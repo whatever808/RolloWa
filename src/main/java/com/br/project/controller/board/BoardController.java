@@ -35,16 +35,16 @@ public class BoardController {
 	 */
 	@GetMapping(value="/list.do")
 	public ModelAndView selectBoardList(@RequestParam(value="page", defaultValue="1") int currentPage
-									   ,@RequestParam Map<String, String> request
+									   ,@RequestParam Map<String, String> filter
 									   ,ModelAndView mv) {
 		// 게시글 페이징바 생성
-		PageInfoDto pageInfo = pagingUtil.getPageInfoDto(boardService.selectTotalBoardCount(request), currentPage, 5, 10);
+		PageInfoDto pageInfo = pagingUtil.getPageInfoDto(boardService.selectTotalBoardCount(filter), currentPage, 5, 10);
 		
 		// 응답페이지 지정 및 응답데이터 반환
-		mv.addObject("boardList", boardService.selectBoardList(pageInfo, request));		// 게시글 목록
+		mv.addObject("boardList", boardService.selectBoardList(pageInfo, filter));		// 게시글 목록
 		mv.addObject("pageInfo", pageInfo);
 		mv.addObject("departmentList", departmentService.selectDepartmentList());		// 부서 목록
-		mv.addObject("request", request);
+		mv.addObject("filter", filter);
 		mv.setViewName("/board/list");
 		
 		return mv;

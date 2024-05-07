@@ -20,15 +20,15 @@ public class BoardService {
 	/**
 	 * @return : 총게시글 갯수조회(STATUS = "Y")
 	 */
-	public int selectTotalBoardCount(Map<String, String> request) {
-		return boardDao.selectTotalBoardCount(request);
+	public int selectTotalBoardCount(Map<String, String> filter) {
+		return boardDao.selectTotalBoardCount(filter);
 	}
 	
 	/**
 	 * @return : 게시글 목록조회
 	 */
-	public List<BoardDto> selectBoardList(PageInfoDto pageInfo, Map<String, String> request){
-		return boardDao.selectBoardList(pageInfo, request);
+	public List<BoardDto> selectBoardList(PageInfoDto pageInfo, Map<String, String> filter){
+		return boardDao.selectBoardList(pageInfo, filter);
 	}
 	
 }

@@ -46,28 +46,36 @@
 	<select id="selectTotalBoardCount" parameterType="map" resultType="_int">
 		select count(*) totalBoards
 		  from tb_board
-		  join member on (user_no = modify_emp)
-		 where status = 'Y'
+		  left outer join member on (user_no = tb_board.modify_emp)
+		 where tb_board.status = 'Y'
 		<if test="category != null">
 			<choose>
 				<when test="category.equals('normal')">
 					and board_category is null
 				</when>
-				<when test="category.equals('department')">
+				<when test="category.equals('department') and department.equals('all')">
+					and board_category is not null
+				</when>
+				<when test="category.equals('department') and !department.equals('all')">
 					and board_category = #{department}
 				</when>
 			</choose>
 		</if>
 		<if test="condition != null and keyword != null">
 			<choose>
+				<when test="condition.equals('all')">
+					and board_title like 	 '%' || #{keyword} || '%'
+					 or board_content like '%' || #{keyword} || '%'
+					 or user_name like 		 '%' || #{keyword} || '%'
+				</when>
 				<when test="condition.equals('title')">
-					and board_title like '%' || #{keyword} || '%'
+					and board_title like 	 '%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('content')">
 					and board_content like '%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('writer')">
-					and user_name like '%' || #{keyword} || '%'
+					and user_name like 		 '%' || #{keyword} || '%'
 				</when>
 			</choose>
 		</if>
@@ -99,28 +107,36 @@
 			left outer join attachment on (ref_no = board_no)
      where tb_board.status = 'Y'  
      <if test="category != null">
-     		<choose>
-     			<when test="category.equals('normal')">
-     				and board_category is null
-     			</when>
-     			<when test="category.equals('department')">
-     				and board_category = #{department}
-     			</when>
-     		</choose>
-     </if>
-     <if test="condition != null and keyword != null">
 			<choose>
+				<when test="category.equals('normal')">
+					and board_category is null
+				</when>
+				<when test="category.equals('department') and department.equals('all')">
+					and board_category is not null
+				</when>
+				<when test="category.equals('department') and !department.equals('all')">
+					and board_category = #{department}
+				</when>
+			</choose>
+		</if>
+		<if test="condition != null and keyword != null">
+			<choose>
+				<when test="condition.equals('all')">
+					and board_title like 	 '%' || #{keyword} || '%'
+					 or board_content like '%' || #{keyword} || '%'
+					 or user_name like 		 '%' || #{keyword} || '%'
+				</when>
 				<when test="condition.equals('title')">
-					and board_title like '%' || #{keyword} || '%'
+					and board_title like 	 '%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('content')">
 					and board_content like '%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('writer')">
-					and user_name like '%' || #{keyword} || '%'
+					and user_name like 		 '%' || #{keyword} || '%'
 				</when>
 			</choose>
-		 </if>
+		</if>
      order by board_no desc
 	</select>
 	
