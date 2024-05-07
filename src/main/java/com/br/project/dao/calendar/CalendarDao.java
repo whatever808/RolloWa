@@ -15,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 public class CalendarDao {
 	private final SqlSessionTemplate sqlSession;
 
-	public List<CalendarDto> selectPCalendar(Map<String, String> map) {
-		return sqlSession.selectList("calMapper.selectPCalendar", map);
+	public List<CalendarDto> selectPCalendar() {
+		return sqlSession.selectList("calMapper.selectPCalendar");
 	}
 	
 	

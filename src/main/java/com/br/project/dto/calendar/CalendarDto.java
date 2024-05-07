@@ -19,7 +19,7 @@ public class CalendarDto {
 	private String calSort;
 	private String calTitle;
 	private String calcontent;
-	private String statrDate;
+	private String startDate;
 	private String endDate;
 	private String place;
 	private String color;

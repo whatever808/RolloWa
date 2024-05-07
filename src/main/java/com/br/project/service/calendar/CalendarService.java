@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class CalendarService {
 	private final CalendarDao CalDao;
 
-	public List<CalendarDto> selectPCalendar(Map<String, String> map) {
-		return CalDao.selectPCalendar(map);
+	public List<CalendarDto> selectPCalendar() {
+		return CalDao.selectPCalendar();
 	}
 }

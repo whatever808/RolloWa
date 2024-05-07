@@ -7,7 +7,7 @@
 	<result column="CAL_SORT" property="calSort" />
 	<result column="CAL_TITLE" property="calTitle" />
 	<result column="CAL_CONTENT" property="calcontent" />
-	<result column="START_DATE" property="statrDate" />
+	<result column="START_DATE" property="startDate" />
 	<result column="END_DATE" property="endDate" />
 	<result column="CAL_PLACE" property="place" />
 	<result column="CAL_COLOR" property="color" />
@@ -15,21 +15,21 @@
 	<result column="GROUP_CODE" property="groupCode" />
 </resultMap>
 
-<select id="selectPCalendar" parameterType="String" resultMap="calResultMap">
-	select
-		CAL_NO
-		, CAL_TITLE
-		, CAL_CONTENT
-		, START_DATE
-		, END_DATE
-		, CAL_PLACE
-		, CAL_COLOR
-	from calender
-	where cal_sort in ('P', 'C')
-	and status = 'Y'
+<select id="selectPCalendar" resultMap="calResultMap">
+select
+    CAL_NO
+    , CAL_TITLE
+    , CAL_CONTENT
+    , START_DATE
+    , END_DATE
+    , CAL_PLACE
+    , CAL_COLOR
+from calender
+where cal_sort in ('P', 'C')
+and status = 'Y'
 <![CDATA[
-	and start_date >= TO_DATE(#{start}, 'YYYY-MM-DD HH24:MI:SS')
-	and end_date <= TO_DATE(#{end}, 'YYYY-MM-DD HH24:MI:SS')	 
+and Months_between(START_DATE, sysdate) <= 6
+and Months_between(end_DATE, sysdate) >= -6
 ]]>
 </select>
 
