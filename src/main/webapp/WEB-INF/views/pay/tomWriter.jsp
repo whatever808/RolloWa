@@ -90,8 +90,12 @@
     }
 
 
-     /*----- 결재공통 스타일------------*/
-    
+     /*----- 모달 스타일------------*/
+    .m_content_style {
+            display: flex;
+            flex-direction: column;
+     }
+     #modal_sign{width:400px; width:350px;}
 
     /*--------------------------------------*/
 
@@ -297,7 +301,7 @@
                                     </tr>
                                     <tr>
                                         <th>기안자</th>
-                                        <td>홍길동</td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <th>상태</th>
@@ -390,11 +394,24 @@
                                         </td>
                                         <td class="sing_name">
                                             <div>
+                                            
                                             </div>
                                         </td>
                                         <td class="sing_name" id="div_modal">
                                             <div>
-                                                
+                                            <!-- 버튼 클릭시 사인 모달창 -->
+                                            <a href="#" data-izimodal-open="#modal_sign">Sign</a>
+                                                <!-- Modal structure -->
+																						    <div id="modal_sign">
+																						        <!-- Modal content -->
+																						        <!-- 스타일에 한해서는 이런식으로 class명을 주시기 바랍니다. -->
+																						        <div class="m_content_style">
+																						           <div style="width:300px; height:200px;">    
+																						           <canvas id="canvas" style="border:1px solid black"></canvas>  
+																						           </div>
+																										<button id="save">완료</button>
+																						        </div>
+																						    </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -481,13 +498,146 @@
             </div>
         </div>
         
-        <!-- 추가버튼 스크립트 -->
+        <!-- 싸인모달 -->
+        <script>
+        // 1. 해당 아이디의 모달 등록이 필요함
+        $('#modal_sign').iziModal({
+            title: '결 재',
+            //subtitle: '수정도 가능합니다.',
+            headerColor: '#FEEFAD', // 헤더 색깔
+            theme: '', //Theme of the modal, can be empty or "light".
+            padding: '15px', // content안의 padding
+            radius: 10, // 모달 외각의 선 둥글기
+            //group: 'name111',
+            //loop: true,
+            //arrowKeys: true,
+            //navigateCaption: true,
+            //navigateArrows: true,
+            zindex: 300, // zindex 모달의 화면 우선 순위 입니다. 
+            //focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
+            //restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
+            //autoOpen: 200, // true or false 자동으로 모달을 띠워줌 | milliseconds  설정 가능
+            //openFullscreen: true, // 전체화면으로 모달이  켜짐
+            //fullscreen: true, // 전체화면 버튼 활성화
+            // overlayClose: true, // 배경을 클릭시 모달창이 닫히는 설정
+            // overlayColor: 'rgb(207 152 152 / 40%)', // 뒤에 흐림 배경색 변경
+            // timeout: 3000, // 자동으로 창을 닫음 milliseconds 가능
+            // timeoutProgressbar: true,// 창을 닫음 시간을 보여줌
+            // timeoutProgressbarColor: 'rgba(100,200,255,0.5)', // 창을 닫음 바 컬러
+            // transitionIn: 'comingIn', // 모달 출현시 이벤트 
+            //comingIn, bounceInDown, bounceInUp, fadeInDown, fadeInUp, fadeInLeft, fadeInRight, flipInX
+            // transitionOut: 'bounceOutDown', // 모달 숨김시 이벤트
+            //comingOut, bounceOutDown, bounceOutUp, fadeOutDown, fadeOutUp, , fadeOutLeft, fadeOutRight, flipOutX
+        });
+
+        $('#modal-iframe').iziModal({
+            iframe: true,
+            iframeURL: 'https://www.youtube.com/watch?v=tPDGlPqhzIc'
+        })
+
+        // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
+        $("#modal-test").on('click', function () {
+            // event.preventDefault(); //위의 클릭 이벤트가 일어나는 동안 다른 이벤트가 발생하지 않도록해주는 명령어
+
+            $('##modal_sign').iziModal('open'); // 모달을 출현
+           
+        });
+
+
+    </script>
+        
+        
+        <script>
+        <!-------------------------- 사인 그리는 스크립트 ------------------------------>
+        <script>    
+        		(function(obj){      
+        			obj.init();      
+        			$(obj.onLoad);    })
+        		((function(){      
+        			var canvas = $("#canvas");      
+        			var div = canvas.parent("div");      
+        			// 캔버스의 오브젝트를 가져옵니다.      
+        			var ctx = canvas[0].getContext("2d");      
+        			var drawble = false;
+        			// 이제 html 버그인지는 모르겠는데 canvas의 style의 height와 width를 수정하게 되면 그림이 이상하게 그려집니다.      
+        			function canvasResize(){        
+        				canvas[0].height = div.height();        
+        				canvas[0].width = div.width();
+        			}
+        			// pc에서 서명을 할 경우 사용되는 이벤트입니다.      
+        			function draw(e){        
+        				function getPosition(){          
+        					return {            
+        						X: e.pageX - canvas[0].offsetLeft,             
+        						Y: e.pageY - canvas[0].offsetTop          
+        						}        
+        					}
+        				switch(e.type){          
+        				case "mousedown":{            
+        					drawble = true;            
+        					ctx.beginPath();            
+        					ctx.moveTo(getPosition().X, getPosition().Y);          
+        					}          
+        				break;
+        				case "mousemove":{            
+        					if(drawble){              
+        						ctx.lineTo(getPosition().X, getPosition().Y);              
+        						ctx.stroke();            
+        						}          
+        					}          
+        				break;
+        				case "mouseup":          
+        				case "mouseout":{            
+        					drawble = false;            
+        					ctx.closePath();          
+        					}          
+        					break;
+        				}
+        			}
+        			// 참고로 mousedown은 touchstart와 mousemove는 touchmove, mouseup은 touchend와 같습니다.      
+        			// mouseout와 touchcancel은 서로 다른 동작인데, mouseout은 canvas 화면을 벗어났을 때이고 touchcancel는 모바일에서 터치가 취소, 즉 에러가 났을 때 입니다.      
+        			return {        
+        				init: function(){          
+        					// 캔버스 사이즈 조절          
+        					$(window).on("resize", canvasResize);                    
+        					canvas.on("mousedown", draw);          
+        					canvas.on("mousemove", draw);          
+        					canvas.on("mouseup", draw);          
+        					canvas.on("mouseout", draw);          
+        					// 스마트 폰의 터치 이벤트          
+        					canvas.on("touchstart", touchdraw);          
+        					canvas.on("touchend", touchdraw);          
+        					canvas.on("touchcancel", touchdraw);          
+        					canvas.on("touchmove", touchdraw);          
+        					// save 버튼을 누르면 imageupload.php로 base64코드를 보내서 이미지로 변환합니다.          
+        					$("#save").on("click", function(){            
+        						// a 태그를 만들어서 다운로드를 만듭니다.            
+        						var link = document.createElement('a');             
+        						// base64데이터 링크 달기            
+        						link.href = canvas[0].toDataURL("image/png");             
+        						// 다운로드시 파일명 지정            
+        						link.download = "image.png";             
+        						// body에 추가            
+        						document.body.appendChild(link);             
+        						link.click();             
+        						document.body.removeChild(link);             
+        						// 다운로드용 a 태그는 다운로드가 끝나면 삭제합니다.            
+        						form.remove();          
+        						});        
+        					},        
+        					onLoad: function(){          
+        						// 캔버스 사이즈 조절          
+        						canvasResize();        
+        						}      
+        					}    
+        			})());  
+        		</script>
+        <!------------------------------------------------------------------------------>
+       
         <script>
     
 		      $(document).on("click", "#plus_btn", function () {
 					
-		        	  
-		    	  
 		          var result = "<tr>"
 		          result += "<td><input type='text' class='item'></td>";
 		          result += "<td><input type='number' class='count' min='0'></td>";
@@ -496,8 +646,6 @@
 		          
 		          
 		         $("#next_tr").after(result);
-		         
-		         
 		
 		      });
 		
@@ -506,9 +654,6 @@
 		          $("#next_tr").next().eq(0).remove();
 		
 		      })
-		      
-		      
-        
         </script>
         
          <script>
@@ -517,7 +662,7 @@
                 if(sbtn == true){
                     alert("제출이 완료되었습니다.");
                     
-
+									/*
                    //품목
                   let arr = []; 
                   $(".item").each(function(){
@@ -557,6 +702,7 @@
                         });
                       
                         $("input[type='hidden'][name='item']").val(arr);
+                        */
              
                 }
             }
@@ -569,6 +715,7 @@
                 }
             })
 
+            
             $(document).ready(function(){
                 $(".atag").click(function(){
 
@@ -694,90 +841,7 @@
             });
         </script>
         
-        <!-- 사인 스크립트 -->
-        <script>    
-        		(function(obj){      
-        			obj.init();      
-        			$(obj.onLoad);    })
-        		((function(){      
-        			var canvas = $("#canvas");      
-        			var div = canvas.parent("div");      
-        			// 캔버스의 오브젝트를 가져옵니다.      
-        			var ctx = canvas[0].getContext("2d");      
-        			var drawble = false;
-        			// 이제 html 버그인지는 모르겠는데 canvas의 style의 height와 width를 수정하게 되면 그림이 이상하게 그려집니다.      
-        			function canvasResize(){        
-        				canvas[0].height = div.height();        
-        				canvas[0].width = div.width();
-        			}
-        			// pc에서 서명을 할 경우 사용되는 이벤트입니다.      
-        			function draw(e){        
-        				function getPosition(){          
-        					return {            
-        						X: e.pageX - canvas[0].offsetLeft,             
-        						Y: e.pageY - canvas[0].offsetTop          
-        						}        
-        					}
-        				switch(e.type){          
-        				case "mousedown":{            
-        					drawble = true;            
-        					ctx.beginPath();            
-        					ctx.moveTo(getPosition().X, getPosition().Y);          
-        					}          
-        				break;
-        				case "mousemove":{            
-        					if(drawble){              
-        						ctx.lineTo(getPosition().X, getPosition().Y);              
-        						ctx.stroke();            
-        						}          
-        					}          
-        				break;
-        				case "mouseup":          
-        				case "mouseout":{            
-        					drawble = false;            
-        					ctx.closePath();          
-        					}          
-        					break;
-        				}
-        			}
-        			// 참고로 mousedown은 touchstart와 mousemove는 touchmove, mouseup은 touchend와 같습니다.      
-        			// mouseout와 touchcancel은 서로 다른 동작인데, mouseout은 canvas 화면을 벗어났을 때이고 touchcancel는 모바일에서 터치가 취소, 즉 에러가 났을 때 입니다.      
-        			return {        
-        				init: function(){          
-        					// 캔버스 사이즈 조절          
-        					$(window).on("resize", canvasResize);                    
-        					canvas.on("mousedown", draw);          
-        					canvas.on("mousemove", draw);          
-        					canvas.on("mouseup", draw);          
-        					canvas.on("mouseout", draw);          
-        					// 스마트 폰의 터치 이벤트          
-        					canvas.on("touchstart", touchdraw);          
-        					canvas.on("touchend", touchdraw);          
-        					canvas.on("touchcancel", touchdraw);          
-        					canvas.on("touchmove", touchdraw);          
-        					// save 버튼을 누르면 imageupload.php로 base64코드를 보내서 이미지로 변환합니다.          
-        					$("#save").on("click", function(){            
-        						// a 태그를 만들어서 다운로드를 만듭니다.            
-        						var link = document.createElement('a');             
-        						// base64데이터 링크 달기            
-        						link.href = canvas[0].toDataURL("image/png");             
-        						// 다운로드시 파일명 지정            
-        						link.download = "image.png";             
-        						// body에 추가            
-        						document.body.appendChild(link);             
-        						link.click();             
-        						document.body.removeChild(link);             
-        						// 다운로드용 a 태그는 다운로드가 끝나면 삭제합니다.            
-        						form.remove();          
-        						});        
-        					},        
-        					onLoad: function(){          
-        						// 캔버스 사이즈 조절          
-        						canvasResize();        
-        						}      
-        					}    
-        			})());  
-        		</script>
+       
     </main>
     <script src="../../resources/js/common/bootstrap.bundle.min.js"></script>
 

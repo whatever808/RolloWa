@@ -18,7 +18,7 @@ import lombok.ToString;
 @Setter
 public class PayDto {
 	
-	private int paymentNo; //결재번호
+	private int approvalNo; //결재번호
 	private int documentNo; //문서번호
 	private String documentType; //문서
 	private String department; // 부서

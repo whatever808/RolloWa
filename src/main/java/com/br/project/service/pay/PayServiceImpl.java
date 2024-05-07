@@ -51,9 +51,18 @@ public class PayServiceImpl {
 		return payDao.slistCount(conditions);
 	}
 	
+	public int statusCount(String status) {
+		return payDao.slistCount(status);
+	}
+	
 	//카테고리별 리스트(문서)
 	public List<PayDto> categoryList(String conditions, PageInfoDto pi) {
 		return payDao.categoryList(conditions, pi);
+	}
+	
+	//상태(긴급,보통) 리스트(문서)
+	public List<PayDto> statusList(String status, PageInfoDto pi) {
+		return payDao.statusList(status, pi);
 	}
 	
 	//결재메인페이지 조회(매출보고서)

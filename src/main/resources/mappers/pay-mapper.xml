@@ -3,7 +3,7 @@
 <mapper namespace="payMapper">
 
 	<resultMap id="payResult" type="PayDto">
-		<id column="PAYMENT_NO" property="paymentNo"/>
+		<id column="APPROVAL_NO" property="approvalNo"/>
 		<result column="DOCUMENT_NUMBER" property="documentNo"/>
 		<result column="DOCUMENT_TYPE" property="documentType"/>
 		<result column="DEPARTMENT" property="department"/>
@@ -53,9 +53,8 @@
 
 	<!-- 진행중, 승인완료, 반려 처리된 목록리스트 조회 -->
 	<select id="paymainPage" resultMap="payResult">
-
-		select 
-		      PAYMENT_NO
+select 
+		      APPROVAL_NO
 		    , case when document_type = 'C' then '출장보고서'
 		           when document_type = 'H' then '휴직신청서'
 		           when document_type = 'T' then '퇴직신청서'
@@ -75,13 +74,13 @@
 		           END) DOCUMENT_STATUS
 		   ,(SELECT count(*)
 		        FROM SALES_REPORT S
-		      WHERE A.DOCUMENT_NUMBER = DRAFTING_NO
+		      WHERE A.DOCUMENT_NUMBER = S.SALES_NO
 		        AND A.document_type = 'G'
 		        AND S.STATUS = 'Y'
 		    )SALES_STATUS
 		    , (SELECT count(*)
 		        FROM DRAFT_REPORT D
-		        WHERE A.DOCUMENT_NUMBER = D.SPEND_NO
+		        WHERE A.DOCUMENT_NUMBER = D.DRAFT_NO
 		         AND A.document_type = 'J'
 		         AND D.STATUS = 'Y'
 		     ) DRAFT_STATUS
@@ -98,7 +97,7 @@
 		WHERE STATUS = 'N'
 		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 		order
-			 by PAYMENT_NO desc
+			 by APPROVAL_NO desc
 	</select>
 	
 	<!-- 일주일이상 승인완료가 안된 목록 갯수 -->
@@ -151,7 +150,7 @@
 	 <!-- 카테고리 검색 리스트 조회용쿼리 -->
 	  <select id="searchList" resultMap="payResult">
 		select 
-		      PAYMENT_NO
+		      APPROVAL_NO
 		    , case when document_type = 'C' then '출장보고서'
 		           when document_type = 'H' then '휴직신청서'
 		           when document_type = 'T' then '퇴직신청서'
@@ -171,13 +170,13 @@
 		           END) DOCUMENT_STATUS
 		   ,(SELECT count(*)
 		        FROM SALES_REPORT S
-		      WHERE A.DOCUMENT_NUMBER = DRAFTING_NO
+		      WHERE A.DOCUMENT_NUMBER = S.SALES_NO
 		        AND A.document_type = 'G'
 		        AND S.STATUS = 'Y'
 		    )SALES_STATUS
 		    , (SELECT count(*)
 		        FROM DRAFT_REPORT D
-		        WHERE A.DOCUMENT_NUMBER = D.SPEND_NO
+		        WHERE A.DOCUMENT_NUMBER = D.DRAFT_NO
 		         AND A.document_type = 'J'
 		         AND D.STATUS = 'Y'
 		     ) DRAFT_STATUS
@@ -195,7 +194,7 @@
 		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 		and ${condition} like '%' || #{keyword} || '%'
 		order
-			 by PAYMENT_NO desc
+			 by APPROVAL_NO desc
 		</select>
 		
 		<!-- 메인 카테고리(문서) 갯수 조회용 -->
@@ -204,57 +203,73 @@
 			  from approval
 			  WHERE STATUS = 'N'
 			  AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-			  and DOCUMENT_TYPE = #{conditions}
+			<choose>
+			    <when test="conditions != null">
+			      and DOCUMENT_TYPE =  #{conditions}
+			    </when>
+			    <when test="status != null">
+			      and PAYMENT_STATUS = #{status}
+			    </when>
+			    <otherwise>
+			    </otherwise>
+			</choose>
 		</select>
 		
 		<!-- 메인 카테고리(문서) 리스트 조회용 -->
 		<select id="categoryList" resultMap="payResult">
 			select 
-			      PAYMENT_NO
-			    , case when document_type = 'C' then '출장보고서'
-			           when document_type = 'H' then '휴직신청서'
-			           when document_type = 'T' then '퇴직신청서'
-			           when document_type = 'B' then '비품신청서'
-			           when document_type = 'J' then '지출결의서'
-			           when document_type = 'G' then '기안서'
-			           when document_type = 'M' then '매출보고서'
-			      else '휴가신청서'
-			   end document_type
-			   , DOCUMENT_NUMBER
-			   , DEPARTMENT
-			   , PAYMENT_WRITER
-			   , PAYMENT_WRITER_NO
-			   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-			           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
-			           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
-			           END) DOCUMENT_STATUS
-			   ,(SELECT count(*)
-			        FROM SALES_REPORT S
-			      WHERE A.DOCUMENT_NUMBER = DRAFTING_NO
-			        AND A.document_type = 'G'
-			        AND S.STATUS = 'Y'
-			    )SALES_STATUS
-			    , (SELECT count(*)
-			        FROM DRAFT_REPORT D
-			        WHERE A.DOCUMENT_NUMBER = D.SPEND_NO
-			         AND A.document_type = 'J'
-			         AND D.STATUS = 'Y'
-			     ) DRAFT_STATUS
-			    , (SELECT count(*)
-			        FROM BUSINESSTRIP_REPORT B
-			        WHERE A.DOCUMENT_NUMBER = B.BUSINESS_NO
-			        AND A.document_type = 'C'
-			        AND B.STATUS = 'Y'
-			     ) BUSINESSTRIP_STATUS
-			     , to_char(regist_date, 'YYYY-MM-DD') regist_date
-			     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
-			     , PAYMENT_STATUS
+		      APPROVAL_NO
+		    , case when document_type = 'C' then '출장보고서'
+		           when document_type = 'H' then '휴직신청서'
+		           when document_type = 'T' then '퇴직신청서'
+		           when document_type = 'B' then '비품신청서'
+		           when document_type = 'J' then '지출결의서'
+		           when document_type = 'G' then '기안서'
+		           when document_type = 'M' then '매출보고서'
+		      else '휴가신청서'
+		   end document_type
+		   , DOCUMENT_NUMBER
+		   , DEPARTMENT
+		   , PAYMENT_WRITER
+		   , PAYMENT_WRITER_NO
+		   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
+		           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+		           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+		           END) DOCUMENT_STATUS
+		   ,(SELECT count(*)
+		        FROM SALES_REPORT S
+		      WHERE A.DOCUMENT_NUMBER = S.SALES_NO
+		        AND A.document_type = 'G'
+		        AND S.STATUS = 'Y'
+		    )SALES_STATUS
+		    , (SELECT count(*)
+		        FROM DRAFT_REPORT D
+		        WHERE A.DOCUMENT_NUMBER = D.DRAFT_NO
+		         AND A.document_type = 'J'
+		         AND D.STATUS = 'Y'
+		     ) DRAFT_STATUS
+		    , (SELECT count(*)
+		        FROM BUSINESSTRIP_REPORT B
+		        WHERE A.DOCUMENT_NUMBER = B.BUSINESS_NO
+		        AND A.document_type = 'C'
+		        AND B.STATUS = 'Y'
+		     ) BUSINESSTRIP_STATUS
+		     , to_char(regist_date, 'YYYY-MM-DD') regist_date
+		     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+		     , PAYMENT_STATUS
 			from approval A
 			WHERE STATUS = 'N'
 			AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-			and DOCUMENT_TYPE =  #{conditions}
+			<choose>
+			    <when test="conditions != null">
+			      and DOCUMENT_TYPE =  #{conditions}
+			    </when>
+			    <when test="status != null">
+			      and PAYMENT_STATUS = #{status}
+			    </when>
+			</choose>
 			order
-			     by PAYMENT_NO desc
+			     by APPROVAL_NO desc
 		</select>
 		
 		<!-- 퇴직 테이블 & 휴직테이블
@@ -290,8 +305,8 @@
    -->
    
    <select id="mdetail" resultMap="payResult">
-		   select 
-		        SALES_NO
+		  select 
+		        EXPEND_NO
 		      , SALES_DIVISION
 		      , MANAGER
       		, to_char(TOTAL_SALES, '999,999,999,999') TOTAL_SALES
@@ -309,13 +324,15 @@
 		      , PAYMENT_STATUS
 		      , PAYMENT_WRITER
 		from EXPENDITURE_REPORT E
-		join approval A on(E.SALES_NO = A.DOCUMENT_NUMBER) 
+		join approval A on(E.EXPEND_NO = A.DOCUMENT_NUMBER) 
 		where DOCUMENT_TYPE = 'M'
-		and PAYMENT_NO = #{paymentNo}
+		and APPROVAL_NO = #{approvalNo}
 		and DOCUMENT_NUMBER = #{documentNo}
 		and A.PAYMENT_WRITER =  #{payWriter}
 		<!--and PAYMENT_WRITER_NO = #{}  꼭해야됨.. 중복되서 여러행이 나옴(기안자의 번호 로그인한 사용자 번호)-->
    
    </select>
+   
+   
 		
 </mapper>

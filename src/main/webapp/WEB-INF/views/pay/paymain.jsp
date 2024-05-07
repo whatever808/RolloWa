@@ -310,13 +310,15 @@
                             <div id="cen_bottom_search">
                                 <div id="cen_bottom_search_next">
                                     <div>
-                                        <select name="" id="">
-                                            <option value="">보통</option>
-                                            <option value="">긴급</option>
+                                        <select name="status" id="statusSelect">
+                                        		<option value="보통">보통</option>
+                                            <option value="보통">보통</option>
+                                            <option value="긴급">긴급</option>
                                         </select>
                                     </div>
                                     <div style="margin-left: 30px;">
                                         <select name="conditions" id="selects">
+                                            <option value="T">퇴직신청서</option>
                                             <option value="T">퇴직신청서</option>
                                             <option value="C">출장보고서</option>
                                             <option value="B">비품신청서</option>
@@ -332,6 +334,9 @@
                                    	$(document).ready(function(){
                                    		$("#selects").change(function(){
                                    			 location.href="${contextPath}/pay/selects.do?conditions=" + $("#selects").val();
+                                   		})
+                                   		$("#statusSelect").change(function(){
+                                   			 location.href="${contextPath}/pay/status.do?status=" + $(this).val();
                                    		})
                                    	})
                                    
@@ -364,7 +369,7 @@
                                         					                      </svg>` : "";
 
                                         					    let td = "<tr>";
-                                        					    td += "<td>" + result.list[i].paymentNo + "</td>";  
+                                        					    td += "<td>" + result.list[i].approvalNo + "</td>";  
                                         					    td += "<td>" + result.list[i].documentType + attachment + "</td>";
                                         					    td += "<td>" + result.list[i].payWriter + "</td>";
                                         					    td += "<td>" + result.list[i].department + "</td>";
@@ -437,8 +442,8 @@
                                     </thead>
                                     <tbody>
                                     <c:forEach var="l" items="${ list }">
-                                     		<tr onclick="location.href='${contextPath}/pay/detail.do?paymentNo=${ l.paymentNo }&documentNo=${ l.documentNo }&documentType=${ l.documentType }&payWriter=${ l.payWriter }';">
-                                            <td>${ l.paymentNo }</td>
+                                     		<tr onclick="location.href='${contextPath}/pay/detail.do?approvalNo=${ l.approvalNo }&documentNo=${ l.documentNo }&documentType=${ l.documentType }&payWriter=${ l.payWriter }';">
+                                            <td>${ l.approvalNo }</td>
                                             <td>${ l.documentType } 
                                             		${ l.salesStatus + l.draftStatus + l.businessStatus == 1 ? '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">
 				                                        <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>

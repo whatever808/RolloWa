@@ -131,6 +131,41 @@ public class PayController {
 	}
 	//---------------------------------------------
 	
+	//메인결재 보고서 카테고리----------------------
+		@GetMapping(value="/status.do")
+		public String statusList(String status, @RequestParam (value="page", defaultValue="1") int currentPage
+							, Model model) {
+			
+			//(카테고리별)페이지갯수
+			int clistCount = payServiceImpl.slistCount(status);
+			
+			//일주일이상승인완료가 안된 게시글총갯수
+			int mdCount = payServiceImpl.moreDateCount();
+			
+			//결재내역 게시글 총갯수
+			int slistCount = payServiceImpl.successListCount();
+			
+			//페이지
+			PageInfoDto pi =  pagingUtil.getPageInfoDto(clistCount, currentPage, 5, 10);
+			
+			//리스트
+			List<PayDto> list = payServiceImpl.statusList(status, pi);
+			
+			model.addAttribute("clistCount", clistCount);
+			model.addAttribute("slistCount", slistCount);
+			model.addAttribute("mdCount", String.valueOf(mdCount));
+			model.addAttribute("slistCount", String.valueOf(slistCount));
+			model.addAttribute("pi", pi);
+			model.addAttribute("list", list);
+			model.addAttribute("status", status);
+			
+			return "pay/paymain";
+			
+		}
+		//---------------------------------------------
+		
+	
+	
 	// 메인결재 상세페이지목록클릭-----------------------
 	@RequestMapping("/detail.do")
 	public String detail(PayDto pDto, Model model) {
