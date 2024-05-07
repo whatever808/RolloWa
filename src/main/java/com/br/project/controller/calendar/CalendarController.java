@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,15 +24,13 @@ public class CalendarController {
 	private final CalendarService calService;
 	
 	/**
-	 * 개인 ?��?�� ?��?�� 매서?��
 	 * @author dpcks
 	 */
-	@RequestMapping("/pCalendar.page")
+	@GetMapping("/pCalendar.page")
 	public void selectPCalendar() {}
 	
 	/**
 	 * @author dpcks
-	 * @return ?��?�� qja?��값을 ?���? 못정?��
 	 */
 	@ResponseBody
 	@PostMapping(value="/selectCal.do", produces="application/json")
