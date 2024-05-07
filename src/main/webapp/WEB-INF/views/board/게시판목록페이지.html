@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <script src="../assets/js/color-modes.js"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.122.0">
+    <title>게시판 관리페이지</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+
+    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
+    <script src="../../../resources/js/common/bootstrap.bundle.min.js"></script>
+    <script src="../../../resources/js/common/sidebars.js"></script>
+    
+    <style>
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .active .bi {
+            display: block !important;
+        }
+
+        /* content의 height와 height 값을 동일하게 */
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 1200px;
+        }
+
+        .content {
+            height: 1200px;
+            width: 1500px;
+        }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="../../resources/css/common/sidebars.css" rel="stylesheet">
+
+    <!-- 게시판관리페이지 스타일 -->
+    <link href="/src/main/webapp/resources/css/board/community_manage.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <main class="d-flex flex-nowrap">
+        <div class="flex-shrink-0 p-3" style="width: 280px;">
+            <a href="/"
+                class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+                <svg class="bi pe-none me-2" width="30" height="24">
+                    <use xlink:href="#bootstrap" />
+                </svg>
+                <span class="fs-5 fw-semibold">회사로고</span>
+            </a>
+            <ul class="list-unstyled ps-0">
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                        Home
+                    </button>
+                    <div class="collapse show" id="home-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                        Dashboard
+                    </button>
+                    <div class="collapse" id="dashboard-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                        Orders
+                    </button>
+                    <div class="collapse" id="orders-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="border-top my-3"></li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                        Account
+                    </button>
+                    <div class="collapse" id="account-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New...</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a>
+                            </li>
+                            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
+                                    out</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="b-example-divider b-example-vr"></div>
+
+        <!-- content 추가 -->
+        <div class="content p-5">
+
+            <h2 class="page-title">게시판 관리</h2>
+
+            <!-- board category start -->
+            <select class="board-category form-select" aria-label="Default select example">
+                <option>모든게시판</option>
+                <option>일반게시판</option>
+                <option>부서게시판</option>
+                <option>사용게시판</option>
+                <option>미사용게시판</option>
+            </select>
+            <!-- board category end -->
+
+            <!-- search form start-->
+            <div id="search-form">
+                <form>
+                    <input type="text" id="search-keyword" class="form-control" placeholder="게시판 검색" required>
+                    <button type="submit" class="btn btn-secondary">검색</button>
+                </form>
+            </div>
+            <!-- search form end -->
+            
+            <!-- board list start -->
+            <div class="board-list">
+                <!-- board list table start-->
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>
+                                <input type="checkbox">
+                            </th>
+                            <th>종류</th>
+                            <th>카테고리</th>
+                            <th>게시판명</th>
+                            <th>관리자</th>
+                            <th>총게시글</th>
+                            <th>사용여부</th>
+                            <th>생성일자</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>일반</td>
+                            <td>전체</td>
+                            <td>일반게시판</td>
+                            <td>머스크</td>
+                            <td>130</td>
+                            <td>사용</td>
+                            <td>2024-04-24</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary">수정</button>&nbsp;
+                                <button type="button" class="btn btn-sm btn-danger">삭제</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>부서</td>
+                            <td>ooo부</td>
+                            <td>일반게시판</td>
+                            <td>아인슈타인</td>
+                            <td>130</td>
+                            <td>미사용</td>
+                            <td>2024-04-24</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-warning">백업</button>&nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>일반</td>
+                            <td>전체</td>
+                            <td>일반게시판</td>
+                            <td>머스크</td>
+                            <td>130</td>
+                            <td>사용</td>
+                            <td>2024-04-24</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary">수정</button>&nbsp;
+                                <button type="button" class="btn btn-sm btn-danger">삭제</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>부서</td>
+                            <td>ooo부</td>
+                            <td>일반게시판</td>
+                            <td>아인슈타인</td>
+                            <td>130</td>
+                            <td>미사용</td>
+                            <td>2024-04-24</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-warning">백업</button>&nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>일반</td>
+                            <td>전체</td>
+                            <td>일반게시판</td>
+                            <td>머스크</td>
+                            <td>130</td>
+                            <td>사용</td>
+                            <td>2024-04-24</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary">수정</button>&nbsp;
+                                <button type="button" class="btn btn-sm btn-danger">삭제</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>부서</td>
+                            <td>ooo부</td>
+                            <td>일반게시판</td>
+                            <td>아인슈타인</td>
+                            <td>130</td>
+                            <td>미사용</td>
+                            <td>2024-04-24</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-warning">백업</button>&nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>일반</td>
+                            <td>전체</td>
+                            <td>일반게시판</td>
+                            <td>머스크</td>
+                            <td>130</td>
+                            <td>사용</td>
+                            <td>2024-04-24</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary">수정</button>&nbsp;
+                                <button type="button" class="btn btn-sm btn-danger">삭제</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>부서</td>
+                            <td>ooo부</td>
+                            <td>일반게시판</td>
+                            <td>아인슈타인</td>
+                            <td>130</td>
+                            <td>미사용</td>
+                            <td>2024-04-24</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-warning">백업</button>&nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>일반</td>
+                            <td>전체</td>
+                            <td>일반게시판</td>
+                            <td>머스크</td>
+                            <td>130</td>
+                            <td>사용</td>
+                            <td>2024-04-24</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary">수정</button>&nbsp;
+                                <button type="button" class="btn btn-sm btn-danger">삭제</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>부서</td>
+                            <td>ooo부</td>
+                            <td>일반게시판</td>
+                            <td>아인슈타인</td>
+                            <td>130</td>
+                            <td>미사용</td>
+                            <td>2024-04-24</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-warning">백업</button>&nbsp;
+                            </td>
+                        </tr>
+                    </tbody>
+                        
+                </table>
+                <!-- board list table end -->
+
+                <!-- pagination start -->
+                <div class="board-list-pagination">
+                    <ul class="pagination justify-content-center">
+                      <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
+                      <li class="page-item"><a class="page-link active" href="javascript:void(0);">1</a></li>
+                      <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                      <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
+                      <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
+                      <li class="page-item"><a class="page-link" href="javascript:void(0);">5</a></li>
+                      <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
+                    </ul>
+                </div>
+                <!-- pagination end -->
+            </div>
+            <!-- board list end-->
+
+        </div>
+        <!-- content 끝 -->
+    </main>
+    <script src="../../resources/js/common/bootstrap.bundle.min.js"></script>
+
+    <script src="../../resources/js/common/sidebars.js"></script>
+</body>
+
+</html>

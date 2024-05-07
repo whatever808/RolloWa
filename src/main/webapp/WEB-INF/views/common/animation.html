@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    
+</head>
+<body>
+    <br><br>
+
+
+    <h1 style="margin: 300px; cursor: pointer;" class="myAnimation" id="mtAnima">Bounce</h1>
+
+
+    <script>
+        //1. 먼저 함수를 선언 해야 됩니다.
+        const animateCSS = (element, animation, prefix = 'animate__') =>
+        new Promise((resolve, reject) => {
+            const animationName = `${prefix}${animation}`;
+            const node = document.querySelector(element);
+
+            node.classList.add(`${prefix}animated`, animationName);
+
+            function handleAnimationEnd(event) {
+            event.stopPropagation();
+            node.classList.remove(`${prefix}animated`, animationName);
+            resolve('Animation ended');
+            }
+
+            node.addEventListener('animationend', handleAnimationEnd, {once: true});
+        });
+
+        // 2. 이벤트가 발생할떄를 결정하시고
+        //     animateCSS 첫번쨰에 바운스(이벤트)를 발생시키려는 요소를 선택하시면 됩니다. 
+        $(document).ready(function(){
+            $(".myAnimation").click(function(e){
+                animateCSS('#mtAnima', 'bounce');
+            })
+        })
+    </script>
+</body>
+</html>

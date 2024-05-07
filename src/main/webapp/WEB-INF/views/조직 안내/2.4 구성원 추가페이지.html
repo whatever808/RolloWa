@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- animate -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!-- bootstrap -->
+    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
+
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
+
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+
+    <!-- Google Fonts Jua -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- css -->
+    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../resources/css/common.css">
+    <link rel="stylesheet" href="../../../resources/css/common/mdb.min.css" />
+
+    <!-- sidebar -->
+    <script src="../../../resources/js/common/sidebars.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.sidebar').load('../common/sidebar.html');
+        });
+    </script>
+
+    <style>
+    /* 전체 영역 css */
+    .content{
+        display: flex;
+    }
+    .sidebar{
+        /* background-color: orange; */        
+        width: 300px;
+    }
+    .main_content{
+        /* background-color: yellowgreen; */
+        margin: 20px;
+        width: 100%;
+    }
+    .div_form{
+        margin: 0 100px;
+    }
+    .div_form h4{
+        /* background-color: yellow; */
+        margin-left: 100px;
+    }
+
+    /* 테이블 공통 css */
+    th{
+        background-color: antiquewhite !important;
+        width: 200px;
+        vertical-align: middle;
+    }
+    label {
+        margin-left: 20px;
+    }
+    .usable {
+         color: green;
+         text-align: center;
+    }
+    .nocheck {
+        color: red;
+        width: 300px !important;
+    }
+    
+    /* 테이블 공통 영역 */
+    .td_common {
+        display: flex;
+    }
+    .td_common input {
+        width: 250px !important;
+    }
+    .div_common{
+        display: flex;
+    }
+    .h5_margin {
+        margin-top: 20px;
+    }
+    select {
+        width: 300px !important;
+    }
+
+    /* 비밀번호 영역 */
+
+    .td_1 select{
+        width: 300px;
+    }
+    .checkbox_flex{
+        display: flex;
+    }
+    .checkbox_flex input {
+        margin: 0 10px;
+        width: 20px;
+    }
+    .btn_center{
+        text-align: center;
+    }
+    </style>
+</head>
+<body>
+    <div class="content">
+
+        <!-- 사이드바 영역 -->
+        <div class="sidebar"></div>
+        
+        <div class="main_content">
+            <h2 class="jua-regular">구성원 추가</h2>
+            <hr>
+
+            <!-- 메인 영역 start -->
+            <form action="" method="post" id="signup_form">
+                <div class="div_form form-group">
+                    <table class="table table-responsive">
+
+                        <!-- 이름 입력 영역 -->
+                        <tr>
+                            <th>
+                                <label for="userName">
+                                    <h5>이름</h5>
+                                </label>
+                            </th>
+                            <td class="td_common">
+                                <div>
+                                    <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력하세요." required>
+                                </div>
+                                <h4>
+                                    <div id="nameCheck_result" class="nocheck"></div>
+                                </h4>
+                            </td>
+                        </tr>
+
+                        <!-- 아이디 입력 영역 -->
+                        <tr>
+                            <th>
+                                <label for="userId">
+                                    <h5>아이디</h5>
+                                </label>
+                            </th>
+                            <td class="td_common">
+                                <div>
+                                    <div class="div_common">
+                                        <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디을 입력하세요." required>
+                                        <h4>
+                                            <div id="idCheck_result" class="nocheck"></div>
+                                        </h4>
+                                    </div>
+                                    <h5 class="h5_margin">영문, 숫자 조합 5~20자로 입력해주세요.</h5>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- 비밀번호 입력 -->
+                        <tr>
+                            <th>
+                                <label for="userPwd">
+                                    <h5>비밀번호</h5>
+                                </label>
+                            </th>
+                            <td class="td_common">
+                                <div>
+                                    <div class="div_common">
+                                        <input type="password" class="form-control" id="userPwd" name="userPwd" placeholder="비밀번호을 입력하세요." required>
+                                        <h4>
+                                            <div id="pwd_result" class="nocheck"></div>
+                                        </h4>
+                                    </div>
+                                    <h5 class="h5_margin">영문, 숫자, 특수문자 조합 5~20자로 입력해주세요.</h5>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- 비밀번호 확인 입력 -->
+                        <tr>
+                            <th>
+                                <label for="userPwdck">
+                                    <h5>비밀번호 확인</h5>
+                                </label>
+                            </th>
+                            <td class="td_common">
+                                <div>
+                                    <div class="div_common">
+                                        <input type="password" class="form-control" id="userPwdck" name="userPwdck" placeholder="확인 비밀번호를 입력하세요." required>
+                                        <h4>
+                                            <div id="pwdck_result" class="nocheck"></div>
+                                        </h4>
+                                    </div>
+                                    <h5 class="h5_margin">비밀번호를 한번 더 입력해주세요.</h5>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- 부서 입력 -->
+                        <tr>
+                            <th>
+                                <label for="department">
+                                    <h5>부서명</h5>
+                                </label>
+                            </td>
+                                <td>
+                                    <select name="department" id="department" name="department" class="form-control">
+                                        <option value="">전체 부서</option>
+                                        <option value="">부서1</option>
+                                    <option value="">부서2</option>
+                                    <option value="">부서3</option>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th>
+                                <label for="team">
+                                    <h5>팀명</h5></td>
+                                </label>
+                            <td class="td_1">
+                                <select name="" id="team" name="team" class="form-control">
+                                    <option value="">전체 팀</option>
+                                    <option value="">1팀</option>
+                                    <option value="">2팀</option>
+                                    <option value="">3팀</option>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <!--
+
+                        <tr>
+                            <th>
+                                <label for="position">
+                                    <h5>직급</h5></td>
+                                </label>
+                            <td class="td_1">
+                                <select name="" id="position" name="position" class="form-control">
+                                    <option value="">전체 직급</option>
+                                    <option value="">사원</option>
+                                    <option value="">대리</option>
+                                    <option value="">과장</option>
+                                    <option value="">부장</option>
+                                    <option value="">차장</option>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th>
+                                <label for="checkAdmin">
+                                    <h5>관리자 설정</h5>
+                                </label>
+                            </th>
+                            <td class="checkbox_flex">
+                                <input type="checkbox" id="checkAdmin" name="checkAdmin" class="form-check-input">
+                                <h5>관리자로 계정을 생성합니다.</h5>
+                            </td>
+                        </tr>
+                    -->
+                    </table>
+                </div>
+                
+                <div class="btn_center">
+                    <button class="btn btn-outline-primary"><h6>뒤로가기</h6></button>
+                    <button type="submit" class="btn btn-primary"><h6>구성원 추가</h6></button>
+                </div>
+            </form>
+
+            <!-- 회원가입 js -->
+            <script>
+            let nameResult = false;
+            let idResult = false;
+            let pwdResult = false;
+            let pwdckResult = false;
+            
+            /* 이름 : 한글만 입력되고 나머지 글자(숫자,영문,특문)는 공백으로 변환 */
+            $("#signup_form input[name=userName]").on("keyup", function(){
+                let regExp = $(this).val().replace(/[^가-힣]+/g, '');
+                $(this).val(regExp);
+
+                if( regExp.trim().length == 0 ){
+                    nameResult = checkPrint("#nameCheck_result", "usable unusable", "nocheck", "다시 입력해주세요.");
+                } else {
+                    if( regExp ){
+                        nameResult = checkPrint("#nameCheck_result", "nocheck unusable", "usable", "사용가능한 이름입니다.");
+                    }
+                }
+                validate();
+            })
+
+            /* 아이디 : 영문,숫자 조합 5~20자 */
+            $("#signup_form input[name=userId]").on("keyup", function(){
+                let regExp = $(this).val().replace(/[^A-Za-z0-9]+/g, "");
+                $(this).val(regExp);
+
+                if( regExp.trim().length < 5 || regExp.trim().length > 20 ){
+                    idResult = checkPrint("#idCheck_result", "usable unusable", "nocheck", "다시 입력해주세요.");
+                } else {
+                    if( regExp ){
+                        idResult = checkPrint("#idCheck_result", "nocheck unusable", "usable", "사용가능한 아이디입니다.");
+                    }
+                }
+                validate();
+            })
+            
+            /* 비밀번호 : 영문, 숫자, 특수문자를 포함한 조합 5~20자 */
+            $("#signup_form input[name=userPwd]").on("keyup", function(){
+                let regExp = $(this).val().replace(/[^A-Za-z0-9!@#$%^&*]+/g, "");
+                $(this).val(regExp);
+
+                if( regExp.trim().length < 5 || regExp.trim().length > 20 ){
+                    pwdResult = checkPrint("#pwd_result", "usable unusable", "nocheck", "다시 입력해주세요.");
+                } else {
+                    if( regExp ){
+                        pwdResult = checkPrint("#pwd_result", "nocheck unusable", "usable", "사용가능한 비밀번호입니다.");
+                    }
+                }
+                pwdResult = regExp;
+                validate();
+            })
+
+            /* 비밀번호 확인 */
+            $("#signup_form input[name=userPwdck]").on("keyup", function(){
+                let regExp = $(this).val().replace(/[^A-Za-z0-9!@#$%^&*]+/g, "");
+                $(this).val(regExp);
+
+                console.log("pwdResult :", pwdResult);
+                console.log("regExp :", regExp);
+                if( pwdResult !=  regExp ){
+                    pwdckResult = checkPrint("#pwdck_result", "usable unusable", "nocheck", "비밀번호가 일치하지 않습니다.");
+                } else {
+                    if( regExp ){
+                        pwdckResult = checkPrint("#pwdck_result", "nocheck unusable", "usable", "비밀번호가 일치합니다.");
+                    }
+                }
+                validate();
+            })
+            
+
+            function checkPrint(selector, rmClassNm, addClassNm, msg){
+			    $(selector).removeClass(rmClassNm).addClass(addClassNm).text(msg);
+			    return addClassNm == "usable" ? true : false;
+		    }
+
+            function validate(){
+                if(nameResult, idResult) {
+                    $("#signup_form :submit").attr("disabled", false);
+                } else {
+                    $("#signup_form :submit").attr("disabled", true);
+                }
+            }
+
+            </script>
+                
+            <!-- 메인 영역 end -->
+
+        </div>
+    </div>
+
+</body>
+</html>

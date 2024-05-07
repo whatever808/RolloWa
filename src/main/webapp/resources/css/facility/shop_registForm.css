@@ -1,0 +1,88 @@
+/* ------------- regist form content div ------------- */
+.registForm{
+    padding: 30px;
+    padding-bottom: 100px;
+    box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
+    border-radius: 10px;
+}
+
+/* -------------- page title -------------- */
+.page-title{
+    margin-bottom: 50px;
+    font-weight: bold;
+    font-family: "Jua";
+}
+
+/*-------------  input, textarea common -------------*/
+input, textarea {
+    font-size: 15px;
+    color: #222222;
+    width: fit-content;
+    border: none;
+    border-bottom: solid rgb(170, 170, 170) 1px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    position: relative;
+    background: none;
+    z-index: 5;
+}
+input:focus, textarea:focus { 
+    outline: none;
+    border-bottom: 2px solid rgb(0, 0, 0);  
+}
+.myfile{
+    display: flex;
+}
+.myfile>div{
+    border-bottom: 1px solid rgb(170, 170, 170); 
+}
+
+/* ------------- regist form ------------- */
+.field-group{
+    margin-bottom: 50px;
+}
+
+.field-title{
+    font-weight: bold;
+    font-size: large;
+    margin-bottom: 10px;
+}
+
+#shop-name, #shop-manage-emp, #shop-intro{
+    width: 700px;
+}
+
+#shop-category, #shop-location, #capacity-limit{
+    display: inline-block;
+    width: 200px;
+    margin-right: 60px;
+}
+input#work-hour{
+    display: inline-block;
+    margin-right: 50px;
+}
+input#work-hour-end{
+    display: inline-block;
+    margin-left: 50px;
+}
+
+.holiday-div{
+    display: inline-block;
+    margin-left: 100px;
+}
+.holiday-cycle, .day-of-week{
+    display: inline-block;
+    width: 200px;
+    margin-right: 60px;
+}
+
+#shop-intro{
+    resize: none;
+}
+.button-group{
+    margin-left: 350px;
+}
+#regist-form button{
+    margin-left: 20px;
+}
+

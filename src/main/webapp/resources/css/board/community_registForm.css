@@ -1,0 +1,62 @@
+/*  input, textarea common  */
+input, textarea {
+    font-size: 15px;
+    color: #222222;
+    width: fit-content;
+    border: none;
+    border-bottom: solid rgb(170, 170, 170) 1px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    position: relative;
+    background: none;
+    z-index: 5;
+}
+input:focus, textarea:focus { 
+    outline: none;
+    border-bottom: 2px solid rgb(0, 0, 0);  
+}
+.myfile{
+    display: flex;
+}
+.myfile>div{
+    border-bottom: 1px solid rgb(170, 170, 170); 
+}
+
+/* ------------- page title ------------- */
+.page-title{
+    margin-bottom: 50px;
+    font-weight: bold;
+}
+
+/* ------------- create board form area ------------- */
+.create-board-form-area{
+    margin-top: 80px;
+}
+
+/* ------------- create board form ------------- */
+.field-group{
+    margin-bottom: 50px;
+}
+#create-board-form label{
+    font-weight: bold;
+    font-size: large;
+    margin-bottom: 10px;
+}
+#board-title, #board-manager{
+    width: 500px;
+}
+#board-category, #board-department{
+    display: inline-block;
+    width: 300px;
+    margin-right: 60px;
+}
+#board-intro, #board-manager, #board-title{
+    width: 700px;
+    resize: none;
+}
+.button-group{
+    padding-left: 180px;
+}
+.button-group>button{
+    margin-left: 20px;
+}

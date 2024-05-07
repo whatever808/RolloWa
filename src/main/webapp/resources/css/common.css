@@ -1,0 +1,158 @@
+@charset "UTF-8";
+
+/* ---------------------------------------- 이예찬 ---------------------------------------- */
+/* input 타입 color스타일 css입니다. id값으로 input탕비에 넣어 두시면 되욧. */
+#color-style {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#color-style::-webkit-color-swatch {
+    border-radius: 10px;
+    border: none;
+}
+
+#color-style::-moz-color-swatch {
+    border-radius: 10px;
+    border: none;
+}
+
+.radious10 {
+    border-radius: 10px;
+}
+
+.line-shadow {
+    box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
+}
+
+.font-size25 {
+    font-size: 25px;
+}
+
+.font-size20 {
+    font-size: 20px;
+}
+
+.marginR30 {
+    margin-right: 30px;
+}
+
+.size-fit {
+    display: contents;
+}
+
+.fontRed {
+    color: red;
+}
+
+.border1 {
+    border: 1px solid;
+}
+
+/*  input, textarea 스타일  */
+input[type=text],
+input[type=file],
+input[type=date],
+input[type=time],
+textarea {
+    font-size: 15px;
+    color: #222222;
+    width: fit-content;
+    border: none;
+    border-bottom: solid rgb(170, 170, 170) 1px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    position: relative;
+    background: none;
+    z-index: 5;
+}
+
+input[type=text]:focus,
+input[type=file]:focus,
+input[type=date]:focus,
+input[type=time]:focus,
+textarea:focus {
+    outline: none;
+    border-bottom: 2px solid rgb(0, 0, 0);
+}
+
+.myfile {
+    display: flex;
+}
+
+.myfile>div {
+    border-bottom: 1px solid rgb(170, 170, 170);
+}
+
+/* ---------------------------------------- 이예찬 ---------------------------------------- */
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
+
+.rounded-circle {
+    border-radius: 50%;
+}
+
+.jua-regular {
+    font-family: "Jua", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Jua", sans-serif;
+}
+
+.btn1 {
+    border: 0;
+    font-family: "Jua", sans-serif;
+    background: #FEEFAD;
+    color: rgb(0, 0, 0);
+    border-radius: 100px;
+    width: 340px;
+    height: 49px;
+    font-size: 16px;
+    position: absolute;
+    top: 79%;
+    left: 8%;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.btn1:hover {
+    background: #ffe367;
+}
+
+.btn_wrapper {
+    height: 50px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.forget_btn {
+    position: unset;
+    width: 100px;
+}
+
+.delete_btn {
+    position: unset;
+    width: 100px;
+}
+
+.delete_btn:hover {
+    background: #ffe367;
+}
+
+/* ---------------------------------------- 기웅*/

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="calMapper">
+<resultMap type="calendarDto" id="calResultMap">
+	<id column="CAL_NO" property="calNO" />
+	<result column="CAL_SORT" property="calSort" />
+	<result column="CAL_TITLE" property="calTitle" />
+	<result column="CAL_CONTENT" property="calcontent" />
+	<result column="START_DATE" property="statrDate" />
+	<result column="END_DATE" property="endDate" />
+	<result column="CAL_PLACE" property="place" />
+	<result column="CAL_COLOR" property="color" />
+	<result column="STATUS" property="status" />
+	<result column="GROUP_CODE" property="groupCode" />
+</resultMap>
+
+<select id="selectPCalendar" parameterType="String" resultMap="calResultMap">
+	select
+		CAL_NO
+		, CAL_TITLE
+		, CAL_CONTENT
+		, START_DATE
+		, END_DATE
+		, CAL_PLACE
+		, CAL_COLOR
+	from calender
+	where cal_sort in ('P', 'C')
+	and status = 'Y'
+<![CDATA[
+	and start_date >= TO_DATE(#{start}, 'YYYY-MM-DD HH24:MI:SS')
+	and end_date <= TO_DATE(#{end}, 'YYYY-MM-DD HH24:MI:SS')	 
+]]>
+</select>
+
+
+</mapper>

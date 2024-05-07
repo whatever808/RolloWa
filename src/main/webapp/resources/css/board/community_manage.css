@@ -1,0 +1,31 @@
+.page-title{
+    margin-bottom: 50px;
+    font-weight: bold;
+}
+
+/* ------------- notice category ------------- */
+.board-category{
+    width: 200px;
+}
+
+/* ------------- search form ------------- */
+#search-form{
+    float: right;
+}
+#search-keyword{
+    display: inline-block;
+    width: 350px;
+}
+#search-form button{
+    margin-top: -5px;
+}
+
+/* ------------- board list ------------- */
+.board-list{
+    margin-top: 150px;
+    text-align: center;
+}
+
+.board-list-pagination{
+    margin-top: 60px;
+}

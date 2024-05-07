@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <script src="../assets/js/color-modes.js"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.122.0">
+    <title>놀이기구 상세페이지</title>
+
+    <!-- animate -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!-- bootstrap -->
+    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
+
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
+
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+
+    <!-- Google Fonts Jua -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- css -->
+    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../resources/css/common.css">
+    <link rel="stylesheet" href="../../../resources/css/common/mdb.min.css" />
+    <style>
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background: rgb(255, 247, 208);
+            /* background: linear-gradient(90deg, rgba(255, 247, 208, 1) 0%, rgba(254, 239, 173, 1) 46%, rgba(248, 255, 140, 1) 100%); */
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .active .bi {
+            display: block !important;
+        }
+
+        .msg_open_btn,
+        .msg_close_btn {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            z-index: 10;
+        }
+
+        .msg_close_btn {
+            display: none;
+        }
+
+        .msg_open_btn>a,
+        .msg_close_btn>a {
+            color: black;
+        }
+
+        /* content의 height와 height 값을 동일하게 */
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 1200px;
+        }
+
+        .content {
+            height: 1200px;
+            width: 1500px;
+        }
+
+
+        /* 채팅 스타일 */
+        .msgbox {
+            height: 600px;
+            width: 400px;
+            border-radius: 10px;
+            border: 1px solid black;
+            position: fixed;
+            right: 70px;
+            bottom: 70px;
+            display: none;
+            flex-direction: column;
+        }
+
+        .chatrooms,
+        .people_list,
+        .chatting {
+            border: 1px solid red;
+            height: 500px;
+            overflow: scroll;
+            overflow-x: hidden;
+        }
+
+        /* 채팅방 리스트 */
+        .chatrooms {
+            /* display: flex; */
+            flex-direction: column;
+            display: none;
+        }
+
+        .room_info {
+            min-height: 100px;
+            border: 1px solid black;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: row;
+            cursor: pointer;
+        }
+
+        .room_info:hover {
+            background-color: lightgray;
+        }
+
+        .room_img {
+            width: 20%;
+            border: 1px solid yellow;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .room_img>img {
+            width: 80%;
+        }
+
+        .part_info {
+            width: 60%;
+            border: 1px solid rgb(63, 63, 4);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .room_title {
+            height: 30%;
+            border: 1px solid black;
+        }
+
+        .room_msg {
+            height: 70%;
+            color: rgba(0, 0, 0, .6);
+        }
+
+        .chat_noti {
+            width: 20%;
+            border: 1px solid rgb(41, 151, 59);
+        }
+
+        .chat_date {
+            font-size: 12px;
+            color: rgba(0, 0, 0, .6);
+        }
+
+        /* 채팅방 리스트 끝 */
+
+        /* 인물 목록 */
+        .people_list {
+            display: none;
+            /* display: flex; */
+            flex-direction: column;
+        }
+
+        .search_bar {
+            height: 10%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dept_list_wrapper {
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dept_list {
+            display: flex;
+            flex-direction: column;
+            height: 40px;
+            background-color: lightblue;
+        }
+
+        .dept {
+            height: 40px;
+            width: 100%;
+            font-size: 15px;
+        }
+
+        .team {
+            height: 30px;
+            font-size: 15px;
+            padding: 0;
+            margin: 10px;
+        }
+
+        .chatting_btn {
+            margin-left: 150px;
+        }
+
+
+        /* 인물 목록 끝 */
+
+        /* 채팅방 버튼 */
+        .chat_btn {
+            border: 1px solid blue;
+            height: 100px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pl_btn,
+        .cr_btn {
+            border-radius: 25px;
+            --bs-btn-bg: #72abff;
+            --bs-btn-border-color: #72abff;
+            --bs-btn-hover-bg: #4992ff;
+            margin: 0 15px;
+        }
+
+        /* 채팅방 버튼 끝 */
+
+        /* 채팅방 */
+        .chatting {
+            /* display: none; */
+            display: block;
+        }
+
+        /* 채팅방 스타일 끝 */
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="../../../resources/css/sidebars.css" rel="stylesheet">
+
+    <!-- 놀이기구상세페이지 스타일 -->
+    <link href="../../../resources/css/facility/attractionDetail.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <main class="d-flex flex-nowrap">
+        <div class="flex-shrink-0 p-3" style="width: 280px;">
+            <a href="/"
+                class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+                <svg class="bi pe-none me-2" width="30" height="24">
+                    <use xlink:href="#bootstrap" />
+                </svg>
+                <span class="fs-5 fw-semibold">회사로고</span>
+            </a>
+            <ul class="list-unstyled ps-0">
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                        Home
+                    </button>
+                    <div class="collapse show" id="home-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                        Dashboard
+                    </button>
+                    <div class="collapse" id="dashboard-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                        Orders
+                    </button>
+                    <div class="collapse" id="orders-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="border-top my-3"></li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                        Account
+                    </button>
+                    <div class="collapse" id="account-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New...</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a>
+                            </li>
+                            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
+                                    out</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="b-example-divider b-example-vr"></div>
+
+        <!-- content 추가 -->
+        <div class="content p-5">
+
+            <div class="detail">
+
+                <h1 class="page-title">놀이기구 상세</h1>
+
+                <!-- detail form start -->
+                <form action="" id="detail-form">
+                    
+                    <div class="field-group">
+                        <label for="attraction-name" class="field-title">기구명</label><br>
+                        <input type="text" id="attraction-name" value="둘이 타다 한명 날아가도 모르는 롤러코스터" readonly>
+                    </div>
+                    
+                    <div class="field-group">
+                        <label for="attraction-location" class="field-title">위치</label><br>
+                        <input type="text" id="attraction-location" value="A zone" readonly>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="capacity-limit" class="field-title">수용가능 인원</label><br>
+                        <input type="text" id="capacity-limit" value="100" readonly>명
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-title">연령제한</label><br>
+                        
+                        <input type="radio" name="ageLimit" id="age-limit-n">
+                        <label class="form-check-label" for="age-limit-n">없음</label>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <input type="radio" name="ageLimit" id="age-limit-y" checked>
+                        <label class="form-check-label" for="age-limit-y">있음</label>
+
+                        <!-- if age-limit-y checked start -->
+                        <div class="age-limit">
+                            <input type="text" class="form-input" id="age-limit" placeholder="88">세 이상
+                        </div>
+                        <!-- if age-limit-y checked end -->
+                    </div>
+
+                    <div class="field-group">
+                        <label for="attraction-manage-emp" class="field-title">관리자</label><br>
+                        <input type="text" id="attraction-manage-emp" value="머스크 멜론">
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-title">운영상태</label><br>
+                        
+                        <input type="radio" name="status" id="status-y">
+                        <label class="form-check-label"  for="status-y">운영중</label>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <input type="radio" name="status" id="status-n" checked>
+                        <label class="form-check-label" for="status-n">운영중지</label><br>
+
+                        <!-- if status-n checked start -->
+                        <div class="status">
+                            <textarea type="text" class="form-input" id="status-n-reason">정말로 날라가버렸습니다.</textarea>
+                        </div>
+                        <!-- if age-limit-y checked end -->
+                    </div>
+
+                    <div class="field-group">
+                        <label for="attraction-intro" class="field-title">기구소개</label><br>
+                        <textarea name="" id="attraction-intro" cols="30" rows="10">꿈과 희망이 가득한 롤러코스터</textarea>
+                    </div>
+
+                    <!-- 작성자 or 관리자일 경우에만 보여질 요소들 -->
+                    <div class="button-group">
+                        <button type="button" class="btn btn-outline-secondary">목록가기</button>
+                        <button type="button" class="btn btn-outline-primary">수정하기</button>
+                        <button type="button" class="btn btn-outline-danger">삭제하기</button>
+                    </div>
+                
+                </form>
+                <!-- detail form end -->
+
+
+            </div>
+
+        </div>
+        <!-- content 끝 -->
+
+        <div class="msg_open_btn">
+            <i class="fa-solid fa-comment fa-5x"></i>
+        </div>
+        <div class="msg_close_btn">
+            <i class="fa-regular fa-circle-xmark fa-5x"></i>
+        </div>
+
+        <div class="msgbox">
+            <div class="chatrooms">
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="p-2 border-bottom" style="background-color: #eee;">
+                            <a href="#!" class="d-flex justify-content-between">
+                                <div class="d-flex flex-row">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp" alt="avatar"
+                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
+                                    <div class="pt-1">
+                                        <p class="fw-bold mb-0">John Doe</p>
+                                        <p class="small text-muted">Hello, Are you there?</p>
+                                    </div>
+                                </div>
+                                <div class="pt-1">
+                                    <p class="small text-muted mb-1">Just now</p>
+                                    <span class="badge bg-danger float-end">1</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="p-2 border-bottom">
+                            <a href="#!" class="d-flex justify-content-between">
+                                <div class="d-flex flex-row">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp" alt="avatar"
+                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
+                                    <div class="pt-1">
+                                        <p class="fw-bold mb-0">Danny Smith</p>
+                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
+                                    </div>
+                                </div>
+                                <div class="pt-1">
+                                    <p class="small text-muted mb-1">5 mins ago</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="p-2 border-bottom">
+                            <a href="#!" class="d-flex justify-content-between">
+                                <div class="d-flex flex-row">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-2.webp" alt="avatar"
+                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
+                                    <div class="pt-1">
+                                        <p class="fw-bold mb-0">Alex Steward</p>
+                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
+                                    </div>
+                                </div>
+                                <div class="pt-1">
+                                    <p class="small text-muted mb-1">Yesterday</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="p-2 border-bottom">
+                            <a href="#!" class="d-flex justify-content-between">
+                                <div class="d-flex flex-row">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-3.webp" alt="avatar"
+                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
+                                    <div class="pt-1">
+                                        <p class="fw-bold mb-0">Ashley Olsen</p>
+                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
+                                    </div>
+                                </div>
+                                <div class="pt-1">
+                                    <p class="small text-muted mb-1">Yesterday</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="p-2 border-bottom">
+                            <a href="#!" class="d-flex justify-content-between">
+                                <div class="d-flex flex-row">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-4.webp" alt="avatar"
+                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
+                                    <div class="pt-1">
+                                        <p class="fw-bold mb-0">Kate Moss</p>
+                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
+                                    </div>
+                                </div>
+                                <div class="pt-1">
+                                    <p class="small text-muted mb-1">Yesterday</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="p-2 border-bottom">
+                            <a href="#!" class="d-flex justify-content-between">
+                                <div class="d-flex flex-row">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp" alt="avatar"
+                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
+                                    <div class="pt-1">
+                                        <p class="fw-bold mb-0">Lara Croft</p>
+                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
+                                    </div>
+                                </div>
+                                <div class="pt-1">
+                                    <p class="small text-muted mb-1">Yesterday</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="p-2">
+                            <a href="#!" class="d-flex justify-content-between">
+                                <div class="d-flex flex-row">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
+                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
+                                    <div class="pt-1">
+                                        <p class="fw-bold mb-0">Brad Pitt</p>
+                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
+                                    </div>
+                                </div>
+                                <div class="pt-1">
+                                    <p class="small text-muted mb-1">5 mins ago</p>
+                                    <span class="text-muted float-end"><i class="fas fa-check"
+                                            aria-hidden="true"></i></span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="chatting">
+                <div class="chatting_history">
+                    <ul class="list-unstyled">
+                        <li class="d-flex justify-content-between mb-4">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
+                                class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between p-3">
+                                    <p class="fw-bold mb-0">Brad Pitt</p>
+                                    <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-0">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                        incididunt ut
+                                        labore et dolore magna aliqua.
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="d-flex justify-content-between mb-4">
+                            <div class="card w-100">
+                                <div class="card-header d-flex justify-content-between p-3">
+                                    <p class="fw-bold mb-0">Lara Croft</p>
+                                    <p class="text-muted small mb-0"><i class="far fa-clock"></i> 13 mins ago</p>
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-0">
+                                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+                                        doloremque
+                                        laudantium.
+                                    </p>
+                                </div>
+                            </div>
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp" alt="avatar"
+                                class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
+                        </li>
+                        <li class="d-flex justify-content-between mb-4">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
+                                class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between p-3">
+                                    <p class="fw-bold mb-0">Brad Pitt</p>
+                                    <p class="text-muted small mb-0"><i class="far fa-clock"></i> 10 mins ago</p>
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-0">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                        incididunt ut
+                                        labore et dolore magna aliqua.
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="message_input_box">
+                    <ul class="list-unstyled">
+                        <li class="bg-white mb-3">
+                            <div data-mdb-input-init="" class="form-outline" data-mdb-input-initialized="true">
+                                <textarea class="form-control" id="textAreaExample2" rows="4"></textarea>
+                                <label class="form-label" for="textAreaExample2"
+                                    style="margin-left: 0px;">Message</label>
+                                <div class="form-notch">
+                                    <div class="form-notch-leading" style="width: 9px;"></div>
+                                    <div class="form-notch-middle" style="width: 60px;"></div>
+                                    <div class="form-notch-trailing"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <button type="button" data-mdb-button-init="" data-mdb-ripple-init=""
+                            class="btn btn-info btn-rounded float-end active" data-mdb-button-initialized="true"
+                            style="" aria-pressed="true">Send</button>
+                    </ul>
+                </div>
+            </div>
+            <div class="people_list">
+                <div class="search_bar form-outline" data-mdb-input-init style="margin-top: 5px;">
+                    <input type="text" id="form12" class="form-control" />
+                    <label class="form-label" for="form12">인물 검색</label>
+                </div>
+                <div class="dept_list_wrapper">
+                    <div class="d-inline-flex gap-1 dept_list">
+                        <button class="btn btn-info dept" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#dept1" aria-expanded="false" data-mdb-ripple-init>
+                            경리부
+                        </button>
+                    </div>
+                    <div class="collapse multi-collapse" id="dept1">
+                        <div class="card card-body team">
+                            <button class="btn btn-outline-info team" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#team1" aria-expanded="false" data-mdb-ripple-init>
+                                경리1팀
+                            </button>
+                        </div>
+                        <div class="collapse multi-collapse" id="team1">
+                            <ul class="list-group list-group-light">
+                                <li class="list-group-item">부장 유재석 <button type="button"
+                                        class="btn btn-outline-success chatting_btn">채팅하기</button></li>
+                                <li class="list-group-item">부장 유재석 <button type="button"
+                                        class="btn btn-outline-success chatting_btn">채팅하기</button></li>
+                                <li class="list-group-item">부장 유재석 <button type="button"
+                                        class="btn btn-outline-success chatting_btn">채팅하기</button></li>
+                                <li class="list-group-item">부장 유재석 <button type="button"
+                                        class="btn btn-outline-success chatting_btn">채팅하기</button></li>
+                            </ul>
+                        </div>
+                        <div class="card card-body team">
+                            경리2팀
+                        </div>
+                    </div>
+                    <div class="d-inline-flex gap-1 dept_list">
+                        <button class="btn btn-info dept" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#dept2" aria-expanded="false" data-mdb-ripple-init>
+                            경리부
+                        </button>
+                    </div>
+                    <div class="collapse multi-collapse" id="dept2">
+                        <div class="card card-body team">
+                            <button class="btn btn-outline-info team" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#team2" aria-expanded="false" data-mdb-ripple-init>
+                                경리1팀
+                            </button>
+                        </div>
+                        <div class="collapse multi-collapse" id="team2">
+                            <ul class="list-group list-group-light">
+                                <li class="list-group-item">부장 유재석 <button type="button"
+                                        class="btn btn-outline-success chatting_btn">채팅하기</button></li>
+                                <li class="list-group-item">부장 유재석 <button type="button"
+                                        class="btn btn-outline-success chatting_btn">채팅하기</button></li>
+                                <li class="list-group-item">부장 유재석 <button type="button"
+                                        class="btn btn-outline-success chatting_btn">채팅하기</button></li>
+                                <li class="list-group-item">부장 유재석 <button type="button"
+                                        class="btn btn-outline-success chatting_btn">채팅하기</button></li>
+                            </ul>
+                        </div>
+                        <div class="card card-body team">
+                            경리2팀
+                        </div>
+                    </div>
+                    <div class="d-inline-flex gap-1 dept_list">
+                        <button class="btn btn-info dept" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#dept3" aria-expanded="false" data-mdb-ripple-init>
+                            경리부
+                        </button>
+                    </div>
+                    <div class="collapse multi-collapse" id="dept3">
+                        <div class="card card-body team">
+                            <button class="btn btn-outline-info team" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#team3" aria-expanded="false" data-mdb-ripple-init>
+                                경리1팀
+                            </button>
+                        </div>
+                        <div class="collapse multi-collapse" id="team3">
+                            <ul class="list-group list-group-light">
+                                <li class="list-group-item">부장 유재석 <button type="button"
+                                        class="btn btn-outline-success chatting_btn">채팅하기</button></li>
+                                <li class="list-group-item">부장 유재석 <button type="button"
+                                        class="btn btn-outline-success chatting_btn">채팅하기</button></li>
+                                <li class="list-group-item">부장 유재석 <button type="button"
+                                        class="btn btn-outline-success chatting_btn">채팅하기</button></li>
+                                <li class="list-group-item">부장 유재석 <button type="button"
+                                        class="btn btn-outline-success chatting_btn">채팅하기</button></li>
+                            </ul>
+                        </div>
+                        <div class="card card-body team">
+                            경리2팀
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat_btn">
+                <button type="button" class="btn btn-primary btn-round pl_btn">
+                    <i class="fa-solid fa-user fa-2x"></i>
+                </button>
+                <button type="button" class="btn btn-primary btn-round cr_btn">
+                    <i class="fa-solid fa-comments fa-2x"></i>
+                </button>
+            </div>
+        </div>
+
+    </main>
+    <script src="../../../resources/js/common/bootstrap.bundle.min.js"></script>
+    <script src="../../../resources/js/common/sidebars.js"></script>
+</body>
+<script>
+    $(document).ready(function () {
+        $(".msg_open_btn").on("click", function () {
+            $(".msg_close_btn").css("display", "block");
+            $(".msg_open_btn").css("display", "none");
+            $(".msgbox").css("display", "flex");
+        })
+
+        $(".msg_close_btn").on("click", function () {
+            $(".msg_open_btn").css("display", "block");
+            $(".msg_close_btn").css("display", "none");
+            $(".msgbox").css("display", "none");
+        })
+
+        $(".pl_btn").on("click", function () {
+            $(".people_list").css("display", "flex");
+            $(".chatrooms").css("display", "none");
+        })
+
+        $(".cr_btn").on("click", function () {
+            $(".chatrooms").css("display", "flex");
+            $(".people_list").css("display", "none");
+        })
+    })
+</script>
+
+</html>

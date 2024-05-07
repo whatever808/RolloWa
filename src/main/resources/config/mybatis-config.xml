@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+
+<configuration>
+
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="com.br.project.dto.board.BoardDto" 		alias="BoardDto" />
+		<typeAlias type="com.br.project.dto.common.AttachmentDto" 	alias="AttachmentDto" />
+		<typeAlias type="com.br.project.dto.common.GroupDto" 		alias="GroupDto" />
+		<typeAlias type="com.br.project.dto.pay.PayDto" 			alias="PayDto"/>
+		<typeAlias type="com.br.project.dto.pay.ExpenditureDto" 	alias="ExpenditureDto"/>
+		<typeAlias type="com.br.project.dto.calendar.CalendarDto" alias="calendarDto"/>
+	</typeAliases>
+	
+	
+	<mappers>
+		<mapper resource="mappers/board-mapper.xml" />
+		<mapper resource="mappers/attachment-mapper.xml" />
+		<mapper resource="mappers/department-mapper.xml" />
+		<mapper resource="mappers/member-mapper.xml" />
+		<mapper resource="mappers/pay-mapper.xml" />
+		<mapper resource="mappers/calendar-mapper.xml" />
+	</mappers>
+
+</configuration>

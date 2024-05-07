@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <script src="../assets/js/color-modes.js"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.122.0">
+    <title>메인페이지</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+
+    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
+    <script src="../../../resources/js/common/bootstrap.bundle.min.js"></script>
+    <script src="../../../resources/js/common/sidebars.js"></script>
+
+    <link href="/src/main/webapp/resources/css/mainPage/mainPage.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https: //fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .active .bi {
+            display: block !important;
+        }
+
+        /* content의 height와 height 값을 동일하게 */
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 1200px;
+        }
+
+        .content {
+            height: 1200px;
+            width: 1500px;
+        }
+
+        .left_con{
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            width: 1200px;
+            height: 1000px;
+            padding: 100px;
+            box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
+        }
+
+        #cen_bottom_search_center{height: 18%; display: flex; align-items: center; justify-content: space-around;}
+        #cen_bottom_search_center select{border: 1px solid white; font-weight: bold;}
+        #ccen_bot_table{height: 70%;}
+
+        #search_input{width: 20%; border-radius: 20px;}
+        #cen_bottom_pagging{width: 20%; display: flex; justify-content: center; align-items: center; margin: auto;}
+        table tr:hover{cursor: pointer;}
+
+
+
+
+
+         /*--------버튼 스타일----------*/
+         #my-button {
+            display: inline-block;
+          
+            font-size: 20px;
+            height: 40px;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            background-color: white;
+            border: 1px solid white;
+            color:black;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 60px;
+          
+        }
+
+
+        #btn_div{
+            padding-top: 40px;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #btn_div button{
+            margin: 30px;
+        }
+
+        tbody *{
+            font-family: "Jua", sans-serif;
+        }
+
+
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="../../resources/css/common/sidebars.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <main class="d-flex flex-nowrap">
+        <div class="flex-shrink-0 p-3" style="width: 280px;">
+            <a href="/"
+                class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+                <svg class="bi pe-none me-2" width="30" height="24">
+                    <use xlink:href="#bootstrap" />
+                </svg>
+                <span class="fs-5 fw-semibold">회사로고</span>
+            </a>
+            <ul class="list-unstyled ps-0">
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                        Home
+                    </button>
+                    <div class="collapse show" id="home-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                        Dashboard
+                    </button>
+                    <div class="collapse" id="dashboard-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                        Orders
+                    </button>
+                    <div class="collapse" id="orders-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="border-top my-3"></li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                        Account
+                    </button>
+                    <div class="collapse" id="account-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New...</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a>
+                            </li>
+                            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
+                                    out</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="b-example-divider b-example-vr"></div>
+
+        <!-- content 추가 -->
+        <div class="content p-4">
+            <!-- 프로필 영역 -->
+            <div class="informations">
+                <!-- informations left area start -->
+                <div class="left_con">
+                    <div id="cen_bottom_search_center">
+                       <div class="input-group mb-3">
+                            <select name="" id="select_search">
+                                <option value="">카테고리</option>
+                                <option value="">부서</option>
+                                <option value="">기안자</option>
+                                <option value="">문서</option>
+                                <option value="">상태</option>
+                            </select>
+                            <input type="text" id="search_input" class="form-control" placeholder="검색어를 입력하세요">
+                            <div class="input-group-append">
+                                <button type="submit" id="my-button">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
+                                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                  </svg>
+                                </button>
+                              </div>
+                        </div>
+                    </div>
+                    <div id="cen_bot_table">
+                        <table e class="table table-hover">
+                            <thead>
+                              <tr>
+                                <th>번호</th>
+                                    <th>문서</th>
+                                    <th>제목</th>
+                                    <th>기안자</th>
+                                    <th>부서</th>
+                                    <th>기안일</th>
+                                    <th>승인여부</th>
+                                    <th>상태</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>퇴직신청서</td>
+                                    <td>
+                                        퇴직
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">
+                                        <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>
+                                        </svg>
+                                    </td>
+                                    <td>홍길동</td>
+                                    <td>홍보</td>
+                                    <td>2024-11-11</td>
+                                    <td class="ing">진행중</td>
+                                    <td class="status">보통</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>퇴직신청서</td>
+                                    <td>퇴직 </td>
+                                    <td>홍길동</td>
+                                    <td>홍보</td>
+                                    <td>2024-11-11</td>
+                                    <td class="ing">반려</td>
+                                    <td class="status">긴급</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>퇴직신청서</td>
+                                    <td>퇴직 </td>
+                                    <td>홍길동</td>
+                                    <td>홍보</td>
+                                    <td>2024-11-11</td>
+                                    <td class="ing">반려</td>
+                                    <td class="status">긴급</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>퇴직신청서</td>
+                                    <td>퇴직 </td>
+                                    <td>홍길동</td>
+                                    <td>홍보</td>
+                                    <td>2024-11-11</td>
+                                    <td class="ing">반려</td>
+                                    <td class="status">긴급</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>퇴직신청서</td>
+                                    <td>퇴직 </td>
+                                    <td>홍길동</td>
+                                    <td>홍보</td>
+                                    <td>2024-11-11</td>
+                                    <td class="ing">진행중</td>
+                                    <td class="status">보통</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>퇴직신청서</td>
+                                    <td>퇴직 </td>
+                                    <td>홍길동</td>
+                                    <td>홍보</td>
+                                    <td>2024-11-11</td>
+                                    <td class="ing">진행중</td>
+                                    <td class="status">보통</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>퇴직신청서</td>
+                                    <td>퇴직 </td>
+                                    <td>홍길동</td>
+                                    <td>홍보</td>
+                                    <td>2024-11-11</td>
+                                    <td class="ing">진행중</td>
+                                    <td class="status">보통</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>퇴직신청서</td>
+                                    <td>퇴직 </td>
+                                    <td>홍길동</td>
+                                    <td>홍보</td>
+                                    <td>2024-11-11</td>
+                                    <td class="ing">진행중</td>
+                                    <td class="status">보통</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>퇴직신청서</td>
+                                    <td>퇴직 </td>
+                                    <td>홍길동</td>
+                                    <td>홍보</td>
+                                    <td>2024-11-11</td>
+                                    <td class="ing">진행중</td>
+                                    <td class="status">보통</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>퇴직신청서</td>
+                                    <td>퇴직 </td>
+                                    <td>홍길동</td>
+                                    <td>홍보</td>
+                                    <td>2024-11-11</td>
+                                    <td class="ing">진행중</td>
+                                    <td class="status">보통</td>
+                                </tr>
+                            </tbody>
+                          </table>
+                        
+                    </div>
+                    <div id="cen_bottom_pagging">
+                        <div id="pagin_form">
+                            <ul class="pagination">
+                                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item active"><a class="page-link" href="#" >2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                              </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function(){
+                $(".ing").each(function(){
+                    var text = $(this).text();
+                    if(text == '진행중'){
+                        $(this).css("color", "green");
+                    } else if(text == '반려'){
+                        $(this).css("color", "orange");
+                    } else if(text == '승인완료'){
+                        $(this).css("color", "red");
+                    }
+                });
+
+                $(".status").each(function(){
+                    var text = $(this).text();
+                    if(text == '긴급'){
+                        $(this).css("color", "red");
+                    } else if(text == '보통'){
+                        $(this).css("color", "rgb(49, 106, 153)");
+                    } 
+                });
+
+            });
+        </script>
+
+       
+    </main>
+    <script src="../../resources/js/common/bootstrap.bundle.min.js"></script>
+
+    <script src="../../resources/js/common/sidebars.js"></script>
+</body>
+
+</html>

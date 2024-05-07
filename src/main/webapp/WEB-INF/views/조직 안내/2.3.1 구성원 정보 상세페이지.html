@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- animate -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!-- bootstrap -->
+    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
+
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
+
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+
+    <!-- Google Fonts Jua -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- css -->
+    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../resources/css/common.css">
+    <link rel="stylesheet" href="../../../resources/css/common/mdb.min.css" />
+
+    <!-- sidebar -->
+    <script src="../../../resources/js/common/sidebars.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.sidebar').load('../common/sidebar.html');
+        });
+    </script>
+
+    <style>
+    .content{
+        margin-top: 20px;
+        display: flex;
+    }
+    .sidebar{
+        width: 300px;
+        /* background-color: orange; */        
+    }
+    .main_content{
+        /* background-color: yellowgreen; */
+        padding: 0 20px;
+        width: 100%;
+    }
+
+    /* mypage 추가 */
+    .content_2 {
+            height: 1200px;
+            width: 1000px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            border: 1px solid lightgray;
+            border-radius: 10px;
+        }
+
+        .profile {
+            height: 30%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .info {
+            height: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .profile_box {
+            width: 80%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .profile_img {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .user_info {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .dp_info,
+        .sd_info,
+        .co_info {
+            height: 35%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .img_wrapper {
+            height: 70%;
+        }
+
+        #profileImg {
+            height: 280px;
+            width: 280px;
+            border: 1px solid lightgray;
+            border-radius: 50%;
+        }
+
+        .info_wrapper {
+            height: 20%;
+        }
+
+        .btn_wrapper {
+            height: 10%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center !important;
+        }
+
+        .btn {
+            margin: 3px;
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="content">
+
+        <!-- 사이드바 영역 -->
+        <div class="sidebar"></div>
+        
+        <div class="main_content">
+            <h2 class="jua-regular">구성원 정보 수정</h2>
+            <hr>
+
+            <!-- 메인 영역 start -->
+            
+            <!-- content 추가 -->
+            <div class="content_2">
+                <div class="profile">
+                    <div class="profile_box">
+                        <div class="profile_img">
+                            <div class="img_wrapper">
+                                <img id="profileImg" src="" onclick="$('#profileImgFile').click();">
+                                <input type="file" id="profileImgFile" class="file" style="display:none;" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="user_info">
+                            <div class="dp_info">
+                                <div class="info_wrapper">
+                                    <span>직급</span>
+                                    <span>소속부서</span>
+                                </div>
+                            </div>
+                            <div class="sd_info">
+                                <div class="info_wrapper">
+                                    <span>근속일수</span>
+                                </div>
+                            </div>
+                            <div class="co_info">
+                                <div class="info_wrapper">
+                                    <span>출근시간</span> | <span>퇴근시간</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info">
+                    <form action="">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>아이디 : </th>
+                                <td colspan="2"><input class="form-control" type="text" name="" value=""
+                                        placeholder="기존 아이디" readonly></td>
+                            </tr>
+                            <tr>
+                                <th>이름 : </th>
+                                <td colspan="2"><input class="form-control" type="text" name="" value="" placeholder="이름"
+                                        required></td>
+                            </tr>
+                            <tr>
+                                <th>핸드폰 번호 : </th>
+                                <td><input class="form-control" type="text" name="" value="" placeholder="전화번호"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>우편번호 : </th>
+                                <td><input class="form-control" type="text" name="" value=""></td>
+                                <td><button type="button" class="btn btn-sm btn-outline-primary"><h6>주소 찾기</h6></button></td>
+                            </tr>
+                            <tr>
+                                <th>주소 : </th>
+                                <td colspan="2"><input class="form-control" type="text" name="" value=""></td>
+                            </tr>
+                            <tr>
+                                <th>상세주소 : </th>
+                                <td colspan="2"><input class="form-control" type="text" name="" value=""></td>
+                            </tr>
+                            <tr>
+                                <th>이메일 : </th>
+                                <td colspan="2"><input class="form-control" type="text" name="" value=""></td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    월급 수령계좌 :
+                                </th>
+                                <td>
+                                    <select class="form-select" aria-label="Default select example">
+                                                                    <option selected>은행</option>
+                                                                    <option value="1">국민은행</option>
+                                                                    <option value="2">신한은행</option>
+                                                                    <option value="3">우리은행</option>
+                                                                    </select>
+                                </td>
+                                <td>
+                                    <input class="form-control" type="text" name="" value="" placeholder="계좌번호">
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="btn_wrapper">
+                            <button type="reset" class="btn btn-outline-success"><h6>되돌리기</h6></button>
+                            <button type="submit" class="btn btn-outline-primary"><h6>개인정보 변경</h6></button>
+                            <button type="button" class="btn btn-outline-warning"><h6>비밀번호 변경</h6></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- content 끝 -->
+            
+
+            <!-- 메인 영역 end -->
+
+        </div>
+    </div>
+
+</body>
+</html>

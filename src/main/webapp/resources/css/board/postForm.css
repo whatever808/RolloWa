@@ -1,0 +1,48 @@
+.post-form{
+    padding: 30px;
+    padding-bottom: 100px;
+    box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
+    border-radius: 10px;
+}
+
+/* -------------- page title -------------- */
+.page-title{
+    margin-bottom: 50px;
+    font-weight: bold;
+    font-family: "Jua";
+}
+
+/* ------------- post form -------------*/
+.field-group{
+    margin-bottom: 50px;
+}
+.field-title{
+    font-weight: bold;
+    font-size: large;
+    margin-bottom: 10px;
+}
+
+#post-form select{
+    display: inline-block;
+    width: 250px;
+    margin-right: 50px;
+}
+
+#board-title, #board-attachment{
+    width: 1000px;
+}
+
+/* ckeditor style */
+.ck.ck-editor{
+    width: 800px;
+}
+.ck-editor__editable {
+    min-height: 300px;
+}
+
+.button-group{
+    margin-left: 650px;
+}
+.button-group>button{
+    margin-left: 20px;
+}

@@ -1,0 +1,54 @@
+
+.page-title{
+    margin-bottom: 50px;
+    font-weight: bold;
+    font-family: "Jua";
+}
+@charset "UTF-8";
+
+/* ------------- board category ------------- */
+.board-category{
+    width: 200px;
+}
+.department-category{
+		display: inline-block;
+		width: 200px;
+}
+
+/* ------------- search form ------------- */
+#search-form{
+    float: right;
+}
+    display: inline-block;
+.search-condition{
+    display: inline-block;
+    width: 100px;
+}
+#search-keyword{
+    display: inline-block;
+    width: 350px;
+}
+#search-form button{
+    margin-top: -5px;
+}
+
+/* ------------- board list ------------- */
+.board-list{
+    margin-top: 150px;
+    text-align: center;
+}
+.board-list tbody>tr>.board-title{
+    cursor: pointer;
+}
+.bi-star:hover{ 
+    cursor: pointer; 
+}
+.board-writer-profile{
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+}
+
+.board-list-pagination{
+    margin-top: 60px;
+}

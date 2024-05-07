@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- 애니메이션  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <!-- 부트스트랩 -->
+    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="../../../resources/js/common/bootstrap.bundle.min.js"></script>
+    
+    <!-- 사이드바 -->
+    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
+    <script src="../../../resources/js/common/sidebars.js"></script>
+
+    <!-- 제이쿼리 -->
+    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- 모달 관련 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.1/css/iziModal.min.css" integrity="sha512-3c5WiuZUnVWCQGwVBf8XFg/4BKx48Xthd9nXi62YK0xnf39Oc2FV43lIEIdK50W+tfnw2lcVThJKmEAOoQG84Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.1/js/iziModal.min.js" integrity="sha512-lR/2z/m/AunQdfBTSR8gp9bwkrjwMq1cP0BYRIZu8zd4ycLcpRYJopB+WsBGPDjlkJUwC6VHCmuAXwwPHlacww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+    <!-- 체크박스 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
+
+
+    <!-- 사이드 바 스타일 -->
+    <style>
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: hidden;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        .active .bi {
+            display: block !important;
+        }
+        /* content의 height와 height 값을 동일하게 */
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 1200px;
+            background-color: rgb(255,247,208);
+        }
+        .content {
+            height: 1200px;
+            width: 1500px;
+        }
+    </style>
+    <style>
+        /* *{border: 1px solid black;} */
+        .border0{
+            border: 0px;
+        }
+        .out-line{
+            min-height: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            box-sizing: border-box;
+        }
+        .content-area{
+            width: 75%;
+            max-width: 1120px;
+            padding: 30px;
+        }
+        .radious10{
+            border-radius: 10px;
+        }
+        .line-show{
+            box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
+        }
+        .font-size25{
+            font-size: 25px;
+        }
+        .font-size20{
+            font-size: 20px;
+        }
+        .search-date{
+            display: flex;
+            gap: 5%;
+        }
+        .size-fit{
+            display: contents;
+        }
+        .search-list{
+            width: 100%;
+            padding: 10px;
+        }
+        .search-list *{
+            /* padding: 5px; */
+            text-align: center;
+        }
+        tbody input{
+            height: 25px;
+            width: 100%;
+        }
+        .inner-line{
+            padding: 30px;
+        }
+        .inner-line>div{
+            margin-left: 10px;
+        }
+    
+        .date-area{
+            width: 30%;
+            text-align: center;
+        }
+    </style>
+    <!-- input, textarea 스타일 -->
+    <style>
+        input, textarea {
+            font-size: 15px;
+            color: #222222;
+            width: fit-content;
+            border: none;
+            border-bottom: solid rgb(170, 170, 170) 1px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            position: relative;
+            background: none;
+            z-index: 5;
+        }
+        input:focus, textarea:focus { 
+            outline: none;
+            border-bottom: 2px solid rgb(0, 0, 0);  
+        }
+        .myfile{
+            display: flex;
+        }
+        .myfile>div{
+            border-bottom: 1px solid rgb(170, 170, 170); 
+        }
+        .jua-regular {
+            font-family: "Jua", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+        /* .pretty .state label:after, .pretty .state label:before{
+            left: 0!important;
+            top: 0!important;
+            display: block;
+        } */
+    </style>
+</head>
+<body>
+    <div class="out-line">
+        <!-- 메뉴판 -->
+        <main class="d-flex flex-nowrap">
+            <div class="flex-shrink-0 p-3" style="width: 280px;">
+                <a href="/"
+                    class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+                    <svg class="bi pe-none me-2" width="30" height="24">
+                        <use xlink:href="#bootstrap" />
+                    </svg>
+                    <span class="fs-5 fw-semibold">회사로고</span>
+                </a>
+                <ul class="list-unstyled ps-0">
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                            Home
+                        </button>
+                        <div class="collapse show" id="home-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                            Dashboard
+                        </button>
+                        <div class="collapse" id="dashboard-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                            Orders
+                        </button>
+                        <div class="collapse" id="orders-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="border-top my-3"></li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                            Account
+                        </button>
+                        <div class="collapse" id="account-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">New...</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a>
+                                </li>
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
+                                        out</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </main>     
+        <div class="b-example-divider b-example-vr"></div>
+        <!-- 컨텐츠 영역 -->
+        <div class="content-area">
+            <fieldset class="line-show radious10 inner-line">
+                <legend><h1 class="jua-regular animate__animated animate__bounce">회사 일정</h1></legend>
+                <br><br>
+                <div class="search-date">
+                    <div class="font-size25 jua-regular">날짜</div>
+                    <div class="size-fit"><input type="date" id="currentDate1" class="date-area jua-regular"></div>
+                    <div>~</div>
+                    <div class="size-fit"><input type="date" id="currentDate2" class="date-area jua-regular"></div>
+                </div>
+                <br>
+                <div>
+                    <table class="search-list table line-shadow table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="font-size20 jua-regular">No</th>
+                                <th class="font-size20 jua-regular">카테고리</th>
+                                <th class="font-size20 jua-regular">날짜</th>
+                                <th class="font-size20 jua-regular">check</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> 1 </td>
+                                <td> 이벤트 </td>
+                                <td> 2024-04-24 ~ 2024-04-27 </td>
+                                <td>
+                                    <div class="pretty p-icon p-curve p-thick p-jelly">
+                                        <input type="checkbox" />
+                                        <div class="state p-danger">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> 1 </td>
+                                <td> 이벤트 </td>
+                                <td> 2024-04-24 ~ 2024-04-27 </td>
+                                <td>
+                                    <div class="pretty p-icon p-curve p-thick p-jelly">
+                                        <input type="checkbox" />
+                                        <div class="state p-danger">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> 1 </td>
+                                <td> 이벤트 </td>
+                                <td> 2024-04-24 ~ 2024-04-27 </td>
+                                <td>
+                                    <div class="pretty p-icon p-curve p-thick p-jelly">
+                                        <input type="checkbox" />
+                                        <div class="state p-danger">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> 1 </td>
+                                <td> 이벤트 </td>
+                                <td> 2024-04-24 ~ 2024-04-27 </td>
+                                <td>
+                                    <div class="pretty p-icon p-curve p-thick p-jelly">
+                                        <input type="checkbox" />
+                                        <div class="state p-danger">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> 1 </td>
+                                <td> 이벤트 </td>
+                                <td> 2024-04-24 ~ 2024-04-27 </td>
+                                <td>
+                                    <div class="pretty p-icon p-curve p-thick p-jelly">
+                                        <input type="checkbox" />
+                                        <div class="state p-danger">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <br><br>
+                <!-- 페이징 바 -->
+                <style>
+                    #pagnation-outline {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 100%;
+                        height: 30px;
+                        margin: 15px auto;
+                    }
+                    .pagnation-div {
+                        width: 20px;
+                        height: 20px;
+                        float: left;
+                        margin-right: 20px;
+                        /* background-color: cornflowerblue; */
+                        border: 3px solid rgb(195, 194, 194);
+                        border-radius: 20px;
+                        cursor: pointer;
+                        transition: 0.3s ease width;
+                    }
+                    .pagnation-div:last-child {
+                        margin-right: 0;
+                    }
+                    .pagnation-div.active {
+                        width: 60px;
+                        cursor: auto;
+                    }
+                </style>
+                <script>
+                    $(function () {
+                        var button = $(".pagnation-div");
+
+                        function switchToNext() {
+                            var _this = $(this);
+
+                            if (_this.hasClass("active")) return false;
+                            else {
+                            $(".pagnation-div.active").removeClass("active");
+                            _this.addClass("active");
+                            }
+                        }
+
+                        button.on("click", switchToNext);
+                    });
+                </script>
+                <div id="pagnation-outline">
+                    <div class="pagnation-div active"></div>
+                    <div class="pagnation-div"></div>
+                    <div class="pagnation-div"></div>
+                    <div class="pagnation-div"></div>
+                    <div class="pagnation-div"></div>
+                </div>
+                <div align="end"><button class="btn btn-outline-danger">삭제</button></div>
+            </fieldset>
+
+            <script>
+                const offset = new Date().getTimezoneOffset() * 60000;
+                const today = new Date(Date.now() - offset);
+                let dateData = today.toISOString().slice(0, 10);
+                document.getElementById('currentDate1').value = dateData;
+                
+                today.setDate(today.getDate() + 1);
+                today.setTime(today.getTime() + 12*1000*60*60);
+
+                dateData0 = today.toISOString().slice(0, 10);
+                console.log(dateData0);
+                document.getElementById('currentDate2').value = dateData0;
+            </script>
+        </div>
+    </div>
+</body>
+</html>

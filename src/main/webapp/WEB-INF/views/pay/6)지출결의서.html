@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <script src="../assets/js/color-modes.js"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.122.0">
+    <title>메인페이지</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+
+    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
+    <script src="../../../resources/js/common/bootstrap.bundle.min.js"></script>
+    <script src="../../../resources/js/common/sidebars.js"></script>
+
+    <link href="/src/main/webapp/resources/css/mainPage/mainPage.css" rel="stylesheet">
+    
+    <style>
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .active .bi {
+            display: block !important;
+        }
+
+        /* content의 height와 height 값을 동일하게 */
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 1200px;
+        }
+
+        .content {
+            height: 1200px;
+            width: 1500px;
+        }
+
+
+        /*----- 결재공통 스타일------------*/
+        .left_con{
+            display: flex;
+            flex-direction: column;
+            margin: auto;
+           
+        }
+        .left_con h3{font-size: 50px; text-align: center;}
+        .left_con>div{margin: 20px; padding-bottom: 20px;}
+        
+        .sing_name{
+            height: 100px;
+            width: 130px;
+            border: 1px solid black;
+        }
+        #sign_table{
+            text-align: center;
+            width: 500px;
+            display: flex;
+            justify-content: end;
+            align-items: end;
+            padding-top: 50px;
+            height: 181px;
+            border: 1px solid black;
+            margin-left: 40px;
+        }
+        #sign_top{
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+
+        }
+
+        #sign_div_left{
+            padding-right: 270px;
+        }
+
+
+        #sign_left{width: 310px; border: 1px solid black;}
+        #sign_left tr{height: 50px; border: 1px solid black;}
+        #sign_table tr>th{width: 50px; border: 1px solid black;}
+        table th{background-color: rgba(192, 192, 192, 0.548); border: 1px solid black;}
+        table td{background-color: rgba(250, 250, 250, 0.226);border: 1px solid black;}
+        table input{background-color: rgba(250, 250, 250, 0.226);border: 1px solid black;}
+        table textarea{background-color: rgba(250, 250, 250, 0.226);border: 1px solid black;}
+
+        /*--------------------------------------*/
+
+        .table_middle{
+           margin: auto;
+           width: 1130px;
+           text-align: center;
+           height: auto;
+        }
+        .table_middle>table{width: 100%; font-size: 20px;}
+        .table_middle tr{height: 40px;}
+        .table_middle input{height: 40px; width: 100%;}
+        .table_middle textarea{width: 100%; height: 100%; resize: none;}
+        .table_middle select{display: flex; justify-content: left;}
+
+        #date_td>input{width: 200px;}
+
+        #plus_btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            background-color: #000000;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #plus_btn:hover {
+            background-color: #696969b4;
+        }
+        #del_btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            background-color: #000000;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #del_btn:hover {
+            background-color: #696969b4;
+        }
+        #mid_btn{ width: 1100px; display: flex; align-items: center; justify-content: right;}
+        #mid_btn button{margin-left: 20px; margin: 10px;}
+
+        .num{width: 200px;}
+
+        /*-----------------*/
+        /*--------버튼 스타일----------*/
+        
+        #btn_div{
+            padding-top: 40px;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #btn_div button{
+            margin: 30px;
+        }
+        
+        /*----------------------------*/
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="../../resources/css/common/sidebars.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <main class="d-flex flex-nowrap">
+        <div class="flex-shrink-0 p-3" style="width: 280px;">
+            <a href="/"
+                class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+                <svg class="bi pe-none me-2" width="30" height="24">
+                    <use xlink:href="#bootstrap" />
+                </svg>
+                <span class="fs-5 fw-semibold">회사로고</span>
+            </a>
+            <ul class="list-unstyled ps-0">
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                        Home
+                    </button>
+                    <div class="collapse show" id="home-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                        Dashboard
+                    </button>
+                    <div class="collapse" id="dashboard-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                        Orders
+                    </button>
+                    <div class="collapse" id="orders-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="border-top my-3"></li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                        Account
+                    </button>
+                    <div class="collapse" id="account-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New...</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a>
+                            </li>
+                            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
+                                    out</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="b-example-divider b-example-vr"></div>
+
+        <!-- content 추가 -->
+        <div class="content p-4">
+            <!-- 프로필 영역 -->
+            <div class="informations">
+                <!-- informations left area start -->
+                <div class="left_con">
+                    <div><h3>지출결의서</h3></div>
+                    <form action="">
+                        <div id="sign_top">
+                            <div id="sign_div_left">
+                                <table border="1" id="sign_left">
+                                    <tr>
+                                        <th>문서번호</th>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <th>부  서</th>
+                                        <td>운영팀</td>
+                                    </tr>
+                                    <tr>
+                                        <th>기안일</th>
+                                        <td><input type="date"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>기안자</th>
+                                        <td>홍길동</td>
+                                    </tr>
+                                    <tr>
+                                        <th>상태</th>
+                                        <td>
+                                            <select name="" id="">
+                                                <option value="">보통</option>
+                                                <option value="">긴급</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div>
+                                <table border="1" id="sign_table">
+                                    <tr>
+                                        <th rowspan="3">승 <br> 인</th>
+                                        <td>김사원이름</td>
+                                        <td>박부장이름</td>
+                                        <td>최사장이름</td>
+                                        <th rowspan="3">결 <br> 재</th>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="sing_name"><div>김사원도장</div></td>
+                                        <td class="sing_name"><div>박부장도장</div></td>
+                                        <td class="sing_name"><div>최사장도장</div></td>
+                                        <td class="sing_name"><div>결재자도장</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>김사원승인일자</td>
+                                        <td>박부장승인일자</td>
+                                        <td>최사장승인일자</td>
+                                        <td>결재일자</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="mid_btn">
+                            <button id="plus_btn">추가</button>
+                            <button id="del_btn">삭제</button>
+                        </div>
+                        <div class="table_middle">
+                            <table border="1">
+                                <tr>
+                                    <th>거래처</th>
+                                    <th>사용내역 및 용도</th>
+                                    <th>금액</th>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" value="ㅇㅇ마트"></td>
+                                    <td><input type="text" value="[사업진행비] 1월 23일 1차 집담회 다과비 구입"></td>
+                                    <td class="num"><input type="text" value="1500000"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" value="ㅇㅇ마트"></td>
+                                    <td><input type="text" value="[사업진행비] 1월 23일 1차 집담회 다과비 구입"></td>
+                                    <td class="num"><input type="text" value="1500000"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" value="ㅇㅇ마트"></td>
+                                    <td><input type="text" value="[사업진행비] 1월 23일 1차 집담회 다과비 구입"></td>
+                                    <td class="num"><input type="text" value="1500000"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" value="ㅇㅇ마트"></td>
+                                    <td><input type="text" value="[사업진행비] 1월 23일 1차 집담회 다과비 구입"></td>
+                                    <td class="num"><input type="text" value="1500000"></td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">합계</th>
+                                    <td>150,000</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">부가가치세</th>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">총 지출 합계</th>
+                                    <td>150,000</td>
+                                </tr>
+                                <tr>
+                                    <th>파일첨부</th>
+                                    <td colspan="2"><input type="file"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <!--버튼 영역-->
+                        <div id="btn_div">
+                            <button type="button" class="btn btn-primary" onclick="submitbtn();">제출</button>
+                            <button type="button" class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
+                            <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
+                        </div>
+                        <!------------>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function submitbtn(){
+                let sbtn = confirm('정말로 제출하시겠습니까?');
+                if(sbtn == true){
+                    alert("제출이 완료되었습니다.");
+                }
+            }
+
+            $("#reset_btn").click(function(){
+                if(confirm("정말로 초기화 하시겠습니까?") == true){
+                    return;
+                }else{
+                    return false;
+                }
+            })
+        </script>
+        <!-- content 끝 -->
+    </main>
+    <script src="../../resources/js/common/bootstrap.bundle.min.js"></script>
+
+    <script src="../../resources/js/common/sidebars.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
+    <!--
+        <script src="../../../resources/js/common/bootstrap.bundle.min.js"></script>
+    -->
+    <script src="../../../resources/js/common/sidebars.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.sidebar').load('../common/sidebar.html');
+        });
+    </script>
+    
+    <style>
+        .content{
+            margin-top: 20px;
+            display: flex;
+        }
+        .sidebar{
+            width: 300px;
+            /* background-color: orange; */
+            
+        }
+        .main_content{
+            /* background-color: yellowgreen; */
+            padding: 0 20px;
+            width: 100%;
+        }
+        
+        .search_menu{
+            justify-content: center;
+            width: 100%;
+        }
+        .search_menu_tr th{
+            background-color: rgb(118, 207, 255) !important;
+            text-align: center;
+            width: 20%;
+            vertical-align: middle !important;
+        }
+        .search_menu_tr td{
+            width: 200px;
+            text-align: center;
+            /* background-color: red !important; */
+        }
+        .search_menu_tr td input{
+            width: 100%;
+        }
+        .btn_center{
+            text-align: center;
+            padding-top: 30px !important;
+        }
+       
+        /* 직원 정보 테이블 */
+        .employee_count {
+            margin-left: 10px;
+        }
+        .employee_info {
+            text-align: center;
+        }
+        .employee_info th{
+            background-color: lightgray !important;
+        }
+        .employee_info td{
+            vertical-align: middle !important;
+        }
+        .employee_info td img{
+            border: 1px solid gainsboro;
+            border-radius: 100%;
+            width: 40px;
+            margin: -5px;
+        }
+    </style>
+</head>
+<body>
+
+        <div class="content">
+            <!-- 사이드바 영역 -->
+            <div class="sidebar"></div>
+            
+            <!-- 메인 영역 -->
+            <div class="main_content">
+                <h2 class="jua-regular">직원 검색</h2>
+                <hr>
+                
+                <table class="table search_menu">
+                    <tr class="search_menu_tr">
+                        <th>부서명</th>
+                        <td>
+                            <select name="department" id="department" class="form-control">
+                                <option value="">전체 부서</option>
+                                <option value="">부서 1</option>
+                                <option value="">부서 2</option>
+                                <option value="">부서 3</option>
+                            </select>
+                        </td>
+                        <th>전화번호</th>
+                        <td>
+                            <input type="text" class="form-control">
+                        </td>
+                    </tr>
+                    <tr class="search_menu_tr">
+                        <th>팀명</th>
+                        <td>
+                            <select name="department" id="department" class="form-control">
+                                <option value="">전체 팀</option>
+                                <option value="">1팀</option>
+                                <option value="">2팀</option>
+                                <option value="">3팀</option>
+                            </select>
+                        </td>
+                        <th>이름</th>
+                        <td>
+                            <input type="text" class="form-control">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="btn_center" colspan="4">
+                            <button class="btn btn-outline-primary" type="reset">초기화</button>
+                            <button class="btn btn-primary">검색</button>
+                        </td>
+                    </tr>
+                </table>
+                
+
+                <!-- 전체 인원수 -->
+                <h6 class="employee_count">전체 50명</h6>
+
+                <!-- 직원 정보 테이블 start-->
+                <table class="table employee_info">
+                    <tr>
+                        <th>프로필 사진</th>
+                        <th>성명</th>
+                        <th>부서</th>
+                        <th>팀명</th>
+                        <th>직급</th>
+                        <th>전화번호</th>
+                        <th>이메일</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="../../../resources/images/defaultProfile.png" class="profile_img">
+                        </td>
+                        <td>고미옥</td>
+                        <td>총무부</td>
+                        <td>팀명</td>
+                        <td>대표이사</td>
+                        <td>010-2222-3333</td>
+                        <td>user01@gamil.com</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <img src="../../../resources/images/defaultProfile.png" class="profile_img">
+                        </td>
+                        <td>고미옥</td>
+                        <td>총무부</td>
+                        <td>팀명</td>
+                        <td>대표이사</td>
+                        <td>010-2222-3333</td>
+                        <td>user01@gamil.com</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="../../../resources/images/defaultProfile.png" class="profile_img">
+                        </td>
+                        <td>고미옥</td>
+                        <td>총무부</td>
+                        <td>팀명</td>
+                        <td>대표이사</td>
+                        <td>010-2222-3333</td>
+                        <td>user01@gamil.com</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="../../../resources/images/defaultProfile.png" class="profile_img">
+                        </td>
+                        <td>고미옥</td>
+                        <td>총무부</td>
+                        <td>팀명</td>
+                        <td>대표이사</td>
+                        <td>010-2222-3333</td>
+                        <td>user01@gamil.com</td>
+                    </tr>
+                </table>
+                <!-- 직원 테이블 end -->
+
+                <!--페이징 처리 start-->
+                <div class="container">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                        <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
+                    </ul>
+                </div>
+                <!--페이징 처리 end-->
+
+            </div>
+            <!-- 메인 영역 end-->
+
+
+        </div>
+
+</body>
+</html>

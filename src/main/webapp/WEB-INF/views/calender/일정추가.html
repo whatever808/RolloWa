@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- 애니메이션  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <!-- 부트스트랩 -->
+    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="../../../resources/js/common/bootstrap.bundle.min.js"></script>
+    
+    <!-- 사이드바 -->
+    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
+    <script src="../../../resources/js/common/sidebars.js"></script>
+
+    <!-- 제이쿼리 -->
+    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- 모달 관련 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.1/css/iziModal.min.css" integrity="sha512-3c5WiuZUnVWCQGwVBf8XFg/4BKx48Xthd9nXi62YK0xnf39Oc2FV43lIEIdK50W+tfnw2lcVThJKmEAOoQG84Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.1/js/iziModal.min.js" integrity="sha512-lR/2z/m/AunQdfBTSR8gp9bwkrjwMq1cP0BYRIZu8zd4ycLcpRYJopB+WsBGPDjlkJUwC6VHCmuAXwwPHlacww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    
+    <!-- 체크박스 관련 스타일 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
+
+
+    <!-- 사이드 바 스타일 -->
+    <style>
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: hidden;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        .active .bi {
+            display: block !important;
+        }
+        /* content의 height와 height 값을 동일하게 */
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 1200px;
+            background-color: rgb(255,247,208);
+        }
+        .content {
+            height: 1200px;
+            width: 1500px;
+            padding: 30px;
+        }
+    </style>
+    <style>
+        /* *{border: 1px solid black;} */
+        .out-line{
+            min-height: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            box-sizing: border-box;
+        }
+        .content-area{
+            width: 75%;
+            max-width: 1120px;
+            padding: 30px;
+        }
+        .clander-add-area{
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px;
+        }
+        .clander-add-area>div{
+            margin-left: 30px;
+        }
+        .radious10{
+            border-radius: 10px;
+        }
+        .line-shadow{
+            box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
+        }
+        .line-cirecle-sm{
+            border-radius: 100%;
+            height: fit-content;
+            margin-left: 30px;
+            margin-bottom: 10px;
+            padding: 5px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .display-item-center{
+            justify-content: center;
+            align-items: center;
+        }
+        .Category, .Co-worker{
+            display:  -webkit-box;
+            overflow-y: hidden;
+        }
+        #color-style {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 50px;
+            height: 50px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        #color-style::-webkit-color-swatch {
+            border-radius: 10px;
+            border: none;
+        }
+        #color-style::-moz-color-swatch {
+            border-radius: 10px;
+            border: none;
+        }
+        .date-time-area{
+            display: flex;
+            justify-content: space-evenly;
+            text-align: center;
+            width: 80%;
+        }
+        .date-area, .time-area{
+            width: 80%;
+            text-align: center;
+        }
+        .date-area{
+            height: 30px;
+        }
+        .time-area{
+            height: 50px;
+        }
+        .Title>input, .Place>input{
+            width: 80%;
+            height: 25px;
+            padding: 10px;
+        }
+        .enroll{
+            text-align: end;
+        }
+        .font-size25{
+            font-size: 25px;
+        }
+        .font-size20{
+            font-size: 20px;
+        }
+        .marginR30{
+            margin-right: 30px;
+        }
+        .content-text-area{
+            width: 80%;
+            min-height: 150px;
+        }
+        textarea, input{
+            padding: 10px;
+        }
+        .inner-line{
+            padding: 30px;
+        }
+        .inner-line>div, .inner-line>label{ 
+            margin-left: 30px;
+        }
+    </style>
+    <!-- input, textarea 스타일 -->
+    <style>
+        input, textarea {
+            font-size: 15px;
+            color: #222222;
+            width: fit-content;
+            border: none;
+            border-bottom: solid rgb(170, 170, 170) 1px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            position: relative;
+            background: none;
+            z-index: 5;
+        }
+        input:focus, textarea:focus { 
+            outline: none;
+            border-bottom: 2px solid rgb(0, 0, 0);  
+        }
+        .myfile{
+            display: flex;
+        }
+        .myfile>div{
+            border-bottom: 1px solid rgb(170, 170, 170); 
+        }
+        .jua-regular {
+            font-family: "Jua", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="out-line">
+        <!-- 메뉴판 -->
+        <main class="d-flex flex-nowrap">
+            <div class="flex-shrink-0 p-3" style="width: 280px;">
+                <a href="/"
+                    class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+                    <svg class="bi pe-none me-2" width="30" height="24">
+                        <use xlink:href="#bootstrap" />
+                    </svg>
+                    <span class="fs-5 fw-semibold">회사로고</span>
+                </a>
+                <ul class="list-unstyled ps-0">
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                            Home
+                        </button>
+                        <div class="collapse show" id="home-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                            Dashboard
+                        </button>
+                        <div class="collapse" id="dashboard-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                            Orders
+                        </button>
+                        <div class="collapse" id="orders-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="border-top my-3"></li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                            Account
+                        </button>
+                        <div class="collapse" id="account-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">New...</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a>
+                                </li>
+                                <li><a href="#"
+                                        class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a>
+                                </li>
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
+                                        out</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </main>     
+        <div class="b-example-divider b-example-vr"></div>
+        <!-- 컨텐츠 영역 -->
+        <div class="content-area">
+            <fieldset class="clander-add-area radious10 inner-line line-shadow">
+                <legend><h1 class="animate__animated animate__bounce jua-regular">일정 추가</h1></legend>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="font-size25 jua-regular" id="categoryName">Category</div>
+
+                    <div class="pretty p-default p-round p-smooth font-size20 privateArea" id="privateName">
+                        <input type="checkbox" />
+                        <div class="state p-danger">
+                            <label class="jua-regular">private</label>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="Category">
+                    <div class="line-cirecle-sm line-shadow">미팅</div>
+                    <div class="line-cirecle-sm line-shadow">회의</div>
+                    <div class="line-cirecle-sm line-shadow">외근</div>
+                    <div class="line-cirecle-sm line-shadow">교육</div>
+                    <div class="line-cirecle-sm line-shadow">기타</div>
+                </div>
+
+                <div class="font-size25 jua-regular" id="co-workerName">Co-worker</div>
+                <div class="Co-worker">
+                    <!-- <div class="line-cirecle-sm line-shadow">김우빈</div>
+                    <div class="line-cirecle-sm line-shadow">전지현</div>
+                    <div class="line-cirecle-sm line-shadow">아이유</div>
+                    <div class="line-cirecle-sm line-shadow">뚱이</div>
+                    <div class="line-cirecle-sm line-shadow">징징이</div> -->
+
+                    <div class="pretty p-default p-round p-smooth p-plain">
+                        <input type="checkbox" />
+                        <div class="state p-success-o">
+                            <label> 김우빈</label>
+                        </div>
+                    </div>
+
+                    <div class="pretty p-default p-round p-smooth p-plain">
+                        <input type="checkbox" />
+                        <div class="state p-success-o">
+                            <label> 김우빈</label>
+                        </div>
+                    </div>
+
+                    <div class="pretty p-default p-round p-smooth p-plain">
+                        <input type="checkbox" />
+                        <div class="state p-success-o">
+                            <label> 김우빈</label>
+                        </div>
+                    </div>
+
+                    <div class="pretty p-default p-round p-smooth p-plain">
+                        <input type="checkbox" />
+                        <div class="state p-success-o">
+                            <label> 김우빈</label>
+                        </div>
+                    </div>
+
+                    <div class="pretty p-default p-round p-smooth p-plain">
+                        <input type="checkbox" />
+                        <div class="state p-success-o">
+                            <label> 김우빈</label>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div style="display: flex;">
+                    <label class="font-size25 jua-regular" for="color-style" id="colorName">Color</label>
+                    <input type="color" id="color-style">
+                </div>
+                <label class="font-size25 jua-regular" for="title" id="titleName">Title</label>
+                <div class="Title"><input class="font-size20" type="text" id="title"></div>
+
+                <div style="width: 80%; display: flex; justify-content: space-between;">
+                    <div class="font-size25 jua-regular" id="all_day">All Day</div>
+
+                    <div class="pretty p-switch all_day">
+                        <input type="checkbox" />
+                        <div class="state p-success">
+                            <label>종일</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="date-time-area">
+                    <div style="width: 40%;">
+                        <div><input class="date-area jua-regular" type="date" id="currentDate1"></div>
+                        <br>
+                        <div><input class="time-area jua-regular" type="time" id="currentTime1"></div>
+                    </div>
+                    <div style="place-self: center; font-size: xx-large;">~</div>
+                    <div style="width: 40%;">
+                        <div><input class="date-area jua-regular" type="date" id="currentDate2"></div>
+                        <br>
+                        <div><input class="time-area jua-regular" type="time" id="currentTime2"></div>
+                    </div>
+                </div>
+
+                <div class="font-size25 jua-regular" id="contentName">Content</div> 
+                <div><textarea class="content-text-area" style="resize: none;"></textarea></div>
+                
+                <div class="font-size25 jua-regular" id="placeName">Place</div>
+                <div class="Place"><input class="font-size20" type="text"></div>
+
+                <div class="enroll marginR30"><button class="btn btn-outline-primary">등록</button></div>
+            </fieldset>
+        </div>
+    </div>
+    <script>
+        const offset = new Date().getTimezoneOffset() * 60000;
+        const today = new Date(Date.now() - offset);
+        let dateData = today.toISOString().slice(0, 10);
+        let timeData = today.toISOString().slice(11, 16);
+        document.getElementById('currentDate1').value = dateData;
+        document.getElementById('currentTime1').value = timeData;
+        
+        today.setDate(today.getDate() + 1);
+        today.setTime(today.getTime() + 12*1000*60*60);
+
+        dateData = today.toISOString().slice(0, 10);
+        timeData = today.toISOString().slice(11, 16);
+        document.getElementById('currentDate2').value = dateData;
+        document.getElementById('currentTime2').value = timeData;
+    </script>
+    <script>
+        $(document).ready(function(){
+            $(".Category").children().click(function(e){
+                animateCSS('#categoryName', 'bounce');
+
+                if(e.currentTarget.style.backgroundColor != 'rgb(255,247,208)'){
+                    e.currentTarget.style.backgroundColor = 'rgb(255,247,208)';
+                } else {
+                    e.currentTarget.style.backgroundColor = '#fff';
+                }
+
+            })
+
+            $(".Co-worker").children().click(function(e){
+                animateCSS('#co-workerName', 'bounce');
+            })
+
+            $("#color-style").click(function(){
+             animateCSS('#colorName', 'bounce');
+            })
+
+            $("#title").click(function(){
+                animateCSS('#titleName', 'bounce');
+            })
+            
+            $(".privateArea").children().click(function(){
+                animateCSS('#privateName', 'bounce');
+            })
+
+            $(".content-text-area").click(function(){
+                animateCSS('#contentName', 'bounce');
+            })
+
+            $(".Place").children().click(function(){
+                animateCSS('#placeName', 'bounce');
+            })
+
+            $(".all_day").click(function(){
+                animateCSS('#all_day', 'bounce');
+
+            })
+
+        })
+
+        const animateCSS = (element, animation, prefix = 'animate__') =>
+        new Promise((resolve, reject) => {
+            const animationName = `${prefix}${animation}`;
+            const node = document.querySelector(element);
+
+            node.classList.add(`${prefix}animated`, animationName);
+
+            function handleAnimationEnd(event) {
+            event.stopPropagation();
+            node.classList.remove(`${prefix}animated`, animationName);
+            resolve('Animation ended');
+            }
+
+            node.addEventListener('animationend', handleAnimationEnd, {once: true});
+        });
+
+    </script>
+</body>
+</html>
