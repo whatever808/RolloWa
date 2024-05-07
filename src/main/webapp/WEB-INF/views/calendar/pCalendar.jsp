@@ -175,6 +175,24 @@
 		width: 500px;
 		min-height: 150px;
 	}
+	/* 캘린더 스타일  */
+	#calendar a {
+		color: rgb(130, 130, 130);
+		text-decoration-line: none;
+	}
+	
+	.fc-button-primary {
+		background-color: rgb(160, 160, 160) !important;
+		border: 0 !important;
+	}
+	
+	.fc-day-sat a {
+		color: #007bff !important;
+	}
+	
+	.fc-day-sun a {
+		color: #dc3545 !important;
+	}
 </style>
 </head>
 <body>
@@ -199,26 +217,6 @@
 				</div>
 			</div>
 			<br> <br>
-			<!-- 캘린더 스타일 -->
-			<style>
-			#calendar a {
-				color: rgb(130, 130, 130);
-				text-decoration-line: none;
-			}
-			
-			.fc-button-primary {
-				background-color: rgb(160, 160, 160) !important;
-				border: 0 !important;
-			}
-			
-			.fc-day-sat a {
-				color: #007bff !important;
-			}
-			
-			.fc-day-sun a {
-				color: #dc3545 !important;
-			}
-			</style>
 			<!-- 캘린더 영역 -->
 			<div class="calender-area radious10 line-shadow ">
 				<div id="calendar"></div>
@@ -234,10 +232,10 @@
 							locale: 'ko',
 							buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주',},
 							headerToolbar:{start: 'prev today',center: 'title',end: 'multiMonthYear,dayGridMonth,timeGridWeek next'},
-							views:{year:{titleFormat:{year: '2-digit'},multiMonthMaxColumns: 1},
-										month:{titleFormat:{year: '2-digit', month: 'short'}},
-										week: {titleFormat:{year: '2-digit'}},
-										day: {titleFormat:{month: 'short',day:'2-digit'}}},
+							views:{year: {titleFormat:{year: '2-digit'},multiMonthMaxColumns: 1},
+								  	month:{titleFormat:{year: '2-digit', month: 'short'}},
+									week: {titleFormat:{year: '2-digit'}},
+									day: {titleFormat:{month: 'short',day:'2-digit'}}},
 							buttonIcons: false,
 							navLinks: true,
 							slotMinTime: "06:00:00",
@@ -247,9 +245,25 @@
 							eventStartEditable: true,
 							eventResizableFromStart: true,
 							eventClick:function(info){
-									// alert('Event: ' + info.event.title + 'start: ' + info.event.start);
-									console.log(info.event.id);
-									$('#cal_modal').iziModal('open');
+								//console.log(info.event);
+								//console.log(info.event.extendedProps);
+								//console.log(info.event.extendedProps.content);
+							      $('#cal_modal').iziModal({
+							          title: '상세보기',
+							          subtitle: '수정도 가능합니다.',
+							          headerColor: ' rgb(255,247,208)', 
+							          theme:'light',
+							          padding: '15px',
+							          radius: 10, 
+							          focusInput:	true,
+							          restoreDefaultContent: false,
+							          onOpening: function(){
+							        	  //console.log($('#cal_modal').find('.content-text-area'));
+							        	  $('#cal_modal').find('.content-text-area').html(info.event.id);
+							          }
+						     	  });
+							      
+							      $('#cal_modal').iziModal('open');
 							},
 							eventMouseEnter:function(info){
 									info.el.style.transform = 'scale(1.05)';
@@ -265,7 +279,11 @@
 										title: '${d.calTitle }',
 										start: '${d.startDate }',
 										end: '${d.endDate }',
-										color: '${d.color }'
+										color: '${d.color }',
+										extendeProps:{
+											content: '${d.calcontent}',
+											place: '${d.place}'
+										}
 									},
 								</c:forEach>
 							]
@@ -355,13 +373,13 @@
 			</div>
 		</div>
 		<br>
-		<div class="jua-regular">Content</div>
+		<div class="jua-regular" >Content</div>
 		<div>
-			<textarea class="content-text-area"
+			<textarea class="content-text-area" 
 				style="resize: none; height: 200px;"></textarea>
 		</div>
 		<br>
-		<div class="jua-regular">Place</div>
+		<div class="jua-regular" name="place">Place</div>
 		<div class="Place">
 			<input style="width: 80%" type="text">
 		</div>
@@ -376,7 +394,7 @@
       function repeat_anmation(){
           animateCSS('.my-element', 'bounce');
       }
-
+/* 
       $('#cal_modal').iziModal({
       title: '상세보기',
       subtitle: '수정도 가능합니다.',
@@ -387,7 +405,7 @@
       zindex:	300,
       focusInput:	true,
       restoreDefaultContent: false, 
-  });
+ 	  }); */
   </script>
 
 </body>
