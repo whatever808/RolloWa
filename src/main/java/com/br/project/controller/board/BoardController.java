@@ -31,14 +31,14 @@ public class BoardController {
 	private final BoardService boardService;
 	private final PagingUtil pagingUtil;
 	private final FileUtil fileUtil;
-	private final AttachmentController attachmentController;
+	private final FileController attachmentController;
 	
 	private final DepartmentService departmentService;
 	
 	/**
 	 * @method : 게시글 목록조회
 	 */
-	@GetMapping(value="/list.do")
+	@RequestMapping(value="/list.do")
 	public ModelAndView selectBoardList(@RequestParam(value="page", defaultValue="1") int currentPage
 									   ,@RequestParam Map<String, String> filter
 									   ,ModelAndView mv) {
@@ -58,11 +58,15 @@ public class BoardController {
 	/**
 	 * @method : 게시글 등록페이지 반환
 	 */
-	@GetMapping(value="/post.page")
+	@RequestMapping(value="/post.page")
 	public String showBoardPostForm() {
 		return "board/post";
 	}
 	
+	/**
+	 * @param board
+	 * @param uploadFiles
+	 
 	@PostMapping(value="/post.do")
 	public void postBoard(BoardDto board
 						 ,List<MultipartFile> uploadFiles) {
@@ -74,7 +78,7 @@ public class BoardController {
 		
 		
 	}
-	
+	*/
 	
 	
 

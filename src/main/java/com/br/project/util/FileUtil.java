@@ -24,7 +24,7 @@ public class FileUtil {
 	 * @param category    : 저장할 파일의 유형
 	 */
 	public Map<String, String> fileUpload(MultipartFile uploadFile, String category) {
-		log.debug("업로드 이미지 : {}", uploadFile);
+		
 		String filePath = "/upload/" + category + new SimpleDateFormat("/YYYY/MM/DD").format(new Date());
 		File filePathDir = new File(filePath);
 		if(!filePathDir.exists()) {

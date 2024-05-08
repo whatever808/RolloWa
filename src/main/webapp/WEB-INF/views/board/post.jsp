@@ -60,7 +60,7 @@
 							<!-- board category -->
               <div class="field-group">
                   <label for="board-category" class="field-title">게시판</label><br>              
-                  <select name="boardCategory" class="board-category form-select" id="board-category">
+                  <select name="category" class="board-category form-select" id="board-category">
                       <option value="">일반게시판</option>
                       <option value="${ loginUser.teamNo }">부서게시판</option> <!-- 로그인 사용자가 속한 부서 -->
                   </select>
@@ -69,7 +69,7 @@
               <!-- board title -->
               <div class="field-group">
                   <label for="board-title" class="field-title">게시글 제목</label><br>
-                  <input type="text" id="board-title" placeholder="제목을 입력하세요." name="boardTitle" required>
+                  <input type="text" id="board-title" placeholder="제목을 입력하세요." name="title" required>
               </div>
 
               <!-- board attachment -->
@@ -78,17 +78,18 @@
                   <input type="file" name="uploadFiles" class="form-control" id="board-attachment" multiple>
               </div>
               
-              <!-- board content -->
+              <!-- board content 
                <div class="field-group">
                   <label class="field-title" for="board-content">게시글 내용</label>
                   <textarea name="boardContent" class="form-control" id="boardContent" required></textarea>
               </div>
+              -->
               
-              <!--  CKEditor 적용
+              <!--  CKEditor 적용 -->
               <script>
 		              $(document).ready(function(){
-		            		CKEDITOR.replace("boardContent", {
-		            			filebrowserUploadUrl:"${ contextPath }/board/attachment/upload.do"
+		            		CKEDITOR.replace("board-content", {
+		            			filebrowserUploadUrl:"${ contextPath }/upload/img.do"
 		            		});
 		            	})
               </script>
@@ -96,9 +97,9 @@
               
               <div class="field-group">
                   <label class="field-title" for="board-content">게시글 내용</label>
-                  <textarea name="boardContent" class="form-control" id="boardContent"></textarea>
+                  <textarea name="content" class="form-control" id="board-content"></textarea>
               </div>
-							-->
+							
 							
               <div class="button-group">
                   <button type="reset" class="btn btn-outline-warning" onclick="resetForm();">초기화</button>
