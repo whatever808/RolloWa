@@ -91,7 +91,7 @@ public class MemberController {
         // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
         message.setFrom("01047547864");
         message.setTo(phone);
-        String rand = RandomStringUtils.random(6);
+        String rand = RandomStringUtils.randomNumeric(6);
         log.debug(rand);
         
         message.setText("[CoolSMS] 인증번호를 확인하고 입력해주세요 : " + rand);

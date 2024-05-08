@@ -190,7 +190,7 @@
 							  url: "${contextPath}/member/sendMsg.do"
 								, method: "post"
 								, data: {phone: $("#phone").text()}
-								, success: function(result) {
+							  , success: function(result) {
 									console.log(result);
 								}
 						  	, error: function() {
