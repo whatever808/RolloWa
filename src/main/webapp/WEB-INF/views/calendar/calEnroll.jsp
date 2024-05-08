@@ -220,7 +220,7 @@
               <div class="enroll marginR30"><button type="submit" class="btn btn-outline-primary" onclick="return checkDate();">등록</button></div>
           </form>
           </fieldset>
-            <script>
+        <script>
     		function checkDate(){
     			
     			let date2 = $('#currentDate2').val()+ " " + $('#currentTime2').val();
@@ -234,11 +234,9 @@
 		        }else {
 		        	alert('날짜 및 시간을 확인 해 주세요.');
 			        return false;		        	
-		        }
-		        
-		        
+		        }  
 	     	};
-  </script>
+  			</script>
       </div>
   </div>
   <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>

@@ -42,10 +42,10 @@ public class CalendarController {
 	public void moveEnroll() {}
 	
 	@PostMapping("/calEnroll.do")
-	public void insertCal(CalendarDto calendar
+	public ModelAndView insertCal(CalendarDto calendar
 							, String[] date, String[] time
 							, ModelAndView mv) {
-		log.debug("data == {}", calendar);
+//		log.debug("data == {}", calendar);
 		if(calendar.getCalSort() != "P") {
 			calendar.setCalSort("D");			
 		}
@@ -59,8 +59,23 @@ public class CalendarController {
 		}else {
 			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("calendar/calEnroll.page");
 		}
-		
+		return mv;
 	}
+	
+	@PostMapping("calUpdate.do")
+	public String calUpdate(CalendarDto calendar, String[] date, String[] time) {
+		
+//		if(calendar.getCalSort() != 'P') {
+//			calendar.setCalSort("D");			
+//		}
+		calendar.setStartDate(date[0]+ " " + time[0]);
+		calendar.setEndDate(date[1] + " " + time[1]);
+		
+		log.debug("calendar == {}", calendar);
+		
+		return null;
+	}
+	
 	
 	
 	
