@@ -16,6 +16,23 @@
    </properties>
    
    <dependencies>
+   
+		<!-- * RandomStringUtils 사용 -->		
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.12.0</version>
+		</dependency>
+   
+   
+   <dependency>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-war-plugin</artifactId>
+		  <version>3.3.2</version>
+	  </dependency>
+   
+   
     <!-- * Cool SMS 사용을 위한 라이브러리 -->
 		<dependency>
 		  <groupId>net.nurigo</groupId>
@@ -193,7 +210,7 @@
          <artifactId>jstl</artifactId>
          <version>1.2</version>
       </dependency>
-   
+         
    </dependencies>
    
     <build>
