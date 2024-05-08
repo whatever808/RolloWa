@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,13 +84,17 @@ public class MemberController {
 	
 	// 비밀번호 찾기
 	// 휴대폰 인증번호 발송
-    @PostMapping("/send-one")
-    public SingleMessageSentResponse sendOne() {
+    @PostMapping(value="/sendMsg.do", produces="aplication/json; charset=utf-8")
+    @ResponseBody
+    public SingleMessageSentResponse ajaxSendOne(String phone) {
         Message message = new Message();
         // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-        message.setFrom("발신번호 입력");
-        message.setTo("수신번호 입력");
-        message.setText("한글 45자, 영자 90자 이하 입력되면 자동으로 SMS타입의 메시지가 추가됩니다.");
+        message.setFrom("01047547864");
+        message.setTo(phone);
+        String rand = RandomStringUtils.random(6);
+        log.debug(rand);
+        
+        message.setText("[CoolSMS] 인증번호를 확인하고 입력해주세요 : " + rand);
 
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
         System.out.println(response);

@@ -97,7 +97,7 @@
                 <!-- 스타일에 한해서는 이런식으로 class명을 주시기 바랍니다. -->
                 <div class="m_content_style">
 									아이디 : <input type="text" name="userId" style="padding-bottom: 2px;"> <br>
-									전화번호 : <input type="text" name="phone" placeholder="01012345678"> 
+									전화번호 : <input type="text" id="phone" name="phone" placeholder="01012345678"> 
 									<button type="button" class="btn1 forget_btn phone_vali_btn" onclick="takeTarget();">인증번호 발송</button> <br>
 									인증번호 : <input type="text" name="certNo" maxlength="6" placeholder="123456">
 									<span class="target__time">
@@ -174,17 +174,30 @@
 						let time = 180;
 						const takeTarget = () => {
 						  setInterval(function () {
-						    if (time > 0) { // >= 0 으로하면 -1까지 출력된다.
-						      time = time - 1; // 여기서 빼줘야 3분에서 3분 또 출력되지 않고, 바로 2분 59초로 넘어간다.
+						    if (time > 0) {
+						      time = time - 1; // 2:59로 시작
 						      let min = Math.floor(time / 60);
 						      let sec = String(time % 60).padStart(2, "0");
 						      remainingMin.innerText = min;
 						      remainingSec.innerText = sec;
-						      // time = time - 1
 						    } else {
 						      completeBtn.disabled = true;
+						      completeBtn.className += 'disabled';
 						    }
 						  }, 1000);
+						  
+						  $.ajax({
+							  url: "${contextPath}/member/sendMsg.do"
+								, method: "post"
+								, data: {phone: $("#phone").text()}
+								, success: function(result) {
+									console.log(result);
+								}
+						  	, error: function() {
+						  		console.log("AJAX 통신 실패");
+						  	}
+						  })
+						  
 						};
             
 
