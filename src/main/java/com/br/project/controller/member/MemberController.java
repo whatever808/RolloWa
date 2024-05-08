@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +23,11 @@ import com.br.project.util.FileUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import net.nurigo.sdk.message.service.DefaultMessageService;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,14 +36,13 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	private final MemberService memberService;
 	private final FileUtil fileUtil;
-	
+	DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSVIKI2KIZ8BWZP", "FRCLTDLTRNZ8AYQ3ABSZCF4JOBNBFIGK", "https://api.coolsms.co.kr");
+		
 	// 로그인
 	@PostMapping("/login.do")
 	public String MemberLogin(MemberDto member, HttpServletRequest request, RedirectAttributes redirectAttribute) {
-		log.debug("id : {}, pwd : {}", member.getUserId(), member.getUserPwd());
 		MemberDto loginMember = memberService.selectMember(member);
 		HttpSession session = request.getSession();
-		
 		
 		if(loginMember != null) {
 			// 로그인 성공
@@ -77,7 +81,25 @@ public class MemberController {
 	}
 	
 	// 비밀번호 찾기
-	
+	// 휴대폰 인증번호 발송
+    @PostMapping(value="/sendMsg.do", produces="aplication/json; charset=utf-8")
+    @ResponseBody
+    public SingleMessageSentResponse ajaxSendOne(String phone) {
+        Message message = new Message();
+        // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+        message.setFrom("송신 전화번호");
+        message.setTo(phone);
+        String rand = RandomStringUtils.randomNumeric(6);
+        log.debug(rand);
+        
+        message.setText("[CoolSMS] 인증번호를 확인하고 입력해주세요 : " + rand);
+
+        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        System.out.println(response);
+
+        return response;
+    }
+    
 	// 마이페이지 조회
 	@GetMapping("/mypage.page")
 	public String ToMyPage() {
