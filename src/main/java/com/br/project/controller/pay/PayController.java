@@ -100,15 +100,16 @@ public class PayController {
 		
 	}
 	//----------------------------------------
-	@RequestMapping(value="/selectList_new.do")
-	public String selectList_new(HttpServletRequest request,
-			String conditions, @RequestParam (value="page", defaultValue="1") int currentPage
+	
+	@RequestMapping(value="/selectList.do")
+	public String selectList(HttpServletRequest request,
+			 @RequestParam (value="page", defaultValue="1") int currentPage
 						, Model model) {
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		params = CommonController.getParameterMap(request);
-		
+		log.debug(request.toString());
 		//(카테고리별)페이지갯수
 		int clistCount = payServiceImpl.slistCount(params);
 		
@@ -130,11 +131,12 @@ public class PayController {
 		model.addAttribute("slistCount", String.valueOf(slistCount));
 		model.addAttribute("pi", pi);
 		model.addAttribute("list", list);
-		model.addAttribute("conditions", conditions);
+		
 		
 		return "pay/paymain";
 		
 	}
+	
 	/*
 	//메인결재 보고서 카테고리----------------------
 	@GetMapping(value="/selects.do")
@@ -170,6 +172,7 @@ public class PayController {
 	*/
 	//---------------------------------------------
 	
+	/*
 	//메인결재 보고서 카테고리----------------------
 		@GetMapping(value="/status.do")
 		public String statusList(String status, @RequestParam (value="page", defaultValue="1") int currentPage
@@ -202,7 +205,7 @@ public class PayController {
 			
 		}
 		//---------------------------------------------
-		
+		*/
 	
 	
 	// 메인결재 상세페이지목록클릭-----------------------
@@ -282,8 +285,8 @@ public class PayController {
 	
 	
 	//글작성페이지폼-------------------------------------------
-	@GetMapping("/tomWriterForm.do")
-	public void tomWriterForm() {
+	@GetMapping("/mWriterForm.do")
+	public void mWriterForm() {
 		
 	}
 	//----------------------------------------------------

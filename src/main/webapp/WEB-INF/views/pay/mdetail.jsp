@@ -31,15 +31,8 @@
 
     <link href="/src/main/webapp/resources/css/mainPage/mainPage.css" rel="stylesheet">
     
-   
-    <link href="${contextPath}/resources/css/mainPage/mainPage.css" rel="stylesheet">
-
-    <!-- 모달 관련 -->
-    <script src="${contextPath}/resources/js/iziModal.min.js"></script>
-    <link rel="stylesheet" href="${contextPath}/resources/css/iziModal.min.css">
-
     <!-- 결재신청서 공통스타일 -->
-    <link href="${contextPath}/resources/css/pay/writer.css" rel="stylesheet">
+    <link href="/src/main/webapp/resources/css/pay/writer.css" rel="stylesheet">
     
     <style>
         .b-example-divider {
@@ -362,13 +355,8 @@
                                         <td class="sing_name"><div></div></td>
                                         <td class="sing_name"><div></div></td>
                                         <td class="sing_name"><div></div></td>
-                                        <td class="sing_name">
-                                        <div>
-                                        <a href="#" data-izimodal-open="#modal">싸인</a>
-                                        </div>
-                                        </td>
+                                        <td class="sing_name"><div></div></td>
                                     </tr>
-                                    
                                     <tr>
                                         <td class="left_td">${payDto.firstApproDt == null ? "" : payDto.firstApproDt}</td>
                                         <td class="left_td">${payDto.middleApproDt == null ? "" : payDto.middleApproDt}</td>
@@ -384,7 +372,13 @@
                             <table border="1">
                                 <tr>
                                     <th style="width: 300px;">매출구분</th>
-                                    <td colspan="2"></td>
+                                    <td colspan="2">
+                                        <select name="" id="">
+                                            <option value="">상품</option>
+                                            <option value="">티켓</option>
+                                            <option value="">음식점</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>담당자</th>
@@ -435,8 +429,6 @@
                 </div>
             </div>
         </div>
-        
-        
 
         <script>
             function submitbtn(){

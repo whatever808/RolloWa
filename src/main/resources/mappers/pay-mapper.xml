@@ -219,13 +219,23 @@
 			  from approval
 			  WHERE STATUS = 'N'
 			  AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-				<if test="conditions != null">
-		      and DOCUMENT_TYPE =  #{conditions}
-		    </if>
-		    <if test="status != null">
-		      and PAYMENT_STATUS = #{status}
-		    </if>
+			  <choose>
+					<when test="conditions == '전체'">
+					and DOCUMENT_TYPE IN ('T','C','B','M','J','G','H','V')
+					</when>
+					<otherwise>
+						and DOCUMENT_TYPE = #{conditions}
+					</otherwise>
+				</choose>
 			
+				<choose>
+					<when test="status == '전체'">
+						and PAYMENT_STATUS IN ('보통','긴급')
+					</when>
+					<otherwise>
+						and PAYMENT_STATUS = #{status}
+					</otherwise>
+				</choose>
 		</select>
 		
 		<!-- 메인 카테고리(문서) 리스트 조회용 -->
@@ -273,14 +283,23 @@
 			from approval A
 			WHERE STATUS = 'N'
 			AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+			<choose>
+				<when test="conditions == '전체'">
+					and DOCUMENT_TYPE IN ('T','C','B','M','J','G','H','V')
+				</when>
+				<otherwise>
+						and DOCUMENT_TYPE = #{conditions}
+				</otherwise>
+			</choose>
 			
-		    <if test="conditions != null">
-		      and DOCUMENT_TYPE =  #{conditions}
-		    </if>
-		    <if test="status != null">
-		      and PAYMENT_STATUS = #{status}
-		    </if>
-			
+				<choose>
+					<when test="status == '전체'">
+						and PAYMENT_STATUS IN ('보통','긴급')
+					</when>
+					<otherwise>
+						and PAYMENT_STATUS = #{status}
+					</otherwise>
+				</choose>
 			order
 			     by APPROVAL_NO desc
 		</select>

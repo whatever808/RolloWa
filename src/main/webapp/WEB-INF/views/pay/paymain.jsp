@@ -44,25 +44,23 @@
 
 </head>
 <body>
+
 	<script>
-  function typeSelect(){
-		location.href="${contextPath}/pay/selectList_new.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
-	
-	};
- 	$(document).ready(function(){
- 		
- 		$("#selects").change(function(){
- 			typeSelect();
- 			});
- 		$("#statusSelect").change(function(){
- 			typeSelect();
- 		});
- 		
- 		
- 	});
-  	
-  	
-  
+		 function typeSelect(){
+			location.href="${contextPath}/pay/selectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
+		
+		};
+		
+			$(document).ready(function(){
+				
+				$("#selects").change(function(){
+					typeSelect();
+					});
+				$("#statusSelect").change(function(){
+					typeSelect();
+				});
+				
+			});
   </script>
                                    
 	<main class="d-flex flex-nowrap">
@@ -266,7 +264,7 @@
                                     <div><b>비품신청서</b></div>
                                 </div>
                             </a>
-                           <a href="${contextPath}/pay/tomWriterForm.do" method="get">
+                           <a href="${contextPath}/pay/mWriterForm.do" method="get">
                             <div class="cen_bottom_left_div">
                                 <div>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-clipboard-data" viewBox="0 0 16 16" style="color: black;">
@@ -331,14 +329,14 @@
                                 <div id="cen_bottom_search_next">
                                     <div>
                                         <select name="status" id="statusSelect">
-                                        		<option value="보통">보통</option>
+                                        		<option value="전체">전체</option>
                                             <option value="보통">보통</option>
                                             <option value="긴급">긴급</option>
                                         </select>
                                     </div>
                                     <div style="margin-left: 30px;">
                                         <select name="conditions" id="selects">
-                                            <option value="T">퇴직신청서</option>
+                                            <option value="전체">전체</option>
                                             <option value="T">퇴직신청서</option>
                                             <option value="C">출장보고서</option>
                                             <option value="B">비품신청서</option>
@@ -350,66 +348,7 @@
                                         </select>
                                     </div>
                                    
-                                    <script>
-                                    /* ajax 카테고리..xx
-                                    	$(document).ready(function(){
-                                    		
-                                    			$("#selects").change(function(){
-                                    				
-                                    				
-                                    				
-                                    				$.ajax({
-                                        				url:"${contextPath}/pay/selects.do",
-                                        				type:"get",
-                                        				data:{conditions:$("#selects").val()},
-                                        				success:function(result){
-                                        					
-                                        					console.log(result.list);
-                                        					
-                                        					
-                                        					let td = "";
-                                        					for (let i = 0; i < result.list.length; i++) {
-                                        					    let attachment = (result.list[i].salesStatus + result.list[i].draftStatus + result.list[i].businessStatus == 1) ?
-                                        					                     `<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">
-                                        					                      <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>
-                                        					                      </svg>` : "";
-
-                                        					    let td = "<tr>";
-                                        					    td += "<td>" + result.list[i].approvalNo + "</td>";  
-                                        					    td += "<td>" + result.list[i].documentType + attachment + "</td>";
-                                        					    td += "<td>" + result.list[i].payWriter + "</td>";
-                                        					    td += "<td>" + result.list[i].department + "</td>";
-                                        					    td += "<td>" + result.list[i].registDt + "</td>";
-                                        					    td += '<td class="ing">' + result.list[i].documentStatus + "</td>";
-                                        					    td += "<td>" +  (result.list[i].finalApproDt == null ? "-" : result.list[i].finalApproDt) + "</td>";
-                                        					    td += '<td class="status">' + result.list[i].payStatus + "</td>";
-                                        					    td += "</tr>";
-                                        					}
-                                        					$("#cen_bot_table tbody").empty();
-                                        					$("#cen_bot_table tbody").html(td);
-                                        					
-                                        					
-                                        					let li = "";
-                                        			        li += '<li class="page-item ' + (result.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="page-link" href="${contextPath}/pay/selects.do?page=' + (result.pi.currentPage - 1) + '&conditions=' + (result.conditions) + '">Previous</a></li>';
-                                        			        for (let p = result.pi.startPage; p <= result.pi.endPage; p++) {
-                                        			            li += '<li class="page-item ' + (result.pi.currentPage == p ? 'disabled' : '') + '"><a class="page-link" href="${contextPath}/pay/selects.do?page=' + p + '&conditions=' + (result.conditions) + '">' + p + '</a></li>';
-                                        			        }
-                                        			        li += '<li class="page-item ' + (result.pi.currentPage == result.pi.maxPage ? 'disabled' : '') + '"><a class="page-link" href="${contextPath}/pay/selects.do?page=' + (result.pi.currentPage + 1) + '&conditions=' + (result.conditions) + '">Next</a></li>';
-                                        					
-                                        			    $(".pagination ul").empty(); //자식요소 삭제
-                                        					$(".pagination ul").html(li); //html로 만들어서 ul
-                                        					
-                                        				},
-                                        				error:function(){
-                                        					console.log("데이터 ajax 통신 실패");
-                                        				}
-                                        			})
-                                    			
-                                    			})
-                                    					
-                                    	})
-                                    	*/
-                                    </script>
+                                   
                                 </div>
                                 <div id="cen_bottom_search_center">
                                      <form action="${contextPath}/pay/search.do" method="get">
@@ -446,7 +385,9 @@
                                       </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach var="l" items="${ list }">
+                                    <c:choose>
+                                    <c:when test="${ not empty list }">
+                                      <c:forEach var="l" items="${ list }">
                                      		<tr onclick="location.href='${contextPath}/pay/detail.do?approvalNo=${ l.approvalNo }&documentNo=${ l.documentNo }&documentType=${ l.documentType }&payWriter=${ l.payWriter }';">
                                             <td>${ l.approvalNo }</td>
                                             <td>${ l.documentType } 
@@ -460,7 +401,15 @@
                                             <td>${ l.finalApproDt == null ?  "-" : l.finalApproDt }</td>
                                     				<td class="status">${ l.payStatus }</td>
                                         </tr>
-                                    </c:forEach>
+                                    	</c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+	                                    <tr>
+	                                    	<td colspan="8"><b>검색한 결과가 없습니다.</b></td>
+	                                    </tr>
+                                    </c:otherwise>
+                                    </c:choose>
+                                  
                                     </tbody>
                                   </table>
                                 
@@ -468,15 +417,41 @@
                             </div>
                             <div id="cen_bottom_pagging">
                                 <div id="pagin_form">
-                                   <ul class="pagination">
-											                <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${pi.currentPage-1}">Previous</a></li>
-											                
-											                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-											                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${p}">${ p }</a></li>
-											                </c:forEach>
-											                
-											                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${pi.currentPage+1}">Next</a></li>
-											             </ul>
+                                   <c:choose>
+                                   	<c:when test="${ not empty params }">
+                                   	<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/selectList.do?page=${pi.currentPage-1}&conditions=${params.conditions}&status=${params.status}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/selectList.do?page=${p}&conditions=${params.conditions}&status=${params.status}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/selectList.do?page=${pi.currentPage+1}&conditions=${params.conditions}&status=${params.status}">Next</a></li>
+													             </ul>
+                                   	</c:when>
+                                   	<c:when test="${ not empty search }">
+                                   	<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage-1}&condition=${search.condition}&keyword=${search.keyword}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${p}&condition=${search.condition}&keyword=${search.keyword}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage+1}&condition=${search.condition}&keyword=${search.keyword}">Next</a></li>
+													             </ul>
+                                   	</c:when>
+                                   	<c:otherwise>
+                                   		<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${pi.currentPage-1}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${p}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${pi.currentPage+1}">Next</a></li>
+													             </ul>
+                                   	</c:otherwise>
+                                   </c:choose>
                                 </div>
                             </div>
                         </div>
@@ -517,42 +492,97 @@
 	</script>
 	
 	<!-- search가 비워져있지않을때 실행되는 스크립트구문 -->
-	<c:if test="${ not empty search }">
-		<script>
-			$(document).ready(function(){
-				//카테고리 고정시키기
-				$("#select_search").val("${search.condition}");
-				 
-				//
-				$("#pagin_form a").on("click", function(){
-					location.href = "${contextPath}/pay/search.do?condition=${search.condition}&keyword=${search.keyword}&page=" + $(this).text(); 
-				})
-			})
-		
-		</script>
-	</c:if>
+	
 	
 	<!-- clistCount 값이 있을때 실행되는 스크립트 구문 -->
-	<c:if test="${ not empty params }">
-		<script>
-			$(document).ready(function(){
-				$("#selects").val("${conditions}");
-				
-				$("pagin_form a").on("click", function(){
-					if($(this).text() == 'Previous'){
-						location.href="${ contextPath }/pay/paymain.page?page=" + ${pi.currentPage-1} + "&conditions=" + ${conditions};
-					}else if($(this).text() == 'next'){
-						location.href="${ contextPath }/pay/paymain.page?page=" + ${pi.currentPage+1} + "&conditions=" + ${conditions};
-					}else{
-						location.href="${contextPath}/pay/selects.do?conditions=" + ${conditions} + "&page=" + $(this).text();						
-					}
+
+	
+	<c:choose>
+		<c:when test="${ not empty params }">
+			<script>
+				$(document).ready(function(){
+					$("#selects").val("${params.conditions}");
+					$("#statusSelect").val("${params.status}");
+					
+					
 				})
-				
-				
-			})
-		
-		</script>
-	</c:if>
+			</script>
+		</c:when>
+		<c:when test="${ not empty search }">
+			<script>
+				$(document).ready(function(){
+					//카테고리 고정시키기
+					$("#select_search").val("${search.condition}");
+					 
+					
+				})
+			
+			</script>
+		</c:when>
+	</c:choose>
+	
+	
+	
+	 <script>
+    /* ajax 카테고리..xx
+    	$(document).ready(function(){
+    		
+    			$("#selects").change(function(){
+    				
+    				
+    				
+    				$.ajax({
+        				url:"${contextPath}/pay/selects.do",
+        				type:"get",
+        				data:{conditions:$("#selects").val()},
+        				success:function(result){
+        					
+        					console.log(result.list);
+        					
+        					
+        					let td = "";
+        					for (let i = 0; i < result.list.length; i++) {
+        					    let attachment = (result.list[i].salesStatus + result.list[i].draftStatus + result.list[i].businessStatus == 1) ?
+        					                     `<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">
+        					                      <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>
+        					                      </svg>` : "";
+
+        					    let td = "<tr>";
+        					    td += "<td>" + result.list[i].approvalNo + "</td>";  
+        					    td += "<td>" + result.list[i].documentType + attachment + "</td>";
+        					    td += "<td>" + result.list[i].payWriter + "</td>";
+        					    td += "<td>" + result.list[i].department + "</td>";
+        					    td += "<td>" + result.list[i].registDt + "</td>";
+        					    td += '<td class="ing">' + result.list[i].documentStatus + "</td>";
+        					    td += "<td>" +  (result.list[i].finalApproDt == null ? "-" : result.list[i].finalApproDt) + "</td>";
+        					    td += '<td class="status">' + result.list[i].payStatus + "</td>";
+        					    td += "</tr>";
+        					}
+        					$("#cen_bot_table tbody").empty();
+        					$("#cen_bot_table tbody").html(td);
+        					
+        					
+        					let li = "";
+        			        li += '<li class="page-item ' + (result.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="page-link" href="${contextPath}/pay/selects.do?page=' + (result.pi.currentPage - 1) + '&conditions=' + (result.conditions) + '">Previous</a></li>';
+        			        for (let p = result.pi.startPage; p <= result.pi.endPage; p++) {
+        			            li += '<li class="page-item ' + (result.pi.currentPage == p ? 'disabled' : '') + '"><a class="page-link" href="${contextPath}/pay/selects.do?page=' + p + '&conditions=' + (result.conditions) + '">' + p + '</a></li>';
+        			        }
+        			        li += '<li class="page-item ' + (result.pi.currentPage == result.pi.maxPage ? 'disabled' : '') + '"><a class="page-link" href="${contextPath}/pay/selects.do?page=' + (result.pi.currentPage + 1) + '&conditions=' + (result.conditions) + '">Next</a></li>';
+        					
+        			    $(".pagination ul").empty(); //자식요소 삭제
+        					$(".pagination ul").html(li); //html로 만들어서 ul
+        					
+        				},
+        				error:function(){
+        					console.log("데이터 ajax 통신 실패");
+        				}
+        			})
+    			
+    			})
+    					
+    	})
+    	*/
+    </script>
 
 	
 	
