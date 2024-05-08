@@ -104,46 +104,6 @@
         top: -2.7em !important;
         z-index: -1;
     }
-    /* 7개 이상일 때만 */
-    .tree li:nth-child(6n+5)::before {
-      outline: solid 1px green;
-      content: "";
-      left: 0;
-      right: -215px;
-      position: absolute;
-      top: -.2em;
-    }
-    /* 6번째 마다 적용 */
-    .tree li:nth-child(6n)::before {
-      outline: solid 1px lightgray;
-      content: "";
-      left: 0;
-      right: 103px;
-      position: absolute;
-      top: -.2em;
-    }
-    /*  */
-    /* 6번째 마다 적용 */
-    .tree li:nth-child(6n)::before {
-      outline: solid 1px orange;
-      content: "";
-      height: 113.5%;
-      left: auto;
-      right: -10px;
-      position: absolute;
-      top: -.2em;
-    }
-    
-    /* 7번째 마다 적용 */
-    .tree li:nth-child(7n)::before {
-      outline: solid 1px red;
-      content: "";
-      left: 103px;
-      right: -1042px;
-      position: absolute;
-      top: -.2em;
-    }
-
     /* 줄 간격 넓히기 */
     .tree li:nth-child(n+7) {
       margin-top: 50px;
@@ -222,7 +182,7 @@
             <script>
               $(document).ready(function() {
                   var treeItems = $('.tree > li > ul > li').length;
-                  if (treeItems > 4) {
+                  if (treeItems > 6) {
                       $('.tree > li > ul').css('display', 'flex');
                       $('.tree > li > ul').css('flex-wrap', 'wrap');
                     }
@@ -241,125 +201,83 @@
 
                   <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
                     <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다1</span></a> </li>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
                     </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
                     <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다2</span></a> </li>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
                     </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
                     <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
                     </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
                     <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
                     </ul>
                   </li>
                   
                   <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
                     <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다1</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다2</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
                     </ul>
                   </li>
+
                   
-                 
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다1</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다2</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다1</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다2</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다1</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다2</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다1</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다2</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다1</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다2</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다1</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다2</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다1</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다2</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
-                    </ul>
-                  </li>
 
 
                 </ul>
