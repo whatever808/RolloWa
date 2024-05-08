@@ -12,7 +12,6 @@ import com.br.project.service.organizaion.OrganizationService;
 
 import ch.qos.logback.core.model.Model;
 import lombok.extern.slf4j.Slf4j;
-import sun.print.resources.serviceui;
 
 // 1. 조직안내
 
@@ -25,7 +24,7 @@ public class OrganizationInfoController {
 	@GetMapping("/orgchart.page")
 	public String orgchart() {
 		
-		int result = OR;
+		//int result = OR;
 		return "organization/organizationChart";
 	}
 	
