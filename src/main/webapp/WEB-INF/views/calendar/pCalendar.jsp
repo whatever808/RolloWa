@@ -371,6 +371,109 @@
 		</div>
 	</div>
 
+		<!-- 컨텐츠 영역 content-area -->
+		<div class="content" style="max-width: 1120px; padding: 30px;">
+			<!-- 직원 div 영역 -->
+			<div class="member-search-area radious10 line-shadow">
+				<div class="mydiv-area display-item-center">
+					<div
+						class="line-cirecle display-item-center line-shadow my-element"
+						onclick="repeat_anmation()">홍길동</div>
+				</div>
+				<div class="memebrdiv-area display-item-center">
+					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
+					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
+					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
+					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
+					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
+				</div>
+			</div>
+			<br> <br>
+			<!-- 캘린더 영역 -->
+			<div class="calender-area radious10 line-shadow "><div id="calendar"></div></div>
+			<!-- 캘린더 스타일 -->
+			<script>
+			// 캘린더 설정 및 선언
+			document.addEventListener('DOMContentLoaded', function() {
+					var calendarEl = document.getElementById('calendar');
+					var calendar = new FullCalendar.Calendar(calendarEl, {
+							initialView: 'dayGridMonth',
+							locale: 'ko',
+							 customButtons: {
+								 enrollButton:{
+									 text: '일정 등록',
+									 click: function(){
+										 location.href="${path}/calendar/calEnroll.page";
+									 }
+								 }
+							 },
+							buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주',},
+							headerToolbar:{start: 'prev today enrollButton',center: 'title',end: 'multiMonthYear,dayGridMonth,timeGridWeek next'},
+							views:{year: {titleFormat:{year: '2-digit'},multiMonthMaxColumns: 1},
+								  	month:{titleFormat:{year: '2-digit', month: 'short'}},
+									week: {titleFormat:{year: '2-digit'}},
+									day: {titleFormat:{month: 'short',day:'2-digit'}}},
+							buttonIcons: false,
+							navLinks: true,
+							slotMinTime: "06:00:00",
+							timeZone: 'Asia/Seoul',
+							editable: true,
+							droppable: true,
+							eventStartEditable: true,
+							eventResizableFromStart: true,
+							eventClick:function(info){
+								console.log(info.event);
+								console.log(info.event.extendedProps);
+								console.log(info.event.extendedProps.content);
+								//console.log($('#cal_modal').find('.content-text-area'));
+					     	 	$(document).on('opening', '#cal_modal', function (e) {
+					     	 		console.log(info.event.title);
+								    //console.log($('#cal_modal').find('#currentDate1'));
+								    
+								    $('#cal_modal').find('#color-style').val(info.event.backgroundColor);
+								    $('#cal_modal').find('#currentDate1').val(info.event.startStr.slice(0,10));
+								    $('#cal_modal').find('#currentTime1').val(info.event.startStr.slice(11));
+								    $('#cal_modal').find('#currentDate2').val(info.event.endStr.slice(0,10));
+								    $('#cal_modal').find('#currentTime2').val(info.event.endStr.slice(11));
+								});
+						     	
+					     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
+						      	$('#cal_modal').iziModal('open');
+							},
+							eventMouseEnter:function(info){
+									info.el.style.transform = 'scale(1.05)';
+									info.el.style.cursor = 'pointer';
+							},
+							eventMouseLeave:function(info){
+									info.el.style.transform = '';
+							},
+							events:[
+								<c:forEach var="d" items="${list}">
+									{
+										id: '${d.calNO}',
+										title: '${d.calTitle }',
+										start: '${d.startDate }',
+										end: '${d.endDate }',
+										color: '${d.color }',
+										extendeProps:{
+											content: '${d.calcontent}',
+											place: '${d.place}'
+										}
+									},
+								</c:forEach>
+							]
+						});
+					// 캘린더 객체 호출
+					calendar.render();
+				});
+				
+				$(function(){
+					//console.log('${list}');
+				})
+	      </script>
+		</div>
+	</div>
+	
 	<!-- 모달 스크립트문 -->
 	<script>
       function repeat_anmation(){
