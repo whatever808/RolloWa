@@ -18,6 +18,14 @@ public class CalendarDao {
 	public List<CalendarDto> selectPCalendar() {
 		return sqlSession.selectList("calMapper.selectPCalendar");
 	}
+
+	public int insertCal(CalendarDto calendar) {
+		return sqlSession.insert("calMapper.insertCal", calendar);
+	}
+
+	public int insertCoworker(String woker) {
+		return sqlSession.insert("calMapper.inserCoworker", woker);
+	}
 	
 	
 }

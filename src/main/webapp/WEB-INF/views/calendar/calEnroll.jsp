@@ -86,14 +86,13 @@
       <!-- 컨텐츠 영역 -->
       <div class="content" style="max-width: 1000px; padding: 30px;">
           <fieldset class="clander-add-area radious10 inner-line line-shadow">
-          <form action="" method="post"> 
-          <!-- ${path }/calendar/calEnroll.do -->
+          <form action="${path}/calendar/calEnroll.do" method="post"> 
               <legend><h1 class="jua-regular">일정 추가</h1></legend>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div class="font-size25 jua-regular" id="categoryName">Category</div>
 
                   <div class="pretty p-default p-round p-smooth font-size20 privateArea">
-                      <input type="radio" name="calSort" value="P">
+                      <input type="checkbox" name="calSort" value="P">
                       <div class="state p-danger">
                           <label class="jua-regular">private</label>
                       </div>
@@ -102,35 +101,35 @@
 
               <div class="Category">
                   <div class="pretty p-default p-curve">
-                      <input type="radio" name="calSort" value="A" >
+                      <input type="radio" name="groupCode" value="A" >
                       <div class="state p-success-o">
                           <label>회의</label>
                       </div>
                   </div>
               
                   <div class="pretty p-default p-curve">
-                      <input type="radio" name="calSort" value="B">
+                      <input type="radio" name="groupCode" value="B">
                       <div class="state p-success-o">
                           <label>미팅</label>
                       </div>
                   </div>
               
                   <div class="pretty p-default p-curve">
-                      <input type="radio" name="calSort" value="C">
+                      <input type="radio" name="groupCode" value="C">
                       <div class="state p-success-o">
                           <label>이벤트</label>
                       </div>
                   </div>
               
                   <div class="pretty p-default p-curve">
-                      <input type="radio" name="calSort" value="D">
+                      <input type="radio" name="groupCode" value="D">
                       <div class="state p-success-o">
                           <label>계약</label>
                       </div>
                   </div>
               
                   <div class="pretty p-default p-curve">
-                      <input type="radio" name="calSort" value="E">
+                      <input type="radio" name="groupCode" value="E">
                       <div class="state p-success-o">
                           <label>기타</label>
                       </div>
@@ -141,35 +140,35 @@
               <div class="font-size25 jua-regular">Co-worker</div>
               <div class="Co-worker">
                   <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" name="coworker" value="김우빈">
+                      <input type="checkbox" name="coworker" value="1">
                       <div class="state p-success-o">
                           <label> 김우빈</label>
                       </div>
                   </div>
 
                   <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" name="coworker" value="전지현">
+                      <input type="checkbox" name="coworker" value="1">
                       <div class="state p-success-o">
                           <label> 전지현</label>
                       </div>
                   </div>
 
                   <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" name="coworker" value="아이유">
+                      <input type="checkbox" name="coworker" value="1">
                       <div class="state p-success-o">
                           <label> 아이유</label>
                       </div>
                   </div>
 
                   <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" name="coworker" value="뚱이">
+                      <input type="checkbox" name="coworker" value="1">
                       <div class="state p-success-o">
                           <label> 뚱이</label>
                       </div>
                   </div>
 
                   <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" name="coworker" value="징징이">
+                      <input type="checkbox" name="coworker" value="1">
                       <div class="state p-success-o">
                           <label> 징징이</label>
                       </div>
@@ -218,7 +217,7 @@
               <div class="font-size25 jua-regular" id="placeName">Place</div>
               <div class="Place"><input class="font-size20" type="text" name="place"></div>
 
-              <div class="enroll marginR30"><button type="button" class="btn btn-outline-primary" onclick="return checkDate();">등록</button></div>
+              <div class="enroll marginR30"><button type="submit" class="btn btn-outline-primary" onclick="return checkDate();">등록</button></div>
           </form>
           </fieldset>
             <script>
@@ -226,16 +225,18 @@
     			
     			let date2 = $('#currentDate2').val()+ " " + $('#currentTime2').val();
     			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();
-		        console.log( (new Date(date2) >= new Date(date1)));
-                console.log(new Date(date2));
-                console.log(new Date(date1));
-		        console.log( (new Date(date2).getTime() - new Date(date1).getTime())/60000 );
-		        if(new Date(date2) - new Date(date1) > 60*1000){
-		        	
+    			let checkDate =  new Date(date2) >= new Date(date1);
+    			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
+		        console.log(checkDate);
+		        console.log(checkTime);
+		        if(checkDate && checkTime){
+		        	return true;
+		        }else {
+		        	alert('날짜 및 시간을 확인 해 주세요.');
+			        return false;		        	
 		        }
 		        
 		        
-		        return false;
 	     	};
   </script>
       </div>

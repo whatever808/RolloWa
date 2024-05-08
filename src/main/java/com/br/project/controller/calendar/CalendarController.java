@@ -34,16 +34,32 @@ public class CalendarController {
 		return mv;
 	}
 	
+	/**
+	 * 일정 등록 이동용 매서드
+	 * @author dpcks
+	 */
 	@GetMapping("/calEnroll.page")
 	public void moveEnroll() {}
 	
 	@PostMapping("/calEnroll.do")
-	public void insertCal(CalendarDto calendar, String[] date, String[] time) {
+	public void insertCal(CalendarDto calendar
+							, String[] date, String[] time
+							, ModelAndView mv) {
 		log.debug("data == {}", calendar);
+		if(calendar.getCalSort() != "P") {
+			calendar.setCalSort("D");			
+		}
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
 		
-//		calService.insertCal(calendar);
+		int result = calService.insertCal(calendar);
+		
+		if(result > 0 ) {
+			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("calendar/pCalendar.page");
+		}else {
+			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("calendar/calEnroll.page");
+		}
+		
 	}
 	
 	

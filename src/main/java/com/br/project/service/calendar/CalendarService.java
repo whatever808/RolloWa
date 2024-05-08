@@ -13,9 +13,32 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CalendarService {
-	private final CalendarDao CalDao;
+	private final CalendarDao calDao;
 
+	/**
+	 * @author dpcks
+	 * @return
+	 */
 	public List<CalendarDto> selectPCalendar() {
-		return CalDao.selectPCalendar();
+		return calDao.selectPCalendar();
+	}
+
+	/**
+	 * @author dpcks
+	 * @param calendar
+	 * @return
+	 */
+	public int insertCal(CalendarDto calendar) {
+		int result = calDao.insertCal(calendar);
+		int outcome = 1;
+		String[] coArr = calendar.getCoworker();
+		
+		if(coArr != null) {
+			for(String w : coArr) {
+				outcome *= calDao.insertCoworker(w);							
+			}
+		}
+		
+		return result * outcome;
 	}
 }

@@ -142,7 +142,7 @@
 			<div
 				class="pretty p-default p-round p-smooth font-size20 privateArea"
 				id="privateName">
-				<input type="checkbox" />
+				<input type="checkbox" name="calSort" />
 				<div class="state p-danger">
 					<label class="jua-regular">private</label>
 				</div>
@@ -150,77 +150,77 @@
 		</div>
 		
 		<div class="Category">
-           <div class="pretty p-default p-curve">
-               <input type="radio" name="color" />
-               <div class="state p-success-o">
-                   <label>회의</label>
-               </div>
-           </div>
+	    <div class="pretty p-default p-curve">
+	     	<input type="radio" name="color" />
+	       <div class="state p-success-o">
+	           <label>회의</label>
+	       </div>
+	    </div>
        
-           <div class="pretty p-default p-curve">
-               <input type="radio" name="color" />
-               <div class="state p-success-o">
-                   <label>미팅</label>
-               </div>
-           </div>
+      <div class="pretty p-default p-curve">
+       <input type="radio" name="color" />
+       <div class="state p-success-o">
+           <label>미팅</label>
+       </div>
+      </div>
        
-           <div class="pretty p-default p-curve">
-               <input type="radio" name="color" />
-               <div class="state p-success-o">
-                   <label>이벤트</label>
-               </div>
-           </div>
-       
-           <div class="pretty p-default p-curve">
-               <input type="radio" name="color" />
-               <div class="state p-success-o">
-                   <label>계약</label>
-               </div>
-           </div>
-           <div class="pretty p-default p-curve">
-               <input type="radio" name="color" />
-               <div class="state p-success-o">
-                   <label>기타</label>
-               </div>
-           </div>       
+      <div class="pretty p-default p-curve">
+       <input type="radio" name="color" />
+       <div class="state p-success-o">
+           <label>이벤트</label>
+       </div>
+      </div>
+  
+      <div class="pretty p-default p-curve">
+	      <input type="radio" name="color" />
+	      <div class="state p-success-o">
+	          <label>계약</label>
+  			</div>
+      </div>
+      <div class="pretty p-default p-curve">
+	      <input type="radio" name="color" />
+	      <div class="state p-success-o">
+        	<label>기타</label>
+	      </div>
+      </div>       
 		</div>
 		<br>
 		<div class="jua-regular">Co-worker</div>
 		<div class="Co-worker">
-                    <div class="pretty p-default p-round p-smooth p-plain">
-                        <input type="checkbox" />
-                        <div class="state p-success-o">
-                            <label> 김우빈</label>
-                        </div>
-                    </div>
-
-                    <div class="pretty p-default p-round p-smooth p-plain">
-                        <input type="checkbox" />
-                        <div class="state p-success-o">
-                            <label> 전지현</label>
-                        </div>
-                    </div>
-
-                    <div class="pretty p-default p-round p-smooth p-plain">
-                        <input type="checkbox" />
-                        <div class="state p-success-o">
-                            <label> 아이유</label>
-                        </div>
-                    </div>
-
-                    <div class="pretty p-default p-round p-smooth p-plain">
-                        <input type="checkbox" />
-                        <div class="state p-success-o">
-                            <label> 뚱이</label>
-                        </div>
-                    </div>
-
-                    <div class="pretty p-default p-round p-smooth p-plain">
-                        <input type="checkbox" />
-                        <div class="state p-success-o">
-                            <label> 징징이</label>
-                        </div>
-                    </div>
+	    <div class="pretty p-default p-round p-smooth p-plain">
+	        <input type="checkbox" />
+	        <div class="state p-success-o">
+	            <label> 김우빈</label>
+	        </div>
+	    </div>
+	
+	    <div class="pretty p-default p-round p-smooth p-plain">
+	        <input type="checkbox" />
+	        <div class="state p-success-o">
+	            <label> 전지현</label>
+	        </div>
+	    </div>
+	
+	    <div class="pretty p-default p-round p-smooth p-plain">
+	        <input type="checkbox" />
+	        <div class="state p-success-o">
+	            <label> 아이유</label>
+	        </div>
+	    </div>
+	
+	    <div class="pretty p-default p-round p-smooth p-plain">
+	        <input type="checkbox" />
+	        <div class="state p-success-o">
+	            <label> 뚱이</label>
+	        </div>
+	    </div>
+	
+	    <div class="pretty p-default p-round p-smooth p-plain">
+	        <input type="checkbox" />
+	        <div class="state p-success-o">
+	            <label> 징징이</label>
+	        </div>
+	    </div>
 		</div>
 		<br>
 		<div class="jua-regular">
@@ -238,6 +238,7 @@
 			</div>
 		</div>
 		<br>
+		
 		<div class="date-time-area">
 			<div style="width: 40%;">
 				<div>
@@ -260,16 +261,19 @@
 			</div>
 		</div>
 		<br>
+		
 		<div class="jua-regular" >Content</div>
 		<div>
 			<textarea class="content-text-area"></textarea>
 		</div>
 		<br>
-		<div class="jua-regular" name="place">Place</div>
+		
+		<div class="jua-regular">Place</div>
 		<div class="Place">
-			<input style="width: 80%" type="text">
+			<input style="width: 80%" type="text" name="place">
 		</div>
 		<br>
+		
 		<div align="end">
 			<button class="btn btn-outline-warning">수정</button>
 		</div>
@@ -307,20 +311,20 @@
 					var calendar = new FullCalendar.Calendar(calendarEl, {
 							initialView: 'dayGridMonth',
 							locale: 'ko',
-							 customButtons: {
+							customButtons: {
 								 enrollButton:{
-									 text: '일정 등록',
-									 click: function(){
-										 location.href="${path}/calendar/calEnroll.page";
-									 }
+								 text: '일정 등록',
+								 click: function(){
+								   location.href="${path}/calendar/calEnroll.page";
+								   }
 								 }
 							 },
 							buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주',},
 							headerToolbar:{start: 'prev today enrollButton',center: 'title',end: 'multiMonthYear,dayGridMonth,timeGridWeek next'},
 							views:{year: {titleFormat:{year: '2-digit'},multiMonthMaxColumns: 1},
 								  	month:{titleFormat:{year: '2-digit', month: 'short'}},
-									week: {titleFormat:{year: '2-digit'}},
-									day: {titleFormat:{month: 'short',day:'2-digit'}}},
+										week: {titleFormat:{year: '2-digit'}},
+										day: {titleFormat:{month: 'short',day:'2-digit'}}},
 							buttonIcons: false,
 							navLinks: true,
 							slotMinTime: "06:00:00",
@@ -330,19 +334,21 @@
 							eventStartEditable: true,
 							eventResizableFromStart: true,
 							eventClick:function(info){
-								//console.log(info.event);
-								//console.log(info.event.extendedProps);
-								//console.log(info.event.extendedProps.content);
-								//console.log($('#cal_modal').find('.content-text-area'));
+				     	 		console.log(info.event.extendedProps.extendeProps.place);
+							    console.log($('#cal_modal').find('input[name=place]'));
 					     	 	$(document).on('opening', '#cal_modal', function (e) {
-					     	 		console.log(info.event.title);
-								    //console.log($('#cal_modal').find('#currentDate1'));
-								    
-								    $('#cal_modal').find('#color-style').val(info.event.backgroundColor);
-								    $('#cal_modal').find('#currentDate1').val(info.event.startStr.slice(0,10));
-								    $('#cal_modal').find('#currentTime1').val(info.event.startStr.slice(11));
-								    $('#cal_modal').find('#currentDate2').val(info.event.endStr.slice(0,10));
-								    $('#cal_modal').find('#currentTime2').val(info.event.endStr.slice(11));
+								    const extend = info.event.extendedProps.extendeProps;
+								    $('#color-style').val(info.event.backgroundColor);
+								    $('#currentDate1').val(info.event.startStr.slice(0,10));
+								    $('#currentTime1').val(info.event.startStr.slice(11));
+								    $('#currentDate2').val(info.event.endStr.slice(0,10));
+								    $('#currentTime2').val(info.event.endStr.slice(11));
+								    $('#cal_modal').find('.content-text-area').val(extend.content);
+								    $('#cal_modal').find('input[name=place]').val(extend.place);
+									if(extend.calSort == 'P'){
+									$('#cal_modal').find('input[name=calSort]').attr('checked', true);										
+									}
+									
 								});
 						     	
 					     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
@@ -356,16 +362,17 @@
 									info.el.style.transform = '';
 							},
 							events:[
-								<c:forEach var="d" items="${list}">
+								<c:forEach var="c" items="${list}">
 									{
-										id: '${d.calNO}',
-										title: '${d.calTitle }',
-										start: '${d.startDate }',
-										end: '${d.endDate }',
-										color: '${d.color }',
+										id:			'${c.calNO}',
+										title: 	'${c.calTitle }',
+										start: 	'${c.startDate }',
+										end: 		'${c.endDate }',
+										color: 	'${c.color }',
 										extendeProps:{
-											content: '${d.calcontent}',
-											place: '${d.place}'
+											content:  '${c.calContent}',
+											place: 	  '${c.place}',
+											calSort:  '${c.calSort}'
 										}
 									},
 								</c:forEach>
@@ -374,10 +381,6 @@
 					// 캘린더 객체 호출
 					calendar.render();
 				});
-				
-				$(function(){
-					//console.log('${list}');
-				})
 	      </script>
 		</div>
 	</div>
@@ -397,9 +400,8 @@
      focusInput:	true,
      restoreDefaultContent: false, 
 	  }); 
- </script>
+</script>
 	
-<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
-
+	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
 </body>
 </html>

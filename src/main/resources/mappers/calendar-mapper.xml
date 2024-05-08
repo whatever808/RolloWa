@@ -6,7 +6,7 @@
 	<id column="CAL_NO" property="calNO" />
 	<result column="CAL_SORT" property="calSort" />
 	<result column="CAL_TITLE" property="calTitle" />
-	<result column="CAL_CONTENT" property="calcontent" />
+	<result column="CAL_CONTENT" property="calContent" />
 	<result column="START_DATE" property="startDate" />
 	<result column="END_DATE" property="endDate" />
 	<result column="CAL_PLACE" property="place" />
@@ -14,10 +14,11 @@
 	<result column="STATUS" property="status" />
 	<result column="GROUP_CODE" property="groupCode" />
 </resultMap>
-
+<!-- 개인 및 부서 일정 조회 -->
 <select id="selectPCalendar" resultMap="calResultMap">
 select
     CAL_NO
+    , CAL_SORT
     , CAL_TITLE
     , CAL_CONTENT
     , START_DATE
@@ -25,15 +26,15 @@ select
     , CAL_PLACE
     , CAL_COLOR
 from calender
-where cal_sort in ('P', 'C')
+where cal_sort in ('P', 'D')
 and status = 'Y'
 <![CDATA[
 and Months_between(START_DATE, sysdate) <= 6
 and Months_between(end_DATE, sysdate) >= -6
 ]]>
 </select>
-
-<insert id="">
+<!-- 갤린더 일정 등록 쿼리 -->
+<insert id="insertCal">
 	insert 
 	into calender(CAL_NO,CAL_TITLE,CAL_CONTENT,START_DATE,END_DATE,CAL_COLOR,REGIST_EMP,MODIFY_EMP,GROUP_CODE
 	) values ( 
@@ -43,9 +44,20 @@ and Months_between(end_DATE, sysdate) >= -6
 		,to_date(#{startDate}, 'YYYY-MM-DD HH24:MI:SS')
 		,to_date(#{endDate}, 'YYYY-MM-DD HH24:MI:SS')
 		,#{color}
-		,1
-		,1
-		,1)
+		,1<!-- REGIST_EMP -->
+		,1<!-- MODIFY_EMP -->
+		,1<!-- GROUP_CODE -->
+		)
+</insert>
+<!-- 일정 별 동행자 추가 쿼리 -->
+<insert id="inserCoworker">
+	insert
+	into co_worker(WORKER_NO, CAL_NO, USER_NO
+	)values(
+		SEQ_COWNO.NEXTVAL
+		, SEQ_CALNO.CURRVAL
+		, #{woker}
+	)
 </insert>
 
 </mapper>
