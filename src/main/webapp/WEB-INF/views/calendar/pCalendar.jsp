@@ -22,14 +22,6 @@
 		box-sizing: border-box;
 	}
 	
-	.radious10 {
-		border-radius: 10px;
-	}
-	
-	.line-shadow {
-		box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
-	}
-	
 	.member-search-area {
 		height: 15%;
 		padding: 10px;
@@ -88,56 +80,13 @@
 	.font-size25 {
 		font-size: 25px;
 	}
-	
-	.content-area {
-		width: 75%;
-		max-width: 1120px;
-		padding: 30px;
-	}
-	.content-area .member-search-area, .content-area .calender-area {
+	.member-search-area, .content-area .calender-area {
 		margin-left: 30px;
 	}
-</style>
-<!-- 모달 스타일 -->
-<style>
+	/* 모달 스타일 */
 	.Category, .Co-worker {
 		display: -webkit-box;
 		overflow-y: hidden;
-	}
-	
-	.line-shadow {
-		box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
-	}
-	
-	.line-cirecle-sm {
-		border-radius: 100%;
-		margin-left: 20px;
-		margin-bottom: 10px;
-		padding: 5px;
-		text-align: center;
-		height: fit-content;
-		cursor: pointer;
-	}
-	
-	#color-style {
-		-webkit-appearance: none;
-		-moz-appearance: none;
-		appearance: none;
-		width: 30px;
-		height: 30px;
-		background-color: transparent;
-		border: none;
-		cursor: pointer;
-	}
-	
-	#color-style::-webkit-color-swatch {
-		border-radius: 10px;
-		border: none;
-	}
-	
-	#color-style::-moz-color-swatch {
-		border-radius: 10px;
-		border: none;
 	}
 	
 	.date-time-area {
@@ -160,20 +109,9 @@
 		height: 50px;
 	}
 	
-	.border1 {
-		border: 1px solid;
-	}
-	
-	.line-border-square {
-		border-radius: 10px;
-		width: 80px;
-		text-align: center;
-		padding: 5px;
-	}
-	
 	.content-text-area {
 		width: 500px;
-		min-height: 150px;
+		min-height: 120px;
 	}
 	/* 캘린더 스타일  */
 	#calendar a {
@@ -196,118 +134,11 @@
 </style>
 </head>
 <body>
-	<div class="out-line">
-		<!-- 메뉴판 -->
-		<jsp:include page="/WEB-INF/views/common/sidebar.jsp"/>
-		<!-- 컨텐츠 영역 -->
-		<div class="content-area">
-			<!-- 직원 div 영역 -->
-			<div class="member-search-area radious10 line-shadow">
-				<div class="mydiv-area display-item-center">
-					<div
-						class="line-cirecle display-item-center line-shadow my-element"
-						onclick="repeat_anmation()">홍길동</div>
-				</div>
-				<div class="memebrdiv-area display-item-center">
-					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
-					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
-					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
-					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
-					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
-				</div>
-			</div>
-			<br> <br>
-			<!-- 캘린더 영역 -->
-			<div class="calender-area radious10 line-shadow ">
-				<div id="calendar"></div>
-			</div>
-			<!-- 캘린더 스타일 -->
-		<script>
-			let events = [];
-			// 캘린더 설정 및 선언
-			document.addEventListener('DOMContentLoaded', function() {
-					var calendarEl = document.getElementById('calendar');
-					var calendar = new FullCalendar.Calendar(calendarEl, {
-							initialView: 'dayGridMonth',
-							locale: 'ko',
-							buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주',},
-							headerToolbar:{start: 'prev today',center: 'title',end: 'multiMonthYear,dayGridMonth,timeGridWeek next'},
-							views:{year: {titleFormat:{year: '2-digit'},multiMonthMaxColumns: 1},
-								  	month:{titleFormat:{year: '2-digit', month: 'short'}},
-									week: {titleFormat:{year: '2-digit'}},
-									day: {titleFormat:{month: 'short',day:'2-digit'}}},
-							buttonIcons: false,
-							navLinks: true,
-							slotMinTime: "06:00:00",
-							timeZone: 'Asia/Seoul',
-							editable: true,
-							droppable: true,
-							eventStartEditable: true,
-							eventResizableFromStart: true,
-							eventClick:function(info){
-								//console.log(info.event);
-								//console.log(info.event.extendedProps);
-								//console.log(info.event.extendedProps.content);
-							      $('#cal_modal').iziModal({
-							          title: '상세보기',
-							          subtitle: '수정도 가능합니다.',
-							          headerColor: ' rgb(255,247,208)', 
-							          theme:'light',
-							          padding: '15px',
-							          radius: 10, 
-							          focusInput:	true,
-							          restoreDefaultContent: false,
-							          onOpening: function(){
-							        	  //console.log($('#cal_modal').find('.content-text-area'));
-							        	  $('#cal_modal').find('.content-text-area').html(info.event.id);
-							          }
-						     	  });
-							      
-							      $('#cal_modal').iziModal('open');
-							},
-							eventMouseEnter:function(info){
-									info.el.style.transform = 'scale(1.05)';
-									info.el.style.cursor = 'pointer';
-							},
-							eventMouseLeave:function(info){
-									info.el.style.transform = '';
-							},
-							events:[
-								<c:forEach var="d" items="${list}">
-									{
-										id: '${d.calNO}',
-										title: '${d.calTitle }',
-										start: '${d.startDate }',
-										end: '${d.endDate }',
-										color: '${d.color }',
-										extendeProps:{
-											content: '${d.calcontent}',
-											place: '${d.place}'
-										}
-									},
-								</c:forEach>
-							]
-						});
-
-					// 캘린더 객체 호출
-					calendar.render();
-			});
-			
-			$(function(){
-				console.log('${list}');
-			})
-      </script>
-			<br>
-			<button data-izimodal-open="#cal_modal"
-				class="btn btn-outline-secondary">Modal</button>
-		</div>
-	</div>
-
 	<!-- 상세보기 일정 모달 -->
 	<div id="cal_modal">
-		<div
-			style="display: flex; justify-content: space-between; align-items: center">
+		<div style="display: flex; justify-content: space-between; align-items: center">
 			<div class="jua-regular">Category</div>
+			
 			<div
 				class="pretty p-default p-round p-smooth font-size20 privateArea"
 				id="privateName">
@@ -317,27 +148,83 @@
 				</div>
 			</div>
 		</div>
-		<br>
+		
 		<div class="Category">
-			<div class="line-cirecle-sm line-shadow">이벤트</div>
-			<div class="line-cirecle-sm line-shadow">이벤트</div>
-			<div class="line-cirecle-sm line-shadow">이벤트</div>
-			<div class="line-cirecle-sm line-shadow">이벤트</div>
-			<div class="line-cirecle-sm line-shadow">이벤트</div>
+           <div class="pretty p-default p-curve">
+               <input type="radio" name="color" />
+               <div class="state p-success-o">
+                   <label>회의</label>
+               </div>
+           </div>
+       
+           <div class="pretty p-default p-curve">
+               <input type="radio" name="color" />
+               <div class="state p-success-o">
+                   <label>미팅</label>
+               </div>
+           </div>
+       
+           <div class="pretty p-default p-curve">
+               <input type="radio" name="color" />
+               <div class="state p-success-o">
+                   <label>이벤트</label>
+               </div>
+           </div>
+       
+           <div class="pretty p-default p-curve">
+               <input type="radio" name="color" />
+               <div class="state p-success-o">
+                   <label>계약</label>
+               </div>
+           </div>
+           <div class="pretty p-default p-curve">
+               <input type="radio" name="color" />
+               <div class="state p-success-o">
+                   <label>기타</label>
+               </div>
+           </div>       
 		</div>
-
-		<div class="jua-regular">Co-worker</div>
 		<br>
+		<div class="jua-regular">Co-worker</div>
 		<div class="Co-worker">
-			<div class="line-cirecle-sm line-shadow">홍길동</div>
-			<div class="line-cirecle-sm line-shadow">홍길동</div>
-			<div class="line-cirecle-sm line-shadow">홍길동</div>
-			<div class="line-cirecle-sm line-shadow">홍길동</div>
-			<div class="line-cirecle-sm line-shadow">홍길동</div>
+                    <div class="pretty p-default p-round p-smooth p-plain">
+                        <input type="checkbox" />
+                        <div class="state p-success-o">
+                            <label> 김우빈</label>
+                        </div>
+                    </div>
+
+                    <div class="pretty p-default p-round p-smooth p-plain">
+                        <input type="checkbox" />
+                        <div class="state p-success-o">
+                            <label> 전지현</label>
+                        </div>
+                    </div>
+
+                    <div class="pretty p-default p-round p-smooth p-plain">
+                        <input type="checkbox" />
+                        <div class="state p-success-o">
+                            <label> 아이유</label>
+                        </div>
+                    </div>
+
+                    <div class="pretty p-default p-round p-smooth p-plain">
+                        <input type="checkbox" />
+                        <div class="state p-success-o">
+                            <label> 뚱이</label>
+                        </div>
+                    </div>
+
+                    <div class="pretty p-default p-round p-smooth p-plain">
+                        <input type="checkbox" />
+                        <div class="state p-success-o">
+                            <label> 징징이</label>
+                        </div>
+                    </div>
 		</div>
 		<br>
 		<div class="jua-regular">
-			Color <input type="color" id="color-style">
+			Color <input type="color" id="color-style" style="width: 30px; height: 30px;">
 		</div>
 		<br>
 		<div style="display: flex; justify-content: space-between;">
@@ -375,8 +262,7 @@
 		<br>
 		<div class="jua-regular" >Content</div>
 		<div>
-			<textarea class="content-text-area" 
-				style="resize: none; height: 200px;"></textarea>
+			<textarea class="content-text-area"></textarea>
 		</div>
 		<br>
 		<div class="jua-regular" name="place">Place</div>
@@ -388,25 +274,132 @@
 			<button class="btn btn-outline-warning">수정</button>
 		</div>
 	</div>
+	
+	<div class="out-line">
+		<!-- 메뉴판 -->
+		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 
+		<!-- 컨텐츠 영역 content-area -->
+		<div class="content" style="max-width: 1120px; padding: 30px;">
+			<!-- 직원 div 영역 -->
+			<div class="member-search-area radious10 line-shadow">
+				<div class="mydiv-area display-item-center">
+					<div
+						class="line-cirecle display-item-center line-shadow my-element"
+						onclick="repeat_anmation()">홍길동</div>
+				</div>
+				<div class="memebrdiv-area display-item-center">
+					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
+					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
+					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
+					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
+					<div class="line-cirecle display-item-center line-shadow">홍길동</div>
+				</div>
+			</div>
+			<br> <br>
+			<!-- 캘린더 영역 -->
+			<div class="calender-area radious10 line-shadow "><div id="calendar"></div></div>
+			<!-- 캘린더 스타일 -->
+			<script>
+			// 캘린더 설정 및 선언
+			document.addEventListener('DOMContentLoaded', function() {
+					var calendarEl = document.getElementById('calendar');
+					var calendar = new FullCalendar.Calendar(calendarEl, {
+							initialView: 'dayGridMonth',
+							locale: 'ko',
+							 customButtons: {
+								 enrollButton:{
+									 text: '일정 등록',
+									 click: function(){
+										 location.href="${path}/calendar/calEnroll.page";
+									 }
+								 }
+							 },
+							buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주',},
+							headerToolbar:{start: 'prev today enrollButton',center: 'title',end: 'multiMonthYear,dayGridMonth,timeGridWeek next'},
+							views:{year: {titleFormat:{year: '2-digit'},multiMonthMaxColumns: 1},
+								  	month:{titleFormat:{year: '2-digit', month: 'short'}},
+									week: {titleFormat:{year: '2-digit'}},
+									day: {titleFormat:{month: 'short',day:'2-digit'}}},
+							buttonIcons: false,
+							navLinks: true,
+							slotMinTime: "06:00:00",
+							timeZone: 'Asia/Seoul',
+							editable: true,
+							droppable: true,
+							eventStartEditable: true,
+							eventResizableFromStart: true,
+							eventClick:function(info){
+								//console.log(info.event);
+								//console.log(info.event.extendedProps);
+								//console.log(info.event.extendedProps.content);
+								//console.log($('#cal_modal').find('.content-text-area'));
+					     	 	$(document).on('opening', '#cal_modal', function (e) {
+					     	 		console.log(info.event.title);
+								    //console.log($('#cal_modal').find('#currentDate1'));
+								    
+								    $('#cal_modal').find('#color-style').val(info.event.backgroundColor);
+								    $('#cal_modal').find('#currentDate1').val(info.event.startStr.slice(0,10));
+								    $('#cal_modal').find('#currentTime1').val(info.event.startStr.slice(11));
+								    $('#cal_modal').find('#currentDate2').val(info.event.endStr.slice(0,10));
+								    $('#cal_modal').find('#currentTime2').val(info.event.endStr.slice(11));
+								});
+						     	
+					     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
+						      	$('#cal_modal').iziModal('open');
+							},
+							eventMouseEnter:function(info){
+									info.el.style.transform = 'scale(1.05)';
+									info.el.style.cursor = 'pointer';
+							},
+							eventMouseLeave:function(info){
+									info.el.style.transform = '';
+							},
+							events:[
+								<c:forEach var="d" items="${list}">
+									{
+										id: '${d.calNO}',
+										title: '${d.calTitle }',
+										start: '${d.startDate }',
+										end: '${d.endDate }',
+										color: '${d.color }',
+										extendeProps:{
+											content: '${d.calcontent}',
+											place: '${d.place}'
+										}
+									},
+								</c:forEach>
+							]
+						});
+					// 캘린더 객체 호출
+					calendar.render();
+				});
+				
+				$(function(){
+					//console.log('${list}');
+				})
+	      </script>
+		</div>
+	</div>
+	
 	<!-- 모달 스크립트문 -->
-	<script>
-      function repeat_anmation(){
-          animateCSS('.my-element', 'bounce');
-      }
-/* 
-      $('#cal_modal').iziModal({
-      title: '상세보기',
-      subtitle: '수정도 가능합니다.',
-      headerColor: ' rgb(255,247,208)', 
-      theme:'light',
-      padding: '15px',
-      radius: 10, 
-      zindex:	300,
-      focusInput:	true,
-      restoreDefaultContent: false, 
- 	  }); */
-  </script>
+<script>
+     function repeat_anmation(){
+         animateCSS('.my-element', 'bounce');
+     }
+
+     $('#cal_modal').iziModal({
+     subtitle: '수정도 가능합니다.',
+     headerColor: ' rgb(255,247,208)', 
+     theme:'light',
+     padding: '15px',
+     radius: 10, 
+     focusInput:	true,
+     restoreDefaultContent: false, 
+	  }); 
+ </script>
+	
+<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
 
 </body>
 </html>

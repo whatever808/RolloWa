@@ -21,6 +21,7 @@ public class CalendarController {
 	private final CalendarService calService;
 	
 	/**
+	 * 개인 및 부서 일정 조회 매서드
 	 * @author dpcks
 	 */
 	@GetMapping("/pCalendar.page")
@@ -31,6 +32,12 @@ public class CalendarController {
 		mv.addObject("list", list).setViewName("calendar/pCalendar");
 		return mv;
 	}
+	
+	@GetMapping("/calEnroll.page")
+	public void moveEnroll() {}
+	
+	
+	
 	
 	
 }
