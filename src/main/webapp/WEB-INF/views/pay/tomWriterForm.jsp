@@ -327,30 +327,30 @@
                                                 <div class="m_content_style">
                                                     <div id="m_co_top">
                                                         <div id="m_co1">
-                                                                <button class="atag">영업</button>
-                                                                <ul>
-                                                                    <button class="btn_result">과장-홍길동</button><br>
-                                                                    <button class="btn_result">과장-김말순</button><br>
-                                                                    <button class="btn_result">과장-홍길동</button><br>
-                                                                    <button class="btn_result">과장-김말순</button><br>
-                                                                    <button class="btn_result">과장-김말순</button><br>
-                                                                </ul>
-                                                                <button class="atag">홍보</button>
-                                                                <ul>
-                                                                    <button class="btn_result">과장-홍길동</button><br>
-                                                                    <button class="btn_result">과장-김말순</button><br>
-                                                                    <button class="btn_result">과장-홍길동</button><br>
-                                                                    <button class="btn_result">과장-김말순</button><br>
-                                                                    <button class="btn_result">과장-김말순</button><br>
-                                                                </ul>
-                                                                <button class="atag">경영</button>
-                                                                <ul>
-                                                                    <button class="btn_result">과장-홍길동</button><br>
-                                                                    <button class="btn_result">과장-김말순</button><br>
-                                                                    <button class="btn_result">과장-홍길동</button><br>
-                                                                    <button class="btn_result">과장-김말순</button><br>
-                                                                    <button class="btn_result">과장-김말순</button><br>
-                                                                </ul>
+                                                           <button class="atag">영업</button>
+                                                           <ul>
+                                                               <button class="btn_result">과장-홍길동</button><br>
+                                                               <button class="btn_result">과장-김말순</button><br>
+                                                               <button class="btn_result">과장-홍길동</button><br>
+                                                               <button class="btn_result">과장-김말순</button><br>
+                                                               <button class="btn_result">과장-김말순</button><br>
+                                                           </ul>
+                                                           <button class="atag">홍보</button>
+                                                           <ul>
+                                                               <button class="btn_result">과장-홍길동</button><br>
+                                                               <button class="btn_result">과장-김말순</button><br>
+                                                               <button class="btn_result">과장-홍길동</button><br>
+                                                               <button class="btn_result">과장-김말순</button><br>
+                                                               <button class="btn_result">과장-김말순</button><br>
+                                                           </ul>
+                                                           <button class="atag">경영</button>
+                                                           <ul>
+                                                               <button class="btn_result">과장-홍길동</button><br>
+                                                               <button class="btn_result">과장-김말순</button><br>
+                                                               <button class="btn_result">과장-홍길동</button><br>
+                                                               <button class="btn_result">과장-김말순</button><br>
+                                                               <button class="btn_result">과장-김말순</button><br>
+                                                           </ul>
                                                         </div>
                                                         <div>
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16" style="margin: 20px;">
@@ -658,53 +658,31 @@
         
          <script>
             function submitbtn(){
-                let sbtn = confirm('정말로 제출하시겠습니까?');
-                if(sbtn == true){
-                    alert("제출이 완료되었습니다.");
-                    
-									/*
-                   //품목
-                  let arr = []; 
-                  $(".item").each(function(){
-                        let item = $(this).val().trim(); // 각 요소의 값 가져오기
-                        
-                        // 값이 비어있지 않으면 배열에 추가
-                        if(item !== ""){
-                            arr.push(item);
-                        }
-                    });
-                  
-                    $("input[type='hidden'][name='item']").val(arr);
-                    
-                    
-                    let arr = [];
-                    
-                    $(".item").each(function(){
-                          let item = $(this).val().trim(); // 각 요소의 값 가져오기
-                          
-                          // 값이 비어있지 않으면 배열에 추가
-                          if(item !== ""){
-                              arr.push(item);
-                          }
-                      });
-                    
-                      $("input[type='hidden'][name='item']").val(arr);
-                      
-                      let arr = [];
-                      
-                      $(".item").each(function(){
-                            let item = $(this).val().trim(); // 각 요소의 값 가져오기
-                            
-                            // 값이 비어있지 않으면 배열에 추가
-                            if(item !== ""){
-                                arr.push(item);
-                            }
-                        });
-                      
-                        $("input[type='hidden'][name='item']").val(arr);
-                        */
+            	 if(confirm('정말로 제출하시겠습니까?') == true){
+                     alert("제출이 완료되었습니다.");
+                 }
+            	/*
+            	$(".item").each(function() {
+                    if ($(this).val().trim() != "") {
+                	
+                	 let arr = []; 
+                     $(".item").each(function(){
+                           let item = $(this).val().trim(); // 각 요소의 값 가져오기
+                           
+                           // 값이 비어있지 않으면 배열에 추가
+                           if(item !== ""){
+                               arr.push(item);
+                           }
+                       });
+                     
+                       $("input[type='hidden'][name='item']").val(arr);
+                       
+                		}
              
                 }
+								*/
+								
+               
             }
                
             $("#reset_btn").click(function(){

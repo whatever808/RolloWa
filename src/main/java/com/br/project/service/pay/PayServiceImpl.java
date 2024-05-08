@@ -99,6 +99,16 @@ public class PayServiceImpl {
 	public PayDto cdetail(PayDto pDto) {	
 		return payDao.cdetail(pDto);	
 	}
+	
+	//결재메인페이지 사용자 결재리스트갯수
+	public int allUserCount(String userName) {
+		return payDao.allUserCount(userName);
+	}
+	
+	//결재메인페이지 사용자 결재리스트
+	public List<PayDto> allUserList(String userName, PageInfoDto pi) {
+		return payDao.allUserList(userName, pi);
+	}
 
 		
 }

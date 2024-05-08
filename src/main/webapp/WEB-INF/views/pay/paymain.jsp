@@ -152,7 +152,7 @@
                 <!-- informations left area start -->
                 <div class="left_con">
                     <div id="cen_top">
-                        <a href="">
+                        <a href="${contextPath}/pay/allUserlist.do" method="get">
                             <div class="di_top" id="di_t_1">
                                 <div class="di_top_left">
                                     <div><label>000님의 전체수신결재함</label></div>
@@ -246,7 +246,7 @@
                                     <div><b>비품신청서</b></div>
                                 </div>
                             </a>
-                           <a href="${contextPath}/pay/tomWriter.do" method="get">
+                           <a href="${contextPath}/pay/tomWriterForm.do" method="get">
                             <div class="cen_bottom_left_div">
                                 <div>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-clipboard-data" viewBox="0 0 16 16" style="color: black;">
@@ -412,7 +412,6 @@
                                         <select name="condition" id="select_search">
                                             <option value="PAYMENT_WRITER">기안자</option>
                                             <option value="DEPARTMENT">부서</option>
-                                            <option value="DOCUMENT_STATUS">승인여부</option>
                                         </select>
                                         <input type="text" name="keyword" value="${ search.keyword }"  id="search_input" class="form-control" placeholder="검색어를 입력하세요" style="width: 400px;">
                                         <div class="input-group-append">
@@ -516,7 +515,7 @@
 		<script>
 			$(document).ready(function(){
 				//카테고리 고정시키기
-				$("#select_search select").val("${search.condition}");
+				$("#select_search").val("${search.condition}");
 				 
 				//
 				$("#pagin_form a").on("click", function(){

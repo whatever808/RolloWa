@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.br.project.dto.common.PageInfoDto;
+import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.PayDto;
 import com.br.project.service.pay.PayServiceImpl;
 import com.br.project.util.PagingUtil;
@@ -203,11 +204,60 @@ public class PayController {
 		
 	}
 	
-	
-	@GetMapping("/tomWriter.do")
-	public void tomWriter() {
+	//메인페이지 로그인한 유저의 전체결재 수신함--------------------------
+	@GetMapping("/allUserlist.do")
+	public String allUserlist(@RequestParam (value="page", defaultValue="1") int currentPage
+								,HttpSession session, Model model) {
+		
+		//session 멤버객체
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		// 로그인한 userName
+		String userName = loginMember.getUserName();
+		log.debug("userName : {}", userName);
+		
+		//로그인한 유저의 승인자결재목록갯수
+		int ulistCount = payServiceImpl.allUserCount(userName);
+		
+		//페이지
+		PageInfoDto pi = pagingUtil.getPageInfoDto(ulistCount, ulistCount, 5, 10);
+		
+		//로그인한 유저의 승인자결재목록리스트
+		List<PayDto> list = payServiceImpl.allUserList(userName, pi);
+		
+		//일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payServiceImpl.moreDateCount();
+		
+		//결재내역 게시글 총갯수
+		int slistCount = payServiceImpl.successListCount();
+		
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("ulistCount", ulistCount);
+		model.addAttribute("mdCount", mdCount);
+		model.addAttribute("slistCount", slistCount);
+		
+		return "pay/paymain";
 		
 	}
+	//-------------------------------------------------------
+	
+	
+	//글작성페이지폼-------------------------------------------
+	@GetMapping("/tomWriterForm.do")
+	public void tomWriterForm() {
+		
+	}
+	//----------------------------------------------------
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 	

@@ -97,6 +97,15 @@ public class PayDao {
 		return sqlSessionTemplate.selectOne("payMapper.cdetail", pDto);
 	}
 	
+	public int allUserCount(String userName) {
+		return sqlSessionTemplate.selectOne("payMapper.allUserCount",userName);
+	}
+	
+	public List<PayDto> allUserList(String userName, PageInfoDto pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.allUserList", userName, rowBounds);
+	}
+	
 	
 	
 }
