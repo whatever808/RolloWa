@@ -36,7 +36,7 @@
 	<title>게시글 등록</title>
 	
 	<!-- 게시글등록페이지 스타일 -->
-  <link href="${ contextPath }/resources/css/board/postForm.css" rel="stylesheet">
+  <link href="${ contextPath }/resources/css/board/post.css" rel="stylesheet">
 </head>
 <body>
 
@@ -55,21 +55,21 @@
           <script type="text/javascript" src="${ contextPath }/resources/ckeditor/ckeditor.js"></script>
 
           <!-- board post form start -->
-          <form action="" method="post" encType="multipart/form-data" id="post-form" >
+          <form action="${ contextPath }/board/post.do" method="post" encType="multipart/form-data" id="post-form" >
 							
 							<!-- board category -->
               <div class="field-group">
                   <label for="board-category" class="field-title">게시판</label><br>              
                   <select name="boardCategory" class="board-category form-select" id="board-category">
-                      <option>일반게시판</option>
-                      <option value="${ loginUser.teamNo }">부서게시판</option>
+                      <option value="">일반게시판</option>
+                      <option value="${ loginUser.teamNo }">부서게시판</option> <!-- 로그인 사용자가 속한 부서 -->
                   </select>
               </div>
 
               <!-- board title -->
               <div class="field-group">
                   <label for="board-title" class="field-title">게시글 제목</label><br>
-                  <input type="text" id="board-title" placeholder="제목을 입력하세요." required>
+                  <input type="text" id="board-title" placeholder="제목을 입력하세요." name="boardTitle" required>
               </div>
 
               <!-- board attachment -->
@@ -78,6 +78,13 @@
                   <input type="file" name="uploadFiles" class="form-control" id="board-attachment" multiple>
               </div>
               
+              <!-- board content -->
+               <div class="field-group">
+                  <label class="field-title" for="board-content">게시글 내용</label>
+                  <textarea name="boardContent" class="form-control" id="boardContent" required></textarea>
+              </div>
+              
+              <!--  CKEditor 적용
               <script>
 		              $(document).ready(function(){
 		            		CKEDITOR.replace("boardContent", {
@@ -86,15 +93,16 @@
 		            	})
               </script>
               
-              <!-- board content -->
+              
               <div class="field-group">
                   <label class="field-title" for="board-content">게시글 내용</label>
                   <textarea name="boardContent" class="form-control" id="boardContent"></textarea>
               </div>
-
+							-->
+							
               <div class="button-group">
                   <button type="reset" class="btn btn-outline-warning" onclick="resetForm();">초기화</button>
-                  <button type="submit" class="btn btn-outline-primary"">등록하기</button>
+                  <button type="submit" class="btn btn-outline-primary">등록하기</button>
                   <button type="button" class="btn btn-outline-secondary">임시저장</button>
               </div>
 
@@ -103,10 +111,6 @@
 
       </div>
       <!-- post form end -->
-      
-      <script>
-  
-      </script>
 
   </div>
   <!-- content 끝 -->
@@ -119,5 +123,11 @@
 
 <!-- 게시글등록페이지 스크립트 -->
 <script src="${ contextPath }/resources/js/board/postForm.js"></script>
+
+<script>
+	$("#post-form").on("submit", function(){
+		
+	})  			
+</script>
 
 </html>

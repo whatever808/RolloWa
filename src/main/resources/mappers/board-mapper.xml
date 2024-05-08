@@ -182,7 +182,7 @@
 					 ,#{modifyName}
 					 ,#{attachPath}
 					 ,#{refType}
-					 ,#{refNo}
+					 ,seq_bno.currval
 					)
 	</insert>
 	
