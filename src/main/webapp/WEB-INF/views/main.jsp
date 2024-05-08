@@ -168,36 +168,38 @@
 						const remainingSec = document.getElementById("remaining__sec");
 						const completeBtn = document.getElementById("complete");
 						
-						// 굳이 ms로 변경할 필요가 없다. 계산하기 더 불편하고 할 이유가 없다.
-						// 항상 상황에 따라서 달라진다.
-						
 						let time = 180;
 						const takeTarget = () => {
-						  setInterval(function () {
-						    if (time > 0) {
-						      time = time - 1; // 2:59로 시작
-						      let min = Math.floor(time / 60);
-						      let sec = String(time % 60).padStart(2, "0");
-						      remainingMin.innerText = min;
-						      remainingSec.innerText = sec;
-						    } else {
-						      completeBtn.disabled = true;
-						      completeBtn.className += 'disabled';
-						    }
-						  }, 1000);
-						  
-						  $.ajax({
-							  url: "${contextPath}/member/sendMsg.do"
-								, method: "post"
-								, data: {phone: $("#phone").text()}
-							  , success: function(result) {
-									console.log(result);
-								}
-						  	, error: function() {
-						  		console.log("AJAX 통신 실패");
-						  	}
-						  })
-						  
+							// 휴대전화 정규표현식
+							const regExp = /^010[0-9]{8}$/;
+							console.log(regExp.test($("#phone").val()));
+							if (regExp.test($("#phone").val())) {
+								setInterval(function () {							  
+								    if (time > 0) {
+								      time = time - 1; // 2:59로 시작
+								      let min = Math.floor(time / 60);
+								      let sec = String(time % 60).padStart(2, "0");
+								      remainingMin.innerText = min;
+								      remainingSec.innerText = sec;
+								    } else {
+								      completeBtn.disabled = true;
+								      completeBtn.className += 'disabled';
+								    }
+								  }, 1000);	
+								$.ajax({
+									  url: "${contextPath}/member/sendMsg.do"
+										, method: "post"
+										, data: {phone: $("#phone").text()}
+									  , success: function(result) {
+											console.log(result);
+										}
+								  	, error: function() {
+								  		console.log("AJAX 통신 실패");
+								  	}
+								  })
+							} else {
+								alertify.alert("전화번호", "전화번호가 유효하지 않습니다. 다시 확인해주세요.");
+							}		  
 						};
             
 

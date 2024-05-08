@@ -41,10 +41,8 @@ public class MemberController {
 	// 로그인
 	@PostMapping("/login.do")
 	public String MemberLogin(MemberDto member, HttpServletRequest request, RedirectAttributes redirectAttribute) {
-		log.debug("id : {}, pwd : {}", member.getUserId(), member.getUserPwd());
 		MemberDto loginMember = memberService.selectMember(member);
 		HttpSession session = request.getSession();
-		
 		
 		if(loginMember != null) {
 			// 로그인 성공
@@ -89,7 +87,7 @@ public class MemberController {
     public SingleMessageSentResponse ajaxSendOne(String phone) {
         Message message = new Message();
         // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-        message.setFrom("01047547864");
+        message.setFrom("송신 전화번호");
         message.setTo(phone);
         String rand = RandomStringUtils.randomNumeric(6);
         log.debug(rand);
