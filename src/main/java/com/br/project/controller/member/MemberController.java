@@ -1,8 +1,12 @@
 package com.br.project.controller.member;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.br.project.dto.common.AttachmentDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.member.MemberService;
+import com.br.project.util.FileUtil;
 
-import ch.qos.logback.core.util.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -82,9 +87,36 @@ public class MemberController {
 	// 마이페이지 프로필 이미지 수정
 	@PostMapping("/modifyProfile.do")
 	@ResponseBody
-	public String ajaxUpdateProfile(MultipartFile multipartFile) {
-		log.debug("{}", multipartFile);
+	public String ajaxUpdateProfile(MultipartFile uploadFile, HttpSession session) {
+		log.debug("{}", uploadFile);
+		MemberDto member = new MemberDto();
+		// 로그인한 회원 정보 확인
+		if(session.getAttribute("loginMember") != null) {
+			member = (MemberDto)session.getAttribute("loginMember");
+		} else {
+			return "FAIL";
+		}
 		
-		return "SUCCESS";
+		Map<String, String> file = new HashMap<>(); 
+	
+		if(uploadFile != null && !uploadFile.isEmpty()) {
+			file = fileUtil.fileUpload(uploadFile, "member");
+		}
+		AttachmentDto att = AttachmentDto.builder()
+								.originName(file.get("originalName"))
+								.attachPath(file.get("filePath"))
+								.modifyName(file.get("filesystemName"))
+								.refType("M")
+								.refNo(String.valueOf(member.getUserNo()))
+								.build();
+		member.setProfileURL(att.getAttachPath() + "/" + att.getModifyName());
+		
+		int result = memberService.updateProfile(member, att);
+		
+		if (result > 0) {
+			return "SUCCESS";
+		} else {
+			return "FAIL";
+		}
 	}
 }

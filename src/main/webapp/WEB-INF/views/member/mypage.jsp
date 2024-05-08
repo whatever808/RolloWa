@@ -90,7 +90,7 @@
 	             <div class="profile_box">
 	                 <div class="profile_img">
 	                     <div class="img_wrapper">
-	                         <img id="profileImg" src="${ contextPath }/resources/images/defaultProfile.png" onclick="$('#profileImgFile').click();">
+	                         <img id="profileImg" src="${ contextPath }<c:out value=${ loginMember.profileURL } default='/resources/images/defaultProfile.png'" onclick="$('#profileImgFile').click();">
 	                         <input type="file" id="profileImgFile" class="file" style="display:none;" accept="image/*">
 	                     </div>
 	                 </div>
@@ -208,38 +208,36 @@
 	    focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
 	    restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
 	});
-	 $(document).ready(function() {
-			 $("#profileImgFile").on("change", function(evt) {
-	     	if(this.files.length != 0) {
-	     		// 현재 선택된 파일이 있을 경우
-	     		let formData = new FormData();
-	     		formData.append("uploadFile", this.files[0]);
-	     		console.log(this.files[0]);
-	     		
-	     		$.ajax({
-	       		 url: "${contextPath}/member/modifyProfile.do"
-	       		, type: "post"
-	       		, data: formData
-	       		, processData: false
-	       		, contentType: false
-	       		, success: function(result) {
-	       			if (result == "SUCCESS") {
-	       				alertify.alert("프로필 사진 변경","프로필 변경에 성공했습니다.");
-	       				// 현재 위치 새로고침
-	       				location.reload();
-	       			} else if (result == "FAIL") {
-	       				alertify.alert("프로필 사진 변경","프로필 변경에 실패했습니다.");
-	       			}
-	       		}
-	       	 	, error: function() {
-	       	 		console.log("프로필 이미지 변경용 ajax 통신 실패")
-	       	 	}
-	  	 })
-	     	} else {
-	     		// 선택된 파일이 없을 경우
-	     		
-	     	}
-	 	})
-	 })
+	$("#profileImgFile").on("change", function(evt) {
+			if(this.files.length != 0) {
+				// 현재 선택된 파일이 있을 경우
+				let formData = new FormData();
+				formData.append("uploadFile", this.files[0]);
+				console.log(this.files[0]);
+				
+				$.ajax({
+						 url: "${contextPath}/member/modifyProfile.do"
+						, type: "post"
+						, data: formData
+						, processData: false
+						, contentType: false
+						, success: function(result) {
+							if (result == "SUCCESS") {
+								alertify.alert("프로필 사진 변경","프로필 변경에 성공했습니다.");
+								// 현재 위치 새로고침
+								location.reload();
+							} else if (result == "FAIL") {
+								alertify.alert("프로필 사진 변경","프로필 변경에 실패했습니다.");
+							}
+						}
+					 	, error: function() {
+					 		console.log("프로필 이미지 변경용 ajax 통신 실패")
+					 	}
+				})
+			} else {
+				// 선택된 파일이 없을 경우
+				
+			}
+	})
 </script>
 </html>

@@ -24,7 +24,7 @@ public class MemberDto {
 	private String accountNo;
 	private String bank;
 	private String email;
-	private String prorfileURL;
+	private String profileURL;
 	private int countFail;
 	private String enrollDate;
 	private int enrollUserNo;
