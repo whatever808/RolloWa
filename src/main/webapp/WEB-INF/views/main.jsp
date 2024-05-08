@@ -34,6 +34,12 @@
 
             <!-- 체크박스 관련 스타일 -->
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
+						
+						<!-- alertify -->
+						<script src="${ contextPath }/resources/alertify/js/alertify.min.js"></script>
+						<link href="${contextPath}/resources/alertify/css/alertify.min.css" rel="stylesheet">
+						<link href="${contextPath}/resources/alertify/css/default.min.css" rel="stylesheet">
+						<link href="${contextPath}/resources/alertify/css/semantic.min.css" rel="stylesheet">
 
 				    <!-- css -->
 				    <!-- <link href="/resources/css/common/sidebars.css" rel="stylesheet"> -->
@@ -42,17 +48,21 @@
 				    <link href="${ contextPath }/resources/css/login.css" rel="stylesheet">
 				    <script src="${ contextPath }/resources/js/login.js"></script>
         </head>
-
+					<c:if test="${ alertMsg != null }" >
+					<script>
+						alert('${alertMsg}');
+					</script>
+					</c:if>
         <body id="particles-js"></body>
         <div class="animated bounceInDown">
             <div class="container">
                 <span class="error animated tada" id="msg"></span>
-                <form name="form1" class="box" onsubmit="return checkStuff()">
+                <form action="${ contextPath }/member/login.do" method="post" name="form1" class="box" onsubmit="return checkStuff()">
                     <h4>회사 이름</h4>
                     <h5>Sign in to your account.</h5>
-                    <input type="text" name="email" placeholder="user id" autocomplete="off">
+                    <input type="text" name="userId" placeholder="user id" autocomplete="off">
                     <i class="typcn typcn-eye" id="eye"></i>
-                    <input type="password" name="password" placeholder="Passsword" id="pwd" autocomplete="off">
+                    <input type="password" name="userPwd" placeholder="Passsword" id="pwd" autocomplete="off">
                     <!-- <label>
                 <input type="checkbox">
                 <span></span>
@@ -75,12 +85,10 @@
                 <!-- Modal content -->
                 <!-- 스타일에 한해서는 이런식으로 class명을 주시기 바랍니다. -->
                 <div class="m_content_style">
-                    <form action="">
-                        사번 : <input type="text"> <br>
-                        <div class="btn_wrapper">
-                            <input type="submit" value="제출" class="btn1 forget_btn">
-                        </div>
-                    </form>
+                      사번 : <input type="text" name="userNo"> <br>
+                      <div class="btn_wrapper">
+                          <input type="submit" value="제출" class="btn1 forget_btn forget_id_btn">
+                      </div>
                 </div>
             </div>
             <!-- 비밀번호 찾기 modal -->
@@ -88,13 +96,11 @@
                 <!-- Modal content -->
                 <!-- 스타일에 한해서는 이런식으로 class명을 주시기 바랍니다. -->
                 <div class="m_content_style">
-                    <form action="">
-                        아이디 : <input type="text" name=""> <br>
-                        전화번호 : <input type="text" name="" placeholder="01012345678"> <br>
-                        <div class="btn_wrapper">
-                            <button type="button" class="btn1 forget_btn">휴대폰인증</button>
-                        </div>
-                    </form>
+                   아이디 : <input type="text" name=""> <br>
+                   전화번호 : <input type="text" name="" placeholder="01012345678"> <br>
+                   <div class="btn_wrapper">
+                       <button type="button" class="btn1 forget_btn">휴대폰 문자인증</button>
+                   </div>
                 </div>
             </div>
         </div>
@@ -133,6 +139,21 @@
                 focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
                 restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
             });
+            
+            // 아이디 찾기 ajax 통신
+            $(".forget_id_btn").on("click", function() {
+            	$.ajax({
+                	url: "${contextPath}/member/forgetId.do"
+                	, method: "post"
+                	, data: {userNo: $("#forget_id input[type=text]").val()}
+                	, success: function(result) {
+                		alertify.alert(result);
+                	}
+                	, error: function() {
+                		console.log("ajax 통신 실패");
+                	}
+                })
+            })
 
         </script>
 
