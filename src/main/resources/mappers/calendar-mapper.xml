@@ -33,5 +33,19 @@ and Months_between(end_DATE, sysdate) >= -6
 ]]>
 </select>
 
+<insert id="">
+	insert 
+	into calender(CAL_NO,CAL_TITLE,CAL_CONTENT,START_DATE,END_DATE,CAL_COLOR,REGIST_EMP,MODIFY_EMP,GROUP_CODE
+	) values ( 
+		SEQ_CALNO.nextval
+		,#{calTitle}
+		,#{calContent}
+		,to_date(#{startDate}, 'YYYY-MM-DD HH24:MI:SS')
+		,to_date(#{endDate}, 'YYYY-MM-DD HH24:MI:SS')
+		,#{color}
+		,1
+		,1
+		,1)
+</insert>
 
 </mapper>

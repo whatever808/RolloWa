@@ -18,12 +18,12 @@ public class CalendarDto {
 	private String calNO;
 	private String calSort;
 	private String calTitle;
-	private String calcontent;
+	private String calContent;
 	private String startDate;
 	private String endDate;
 	private String place;
 	private String color;
 	private String status;
 	private String groupCode;
-	
+	private String[] coworker;
 }
