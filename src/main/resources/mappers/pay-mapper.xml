@@ -219,12 +219,12 @@
 			  from approval
 			  WHERE STATUS = 'N'
 			  AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-			<if test="conditions != null">
-			      and DOCUMENT_TYPE =  #{conditions}
-			    </if>
-			    <if test="status != null">
-			      and PAYMENT_STATUS = #{status}
-			    </if>
+				<if test="conditions != null">
+		      and DOCUMENT_TYPE =  #{conditions}
+		    </if>
+		    <if test="status != null">
+		      and PAYMENT_STATUS = #{status}
+		    </if>
 			
 		</select>
 		
@@ -274,12 +274,12 @@
 			WHERE STATUS = 'N'
 			AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 			
-			    <if test="conditions != null">
-			      and DOCUMENT_TYPE =  #{conditions}
-			    </if>
-			    <if test="status != null">
-			      and PAYMENT_STATUS = #{status}
-			    </if>
+		    <if test="conditions != null">
+		      and DOCUMENT_TYPE =  #{conditions}
+		    </if>
+		    <if test="status != null">
+		      and PAYMENT_STATUS = #{status}
+		    </if>
 			
 			order
 			     by APPROVAL_NO desc

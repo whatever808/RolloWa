@@ -53,20 +53,25 @@ public class PayDao {
 		
 	}
 	
+	/*
 	public int statusCount(String status) {
 		return sqlSessionTemplate.selectOne("payMapper.slistCount", status);
 		
 	}
+	*/
 	
-	public List<PayDto> categoryList(String conditions, PageInfoDto pi){
+	
+	public List<PayDto> categoryList(Map<String, Object> params, PageInfoDto pi){
 		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
-		return sqlSessionTemplate.selectList("payMapper.categoryList", conditions, rowBounds);
+		return sqlSessionTemplate.selectList("payMapper.categoryList", params, rowBounds);
 	}
 	
+	/*
 	public List<PayDto> statusList(String status, PageInfoDto pi){
 		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
 		return sqlSessionTemplate.selectList("payMapper.categoryList", status, rowBounds);
 	}
+	*/
 	
 	
 	public PayDto mdetail(PayDto pDto) {

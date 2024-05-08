@@ -122,10 +122,10 @@ public class PayController {
 		PageInfoDto pi =  pagingUtil.getPageInfoDto(clistCount, currentPage, 5, 10);
 		
 		//리스트
-		List<PayDto> list = payServiceImpl.categoryList(conditions, pi);
+		List<PayDto> list = payServiceImpl.categoryList(params, pi);
 		
 		model.addAttribute("clistCount", clistCount);
-		model.addAttribute("slistCount", slistCount);
+		model.addAttribute("params", params);
 		model.addAttribute("mdCount", String.valueOf(mdCount));
 		model.addAttribute("slistCount", String.valueOf(slistCount));
 		model.addAttribute("pi", pi);
@@ -135,7 +135,7 @@ public class PayController {
 		return "pay/paymain";
 		
 	}
-	
+	/*
 	//메인결재 보고서 카테고리----------------------
 	@GetMapping(value="/selects.do")
 	public String selectList(String conditions, @RequestParam (value="page", defaultValue="1") int currentPage
@@ -167,6 +167,7 @@ public class PayController {
 		return "pay/paymain";
 		
 	}
+	*/
 	//---------------------------------------------
 	
 	//메인결재 보고서 카테고리----------------------

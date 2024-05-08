@@ -593,6 +593,40 @@
         					break;
         				}
         			}
+        			
+        			// 스마트 폰에서 서명을 할 경우 사용되는 이벤트입니다.      
+        			function touchdraw(e){        
+        				function getPosition(){          
+        					return {            
+        						X: e.changedTouches[0].pageX - canvas[0].offsetLeft,             
+        						Y: e.changedTouches[0].pageY - canvas[0].offsetTop          
+        						}        
+        					}        
+        				switch(e.type){          
+        				case "touchstart":{            
+        					drawble = true;            
+        					ctx.beginPath();            
+        					ctx.moveTo(getPosition().X, 
+        							getPosition().Y);          }          
+        				break;          
+        				case "touchmove":{            
+        					if(drawble){              
+        						// 스크롤 이동등 이벤트 중지..              
+        						e.preventDefault();              
+        						ctx.lineTo(getPosition().X, getPosition().Y);              
+        						ctx.stroke();            
+        						}          
+        					}         
+        				break;          
+        				case "touchend":          
+        					case "touchcancel":{            
+        						drawble = false;            
+        						ctx.closePath();          
+        						}          
+        					break;        
+        					}      
+        				}
+        			
         			// 참고로 mousedown은 touchstart와 mousemove는 touchmove, mouseup은 touchend와 같습니다.      
         			// mouseout와 touchcancel은 서로 다른 동작인데, mouseout은 canvas 화면을 벗어났을 때이고 touchcancel는 모바일에서 터치가 취소, 즉 에러가 났을 때 입니다.      
         			return {        

@@ -56,14 +56,15 @@ public class PayServiceImpl {
 	}
 	
 	//카테고리별 리스트(문서)
-	public List<PayDto> categoryList(String conditions, PageInfoDto pi) {
-		return payDao.categoryList(conditions, pi);
+	public List<PayDto> categoryList(Map<String, Object> params, PageInfoDto pi) {
+		return payDao.categoryList(params, pi);
 	}
-	
+	/*
 	//상태(긴급,보통) 리스트(문서)
 	public List<PayDto> statusList(String status, PageInfoDto pi) {
 		return payDao.statusList(status, pi);
 	}
+	*/
 	
 	//결재메인페이지 조회(매출보고서)
 	public PayDto mdetail(PayDto pDto) {	

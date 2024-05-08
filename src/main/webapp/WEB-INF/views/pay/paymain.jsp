@@ -350,10 +350,6 @@
                                         </select>
                                     </div>
                                    
-                                   
-                                   
-                                   
-                                   
                                     <script>
                                     /* ajax 카테고리..xx
                                     	$(document).ready(function(){
@@ -537,7 +533,7 @@
 	</c:if>
 	
 	<!-- clistCount 값이 있을때 실행되는 스크립트 구문 -->
-	<c:if test="${ not empty clistCount }">
+	<c:if test="${ not empty params }">
 		<script>
 			$(document).ready(function(){
 				$("#selects").val("${conditions}");
