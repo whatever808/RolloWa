@@ -96,11 +96,17 @@
                 <!-- Modal content -->
                 <!-- 스타일에 한해서는 이런식으로 class명을 주시기 바랍니다. -->
                 <div class="m_content_style">
-                   아이디 : <input type="text" name=""> <br>
-                   전화번호 : <input type="text" name="" placeholder="01012345678"> <br>
-                   <div class="btn_wrapper">
-                       <button type="button" class="btn1 forget_btn">휴대폰 문자인증</button>
-                   </div>
+									아이디 : <input type="text" name="userId" style="padding-bottom: 2px;"> <br>
+									전화번호 : <input type="text" name="phone" placeholder="01012345678"> 
+									<button type="button" class="btn1 forget_btn phone_vali_btn" onclick="takeTarget();">인증번호 발송</button> <br>
+									인증번호 : <input type="text" name="certNo" maxlength="6" placeholder="123456">
+									<span class="target__time">
+										<span id="remaining__min">3</span> :
+										<span id="remaining__sec">00</span>
+									</span>
+									<div class="btn_wrapper">
+										<button type="button" class="btn1 forget_btn" id="complete">인증하기</button>
+									</div>
                 </div>
             </div>
         </div>
@@ -154,6 +160,33 @@
                 	}
                 })
             })
+            
+            // 비밀번호 찾기
+            // 휴대폰 인증
+            // 인증 타이머
+            const remainingMin = document.getElementById("remaining__min");
+						const remainingSec = document.getElementById("remaining__sec");
+						const completeBtn = document.getElementById("complete");
+						
+						// 굳이 ms로 변경할 필요가 없다. 계산하기 더 불편하고 할 이유가 없다.
+						// 항상 상황에 따라서 달라진다.
+						
+						let time = 180;
+						const takeTarget = () => {
+						  setInterval(function () {
+						    if (time > 0) { // >= 0 으로하면 -1까지 출력된다.
+						      time = time - 1; // 여기서 빼줘야 3분에서 3분 또 출력되지 않고, 바로 2분 59초로 넘어간다.
+						      let min = Math.floor(time / 60);
+						      let sec = String(time % 60).padStart(2, "0");
+						      remainingMin.innerText = min;
+						      remainingSec.innerText = sec;
+						      // time = time - 1
+						    } else {
+						      completeBtn.disabled = true;
+						    }
+						  }, 1000);
+						};
+            
 
         </script>
 

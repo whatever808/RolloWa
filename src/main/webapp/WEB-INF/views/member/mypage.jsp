@@ -208,6 +208,8 @@
 	    focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
 	    restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
 	});
+	
+	// 프로필 이미지 변경
 	$("#profileImgFile").on("change", function(evt) {
 			if(this.files.length != 0) {
 				// 현재 선택된 파일이 있을 경우
@@ -235,7 +237,6 @@
 					 	}
 				})
 			} else {
-				// 선택된 파일이 없을 경우
 				
 			}
 	})
