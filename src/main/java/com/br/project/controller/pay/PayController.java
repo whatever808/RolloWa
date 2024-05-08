@@ -6,6 +6,7 @@ package com.br.project.controller.pay;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -97,7 +98,37 @@ public class PayController {
 		
 	}
 	//----------------------------------------
-	
+	@RequestMapping(value="/selectList_new.do")
+	public String selectList_new(HttpServletRequest request,
+			String conditions, @RequestParam (value="page", defaultValue="1") int currentPage
+						, Model model) {
+		
+		//(카테고리별)페이지갯수
+		int clistCount = payServiceImpl.slistCount(conditions);
+		
+		//일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payServiceImpl.moreDateCount();
+		
+		//결재내역 게시글 총갯수
+		int slistCount = payServiceImpl.successListCount();
+		
+		//페이지
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(clistCount, currentPage, 5, 10);
+		
+		//리스트
+		List<PayDto> list = payServiceImpl.categoryList(conditions, pi);
+		
+		model.addAttribute("clistCount", clistCount);
+		model.addAttribute("slistCount", slistCount);
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("pi", pi);
+		model.addAttribute("list", list);
+		model.addAttribute("conditions", conditions);
+		
+		return "pay/paymain";
+		
+	}
 	
 	//메인결재 보고서 카테고리----------------------
 	@GetMapping(value="/selects.do")

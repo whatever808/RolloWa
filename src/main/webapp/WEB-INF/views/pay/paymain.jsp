@@ -44,7 +44,27 @@
 
 </head>
 <body>
+	<script>
+  function typeSelect(){
+		location.href="${contextPath}/pay/selects.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
 	
+	};
+ 	$(document).ready(function(){
+ 		
+ 		$("#selects").change(function(){
+ 			typeSelect();
+ 			});
+ 		$("#statusSelect").change(function(){
+ 			typeSelect();
+ 		});
+ 		
+ 		
+ 	});
+  	
+  	
+  
+  </script>
+                                   
 	<main class="d-flex flex-nowrap">
         <div class="flex-shrink-0 p-3" style="width: 280px;">
             <a href="/"
@@ -330,17 +350,7 @@
                                         </select>
                                     </div>
                                    
-                                   <script>
-                                   	$(document).ready(function(){
-                                   		$("#selects").change(function(){
-                                   			 location.href="${contextPath}/pay/selects.do?conditions=" + $("#selects").val();
-                                   		})
-                                   		$("#statusSelect").change(function(){
-                                   			 location.href="${contextPath}/pay/status.do?status=" + $(this).val();
-                                   		})
-                                   	})
                                    
-                                   </script>
                                    
                                    
                                    
