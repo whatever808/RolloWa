@@ -90,7 +90,7 @@
 	             <div class="profile_box">
 	                 <div class="profile_img">
 	                     <div class="img_wrapper">
-	                         <img id="profileImg" src="${ contextPath }<c:out value=${ loginMember.profileURL } default='/resources/images/defaultProfile.png'" onclick="$('#profileImgFile').click();">
+	                         <img id="profileImg" src="${ contextPath }<c:out value='${ loginMember.profileURL }' default='/resources/images/defaultProfile.png'/>" onclick="$('#profileImgFile').click();">
 	                         <input type="file" id="profileImgFile" class="file" style="display:none;" accept="image/*">
 	                     </div>
 	                 </div>
