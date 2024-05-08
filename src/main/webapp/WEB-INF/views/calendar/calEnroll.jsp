@@ -66,15 +66,6 @@
      .enroll{
          text-align: end;
      }
-     .font-size25{
-         font-size: 25px;
-     }
-     .font-size20{
-         font-size: 20px;
-     }
-     .marginR30{
-         margin-right: 30px;
-     }
      .content-text-area{
          width: 80%;
          min-height: 150px;
@@ -95,12 +86,13 @@
       <!-- 컨텐츠 영역 -->
       <div class="content" style="max-width: 1000px; padding: 30px;">
           <fieldset class="clander-add-area radious10 inner-line line-shadow">
+          <form action="${path }/calendar/calEnroll.do" method="get">
               <legend><h1 class="animate__animated animate__bounce jua-regular">일정 추가</h1></legend>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div class="font-size25 jua-regular" id="categoryName">Category</div>
 
                   <div class="pretty p-default p-round p-smooth font-size20 privateArea" id="privateName">
-                      <input type="checkbox" />
+                      <input type="checkbox" name="private" />
                       <div class="state p-danger">
                           <label class="jua-regular">private</label>
                       </div>
@@ -109,83 +101,85 @@
 
               <div class="Category">
                   <div class="pretty p-default p-curve">
-                      <input type="radio" name="color" />
+                      <input type="radio" name="category" />
                       <div class="state p-success-o">
                           <label>회의</label>
                       </div>
                   </div>
               
                   <div class="pretty p-default p-curve">
-                      <input type="radio" name="color" />
+                      <input type="radio" name="category" />
                       <div class="state p-success-o">
                           <label>미팅</label>
                       </div>
                   </div>
               
                   <div class="pretty p-default p-curve">
-                      <input type="radio" name="color" />
+                      <input type="radio" name="category" />
                       <div class="state p-success-o">
                           <label>이벤트</label>
                       </div>
                   </div>
               
                   <div class="pretty p-default p-curve">
-                      <input type="radio" name="color" />
+                      <input type="radio" name="category" />
                       <div class="state p-success-o">
                           <label>계약</label>
                       </div>
                   </div>
               
                   <div class="pretty p-default p-curve">
-                      <input type="radio" name="color" />
+                      <input type="radio" name="category" />
                       <div class="state p-success-o">
                           <label>기타</label>
                       </div>
                   </div>                
               </div>
+			  <br>
 
-              <div class="font-size25 jua-regular" id="co-workerName">Co-worker</div>
+              <div class="font-size25 jua-regular" id="co_workerName">Co-worker</div>
               <div class="Co-worker">
                   <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" />
+                      <input type="checkbox" name="coworker" />
                       <div class="state p-success-o">
                           <label> 김우빈</label>
                       </div>
                   </div>
 
                   <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" />
+                      <input type="checkbox" name="coworker" />
                       <div class="state p-success-o">
                           <label> 전지현</label>
                       </div>
                   </div>
 
                   <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" />
+                      <input type="checkbox" name="coworker" />
                       <div class="state p-success-o">
                           <label> 아이유</label>
                       </div>
                   </div>
 
                   <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" />
+                      <input type="checkbox" name="coworker" />
                       <div class="state p-success-o">
                           <label> 뚱이</label>
                       </div>
                   </div>
 
                   <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" />
+                      <input type="checkbox" name="coworker" />
                       <div class="state p-success-o">
                           <label> 징징이</label>
                       </div>
                   </div>
-
-
               </div>
-              <div style="display: flex;">
+              
+              <br>
+       
+              <div style="display: flex; gap: 20px;">
                   <label class="font-size25 jua-regular" for="color-style" id="colorName">Color</label>
-                  <input type="color" id="color-style">
+                  <input type="color" id="color-style" name="color">
               </div>
               <label class="font-size25 jua-regular" for="title" id="titleName">Title</label>
               <div class="Title"><input class="font-size20" type="text" id="title"></div>
@@ -204,25 +198,26 @@
 
               <div class="date-time-area">
                   <div style="width: 40%;">
-                      <div><input class="date-area jua-regular" type="date" id="currentDate1"></div>
+                      <div><input class="date-area jua-regular" type="date" id="currentDate1" name="date"></div>
                       <br>
-                      <div><input class="time-area jua-regular" type="time" id="currentTime1"></div>
+                      <div><input class="time-area jua-regular" type="time" id="currentTime1" name="time"></div>
                   </div>
                   <div style="place-self: center; font-size: xx-large;">~</div>
                   <div style="width: 40%;">
-                      <div><input class="date-area jua-regular" type="date" id="currentDate2"></div>
+                      <div><input class="date-area jua-regular" type="date" id="currentDate2" name="date"></div>
                       <br>
-                      <div><input class="time-area jua-regular" type="time" id="currentTime2"></div>
+                      <div><input class="time-area jua-regular" type="time" id="currentTime2" name="time"></div>
                   </div>
               </div>
 
               <div class="font-size25 jua-regular" id="contentName">Content</div> 
-              <div><textarea class="content-text-area" style="resize: none;"></textarea></div>
+              <div><textarea class="content-text-area" style="resize: none;" name="content"></textarea></div>
               
               <div class="font-size25 jua-regular" id="placeName">Place</div>
-              <div class="Place"><input class="font-size20" type="text"></div>
+              <div class="Place"><input class="font-size20" type="text" name="place"></div>
 
-              <div class="enroll marginR30"><button class="btn btn-outline-primary">등록</button></div>
+              <div class="enroll marginR30"><button type="submit" class="btn btn-outline-primary">등록</button></div>
+          </form>
           </fieldset>
       </div>
   </div>
