@@ -1,56 +1,51 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 
-    <!-- 조직도 참고 사이트
+		<!-- 조직도 참고 사이트
        https://www.cssscript.com/clean-tree-diagram/
     -->
 
-    <!-- 추가 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <!-- animate -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!-- bootstrap -->
     <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
-    <!-- 사이드바 안닫혀서 주석
-        <script src="../../../resources/js/common/bootstrap.bundle.min.js"></script>
-    -->
-    <script src="../../../resources/js/common/sidebars.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            $('.sidebar').load('../common/sidebar.html');
-        });
-    </script>
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
 
-    <!-- JUA 폰트 -->
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+
+    <!-- Google Fonts Jua -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- css -->
+    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../resources/css/common.css">
+    <link rel="stylesheet" href="../../../resources/css/common/mdb.min.css" />
+
     <style>
-    /* 폰트 css */
-    .jua-regular {
-      font-family: "Jua", sans-serif;
-      font-weight: 400;
-      font-style: normal;
-    }
-
-
     .content{
         margin-top: 20px;
         display: flex;
     }
     .sidebar{
+      /* background-color: orange; */        
         width: 300px;
-        /* background-color: orange; */        
     }
     .main_content{
         /* background-color: yellowgreen; */
@@ -58,7 +53,7 @@
         width: 100%;
     }
 
-    /* 조직도 css */
+    /* 조직도 관련 css */
     .tree{
       width: 80em;
     }
@@ -88,11 +83,35 @@
     .tree li:before {
         outline: solid 1px lightgray; 
         content: "";
-        left: 0;
+        left: 0px;
+        right: 0px;
         position: absolute;
-        right: 0;
         top: -.2em;
     }
+    /* 6번째 마다 적용 */
+    .tree li:nth-child(6n)::before {
+      outline: solid 1px lightgray;
+      content: "";
+      left: 0px;
+      right: 103px;
+      position: absolute;
+      top: -.2em;
+    }
+    /* 7번째 마다 적용 */
+    .tree li:nth-child(7n)::before {
+      outline: solid 1px lightgray;
+      content: "";
+      left: 103px;
+      right: 0px;
+      position: absolute;
+      top: -.2em;
+    }
+
+    /* 줄 간격 넓히기 */
+    .tree li:nth-child(n+7) {
+      margin-top: 50px;
+    }
+
     .tree li:first-child:before {
         left: 50%;
     }
@@ -105,10 +124,9 @@
         border-radius: .3em;
         display: inline-block;
         margin: 0 .2em 2.5em;
-        padding: 1em 1.5em; /* 네모 높이 */
+        padding: 1em 1.5em;
         position: relative;
-        /* 네모 가로길이 */
-        width: 170px;
+        width: 200px;
     }
     /* 세로줄 */
     .tree ul:before, .tree code:before, .tree span:before {
@@ -135,11 +153,9 @@
     .tree>li>span:before {
         outline: none;
     }
-    
     a:hover{
       text-decoration: none !important;
     }
-
     .level1{
       background-color: navy;
       color: white;
@@ -156,17 +172,23 @@
       margin: -0.45em 0 !important;
     }
 
-
+    /*  */
+    .tree > li > ul {
+      display: flex;
+      flex-wrap: wrap;
+    }
     </style>
 </head>
 <body>
     <div class="content">
 
         <!-- 사이드바 영역 -->
-        <div class="sidebar"></div>
-        
+        <div class="sidebar">
+        	<%-- <jsp:include page="/WEB-INF/views/common/sidebar.jsp"/> --%>
+       	</div>
+       	
         <div class="main_content">
-            <h2 class="jua-regular">조직도</h2>
+            <h2>조직도</h2>
             <hr>
 
             <!-- 메인 영역 start -->
@@ -175,9 +197,9 @@
               <li> <span class="level1">대표이사</span>
                 <ul>
 
-                  <li> <a href="http://www.naver.com"><span class="level2">부서</span></a>
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
                     <ul>
-                      <li> <a href=""><span class="level3">팀이름</span></a> </li>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
                     </ul>
                   </li>
 
@@ -240,6 +262,43 @@
                       <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
                     </ul>
                   </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                  </li>
+
+                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                    <ul>
+                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
+                    </ul>
+                  </li>
+
 
                 </ul>
               </li>
