@@ -5,12 +5,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>채팅</title>
+   <meta charset="UTF-8">
+   <title>채팅</title>
 </head>
 <body>
 
-	<div class="msg_open_btn">
+   <div class="msg_open_btn">
       <i class="fa-solid fa-comment fa-5x"></i>
   </div>
   <div class="msg_close_btn">

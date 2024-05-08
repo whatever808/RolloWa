@@ -6,43 +6,44 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>1.2 직원검색</title>
 
 	<!-- animate -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
-  <!-- bootstrap -->
-  <link href="${contextPath}/resources/css/common/bootstrap.min.css" rel="stylesheet">
-
-  <!-- fontawesome -->
-  <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
-
-  <!-- Google Fonts Roboto -->
-  <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
-
-  <!-- Google Fonts Jua -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-
-  <!-- jQuery -->
-  <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-  <!-- css -->
-  <link href="${contextPath}/resources/css/common/sidebars.css" rel="stylesheet">
-  <link rel="stylesheet" href="${contextPath}/resources/css/common.css">
-  <link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
+	<!-- bootstrap -->
+	<link href="${contextPath}/resources/css/common/bootstrap.min.css" rel="stylesheet">
+	
+	<!-- fontawesome -->
+	<script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
+	
+	<!-- Google Fonts Roboto -->
+	<link rel="stylesheet"
+	    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+	
+	<!-- Google Fonts Jua -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+	
+	<!-- jQuery -->
+	<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+	
+	<!-- css -->
+	<link href="${contextPath}/resources/css/common/sidebars.css" rel="stylesheet">
+	<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
+	<link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
   
 	<style>
 	.content{
 	    display: flex;
 	}
+	
 	.sidebar{
+	    background-color: orange;
 	    width: 300px;
-	    /* background-color: orange; */
-	    
 	}
+	
 	.main_content{
 	    /* background-color: yellowgreen; */
 	    padding: 20px;
@@ -94,200 +95,198 @@
 	    border-radius: 100%;
 	    width: 40px;
 	    margin: -5px;
- }
-    </style>
-  
+ 	}
+	</style>
 </head>
 <body>
 
-		<div class="content">
-		    <!-- 사이드바 영역 -->
-		    <div class="sidebar">
-		    	<%-- <jsp:include page="/WEB-INF/views/common/sidebar.html"/> --%>
-		    	<%@ include file="/WEB-INF/views/common/sidebar.html" %>
-		    </div>
-		    
-		    <!-- 메인 영역 -->
-		    <div class="main_content">
-		        <h2>직원 검색</h2>
-		        <hr>
-		        
-		        <form id="search_Form" action="검색_처리_페이지_주소_입력" method="GET">
-		            <table class="table table_search">
+	<!-- 사이드바 영역 -->
+	<jsp:include page="/WEB-INF/views/common/sidebar.jsp"/>
+	
+	<!-- 메인 영역 -->
+	<div class="main_content">
+	    <h2>직원 검색</h2>
+	    <hr>
+	    
+	    <!-- ------------ -->
+	    <form id="search_Form" action="검색_처리_페이지_주소_입력" method="GET">
+	        <table class="table table_search">
+	
+	            <tr class="tr_search">
+	                <!-- 검색 메뉴 1 : 부서명-->
+	                <th>부서명</th>
+	                <td>
+	                    <select id="department" name="department" class="form-control">
+	                        <option value="전체 부서">전체 부서</option>
+	                        <option value="부서 1">부서 1</option>
+	                        <option value="부서 2">부서 2</option>
+	                        <option value="부서 3">부서 3</option>
+	                    </select>
+	                </td>
+	                <!-- 검색 메뉴 2 : 전화번호 -->
+	                <th>전화번호</th>
+	                <td>
+	                    <input type="text" id="phone" name="phone" class="form-control" placeholder="전화번호를 입력하세요.(숫자만 입력)">
+	                </td>
+	            </tr>
+	            <tr class="tr_search">
+	                <!-- 검색 메뉴 3 : 팀명 -->
+	                <th>팀명</th>
+	                <td>
+	                    <select name="team" id="team" class="form-control">
+	                        <option value="전체 팀">전체 팀</option>
+	                        <option value="1팀">1팀</option>
+	                        <option value="2팀">2팀</option>
+	                        <option value="3팀">3팀</option>
+	                    </select>
+	                </td>
+	                <!-- 검색 메뉴 4 : 이름 -->
+	                <th>이름</th>
+	                <td>
+	                    <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하세요.">
+	                </td>
+	            </tr>
+	            <tr>
+	                <td class="btn_center" colspan="4">
+	                    <h2>
+	                        <button class="btn btn-outline-primary" type="reset">초기화</button>
+	                        <button class="btn btn-primary">검색</button>
+	                    </h2>
+	                </td>
+	            </tr>
+	        </table>
+	    </form>
+	
+	    <script>
+	        /* 전화번호 : 숫자만 입력되고 나머지 글자는 공백으로 변환 */
+	        $("#search_Form input[name=phone]").on("keyup", function(){
+	            let regExp = $(this).val().replace(/[^\d]+/g, '');
+	            $(this).val(regExp);
+	        })
+	
+	        /* 이름 : 한글만 입력되고 나머지 글자는 공백으로 변환 */
+	        $("#search_Form input[name=name]").on("keyup", function(){
+	            let regExp = $(this).val().replace(/[^가-힣ㄱ-ㅎ]+/g, '');
+	            $(this).val(regExp);
+	        })
+	    </script>
+	
+	
+	    <!-- 전체 인원수 -->
+	    <h5 class="employee_count">전체 50명</h5>
+	
+	    <!-- 직원 정보 테이블 start-->
+	    <table class="table table_empinfo line-shadow">
+	        <tr>
+	            <th>프로필 사진</th>
+	            <th>성명</th>
+	            <th>부서</th>
+	            <th>팀명</th>
+	            <th>직급</th>
+	            <th>전화번호</th>
+	            <th>이메일</th>
+	        </tr>
+	        <tr>
+	            <td>
+	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
+	            </td>
+	            <td>고미옥</td>
+	            <td>총무부</td>
+	            <td>팀명</td>
+	            <td>대표이사</td>
+	            <td>010-2222-3333</td>
+	            <td>user01@gamil.com</td>
+	        </tr>
+	        
+	        <tr>
+	            <td>
+	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
+	            </td>
+	            <td>고미옥</td>
+	            <td>총무부</td>
+	            <td>팀명</td>
+	            <td>대표이사</td>
+	            <td>010-2222-3333</td>
+	            <td>user01@gamil.com</td>
+	        </tr>
+	        <tr>
+	            <td>
+	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
+	            </td>
+	            <td>고미옥</td>
+	            <td>총무부</td>
+	            <td>팀명</td>
+	            <td>대표이사</td>
+	            <td>010-2222-3333</td>
+	            <td>user01@gamil.com</td>
+	        </tr>
+	        <tr>
+	            <td>
+	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
+	            </td>
+	            <td>고미옥</td>
+	            <td>총무부</td>
+	            <td>팀명</td>
+	            <td>대표이사</td>
+	            <td>010-2222-3333</td>
+	            <td>user01@gamil.com</td>
+	        </tr>
+	
+	        <tr>
+	            <td>
+	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
+	            </td>
+	            <td>고미옥</td>
+	            <td>총무부</td>
+	            <td>팀명</td>
+	            <td>대표이사</td>
+	            <td>010-2222-3333</td>
+	            <td>user01@gamil.com</td>
+	        </tr>
+	
+	        <tr>
+	            <td>
+	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
+	            </td>
+	            <td>고미옥</td>
+	            <td>총무부</td>
+	            <td>팀명</td>
+	            <td>대표이사</td>
+	            <td>010-2222-3333</td>
+	            <td>user01@gamil.com</td>
+	        </tr>
+	
+	        <tr>
+	            <td>
+	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
+	            </td>
+	            <td>고미옥</td>
+	            <td>총무부</td>
+	            <td>팀명</td>
+	            <td>대표이사</td>
+	            <td>010-2222-3333</td>
+	            <td>user01@gamil.com</td>
+	        </tr>
+	    </table>
+	    <!-- 직원 테이블 end -->
+	
+	    <!--페이징 처리 start-->
+	    <div class="container">
+	        <ul class="pagination justify-content-center">
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
+	        </ul>
+	    </div>
+	    <!--페이징 처리 end-->
+	
+		<!-- ------------ -->
 		
-		                <tr class="tr_search">
-		                    <!-- 검색 메뉴 1 : 부서명-->
-		                    <th>부서명</th>
-		                    <td>
-		                        <select id="department" name="department" class="form-control">
-		                            <option value="전체 부서">전체 부서</option>
-		                            <option value="부서 1">부서 1</option>
-		                            <option value="부서 2">부서 2</option>
-		                            <option value="부서 3">부서 3</option>
-		                        </select>
-		                    </td>
-		                    <!-- 검색 메뉴 2 : 전화번호 -->
-		                    <th>전화번호</th>
-		                    <td>
-		                        <input type="text" id="phone" name="phone" class="form-control" placeholder="전화번호를 입력하세요.(숫자만 입력)">
-		                    </td>
-		                </tr>
-		                <tr class="tr_search">
-		                    <!-- 검색 메뉴 3 : 팀명 -->
-		                    <th>팀명</th>
-		                    <td>
-		                        <select name="team" id="team" class="form-control">
-		                            <option value="전체 팀">전체 팀</option>
-		                            <option value="1팀">1팀</option>
-		                            <option value="2팀">2팀</option>
-		                            <option value="3팀">3팀</option>
-		                        </select>
-		                    </td>
-		                    <!-- 검색 메뉴 4 : 이름 -->
-		                    <th>이름</th>
-		                    <td>
-		                        <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하세요.">
-		                    </td>
-		                </tr>
-		                <tr>
-		                    <td class="btn_center" colspan="4">
-		                        <h2>
-		                            <button class="btn btn-outline-primary" type="reset">초기화</button>
-		                            <button class="btn btn-primary">검색</button>
-		                        </h2>
-		                    </td>
-		                </tr>
-		            </table>
-		        </form>
+	</div>
+	<!-- 메인 영역 end-->
 		
-		        <script>
-		            /* 전화번호 : 숫자만 입력되고 나머지 글자는 공백으로 변환 */
-		            $("#search_Form input[name=phone]").on("keyup", function(){
-		                let regExp = $(this).val().replace(/[^\d]+/g, '');
-		                $(this).val(regExp);
-		            })
-		
-		            /* 이름 : 한글만 입력되고 나머지 글자는 공백으로 변환 */
-		            $("#search_Form input[name=name]").on("keyup", function(){
-		                let regExp = $(this).val().replace(/[^가-힣ㄱ-ㅎ]+/g, '');
-		                $(this).val(regExp);
-		            })
-		        </script>
-		
-
-		        <!-- 전체 인원수 -->
-		        <h5 class="employee_count">전체 50명</h5>
-		
-		        <!-- 직원 정보 테이블 start-->
-		        <table class="table table_empinfo line-shadow">
-		            <tr>
-		                <th>프로필 사진</th>
-		                <th>성명</th>
-		                <th>부서</th>
-		                <th>팀명</th>
-		                <th>직급</th>
-		                <th>전화번호</th>
-		                <th>이메일</th>
-		            </tr>
-		            <tr>
-		                <td>
-		                    <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-		                </td>
-		                <td>고미옥</td>
-		                <td>총무부</td>
-		                <td>팀명</td>
-		                <td>대표이사</td>
-		                <td>010-2222-3333</td>
-		                <td>user01@gamil.com</td>
-		            </tr>
-		            
-		            <tr>
-		                <td>
-		                    <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-		                </td>
-		                <td>고미옥</td>
-		                <td>총무부</td>
-		                <td>팀명</td>
-		                <td>대표이사</td>
-		                <td>010-2222-3333</td>
-		                <td>user01@gamil.com</td>
-		            </tr>
-		            <tr>
-		                <td>
-		                    <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-		                </td>
-		                <td>고미옥</td>
-		                <td>총무부</td>
-		                <td>팀명</td>
-		                <td>대표이사</td>
-		                <td>010-2222-3333</td>
-		                <td>user01@gamil.com</td>
-		            </tr>
-		            <tr>
-		                <td>
-		                    <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-		                </td>
-		                <td>고미옥</td>
-		                <td>총무부</td>
-		                <td>팀명</td>
-		                <td>대표이사</td>
-		                <td>010-2222-3333</td>
-		                <td>user01@gamil.com</td>
-		            </tr>
-		
-		            <tr>
-		                <td>
-		                    <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-		                </td>
-		                <td>고미옥</td>
-		                <td>총무부</td>
-		                <td>팀명</td>
-		                <td>대표이사</td>
-		                <td>010-2222-3333</td>
-		                <td>user01@gamil.com</td>
-		            </tr>
-		
-		            <tr>
-		                <td>
-		                    <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-		                </td>
-		                <td>고미옥</td>
-		                <td>총무부</td>
-		                <td>팀명</td>
-		                <td>대표이사</td>
-		                <td>010-2222-3333</td>
-		                <td>user01@gamil.com</td>
-		            </tr>
-		
-		            <tr>
-		                <td>
-		                    <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-		                </td>
-		                <td>고미옥</td>
-		                <td>총무부</td>
-		                <td>팀명</td>
-		                <td>대표이사</td>
-		                <td>010-2222-3333</td>
-		                <td>user01@gamil.com</td>
-		            </tr>
-		        </table>
-		        <!-- 직원 테이블 end -->
-		
-		        <!--페이징 처리 start-->
-		        <div class="container">
-		            <ul class="pagination justify-content-center">
-		                <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
-		                <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
-		                <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-		                <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
-		            </ul>
-		        </div>
-		        <!--페이징 처리 end-->
-		
-		    </div>
-		    <!-- 메인 영역 end-->
-		
-		</div>
-
 </body>
 </html>
+
+	
