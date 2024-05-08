@@ -63,18 +63,18 @@
 		</if>
 		<if test="condition != null and keyword != null">
 			<choose>
-				<when test="condition.equals('all')">
+				<when test="condition.equals('all') and !keyword.equals('')">
 					and board_title like 	 '%' || #{keyword} || '%'
 					 or board_content like '%' || #{keyword} || '%'
 					 or user_name like 		 '%' || #{keyword} || '%'
 				</when>
-				<when test="condition.equals('title')">
+				<when test="condition.equals('title') and !keyword.equals('')">
 					and board_title like 	 '%' || #{keyword} || '%'
 				</when>
-				<when test="condition.equals('content')">
+				<when test="condition.equals('content') and !keyword.equals('')">
 					and board_content like '%' || #{keyword} || '%'
 				</when>
-				<when test="condition.equals('writer')">
+				<when test="condition.equals('writer') and !keyword.equals('')">
 					and user_name like 		 '%' || #{keyword} || '%'
 				</when>
 			</choose>
@@ -121,18 +121,18 @@
 		</if>
 		<if test="condition != null and keyword != null">
 			<choose>
-				<when test="condition.equals('all')">
+				<when test="condition.equals('all') and !keyword.equals('')">
 					and board_title like 	 '%' || #{keyword} || '%'
 					 or board_content like '%' || #{keyword} || '%'
 					 or user_name like 		 '%' || #{keyword} || '%'
 				</when>
-				<when test="condition.equals('title')">
+				<when test="condition.equals('title') and !keyword.equals('')">
 					and board_title like 	 '%' || #{keyword} || '%'
 				</when>
-				<when test="condition.equals('content')">
+				<when test="condition.equals('content') and !keyword.equals('')">
 					and board_content like '%' || #{keyword} || '%'
 				</when>
-				<when test="condition.equals('writer')">
+				<when test="condition.equals('writer') and !keyword.equals('')">
 					and user_name like 		 '%' || #{keyword} || '%'
 				</when>
 			</choose>

@@ -29,46 +29,6 @@
       </select>
       <!-- board category end -->
       
-      <script>
-      	$(document).ready(function(){
-     			// 카테고리 select 박스 선택값 지정
-     			$("#category").children("option").each(function(){
-     				$(this).val() == "${ filter.category }" && $(this).attr("selected", true);
-     			})
-     			
-     			// "부서게시글" 목록조회 요청했을 경우, 부서 select 박스 선택값 지정
-     			if($("#category").val() == 'department'){
-     				$("#department").removeClass("d-none");
-     				$("#department").children("option").each(function(){
-     					$(this).val() == "${ filter.department }" && $(this).attr("selected", true);
-     				})
-     			}			// if end
-      	})	// ready() end
-      	
-      	// 게시글 목록조회 function
-      	function boardList(){
-      		// 요청 페이지
-      		let page = "";
-      		if(event.target.innerText == "Previous"){
-      			page = ${ pageInfo.currentPage - 1};
-      		}else if(event.target.innerText >= ${ pageInfo.startPage } && event.target.innerText <= ${ pageInfo.endPage }){
-      			page = event.target.innerText;
-      		}else if(event.target.innerText == "Next"){
-      			page = ${ pageInfo.currentPage + 1};
-      		}else{
-      			page = 1;
-      		}
-      		
-      		// URL 페이지요청
-      		location.href = "${ contextPath }/board/list.do?" + "category=" + $("#category").val() + "&"
-      																											+ "department=" + $("#department").val() + "&"
-      																											+ "condition=" + $("#condition").val() + "&"
-      																											+ "keyword=" + $("#keyword").val().trim() + "&"
-      																											+ "page=" + page
-      		
-      	}
-      </script>
-      
       <!-- show when department board category was selected -->
       <select id="department" name="department" class="department-category form-select d-none" onchange="boardList();">
       	<option value="all">전체</option>
@@ -80,14 +40,13 @@
       <!-- search form start-->
       <div id="search-form">
 	      <select id="condition" class="search-condition form-select">
-	      		<option value="">선택</option>
 	      		<option value="all">전체</option>
 	          <option value="title">제목</option>
 	          <option value="content">내용</option>
 	          <option value="writer">작성자</option>
 	      </select>
 	      <input type="text" id="keyword" class="form-control" placeholder="게시글 검색">
-	      <button type="button" class="btn btn-secondary" onclick="boardList();">검색</button>
+	      <button type="button" class="btn btn-secondary" onclick="search();">검색</button>
       </div>
       <!-- search form end -->
       
@@ -97,8 +56,8 @@
           <table class="table table-hover">
               <thead class="table-light">
                   <tr>
-                      <th>제목</th>
                       <th>부서</th>
+                      <th>제목</th>
                       <th>작성자</th>
                       <th>작성일</th>
                       <th>조회수</th>
@@ -115,8 +74,8 @@
                  	<c:otherwise>
                  		<c:forEach var="board" items="${ boardList }">
 	                 		<tr>
-	                      <td class="board-title">${ board.boardTitle }</td>
 	                      <td>${ board.boardCategory eq null ? "일반" : board.boardCategory }</td>
+	                      <td class="board-title">${ board.boardTitle }</td>
 	                      <td>
 	                     		<c:choose>
 	                     			<c:when test="${ not empty board.profileURL }">
@@ -182,5 +141,66 @@
 
 <!-- 게시글 목록페이지 스크립트 -->
 <script src="${ contextPath }/resources/js/board/list.js"></script>
+
+<script>
+//페이지 로드 즉시 실행되어야할 functions ===========================================================================
+$(document).ready(function(){
+	console.log("하이");
+	// 카테고리 select 박스 선택값 지정
+	$("#category").children("option").each(function(){
+		$(this).val() == "${ filter.category }" && $(this).attr("selected", true);
+	})
+	
+	// "부서게시글" 목록조회 요청했을 경우, 부서 select 박스 선택값 지정 
+	if($("#category").val() == 'department'){
+		$("#department").removeClass("d-none");
+		$("#department").children("option").each(function(){
+			$(this).val() == "${ filter.department }" && $(this).attr("selected", true);
+		})	// each end
+	}	// if end
+	
+	// "키워드검색" 게시글 목록조회 요청했을 경우, 검색값 지정
+	if(${ filter.condition != ''} && ${ filter.keyword != ''}){
+		$("#condition").children("option").each(function(){
+			if($(this).val() == '${ filter.condition }'){
+				$(this).attr("selected", true);
+				$("#keyword").val("${ filter.keyword }");
+			} 	// if end
+		})	// each end
+	}	// if end
+	
+})	// ready() end
+
+// "키워드검색" 게시글 목록조회시 키워드 input값 유효성체크 function =========================================================
+function search(){
+	if($("#keyword").val().trim().length == 0){
+		alertify.alert("게시글 목록조회 서비스", "검색어를 입력해주세요.", $("#keyword").select());
+	}else{
+		boardList();
+	}
+}
+
+// 게시글 목록조회 function =========================================================================================
+function boardList(){
+	// 요청 페이지
+	let page = "";
+	if(event.target.innerText == "Previous"){
+		page = ${ pageInfo.currentPage - 1};
+	}else if(event.target.innerText >= ${ pageInfo.startPage } && event.target.innerText <= ${ pageInfo.endPage }){
+		page = event.target.innerText;
+	}else if(event.target.innerText == "Next"){
+		page = ${ pageInfo.currentPage + 1};
+	}else{
+		page = 1;
+	}
+	
+	// URL 페이지요청 
+	location.href = "${ contextPath }/board/list.do?" + "category=" + $("#category").val() + "&"
+																										+ "department=" + $("#department").val() + "&"
+																										+ "condition=" + $("#condition").val() + "&"
+																										+ "keyword=" + $("#keyword").val().trim() + "&"
+																										+ "page=" + page;
+}
+</script>
 
 </html>

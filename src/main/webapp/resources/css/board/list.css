@@ -1,17 +1,17 @@
-
 .page-title{
     margin-bottom: 50px;
     font-weight: bold;
     font-family: "Jua";
 }
-@charset "UTF-8";
 
 /* ------------- board category ------------- */
-.board-category{
+#category{
+		display: inline-block;
     width: 200px;
 }
-.department-category{
+#department{
 		display: inline-block;
+		margin-left: 50px;
 		width: 200px;
 }
 
@@ -19,12 +19,11 @@
 #search-form{
     float: right;
 }
-    display: inline-block;
-.search-condition{
+#condition{
     display: inline-block;
     width: 100px;
 }
-#search-keyword{
+#keyword{
     display: inline-block;
     width: 350px;
 }
@@ -51,4 +50,9 @@
 
 .board-list-pagination{
     margin-top: 60px;
+}
+
+/* ------------- pagination ------------- */
+.board-list-pagination>.pagination span:hover{
+		cursor: pointer;
 }
