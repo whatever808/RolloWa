@@ -63,7 +63,7 @@ input[type=time],
 textarea {
     font-size: 15px;
     color: #222222;
-    width: fit-content;
+    height: fit-content;
     border: none;
     border-bottom: solid rgb(170, 170, 170) 1px;
     padding-bottom: 10px;
