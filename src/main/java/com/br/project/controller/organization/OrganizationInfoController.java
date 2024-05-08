@@ -24,7 +24,7 @@ public class OrganizationInfoController {
 	@GetMapping("/orgchart.page")
 	public String orgchart() {
 		
-		//int result = OR;
+		
 		return "organization/organizationChart";
 	}
 	
