@@ -48,8 +48,8 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.searchList", search, rowBounds);
 	}
 	
-	public int slistCount(String conditions) {
-		return sqlSessionTemplate.selectOne("payMapper.slistCount", conditions);
+	public int slistCount(Map<String, Object> params) {
+		return sqlSessionTemplate.selectOne("payMapper.slistCount", params);
 		
 	}
 	

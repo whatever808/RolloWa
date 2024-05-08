@@ -47,12 +47,12 @@ public class PayServiceImpl {
 	}
 	
 	//카테고리별 총리스트갯수(문서)
-	public int slistCount(String conditions) {
-		return payDao.slistCount(conditions);
+	public int slistCount(Map<String, Object> params) {
+		return payDao.slistCount(params);
 	}
 	
 	public int statusCount(String status) {
-		return payDao.slistCount(status);
+		return 1;//payDao.slistCount(status);
 	}
 	
 	//카테고리별 리스트(문서)

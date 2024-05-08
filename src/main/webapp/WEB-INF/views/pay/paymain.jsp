@@ -46,7 +46,7 @@
 <body>
 	<script>
   function typeSelect(){
-		location.href="${contextPath}/pay/selects.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
+		location.href="${contextPath}/pay/selectList_new.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
 	
 	};
  	$(document).ready(function(){

@@ -3,6 +3,7 @@ package com.br.project.controller.pay;
 
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.br.project.controller.common.CommonController;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.PayDto;
@@ -103,8 +105,12 @@ public class PayController {
 			String conditions, @RequestParam (value="page", defaultValue="1") int currentPage
 						, Model model) {
 		
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		params = CommonController.getParameterMap(request);
+		
 		//(카테고리별)페이지갯수
-		int clistCount = payServiceImpl.slistCount(conditions);
+		int clistCount = payServiceImpl.slistCount(params);
 		
 		//일주일이상승인완료가 안된 게시글총갯수
 		int mdCount = payServiceImpl.moreDateCount();
@@ -136,7 +142,7 @@ public class PayController {
 						, Model model) {
 		
 		//(카테고리별)페이지갯수
-		int clistCount = payServiceImpl.slistCount(conditions);
+		int clistCount = 1;//payServiceImpl.slistCount(conditions);
 		
 		//일주일이상승인완료가 안된 게시글총갯수
 		int mdCount = payServiceImpl.moreDateCount();
@@ -169,7 +175,7 @@ public class PayController {
 							, Model model) {
 			
 			//(카테고리별)페이지갯수
-			int clistCount = payServiceImpl.slistCount(status);
+			int clistCount = 1;//payServiceImpl.slistCount(status);
 			
 			//일주일이상승인완료가 안된 게시글총갯수
 			int mdCount = payServiceImpl.moreDateCount();
