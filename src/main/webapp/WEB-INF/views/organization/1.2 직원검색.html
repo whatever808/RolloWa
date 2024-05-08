@@ -27,7 +27,6 @@
     
     <style>
         .content{
-            margin-top: 20px;
             display: flex;
         }
         .sidebar{
@@ -37,47 +36,51 @@
         }
         .main_content{
             /* background-color: yellowgreen; */
-            padding: 0 20px;
-            width: 100%;
+            padding: 20px;
+            width: 1200px;
         }
         
         .search_menu{
             justify-content: center;
             width: 100%;
         }
-        .search_menu_tr th{
-            background-color: rgb(118, 207, 255) !important;
+        .tr_search th{
+            background-color: rgb(203, 237, 255) !important;
             text-align: center;
             width: 20%;
             vertical-align: middle !important;
+            font-size: 30px;
         }
-        .search_menu_tr td{
+        .tr_search td{
             width: 200px;
             text-align: center;
-            /* background-color: red !important; */
         }
-        .search_menu_tr td input{
-            width: 100%;
+        .tr_search input {
+            width: 100% !important;
         }
         .btn_center{
             text-align: center;
             padding-top: 30px !important;
         }
-       
-        /* 직원 정보 테이블 */
+        .btn_center button {
+            width: 140px;
+            height: 50px;
+            font-size: 20px;
+        }
         .employee_count {
             margin-left: 10px;
         }
-        .employee_info {
+        .table_empinfo {
             text-align: center;
         }
-        .employee_info th{
-            background-color: lightgray !important;
+        .table_empinfo th{
+            background-color: rgb(255,247,208) !important;
+            font-size: 19px;
         }
-        .employee_info td{
+        .table_empinfo td{
             vertical-align: middle !important;
         }
-        .employee_info td img{
+        .table_empinfo td img{
             border: 1px solid gainsboro;
             border-radius: 100%;
             width: 40px;
@@ -93,54 +96,79 @@
             
             <!-- 메인 영역 -->
             <div class="main_content">
-                <h2 class="jua-regular">직원 검색</h2>
+                <h2>직원 검색</h2>
                 <hr>
                 
-                <table class="table search_menu">
-                    <tr class="search_menu_tr">
-                        <th>부서명</th>
-                        <td>
-                            <select name="department" id="department" class="form-control">
-                                <option value="">전체 부서</option>
-                                <option value="">부서 1</option>
-                                <option value="">부서 2</option>
-                                <option value="">부서 3</option>
-                            </select>
-                        </td>
-                        <th>전화번호</th>
-                        <td>
-                            <input type="text" class="form-control">
-                        </td>
-                    </tr>
-                    <tr class="search_menu_tr">
-                        <th>팀명</th>
-                        <td>
-                            <select name="department" id="department" class="form-control">
-                                <option value="">전체 팀</option>
-                                <option value="">1팀</option>
-                                <option value="">2팀</option>
-                                <option value="">3팀</option>
-                            </select>
-                        </td>
-                        <th>이름</th>
-                        <td>
-                            <input type="text" class="form-control">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="btn_center" colspan="4">
-                            <button class="btn btn-outline-primary" type="reset">초기화</button>
-                            <button class="btn btn-primary">검색</button>
-                        </td>
-                    </tr>
-                </table>
+                <form id="search_Form" action="검색_처리_페이지_주소_입력" method="GET">
+                    <table class="table table_search">
+
+                        <tr class="tr_search">
+                            <!-- 검색 메뉴 1 : 부서명-->
+                            <th>부서명</th>
+                            <td>
+                                <select id="department" name="department" class="form-control">
+                                    <option value="전체 부서">전체 부서</option>
+                                    <option value="부서 1">부서 1</option>
+                                    <option value="부서 2">부서 2</option>
+                                    <option value="부서 3">부서 3</option>
+                                </select>
+                            </td>
+                            <!-- 검색 메뉴 2 : 전화번호 -->
+                            <th>전화번호</th>
+                            <td>
+                                <input type="text" id="phone" name="phone" class="form-control" placeholder="전화번호를 입력하세요.(숫자만 입력)">
+                            </td>
+                        </tr>
+                        <tr class="tr_search">
+                            <!-- 검색 메뉴 3 : 팀명 -->
+                            <th>팀명</th>
+                            <td>
+                                <select name="team" id="team" class="form-control">
+                                    <option value="전체 팀">전체 팀</option>
+                                    <option value="1팀">1팀</option>
+                                    <option value="2팀">2팀</option>
+                                    <option value="3팀">3팀</option>
+                                </select>
+                            </td>
+                            <!-- 검색 메뉴 4 : 이름 -->
+                            <th>이름</th>
+                            <td>
+                                <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하세요.">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="btn_center" colspan="4">
+                                <h2>
+                                    <button class="btn btn-outline-primary" type="reset">초기화</button>
+                                    <button class="btn btn-primary">검색</button>
+                                </h2>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+
+                <script>
+                    /* 전화번호 : 숫자만 입력되고 나머지 글자는 공백으로 변환 */
+                    $("#search_Form input[name=phone]").on("keyup", function(){
+                        let regExp = $(this).val().replace(/[^\d]+/g, '');
+                        $(this).val(regExp);
+                    })
+
+                    /* 이름 : 한글만 입력되고 나머지 글자는 공백으로 변환 */
+                    $("#search_Form input[name=name]").on("keyup", function(){
+                        let regExp = $(this).val().replace(/[^가-힣ㄱ-ㅎ]+/g, '');
+                        $(this).val(regExp);
+                    })
+                </script>
+
+
                 
 
                 <!-- 전체 인원수 -->
-                <h6 class="employee_count">전체 50명</h6>
+                <h5 class="employee_count">전체 50명</h5>
 
                 <!-- 직원 정보 테이블 start-->
-                <table class="table employee_info">
+                <table class="table table_empinfo line-shadow">
                     <tr>
                         <th>프로필 사진</th>
                         <th>성명</th>
@@ -195,6 +223,42 @@
                         <td>010-2222-3333</td>
                         <td>user01@gamil.com</td>
                     </tr>
+
+                    <tr>
+                        <td>
+                            <img src="../../../resources/images/defaultProfile.png" class="profile_img">
+                        </td>
+                        <td>고미옥</td>
+                        <td>총무부</td>
+                        <td>팀명</td>
+                        <td>대표이사</td>
+                        <td>010-2222-3333</td>
+                        <td>user01@gamil.com</td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <img src="../../../resources/images/defaultProfile.png" class="profile_img">
+                        </td>
+                        <td>고미옥</td>
+                        <td>총무부</td>
+                        <td>팀명</td>
+                        <td>대표이사</td>
+                        <td>010-2222-3333</td>
+                        <td>user01@gamil.com</td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <img src="../../../resources/images/defaultProfile.png" class="profile_img">
+                        </td>
+                        <td>고미옥</td>
+                        <td>총무부</td>
+                        <td>팀명</td>
+                        <td>대표이사</td>
+                        <td>010-2222-3333</td>
+                        <td>user01@gamil.com</td>
+                    </tr>
                 </table>
                 <!-- 직원 테이블 end -->
 
@@ -211,7 +275,6 @@
 
             </div>
             <!-- 메인 영역 end-->
-
 
         </div>
 
