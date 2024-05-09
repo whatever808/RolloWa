@@ -134,7 +134,7 @@
 	                     </tr>
 	                     <tr>
 	                         <th>우편번호 : </th>
-	                         <td><input class="form-control" type="text" id="postCode" name="postNumber" value="${ loginMember.postCode } }"></td>
+	                         <td><input class="form-control" type="text" id="postCode" name="postNumber" value="${ loginMember.postCode }"></td>
 	                         <td><button type="button" class="btn btn-sm btn-outline-primary" onclick="findAddress();">주소 찾기</button></td>
 	
 	                     </tr>
