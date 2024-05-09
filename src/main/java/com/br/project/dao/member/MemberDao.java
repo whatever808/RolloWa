@@ -30,4 +30,8 @@ public class MemberDao {
 	public int insertAttachment(AttachmentDto att) {
 		return sqlSessionTemplate.insert("attachmentMapper.insertAttachment", att);
 	}
+
+	public int updateMember(Map<String, String> memberInfo) {
+		return sqlSessionTemplate.update("memberMapper.updateMember", memberInfo);
+	}
 }

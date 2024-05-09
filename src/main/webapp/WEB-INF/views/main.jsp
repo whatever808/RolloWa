@@ -49,9 +49,9 @@
 				    <script src="${ contextPath }/resources/js/login.js"></script>
         </head>
 					<c:if test="${ alertMsg != null }" >
-					<script>
-						alert('${alertMsg}');
-					</script>
+						<script>
+							alertify.alert('${alertTitle}','${alertMsg}');
+						</script>
 					</c:if>
         <body id="particles-js"></body>
         <div class="animated bounceInDown">

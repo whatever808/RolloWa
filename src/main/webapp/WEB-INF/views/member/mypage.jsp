@@ -117,7 +117,7 @@
 	             </div>
 	         </div>
 	         <div class="info">
-	             <form action="">
+	             <form action="${ contextPath }/member/updateInfo.do" method="post">
 	                 <table class="table table-striped">
 	                     <tr>
 	                         <th>아이디 : </th>
@@ -125,37 +125,37 @@
 	                     </tr>
 	                     <tr>
 	                         <th>이름 : </th>
-	                         <td colspan="2"><input type="text" name="" value="${ loginMember.userName }" placeholder="이름" required></td>
+	                         <td colspan="2"><input type="text" name="userName" value="${ loginMember.userName }" placeholder="이름" required></td>
 	                     </tr>
 	                     <tr>
 	                         <th>핸드폰 번호 : </th>
-	                         <td><input type="text" name="" value="${ loginMember.phone }" placeholder="전화번호"></td>
+	                         <td><input type="text" name="phone" value="${ loginMember.phone }" placeholder="전화번호"></td>
 	                         <td><button type="button" class="btn btn-sm btn-outline-primary">인증</button></td>
 	                     </tr>
 	                     <tr>
 	                         <th>우편번호 : </th>
-	                         <td><input class="form-control" type="text" id="postCode" name="" value=""></td>
+	                         <td><input class="form-control" type="text" id="postCode" name="postNumber" value="${ loginMember.postCode } }"></td>
 	                         <td><button type="button" class="btn btn-sm btn-outline-primary" onclick="findAddress();">주소 찾기</button></td>
 	
 	                     </tr>
 	                     <tr>
 	                         <th>주소 : </th>
-	                         <td colspan="2"><input type="text" id="address" name="" value=""></td>
+	                         <td colspan="2"><input type="text" id="address" name="address" value="${ loginMember.address }"></td>
 	                     </tr>
 	                     <tr>
 	                         <th>상세주소 : </th>
-	                         <td colspan="2"><input type="text" id="detailAddress" name="" value=""></td>
+	                         <td colspan="2"><input type="text" id="detailAddress" name="detailAddress" value="${ loginMember.detailAddress }"></td>
 	                     </tr>
 	                     <tr>
 	                         <th>이메일 : </th>
-	                         <td colspan="2"><input type="text" name="" value="${ loginMember.email }"></td>
+	                         <td colspan="2"><input type="text" name="email" value="${ loginMember.email }"></td>
 	                     </tr>
 	                     <tr>
 	                         <th>
 	                             월급 수령계좌 :
 	                         </th>
 	                         <td>
-	                             <select class="form-select" aria-label="Default select example" id="bank_select">
+	                             <select name="bank" class="form-select" aria-label="Default select example" id="bank_select">
 	                                 <option value="농협은행">농협은행</option>
 	                                 <option value="국민은행">국민은행</option>
 	                                 <option value="신한은행">신한은행</option>
@@ -163,7 +163,7 @@
 	                             </select>
 	                         </td>
 	                         <td>
-	                             <input type="text" name="" value="${ loginMember.accountNo }" placeholder="계좌번호">
+	                             <input type="text" name="bankAccount" value="${ loginMember.bankAccount }" placeholder="계좌번호">
 	                         </td>
 	                     </tr>
 	                 </table>
