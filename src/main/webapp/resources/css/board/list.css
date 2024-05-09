@@ -48,11 +48,14 @@
     margin-right: 5px;
 }
 
-.board-list-pagination{
-    margin-top: 60px;
-}
-
 /* ------------- pagination ------------- */
+.board-list-pagination{
+    margin-top: 90px;
+    display: flex;
+    justify-content: center;
+    align-itmes: center;
+    
+}
 .board-list-pagination>.pagination span:hover{
 		cursor: pointer;
 }

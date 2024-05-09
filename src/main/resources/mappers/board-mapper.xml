@@ -53,10 +53,10 @@
 				<when test="category.equals('normal')">
 					and category is null
 				</when>
-				<when test="category.equals('department') and department.equals('all')">
+				<when test="category.equals('department') and department == null">
 					and category is not null
 				</when>
-				<when test="category.equals('department') and !department.equals('all')">
+				<when test="category.equals('department') and department != null">
 					and category = #{department}
 				</when>
 			</choose>
@@ -113,10 +113,10 @@
 				<when test="category.equals('normal')">
 					and category is null
 				</when>
-				<when test="category.equals('department') and department.equals('all')">
+				<when test="category.equals('department') and department.equals('')">
 					and category is not null
 				</when>
-				<when test="category.equals('department') and !department.equals('all')">
+				<when test="category.equals('department') and !department.equals('')">
 					and category = #{department}
 				</when>
 			</choose>
