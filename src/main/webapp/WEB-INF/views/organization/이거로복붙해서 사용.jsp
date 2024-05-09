@@ -36,14 +36,9 @@
 	<link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
   
 	<style>
-    .content{
-        margin-top: 20px;
-        display: flex;
-    }
     .main_content{
-        /* background-color: yellowgreen; */
-        padding: 0 20px;
-        width: 100%;
+    	width: 1200px !important;
+        padding: 20px;
     }
     
 
@@ -60,6 +55,8 @@
 	    <hr>
 	    
 		<!-- ------------ -->
+	
+		
 	
 	
 		<!-- ------------ -->

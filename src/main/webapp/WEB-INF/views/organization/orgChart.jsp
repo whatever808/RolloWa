@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <!-- bootstrap -->
-    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
+    <link href="${contextPath}/resources/css/common/bootstrap.min.css" rel="stylesheet">
 
     <!-- fontawesome -->
     <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
@@ -35,31 +35,17 @@
     <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <!-- css -->
-    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../../resources/css/common.css">
-    <link rel="stylesheet" href="../../../resources/css/common/mdb.min.css" />
+    <link href="${contextPath}/resources/css/common/sidebars.css" rel="stylesheet">
+    <link rel="stylesheet" href="${contextPath}/resources/css/common.css">
+    <link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
 
     <!-- sidebar -->
-    <script src="../../../resources/js/common/sidebars.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.sidebar').load('../common/sidebar.html');
-        });
-    </script>
-
+    <script src="${contextPath}/resources/js/common/sidebars.js"></script>
+    
     <style>
-    .content{
-        margin-top: 20px;
-        display: flex;
-    }
-    .sidebar{
-      /* background-color: orange; */        
-        width: 300px;
-    }
     .main_content{
-        /* background-color: yellowgreen; */
-        padding: 0 20px;
-        width: 100%;
+    	width: 1200px !important;
+        padding: 20px;
     }
 
     /* 조직도 관련 css */

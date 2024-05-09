@@ -21,11 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 public class OrganizationInfoController {
 
 	// 1.1 조직도
-	@GetMapping("/orgchart.page")
+	@GetMapping("/orgChart.page")
 	public String orgchart() {
-		
-		
-		return "organization/organizationChart";
+		return "organization/orgChart";
 	}
 	
 	// 1.2 직원검색
@@ -35,5 +33,9 @@ public class OrganizationInfoController {
 	}
 	
 	// 1.3 조직관리(관리자 전용)
+	@GetMapping("/orgManager.page")
+	public String deptManager() {
+		return "organization/orgManager";
+	}
 
 }
