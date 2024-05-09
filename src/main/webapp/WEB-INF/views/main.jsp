@@ -105,7 +105,7 @@
 										<span id="remaining__sec">00</span>
 									</span>
 									<div class="btn_wrapper">
-										<button type="button" class="btn1 forget_btn" id="complete">인증하기</button>
+										<button type="button" class="btn1 forget_btn" id="complete" onclick="certificate();">인증하기</button>
 									</div>
                 </div>
             </div>
@@ -204,6 +204,9 @@
 							}		  
 						};
             
+						function certificate() {
+							
+						}
 
         </script>
 
