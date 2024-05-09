@@ -28,7 +28,11 @@
     <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
     <script src="../../../resources/js/common/bootstrap.bundle.min.js"></script>
     <script src="../../../resources/js/common/sidebars.js"></script>
-
+    
+		<!-- 사인관련 스크립트 -->
+		<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+		<!-- ------------ -->
     <link href="${contextPath}/resources/css/mainPage/mainPage.css" rel="stylesheet">
 
     <!-- 모달 관련 -->
@@ -163,7 +167,10 @@
     }
     
     /*----------------------------*/
-        
+    
+    /*-----사인 스타일-----*/
+    #signature { border:1px solid #000; }
+		#save, #clear { padding:5px 20px; border:0; color:#fff; background:#000; margin-top:5px; }
 
 </style>
 
@@ -696,8 +703,6 @@
                 $('#modal').iziModal('open');
             });
         </script>
-        
-        
         
     </main>
     <script src="../../resources/js/common/bootstrap.bundle.min.js"></script>

@@ -211,7 +211,8 @@ public class PayController {
 	// 메인결재 상세페이지목록클릭-----------------------
 	@RequestMapping("/detail.do")
 	public String detail(PayDto pDto, Model model) {
-		
+		log.debug("documentType : {}", pDto.getDocumentType() );
+		log.debug("dto : {}", pDto );
 		String documentType = pDto.getDocumentType();
 		if(documentType.equals("매출보고서")) {
 			PayDto payDto = payServiceImpl.mdetail(pDto);

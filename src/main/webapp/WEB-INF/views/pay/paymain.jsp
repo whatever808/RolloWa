@@ -216,7 +216,7 @@
                             <div class="di_top" id="di_t_4">
                                 <div class="di_top_left">
                                     <div><label>전체결재내역보기</label></div>
-                                    <div class="biv_b"><b>${ slistCount.length() == 1 ? '0'+slistCount : slistCount}건</b></div>
+                                    <div class="biv_b"><b>${ slistCount.length() == 1 ? '0'+ slistCount : slistCount}건</b></div>
                                 </div>
                                 <div class="di_top_rigth">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard2-fill" viewBox="0 0 16 16">
