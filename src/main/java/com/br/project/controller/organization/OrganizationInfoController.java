@@ -2,21 +2,19 @@ package com.br.project.controller.organization;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.organizaion.OrganizationService;
 import com.br.project.util.PagingUtil;
 
-import ch.qos.logback.core.model.Model;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,12 +46,17 @@ public class OrganizationInfoController {
 		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
+		  .addObject("listCount", listCount)
 		  .setViewName("organization/empSearch");
 		
 		return mv;
 	}
 	
-	// 1.2 전체 인원수 조회
+	// 1.2 부서조회
+	@GetMapping("/dept")
+    public List<GroupDto> getDept(){
+        return organizationService.getDept();
+    }
 
 	
 	// 1.3 조직관리(관리자 전용)

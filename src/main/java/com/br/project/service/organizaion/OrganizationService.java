@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.br.project.dao.organization.OrganizationDao;
+import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 
@@ -26,6 +27,10 @@ public class OrganizationService {
 
 	public List<MemberDto> selectOrganizationList(PageInfoDto pi) {
 		return organizationDao.selectOrganizationList(pi);
+	}
+
+	public List<GroupDto> getDept() {
+		return organizationDao.selectDept();
 	}
 
 }

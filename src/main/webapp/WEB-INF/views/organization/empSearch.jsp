@@ -70,8 +70,12 @@
 	.employee_count {
 	    margin-left: 10px;
 	}
+	table{
+		table-layout: fixed;
+	}
 	.table_empinfo {
 	    text-align: center;
+	    table-layout: fixed !important;
 	}
 	.table_empinfo th{
 	    background-color: rgb(255,247,208) !important;
@@ -89,15 +93,12 @@
 	    margin: -10px;
  	}
  	.profile_img:hover {
-	    top: 50% !important;
-	    left: 50% !important;
-		transform: scale(4);
-    	transition: transform 0.5s;
+		transform: scale(10) translate(70%, -40%);
     	border-radius: 0;
+    	border: 0px;
     	object-fit: contain;
-    	width: 100px;
-    	height: auto;
 	}
+	
  	
 	</style>
 </head>
@@ -121,9 +122,9 @@
 	                <td>
 	                    <select id="department" name="department" class="form-control">
 	                        <option value="전체 부서">전체 부서</option>
-	                        <option value="부서 1">부서 1</option>
-	                        <option value="부서 2">부서 2</option>
-	                        <option value="부서 3">부서 3</option>
+	                        <c:forEach var="d" items="dept">
+		                        <option value="${d.dept}">${ d.dept }</option>
+	                        </c:forEach>
 	                    </select>
 	                </td>
 	                <!-- 검색 메뉴 2 : 전화번호 -->
@@ -173,10 +174,11 @@
 	            $(this).val(regExp);
 	        })
 	    </script>
-	
+	    
+	   
 	
 	    <!-- 전체 인원수 -->
-	    <h5 class="employee_count">전체 50명</h5>
+	    <h5 class="employee_count">전체 ${ listCount }명</h5>
 	
 	    <!-- 직원 정보 테이블 start-->
 	    <table class="table table_empinfo line-shadow">
@@ -218,6 +220,7 @@
 	        </c:choose>
 	        
 	    </table>
+	    
 	    <!-- 직원 테이블 end -->
 	
 	    <!--페이징 처리 start-->
@@ -231,21 +234,6 @@
 	        </ul>
 	    </div>
 	    <!--페이징 처리 end-->
-	    
-	    
-		<!-- 삭제예정
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">5</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">6</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">7</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">8</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
-        -->
-		<!-- ------------ -->
 		
 	</div>
 	<!-- 메인 영역 end-->

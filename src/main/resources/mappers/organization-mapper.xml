@@ -39,7 +39,6 @@
 		</collection>
 		
 	</resultMap>
-	
 
 	<!-- 직원 전체 카운트 -->
 	<select id="selectOrganizationListCount" resultType="_int">
@@ -65,6 +64,17 @@
 		 ORDER BY
 			   USER_NO ASC
 	</select>
-
+	
+	<!-- 부서 조회 -->
+	<select id="selectDept" resultMap="memberResult">
+		SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'DEPT%'
+	</select>
+	
+	<!-- 팀 조회 -->
+	<select id="selectTeam" resultMap="memberResult">
+		SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'TEAM%'
+	</select>
+	
+	
 
 </mapper>

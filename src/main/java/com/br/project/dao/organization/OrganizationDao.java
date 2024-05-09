@@ -6,6 +6,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 
@@ -35,6 +36,10 @@ public class OrganizationDao {
 		
 		return sqlSessionTemplate.selectList("organizationMapper.selectOrganizationList", null, rowBounds);
 		
+	}
+
+	public List<GroupDto> selectDept() {
+		return sqlSessionTemplate.selectList("organizationMapper.selectDept");
 	}
 
 	
