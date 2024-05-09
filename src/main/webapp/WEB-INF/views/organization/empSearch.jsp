@@ -83,9 +83,22 @@
 	.table_empinfo td img{
 	    border: 1px solid gainsboro;
 	    border-radius: 100%;
-	    width: 40px;
-	    margin: -5px;
+	    width: 50px;
+	    height: 50px;
+		object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
+	    margin: -10px;
  	}
+ 	.profile_img:hover {
+	    top: 50% !important;
+	    left: 50% !important;
+		transform: scale(4);
+    	transition: transform 0.5s;
+    	border-radius: 0;
+    	object-fit: contain;
+    	width: 100px;
+    	height: auto;
+	}
+ 	
 	</style>
 </head>
 <body>
@@ -176,101 +189,62 @@
 	            <th>전화번호</th>
 	            <th>이메일</th>
 	        </tr>
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
 	        
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
-	
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
-	
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
-	
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
+	        <!-- 이름, 부서, 팀명, 직급, 전화, 이메일 -->
+	        <c:choose>
+		        <c:when test="${ not empty list }">
+		        	<c:forEach var="m" items="${ list }">
+				        <tr>
+
+				            <td>
+					            <c:choose>
+					            	<c:when test="${ not empty m.profileUrl }">
+						                <img src="${ m.profileUrl }" class="profile_img">
+					            	</c:when>
+					            	<c:otherwise>
+						                <img src="${contextPath}/resources/images/defaultProfile.png">
+					            	</c:otherwise>
+					            </c:choose>
+				            </td>
+				            <td>${ m.userName }</td>
+				            <td>${ m.dept }</td>
+				            <td>${ m.team }</td>
+				            <td>${ m.posi }</td>
+				            <td>${ m.phone }</td>
+				            <td>${ m.email }</td>
+				        </tr>
+			        </c:forEach>
+		        </c:when>
+	        </c:choose>
+	        
 	    </table>
 	    <!-- 직원 테이블 end -->
 	
 	    <!--페이징 처리 start-->
 	    <div class="container">
 	        <ul class="pagination justify-content-center">
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
+	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/empSearch.do?page=${pi.currentPage-1}">Previous</a></li>
+				<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/empSearch.do?page=${p}">${ p }</a></li>
+				</c:forEach>
+				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/empSearch.do?page=${pi.currentPage+1}">Next</a></li> 
 	        </ul>
 	    </div>
 	    <!--페이징 처리 end-->
-	
+	    
+	    
+		<!-- 삭제예정
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">5</a></li>
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">6</a></li>
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">7</a></li>
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">8</a></li>
+	            <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
+        -->
 		<!-- ------------ -->
 		
 	</div>
