@@ -41,7 +41,7 @@
 <body>
 
 	<!-- side bar -->
-	<jsp:include page="/WEB-INF/views/common/sidebar.jsp" />
+	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
 	<!-- content 추가 -->
   <div class="content p-5">
@@ -117,7 +117,7 @@
   <!-- content 끝 -->
   
   <!-- chat floating -->
-  <jsp:include page="/WEB-INF/views/common/chatFloating.jsp" />
+  <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />
 	
 
 </body>

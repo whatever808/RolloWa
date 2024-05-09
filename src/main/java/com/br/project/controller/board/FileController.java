@@ -27,6 +27,8 @@ public class FileController {
 	private final AttachmentService attachmentService;
 	private final FileUtil fileUtil;
 	
+	
+	
 	/**
 	 * CKEditor 이미지 업로드 (비동기)
 	 * 
@@ -53,7 +55,7 @@ public class FileController {
 		
 		return result;
 	}
-	
+
 	/**
 	 * @method : 첨부파일 업로드
 	 
