@@ -48,7 +48,6 @@
 				    <link href="${ contextPath }/resources/css/login.css" rel="stylesheet">
 				    <script src="${ contextPath }/resources/js/login.js"></script>
         </head>
-        alertMsg : ${ alertMsg }
 					<c:if test="${ alertMsg != null }" >
 						<script>
 							alertify.alert('${alertTitle}','${alertMsg}');
@@ -168,6 +167,7 @@
             const remainingMin = document.getElementById("remaining__min");
 						const remainingSec = document.getElementById("remaining__sec");
 						const completeBtn = document.getElementById("complete");
+						var certificationNumber = 0;
 						
 						let time = 180;
 						const takeTarget = () => {
@@ -190,9 +190,10 @@
 								$.ajax({
 									  url: "${contextPath}/member/sendMsg.do"
 										, method: "post"
-										, data: {phone: $("#phone").text()}
-									  , success: function(result) {
-											console.log(result);
+										, data: {phone: $("#phone").val()}
+									  , success: function(rand) {
+											console.log(rand);
+											certificationNumber = rand;
 										}
 								  	, error: function() {
 								  		console.log("AJAX 통신 실패");

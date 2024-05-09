@@ -86,10 +86,11 @@ public class MemberController {
 	// 휴대폰 인증번호 발송
     @PostMapping(value="/sendMsg.do", produces="aplication/json; charset=utf-8")
     @ResponseBody
-    public SingleMessageSentResponse ajaxSendOne(String phone) {
+    public String ajaxSendOne(String phone) {
         Message message = new Message();
+        log.debug("{}", phone);
         // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-        message.setFrom("송신 전화번호");
+        message.setFrom("01047547864");
         message.setTo(phone);
         String rand = RandomStringUtils.randomNumeric(6);
         log.debug(rand);
@@ -97,9 +98,9 @@ public class MemberController {
         message.setText("[CoolSMS] 인증번호를 확인하고 입력해주세요 : " + rand);
 
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-        System.out.println(response);
-
-        return response;
+        log.debug("{}", response);
+        
+        return rand;
     }
     
 	// 마이페이지 조회
@@ -151,7 +152,13 @@ public class MemberController {
 		log.debug("{}", memberInfo);
 		
 		// 로그인한 멤버 번호 추출
-		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		MemberDto loginMember = null;
+		if ((MemberDto)session.getAttribute("loginMember") != null) {
+			loginMember = (MemberDto)session.getAttribute("loginMember");	
+		} else {
+			redirectAttributes.addFlashAttribute("alertMsg", "로그인 오류");
+			return "redirect:/";
+		}
 		memberInfo.put("userNo", String.valueOf(loginMember.getUserNo()));
 		
 		// 주소 합치기
@@ -167,14 +174,14 @@ public class MemberController {
 		// 회원정보 다시 조회
 		loginMember = memberService.selectMember(loginMember);
 		
-		redirectAttributes.addAttribute("alertTitle", "회원정보 수정");
+		redirectAttributes.addFlashAttribute("alertTitle", "회원정보 수정");
 		if (result > 0) {
 			session.setAttribute("loginMember", loginMember);
-			redirectAttributes.addAttribute("alertMsg", "회원정보 수정 성공");
+			redirectAttributes.addFlashAttribute("alertMsg", "회원정보 수정 성공");
 		} else {
-			redirectAttributes.addAttribute("alertMsg", "회원정보 수정 실패");
+			redirectAttributes.addFlashAttribute("alertMsg", "회원정보 수정 실패");
 		}
 		
-		return "redirect:/member/mypage.page/{alertTitle}/{alertMsg}";
+		return "redirect:/member/mypage.page";
 	}
 }
