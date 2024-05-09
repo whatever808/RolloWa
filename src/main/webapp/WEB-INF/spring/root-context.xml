@@ -11,9 +11,9 @@
 	
 	<bean class="org.apache.commons.dbcp2.BasicDataSource" id="dataSource" destroy-method="close">
 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
-		<property name="url" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe"/>
-		<property name="username" value="ROLLOWA"/>
-		<property name="password" value="ROLLOWA"/>
+		<property name="url" value="jdbc:log4jdbc:oracle:thin:@14.36.141.71:17600:xe"/>
+		<property name="username" value="rollowa"/>
+		<property name="password" value="rollowa"/>
 	</bean>
 	
 	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">

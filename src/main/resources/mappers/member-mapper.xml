@@ -9,7 +9,7 @@
 	<result column="USER_PWD" property="userPwd"/>
 	<result column="PHONE" property="phone"/>
 	<result column="ADDRESS" property="address"/>
-	<result column="ACCOUNT_NO" property="accountNo"/>
+	<result column="BANK_ACCOUNT" property="accountNo"/>
 	<result column="BANK" property="bank"/>
 	<result column="EMAIL" property="email"/>
 	<result column="PROFILE_URL" property="profileURL"/>
@@ -17,13 +17,13 @@
 	<result column="VACATION_COUNT" property="vacationCount"/>
 	<result column="AUTH_LEVEL" property="authLevel"/>
 	<result column="SALARY" property="salary"/>
-	<result column="TEAM_NO" property="teamNo"/>
-	<result column="POSITION_NO" property="positionNo"/>
+	<result column="TEAM_CODE" property="teamCode"/>
+	<result column="POSITION_CODE" property="positionCode"/>
 </resultMap>
 
   <!--  회원 로그인  -->
 	<select id="selectMember" resultMap="memberResult"> 
-		select USER_NO , USER_NAME , USER_ID , USER_PWD , PHONE , ADDRESS , ACCOUNT_NO , BANK , EMAIL , PROFILE_URL , COUNT_FAIL , VACATION_COUNT , AUTH_LEVEL , SALARY , TEAM_NO , POSITION_NO 
+		select USER_NO , USER_NAME , USER_ID , USER_PWD , PHONE , ADDRESS , BANK_ACCOUNT , BANK , EMAIL , PROFILE_URL , COUNT_FAIL , VACATION_COUNT , AUTH_LEVEL , SALARY , TEAM_CODE , POSITION_CODE 
 		from member
 		where 
 		user_id = #{ userId } 

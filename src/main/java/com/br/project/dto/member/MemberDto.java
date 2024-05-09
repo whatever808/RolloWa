@@ -34,7 +34,7 @@ public class MemberDto {
 	private int vacationCount;
 	private int authLevel;
 	private int salary;
-	private int teamNo;
-	private int positionNo;	
+	private String teamCode;
+	private String positionCode;	
 	
 }
