@@ -5,8 +5,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>1.2 직원검색</title>
+	<meta charset="UTF-8">
+	<title>1.2 직원검색</title>
 
 	<!-- animate -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -35,19 +35,9 @@
 	<link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
   
 	<style>
-	.content{
-	    display: flex;
-	}
-	
-	.sidebar{
-	    background-color: orange;
-	    width: 300px;
-	}
-	
 	.main_content{
-	    /* background-color: yellowgreen; */
+	    width: 1200px !important;
 	    padding: 20px;
-	    width: 1200px;
 	}
 	
 	.search_menu{
