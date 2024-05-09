@@ -21,17 +21,17 @@ public class BoardDao {
 	/**
 	 * @return : 총게시글 갯수조회 (STATUS = "Y")
 	 */
-	public int selectTotalBoardCount(Map<String, String> request) {
-		return sqlSessionTemplate.selectOne("boardMapper.selectTotalBoardCount", request);
+	public int selectTotalBoardCount(Map<String, String> filter) {
+		return sqlSessionTemplate.selectOne("boardMapper.selectTotalBoardCount", filter);
 	}
 	
 	/**
 	 * @return : 게시글 목록조회
 	 */
-	public List<BoardDto> selectBoardList(PageInfoDto pageInfo, Map<String, String> request){
+	public List<BoardDto> selectBoardList(PageInfoDto pageInfo, Map<String, String> filter){
 		RowBounds rowBounds = new RowBounds(pageInfo.getListLimit() * (pageInfo.getCurrentPage() - 1)
 										   ,pageInfo.getListLimit());
-		return sqlSessionTemplate.selectList("boardMapper.selectBoardList", request, rowBounds);
+		return sqlSessionTemplate.selectList("boardMapper.selectBoardList", filter, rowBounds);
 	}
 	
 	
