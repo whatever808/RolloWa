@@ -3,7 +3,7 @@
 <mapper namespace="orgMapper">
 
 	<!-- 직원 전체 조회(사진,성명,부서,팀명,직급,전화,이메일 -->
-	<select id="selectEmp" resultMap="empResult">
+<!-- 	<select id="selectEmp" resultMap="empResult">
 		SELECT PROFILE_URL
 			 , USER_NAME
 			 , 부서
@@ -15,6 +15,5 @@
 		 ORDER 
 		 	BY USER_NO DESC
 		   AND 
-	</select>
-	 -->
+	</select> -->
 </mapper>
