@@ -3,7 +3,7 @@
 <mapper namespace="orgMapper">
 
 	<!-- 직원 전체 조회(사진,성명,부서,팀명,직급,전화,이메일 -->
-	<select id="selectEmp" result="empResult">
+	<select id="selectEmp" resultMap="empResult">
 		SELECT PROFILE_URL
 			 , USER_NAME
 			 , 부서
