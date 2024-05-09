@@ -8,8 +8,11 @@
 	<result column="USER_ID" property="userId"/>
 	<result column="USER_PWD" property="userPwd"/>
 	<result column="PHONE" property="phone"/>
+	<result column="POST_CODE" property="postCode"/>
 	<result column="ADDRESS" property="address"/>
-	<result column="BANK_ACCOUNT" property="accountNo"/>
+	<result column="DATAIL_ADDRESS" property="detailAddress"/>
+	<result column="TOTAL_ADDRESS" property="totalAddress"/>
+	<result column="BANK_ACCOUNT" property="bankAccount"/>
 	<result column="BANK" property="bank"/>
 	<result column="EMAIL" property="email"/>
 	<result column="PROFILE_URL" property="profileURL"/>
@@ -46,6 +49,26 @@
 			member
 		set
 			profile_url = #{ profileURL }
+		where
+			user_no = #{ userNo }
+	</update>
+	
+	<!-- 회원 정보수정 -->
+	<update id="updateMember">
+		update
+			member
+		set
+			user_name = #{ userName }
+			, phone = #{ phone }
+			, post_code = #{ postNumber }
+			, address = #{ address }
+			, detail_address = #{ datailAddress }
+			, total_address = #{ totalAddress }
+			, email = #{ email }
+			, bank = #{ bank }
+			, bank_account = #{ bankAccount }
+			, modify_date = sysdate
+			, modify_user_no = #{ userNo }
 		where
 			user_no = #{ userNo }
 	</update>

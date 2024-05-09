@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -44,12 +45,13 @@ public class MemberController {
 		MemberDto loginMember = memberService.selectMember(member);
 		HttpSession session = request.getSession();
 		
+		redirectAttribute.addFlashAttribute("alertTitle", "로그인 서비스");
 		if(loginMember != null) {
 			// 로그인 성공
-			redirectAttribute.addFlashAttribute("alertMsg", "로그인 성공");
 			session.setAttribute("loginMember", loginMember);
 		} else {
 			// 로그인 실패
+			log.debug("로그인 실패 실행됨");
 			redirectAttribute.addFlashAttribute("alertMsg", "로그인 실패");
 		}
 		
@@ -140,5 +142,39 @@ public class MemberController {
 		} else {
 			return "FAIL";
 		}
+	}
+	
+	// 마이페이지 수정
+	@PostMapping("/updateInfo.do")
+	public String updateInfo(@RequestParam Map<String, String> memberInfo, HttpSession session
+				, RedirectAttributes redirectAttributes) {
+		log.debug("{}", memberInfo);
+		
+		// 로그인한 멤버 번호 추출
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		memberInfo.put("userNo", String.valueOf(loginMember.getUserNo()));
+		
+		// 주소 합치기
+		StringBuilder totalAddress = new StringBuilder();
+		totalAddress.append("(").append(memberInfo.get("postNumber"))
+					.append(") ")
+					.append(memberInfo.get("address")).append(" ")
+					.append(memberInfo.get("detailAddress"));
+		memberInfo.put("totalAddress", totalAddress.toString());
+		
+		// db update
+		int result = memberService.updateMember(memberInfo);
+		// 회원정보 다시 조회
+		loginMember = memberService.selectMember(loginMember);
+		
+		redirectAttributes.addAttribute("alertTitle", "회원정보 수정");
+		if (result > 0) {
+			session.setAttribute("loginMember", loginMember);
+			redirectAttributes.addAttribute("alertMsg", "회원정보 수정 성공");
+		} else {
+			redirectAttributes.addAttribute("alertMsg", "회원정보 수정 실패");
+		}
+		
+		return "redirect:/member/mypage.page/{alertTitle}/{alertMsg}";
 	}
 }

@@ -20,8 +20,11 @@ public class MemberDto {
 	private String userId;
 	private String userPwd;
 	private String phone;
+	private String postCode;
 	private String address;
-	private String accountNo;
+	private String detailAddress;
+	private String totalAddress;
+	private String bankAccount;
 	private String bank;
 	private String email;
 	private String profileURL;

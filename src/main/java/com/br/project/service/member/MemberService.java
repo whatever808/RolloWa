@@ -32,4 +32,8 @@ public class MemberService {
 		
 		return result1 * result2;
 	}
+
+	public int updateMember(Map<String, String> memberInfo) {
+		return memberDao.updateMember(memberInfo);
+	}
 }
