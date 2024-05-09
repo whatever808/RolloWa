@@ -288,7 +288,7 @@
 <body>
 <c:if test="${ alertMsg != null }" >
 <script>
-	alertify.alert('${alertMsg}');
+	alertify.alert('${alertTitle}','${alertMsg}');
 </script>
 </c:if>
 <main class="d-flex flex-nowrap">
