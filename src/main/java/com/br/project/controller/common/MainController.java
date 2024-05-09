@@ -1,4 +1,4 @@
-package com.br.project.common.controller;
+package com.br.project.controller.common;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
