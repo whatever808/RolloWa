@@ -48,6 +48,7 @@
 				    <link href="${ contextPath }/resources/css/login.css" rel="stylesheet">
 				    <script src="${ contextPath }/resources/js/login.js"></script>
         </head>
+        alertMsg : ${ alertMsg }
 					<c:if test="${ alertMsg != null }" >
 						<script>
 							alertify.alert('${alertTitle}','${alertMsg}');

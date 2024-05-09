@@ -20,8 +20,8 @@ public class MainController {
 	@RequestMapping("/")
 	public String mainPage(@SessionAttribute(value="loginMember", required=false) MemberDto loginMember 
 					, Model model
-					, @RequestParam(value="alertMsg", required=false) String alertMsg
-					, @RequestParam(value="alertTitle", required=false) String alertTitle) {
+					, String alertMsg
+					, String alertTitle) {
 
 		log.debug("alertMsg : {}", alertMsg);
 		
@@ -35,7 +35,7 @@ public class MainController {
 			return "mainpage/mainpage";
 		}
 		
-		return "main";
+		return "main/{alertTitle}&{alertMsg}";
 	}
 }
 

@@ -41,18 +41,18 @@ public class MemberController {
 		
 	// 로그인
 	@PostMapping("/login.do")
-	public String MemberLogin(MemberDto member, HttpServletRequest request, RedirectAttributes redirectAttribute) {
+	public String MemberLogin(MemberDto member, HttpServletRequest request, Model model) {
 		MemberDto loginMember = memberService.selectMember(member);
 		HttpSession session = request.getSession();
 		
-		redirectAttribute.addFlashAttribute("alertTitle", "로그인 서비스");
+		model.addAttribute("alertTitle", "로그인 서비스");
 		if(loginMember != null) {
 			// 로그인 성공
 			session.setAttribute("loginMember", loginMember);
 		} else {
 			// 로그인 실패
 			log.debug("로그인 실패 실행됨");
-			redirectAttribute.addFlashAttribute("alertMsg", "로그인 실패");
+			model.addAttribute("alertMsg", "로그인 실패");
 		}
 		
 		return "redirect:/";
@@ -107,7 +107,7 @@ public class MemberController {
 	public String ToMyPage() {
 		return "member/mypage";
 	}
-	
+
 	// 마이페이지 프로필 이미지 수정
 	@PostMapping("/modifyProfile.do")
 	@ResponseBody
@@ -120,7 +120,7 @@ public class MemberController {
 		} else {
 			return "FAIL";
 		}
-		
+
 		Map<String, String> file = new HashMap<>(); 
 	
 		if(uploadFile != null && !uploadFile.isEmpty()) {
