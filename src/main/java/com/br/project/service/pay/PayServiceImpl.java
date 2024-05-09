@@ -47,14 +47,15 @@ public class PayServiceImpl {
 	}
 	
 	//카테고리별 총리스트갯수(문서)
-	public int slistCount(String conditions) {
-		return payDao.slistCount(conditions);
+	public int slistCount(Map<String, Object> params) {
+		return payDao.slistCount(params);
 	}
 	
 	//카테고리별 리스트(문서)
-	public List<PayDto> categoryList(String conditions, PageInfoDto pi) {
-		return payDao.categoryList(conditions, pi);
+	public List<PayDto> categoryList(Map<String, Object> params, PageInfoDto pi) {
+		return payDao.categoryList(params, pi);
 	}
+	
 	
 	//결재메인페이지 조회(매출보고서)
 	public PayDto mdetail(PayDto pDto) {	
@@ -89,6 +90,16 @@ public class PayServiceImpl {
 	//결재메인페이지 조회(출장보고서)
 	public PayDto cdetail(PayDto pDto) {	
 		return payDao.cdetail(pDto);	
+	}
+	
+	//결재메인페이지 사용자 결재리스트갯수
+	public int allUserCount(String userName) {
+		return payDao.allUserCount(userName);
+	}
+	
+	//결재메인페이지 사용자 결재리스트
+	public List<PayDto> allUserList(String userName, PageInfoDto pi) {
+		return payDao.allUserList(userName, pi);
 	}
 
 		

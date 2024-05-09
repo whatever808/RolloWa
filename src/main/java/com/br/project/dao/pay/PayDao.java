@@ -48,15 +48,31 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.searchList", search, rowBounds);
 	}
 	
-	public int slistCount(String conditions) {
-		return sqlSessionTemplate.selectOne("payMapper.slistCount", conditions);
+	public int slistCount(Map<String, Object> params) {
+		return sqlSessionTemplate.selectOne("payMapper.slistCount", params);
 		
 	}
 	
-	public List<PayDto> categoryList(String conditions, PageInfoDto pi){
-		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
-		return sqlSessionTemplate.selectList("payMapper.categoryList", conditions, rowBounds);
+	/*
+	public int statusCount(String status) {
+		return sqlSessionTemplate.selectOne("payMapper.slistCount", status);
+		
 	}
+	*/
+	
+	
+	public List<PayDto> categoryList(Map<String, Object> params, PageInfoDto pi){
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.categoryList", params, rowBounds);
+	}
+	
+	/*
+	public List<PayDto> statusList(String status, PageInfoDto pi){
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.categoryList", status, rowBounds);
+	}
+	*/
+	
 	
 	public PayDto mdetail(PayDto pDto) {
 		return sqlSessionTemplate.selectOne("payMapper.mdetail", pDto);
@@ -84,6 +100,15 @@ public class PayDao {
 	
 	public PayDto cdetail(PayDto pDto) {
 		return sqlSessionTemplate.selectOne("payMapper.cdetail", pDto);
+	}
+	
+	public int allUserCount(String userName) {
+		return sqlSessionTemplate.selectOne("payMapper.allUserCount",userName);
+	}
+	
+	public List<PayDto> allUserList(String userName, PageInfoDto pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.allUserList", userName, rowBounds);
 	}
 	
 	
