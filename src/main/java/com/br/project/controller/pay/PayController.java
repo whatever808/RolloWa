@@ -3,6 +3,7 @@ package com.br.project.controller.pay;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.br.project.controller.common.CommonController;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.dto.pay.MemberDeptDto;
 import com.br.project.dto.pay.PayDto;
 import com.br.project.service.pay.PayServiceImpl;
 import com.br.project.util.PagingUtil;
@@ -47,10 +49,10 @@ public class PayController {
 		//페이지인포객체 생성
 		PageInfoDto pi =  pagingUtil.getPageInfoDto(listCount, currentPage, 5, 10);
 		
-		//로그인한 유저의 이름값 꺼내기
-		//MemberDto loginUser = (MemeberDto)session.getAttribute("loginUser");
-		//String userName = loginUser.getUserName();
-		//userName 전달 = > 해야됨
+		String userName = (String)((MemberDto)session.getAttribute("loginMember")).getUserName();
+		//로그인한 유저의 전체수신결재함(총갯수)
+		int userPayCount = payServiceImpl.userPayCount(userName);
+				
 		List<PayDto> list = payServiceImpl.paymainPage(pi);
 		
 		//일주일이상승인완료가 안된 게시글총갯수
@@ -286,8 +288,113 @@ public class PayController {
 	
 	
 	//글작성페이지폼-------------------------------------------
-	@GetMapping("/mWriterForm.do")
-	public void mWriterForm() {
+	@RequestMapping("/mWriterForm.do")
+	public String mWriterForm(Model model) {
+		
+		List<MemberDeptDto> list = payServiceImpl.selectDepartment();
+		List<Map<String, Object>> maDeptList = new ArrayList<>();
+		List<Map<String, Object>> operatDeptList = new ArrayList<>();
+		List<Map<String, Object>> marketDeptList = new ArrayList<>();
+		List<Map<String, Object>> fbDeptList = new ArrayList<>();
+		List<Map<String, Object>> hrDeptList = new ArrayList<>();
+		List<Map<String, Object>> serviceDeptList = new ArrayList<>();
+		
+		// 총무부의 이름, 팀이름, 직급(부장,과장,차장)
+		
+		for(int i=0; i<list.size(); i++) {
+			Map<String, Object> managementDept = new HashMap<>();;
+			if(list.get(i).getDeptName().equals("총무부")) {
+				managementDept.put("userNo", list.get(i).getUserNo());
+				managementDept.put("userName", list.get(i).getUserName());
+				managementDept.put("teamName", list.get(i).getTeamName());
+				managementDept.put("positionName", list.get(i).getPositionName());
+				managementDept.put("deptName", list.get(i).getDeptName());
+				maDeptList.add(managementDept);
+			}
+		}
+		
+		// 운영부의 이름, 팀이름, 직급(부장,과장,차장)
+		
+		
+		for(int i=0; i<list.size(); i++) {
+			if(list.get(i).getDeptName().equals("운영부")) {
+				Map<String, Object> operationsDept = new HashMap<>();
+				operationsDept.put("userNo", list.get(i).getUserNo());
+				operationsDept.put("userName", list.get(i).getUserName());
+				operationsDept.put("teamName", list.get(i).getTeamName());
+				operationsDept.put("positionName", list.get(i).getPositionName());
+				operationsDept.put("deptName", list.get(i).getDeptName());
+				operatDeptList.add(operationsDept);
+				
+			}
+		}
+		
+		// 마케팅부의 이름, 팀이름, 직급(부장,과장,차장)
+		
+		
+		for(int i=0; i<list.size(); i++) {
+			if(list.get(i).getDeptName().equals("마케팅부")) {
+				Map<String, Object> marketingDept = new HashMap<>();
+				marketingDept.put("userNo", list.get(i).getUserNo());
+				marketingDept.put("userName", list.get(i).getUserName());
+				marketingDept.put("teamName", list.get(i).getTeamName());
+				marketingDept.put("positionName", list.get(i).getPositionName());
+				marketingDept.put("deptName", list.get(i).getDeptName());
+				marketDeptList.add(marketingDept);
+			}
+		}
+		
+		// fb(호텔 운영부)의 이름, 팀이름, 직급(부장,과장,차장)
+		for(int i=0; i<list.size(); i++) {
+			if(list.get(i).getDeptName().equals("마케팅부")) {
+				Map<String, Object> fbDept = new HashMap<>();
+				fbDept.put("userNo", list.get(i).getUserNo());
+				fbDept.put("userName", list.get(i).getUserName());
+				fbDept.put("teamName", list.get(i).getTeamName());
+				fbDept.put("positionName", list.get(i).getPositionName());
+				fbDept.put("deptName", list.get(i).getDeptName());
+				fbDeptList.add(fbDept);
+			}
+		}
+		
+		
+		// 인사부의 이름, 팀이름, 직급(부장,과장,차장)
+		for(int i=0; i<list.size(); i++) {
+			if(list.get(i).getDeptName().equals("FB")) {
+				Map<String, Object> hrDept = new HashMap<>();
+				hrDept.put("userNo", list.get(i).getUserNo());
+				hrDept.put("userName", list.get(i).getUserName());
+				hrDept.put("teamName", list.get(i).getTeamName());
+				hrDept.put("positionName", list.get(i).getPositionName());
+				hrDept.put("deptName", list.get(i).getDeptName());
+				hrDeptList.add(hrDept);
+			}
+		}
+		
+		// 서비스부의 이름, 팀이름, 직급(부장,과장,차장)
+		for(int i=0; i<list.size(); i++) {
+			if(list.get(i).getDeptName().equals("FB")) {
+				Map<String, Object> serviceDept = new HashMap<>();
+				serviceDept.put("userNo", list.get(i).getUserNo());
+				serviceDept.put("userName", list.get(i).getUserName());
+				serviceDept.put("teamName", list.get(i).getTeamName());
+				serviceDept.put("positionName", list.get(i).getPositionName());
+				serviceDept.put("deptName", list.get(i).getDeptName());
+				serviceDeptList.add(serviceDept);
+			}
+		}
+		
+		
+		model.addAttribute("maDeptList", maDeptList);
+		model.addAttribute("operatDeptList", operatDeptList);
+		model.addAttribute("marketDeptList", marketDeptList);
+		model.addAttribute("fbDeptList", fbDeptList);
+		model.addAttribute("hrDeptList", hrDeptList);
+		model.addAttribute("serviceDeptList", serviceDeptList);
+		
+		log.debug("maDeptList : {}", maDeptList);
+		
+		return "pay/mWriterForm";
 		
 	}
 	//----------------------------------------------------

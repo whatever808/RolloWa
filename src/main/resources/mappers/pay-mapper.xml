@@ -59,8 +59,28 @@
 		<result column="ETC" property="etc" />
 	</resultMap>
 	
+
+	<resultMap id="MemberDeptResult" type="MemberDeptDto" >
+		<id column="USER_NO" property="userNo"/>
+		<result column="USER_NAME" property="userName"/>
+		<result column="TEAM_CODE" property="teamCode"/>
+		<result column="POSITION_CODE" property="positionCode"/>
+		<result column="TEAM_NAME" property="teamName"/>
+		<result column="POSITION_NAME" property="positionName"/>
+		<result column="DEPT_NAME" property="deptName"/>
+	</resultMap>
+	
+
 	<!-- 메인페이지 목록갯수조회용 -->
 	<select id="selectListCount" resultType="_int">
+		select count(*) count
+			from approval A
+			WHERE STATUS = 'N'
+			AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+	</select>
+	
+	<!-- 로그인한 유저 앞으로 온 결재갯수 결재 + 미결재 + 반려-->
+	<select id="userPayCount" resultType="_int">
 		select count(*) count
 			from approval A
 			WHERE STATUS = 'N'
@@ -459,6 +479,34 @@
 	     and APPROVAL_NO = #{approvalNo}
 			 and DOCUMENT_NUMBER = #{documentNo}
 			 and A.PAYMENT_WRITER = #{payWriter}
+   </select>
+   
+   <!-- 각부서의 속한 팀명, 부장, 과장, 차장 이름 리스트 -->
+   <select id="selectDepartment" resultMap="MemberDeptResult">
+   		select 
+		       	 USER_NO
+		       , USER_NAME
+		       , TEAM_CODE
+		       , POSITION_CODE
+		       , (SELECT CODE_NAME 
+		           FROM TB_GROUP G
+		           WHERE CODE = TEAM_CODE
+		            AND GROUP_CODE = 'TEAM01' 
+		         ) AS "TEAM_NAME"
+		       , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE = 'POSI01' AND CODE = M.POSITION_CODE) AS "POSITION_NAME"
+		       , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE = 'DEPT01' AND CODE = G.UPPER_CODE) AS "DEPT_NAME"
+				FROM
+				    MEMBER M
+				JOIN
+				    TB_GROUP G
+				ON
+				    M.TEAM_CODE = G.CODE
+				AND
+				    G.GROUP_CODE = 'TEAM01'
+				WHERE
+				    POSITION_CODE IN ('C', 'D', 'E')
+				AND
+				    G.UPPER_CODE IN ('A', 'B', 'C', 'D', 'E', 'F')
    </select>
    
 		

@@ -173,8 +173,8 @@
                         <a href="${contextPath}/pay/allUserlist.do" method="get">
                             <div class="di_top" id="di_t_1">
                                 <div class="di_top_left">
-                                    <div><label>000님의 전체수신결재함</label></div>
-                                    <div class="biv_b"><b>00건</b></div>
+                                    <div><label>${loginMember.userName}님의 <br>전체수신결재함</label></div>
+                                    <div><b>00건</b></div>
                                 </div>
                                 <div class="di_top_rigth">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard2-x-fill" viewBox="0 0 16 16">
@@ -187,7 +187,7 @@
                         <a href="">
                             <div class="di_top" id="di_t_2">
                                 <div class="di_top_left">                         
-                                    <div><label>000님의 처리하지 않은<br>수신결재</label></div>
+                                    <div><label>${loginMember.userName}님의 <br> 처리하지 않은 수신결재</label></div>
                                     <div><b>00건</b></div>
                                  </div>
                                 <div class="di_top_rigth">

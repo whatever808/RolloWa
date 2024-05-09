@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.br.project.dao.pay.PayDao;
 import com.br.project.dto.common.PageInfoDto;
+import com.br.project.dto.pay.MemberDeptDto;
 import com.br.project.dto.pay.PayDto;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,10 @@ public class PayServiceImpl {
 	//결재메인페이지 리스트조회용
 	public List<PayDto> paymainPage(PageInfoDto pi){
 		return payDao.paymainPage(pi);
+	}
+	
+	public int userPayCount(String userName) {
+		return payDao.userPayCount(userName);
 	}
 	
 	//일주일이상승인완료가 안된 게시글총갯수
@@ -100,6 +105,11 @@ public class PayServiceImpl {
 	//결재메인페이지 사용자 결재리스트
 	public List<PayDto> allUserList(String userName, PageInfoDto pi) {
 		return payDao.allUserList(userName, pi);
+	}
+	
+	//결재 작성 페이지 부서 리스트
+	public List<MemberDeptDto> selectDepartment(){
+		return payDao.selectDepartment();
 	}
 
 		

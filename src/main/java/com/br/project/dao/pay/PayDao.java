@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.br.project.dto.common.PageInfoDto;
+import com.br.project.dto.pay.MemberDeptDto;
 import com.br.project.dto.pay.PayDto;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,10 @@ public class PayDao {
 	public List<PayDto> paymainPage(PageInfoDto pi) {
 		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
 		return sqlSessionTemplate.selectList("payMapper.paymainPage", null, rowBounds);
+	}
+	
+	public int userPayCount(String userName) {
+		return sqlSessionTemplate.selectOne("payMapper.userPayCount");
 	}
 	
 	public int moreDateCount() {
@@ -109,6 +114,10 @@ public class PayDao {
 	public List<PayDto> allUserList(String userName, PageInfoDto pi) {
 		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
 		return sqlSessionTemplate.selectList("payMapper.allUserList", userName, rowBounds);
+	}
+	
+	public List<MemberDeptDto> selectDepartment(){
+		return sqlSessionTemplate.selectList("payMapper.selectDepartment");
 	}
 	
 	
