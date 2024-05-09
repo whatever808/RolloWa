@@ -14,6 +14,7 @@
 		<typeAlias type="com.br.project.dto.pay.PayDto" 			alias="PayDto"/>
 		<typeAlias type="com.br.project.dto.pay.ExpenditureDto" 	alias="ExpenditureDto"/>
 		<typeAlias type="com.br.project.dto.calendar.CalendarDto" alias="calendarDto"/>
+		<typeAlias type="com.br.project.dto.member.MemberDto" alias="MemberDto"/>
 		<typeAlias type="com.br.project.dto.pay.FixturesDto" alias="FixturesDto"/>
 	</typeAliases>
 	
