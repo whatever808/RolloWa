@@ -41,4 +41,9 @@ public class CalendarService {
 		
 		return result * outcome;
 	}
+
+	public int calUpdate(CalendarDto calendar) {
+		int result = calDao.calUpdate(calendar);
+		return result;
+	}
 }

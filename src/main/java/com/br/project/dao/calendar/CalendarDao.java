@@ -26,6 +26,10 @@ public class CalendarDao {
 	public int insertCoworker(String woker) {
 		return sqlSession.insert("calMapper.inserCoworker", woker);
 	}
+
+	public int calUpdate(CalendarDto calendar) {
+		return sqlSession.update("calMapper.calUpdate", calendar);
+	}
 	
 	
 }

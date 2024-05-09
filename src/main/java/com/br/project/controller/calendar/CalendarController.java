@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.br.project.dto.calendar.CalendarDto;
@@ -21,9 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 public class CalendarController {
 	private final CalendarService calService;
 	
+
 	/**
-	 * 개인 및 부서 일정 조회 매서드
+	 * 개인 일정을 조히 해서 화면에 전달하는 매서드
 	 * @author dpcks
+	 * @param mv 조회된 객체와 view단을 선택하는 객체
+	 * @return 
 	 */
 	@GetMapping("/pCalendar.page")
 	public ModelAndView selectPCalendar(ModelAndView mv) {
@@ -34,13 +38,23 @@ public class CalendarController {
 		return mv;
 	}
 	
+
 	/**
-	 * 일정 등록 이동용 매서드
+	 * 일정을 등록하기 위한 페이지를 이동 하는 매서드
 	 * @author dpcks
 	 */
 	@GetMapping("/calEnroll.page")
 	public void moveEnroll() {}
 	
+	/**
+	 * 일정 등록 페이지에서 전달 받은 객체, 데이터를 형 변환을 해서
+	 * db에 저장 시키고 그 결과를 반환하는 매서드
+	 * @param calendar db로 부터 전달 받은 calendarDto 데이터
+	 * @param date 사용자가 선탣한 시작, 끝 날짜
+	 * @param time 사용자가 선탣한 시작, 끝 시간
+	 * @param mv 성공 문구와 view단을 선택하기 위한 객체
+	 * @return 
+	 */
 	@PostMapping("/calEnroll.do")
 	public ModelAndView insertCal(CalendarDto calendar
 							, String[] date, String[] time
@@ -62,16 +76,22 @@ public class CalendarController {
 		return mv;
 	}
 	
+	/**
+	 * 수정을 필요를 하는 데이터를 받아와서 형변환(date + time) 후 db엣 저장
+	 * @param calendar
+	 * @param date
+	 * @param time
+	 * @return
+	 */
 	@PostMapping("calUpdate.do")
-	public String calUpdate(CalendarDto calendar, String[] date, String[] time) {
-		
-//		if(calendar.getCalSort() != 'P') {
-//			calendar.setCalSort("D");			
-//		}
+	public String calUpdate(CalendarDto calendar,
+							@RequestParam(value="calSort", defaultValue="D")String calSort,
+							String[] date, String[] time) {
+		calendar.setCalSort(calSort);
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
 		
-		log.debug("calendar == {}", calendar);
+		//int result = calService.calUpdate(calendar);
 		
 		return null;
 	}
