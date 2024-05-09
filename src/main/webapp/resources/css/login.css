@@ -235,3 +235,7 @@ label span {
 .modal_frame {
   font-family: "Jua", sans-serif;
 }
+
+.disabled {
+	background-color: black;
+}

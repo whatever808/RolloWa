@@ -1,12 +1,10 @@
 package com.br.project.controller.calendar;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,16 +22,63 @@ public class CalendarController {
 	private final CalendarService calService;
 	
 	/**
+	 * 개인 및 부서 일정 조회 매서드
 	 * @author dpcks
 	 */
 	@GetMapping("/pCalendar.page")
 	public ModelAndView selectPCalendar(ModelAndView mv) {
 		List<CalendarDto> list = calService.selectPCalendar();
-		for(int i =0; i<list.size(); i++) {
+		for(int i= 0; i< list.size(); i++) {
 		}
 		mv.addObject("list", list).setViewName("calendar/pCalendar");
 		return mv;
 	}
+	
+	/**
+	 * 일정 등록 이동용 매서드
+	 * @author dpcks
+	 */
+	@GetMapping("/calEnroll.page")
+	public void moveEnroll() {}
+	
+	@PostMapping("/calEnroll.do")
+	public ModelAndView insertCal(CalendarDto calendar
+							, String[] date, String[] time
+							, ModelAndView mv) {
+//		log.debug("data == {}", calendar);
+		if(calendar.getCalSort() != "P") {
+			calendar.setCalSort("D");			
+		}
+		calendar.setStartDate(date[0]+ " " + time[0]);
+		calendar.setEndDate(date[1] + " " + time[1]);
+		
+		int result = calService.insertCal(calendar);
+		
+		if(result > 0 ) {
+			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("calendar/pCalendar.page");
+		}else {
+			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("calendar/calEnroll.page");
+		}
+		return mv;
+	}
+	
+	@PostMapping("calUpdate.do")
+	public String calUpdate(CalendarDto calendar, String[] date, String[] time) {
+		
+//		if(calendar.getCalSort() != 'P') {
+//			calendar.setCalSort("D");			
+//		}
+		calendar.setStartDate(date[0]+ " " + time[0]);
+		calendar.setEndDate(date[1] + " " + time[1]);
+		
+		log.debug("calendar == {}", calendar);
+		
+		return null;
+	}
+	
+	
+	
+	
 	
 	
 }

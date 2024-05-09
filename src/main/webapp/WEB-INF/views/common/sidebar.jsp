@@ -7,7 +7,7 @@
 <html>
 
 <head>
-	<script src="${ contextPath }/resources/js/common/color-modes.js"></script>
+   <script src="${ contextPath }/resources/js/common/color-modes.js"></script>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,8 +39,8 @@
   
   <!-- alertify 관련 -->
   <script src="${contextPath}/resources/alertify/js/alertify.min.js"></script>
-	<link rel="stylesheet" href="${ contextPath }/resources/alertify/css/alertify.min.css" />
-	<link rel="stylesheet" href="${ contextPath }/resources/alertify/css/default.min.css" />
+   <link rel="stylesheet" href="${ contextPath }/resources/alertify/css/alertify.min.css" />
+   <link rel="stylesheet" href="${ contextPath }/resources/alertify/css/default.min.css" />
 
   <!-- 모달 관련 -->
   <script src="${ contextPath }/resources/js/iziModal.min.js"></script>
