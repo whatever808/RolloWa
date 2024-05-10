@@ -193,13 +193,14 @@
 	     <div id="modify_pwd">
 	         <!-- Modal content -->
 	         <div class="m_content_style">
-	             <form id="modify_pwd_form" action="" class="form-control">
-	                 현재 비밀번호 : <input class="form-control" type="password" name=""> <br>
+	             <form id="modify_pwd_form" action="${ contextPath }/member/modifyPwd.do" method="post" class="form-control">
+	                 현재 비밀번호 : <input class="form-control" type="password" name="userPwd"> <br>
 	                 변경 비밀번호 : <input class="form-control" type="password" name="updatePwd">
 	                 <label class="validation">유효한 형식(숫자, 영문자 포함 8~15자)의 비밀번호를 입력해주세요.</label> <br>
 	                 비밀번호 확인 : <input class="form-control" type="password" name="checkPwd">
+	                 <label class="validation"></label>
 	                 <div class="btn_wrapper" style="margin-top: 10px;">
-	                     <input type="submit" value="변경하기" class="btn1 forget_btn">
+	                     <input type="submit" value="변경하기" class="btn1 forget_btn" id="modify_pwd_btn">
 	                 </div>
 	             </form>
 	         </div>
@@ -319,29 +320,62 @@
 	const $updatePwd = $("#modify_pwd_form>input[name=updatePwd]");
 	const $updatePwdLabel = $("#modify_pwd_form>input[name=updatePwd]+label");
 	const $checkPwd = $("#modify_pwd_form>input[name=checkPwd]")
+	const $checkPwdLabel = $("#modify_pwd_form>input[name=checkPwd]+label");
+	const $modifyBtn = $("#modify_pwd_btn");
+	const regExp = /^[a-zA-Z0-9]{8,15}$/;
 	var pwdVald = false;
 	var pwdCheck = false;
 	
 	$updatePwd.on("keyup", function() {
-		const regExp = /^[a-zA-Z0-9]{8,15}$/;
-		console.log($updatePwd.val());
-		if($updatePwd.val().trim().length == 0) {
-			$updatePwdLabel.removeClass("able").addClass("disable").text("유효한 형식(숫자, 영문자 포함 8~15자)의 비밀번호를 입력해주세요.");
-		} else {
-			if(regExp.test($updatePwd.val())) {
-				$updatePwdLabel.removeClass("disable").addClass("able").text("사용 가능한 비밀번호 입니다.");
-			} else {
-				$updatePwdLabel.removeClass("able").addClass("disable").text("유효한 형식(숫자, 영문자 포함 8~15자)의 비밀번호를 입력해주세요.");
-			}
-		}
+		// 비밀번호 유효성 검사
+		pwdValidationCheck();
+		
+		// 비밀번호 일치 검사
+		pwdEqualCheck();
 	})
 	
-	$("#modify_pwd_form>input[name=checkPwd]").on("keyup", function() {
-		console.log("확인 비밀번호 감지");
+	$checkPwd.on("keyup", function() {
+		// 비밀번호 일치 검사
+		pwdEqualCheck();
+	})
+	
+	$("#modify_pwd_form").on("submit", function() {
+		if(pwdVald && pwdCheck) {
+			this.submit;
+		} else {
+			alert("비밀번호 변경 서비스", "변경할 비밀번호를 다시 확인해주세요");
+			return false;
+		}
 	})
 	
 	function validation(select, remove, add, text) {
 		select.removeClass(remove).addClass(add).text(text);
+		
+		return add == "able" ? true : false;
+	}
+	
+	function pwdValidationCheck() {
+		if($updatePwd.val().trim().length == 0) {
+			pwdVald = validation($updatePwdLabel, "able", "disable", "유효한 형식(숫자, 영문자 포함 8~15자)의 비밀번호를 입력해주세요.");
+		} else {
+			if(regExp.test($updatePwd.val())) {
+				pwdVald = validation($updatePwdLabel, "disable", "able", "사용 가능한 비밀번호입니다.");
+			} else {
+				pwdVald = validation($updatePwdLabel, "able", "disable", "유효한 형식(숫자, 영문자 포함 8~15자)의 비밀번호를 입력해주세요.");
+			}
+		}
+	}
+	
+	function pwdEqualCheck() {
+		if($checkPwd.val().trim().length == 0) {
+			pwdCheck = validation($checkPwdLabel, "able", "disable", "비밀번호가 일치하지 않습니다.");
+		} else {
+			if($checkPwd.val() == $updatePwd.val()) {
+				pwdCheck = validation($checkPwdLabel, "disable", "able", "비밀번호가 일치합니다.");
+			} else {
+				pwdCheck = validation($checkPwdLabel, "able", "disable", "비밀번호가 일치하지 않습니다.");
+			}
+		}
 	}
 </script>
 </html>

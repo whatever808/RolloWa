@@ -60,10 +60,11 @@
 			member
 		set
 			user_pwd = #{userPwd}
+			, modify_date = sysdate
 		where
 			user_id = #{userId}
 		and
-			status = 'Y'	
+			status = 'Y'
 	</select>
 
 	<!-- 회원 프로필 이미지 변경 -->
@@ -72,6 +73,7 @@
 			member
 		set
 			profile_url = #{ profileURL }
+			, modify_date = sysdate
 		where
 			user_no = #{ userNo }
 	</update>
