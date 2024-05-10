@@ -50,7 +50,7 @@
         </head>
 					<c:if test="${ alertMsg != null }" >
 						<script>
-							alertify.alert('${alertTitle}','${alertMsg}');
+							alert("${alertMsg}");
 						</script>
 					</c:if>
         <body id="particles-js"></body>
@@ -96,16 +96,16 @@
                 <!-- Modal content -->
                 <!-- 스타일에 한해서는 이런식으로 class명을 주시기 바랍니다. -->
                 <div class="m_content_style">
-									아이디 : <input type="text" name="userId" style="padding-bottom: 2px;"> <br>
+									아이디 : <input type="text" name="forget_userId" style="padding-bottom: 2px;"> <br>
 									전화번호 : <input type="text" id="phone" name="phone" placeholder="01012345678"> 
 									<button type="button" class="btn1 forget_btn phone_vali_btn" onclick="takeTarget();">인증번호 발송</button> <br>
-									인증번호 : <input type="text" name="certNo" maxlength="6" placeholder="123456">
+									인증번호 : <input type="text" id="certNo" name="certNo" maxlength="6" placeholder="123456">
 									<span class="target__time">
 										<span id="remaining__min">3</span> :
 										<span id="remaining__sec">00</span>
 									</span>
 									<div class="btn_wrapper">
-										<button type="button" class="btn1 forget_btn" id="complete">인증하기</button>
+										<button type="button" class="btn1 forget_btn" id="complete" onclick="certificate();">인증하기</button>
 									</div>
                 </div>
             </div>
@@ -167,31 +167,32 @@
             const remainingMin = document.getElementById("remaining__min");
 						const remainingSec = document.getElementById("remaining__sec");
 						const completeBtn = document.getElementById("complete");
+						var certificationNumber = 0;
+						var timer;
 						
 						let time = 180;
 						const takeTarget = () => {
 							// 휴대전화 정규표현식
 							const regExp = /^010[0-9]{8}$/;
-							console.log(regExp.test($("#phone").val()));
 							if (regExp.test($("#phone").val())) {
-								setInterval(function () {							  
+								timer = setInterval(function () {							  
 								    if (time > 0) {
-								      time = time - 1; // 2:59로 시작
-								      let min = Math.floor(time / 60);
-								      let sec = String(time % 60).padStart(2, "0");
-								      remainingMin.innerText = min;
-								      remainingSec.innerText = sec;
-								    } else {
-								      completeBtn.disabled = true;
-								      completeBtn.className += 'disabled';
-								    }
-								  }, 1000);	
+									      time = time - 1; // 2:59로 시작
+									      let min = Math.floor(time / 60);
+									      let sec = String(time % 60).padStart(2, "0");
+									      remainingMin.innerText = min;
+									      remainingSec.innerText = sec;
+									    } else {
+									      completeBtn.disabled = true;
+									      clearInterval(timer);
+									    }
+									  }, 1000);	
 								$.ajax({
 									  url: "${contextPath}/member/sendMsg.do"
 										, method: "post"
-										, data: {phone: $("#phone").text()}
-									  , success: function(result) {
-											console.log(result);
+										, data: {phone: $("#phone").val()}
+									  , success: function(rand) {
+											certificationNumber = rand;
 										}
 								  	, error: function() {
 								  		console.log("AJAX 통신 실패");
@@ -202,6 +203,29 @@
 							}		  
 						};
             
+						function certificate() {
+							if (certificationNumber == $("#certNo").val()) {
+								$.ajax({
+									url: "${ contextPath }/member/forgetPwd.do"
+									, method: "post"
+									, data: {userId: $("input[name=forget_userId]").val()}
+									, success: function(result) {
+										if(result.msg == 'SUCCESS') {
+											alertify.alert("비밀번호 변경", "임시 비밀번호는 다음과 같습니다. 로그인 후 비밀번호 변경해주세요.\n비밀번호 :" + result.newPwd);
+											console.log(result.newPwd);
+										} else if(result.msg == 'FAIL') {
+											alertify.alert("비밀번호 변경에 실패했습니다.");
+										}
+										clearInterval(timer);
+									}
+									, error: function() {
+										console.log("ajax 통신 실패");
+									}
+								})
+							} else {
+								alertify.alert("비밀번호 찾기", "인증번호를 다시 확인해주세요");
+							}
+						}
 
         </script>
 

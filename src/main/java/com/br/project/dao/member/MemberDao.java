@@ -15,6 +15,10 @@ import lombok.RequiredArgsConstructor;
 public class MemberDao {
 	private final SqlSessionTemplate sqlSessionTemplate;
 	
+	public MemberDto memberLogin(MemberDto member) {
+		return sqlSessionTemplate.selectOne("memberMapper.memberLogin", member);
+	}
+	
 	public MemberDto selectMember(MemberDto member) {
 		return sqlSessionTemplate.selectOne("memberMapper.selectMember", member);
 	}
@@ -33,5 +37,9 @@ public class MemberDao {
 
 	public int updateMember(Map<String, String> memberInfo) {
 		return sqlSessionTemplate.update("memberMapper.updateMember", memberInfo);
+	}
+
+	public int updateUserPwd(MemberDto member) {
+		return sqlSessionTemplate.update("memberMapper.updateUserPwd", member);
 	}
 }
