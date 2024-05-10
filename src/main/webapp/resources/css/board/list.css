@@ -5,19 +5,26 @@
 }
 
 /* ------------- board category ------------- */
+#filter-category{
+	
+}
 #category{
-		display: inline-block;
+	display: inline-block;
     width: 200px;
 }
 #department{
-		display: inline-block;
-		margin-left: 50px;
-		width: 200px;
+	display: inline-block;
+	margin-left: 50px;
+	width: 200px;
 }
 
 /* ------------- search form ------------- */
+#filter-search{
+	float: right;
+}
 #search-form{
-    float: right;
+	border: 1px solid tomato;
+	display: inline-block;
 }
 #condition{
     display: inline-block;
@@ -29,6 +36,16 @@
 }
 #search-form button{
     margin-top: -5px;
+}
+
+/* ------------- reset search value ------------- */
+#reset-search{
+	border:1px solid green;
+	display: inline-block;
+	color: #2985DB;
+}
+#reset-search:hover{
+	cursor: pointer;
 }
 
 /* ------------- board list ------------- */

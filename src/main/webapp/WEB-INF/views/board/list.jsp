@@ -21,34 +21,54 @@
 	
 	     <h1 class="page-title">게시글 목록</h1>
 	
-	     <!-- board category start -->
-	     <select id="category" name="category" class="board-category form-select" onchange="categoryChange(this);" style="width:200px;">
-	         <option value="">전체게시글</option>
-	         <option value="normal">일반게시글</option>
-	         <option value="department">부서게시글</option>
-	     </select>
-	     <!-- board category end -->
-	     
-	     <!-- show when department board category was selected -->
-	     <select id="department" name="department" class="department-category form-select d-none" onchange="ajaxBoardList();">
-	     	<option value="">전체</option>
-	     	<c:forEach var="department" items="${ departmentList }">
-	     		<option value="${ department.code }">${ department.codeName }</option>
-	     	</c:forEach>
-	     </select>
-	
-	     <!-- search form start-->
-	     <div id="search-form">
-	      <select id="condition" class="search-condition form-select">
-	      	  <option value="">전체</option>
-	          <option value="title">제목</option>
-	          <option value="content">내용</option>
-	          <option value="writer">작성자</option>
-	      </select>
-	      <input type="text" id="keyword" class="form-control" placeholder="게시글 검색">
-	      <button type="button" class="btn btn-secondary" onclick="searchValidation();">검색</button>
+		 <!-- about category start  -->
+	     <div id="filter-category">
+	     	 <!-- board category start -->
+		     <select id="category" name="category" class="board-category form-select" onchange="categoryChange(this);" style="width:200px;">
+		         <option value="">전체게시글</option>
+		         <option value="normal">일반게시글</option>
+		         <option value="department">부서게시글</option>
+		     </select>
+		     <!-- board category end -->
+		     
+		     <!-- show when department board category was selected -->
+		     <select id="department" name="department" class="department-category form-select d-none" onchange="ajaxBoardList();">
+		     	<option value="">전체</option>
+		     	<c:forEach var="department" items="${ departmentList }">
+		     		<option value="${ department.code }">${ department.codeName }</option>
+		     	</c:forEach>
+		     </select>
 	     </div>
-	     <!-- search form end -->
+		 <!-- about category end -->
+		 
+	     <!-- about search start -->
+	     <div id="filter-search">
+	     	 <!-- search form start-->
+		     <div id="search-form">
+		      <select id="condition" class="search-condition form-select">
+		      	  <option value="">전체</option>
+		          <option value="title">제목</option>
+		          <option value="content">내용</option>
+		          <option value="writer">작성자</option>
+		      </select>
+		      <input type="text" id="keyword" class="form-control" placeholder="게시글 검색">
+		      <button type="button" class="btn btn-secondary" onclick="searchValidation();">검색</button>
+		     </div>
+		     <!-- search form end -->
+		     
+		     <!-- reset search value start -->
+		     <div id="reset-search" class="d-none">
+		     	<span>
+		   			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+					  <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+					  <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+					</svg>
+		     	</span>
+		     	<span>검색 취소</span>
+		     </div>
+		     <!-- reset search value end -->
+	     </div>
+	     <!-- about search end -->
 	     
 	     <!-- board list start -->
 	     <div class="board-list">
@@ -99,11 +119,11 @@
 	         <!-- board list table end -->
 	
 	         <!-- pagination start -->
-	         <div class="board-list-pagination">
+	         <div class="board-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
 	             <ul class="pagination">
 	             
 	             	<!-- Previous -->
-				      <li class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
+				      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
 						    onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '' }">
 				      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
 				      </li>
@@ -118,7 +138,7 @@
 				    
 				    <!-- Next -->
 				    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
-				    	  onclick="${ pageInfo.currentPage != pageImfo.maxPage ? 'ajaxBoardList();' : ''}">
+				    	  onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxBoardList();' : ''}">
 				      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
 				    </li>
 				    
@@ -141,6 +161,32 @@
 <script src="${ contextPath }/resources/js/board/list.js"></script>
 
 <script>
+	//페이지 로드 즉시 실행되어야할 functions ===========================================================================
+	$(document).ready(function(){
+		// "카테고리별" 게시글 목록조회 요청했을 경우, 카테고리 선택값 지정
+		$("#category").children("option").each(function(){
+			$(this).val() == "${ filter.category }" && $(this).attr("selected", true);
+		})
+		
+		// "부서게시글" 목록조회 요청했을 경우, 부서 select 박스 선택값 지정 
+		if($("#category").val() == 'department'){
+			$("#department").removeClass("d-none");
+			$("#department").children("option").each(function(){
+				$(this).val() == "${ filter.department }" && $(this).attr("selected", true);
+			})	
+		}	
+		
+		// "키워드검색" 게시글 목록조회 요청했을 경우, 검색값 지정
+		if(${ filter.condition != ''} && ${ filter.keyword != ''}){
+			$("#condition").children("option").each(function(){
+				if($(this).val() == '${ filter.condition }'){
+					$(this).attr("selected", true);
+				} 	
+			})
+			$("#keyword").val("${ filter.keyword }");
+		}	
+	})	
+	
 	// 게시글 카테고리값 변경(== 카테고리별 게시글 조회요청) ==============================================================================
 	function categoryChange(option){
 		// 1) 부서 선택 <select> 요소 숨김여부 처리
@@ -151,26 +197,54 @@
 		ajaxBoardList();
 	}
 	
-	// 키워드검색 게시글 목록조회 요청시 입력값 유효성 체크 ================================================================================
+	// 키워드값 입력후 "Enter"를 눌렀을 경우 =========================================================================================
+	$("#keyword").on("keyup", function(){
+		(event.key == 'Enter' || event.code == 'Enter') && searchValidation();
+	})
+	// 키워드검색 게시글 목록조회 요청시 입력값 유효성 체크 
 	function searchValidation(){
 		if($("#keyword").val().trim().length == 0){
 			alertify.alert("게시글 목록조회 서비스", "검색어를 입력해주세요.", $("#keyword").select());
 		}else{
 			// 1) 키워드 검색요청시 "전체" 검색 value값 변경설정
-			$("#keyword").children().each(function(){
+			$("#condition").children().each(function(){
 				$(this).val() == '' && $(this).val("all");
 			})
 			
-			// 2) 게시글 목록조회 요청
+			// 2) 검색값 초기화 버튼 활성화
+			showResetBtn();
+			
+			// 3) 게시글 목록조회 요청
 			ajaxBoardList();
 		}
 	}
+	
+	// 검색값 설정값 초기화
+	$("#reset-search").on("click", function(){
+		$("#category").children().eq(0).attr("selected", "true");
+		$("#department").children().eq(0).attr("selected", "true");
+		$("#condition").children().eq(0).attr("selected", "true").val("");
+		$("#keyword").val("");
+		
+		console.log($("#category").val());
+		console.log($("#department").val());
+		console.log($("#condition").val());
+		console.log($("#keyword").val());
+		
+		ajaxBoardList();
+	})
+	
+	// 검색 초기화 버튼 활성화
+	function showResetBtn(){
+		$("#reset-search").removeClass("d-none");
+	}
+	
 	
 	// 게시글 목록조회 (비동기식) ================================================================================================
 	function ajaxBoardList(){
 		// 1) 요청 페이지값 설정
 		let page = event.target.dataset.pageno == undefined ? 1
-																			 :event.target.dataset.pageno;
+															:event.target.dataset.pageno;
 		
 		// 2) 게시글 목록조회 AJAX
 		$.ajax({
@@ -216,26 +290,27 @@
 					}
 					
 					// 생성할 페이징바 태그 문자열
-					pagination += "<li class='page-item >" + (pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'disabled' : '' ) + "'" +
-											"onclick='" + (pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '') + "'>";
+					pagination += "<li id='ajax' class='page-item " + (pageInfo.currentPage == 1 ? 'disabled ' : ' ' ) + "'" +
+												"onclick='" + (pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '') + "'>";
 					pagination +=	   "<span class='page-link' data-pageno='" + (pageInfo.getCurrentPage - 1) + "'>Previous</span>";
 					pagination += "</li>";
 					
 					for(let page=pageInfo.startPage ; page<=pageInfo.endPage ; page++){
 						pagination += "<li class='page-item " + (pageInfo.currentPage == page ? 'active' : '') + "' " +
-												"onclick='" + (pageInfo.currentPage != page ? 'ajaxBoardList();' : '') + "'";
+												"onclick='" + (pageInfo.currentPage != page ? 'ajaxBoardList();' : '') + "'>";
 						pagination += 		"<span class='page-link' data-pageno='" + page + "'>" + page + "</span>";
 						pagination += "</li>";
 					}
 					
 					pagination += "<li class='page-item " + (pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '') + "' " +
-											"onclick='" + (pageInfo.currentPage != pageInfo.maxPage ? 'ajaxPageInfo();' : '') + "'>";
+											"onclick='" + (pageInfo.currentPage != pageInfo.maxPage ? 'ajaxBoardList();' : '') + "'>";
 					pagination += 		"<span class='page-link' data-pageno='" + (pageInfo.currentPage + 1) + "'>Next</span>";
 					pagination += "</li>";
 				}
 		
 				$("#boardList").html(list);
-				$("#board-list-pagination>.pagination").html(pagination);
+				console.log("페이징바 : ", pagination);
+				$(".board-list-pagination").children(".pagination").html(pagination);
 				
 				
 				// 2) URL 주소값 변경
@@ -251,32 +326,6 @@
 		})
 		
 	}
-
-	//페이지 로드 즉시 실행되어야할 functions ===========================================================================
-	$(document).ready(function(){
-		// 카테고리 select 박스 선택값 지정
-		$("#category").children("option").each(function(){
-			$(this).val() == "${ filter.category }" && $(this).attr("selected", true);
-		})
-		
-		// "부서게시글" 목록조회 요청했을 경우, 부서 select 박스 선택값 지정 
-		if($("#category").val() == 'department'){
-			$("#department").removeClass("d-none");
-			$("#department").children("option").each(function(){
-				$(this).val() == "${ filter.department }" && $(this).attr("selected", true);
-			})	
-		}	
-		
-		// "키워드검색" 게시글 목록조회 요청했을 경우, 검색값 지정
-		if(${ filter.condition != ''} && ${ filter.keyword != ''}){
-			$("#condition").children("option").each(function(){
-				if($(this).val() == '${ filter.condition }'){
-					$(this).attr("selected", true);
-					$("#keyword").val("${ filter.keyword }");
-				} 	
-			})	
-		}	
-	})	
 
 </script>
 

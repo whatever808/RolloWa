@@ -47,6 +47,8 @@ public class BoardController {
 		mv.addObject("filter", filter);
 		mv.setViewName("/board/list");
 		
+		
+		
 		return mv;
 	}
 	
@@ -63,6 +65,7 @@ public class BoardController {
 		
 		// 응답데이터 반환 (게시글목록)
 		Map<String, Object> response = new HashMap<>();
+
 		response.put("boardList", boardService.selectBoardList(pageInfo, filter));
 		response.put("pageInfo", pageInfo);
 		
