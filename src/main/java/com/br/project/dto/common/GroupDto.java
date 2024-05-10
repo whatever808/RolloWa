@@ -14,15 +14,10 @@ import lombok.ToString;
 @Getter
 @ToString
 public class GroupDto {
-
 	private String groupCode;
 	private String code;
 	private String codeName;
-	private Date registDate;
-	private Date modifyDate;
 	private String status;
-	private String registEmp;
-	private String modifyEmp;
 	private String upperCode;
-	
+	private String coworker;
 }

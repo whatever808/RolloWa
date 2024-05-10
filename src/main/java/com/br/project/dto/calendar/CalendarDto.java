@@ -1,6 +1,10 @@
 package com.br.project.dto.calendar;
 
 
+import java.util.List;
+
+import com.br.project.dto.common.GroupDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,5 +29,5 @@ public class CalendarDto {
 	private String color;
 	private String status;
 	private String groupCode;
-	private String[] coworker;
+	private List<CoworkerDto> coworker;
 }

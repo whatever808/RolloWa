@@ -43,7 +43,7 @@ public class BoardController {
 		// 응답페이지 지정 및 응답데이터 반환
 		mv.addObject("boardList", boardService.selectBoardList(pageInfo, filter));		// 게시글 목록
 		mv.addObject("pageInfo", pageInfo);
-		mv.addObject("departmentList", departmentService.selectDepartmentList());		// 부서 목록
+		mv.addObject("departmentList", departmentService.selectDepartmentList("DEPT01"));		// 부서 목록
 		mv.addObject("filter", filter);
 		mv.setViewName("/board/list");
 		
