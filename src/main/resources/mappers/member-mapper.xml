@@ -72,5 +72,21 @@
 		where
 			user_no = #{ userNo }
 	</update>
+ <!-- ================== 이예찬 ========================== -->
+ <!-- 이예찬 : Member 캘린더 위의 동료 선택 창에 필요한 데이터 조회 쿼리 -->
+	<select id="selectTeamPeer"
+	resultMap="memberResult">
+		select 
+     USER_NO
+     , USER_NAME
+     , PROFILE_URL
+     , (select code_name from tb_group where group_code = 'POSI01' and code = member.position_code) position
+		from Member
+		join tb_group on (code = team_code and code = 'A')
+		where Member.status = 'Y'
+		and team_code = #{teamCode}
+		and group_code = 'DEPT01'
+	</select>
+ <!-- ================== 이예찬 ========================== -->
  
 </mapper>

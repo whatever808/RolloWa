@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.br.project.dto.calendar.CalendarDto;
+import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,14 @@ public class CalendarDao {
 
 	public int insertCoworker(String woker) {
 		return sqlSession.insert("calMapper.inserCoworker", woker);
+	}
+
+	public int calUpdate(CalendarDto calendar) {
+		return sqlSession.update("calMapper.calUpdate", calendar);
+	}
+
+	public List<MemberDto> selectTeamPeer(String teamCode) {
+		return sqlSession.selectList("memberMapper.selectTeamPeer", teamCode);
 	}
 	
 	

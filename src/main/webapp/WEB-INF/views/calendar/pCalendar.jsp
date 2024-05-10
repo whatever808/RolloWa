@@ -311,10 +311,6 @@
 							navLinks: true,
 							slotMinTime: "06:00:00",
 							timeZone: 'Asia/Seoul',
-							editable: true,
-							droppable: true,
-							eventStartEditable: true,
-							eventResizableFromStart: true,
 							eventClick:function(info){
 			     	 		//console.log(info.event.extendedProps.extendeProps.place);
 						    //console.log($('#cal_modal').find('input[name=place]'));
@@ -335,13 +331,15 @@
 				     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
 				      	$('#cal_modal').iziModal('open');
 							},
-							eventMouseEnter:function(info){
+							editable: true,
+							dayMaxEventRows: true,
+/* 							eventMouseEnter:function(info){
 									info.el.style.transform = 'scale(1.05)';
 									info.el.style.cursor = 'pointer';
 							},
 							eventMouseLeave:function(info){
 									info.el.style.transform = '';
-							},
+							}, */
 							events:[
 								<c:forEach var="c" items="${list}">
 									{
@@ -368,10 +366,6 @@
 	
 	<!-- 모달 스크립트문 -->
 <script>
-     function repeat_anmation(){
-         animateCSS('.my-element', 'bounce');
-     }
-
      $('#cal_modal').iziModal({
      subtitle: '수정도 가능합니다.',
      headerColor: ' rgb(255,247,208)', 
