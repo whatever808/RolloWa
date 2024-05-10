@@ -36,8 +36,22 @@
 			<result column="code_name" property="codeName"/>
 			<result column="upper_code" property="upperCode"/>
 		</collection>
-		
 	</resultMap>
+	
+	<!-- 부서와 팀 가져오기 -->
+	<select id="selectOrganizationChart" resultType="GroupDto">
+		SELECT D1.CODE_NAME AS "DEPT"
+		     , D2.CODE_NAME AS "TEAM"
+		  FROM TB_GROUP D1
+		  LEFT JOIN
+		       TB_GROUP D2 ON D2.UPPER_CODE = D1.CODE AND D2.GROUP_CODE LIKE 'TEAM%'
+		 WHERE D1.GROUP_CODE LIKE 'DEPT%'
+	 	   AND D1.STATUS = 'Y'
+	       AND D2.STATUS = 'Y'
+         ORDER BY 
+         	   D1.CODE_NAME DESC
+         	 , D2.CODE_NAME ASC
+	</select>
 
 	<!-- 직원 전체 카운트 -->
 	<select id="selectOrganizationListCount" resultType="_int">
@@ -82,5 +96,7 @@
 	               WHERE GROUP_CODE LIKE 'DEPT%'
 	                 AND CODE_NAME = #{codeName})
 	</select>
+	
+	
 
 </mapper>

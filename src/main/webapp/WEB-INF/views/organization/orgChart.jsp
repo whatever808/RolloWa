@@ -86,7 +86,7 @@
     }
     /* 세로줄 */
     .tree ul:before, .tree code:before, .tree span:before {
-        outline: solid 1px gainsboro;
+        outline: solid 1px lightgray;
         content: "";
         height: 2.5em;
         left: 50%;
@@ -94,46 +94,6 @@
         top: -2.7em !important;
         z-index: -1;
     }
-    /* 7개 이상일 때만 */
-    .tree li:nth-child(6n+5)::before {
-      outline: solid 1px green;
-      content: "";
-      left: 0;
-      right: -215px;
-      position: absolute;
-      top: -.2em;
-    }
-    /* 6번째 마다 적용 */
-    .tree li:nth-child(6n)::before {
-      outline: solid 1px lightgray;
-      content: "";
-      left: 0;
-      right: 103px;
-      position: absolute;
-      top: -.2em;
-    }
-    /*  */
-    /* 6번째 마다 적용 */
-    .tree li:nth-child(6n)::before {
-      outline: solid 1px orange;
-      content: "";
-      height: 113.5%;
-      left: auto;
-      right: -10px;
-      position: absolute;
-      top: -.2em;
-    }
-    
-    /* 7번째 마다 적용 */
-    .tree li:nth-child(7n)::before {
-      outline: solid 1px red;
-      content: "";
-      left: 103px;
-      right: -1042px;
-      position: absolute;
-      top: -.2em;
-    }
-
     /* 줄 간격 넓히기 */
     .tree li:nth-child(n+7) {
       margin-top: 50px;
@@ -206,71 +166,44 @@
 	<div class="main_content">
 	    <h2>직원 검색</h2>
 	    <hr>
-	    
-		<!-- ------------ -->
-		<script>
-              $(document).ready(function() {
-                  var treeItems = $('.tree > li > ul > li').length;
-                  if (treeItems > 4) {
-                      $('.tree > li > ul').css('display', 'flex');
-                      $('.tree > li > ul').css('flex-wrap', 'wrap');
-                    }
-              });
-		</script>
-          
+            
 		<ul class="tree">
-              <li> <span class="level1">대표이사</span>
-                <ul>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다1</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다2</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다3</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  
-
-
-                </ul>
-              </li>
-            </ul>
-	
+		  <li> <span class="level1">대표이사</span>
+		    <ul>
+			    <c:set var="prevDept" value="" />
+				<c:forEach var="d" items="${dept}">
+				    <c:if test="${d.dept ne prevDept}">
+				        <li>
+				            <a href="#"><span class="level2">${d.dept}</span></a>
+				            <ul>
+				                <c:forEach var="team" items="${dept}">
+				                    <c:if test="${d.dept eq team.dept}">
+				                    <ul>
+				                        <li><a href=""><span class="level3">${team.team}</span></a></li>
+			                        </ul>
+				                    </c:if>
+				                </c:forEach>
+				            </ul>
+				        </li>
+				        <c:set var="prevDept" value="${d.dept}" />
+				    </c:if>
+				</c:forEach>
+			
+		    </ul>
+		  </li>
+		</ul>
+		
+		<!-- 일정한 개수 마다 줄간격 맞춤 -->
+		<script>
+		  $(document).ready(function() {
+		      var treeItems = $('.tree > li > ul > li').length;
+		      if (treeItems > 4) {
+		          $('.tree > li > ul').css('display', 'flex');
+		          $('.tree > li > ul').css('flex-wrap', 'wrap');
+		        }
+		  });
+		</script>
+		
 		<!-- ------------ -->
 	
 	</div>

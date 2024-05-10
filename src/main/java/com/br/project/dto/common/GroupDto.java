@@ -25,4 +25,7 @@ public class GroupDto {
 	private String modifyEmp;
 	private String upperCode;
 	
+	
+	private String dept;
+	private String team;
 }

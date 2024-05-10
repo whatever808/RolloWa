@@ -113,7 +113,7 @@
 	    <hr>
 	    
 	    <!-- ------------ -->
-	    <form id="search_Form" action="검색_처리_페이지_주소_입력" method="GET">
+	    <form id="search_Form" action="검색 처리 페이지 주소 입력" method="GET">
 	        <table class="table table_search">
 	
 	            <tr class="tr_search">
@@ -163,24 +163,15 @@
 	    
 	    <!-- 스크립트 작성중 -->
 	    <script>
-		    document.getElementById('dept').addEventListener('change', function() {
-		        let codeName = this.value;
-		        console.log("codeName: ", codeName);
-		        
-		        $.ajax({
-		            url: "${contextPath}/orginfo/empSearch.do",
-		            type: "post",
-		            data: { codeName: codeName },
-		            success: function(result) {
-		                console.log("결과값 : ", result);
-		            },
-		            error: function(result) {
-		                console.log("실패");
-		            }
-		        });
-		        
-		    });
-	    </script>
+    $(document).ready(function() {
+        $('#dept').change(function() {
+            let codeName = $(this).val();
+            console.log("codeName: ", codeName);
+            
+            
+        });
+    });
+</script>
 	    
 	
 	    <script>

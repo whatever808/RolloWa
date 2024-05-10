@@ -37,4 +37,8 @@ public class OrganizationService {
 		return organizationDao.selectTeam();
 	}
 
+	public List<GroupDto> selectOrganizationChart() {
+		return organizationDao.selectOrganizationChart();
+	}
+
 }
