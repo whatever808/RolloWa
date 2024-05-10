@@ -3,28 +3,28 @@
 
 <mapper namespace="boardMapper">
 
-	<resultMap 				id="boardResultMap" type="BoardDto">
-		<id 				column="board_no" 			property="boardNo" />
+	<resultMap 				id="boardResultMap" 	type="BoardDto">
+		<id 			column="board_no" 			property="boardNo" />
 		<result 		column="regist_emp" 		property="registEmp" />
 		<result 		column="modify_emp" 		property="modifyEmp" />
 		<result 		column="regist_date" 		property="registDate" />
 		<result 		column="modify_date" 		property="modifyDate" />
-		<result 		column="title" 					property="title" />
-		<result 		column="content" 				property="content" />
+		<result 		column="title" 				property="title" />
+		<result 		column="content" 			property="content" />
 		<result 		column="read_count" 		property="readCount" />
-		<result 		column="status"					property="status" />
+		<result 		column="status"				property="status" />
 		<result 		column="category" 			property="category" />
-		<result 		column="attachment_yn"	property="attachmentYN" />
+		<result 		column="attachment_yn"		property="attachmentYN" />
 		<result			column="profile_url"		property="profileURL" />
-		<collection ofType="AttachmentDto" 	property="attachmentList">
-			<id 			column="file_no" 				property="fileNo" />
+		<collection ofType="AttachmentDto" 			property="attachmentList">
+			<id 		column="file_no" 			property="fileNo" />
 			<result 	column="origin_name" 		property="originName" />
 			<result 	column="enroll_date" 		property="enrollDate" />
 			<result 	column="modify_name" 		property="modifyName" />
 			<result 	column="attach_path" 		property="attachPath" />
-			<result 	column="status" 				property="status" />
+			<result 	column="status" 			property="status" />
 			<result 	column="ref_type" 			property="refType" />
-			<result 	column="ref_no" 				property="refNo" />
+			<result 	column="ref_no" 			property="refNo" />
 		</collection>
 	</resultMap>
 
