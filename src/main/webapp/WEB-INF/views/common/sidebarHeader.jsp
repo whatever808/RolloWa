@@ -383,11 +383,8 @@
                             <li><a href="${ contextPath }/member/mypage.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">My Page</a>
                             </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a>
+                            <li><a href="${ contextPath }/notification/list.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
                             </li>
                             <li><a href="${ contextPath }/member/logout.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
                                     out</a></li>

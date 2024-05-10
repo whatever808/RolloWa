@@ -18,6 +18,7 @@
 		<typeAlias type="com.br.project.dto.member.MemberDto" 								alias="MemberDto"/>
 		<typeAlias type="com.br.project.dto.pay.FixturesDto" 									alias="FixturesDto"/>
 		<typeAlias type="com.br.project.dto.calendar.CoworkerDto" 						alias="CoworkerDto"/>
+    <typeAlias type="com.br.project.dto.notification.NotificationDto"     alias="NotificationDto"/>
 	</typeAliases>
 	
 	
@@ -29,6 +30,7 @@
 		<mapper resource="mappers/pay-mapper.xml" />
 		<mapper resource="mappers/calendar-mapper.xml" />
 		<mapper resource="mappers/organization-mapper.xml" />
+		<mapper resource="mappers/notification-mapper.xml" />
 	</mappers>
 
 </configuration>
