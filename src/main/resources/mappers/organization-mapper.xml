@@ -64,24 +64,23 @@
 			   USER_NO ASC
 	</select>
 	
-	<!-- 부서 조회 -->
+	<!-- 부서 조회 : 전체 부서 조회 -->
 	<select id="selectDept" resultType="GroupDto">
 		SELECT CODE_NAME "codeName" 
 		  FROM TB_GROUP
 		 WHERE GROUP_CODE LIKE 'DEPT%'
 	</select>
 	
-	<!-- 팀 조회 -->
+	<!-- 팀 조회 : 선택한 부서에 해당하는 팀만 조회 -->
 	<select id="selectTeam" resultMap="memberResult">
 		SELECT CODE_NAME
 		  FROM TB_GROUP
 		 WHERE GROUP_CODE LIKE 'TEAM%'
-    	   AND UPPER_CODE
-			   IN (SELECT CODE
-                     FROM TB_GROUP
-                    WHERE GROUP_CODE LIKE 'DEPT%'
-                      AND CODE_NAME LIKE #{CODENAME})
-                        
+		   AND UPPER_CODE
+		       = (SELECT CODE
+	                FROM TB_GROUP
+	               WHERE GROUP_CODE LIKE 'DEPT%'
+	                 AND CODE_NAME = #{codeName})
 	</select>
 	
 	
