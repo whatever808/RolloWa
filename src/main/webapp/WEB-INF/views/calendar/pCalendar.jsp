@@ -41,15 +41,14 @@
 		padding: 10px;
 	}
 	.calender-area {padding: 10px;}
-	.mydiv-area {width: 20%;}
+	.mydiv-area {width: 20%; position: relative;}
 	.memebrdiv-area {
-		width: 80%;
-		gap: 30px;
+		width: 125px;
 		overflow-y: auto;
+		position: relative;
 	}
 	.line-cirecle {
-		border-radius: 100%;
-		height: 80px;
+		height: fit-content;
 		width: 80px;
 		cursor: pointer;
 	}
@@ -58,12 +57,8 @@
 		justify-content: center;
 		align-items: center;
 	}
-	.memebrdiv-area {
-		display: -webkit-box;
-		-webkit-box-align: center;
-	}
 	.font-size25 {font-size: 25px;}
-	.member-search-area, .content-area .calender-area {margin-left: 30px;}
+	.member-search-area {margin-left: 30px; gap: 25px;}
 	/* 모달 스타일 */
 	.Category, .Co-worker {
 		display: -webkit-box;
@@ -96,6 +91,13 @@
 	}
 	.fc-day-sat a {color: #007bff !important;}
 	.fc-day-sun a {color: #dc3545 !important;}
+	.img_postion{
+    position: absolute;
+    font-weight: bolder;
+    color: black;
+    font-size: x-large;
+    top: 0px;
+	}
 </style>
 </head>
 <body>
@@ -105,14 +107,14 @@
 		<div style="display: flex; justify-content: space-between; align-items: center">
 			<div class="jua-regular">Category</div>
 			
-			<div
+<!-- 			<div
 				class="pretty p-default p-round p-smooth font-size20 privateArea"
 				id="privateName">
 				<input type="checkbox" name="calSort" value="P">
 				<div class="state p-danger">
 					<label class="jua-regular">private</label>
 				</div>
-			</div>
+			</div> -->
 		</div>
 		
 		<div class="Category">
@@ -153,41 +155,18 @@
 		<br>
 		<div class="jua-regular">Co-worker</div>
 		<div class="Co-worker">
-	    <div class="pretty p-default p-round p-smooth p-plain">
-	        <input type="checkbox" name="coworker" value="2">
-	        <div class="state p-success-o">
-	            <label> 김우빈</label>
-	        </div>
-	    </div>
-	
-	    <div class="pretty p-default p-round p-smooth p-plain">
-	        <input type="checkbox" name="coworker" value="2">
-	        <div class="state p-success-o">
-	            <label> 전지현</label>
-	        </div>
-	    </div>
-	
-	    <div class="pretty p-default p-round p-smooth p-plain">
-	        <input type="checkbox" name="coworker" value="2">
-	        <div class="state p-success-o">
-	            <label> 아이유</label>
-	        </div>
-	    </div>
-	
-	    <div class="pretty p-default p-round p-smooth p-plain">
-	        <input type="checkbox" name="coworker" value="2">
-	        <div class="state p-success-o">
-	            <label> 뚱이</label>
-	        </div>
-	    </div>
-	
-	    <div class="pretty p-default p-round p-smooth p-plain">
-	        <input type="checkbox" name="coworker" value="2">
-	        <div class="state p-success-o">
-	            <label> 징징이</label>
-	        </div>
-	    </div>
+	    <c:forEach var="t" items="${teams}">
+		    <div class="pretty p-default p-round p-smooth p-plain">
+		        <input type="checkbox" name="coworker" value="${t.userNo}">
+		        <div class="state p-success-o">
+		            <label>${t.userName}</label>
+		        </div>
+		    </div>
+	    </c:forEach>
 		</div>
+		<script>
+			
+		</script>
 		<br>
 		<div class="jua-regular">
 			Color <input type="color" name="color" id="color-style" style="width: 30px; height: 30px;">
@@ -196,11 +175,11 @@
 		<div style="display: flex; justify-content: space-between;">
 			<div class="jua-regular">All Day</div>
 
-			<div class="pretty p-switch all_day">
+		<div class="pretty p-switch all_day">
 				<input type="checkbox">
 				<div class="state p-success">
 					<label>종일</label>
-				</div>
+				</div> 
 			</div>
 		</div>
 		<br>
@@ -270,17 +249,31 @@
 		<div class="content" style="max-width: 1120px; padding: 30px;">
 			<!-- 직원 div 영역 -->
 			<div class="member-search-area radious10 line-shadow">
-				<div class="mydiv-area display-item-center">
-					<div
-						class="line-cirecle display-item-center line-shadow my-element">홍길동</div>
-				</div>
-				<div class="memebrdiv-area display-item-center">
-					<div class="line-cirecle display-item-center line-shadow">아이유</div>
-					<div class="line-cirecle display-item-center line-shadow">지민</div>
-					<div class="line-cirecle display-item-center line-shadow">김가영</div>
-					<div class="line-cirecle display-item-center line-shadow">이누야샤</div>
-					<div class="line-cirecle display-item-center line-shadow">mama~</div>
-				</div>
+	
+				<!-- when : 로그인한 회원의 위치 -->
+				<!-- other :  같은 팀의 다른 사람들-->	
+				<c:forEach var="t" items="${teams}">
+					<c:choose>
+						<c:when test="${'1055' eq t.userNo}">
+							<div class="mydiv-area display-item-center">
+								<div class="line-cirecle display-item-center line-shadow">
+									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
+									<span class="img_postion">${t.userName}</span>
+								</div>
+							</div>
+						</c:when>
+						<c:otherwise>
+							<div class="memebrdiv-area display-item-center">
+								<div class="line-cirecle display-item-center line-shadow">
+									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
+									<span class="img_postion">${t.userName}</span>
+								</div>
+							</div>						
+						</c:otherwise>
+					</c:choose>
+			
+				</c:forEach>
+				
 			</div>
 			<br> <br>
 			<!-- 캘린더 영역 -->
@@ -332,14 +325,13 @@
 				      	$('#cal_modal').iziModal('open');
 							},
 							editable: true,
-							dayMaxEventRows: true,
-/* 							eventMouseEnter:function(info){
+							eventMouseEnter:function(info){
 									info.el.style.transform = 'scale(1.05)';
 									info.el.style.cursor = 'pointer';
 							},
 							eventMouseLeave:function(info){
 									info.el.style.transform = '';
-							}, */
+							},
 							events:[
 								<c:forEach var="c" items="${list}">
 									{

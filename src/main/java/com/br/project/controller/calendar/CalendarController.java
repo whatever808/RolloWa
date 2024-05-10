@@ -1,5 +1,6 @@
 package com.br.project.controller.calendar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -27,7 +28,7 @@ public class CalendarController {
 	
 
 	/**
-	 * 개인 일정을 조히 해서 화면에 전달하는 매서드
+	 * 개인 일정 과 같은 팀원들의 정보를 불러오는 매서드
 	 * @author dpcks
 	 * @param mv 조회된 객체와 view단을 선택하는 객체
 	 * @return 
@@ -38,15 +39,23 @@ public class CalendarController {
 		MemberDto member = (MemberDto)session.getAttribute("loginUser");
 		
 //		String teamCode = member.getTeamCode();
-		
-		String teamCode = "A";
+		String teamCode = "B";
 		
 		List<MemberDto> teams = calService.selectTeamPeer(teamCode);
 		
-		log.debug("teams {}", teams);
+		for(int i =0; i<teams.size(); i++) {
+			MemberDto m = teams.get(i);
+			if(m.getUserNo() == 1055) {
+				teams.add(0, teams.remove(i));
+			}
+		}
+		
+//		log.debug("teams {}", teams);
 		
 		List<CalendarDto> list = calService.selectPCalendar();
-		mv.addObject("list", list).setViewName("calendar/pCalendar");
+		mv.addObject("list", list)
+			.addObject("teams", teams)
+			.setViewName("calendar/pCalendar");
 		return mv;
 	}
 	

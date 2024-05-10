@@ -82,7 +82,7 @@
      , PROFILE_URL
      , (select code_name from tb_group where group_code = 'POSI01' and code = member.position_code) position
 		from Member
-		join tb_group on (code = team_code and code = 'A')
+		join tb_group on (code = team_code)
 		where Member.status = 'Y'
 		and team_code = #{teamCode}
 		and group_code = 'DEPT01'
