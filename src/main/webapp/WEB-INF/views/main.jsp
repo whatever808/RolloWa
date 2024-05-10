@@ -48,12 +48,13 @@
 				    <link href="${ contextPath }/resources/css/login.css" rel="stylesheet">
 				    <script src="${ contextPath }/resources/js/login.js"></script>
         </head>
-					<c:if test="${ alertMsg != null }" >
+        <body id="particles-js">
+	        <c:if test="${ alertMsg != null }" >
 						<script>
-							alert("${alertMsg}");
+							alertify.alert('${alertTitle}','${alertMsg}');
 						</script>
 					</c:if>
-        <body id="particles-js"></body>
+        </body>
         <div class="animated bounceInDown">
             <div class="container">
                 <span class="error animated tada" id="msg"></span>
