@@ -1,12 +1,12 @@
 package com.br.project.service.calendar;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 import com.br.project.dao.calendar.CalendarDao;
 import com.br.project.dto.calendar.CalendarDto;
+import com.br.project.dto.calendar.CoworkerDto;
 import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
@@ -32,22 +32,30 @@ public class CalendarService {
 	public int insertCal(CalendarDto calendar) {
 		int result = calDao.insertCal(calendar);
 		int outcome = 1;
-		String[] coArr = calendar.getCoworker();
+		List<CoworkerDto> coArr = calendar.getCoworker();
 		
 		if(coArr != null) {
-			for(String w : coArr) {
-				outcome *= calDao.insertCoworker(w);							
+			for(CoworkerDto w : coArr) {
+				outcome *= calDao.insertCoworker(w.getUserNo());							
 			}
 		}
 		
 		return result * outcome;
 	}
 
+	/**
+	 * @param calendar
+	 * @return
+	 */
 	public int calUpdate(CalendarDto calendar) {
 		int result = calDao.calUpdate(calendar);
 		return result;
 	}
 
+	/**
+	 * @param teamCode
+	 * @return
+	 */
 	public List<MemberDto> selectTeamPeer(String teamCode) {
 		return calDao.selectTeamPeer(teamCode);
 	}

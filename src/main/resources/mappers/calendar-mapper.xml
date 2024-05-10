@@ -13,6 +13,9 @@
 	<result column="CAL_COLOR" property="color" />
 	<result column="STATUS" property="status" />
 	<result column="GROUP_CODE" property="groupCode" />
+	<collection property="coworker" ofType="CoworkerDto">
+		<result column="USER_NO" property="userNo"/>
+	</collection>	
 </resultMap>
 <!-- 개인 및 부서 일정 조회 -->
 <select id="selectPCalendar" resultMap="calResultMap">
@@ -25,19 +28,24 @@ select
     , END_DATE
     , CAL_PLACE
     , CAL_COLOR
+    , calender.GROUP_CODE
+    , user_NO
 from 
 	calender
+left join 
+     co_worker using (cal_no)      
 where 
-	cal_sort in ('P', 'D')
+	cal_sort = 'D'
 and 
-	status = 'Y'
+	calender.status = 'Y'
 <![CDATA[
 and 
-	Months_between(START_DATE 	, sysdate) <= 6
+	Months_between(START_DATE     , sysdate) <= 6
 and 
 	Months_between(end_DATE		, sysdate) >= -6
-]]>
+]]>    
 </select>
+
 <!-- 갤린더 일정 등록 쿼리 -->
 <insert id="insertCal">
 	insert 

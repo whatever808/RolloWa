@@ -1,6 +1,5 @@
 package com.br.project.controller.calendar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -13,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.br.project.dto.calendar.CalendarDto;
+import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.calendar.CalendarService;
+import com.br.project.service.common.department.DepartmentService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class CalendarController {
 	private final CalendarService calService;
-	
+	private final DepartmentService dService;
 
 	/**
 	 * 개인 일정 과 같은 팀원들의 정보를 불러오는 매서드
@@ -51,10 +52,14 @@ public class CalendarController {
 		}
 		
 //		log.debug("teams {}", teams);
-		
+		List<GroupDto> group = dService.selectDepartmentList("CALD01");
+//		log.debug("group {}", group);		
 		List<CalendarDto> list = calService.selectPCalendar();
+		log.debug("list = {}", list);
+		
 		mv.addObject("list", list)
 			.addObject("teams", teams)
+			.addObject("group", group)
 			.setViewName("calendar/pCalendar");
 		return mv;
 	}

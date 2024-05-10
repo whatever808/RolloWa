@@ -42,7 +42,8 @@ public class MemberService {
 	public int updateMember(Map<String, String> memberInfo) {
 		return memberDao.updateMember(memberInfo);
 	}
-
+	
+	// 회원 비밀번호 변경
 	public int updateUserPwd(MemberDto member) {
 		return memberDao.updateUserPwd(member);
 	}
