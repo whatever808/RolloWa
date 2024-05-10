@@ -15,8 +15,8 @@ public class DepartmentDao {
 
 	private final SqlSessionTemplate sqlSessionTemplate;
 	
-	public List<GroupDto> selectDepartmentList(){
-		return sqlSessionTemplate.selectList("departmentMapper.selectDepartmentList");
+	public List<GroupDto> selectDepartmentList(String code){
+		return sqlSessionTemplate.selectList("departmentMapper.selectDepartmentList", code);
 	}
 	
 }

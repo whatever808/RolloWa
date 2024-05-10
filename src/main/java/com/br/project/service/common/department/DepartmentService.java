@@ -15,8 +15,8 @@ public class DepartmentService {
 
 	private final DepartmentDao departmentDao;
 	
-	public List<GroupDto> selectDepartmentList(){
-		return departmentDao.selectDepartmentList();
+	public List<GroupDto> selectDepartmentList(String code){
+		return departmentDao.selectDepartmentList(code);
 	}
 	
 }

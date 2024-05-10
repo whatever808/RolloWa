@@ -104,6 +104,12 @@
 	<!-- 상세보기 일정 모달 -->
 	<div id="cal_modal">
 	<form action="${path}/calendar/calUpdate.do" method="post">
+		<input type="hidden" name="calNO">
+		<div>
+			<div class="jua-regular">Title</div>
+			<div><input type="text" name="calTitle" style="width: 80%"></div>
+		</div>
+		<br>
 		<div style="display: flex; justify-content: space-between; align-items: center">
 			<div class="jua-regular">Category</div>
 			
@@ -114,43 +120,19 @@
 				<div class="state p-danger">
 					<label class="jua-regular">private</label>
 				</div>
-			</div> -->
+			</div>  -->
+
 		</div>
 		
 		<div class="Category">
-	    <div class="pretty p-default p-curve">
-	     	<input type="radio" name="groupCode" value="1">
-	       <div class="state p-success-o">
-	           <label>회의</label>
-	       </div>
-	    </div>
-       
-      <div class="pretty p-default p-curve">
-       <input type="radio" name="groupCode" value="1">
-       <div class="state p-success-o">
-           <label>미팅</label>
-       </div>
-      </div>
-       
-      <div class="pretty p-default p-curve">
-       <input type="radio" name="groupCode" value="1">
-       <div class="state p-success-o">
-           <label>이벤트</label>
-       </div>
-      </div>
-  
-      <div class="pretty p-default p-curve">
-	      <input type="radio" name="groupCode" value="1">
-	      <div class="state p-success-o">
-	          <label>계약</label>
-  			</div>
-      </div>
-      <div class="pretty p-default p-curve">
-	      <input type="radio" name="groupCode" value="1">
-	      <div class="state p-success-o">
-        	<label>기타</label>
-	      </div>
-      </div>       
+			<c:forEach var="g" items="${group}">
+		    <div class="pretty p-default p-curve">
+		     	<input type="radio" name="groupCode" value="${g.code}">
+		       <div class="state p-success-o">
+		           <label>${g.codeName}</label>
+		       </div>
+		    </div>
+			</c:forEach>
 		</div>
 		<br>
 		<div class="jua-regular">Co-worker</div>
@@ -305,8 +287,8 @@
 							slotMinTime: "06:00:00",
 							timeZone: 'Asia/Seoul',
 							eventClick:function(info){
-			     	 		//console.log(info.event.extendedProps.extendeProps.place);
-						    //console.log($('#cal_modal').find('input[name=place]'));
+			     	 		console.log(info.event.extendedProps.extendeProps);
+						   // console.log($('input[name=groupCode]'));
 				     	 	$(document).on('opening', '#cal_modal', function (e) {
 							    const extend = info.event.extendedProps.extendeProps;
 							    $('#color-style').val(info.event.backgroundColor);
@@ -316,11 +298,19 @@
 							    $('#currentTime2').val(info.event.endStr.slice(11));
 							    $('#cal_modal').find('.content-text-area').val(extend.content);
 							    $('#cal_modal').find('input[name=place]').val(extend.place);
+							    $('input[name=calTitle]').val(extend.caltitle);
 									if(extend.calSort == 'P'){
-									$('#cal_modal').find('input[name=calSort]').attr('checked', true);										
+										$('#cal_modal').find('input[name=calSort]').attr('checked', true);										
+									}
+									const $cate = $('input[name=groupCode]');
+									for (let i = 0; i<$cate.length; i++){
+										if($cate[i].value == extend.groupCode){
+											$cate[i].checked = true;
+										}
 									}
 								});
-				     	 	$('#cal_modal').iziModal('setSubtitle', info.event.extendedProps.extendeProps.calNO);  
+				     	 	
+				     	 	$('#cal_modal').iziModal('setSubtitle', info.event.id);  
 				     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
 				      	$('#cal_modal').iziModal('open');
 							},
@@ -336,22 +326,25 @@
 								<c:forEach var="c" items="${list}">
 									{
 										id:			'${c.calNO}',
-										title: 	'${c.calTitle }',
+										title: 	'[부서]'+'휴가종류',
 										start: 	'${c.startDate }',
 										end: 		'${c.endDate }',
 										color: 	'${c.color }',
 										extendeProps:{
-											calNO:		'${c.calNO}',
 											content:  '${c.calContent}',
+											caltitle: 	'${c.calTitle }',
 											place: 	  '${c.place}',
-											calSort:  '${c.calSort}'
+											calSort:  '${c.calSort}',
+											groupCode: '${c.groupCode}',
+											cowoker: 		'1050'										
 										}
 									},
 								</c:forEach>
 							]
 						});
 					calendar.render();
-				});
+				});	
+
 	      </script>
 		</div>
 	</div>

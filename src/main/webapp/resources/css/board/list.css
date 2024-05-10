@@ -22,27 +22,23 @@
 #filter-search{
 	float: right;
 }
-#search-form{
-	border: 1px solid tomato;
-	display: inline-block;
+#keyword, #condition, #search-btn, #reset-search{
+	height: 40px;
 }
 #condition{
     display: inline-block;
-    width: 100px;
+    width: 150px;
 }
 #keyword{
-    display: inline-block;
-    width: 350px;
-}
-#search-form button{
-    margin-top: -5px;
+	border: 1px solid lightgray;
 }
 
 /* ------------- reset search value ------------- */
 #reset-search{
-	border:1px solid green;
 	display: inline-block;
 	color: #2985DB;
+	width: 160px;
+	align-content: center;
 }
 #reset-search:hover{
 	cursor: pointer;
