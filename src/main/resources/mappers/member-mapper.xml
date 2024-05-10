@@ -25,12 +25,23 @@
 </resultMap>
 
   <!--  회원 로그인  -->
+  <select id="memberLogin" resultMap="memberResult">
+  	select
+  		user_no, user_id, user_pwd, team_code
+  	from
+  		member
+  	where
+  		user_id = #{ userId }
+  	and
+  		status = 'Y'
+  </select>
+  
+  <!-- 회원 정보 조회 -->
 	<select id="selectMember" resultMap="memberResult"> 
 		select USER_NO , USER_NAME , USER_ID , USER_PWD , PHONE , POST_CODE, ADDRESS, DETAIL_ADDRESS, TOTAL_ADDRESS , BANK_ACCOUNT , BANK , EMAIL , PROFILE_URL , COUNT_FAIL , VACATION_COUNT , AUTH_LEVEL , SALARY , TEAM_CODE , POSITION_CODE 
 		from member
 		where 
 		user_id = #{ userId } 
-		and user_pwd = #{ userPwd } 
 		and status = 'Y' 
 	</select>
  
@@ -41,6 +52,18 @@
 		where
 			user_no = #{ userNo }
 			and status = 'Y'
+	</select>
+	
+	<!-- 회원 랜덤 비밀번호로 수정 -->
+	<select id="updateUserPwd">
+		update
+			member
+		set
+			user_pwd = #{userPwd}
+		where
+			user_id = #{userId}
+		and
+			status = 'Y'	
 	</select>
 
 	<!-- 회원 프로필 이미지 변경 -->
