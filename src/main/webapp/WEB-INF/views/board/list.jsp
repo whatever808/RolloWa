@@ -44,29 +44,42 @@
 	     <!-- about search start -->
 	     <div id="filter-search">
 	     	 <!-- search form start-->
-		     <div id="search-form">
-		      <select id="condition" class="search-condition form-select">
-		      	  <option value="">전체</option>
-		          <option value="title">제목</option>
-		          <option value="content">내용</option>
-		          <option value="writer">작성자</option>
-		      </select>
-		      <input type="text" id="keyword" class="form-control" placeholder="게시글 검색">
-		      <button type="button" class="btn btn-secondary" onclick="searchValidation();">검색</button>
+		     <div id="search-form" class="input-group">
+		     	<!-- search condition start -->
+			    <select id="condition" class="search-condition form-select">
+			       <option value="">전체</option>
+			       <option value="title">제목</option>
+			       <option value="content">내용</option>
+			       <option value="writer">작성자</option>
+		        </select>
+		       	<!-- search condition end -->
+		       	
+		        <!-- search keyword start -->
+			    <span class="form-outline" data-mdb-input-init>
+			        <input type="search" id="keyword" class="form-control" placeholder="게시글 검색" aria-label="게시글 검색"/>
+			    </span>
+			    <!-- search keyword end -->
+			    
+			    <!-- search button start -->
+			    <button id="search-btn" type="button" class="btn btn-secondary" onclick="searchValidation();" data-mdb-ripple-init>
+			        <i class="fas fa-search"></i>
+			    </button>
+			    <!-- search button end -->
+			    
+			    <!-- reset search value start -->
+			    <span id="reset-search" class="d-none">
+			     	<span>
+			   			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+							<path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+							<path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+						</svg>
+			     	</span>
+			     	<span>검색 취소</span>
+			    </span>
+			    <!-- reset search value end -->
+			    
 		     </div>
 		     <!-- search form end -->
-		     
-		     <!-- reset search value start -->
-		     <div id="reset-search" class="d-none">
-		     	<span>
-		   			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-					  <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
-					  <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
-					</svg>
-		     	</span>
-		     	<span>검색 취소</span>
-		     </div>
-		     <!-- reset search value end -->
 	     </div>
 	     <!-- about search end -->
 	     
@@ -163,6 +176,11 @@
 <script>
 	//페이지 로드 즉시 실행되어야할 functions ===========================================================================
 	$(document).ready(function(){
+		// 노출 URL값 변경
+		if(location.href == '${ contextPath }/board/list.do'){
+			history.pushState(null, null, "${ contextPath }/board/list.do?page=1&category=&department=&condition=&keyword=")
+		}
+		
 		// "카테고리별" 게시글 목록조회 요청했을 경우, 카테고리 선택값 지정
 		$("#category").children("option").each(function(){
 			$(this).val() == "${ filter.category }" && $(this).attr("selected", true);
@@ -177,13 +195,19 @@
 		}	
 		
 		// "키워드검색" 게시글 목록조회 요청했을 경우, 검색값 지정
-		if(${ filter.condition != ''} && ${ filter.keyword != ''}){
+		if("${ filter.condition }".length != 0 && "${ filter.keyword != ''}".length != 0){
+			$("#condition").children("option").first().val("all");
+			
+			// 1) 검색값 노출
 			$("#condition").children("option").each(function(){
-				if($(this).val() == '${ filter.condition }'){
+				if($(this).val() == "${ filter.condition }"){
 					$(this).attr("selected", true);
 				} 	
 			})
 			$("#keyword").val("${ filter.keyword }");
+			
+			// 2) "검색 취소" 버튼 활성화
+			$("#reset-search").removeClass("d-none");
 		}	
 	})	
 	
@@ -221,17 +245,19 @@
 	
 	// 검색값 설정값 초기화
 	$("#reset-search").on("click", function(){
-		$("#category").children().eq(0).attr("selected", "true");
-		$("#department").children().eq(0).attr("selected", "true");
-		$("#condition").children().eq(0).attr("selected", "true").val("");
+		// 1) 선택값 모두 초기화
+		$("#category").children().eq(0).prop("selected", "true");
+		$("#department").addClass("d-none")
+						.children().eq(0).prop("selected", "true");
+		$("#condition").children().eq(0).val("").prop("selected", "true");
 		$("#keyword").val("");
 		
-		console.log($("#category").val());
-		console.log($("#department").val());
-		console.log($("#condition").val());
-		console.log($("#keyword").val());
+		// 2) "검색 취소" 버튼 비활성화
+		$(this).addClass("d-none");
 		
+		// 3) 게시글 목록조회 요청
 		ajaxBoardList();
+		
 	})
 	
 	// 검색 초기화 버튼 활성화
@@ -262,8 +288,6 @@
 				let pageInfo = response.pageInfo;	// 페이징바 정보
 				let list = "";	// 갱신 리스트 문자열 태그
 				let pagination = "";	// 갱신할 페이징바 문자열 태그
-				
-				console.log(response);
 				
 				// 1) 게시글 목록 리스트 갱신
 				// 조회된 게시글이 없을 경우
@@ -309,7 +333,6 @@
 				}
 		
 				$("#boardList").html(list);
-				console.log("페이징바 : ", pagination);
 				$(".board-list-pagination").children(".pagination").html(pagination);
 				
 				

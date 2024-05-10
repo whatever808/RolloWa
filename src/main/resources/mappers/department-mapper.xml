@@ -23,7 +23,7 @@
 					,code_name	
 			from tb_group
 		 where status 		= 'Y'
-		   and group_code = 'DEPT01'
+		   and group_code = #{code}
 		 order by code
 	</select>
 	
