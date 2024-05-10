@@ -70,8 +70,12 @@
 	.employee_count {
 	    margin-left: 10px;
 	}
+	table{
+		table-layout: fixed;
+	}
 	.table_empinfo {
 	    text-align: center;
+	    table-layout: fixed !important;
 	}
 	.table_empinfo th{
 	    background-color: rgb(255,247,208) !important;
@@ -83,9 +87,19 @@
 	.table_empinfo td img{
 	    border: 1px solid gainsboro;
 	    border-radius: 100%;
-	    width: 40px;
-	    margin: -5px;
+	    width: 50px;
+	    height: 50px;
+		object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
+	    margin: -10px;
  	}
+ 	.profile_img:hover {
+		transform: scale(10) translate(70%, -40%);
+    	border-radius: 0;
+    	border: 0px;
+    	object-fit: contain;
+	}
+	
+ 	
 	</style>
 </head>
 <body>
@@ -106,11 +120,11 @@
 	                <!-- 검색 메뉴 1 : 부서명-->
 	                <th>부서명</th>
 	                <td>
-	                    <select id="department" name="department" class="form-control">
+	                    <select id="dept" name="dept" class="form-control">
 	                        <option value="전체 부서">전체 부서</option>
-	                        <option value="부서 1">부서 1</option>
-	                        <option value="부서 2">부서 2</option>
-	                        <option value="부서 3">부서 3</option>
+	                        <c:forEach var="d" items="${ dept }">
+		                        <option value="${d.codeName}">${d.codeName}</option>
+	                        </c:forEach>
 	                    </select>
 	                </td>
 	                <!-- 검색 메뉴 2 : 전화번호 -->
@@ -125,9 +139,9 @@
 	                <td>
 	                    <select name="team" id="team" class="form-control">
 	                        <option value="전체 팀">전체 팀</option>
-	                        <option value="1팀">1팀</option>
-	                        <option value="2팀">2팀</option>
-	                        <option value="3팀">3팀</option>
+	                        <c:forEach var="t" items="${ team }">
+		                        <option value="${t.codeName}">${t.codeName}</option>
+	                        </c:forEach>
 	                    </select>
 	                </td>
 	                <!-- 검색 메뉴 4 : 이름 -->
@@ -146,6 +160,28 @@
 	            </tr>
 	        </table>
 	    </form>
+	    
+	    <!-- 스크립트 작성중 -->
+	    <script>
+		    document.getElementById('dept').addEventListener('change', function() {
+		        let codeName = this.value;
+		        console.log("codeName: ", codeName);
+		        
+		        $.ajax({
+		            url: "${contextPath}/orginfo/empSearch.do",
+		            type: "post",
+		            data: { codeName: codeName },
+		            success: function(result) {
+		                console.log("결과값 : ", result);
+		            },
+		            error: function(result) {
+		                console.log("실패");
+		            }
+		        });
+		        
+		    });
+	    </script>
+	    
 	
 	    <script>
 	        /* 전화번호 : 숫자만 입력되고 나머지 글자는 공백으로 변환 */
@@ -160,10 +196,11 @@
 	            $(this).val(regExp);
 	        })
 	    </script>
-	
+	    
+	   
 	
 	    <!-- 전체 인원수 -->
-	    <h5 class="employee_count">전체 50명</h5>
+	    <h5 class="employee_count">전체 ${ listCount }명</h5>
 	
 	    <!-- 직원 정보 테이블 start-->
 	    <table class="table table_empinfo line-shadow">
@@ -176,102 +213,49 @@
 	            <th>전화번호</th>
 	            <th>이메일</th>
 	        </tr>
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
 	        
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
-	
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
-	
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
-	
-	        <tr>
-	            <td>
-	                <img src="${contextPath}/resources/images/defaultProfile.png" class="profile_img">
-	            </td>
-	            <td>고미옥</td>
-	            <td>총무부</td>
-	            <td>팀명</td>
-	            <td>대표이사</td>
-	            <td>010-2222-3333</td>
-	            <td>user01@gamil.com</td>
-	        </tr>
+	        <!-- 이름, 부서, 팀명, 직급, 전화, 이메일 -->
+	        <c:choose>
+		        <c:when test="${ not empty list }">
+		        	<c:forEach var="m" items="${ list }">
+				        <tr>
+
+				            <td>
+					            <c:choose>
+					            	<c:when test="${ not empty m.profileUrl }">
+						                <img src="${ m.profileUrl }" class="profile_img">
+					            	</c:when>
+					            	<c:otherwise>
+						                <img src="${contextPath}/resources/images/defaultProfile.png">
+					            	</c:otherwise>
+					            </c:choose>
+				            </td>
+				            <td>${ m.userName }</td>
+				            <td>${ m.dept }</td>
+				            <td>${ m.team }</td>
+				            <td>${ m.posi }</td>
+				            <td>${ m.phone }</td>
+				            <td>${ m.email }</td>
+				        </tr>
+			        </c:forEach>
+		        </c:when>
+	        </c:choose>
+	        
 	    </table>
+	    
 	    <!-- 직원 테이블 end -->
 	
 	    <!--페이징 처리 start-->
 	    <div class="container">
 	        <ul class="pagination justify-content-center">
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-	            <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
+	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/empSearch.do?page=${pi.currentPage-1}">Previous</a></li>
+				<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/empSearch.do?page=${p}">${ p }</a></li>
+				</c:forEach>
+				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/empSearch.do?page=${pi.currentPage+1}">Next</a></li> 
 	        </ul>
 	    </div>
 	    <!--페이징 처리 end-->
-	
-		<!-- ------------ -->
 		
 	</div>
 	<!-- 메인 영역 end-->
