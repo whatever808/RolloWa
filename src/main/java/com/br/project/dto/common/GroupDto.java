@@ -19,5 +19,7 @@ public class GroupDto {
 	private String codeName;
 	private String status;
 	private String upperCode;
+	private String dept;
+	private String team;
 	private String coworker;
 }

@@ -3,6 +3,7 @@ package com.br.project.controller.organization;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,9 +32,11 @@ public class OrganizationInfoController {
 	
 	// 1.1 조직도
 	@GetMapping("/orgChart.page")
-	public String orgchart() {
+	public String orgChart(Model model) {
+		List<GroupDto> dept = organizationService.selectOrganizationChart();
+		model.addAttribute("dept", dept);
 		return "organization/orgChart";
-	}
+	}	
 	
 	// 1.2 직원검색
 	@RequestMapping(value = "/empSearch.do")
@@ -60,8 +63,13 @@ public class OrganizationInfoController {
 	
 	
 	// 1.3 조직관리(관리자 전용)
-	@GetMapping("/orgManager.page")
-	public String deptManager() {
+	@GetMapping("/orgManager.do")
+	public String deptManager(Model model) {
+		List<GroupDto> dept = organizationService.selectOrganizationChart();
+		model.addAttribute("dept", dept);
+		
+		log.debug("부서 : ", dept);
+		
 		return "organization/orgManager";
 	}
 

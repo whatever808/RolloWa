@@ -96,7 +96,7 @@
     }
     /* 세로줄 */
     .tree ul:before, .tree code:before, .tree span:before {
-        outline: solid 1px gainsboro;
+        outline: solid 1px lightgray;
         content: "";
         height: 2.5em;
         left: 50%;
@@ -162,8 +162,8 @@
 
     /*  */
     .tree > li > ul {
-      /* display: flex; */
-      flex-wrap: wrap;
+      /* display: flex;*/   
+      /*flex-wrap: wrap;*/
     }
     </style>
 </head>
@@ -179,6 +179,7 @@
 
             <!-- 메인 영역 start -->
 
+            <!-- 일정한 개수 마다 다음줄로-->
             <script>
               $(document).ready(function() {
                   var treeItems = $('.tree > li > ul > li').length;
@@ -187,7 +188,7 @@
                       $('.tree > li > ul').css('flex-wrap', 'wrap');
                     }
               });
-          </script>
+            </script>
             
             <ul class="tree">
               <li> <span class="level1">대표이사</span>
@@ -235,47 +236,6 @@
                     </ul>
                   </li>
 
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-                  
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
 
                   
 
