@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.br.project.dao.calendar.CalendarDao;
 import com.br.project.dto.calendar.CalendarDto;
+import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,5 +46,9 @@ public class CalendarService {
 	public int calUpdate(CalendarDto calendar) {
 		int result = calDao.calUpdate(calendar);
 		return result;
+	}
+
+	public List<MemberDto> selectTeamPeer(String teamCode) {
+		return calDao.selectTeamPeer(teamCode);
 	}
 }

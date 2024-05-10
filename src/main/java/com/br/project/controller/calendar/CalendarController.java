@@ -2,6 +2,8 @@ package com.br.project.controller.calendar;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.br.project.dto.calendar.CalendarDto;
+import com.br.project.dto.member.MemberDto;
 import com.br.project.service.calendar.CalendarService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,10 +33,19 @@ public class CalendarController {
 	 * @return 
 	 */
 	@GetMapping("/pCalendar.page")
-	public ModelAndView selectPCalendar(ModelAndView mv) {
+	public ModelAndView selectPCalendar(HttpSession session, ModelAndView mv) {
+		
+		MemberDto member = (MemberDto)session.getAttribute("loginUser");
+		
+//		String teamCode = member.getTeamCode();
+		
+		String teamCode = "A";
+		
+		List<MemberDto> teams = calService.selectTeamPeer(teamCode);
+		
+		log.debug("teams {}", teams);
+		
 		List<CalendarDto> list = calService.selectPCalendar();
-		for(int i= 0; i< list.size(); i++) {
-		}
 		mv.addObject("list", list).setViewName("calendar/pCalendar");
 		return mv;
 	}
