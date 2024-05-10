@@ -18,17 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MainController {
 	// 메인페이지
 	@RequestMapping("/")
-	public String mainPage(@SessionAttribute(value="loginMember", required=false) MemberDto loginMember 
-					, RedirectAttributes redirectAttribute
-					, String alertMsg
-					, String alertTitle) {
-		
-		// alertMsg랑 alertTitle이 url에 노출되는데 이걸 어떻게 해야할지!
-		if(alertMsg != null) {
-			log.debug("로그인 메세지 실행됨");
-			redirectAttribute.addFlashAttribute("alertTitle", alertTitle);
-			redirectAttribute.addFlashAttribute("alertMsg",alertMsg);
-		}
+	public String mainPage(@SessionAttribute(value="loginMember", required=false) MemberDto loginMember ) {
 		
 		if(loginMember != null) {
 			return "mainpage/mainpage";

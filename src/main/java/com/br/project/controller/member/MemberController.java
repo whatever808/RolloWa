@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,22 +38,24 @@ import net.nurigo.sdk.message.service.DefaultMessageService;
 public class MemberController {
 	private final MemberService memberService;
 	private final FileUtil fileUtil;
+	private final BCryptPasswordEncoder bcryptPasswordEncoder;
 	DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSVIKI2KIZ8BWZP", "FRCLTDLTRNZ8AYQ3ABSZCF4JOBNBFIGK", "https://api.coolsms.co.kr");
 		
 	// 로그인
 	@PostMapping("/login.do")
-	public String MemberLogin(MemberDto member, HttpServletRequest request, Model model) {
-		MemberDto loginMember = memberService.selectMember(member);
+	public String MemberLogin(MemberDto member, HttpServletRequest request,
+				RedirectAttributes redirectAttributes) {
+		MemberDto loginMember = memberService.memberLogin(member);
 		HttpSession session = request.getSession();
+		redirectAttributes.addFlashAttribute("alertTitle", "로그인 서비스");
 		
-		model.addAttribute("alertTitle", "로그인 서비스");
-		if(loginMember != null) {
+		if(bcryptPasswordEncoder.matches(member.getUserPwd(), loginMember.getUserPwd())) {
 			// 로그인 성공
 			session.setAttribute("loginMember", loginMember);
 		} else {
 			// 로그인 실패
 			log.debug("로그인 실패 실행됨");
-			model.addAttribute("alertMsg", "로그인 실패");
+			redirectAttributes.addFlashAttribute("alertMsg", "로그인 실패");
 		}
 		
 		return "redirect:/";
@@ -88,7 +91,6 @@ public class MemberController {
     @ResponseBody
     public String ajaxSendOne(String phone) {
         Message message = new Message();
-        log.debug("{}", phone);
         // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
         message.setFrom("01047547864");
         message.setTo(phone);
@@ -97,15 +99,49 @@ public class MemberController {
         
         message.setText("[CoolSMS] 인증번호를 확인하고 입력해주세요 : " + rand);
 
-        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-        log.debug("{}", response);
+        //SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        //log.debug("{}", response);
         
         return rand;
     }
     
+    // 임시 비밀번호 생성
+    @PostMapping("forgetPwd.do")
+    @ResponseBody
+    public Map<String, String> ajaxUpdateUserPwd(String userId) {	
+    	char[] charSet = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    				'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    				'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
+    				'!', '@', '#', '$', '%', '^', '&' };
+    
+    	String newPwd =  "pass1234"; //RandomStringUtils.random(10, charSet);
+    	log.debug("{}", newPwd);
+    	MemberDto member = MemberDto.builder()
+    								.userId(userId)
+    								.userPwd(bcryptPasswordEncoder.encode(newPwd))
+    								.build();
+    	
+    	int result = memberService.updateUserPwd(member);
+    	Map<String, String> map = new HashMap<>();
+    	
+    	if (result > 0) {
+    		map.put("msg", "SUCCESS");
+    		map.put("newPwd", newPwd);
+    	} else {
+    		map.put("msg", "FAIL");
+    	}
+    	
+    	return map;
+    }
+    
 	// 마이페이지 조회
 	@GetMapping("/mypage.page")
-	public String ToMyPage() {
+	public String ToMyPage(Model model, HttpSession session) {
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		loginMember = memberService.selectMember(loginMember);
+		
+		model.addAttribute("memberInfo", loginMember);
+		
 		return "member/mypage";
 	}
 

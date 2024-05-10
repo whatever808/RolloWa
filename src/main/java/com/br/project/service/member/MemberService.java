@@ -16,6 +16,11 @@ public class MemberService {
 	private final MemberDao memberDao;
 	
 	// 회원 로그인
+	public MemberDto memberLogin(MemberDto member) {
+		return memberDao.memberLogin(member);
+	}
+	
+	// 회원 정보 조회
 	public MemberDto selectMember(MemberDto member) {
 		return memberDao.selectMember(member);
 	}
@@ -36,5 +41,9 @@ public class MemberService {
 	// 회원정보 수정
 	public int updateMember(Map<String, String> memberInfo) {
 		return memberDao.updateMember(memberInfo);
+	}
+
+	public int updateUserPwd(MemberDto member) {
+		return memberDao.updateUserPwd(member);
 	}
 }
