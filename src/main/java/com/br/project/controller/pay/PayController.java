@@ -3,9 +3,11 @@ package com.br.project.controller.pay;
 
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.br.project.controller.common.CommonController;
 import com.br.project.dto.common.PageInfoDto;
+import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.PayDto;
 import com.br.project.service.pay.PayServiceImpl;
 import com.br.project.util.PagingUtil;
@@ -97,14 +101,50 @@ public class PayController {
 	}
 	//----------------------------------------
 	
+	@RequestMapping(value="/selectList.do")
+	public String selectList(HttpServletRequest request,
+			 @RequestParam (value="page", defaultValue="1") int currentPage
+						, Model model) {
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		params = CommonController.getParameterMap(request);
+		log.debug(request.toString());
+		//(카테고리별)페이지갯수
+		int clistCount = payServiceImpl.slistCount(params);
+		
+		//일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payServiceImpl.moreDateCount();
+		
+		//결재내역 게시글 총갯수
+		int slistCount = payServiceImpl.successListCount();
+		
+		//페이지
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(clistCount, currentPage, 5, 10);
+		
+		//리스트
+		List<PayDto> list = payServiceImpl.categoryList(params, pi);
+		
+		model.addAttribute("clistCount", clistCount);
+		model.addAttribute("params", params);
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("pi", pi);
+		model.addAttribute("list", list);
+		
+		
+		return "pay/paymain";
+		
+	}
 	
+	/*
 	//메인결재 보고서 카테고리----------------------
 	@GetMapping(value="/selects.do")
 	public String selectList(String conditions, @RequestParam (value="page", defaultValue="1") int currentPage
 						, Model model) {
 		
 		//(카테고리별)페이지갯수
-		int clistCount = payServiceImpl.slistCount(conditions);
+		int clistCount = 1;//payServiceImpl.slistCount(conditions);
 		
 		//일주일이상승인완료가 안된 게시글총갯수
 		int mdCount = payServiceImpl.moreDateCount();
@@ -129,12 +169,50 @@ public class PayController {
 		return "pay/paymain";
 		
 	}
+	*/
 	//---------------------------------------------
+	
+	/*
+	//메인결재 보고서 카테고리----------------------
+		@GetMapping(value="/status.do")
+		public String statusList(String status, @RequestParam (value="page", defaultValue="1") int currentPage
+							, Model model) {
+			
+			//(카테고리별)페이지갯수
+			int clistCount = 1;//payServiceImpl.slistCount(status);
+			
+			//일주일이상승인완료가 안된 게시글총갯수
+			int mdCount = payServiceImpl.moreDateCount();
+			
+			//결재내역 게시글 총갯수
+			int slistCount = payServiceImpl.successListCount();
+			
+			//페이지
+			PageInfoDto pi =  pagingUtil.getPageInfoDto(clistCount, currentPage, 5, 10);
+			
+			//리스트
+			List<PayDto> list = payServiceImpl.statusList(status, pi);
+			
+			model.addAttribute("clistCount", clistCount);
+			model.addAttribute("slistCount", slistCount);
+			model.addAttribute("mdCount", String.valueOf(mdCount));
+			model.addAttribute("slistCount", String.valueOf(slistCount));
+			model.addAttribute("pi", pi);
+			model.addAttribute("list", list);
+			model.addAttribute("status", status);
+			
+			return "pay/paymain";
+			
+		}
+		//---------------------------------------------
+		*/
+	
 	
 	// 메인결재 상세페이지목록클릭-----------------------
 	@RequestMapping("/detail.do")
 	public String detail(PayDto pDto, Model model) {
-		
+		log.debug("documentType : {}", pDto.getDocumentType() );
+		log.debug("dto : {}", pDto );
 		String documentType = pDto.getDocumentType();
 		if(documentType.equals("매출보고서")) {
 			PayDto payDto = payServiceImpl.mdetail(pDto);
@@ -168,11 +246,60 @@ public class PayController {
 		
 	}
 	
-	
-	@GetMapping("/tomWriter.do")
-	public void tomWriter() {
+	//메인페이지 로그인한 유저의 전체결재 수신함--------------------------
+	@GetMapping("/allUserlist.do")
+	public String allUserlist(@RequestParam (value="page", defaultValue="1") int currentPage
+								,HttpSession session, Model model) {
+		
+		//session 멤버객체
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		// 로그인한 userName
+		String userName = loginMember.getUserName();
+		log.debug("userName : {}", userName);
+		
+		//로그인한 유저의 승인자결재목록갯수
+		int ulistCount = payServiceImpl.allUserCount(userName);
+		
+		//페이지
+		PageInfoDto pi = pagingUtil.getPageInfoDto(ulistCount, ulistCount, 5, 10);
+		
+		//로그인한 유저의 승인자결재목록리스트
+		List<PayDto> list = payServiceImpl.allUserList(userName, pi);
+		
+		//일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payServiceImpl.moreDateCount();
+		
+		//결재내역 게시글 총갯수
+		int slistCount = payServiceImpl.successListCount();
+		
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("ulistCount", ulistCount);
+		model.addAttribute("mdCount", mdCount);
+		model.addAttribute("slistCount", slistCount);
+		
+		return "pay/paymain";
 		
 	}
+	//-------------------------------------------------------
+	
+	
+	//글작성페이지폼-------------------------------------------
+	@GetMapping("/mWriterForm.do")
+	public void mWriterForm() {
+		
+	}
+	//----------------------------------------------------
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 	

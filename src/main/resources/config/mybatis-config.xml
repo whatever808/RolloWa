@@ -13,15 +13,17 @@
 		<typeAlias type="com.br.project.dto.common.GroupDto" 		alias="GroupDto" />
 		<typeAlias type="com.br.project.dto.pay.PayDto" 			alias="PayDto"/>
 		<typeAlias type="com.br.project.dto.pay.ExpenditureDto" 	alias="ExpenditureDto"/>
-		<typeAlias type="com.br.project.dto.calendar.CalendarDto"	alias="calendarDto"/>
 		<typeAlias type="com.br.project.dto.organization.OrganizationDto"  alias="OrganizationDto"/>
+		<typeAlias type="com.br.project.dto.calendar.CalendarDto" alias="calendarDto"/>
+		<typeAlias type="com.br.project.dto.member.MemberDto" alias="MemberDto"/>
+		<typeAlias type="com.br.project.dto.pay.FixturesDto" alias="FixturesDto"/>
 	</typeAliases>
 	
 	
 	<mappers>
-		<mapper resource="mappers/board-mapper.xml" />
+		<mapper resource="mappers/board/board-mapper.xml" />
 		<mapper resource="mappers/attachment-mapper.xml" />
-		<mapper resource="mappers/department-mapper.xml" />
+		<mapper resource="mappers/board/department-mapper.xml" />
 		<mapper resource="mappers/member-mapper.xml" />
 		<mapper resource="mappers/pay-mapper.xml" />
 		<mapper resource="mappers/calendar-mapper.xml" />

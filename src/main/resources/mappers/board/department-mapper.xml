@@ -4,8 +4,8 @@
 <mapper namespace="departmentMapper">
 
 	<resultMap 			id="groupResultMap" type="GroupDto">
-		<id				column="group_no" 			property="groupNo" />
-		<result 	column="group_code"			property="groupCode" />
+		<id				column="group_code" 		property="groupCode" />
+		<result 	column="code"						property="code" />
 		<result 	column="code_name"			property="codeName" />
 		<result 	column="regist_date"		property="registDate" />
 		<result 	column="modify_date"		property="modifyDate" />
@@ -18,12 +18,13 @@
   <!-- 부서 목록조회 -->
 	<select id="selectDepartmentList" resultMap="groupResultMap">
 		select 
-					 group_no		
-					,group_code	
+					 group_code		
+					,code	
 					,code_name	
 			from tb_group
-		 where status = 'Y'
-		 order by group_code
+		 where status 		= 'Y'
+		   and group_code = 'DEPT01'
+		 order by code
 	</select>
 	
 </mapper>

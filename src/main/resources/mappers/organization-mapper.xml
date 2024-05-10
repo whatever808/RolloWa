@@ -82,7 +82,5 @@
 	               WHERE GROUP_CODE LIKE 'DEPT%'
 	                 AND CODE_NAME = #{codeName})
 	</select>
-	
-	
 
 </mapper>

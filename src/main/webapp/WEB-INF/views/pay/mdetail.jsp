@@ -31,8 +31,15 @@
 
     <link href="/src/main/webapp/resources/css/mainPage/mainPage.css" rel="stylesheet">
     
+    <!-- 모달 관련 -->
+    <script src="${contextPath}/resources/js/iziModal.min.js"></script>
+    <link rel="stylesheet" href="${contextPath}/resources/css/iziModal.min.css">
+	
+	  <!-- 제이쿼리 -->
+    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
     <!-- 결재신청서 공통스타일 -->
-    <link href="/src/main/webapp/resources/css/pay/writer.css" rel="stylesheet">
+    <link href="${contextPath}/resources/css/pay/writer.css" rel="stylesheet">
     
     <style>
         .b-example-divider {
@@ -197,6 +204,10 @@
 
 
         /*----------------------------*/
+        .m_content_style {
+         display: flex;
+         flex-direction: column;
+     		}
     </style>
 
 
@@ -422,6 +433,7 @@
                         <!--버튼 영역-->
                         <div id="btn_div">
                             <button id="my-button" onclick="submitbtn();" >완료</button>
+                          	<button data-izimodal-open="#modal">반려</button>
                             <button id="end_button" onclick="successbtn();">최종승인</button>
                         </div>
                         <!------------>
@@ -429,6 +441,36 @@
                 </div>
             </div>
         </div>
+        
+        <div id="#modal">
+        <!-- Modal content -->
+        <!-- 스타일에 한해서는 이런식으로 class명을 주시기 바랍니다. -->
+	        <div class="m_content_style">
+	            <div>
+	            	<textarea rows="" cols="">
+	            	</textarea>
+	            </div>
+	            <div>
+		            <button>제출</button>
+		            <button>취소</button>
+	            </div>
+	        </div>
+    		</div>
+    		
+		     <script>
+		        // 1. 해당 아이디의 모달 등록이 필요함
+		        $('#modal').iziModal({
+		            title: '반려사유를 작성해주세요.',
+		            headerColor: '#FEEFAD', // 헤더 색깔
+		            theme: '', //Theme of the modal, can be empty or "light".
+		            padding: '15px', // content안의 padding
+		            radius: 10, // 모달 외각의 선 둥글기
+		            focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
+		            restoreDefaultContent: false
+		        });
+		
+		    </script>
+    		
 
         <script>
             function submitbtn(){
@@ -443,10 +485,11 @@
                     alert("최종승인이 완료되었습니다.");
                 }
                 
-            }
- 	 	          console.log("${payDto}");        	
+            }       	
            
         </script>
+        
+        
         <!-- content 끝 -->
     </main>
     <script src="../../resources/js/common/bootstrap.bundle.min.js"></script>

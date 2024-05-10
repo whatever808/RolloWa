@@ -1,35 +1,51 @@
-
 .page-title{
     margin-bottom: 50px;
     font-weight: bold;
     font-family: "Jua";
 }
-@charset "UTF-8";
 
 /* ------------- board category ------------- */
-.board-category{
+#filter-category{
+	
+}
+#category{
+	display: inline-block;
     width: 200px;
 }
-.department-category{
-		display: inline-block;
-		width: 200px;
+#department{
+	display: inline-block;
+	margin-left: 50px;
+	width: 200px;
 }
 
 /* ------------- search form ------------- */
-#search-form{
-    float: right;
+#filter-search{
+	float: right;
 }
-    display: inline-block;
-.search-condition{
+#search-form{
+	border: 1px solid tomato;
+	display: inline-block;
+}
+#condition{
     display: inline-block;
     width: 100px;
 }
-#search-keyword{
+#keyword{
     display: inline-block;
     width: 350px;
 }
 #search-form button{
     margin-top: -5px;
+}
+
+/* ------------- reset search value ------------- */
+#reset-search{
+	border:1px solid green;
+	display: inline-block;
+	color: #2985DB;
+}
+#reset-search:hover{
+	cursor: pointer;
 }
 
 /* ------------- board list ------------- */
@@ -49,6 +65,14 @@
     margin-right: 5px;
 }
 
+/* ------------- pagination ------------- */
 .board-list-pagination{
-    margin-top: 60px;
+    margin-top: 90px;
+    display: flex;
+    justify-content: center;
+    align-itmes: center;
+    
+}
+.board-list-pagination>.pagination span:hover{
+		cursor: pointer;
 }

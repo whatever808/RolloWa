@@ -2,5 +2,114 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="memberMapper">
+<resultMap type="MemberDto" id="memberResult">
+	<id column="USER_NO" property="userNo"/>
+	<result column="USER_NAME" property="userName"/>
+	<result column="USER_ID" property="userId"/>
+	<result column="USER_PWD" property="userPwd"/>
+	<result column="PHONE" property="phone"/>
+	<result column="POST_CODE" property="postCode"/>
+	<result column="ADDRESS" property="address"/>
+	<result column="DETAIL_ADDRESS" property="detailAddress"/>
+	<result column="TOTAL_ADDRESS" property="totalAddress"/>
+	<result column="BANK_ACCOUNT" property="bankAccount"/>
+	<result column="BANK" property="bank"/>
+	<result column="EMAIL" property="email"/>
+	<result column="PROFILE_URL" property="profileURL"/>
+	<result column="COUNT_FAIL" property="countFail"/>
+	<result column="VACATION_COUNT" property="vacationCount"/>
+	<result column="AUTH_LEVEL" property="authLevel"/>
+	<result column="SALARY" property="salary"/>
+	<result column="TEAM_CODE" property="teamCode"/>
+	<result column="POSITION_CODE" property="positionCode"/>
+</resultMap>
+
+  <!--  회원 로그인  -->
+  <select id="memberLogin" resultMap="memberResult">
+  	select
+  		user_no, user_id, user_pwd, team_code
+  	from
+  		member
+  	where
+  		user_id = #{ userId }
+  	and
+  		status = 'Y'
+  </select>
   
+  <!-- 회원 정보 조회 -->
+	<select id="selectMember" resultMap="memberResult"> 
+		select USER_NO , USER_NAME , USER_ID , USER_PWD , PHONE , POST_CODE, ADDRESS, DETAIL_ADDRESS, TOTAL_ADDRESS , BANK_ACCOUNT , BANK , EMAIL , PROFILE_URL , COUNT_FAIL , VACATION_COUNT , AUTH_LEVEL , SALARY , TEAM_CODE , POSITION_CODE 
+		from member
+		where 
+		user_id = #{ userId } 
+		and status = 'Y' 
+	</select>
+ 
+	<!-- 회원 아이디 찾기 -->
+	<select id="selectUserId" resultType="String">
+		select user_id
+		from member
+		where
+			user_no = #{ userNo }
+			and status = 'Y'
+	</select>
+	
+	<!-- 회원 랜덤 비밀번호로 수정 -->
+	<select id="updateUserPwd">
+		update
+			member
+		set
+			user_pwd = #{userPwd}
+		where
+			user_id = #{userId}
+		and
+			status = 'Y'	
+	</select>
+
+	<!-- 회원 프로필 이미지 변경 -->
+	<update id="updateProfile">
+		update
+			member
+		set
+			profile_url = #{ profileURL }
+		where
+			user_no = #{ userNo }
+	</update>
+	
+	<!-- 회원 정보수정 -->
+	<update id="updateMember">
+		update
+			member
+		set
+			user_name = #{ userName }
+			, phone = #{ phone }
+			, post_code = #{ postNumber }
+			, address = #{ address }
+			, detail_address = #{ detailAddress }
+			, total_address = #{ totalAddress }
+			, email = #{ email }
+			, bank = #{ bank }
+			, bank_account = #{ bankAccount }
+			, modify_date = sysdate
+			, modify_user_no = #{ userNo }
+		where
+			user_no = #{ userNo }
+	</update>
+ <!-- ================== 이예찬 ========================== -->
+ <!-- 이예찬 : Member 캘린더 위의 동료 선택 창에 필요한 데이터 조회 쿼리 -->
+	<select id="selectTeamPeer"
+	resultMap="memberResult">
+		select 
+     USER_NO
+     , USER_NAME
+     , PROFILE_URL
+     , (select code_name from tb_group where group_code = 'POSI01' and code = member.position_code) position
+		from Member
+		join tb_group on (code = team_code)
+		where Member.status = 'Y'
+		and team_code = #{teamCode}
+		and group_code = 'DEPT01'
+	</select>
+ <!-- ================== 이예찬 ========================== -->
+ 
 </mapper>
