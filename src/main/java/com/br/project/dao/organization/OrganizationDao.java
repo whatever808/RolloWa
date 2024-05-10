@@ -42,5 +42,9 @@ public class OrganizationDao {
 		return sqlSessionTemplate.selectList("organizationMapper.selectDept");
 	}
 
+	public List<GroupDto> selectTeam() {
+		return sqlSessionTemplate.selectList("organizationMapper.selectTeam");
+	}
+
 	
 }

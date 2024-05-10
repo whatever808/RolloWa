@@ -120,10 +120,10 @@
 	                <!-- 검색 메뉴 1 : 부서명-->
 	                <th>부서명</th>
 	                <td>
-	                    <select id="department" name="department" class="form-control">
+	                    <select id="dept" name="dept" class="form-control">
 	                        <option value="전체 부서">전체 부서</option>
-	                        <c:forEach var="d" items="dept">
-		                        <option value="${d.dept}">${ d.dept }</option>
+	                        <c:forEach var="d" items="${ dept }">
+		                        <option value="${d.codeName}">${d.codeName}</option>
 	                        </c:forEach>
 	                    </select>
 	                </td>
@@ -139,9 +139,9 @@
 	                <td>
 	                    <select name="team" id="team" class="form-control">
 	                        <option value="전체 팀">전체 팀</option>
-	                        <option value="1팀">1팀</option>
-	                        <option value="2팀">2팀</option>
-	                        <option value="3팀">3팀</option>
+	                        <c:forEach var="t" items="${ team }">
+		                        <option value="${t.codeName}">${t.codeName}</option>
+	                        </c:forEach>
 	                    </select>
 	                </td>
 	                <!-- 검색 메뉴 4 : 이름 -->
@@ -160,6 +160,28 @@
 	            </tr>
 	        </table>
 	    </form>
+	    
+	    <!-- 스크립트 작성중 -->
+	    <script>
+		    document.getElementById('dept').addEventListener('change', function() {
+		        let codeName = this.value;
+		        console.log("codeName: ", codeName);
+		        
+		        $.ajax({
+		            url: "${contextPath}/orginfo/empSearch.do",
+		            type: "post",
+		            data: { codeName: codeName },
+		            success: function(result) {
+		                console.log("결과값 : ", result);
+		            },
+		            error: function(result) {
+		                console.log("실패");
+		            }
+		        });
+		        
+		    });
+	    </script>
+	    
 	
 	    <script>
 	        /* 전화번호 : 숫자만 입력되고 나머지 글자는 공백으로 변환 */

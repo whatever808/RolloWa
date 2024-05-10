@@ -2,11 +2,11 @@ package com.br.project.controller.organization;
 
 import java.util.List;
 
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.br.project.dto.common.GroupDto;
@@ -36,28 +36,28 @@ public class OrganizationInfoController {
 	}
 	
 	// 1.2 직원검색
-	@GetMapping("/empSearch.do")
-	public ModelAndView list(@RequestParam(value="page", defaultValue="1")
-					int currentPage, ModelAndView mv) {
+	@RequestMapping(value = "/empSearch.do")
+	public ModelAndView list(@RequestParam(value = "page", defaultValue= "1") int currentPage,
+							 @RequestParam(value = "codeName", required = false) String codeName, 
+							 ModelAndView mv ){
+					
 		
 		int listCount = organizationService.selectOrganizationListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
 		List<MemberDto> list = organizationService.selectOrganizationList(pi);
-		
+		List<GroupDto> dept = organizationService.selectDept();
+		List<GroupDto> team = organizationService.selectTeam(codeName);
+				
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .addObject("listCount", listCount)
+		  .addObject("dept", dept)
+		  .addObject("team", team)
 		  .setViewName("organization/empSearch");
 		
 		return mv;
 	}
 	
-	// 1.2 부서조회
-	@GetMapping("/dept")
-    public List<GroupDto> getDept(){
-        return organizationService.getDept();
-    }
-
 	
 	// 1.3 조직관리(관리자 전용)
 	@GetMapping("/orgManager.page")

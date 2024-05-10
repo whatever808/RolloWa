@@ -29,8 +29,12 @@ public class OrganizationService {
 		return organizationDao.selectOrganizationList(pi);
 	}
 
-	public List<GroupDto> getDept() {
+	public List<GroupDto> selectDept() {
 		return organizationDao.selectDept();
+	}
+
+	public List<GroupDto> selectTeam(String codeName) {
+		return organizationDao.selectTeam();
 	}
 
 }

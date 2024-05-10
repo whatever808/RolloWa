@@ -30,7 +30,6 @@
 		<result column="team" property="team" />
 		<result column="posi" property="posi" />
 		
-		
 		<collection property="groupList" ofType="GroupDto">
 			<result column="group_code" property="groupCode"/>
 			<result column="code" property="code"/>
@@ -66,13 +65,23 @@
 	</select>
 	
 	<!-- 부서 조회 -->
-	<select id="selectDept" resultMap="memberResult">
-		SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'DEPT%'
+	<select id="selectDept" resultType="GroupDto">
+		SELECT CODE_NAME "codeName" 
+		  FROM TB_GROUP
+		 WHERE GROUP_CODE LIKE 'DEPT%'
 	</select>
 	
 	<!-- 팀 조회 -->
 	<select id="selectTeam" resultMap="memberResult">
-		SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'TEAM%'
+		SELECT CODE_NAME
+		  FROM TB_GROUP
+		 WHERE GROUP_CODE LIKE 'TEAM%'
+    	   AND UPPER_CODE
+			   IN (SELECT CODE
+                     FROM TB_GROUP
+                    WHERE GROUP_CODE LIKE 'DEPT%'
+                      AND CODE_NAME LIKE #{CODENAME})
+                        
 	</select>
 	
 	
