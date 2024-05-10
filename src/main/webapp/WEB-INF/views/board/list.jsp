@@ -6,7 +6,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>게시글 목록</title>
+	<title>공지사항</title>
 	
 	<!-- 게시글 목록페이지 스타일 -->
 	<link href="${ contextPath }/resources/css/board/list.css" rel="stylesheet" />
@@ -19,15 +19,15 @@
 	 <!-- content 추가 -->
 	 <div class="content p-5">
 	
-	     <h1 class="page-title">게시글 목록</h1>
+	     <h1 class="page-title">공지사항</h1>
 	
 		 <!-- about category start  -->
 	     <div id="filter-category">
 	     	 <!-- board category start -->
 		     <select id="category" name="category" class="board-category form-select" onchange="categoryChange(this);" style="width:200px;">
-		         <option value="">전체게시글</option>
-		         <option value="normal">일반게시글</option>
-		         <option value="department">부서게시글</option>
+		         <option value="">전체공지사항</option>
+		         <option value="normal">일반공지사항</option>
+		         <option value="department">부서공지사항</option>
 		     </select>
 		     <!-- board category end -->
 		     
@@ -169,9 +169,6 @@
 
 
 </body>
-
-<!-- 게시글 목록페이지 스크립트 -->
-<script src="${ contextPath }/resources/js/board/list.js"></script>
 
 <script>
 	//페이지 로드 즉시 실행되어야할 functions ===========================================================================
