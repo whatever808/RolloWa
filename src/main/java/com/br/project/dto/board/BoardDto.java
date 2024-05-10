@@ -25,12 +25,12 @@ public class BoardDto {
 	private String modifyEmp;
 	private String registDate;
 	private String modifyDate;
-	private String boardTitle;
-	private String boardContent;
+	private String title;
+	private String content;
 	private String profileURL;
 	private int readCount;
 	private String status;
-	private String boardCategory;
+	private String category;
 	private int attachmentYN;
 	private List<AttachmentDto> attachmentList;
 	private List<GroupDto> departmentList;

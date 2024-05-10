@@ -15,8 +15,8 @@ import lombok.ToString;
 @ToString
 public class GroupDto {
 
-	private String groupNo;
 	private String groupCode;
+	private String code;
 	private String codeName;
 	private Date registDate;
 	private Date modifyDate;

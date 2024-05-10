@@ -9,11 +9,11 @@
 		<result 		column="modify_emp" 		property="modifyEmp" />
 		<result 		column="regist_date" 		property="registDate" />
 		<result 		column="modify_date" 		property="modifyDate" />
-		<result 		column="board_title" 		property="boardTitle" />
-		<result 		column="board_content" 	property="boardContent" />
+		<result 		column="title" 					property="title" />
+		<result 		column="content" 				property="content" />
 		<result 		column="read_count" 		property="readCount" />
 		<result 		column="status"					property="status" />
-		<result 		column="board_category" property="boardCategory" />
+		<result 		column="category" 			property="category" />
 		<result 		column="attachment_yn"	property="attachmentYN" />
 		<result			column="profile_url"		property="profileURL" />
 		<collection ofType="AttachmentDto" 	property="attachmentList">
@@ -26,19 +26,6 @@
 			<result 	column="ref_type" 			property="refType" />
 			<result 	column="ref_no" 				property="refNo" />
 		</collection>
-		<!--  
-		<collection	ofType="GroupDto" 			property="departmentList">
-			<id				column="group_no" 			property="groupNo" />
-			<result 	column="group_code"			property="groupCode" />
-			<result 	column="code_name"			property="codeName" />
-			<result 	column="regist_date"		property="registDate" />
-			<result 	column="modify_date"		property="modifyDate" />
-			<result 	column="status"					property="status" />
-			<result 	column="regist_emp"			property="registEmp" />
-			<result 	column="modify_emp"			property="modifyEmp" />
-			<result 	column="upper_code"			property="upperCode" />
-		</collection>
-		-->
 	</resultMap>
 
 
@@ -51,31 +38,33 @@
 		<if test="category != null">
 			<choose>
 				<when test="category.equals('normal')">
-					and board_category is null
+					and category is null
 				</when>
-				<when test="category.equals('department') and department.equals('all')">
-					and board_category is not null
+				<when test="category.equals('department') and department.equals('')">
+					and category is not null
 				</when>
-				<when test="category.equals('department') and !department.equals('all')">
-					and board_category = #{department}
+				<when test="category.equals('department') and !department.equals('')">
+					and category = #{department}
 				</when>
 			</choose>
 		</if>
 		<if test="condition != null and keyword != null">
 			<choose>
-				<when test="condition.equals('all') and !keyword.equals('')">
-					and board_title like 	 '%' || #{keyword} || '%'
-					 or board_content like '%' || #{keyword} || '%'
-					 or user_name like 		 '%' || #{keyword} || '%'
+				<when test="(condition.equals('') or condition.equals('all')) and !keyword.equals('')">
+					and 
+							(title like 	 		'%' || #{keyword} || '%'
+					 		 or content like 		'%' || #{keyword} || '%'
+					 		 or user_name like 		'%' || #{keyword} || '%'
+					 		 )
 				</when>
 				<when test="condition.equals('title') and !keyword.equals('')">
-					and board_title like 	 '%' || #{keyword} || '%'
+					and title like 	 				 '%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('content') and !keyword.equals('')">
-					and board_content like '%' || #{keyword} || '%'
+					and content like 			 	 '%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('writer') and !keyword.equals('')">
-					and user_name like 		 '%' || #{keyword} || '%'
+					and user_name like 		 		 '%' || #{keyword} || '%'
 				</when>
 			</choose>
 		</if>
@@ -85,55 +74,57 @@
 	<select id="selectBoardList" parameterType="map" resultMap="boardResultMap">
 		select
 					 board_no
-					,board_title
+					,title
 					,profile_url
 					,user_name 			"modify_emp"
 					,to_char(tb_board.modify_date, 'YYYY-MM-DD') "modify_date"
 					,read_count
-					,code_name 		"board_category"
+					,code_name 			"category"
 					,(
 						 select count(*) totalAttachments
 						   from attachment
 						  where status 		= 'Y'
-						    and ref_type 	= 'BO'
+						    and ref_type 	= 'BD'
 						    and ref_no 		= tb_board.board_no
 						) "attachment_yn"
 			from tb_board
 			left outer join member     on (user_no = regist_emp)
 			left outer join tb_group   on (
-                                 		 group_no = 'DEPT01' 
-                                 		 and group_code = board_category
+                                 		 group_code = 'DEPT01' 
+                                 		 and code	  = category
                                  		 )
 			left outer join attachment on (ref_no = board_no)
      where tb_board.status = 'Y'  
      <if test="category != null">
 			<choose>
 				<when test="category.equals('normal')">
-					and board_category is null
+					and category is null
 				</when>
-				<when test="category.equals('department') and department.equals('all')">
-					and board_category is not null
+				<when test="category.equals('department') and department.equals('')">
+					and category is not null
 				</when>
-				<when test="category.equals('department') and !department.equals('all')">
-					and board_category = #{department}
+				<when test="category.equals('department') and !department.equals('')">
+					and category = #{department}
 				</when>
 			</choose>
 		</if>
 		<if test="condition != null and keyword != null">
 			<choose>
-				<when test="condition.equals('all') and !keyword.equals('')">
-					and board_title like 	 '%' || #{keyword} || '%'
-					 or board_content like '%' || #{keyword} || '%'
-					 or user_name like 		 '%' || #{keyword} || '%'
+				<when test="(condition.equals('') or condition.equals('all')) and !keyword.equals('')">
+					and 
+							(title like 	 		'%' || #{keyword} || '%'
+					 		 or content like 		'%' || #{keyword} || '%'
+					 		 or user_name like 		'%' || #{keyword} || '%'
+					 		 )
 				</when>
 				<when test="condition.equals('title') and !keyword.equals('')">
-					and board_title like 	 '%' || #{keyword} || '%'
+					and title like 	 				'%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('content') and !keyword.equals('')">
-					and board_content like '%' || #{keyword} || '%'
+					and content like 				'%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('writer') and !keyword.equals('')">
-					and user_name like 		 '%' || #{keyword} || '%'
+					and user_name like 				'%' || #{keyword} || '%'
 				</when>
 			</choose>
 		</if>
@@ -148,18 +139,18 @@
 					   board_no
 					  ,regist_emp
 					  ,modify_emp
-					  ,board_title
-					  ,board_content
-					  ,board_category
+					  ,title
+					  ,content
+					  ,category
 					 )
 		values 
 					(
 					  seq_bno.nextval
 					 ,#{registEmp}
 					 ,#{modifyEmp}
-					 ,#{boardTitle}
-					 ,#{boardContent}
-					 ,#{boardCategory}
+					 ,#{title}
+					 ,#{content}
+					 ,#{category}
 					)
 	</insert>
 	
