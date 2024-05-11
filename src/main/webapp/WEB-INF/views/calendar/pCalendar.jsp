@@ -113,14 +113,14 @@
 		<div style="display: flex; justify-content: space-between; align-items: center">
 			<div class="jua-regular">Category</div>
 			
-<!-- 			<div
+			<div
 				class="pretty p-default p-round p-smooth font-size20 privateArea"
 				id="privateName">
 				<input type="checkbox" name="calSort" value="P">
 				<div class="state p-danger">
 					<label class="jua-regular">private</label>
 				</div>
-			</div>  -->
+			</div>  
 
 		</div>
 		
@@ -266,30 +266,30 @@
 			document.addEventListener('DOMContentLoaded', function() {
 					var calendarEl = document.getElementById('calendar');
 					var calendar = new FullCalendar.Calendar(calendarEl, {
-							initialView: 'dayGridMonth',
-							locale: 'ko',
-							customButtons: {
-								 enrollButton:{
-								 text: '일정 등록',
-								 click: function(){
-								   location.href="${path}/calendar/calEnroll.page";
-								   }
-								 }
-							 },
-							buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주',},
-							headerToolbar:{start: 'prev today enrollButton',center: 'title',end: 'multiMonthYear,dayGridMonth,timeGridWeek next'},
-							views:{year: {titleFormat:{year: '2-digit'},multiMonthMaxColumns: 1},
-								  	month:{titleFormat:{year: '2-digit', month: 'short'}},
-										week: {titleFormat:{year: '2-digit'}},
-										day: {titleFormat:{month: 'short',day:'2-digit'}}},
-							buttonIcons: false,
-							navLinks: true,
-							slotMinTime: "06:00:00",
-							timeZone: 'Asia/Seoul',
-							eventClick:function(info){
-			     	 		console.log(info.event.extendedProps.extendeProps);
-						   // console.log($('input[name=groupCode]'));
-				     	 	$(document).on('opening', '#cal_modal', function (e) {
+						initialView: 'dayGridMonth',
+						locale: 'ko',
+						customButtons: {
+							 enrollButton:{text: '일정 등록',click: function(){location.href="${path}/calendar/calEnroll.page";}}
+						},
+						buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주'
+						},
+						headerToolbar:{start: 'prev today enrollButton',
+									   center: 'title',
+									   end: 'multiMonthYear,dayGridMonth,timeGridWeek next'
+					    },
+						views:{year: {titleFormat:{year: '2-digit'}, multiMonthMaxColumns: 1},
+						  	   month:{titleFormat:{year: '2-digit', month: 'short'} },
+							   week: {titleFormat:{year: '2-digit'} },
+							   day:  {titleFormat:{month: 'short', day:'2-digit'}}
+						},
+						buttonIcons: false,
+						navLinks: true,
+						slotMinTime: "06:00:00",
+						timeZone: 'Asia/Seoul',
+						eventClick:function(info){	
+							//console.log(info.event.extendedProps.extendeProps);
+							
+							$(document).on('opening', '#cal_modal', function (e) {
 							    const extend = info.event.extendedProps.extendeProps;
 							    $('#color-style').val(info.event.backgroundColor);
 							    $('#currentDate1').val(info.event.startStr.slice(0,10));
@@ -299,56 +299,76 @@
 							    $('#cal_modal').find('.content-text-area').val(extend.content);
 							    $('#cal_modal').find('input[name=place]').val(extend.place);
 							    $('input[name=calTitle]').val(extend.caltitle);
-									if(extend.calSort == 'P'){
-										$('#cal_modal').find('input[name=calSort]').attr('checked', true);										
-									}
+							    
+								if(extend.calSort == 'P'){
+									$('#cal_modal').find('input[name=calSort]').attr('checked', true);										
+								}else{
 									const $cate = $('input[name=groupCode]');
 									for (let i = 0; i<$cate.length; i++){
 										if($cate[i].value == extend.groupCode){
 											$cate[i].checked = true;
 										}
-									}
+									};
+								}
+								
+								$('input[name=coworker]').each(function(){
+			                        $(this).prop('checked', false);
+			                    });
+									
+								const sortArr = extend.cowoker.split(",");
+								sortArr.forEach(s => {
+									$('input[name=coworker]').each(function() {
+										if ($(this).val() == s) {
+											 $(this).prop('checked', true);
+										}
+									  });
 								});
+										
+							}); //ismodal open function
+							
+					/* 		$(document).on('closing', '#cal_modal', function (e) {
+								$('input[name=coworker]').each(function(){
+			                        $(this).prop('checked', false);
+			                    });
+							});//ismodal closing function */
 				     	 	
 				     	 	$('#cal_modal').iziModal('setSubtitle', info.event.id);  
 				     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
-				      	$('#cal_modal').iziModal('open');
-							},
-							editable: true,
-							eventMouseEnter:function(info){
-									info.el.style.transform = 'scale(1.05)';
-									info.el.style.cursor = 'pointer';
-							},
-							eventMouseLeave:function(info){
-									info.el.style.transform = '';
-							},
-							events:[
-								<c:forEach var="c" items="${list}">
-									{
-										id:			'${c.calNO}',
-										title: 	'[부서]'+'휴가종류',
-										start: 	'${c.startDate }',
-										end: 		'${c.endDate }',
-										color: 	'${c.color }',
-										extendeProps:{
-											content:  '${c.calContent}',
-											caltitle: 	'${c.calTitle }',
-											place: 	  '${c.place}',
-											calSort:  '${c.calSort}',
-											groupCode: '${c.groupCode}',
-											cowoker: 		'1050'										
-										}
-									},
-								</c:forEach>
-							]
-						});
+				      		$('#cal_modal').iziModal('open');
+						},// event click
+						eventMouseEnter:function(info){
+							info.el.style.transform = 'scale(1.05)';
+							info.el.style.cursor = 'pointer';
+						},
+						eventMouseLeave:function(info){
+							info.el.style.transform = '';
+						},	
+						events:[
+							<c:forEach var="c" items="${list}">
+								{
+									id:			'${c.calNO}',
+									title: 		'${c.group.upperCode}'+'${c.group.codeName}',
+									start: 		'${c.startDate }',
+									end: 		'${c.endDate }',
+									color: 		'${c.color }',
+									extendeProps:{
+										content:  	'${c.calContent}',
+										caltitle: 	'${c.calTitle }',
+										place: 	  	'${c.place}',
+										calSort:  	'${c.calSort}',
+										groupCode: 	'${c.groupCode}',
+										cowoker: 	'<c:forEach var="co" items="${c.coworker}">${co.userNo},</c:forEach>'								
+									}
+								},
+							</c:forEach>
+						]// event end
+					});
 					calendar.render();
 				});	
 
 	      </script>
 		</div>
 	</div>
-	
 	<!-- 모달 스크립트문 -->
 <script>
      $('#cal_modal').iziModal({
@@ -358,8 +378,8 @@
      padding: '15px',
      radius: 10, 
      focusInput:	true,
-     restoreDefaultContent: false, 
-	  }); 
+     restoreDefaultContent: true, 
+	  });      
 </script>
 	
 	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>

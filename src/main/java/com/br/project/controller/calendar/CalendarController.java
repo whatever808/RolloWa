@@ -40,13 +40,13 @@ public class CalendarController {
 		MemberDto member = (MemberDto)session.getAttribute("loginUser");
 		
 //		String teamCode = member.getTeamCode();
-		String teamCode = "B";
+		String teamCode = "A";
 		
 		List<MemberDto> teams = calService.selectTeamPeer(teamCode);
 		
 		for(int i =0; i<teams.size(); i++) {
 			MemberDto m = teams.get(i);
-			if(m.getUserNo() == 1055) {
+			if(m.getUserNo() == 1051) {
 				teams.add(0, teams.remove(i));
 			}
 		}
@@ -70,7 +70,30 @@ public class CalendarController {
 	 * @author dpcks
 	 */
 	@GetMapping("/calEnroll.page")
-	public void moveEnroll() {}
+	public ModelAndView moveEnroll(HttpSession session, ModelAndView mv) {
+		
+		MemberDto member = (MemberDto)session.getAttribute("loginUser");
+		
+//		String teamCode = member.getTeamCode();
+		String teamCode = "A";
+		
+		List<MemberDto> teams = calService.selectTeamPeer(teamCode);
+		
+		for(int i =0; i<teams.size(); i++) {
+			MemberDto m = teams.get(i);
+			if(m.getUserNo() == 1051) {
+				teams.add(0, teams.remove(i));
+			}
+		}
+		
+		List<GroupDto> group = dService.selectDepartmentList("CALD01");
+		
+		mv.addObject("teams", teams)
+		.addObject("group", group)
+		.setViewName("calendar/calEnroll");
+		
+		return mv;
+	}
 	
 	/**
 	 * 일정 등록 페이지에서 전달 받은 객체, 데이터를 형 변환을 해서
@@ -84,20 +107,26 @@ public class CalendarController {
 	@PostMapping("/calEnroll.do")
 	public ModelAndView insertCal(CalendarDto calendar
 							, String[] date, String[] time
+							, HttpSession session
 							, ModelAndView mv) {
-//		log.debug("data == {}", calendar);
 		if(calendar.getCalSort() != "P") {
 			calendar.setCalSort("D");			
 		}
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
 		
+		MemberDto member = (MemberDto)session.getAttribute("loginUser");
+//		calendar.setEmp(String.valueOf(member.getUserNo()));
+		calendar.setEmp("1051");
+		
+		log.debug("data == {}", calendar);
+		
 		int result = calService.insertCal(calendar);
 		
 		if(result > 0 ) {
-			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("calendar/pCalendar.page");
+			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("redirect:pCalendar.page");
 		}else {
-			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("calendar/calEnroll.page");
+			mv.addObject("alertMsg", "다시 시도해 주세요.").setViewName("redirect:calEnroll.page");
 		}
 		return mv;
 	}
@@ -111,11 +140,10 @@ public class CalendarController {
 	 */
 	@PostMapping("calUpdate.do")
 	public String calUpdate(CalendarDto calendar,
-							@RequestParam(value="calSort", defaultValue="D")String calSort,
 							String[] date, String[] time) {
-		calendar.setCalSort(calSort);
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
+		log.debug("chekc {}", calendar);
 		
 		//int result = calService.calUpdate(calendar);
 		

@@ -28,6 +28,8 @@ public class CalendarDto {
 	private String place;
 	private String color;
 	private String status;
+	private String emp;
 	private String groupCode;
+	private GroupDto group;
 	private List<CoworkerDto> coworker;
 }

@@ -34,7 +34,7 @@ public class CalendarService {
 		int outcome = 1;
 		List<CoworkerDto> coArr = calendar.getCoworker();
 		
-		if(coArr != null) {
+		if(!coArr.isEmpty()) {
 			for(CoworkerDto w : coArr) {
 				outcome *= calDao.insertCoworker(w.getUserNo());							
 			}

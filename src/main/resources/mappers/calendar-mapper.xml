@@ -11,9 +11,12 @@
 	<result column="END_DATE" property="endDate" />
 	<result column="CAL_PLACE" property="place" />
 	<result column="CAL_COLOR" property="color" />
-	<result column="STATUS" property="status" />
 	<result column="GROUP_CODE" property="groupCode" />
-	<collection property="coworker" ofType="CoworkerDto">
+	<collection ofType="GroupDto" property="group" >
+		<result column="CODE_NAME" property="codeName" />
+		<result column="UPPER_CODE" property="upperCode" />
+	</collection>
+	<collection ofType="CoworkerDto" property="coworker">
 		<result column="USER_NO" property="userNo"/>
 	</collection>	
 </resultMap>
@@ -29,13 +32,19 @@ select
     , CAL_PLACE
     , CAL_COLOR
     , calender.GROUP_CODE
+    , code_name
+    , upper_code
     , user_NO
 from 
 	calender
+join 
+     tb_group on ( calender.GROUP_CODE = code ) 
 left join 
      co_worker using (cal_no)      
 where 
 	cal_sort = 'D'
+and 
+     tb_group.GROUP_CODE = 'CALD01'
 and 
 	calender.status = 'Y'
 <![CDATA[
@@ -53,6 +62,7 @@ and
 		calender
 	(
 		CAL_NO
+		,CAL_SORT
 		,CAL_TITLE
 		,CAL_CONTENT
 		,START_DATE
@@ -63,14 +73,15 @@ and
 		,GROUP_CODE
 	) values ( 
 		SEQ_CALNO.nextval
+		,#{calSort}
 		,#{calTitle}
 		,#{calContent}
 		,to_date(#{startDate} 	, 'YYYY-MM-DD HH24:MI:SS')
 		,to_date(#{endDate}		, 'YYYY-MM-DD HH24:MI:SS')
 		,#{color}
-		,1 <!-- REGIST_EMP -->
-		,1 <!-- MODIFY_EMP -->
-		,1 <!-- GROUP_CODE -->
+		,#{emp}
+		,#{emp}
+		,#{groupCode}
 		)
 </insert>
 <!-- 일정 별 동행자 추가 쿼리 -->
@@ -99,7 +110,7 @@ and
 		, END_DATE 		= #{endDate}
 		, CAL_COLOR 	= #{color}
 		, GROUP_CODE 	= #{groupCode}
-		, MODIFY_EMP 	= SYSDATE
+		, MODIFY_EMP 	= #{emp}
 	where
 		CAL_NO = #{calNO}
 </update>
