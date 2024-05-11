@@ -239,7 +239,6 @@
 			ajaxBoardList();
 		}
 	}
-	
 	// 검색값 설정값 초기화
 	$("#reset-search").on("click", function(){
 		// 1) 선택값 모두 초기화

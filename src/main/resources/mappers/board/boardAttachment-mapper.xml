@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="boardAttachmentMapper">
+
+	<resultMap 	 	id="attachmentResultMap"	type="AttachmentDto">
+		<id 	  column="file_no" 					property="fileNo" />
+		<result column="origin_name" 				property="originName" />
+		<result column="enroll_date" 				property="enrollDate" />
+		<result column="modify_name" 				property="modifyName" />
+		<result column="attach_path" 				property="attachPath" />
+		<result column="status" 					property="status" />
+		<result column="ref_type" 					property="refType" />
+		<result column="ref_no" 					property="refNo" />
+	</resultMap>
+
+	<!-- 첨부파일 등록 -->
+	<insert id="insertAttachment" parameterType="AttachmentDto">
+		insert
+			into attachment
+					 (
+					   file_no
+					  ,origin_name
+					  ,modify_name
+					  ,attach_path
+					  ,ref_type
+					  ,ref_no
+					 )
+		values 
+					(
+					  seq_ano.nextval
+					 ,#{originName}
+					 ,#{modifyName}
+					 ,#{attachPath}
+					 ,#{refType}
+					 <choose>
+					 	<when test="refNo != null">
+					 		,#{refNo}
+					 	</when>
+					 	<otherwise>
+					 		,seq_bdno.currval
+					 	</otherwise>
+					 </choose>
+					)
+	</insert>
+	
+	
+</mapper>
