@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.br.project.dto.attendance.AttendanceDto;
 import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.service.attendance.AttendanceService;
 import com.br.project.service.organizaion.OrganizationService;
 import com.br.project.util.PagingUtil;
 
@@ -39,18 +41,19 @@ public class OrganizationInfoController {
 	}	
 	
 	// 1.2 직원검색
+	@ResponseBody
 	@RequestMapping(value = "/empSearch.do")
 	public ModelAndView list(@RequestParam(value = "page", defaultValue= "1") int currentPage,
 							 @RequestParam(value = "codeName", required = false) String codeName, 
 							 ModelAndView mv ){
 					
-		
 		int listCount = organizationService.selectOrganizationListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
 		List<MemberDto> list = organizationService.selectOrganizationList(pi);
 		List<GroupDto> dept = organizationService.selectDept();
 		List<GroupDto> team = organizationService.selectTeam(codeName);
-				
+
+		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .addObject("listCount", listCount)
@@ -72,5 +75,6 @@ public class OrganizationInfoController {
 		
 		return "organization/orgManager";
 	}
+	
 
 }

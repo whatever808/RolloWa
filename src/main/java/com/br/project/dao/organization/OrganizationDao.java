@@ -18,11 +18,6 @@ public class OrganizationDao {
 	
 	private final SqlSessionTemplate sqlSessionTemplate;
 
-	public int selectDepartment(int result) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	public int selectOrganizationListCount() {
 		return sqlSessionTemplate.selectOne("organizationMapper.selectOrganizationListCount");
 	}

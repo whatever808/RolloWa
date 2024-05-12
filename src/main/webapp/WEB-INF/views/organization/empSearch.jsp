@@ -113,13 +113,14 @@
 	    <hr>
 	    
 	    <!-- ------------ -->
-	    <form id="search_Form" action="검색 처리 페이지 주소 입력" method="GET">
+	    <form id="search_Form" action="${ contextPath }/orginfo/empSearch.do" method="GET">
 	        <table class="table table_search">
 	
 	            <tr class="tr_search">
 	                <!-- 검색 메뉴 1 : 부서명-->
-	                <th>부서명</th>
+                	<th>부서명</th>
 	                <td>
+	                	
 	                    <select id="dept" name="dept" class="form-control">
 	                        <option value="전체 부서">전체 부서</option>
 	                        <c:forEach var="d" items="${ dept }">
@@ -163,15 +164,31 @@
 	    
 	    <!-- 스크립트 작성중 -->
 	    <script>
-    $(document).ready(function() {
-        $('#dept').change(function() {
-            let codeName = $(this).val();
-            console.log("codeName: ", codeName);
-            
-            
-        });
-    });
-</script>
+		    $(document).ready(function() {
+		        $('#dept').change(function() {
+		            let selectDept = $(this).val();
+		            console.log("선택한 부서명: ", selectDept);
+		            
+		            $.ajax({
+		                url: '${contextPath}/orginfo/empSearch.do', // 중복된 부분을 한 번만 포함
+		                type: 'GET',
+		                data: { codeName: selectDept },
+		                dataType: 'json',
+		                success: function(data){
+		                    $('#team').empty();
+		                    $('#team').append('<option value="전체">전체 팀</option>'); // 기본 옵션 추가
+		                    $.each(data, function(index, team) {
+		                        $('#team').append('<option value="' + team.codeName + '">' + team.codeName + '</option>');
+		                    });
+		                    console.log("선택한 부서의 팀 : ", data);
+		                },
+		                error: function(xhr, status, error) {
+		                    console.error('통신 실패', error);
+		                }
+		            });
+		        });
+		    });
+		</script>
 	    
 	
 	    <script>
