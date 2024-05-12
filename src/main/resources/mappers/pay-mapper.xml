@@ -366,13 +366,15 @@
    <select id="allUserCount" resultType="_int">
    		select 
 		     	count(*)
-		from approval A
-		WHERE STATUS = 'Y'
-		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-        and FIRST_APPROVAL = #{userName}
-        or MIDDLE_APPROVAL = #{userName}
-        or FINAL_APPROVAL = #{userName}
+				from approval A
+				WHERE STATUS = 'Y'
+				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+		        and FIRST_APPROVAL = #{userName}
+		        or MIDDLE_APPROVAL = #{userName}
+		        or FINAL_APPROVAL = #{userName}
    </select>
+   
+   
    
    
    <!-- 로그인한(관리자) 사용자의 전체 결재 리스트 -->
@@ -425,24 +427,106 @@
 	       or MIDDLE_APPROVAL = #{userName}
 	       or FINAL_APPROVAL = #{userName}
 	      	 )
-      <if test="conditions != null and status != null">
-     		<choose>
-     			<when test="status == '전체'">
-     			and PAYMENT_STATUS in ('보통', '긴급')
-     			</when>
-     			<otherwise>
-     			and PAYMENT_STATUS = #{status} 
-     			</otherwise>
-     		</choose>
-     		<choose>
-     			<when test="conditions == '전체'">
-     			and	DOCUMENT_TYPE in ('T','C','B','M','J','G','H','V')
-     			</when>
-     			<otherwise>
-     			and	DOCUMENT_TYPE = #{conditions}
-     			</otherwise>
-     		</choose>
-     	</if>
+				order
+					 by APPROVAL_NO desc
+   </select>
+   
+   
+    <select id="userSelectListCount" resultType="_int">
+	   		select 
+			     		count(*)
+					from approval A
+					WHERE STATUS = 'Y'
+					AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+			        and FIRST_APPROVAL = #{userName}
+			        or MIDDLE_APPROVAL = #{userName}
+			        or FINAL_APPROVAL = #{userName}
+		      <choose>
+						<when test="conditions == '전체'">
+						and DOCUMENT_TYPE IN ('T','C','B','M','J','G','H','V')
+						</when>
+						<otherwise>
+							and DOCUMENT_TYPE = #{conditions}
+						</otherwise>			
+		     	</choose>
+					<choose>
+						<when test="status == '전체'">
+							and PAYMENT_STATUS IN ('보통','긴급')
+						</when>
+						<otherwise>
+							and PAYMENT_STATUS = #{status}
+						</otherwise>
+					</choose>  
+   </select>
+   
+   
+   <!-- 전체수신결재함 conditions, status값이있을때 -->
+   <select id="userSelectList" resultMap="payResult">
+   		select 
+			      APPROVAL_NO
+			    , case when document_type = 'C' then '출장보고서'
+			           when document_type = 'H' then '휴직신청서'
+			           when document_type = 'T' then '퇴직신청서'
+			           when document_type = 'B' then '비품신청서'
+			           when document_type = 'J' then '지출결의서'
+			           when document_type = 'G' then '기안서'
+			           when document_type = 'M' then '매출보고서'
+			      else '휴가신청서'
+				   end document_type
+				   , DOCUMENT_NUMBER
+				   , DEPARTMENT
+				   , PAYMENT_WRITER
+				   , PAYMENT_WRITER_NO
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           END) DOCUMENT_STATUS
+				   ,(SELECT count(*)
+				        FROM SALES_REPORT S
+				      WHERE A.DOCUMENT_NUMBER = S.SALES_NO
+				        AND A.document_type = 'G'
+				        AND S.STATUS = 'Y'
+				    )SALES_STATUS
+				    , (SELECT count(*)
+				        FROM DRAFT_REPORT D
+				        WHERE A.DOCUMENT_NUMBER = D.DRAFT_NO
+				         AND A.document_type = 'J'
+				         AND D.STATUS = 'Y'
+				     ) DRAFT_STATUS
+				    , (SELECT count(*)
+				        FROM BUSINESSTRIP_REPORT B
+				        WHERE A.DOCUMENT_NUMBER = B.BUSINESS_NO
+				        AND A.document_type = 'C'
+				        AND B.STATUS = 'Y'
+				     ) BUSINESSTRIP_STATUS
+				     , to_char(regist_date, 'YYYY-MM-DD') regist_date
+				     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+				     , PAYMENT_STATUS
+				from approval A
+				WHERE STATUS = 'Y'
+				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+	      and( 
+	      		FIRST_APPROVAL = #{userName}
+	       or MIDDLE_APPROVAL = #{userName}
+	       or FINAL_APPROVAL = #{userName}
+	      	 )
+	     <choose>
+					<when test="conditions == '전체'">
+					  and DOCUMENT_TYPE IN ('T','C','B','M','J','G','H','V')
+					</when>
+					<otherwise>
+						and DOCUMENT_TYPE = #{conditions}
+					</otherwise>			
+	     </choose>
+	     
+				<choose>
+					<when test="status == '전체'">
+						and PAYMENT_STATUS IN ('보통','긴급')
+					</when>
+					<otherwise>
+						and PAYMENT_STATUS = #{status}
+					</otherwise>
+				</choose>
 				order
 					 by APPROVAL_NO desc
    </select>

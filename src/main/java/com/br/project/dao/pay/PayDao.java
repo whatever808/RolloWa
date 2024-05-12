@@ -90,7 +90,12 @@ public class PayDao {
 	}
 	
 	public int allUserCount(String userName) {
-		return sqlSessionTemplate.selectOne("payMapper.allUserCount",userName);
+		return sqlSessionTemplate.selectOne("payMapper.allUserCount", userName);
+	}
+	
+	
+	public int userSelectListCount(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.userSelectListCount", map);
 	}
 	
 	public List<PayDto> allUserList(String userName, PageInfoDto pi) {
@@ -136,7 +141,7 @@ public class PayDao {
 	//로그인한 유저가 승인자일때 전체결재리스트
 	public List<PayDto> userSelectList(Map<String, Object> map, PageInfoDto pi){
 		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
-		return sqlSessionTemplate.selectList("payMapper.allUserList", map, rowBounds);
+		return sqlSessionTemplate.selectList("payMapper.userSelectList", map, rowBounds);
 	}
 	
 }

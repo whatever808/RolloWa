@@ -68,7 +68,7 @@ public class PayController {
 		model.addAttribute("mdCount", String.valueOf(mdCount));
 		model.addAttribute("slistCount", String.valueOf(slistCount));
 		model.addAttribute("ulistCount", String.valueOf(ulistCount));
-		model.addAttribute("Allpaymain", "Allpaymain");
+		model.addAttribute("paymain", "paymain");
 		
 		
 		
@@ -219,6 +219,7 @@ public class PayController {
 		
 		//로그인한 유저 승인자결재함목록갯수
 		int ulistCount = payServiceImpl.allUserCount(userName);
+		log.debug("ulistCount : {}", ulistCount);
 		
 		PageInfoDto pi = pagingUtil.getPageInfoDto(ulistCount, currentPage, 5, 10);
 		
@@ -543,10 +544,11 @@ public class PayController {
 								, Model model, @RequestParam Map<String, Object> map
 								, HttpSession session) {
 		String userName = (String)((MemberDto)session.getAttribute("loginMember")).getUserName();
-		int ulistCount = payServiceImpl.allUserCount(userName);
-		map.put("userName", userName);
 		
-		PageInfoDto pi = pagingUtil.getPageInfoDto(ulistCount, currenPage, 5, 10);
+		map.put("userName", userName);
+		int userSelectListCount = payServiceImpl.userSelectListCount(map);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(userSelectListCount, currenPage, 5, 10);
 		
 		List<PayDto> list = payServiceImpl.userSelectList(map, pi);
 		
@@ -555,6 +557,7 @@ public class PayController {
 		int listCount = payServiceImpl.selectListCount();
 		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
 		int mdCount = payServiceImpl.moreDateCount(userName);
+		int ulistCount = payServiceImpl.allUserCount(userName);
 		//로그인한 사용자의 결재한 내역 게시글 총갯수
 		int slistCount = payServiceImpl.successListCount(userName);
 		

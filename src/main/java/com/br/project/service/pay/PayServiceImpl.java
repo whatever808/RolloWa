@@ -102,6 +102,10 @@ public class PayServiceImpl {
 		return payDao.allUserCount(userName);
 	}
 	
+	//결재메인페이지 전체수신결재함-카테고리선택 갯수
+	public int userSelectListCount(Map<String, Object> map) {
+		return payDao.userSelectListCount(map);
+	}
 	//결재메인페이지 사용자 결재리스트
 	public List<PayDto> allUserList(String userName, PageInfoDto pi) {
 		return payDao.allUserList(userName, pi);

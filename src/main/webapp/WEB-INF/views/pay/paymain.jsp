@@ -15,8 +15,8 @@
 
 </head>
 <body>
-	<script>
-    <c:if test="${not empty Allpaymain or not empty params}">
+    <c:if test="${not empty paymain or not empty params}">
+			<script>
         function typeSelect() {
             location.href = "${contextPath}/pay/selectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
         };
@@ -29,11 +29,11 @@
                 typeSelect();
             });
         });
+			</script>
     </c:if>
-</script>
   
   
-  <c:if test="${ not  empty userAllList or not empty map}">
+  <c:if test="${ not  empty userAllList or not empty userAllListSelect }">
   	<script>
 	  	function typeSelect(){
 				location.href="${contextPath}/pay/userSelectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
@@ -41,7 +41,6 @@
 			};
 			
 				$(document).ready(function(){
-					
 					$("#selects").change(function(){
 						typeSelect();
 						});
@@ -226,7 +225,6 @@
                         <div id="cen_bottom_rigth">
                             <div id="cen_bottom_search">
                                 <div id="cen_bottom_search_next">
-                                	
                                     <div>
                                         <select name="status" id="statusSelect">
                                         		<option value="전체">전체</option>
@@ -246,9 +244,7 @@
                                             <option value="H">휴직신청서</option>
                                             <option value="V">휴가신청서</option>
                                         </select>
-                                    </div>
-                                
-                                   
+                                    </div>    
                                 </div>
                                 <div id="cen_bottom_search_center">
                                      <form action="${contextPath}/pay/search.do" method="get">
@@ -329,18 +325,7 @@
 													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/selectList.do?page=${pi.currentPage+1}&conditions=${params.conditions}&status=${params.status}">Next</a></li>
 													             </ul>
                                    	</c:when>
-                                   	<c:when test="${ not empty search }">
-                                   		<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage-1}&condition=${search.condition}&keyword=${search.keyword}">Previous</a></li>
-													                
-													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${p}&condition=${search.condition}&keyword=${search.keyword}">${ p }</a></li>
-													                </c:forEach>
-													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage+1}&condition=${search.condition}&keyword=${search.keyword}">Next</a></li>
-													             </ul>
-                                   	</c:when>
-                                   	<c:when test="${ empty user and empty params and empty search}">
+                                   	<c:when test="${ not empty paymain }">
                                    		<ul class="pagination">
 		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${pi.currentPage-1}">Previous</a></li>
 													                
@@ -351,7 +336,7 @@
 													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${pi.currentPage+1}">Next</a></li>
 													             </ul>
                                    	</c:when>
-                                   	<c:when test="${not empty userAllList }">
+                                   	<c:when test="${not empty userAllList}">
                                    		<ul class="pagination">
 		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/allUserlist.do?page=${pi.currentPage-1}">Previous</a></li>
 													                
@@ -362,7 +347,7 @@
 													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/allUserlist.do?page=${pi.currentPage+1}">Next</a></li>
 													             </ul>
                                    	</c:when>
-                                   	<c:when test="${not empty userAllListSelect or not empty map}">
+                                   	<c:when test="${not empty userAllListSelect }">
                                 			<ul class="pagination">
 		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSelectList.do?page=${pi.currentPage-1}&conditions=${map.conditions}&status=${map.status}">Previous</a></li>
 													                
@@ -373,6 +358,17 @@
 													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSelectList.do?page=${pi.currentPage+1}&conditions=${map.conditions}&status=${map.status}">Next</a></li>
 													             </ul>
                                    	</c:when>
+                                   	<c:otherwise>
+                                   		<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage-1}&condition=${search.condition}&keyword=${search.keyword}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${p}&condition=${search.condition}&keyword=${search.keyword}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage+1}&condition=${search.condition}&keyword=${search.keyword}">Next</a></li>
+													             </ul>
+                                   	</c:otherwise>
                                    </c:choose>
                                 </div>
                             </div>
@@ -407,7 +403,6 @@
                 $(this).css("color", "rgb(49, 106, 153)");
             } 
         });
-        
     });
 	</script>
 	
@@ -439,7 +434,7 @@
 			
 			</script>
 		</c:when>
-		<c:when test="${not empty map and not empty userAllListSelect}">
+		<c:when test="${not empty userAllListSelect}">
 				<script>
 					$(document).ready(function(){
 						//카테고리고정
