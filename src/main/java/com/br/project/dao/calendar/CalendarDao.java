@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 public class CalendarDao {
 	private final SqlSessionTemplate sqlSession;
 
-	public List<CalendarDto> selectPCalendar() {
-		return sqlSession.selectList("calMapper.selectPCalendar");
+	public List<CalendarDto> selectPCalendar(Map<String, Object> map) {
+		return sqlSession.selectList("calMapper.selectPCalendar", map);
 	}
 
 	public int insertCal(CalendarDto calendar) {
@@ -48,6 +48,8 @@ public class CalendarDao {
 		return sqlSession.insert("calMapper.reInserCoworker", map);
 	}
 
-
+	public List<String> selectCalNO(String userNo) {
+		return sqlSession.selectList("calMapper.selectCalNO", userNo);
+	}
 	
 }

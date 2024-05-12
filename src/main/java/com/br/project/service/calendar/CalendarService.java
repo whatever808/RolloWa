@@ -1,6 +1,8 @@
 package com.br.project.service.calendar;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -22,8 +24,8 @@ public class CalendarService {
 	 * @author dpcks
 	 * @return
 	 */
-	public List<CalendarDto> selectPCalendar() {
-		return calDao.selectPCalendar();
+	public List<CalendarDto> selectPCalendar(Map<String, Object> map) {
+		return calDao.selectPCalendar(map);
 	}
 
 	/**
@@ -71,5 +73,20 @@ public class CalendarService {
 	 */
 	public List<MemberDto> selectTeamPeer(String teamCode) {
 		return calDao.selectTeamPeer(teamCode);
+	}
+
+	/**
+	 * @param userNo
+	 * @return
+	 */
+	public List<CalendarDto> selectOneMemberCal(String userNo) {
+		
+		List<String> calNoList = calDao.selectCalNO(userNo);
+//		log.debug("calNoList == {}", calNoList);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("calNoList", calNoList);
+
+		return  calDao.selectPCalendar(map);
 	}
 }

@@ -258,12 +258,40 @@
 			<script>
 				$(function(){
 					$(".memebrdiv-area").children().on('click', function(e){
-						console.log($(this).next());
-						console.log($(this).next().val());
-						
 						$.ajax({
-							url
-						})
+							url:'${path}/calendar/oneMemCal.do',
+							type:'post',
+							data:'userNo=' + $(this).next().val(),
+							success:function(event){
+								console.log(event);
+								calendar.remove();
+								$('.calendar-area').append("<div class='calendar'><div>");
+								var calendarEl = document.getElementById('calendar');
+								for(let i= 0; i<event.lenght; i++){
+								calendar.addEventSource(
+									{
+										id:			event[i].calNO,
+										title: 		event[i].group.upperCode + event[i].group.codeName,
+										start: 		event[i].startDate,
+										end: 		event[i].endDate,
+										color: 		event[i].color,
+										extendeProps:{
+											content:  	event[i].calContent,
+											caltitle: 	event[i].calTitle,
+											place: 	  	event[i].place,
+											calSort:  	event[i].calSort,
+											groupCode: 	event[i].groupCode,
+											cowoker: 	event[i].coworker						
+										}
+									},
+								);
+								}// for end
+								calendar.render();
+							},
+							error:function(){
+								console.log('실패');
+							}
+						}); // ajax end
 						
 					});
 				})
@@ -338,12 +366,6 @@
 								});
 										
 							}); //ismodal open function
-							
-					/* 		$(document).on('closing', '#cal_modal', function (e) {
-								$('input[name=coworker]').each(function(){
-			                        $(this).prop('checked', false);
-			                    });
-							});//ismodal closing function */
 				     	 	
 				     	 	$('#cal_modal').iziModal('setSubtitle', info.event.id);  
 				     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  

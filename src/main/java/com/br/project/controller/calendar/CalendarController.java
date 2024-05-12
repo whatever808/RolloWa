@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.br.project.dto.calendar.CalendarDto;
@@ -55,7 +56,7 @@ public class CalendarController {
 		//log.debug("teams {}", teams);
 		List<GroupDto> group = dService.selectDepartmentList("CALD01");
 		//log.debug("group {}", group);		
-		List<CalendarDto> list = calService.selectPCalendar();
+		List<CalendarDto> list = calService.selectPCalendar(null);
 		//log.debug("list = {}", list);
 		
 		mv.addObject("list", list)
@@ -161,6 +162,18 @@ public class CalendarController {
 			mv.addObject("alertMsg", "다시 시도해 주세요.").setViewName("redirect:pCalendar.page");
 		}
 		return mv;
+	}
+	
+	/**
+	 * @param userNo
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value="/oneMemCal.do", produces="application/json")
+	public List<CalendarDto> selectOneMemberCal(String userNo) {
+//		log.debug("userno {}", userNo);
+		
+		return calService.selectOneMemberCal(userNo);
 	}
 	
 

@@ -21,7 +21,8 @@
 	</collection>	
 </resultMap>
 <!-- 개인 및 부서 일정 조회 -->
-<select id="selectPCalendar" resultMap="calResultMap">
+<select id="selectPCalendar" 
+resultMap="calResultMap">
 select
     CAL_NO
     , CAL_SORT
@@ -52,7 +53,15 @@ and
 	Months_between(START_DATE     , sysdate) <= 6
 and 
 	Months_between(end_DATE		, sysdate) >= -6
-]]>    
+]]>
+<if test="calNoList != null">
+    <foreach item="num" collection="calNoList"
+       open="and cal_no in (" separator="," close=")" >
+        #{num}
+    </foreach>
+    order by 
+    	cal_no
+</if>
 </select>
 
 <!-- 갤린더 일정 등록 쿼리 -->
@@ -134,6 +143,11 @@ and
 		, #{userNo}
 	)
 </insert>
-
+<select id="selectCalNO"
+resultType="string">
+	select cal_no
+	from co_worker
+	where user_no = #{userNo}
+</select>
 
 </mapper>
