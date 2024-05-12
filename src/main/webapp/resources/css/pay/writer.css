@@ -17,18 +17,18 @@
 
 #sign_table{
     text-align: center;
-    width: 500px;
+    width: 100%;
     display: flex;
-    justify-content: end;
-    align-items: end;
-    height: 181px;
-    border: 1px solid black;
-    margin-left: 40px;
+    justify-content: center;
+    align-items: CENTER;
+    height: 100%;
+    border: 3px solid WHITE;
+    margin-left: 5px;
 }
 #sign_top{
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     width:1130px;
     margin: auto;
 
@@ -50,7 +50,7 @@ table td{background-color: rgba(250, 250, 250, 0.226);border: 1px solid black;}
 table input{background-color: rgba(250, 250, 250, 0.226);border: 1px solid black;}
 table textarea{background-color: rgba(250, 250, 250, 0.226);border: 1px solid black;}
 
-#signs_s{heigth:auto; width:auto;}
+#signs_s{height:auto; width:auto;}
 
 /*---모달 스타일--------*/
 .m_content_style {

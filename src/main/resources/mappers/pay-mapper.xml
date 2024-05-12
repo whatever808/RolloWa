@@ -75,18 +75,11 @@
 	<select id="selectListCount" resultType="_int">
 		select count(*) count
 			from approval A
-			WHERE STATUS = 'N'
+			WHERE STATUS = 'Y'
 			AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 	</select>
 	
-	<!-- 로그인한 유저 앞으로 온 결재갯수 결재 + 미결재 + 반려-->
-	<select id="userPayCount" resultType="_int">
-		select count(*) count
-			from approval A
-			WHERE STATUS = 'N'
-			AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-	</select>
-
+	
 	<!-- 진행중, 승인완료, 반려 처리된 목록리스트 조회 -->
 	<select id="paymainPage" resultMap="payResult">
 		select 
@@ -130,7 +123,7 @@
 		     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 		     , PAYMENT_STATUS
 		from approval A
-		WHERE STATUS = 'N'
+		WHERE STATUS = 'Y'
 		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 		order
 			 by APPROVAL_NO desc
@@ -138,19 +131,29 @@
 	
 	<!-- 일주일이상 승인완료가 안된 목록 갯수 -->
 	<select id="moreDateCount" resultType="_int">
-			SELECT COUNT(*) count
-		    FROM APPROVAL
-		   where REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-		     AND DOCUMENT_STATUS = 'I'
-         and STATUS = 'N'
+      SELECT COUNT(*) count
+			  FROM APPROVAL A
+			 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
+			   AND DOCUMENT_STATUS = 'I'
+			   AND STATUS = 'Y'
+			    and (
+		            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
+		         or (MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is null)
+		         or (FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is null)
+          		)
 	</select>
 	
-	<!-- 결재한 내역의 목록 갯수 -->
+	<!-- 로그인한 사용자의 결재내역(Y,N,I)의 목록 갯수 -->
 	<select id="successListCount" resultType="_int">
 		select count(*) count
 			from approval A
-			WHERE STATUS = 'N'
-			AND DOCUMENT_STATUS = 'Y'	
+			WHERE STATUS = 'Y'
+		    AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+			   and (
+		            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null)
+		         or (MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null)
+		         or (FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is not null)
+          		)
 	</select>
 	
 	 <!-- 위 커리문에 추가해야될것 
@@ -178,7 +181,7 @@
 	 <select id="searchListCount" resultType="_int">
 		 select count(*)
 				from approval
-				WHERE STATUS = 'N'
+				WHERE STATUS = 'Y'
 				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 				and ${condition} like '%' || #{keyword} || '%'
 	 </select>
@@ -226,7 +229,7 @@
 		     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 		     , PAYMENT_STATUS
 		from approval A
-		WHERE STATUS = 'N'
+		WHERE STATUS = 'Y'
 		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 		and ${condition} like '%' || #{keyword} || '%'
 		order
@@ -237,7 +240,7 @@
 		<select id="slistCount" resultType="_int">
 			select count(*) count
 			  from approval
-			  WHERE STATUS = 'N'
+			  WHERE STATUS = 'Y'
 			  AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 			  <choose>
 					<when test="conditions == '전체'">
@@ -301,7 +304,7 @@
 		     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 		     , PAYMENT_STATUS
 			from approval A
-			WHERE STATUS = 'N'
+			WHERE STATUS = 'Y'
 			AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 			<choose>
 				<when test="conditions == '전체'">
@@ -324,65 +327,39 @@
 			     by APPROVAL_NO desc
 		</select>
 		
-		<!-- 퇴직 테이블 & 휴직테이블
-  	select 
-		        SALES_NO
-		      , START_PERIOD
-		      , LAST_PERIOD
-		      , CONTENT
-		      , R.STATUS
-		      , to_char(REGIST_DATE, 'YYYY-MM-DD') REGIST_DATE
-		      , FIRST_APPROVAL
-		      , MIDDLE_APPROVAL
-		      , FINAL_APPROVAL
-		      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
-		      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
-		      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
-		      , DEPARTMENT
-		      , PAYMENT_STATUS
-		      , ORIGIN_NAME
-		      , MODIFY_NAME
-		      , ATTACH_PATH
-		      , PAYMENT_WRITER
-		from RETIRE_REPORT R
-		join ATTACHMENT C on(C.REF_NO = R.SALES_NO)
-		join approval A on(R.SALES_NO = A.DOCUMENT_NUMBER) 바꾸기(테이블 수정할때)RETIRE_No로!!!
-		where DOCUMENT_TYPE = 'T'  (결재이력공동테이블) 퇴직 | 'H' 휴직
-		and R.STATUS = 'T' 퇴직 | 'H' 휴직
-		and C.STATUS = 'Y' 삭제안한 파일
-		and C.REF_TYPE = '결재' 파일공동테이블 데이터가없음
-		and A.PAYMENT_WRITER = #{};
-		and PAYMENT_NO = #{}
-		and PAYMENT_WRITER_NO = #{}
-   -->
-   
-   <select id="mdetail" resultMap="payResult">
-		  select 
-		        EXPEND_NO
-		      , SALES_DIVISION
-		      , MANAGER
-      		, to_char(TOTAL_SALES, '999,999,999,999') TOTAL_SALES
-		      , ITEM
-		      , QUANTITY
-	  			, to_char(SALES_AMOUNT, '999,999,999,999') SALES_AMOUNT
-		      , to_char(A.REGIST_DATE, 'YYYY-MM-DD') REGIST_DATE
-		      , FIRST_APPROVAL
-		      , MIDDLE_APPROVAL
-		      , FINAL_APPROVAL
-		      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
-		      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
-		      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
-		      , DEPARTMENT
-		      , PAYMENT_STATUS
-		      , PAYMENT_WRITER
-		from EXPENDITURE_REPORT E
-		join approval A on(E.EXPEND_NO = A.DOCUMENT_NUMBER) 
-		where DOCUMENT_TYPE = 'M'
-		and APPROVAL_NO = #{approvalNo}
-		and DOCUMENT_NUMBER = #{documentNo}
-		and A.PAYMENT_WRITER =  #{payWriter}
-		<!--and PAYMENT_WRITER_NO = #{}  꼭해야됨.. 중복되서 여러행이 나옴(기안자의 번호 로그인한 사용자 번호)-->
-   
+		<!-- 매출보고서 상세페이지 -->
+   <select id="expendDetail" resultType="map">
+		   select
+		   				APPROVAL_NO 		    
+			      , EXPEND_NO
+			      , DEPARTMENT
+			      , to_char(A.REGIST_DATE, 'YYYY"년 "MM"월 "DD"일"') REGIST_DATE
+			      , PAYMENT_WRITER
+			      , PAYMENT_WRITER_NO
+			      , PAYMENT_STATUS
+			      , FIRST_APPROVAL
+			      , MIDDLE_APPROVAL
+			      , FINAL_APPROVAL
+			      , DOCUMENT_STATUS
+			      , CANCELLATION_CONTENT
+			      , to_char(FIRST_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') FIRST_APPROVAL_DATE
+			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') MIDDLE_APPROVAL_DATE
+			      , to_char(FINAL_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') FINAL_APPROVAL_DATE
+			      , SALES_DIVISION
+			      , MANAGER_NAME
+			      , to_char(TOTAL_SALES, '999,999,999,999') TOTAL_SALES
+			      , ITEM
+			      , VOLUMES
+			      , to_char(SALES_AMOUNT, '999,999,999,999') SALES_AMOUNT 
+				from approval a
+	      left join expenditure_report e on (document_number = expend_no)
+			  left join item i on (expend_no = report_no)
+				where report_no = #{documentNo}
+				  and expend_no = #{documentNo}
+				  and approval_no = #{approvalNo}
+				  and PAYMENT_WRITER_NO = #{payWriterNo}
+				  and PAYMENT_WRITER = #{payWriter}
+				  and report_type = 'M'
    </select>
    
    <!-- 로그인한(관리자) 사용자의 전체 결재 리스트 갯수 -->
@@ -390,63 +367,84 @@
    		select 
 		     	count(*)
 		from approval A
-		WHERE STATUS = 'N'
+		WHERE STATUS = 'Y'
 		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
         and FIRST_APPROVAL = #{userName}
         or MIDDLE_APPROVAL = #{userName}
         or FINAL_APPROVAL = #{userName}
    </select>
-   <!-- 아직 적용안됨 -->
+   
+   
    <!-- 로그인한(관리자) 사용자의 전체 결재 리스트 -->
    <select id="allUserList" resultMap="payResult">
    		select 
-		      APPROVAL_NO
-		    , case when document_type = 'C' then '출장보고서'
-		           when document_type = 'H' then '휴직신청서'
-		           when document_type = 'T' then '퇴직신청서'
-		           when document_type = 'B' then '비품신청서'
-		           when document_type = 'J' then '지출결의서'
-		           when document_type = 'G' then '기안서'
-		           when document_type = 'M' then '매출보고서'
-		      else '휴가신청서'
-		   end document_type
-		   , DOCUMENT_NUMBER
-		   , DEPARTMENT
-		   , PAYMENT_WRITER
-		   , PAYMENT_WRITER_NO
-		   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-		           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
-		           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
-		           END) DOCUMENT_STATUS
-		   ,(SELECT count(*)
-		        FROM SALES_REPORT S
-		      WHERE A.DOCUMENT_NUMBER = S.SALES_NO
-		        AND A.document_type = 'G'
-		        AND S.STATUS = 'Y'
-		    )SALES_STATUS
-		    , (SELECT count(*)
-		        FROM DRAFT_REPORT D
-		        WHERE A.DOCUMENT_NUMBER = D.DRAFT_NO
-		         AND A.document_type = 'J'
-		         AND D.STATUS = 'Y'
-		     ) DRAFT_STATUS
-		    , (SELECT count(*)
-		        FROM BUSINESSTRIP_REPORT B
-		        WHERE A.DOCUMENT_NUMBER = B.BUSINESS_NO
-		        AND A.document_type = 'C'
-		        AND B.STATUS = 'Y'
-		     ) BUSINESSTRIP_STATUS
-		     , to_char(regist_date, 'YYYY-MM-DD') regist_date
-		     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
-		     , PAYMENT_STATUS
-		from approval A
-		WHERE STATUS = 'N'
-		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-        and FIRST_APPROVAL = #{userName}
-        or MIDDLE_APPROVAL = #{userName}
-        or FINAL_APPROVAL = #{userName}
-		order
-			 by APPROVAL_NO desc
+			      APPROVAL_NO
+			    , case when document_type = 'C' then '출장보고서'
+			           when document_type = 'H' then '휴직신청서'
+			           when document_type = 'T' then '퇴직신청서'
+			           when document_type = 'B' then '비품신청서'
+			           when document_type = 'J' then '지출결의서'
+			           when document_type = 'G' then '기안서'
+			           when document_type = 'M' then '매출보고서'
+			      else '휴가신청서'
+				   end document_type
+				   , DOCUMENT_NUMBER
+				   , DEPARTMENT
+				   , PAYMENT_WRITER
+				   , PAYMENT_WRITER_NO
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           END) DOCUMENT_STATUS
+				   ,(SELECT count(*)
+				        FROM SALES_REPORT S
+				      WHERE A.DOCUMENT_NUMBER = S.SALES_NO
+				        AND A.document_type = 'G'
+				        AND S.STATUS = 'Y'
+				    )SALES_STATUS
+				    , (SELECT count(*)
+				        FROM DRAFT_REPORT D
+				        WHERE A.DOCUMENT_NUMBER = D.DRAFT_NO
+				         AND A.document_type = 'J'
+				         AND D.STATUS = 'Y'
+				     ) DRAFT_STATUS
+				    , (SELECT count(*)
+				        FROM BUSINESSTRIP_REPORT B
+				        WHERE A.DOCUMENT_NUMBER = B.BUSINESS_NO
+				        AND A.document_type = 'C'
+				        AND B.STATUS = 'Y'
+				     ) BUSINESSTRIP_STATUS
+				     , to_char(regist_date, 'YYYY-MM-DD') regist_date
+				     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+				     , PAYMENT_STATUS
+				from approval A
+				WHERE STATUS = 'Y'
+				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+	      and( 
+	      		FIRST_APPROVAL = #{userName}
+	       or MIDDLE_APPROVAL = #{userName}
+	       or FINAL_APPROVAL = #{userName}
+	      	 )
+      <if test="conditions != null and status != null">
+     		<choose>
+     			<when test="status == '전체'">
+     			and PAYMENT_STATUS in ('보통', '긴급')
+     			</when>
+     			<otherwise>
+     			and PAYMENT_STATUS = #{status} 
+     			</otherwise>
+     		</choose>
+     		<choose>
+     			<when test="conditions == '전체'">
+     			and	DOCUMENT_TYPE in ('T','C','B','M','J','G','H','V')
+     			</when>
+     			<otherwise>
+     			and	DOCUMENT_TYPE = #{conditions}
+     			</otherwise>
+     		</choose>
+     	</if>
+				order
+					 by APPROVAL_NO desc
    </select>
    
    <!--  -->
@@ -497,17 +495,101 @@
 		       , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE = 'DEPT01' AND CODE = G.UPPER_CODE) AS "DEPT_NAME"
 				FROM
 				    MEMBER M
-				JOIN
-				    TB_GROUP G
-				ON
-				    M.TEAM_CODE = G.CODE
-				AND
-				    G.GROUP_CODE = 'TEAM01'
-				WHERE
-				    POSITION_CODE IN ('C', 'D', 'E')
-				AND
-				    G.UPPER_CODE IN ('A', 'B', 'C', 'D', 'E', 'F')
+				JOIN TB_GROUP G ON M.TEAM_CODE = G.CODE AND G.GROUP_CODE = 'TEAM01'
+				WHERE  G.UPPER_CODE IN ('A', 'B', 'C', 'D', 'E', 'F')
+				<choose>
+					<when test="userName == null">
+						AND  POSITION_CODE IN ('C', 'D', 'E')
+					</when>
+					<when test="userName != null">
+						 AND USER_NAME = #{userName}
+				  	 AND USER_NO = #{userNo}
+					</when>
+				</choose>
    </select>
+
+   <insert id="insertMreport">
+   	INSERT 
+		  INTO 
+		    EXPENDITURE_REPORT
+		    (
+		      EXPEND_NO
+		    , SALES_DIVISION
+		    , MANAGER_NAME
+		    , TOTAL_SALES
+		    )
+		    VALUES
+		    (
+		      SEQ_EXNO.NEXTVAL
+		    , #{sales}
+		    , #{manager}
+		    , #{totalSales}
+		    )
+   </insert>
+
+   <insert id="insertItems">
+   	INSERT 
+	    INTO 
+	    		ITEM
+			    (
+			      REPORT_NO
+			    , REPORT_TYPE 
+			    , ITEM
+			    , VOLUMES
+			    , SALES_AMOUNT  
+			    )
+			    VALUES
+			    (
+			      SEQ_EXNO.CURRVAL
+			    , 'M'
+			    , #{items}
+			    , #{counts}
+			    , #{salesAmounts}
+			    )
+   </insert>
    
-		
+      
+   <insert id="insertApproval">
+	   INSERT
+		    INTO APPROVAL
+		    (
+		      APPROVAL_NO
+		    , DOCUMENT_NUMBER
+		    , DOCUMENT_TYPE
+		    , DEPARTMENT
+		    , PAYMENT_WRITER
+		    , PAYMENT_WRITER_NO
+		    , PAYMENT_STATUS
+		    , FIRST_APPROVAL
+		    , MIDDLE_APPROVAL
+		    , FINAL_APPROVAL
+		    )
+		    VALUES
+		    (
+		      SEQ_APNO.NEXTVAL
+		    , SEQ_EXNO.CURRVAL
+		    , 'M'
+		    , #{deptName}
+		    , #{writerName}
+		    , #{writerNo}
+		    , #{status}
+		    <if test='firstApproval != null'>
+		    ,#{firstApproval}		    
+		    </if>
+		    <if test='middleApproval != null'>
+		    ,#{middleApproval}
+		    </if>
+		    <if test='finalApproval != null'>
+		    ,#{finalApproval}
+		    </if>
+		    )
+   </insert>
+   
+   <insert id="updateReject">
+	   	update approval
+			   set document_status = 'N'
+			     , CANCELLATION_CONTENT = #{content}
+			where approval_no = #{no}
+   </insert>
+   
 </mapper>
