@@ -158,9 +158,9 @@
 	                        </div>                        	
                         </c:if>
                         
-                        <c:if test="${ not empty list and list.get(0).FIRST_APPROVAL_DATE == null and userNo == list.get(0).PAYMENT_WRITER_NO }" >
-                         		<button class="btn btn-warning" id="end_button" onclick="modify();" type="submit">수정</button>
-                        </c:if>
+                        
+                         		<button class="btn btn-warning" id="modifyWriter" type="submit">수정</button>
+                   
                         <!------------>
 								
 								     </div>
@@ -203,16 +203,24 @@
     </script>	
     
     <script>
-    	function modify(){
-    		if(confirm('수정하시겠습니까?')){
-    			alert("작성페이지로 이동합니다.");
-    			location.href="${contextPath}/pay/mModify.do?documentNo=" + ${list.get(0).EXPEND_NO} 
-    																							 + "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
-    																						 	 + "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
-    																							 + "&payWriter=" + ${list.get(0).PAYMENT_WRITER};
-    		}
-    		
+    
+    $("#modifyWriter").on("click", function(){
+    	
+    	let writerNo = "${ not empty list and list.get(0).FIRST_APPROVAL_DATE == null and loginMember.userNo == list.get(0).PAYMENT_WRITER_NO }";
+    	
+    	if(writerNo == "true"){
+	    	 	if(confirm('수정하시겠습니까?')){
+						alert("작성페이지로 이동합니다.");
+							location.href="${contextPath}/pay/mModify.do?documentNo=" + ${list.get(0).EXPEND_NO} 
+																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
+																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
+																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}";
+	    		}
+    	}else{
+    		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
     	}
+   
+    })
     </script>
     
     <script>

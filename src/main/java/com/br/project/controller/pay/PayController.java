@@ -257,7 +257,8 @@ public class PayController {
 		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
 		List<MemberDeptDto> member = payServiceImpl.selectloginUserDept(loginMember);
 			
-		List<MemberDeptDto> list = payServiceImpl.selectDepartment();
+		List<MemberDeptDto> teamList = payServiceImpl.selectDepartment();
+		
 		List<Map<String, Object>> maDeptList = new ArrayList<>();
 		List<Map<String, Object>> operatDeptList = new ArrayList<>();
 		List<Map<String, Object>> marketDeptList = new ArrayList<>();
@@ -269,14 +270,14 @@ public class PayController {
 		
 		// 총무부의 이름, 팀이름, 직급(부장,과장,차장)
 		
-		for(int i=0; i<list.size(); i++) {
+		for(int i=0; i<teamList.size(); i++) {
 			Map<String, Object> managementDept = new HashMap<>();;
-			if(list.get(i).getDeptName().equals("총무부")) {
-				managementDept.put("userNo", list.get(i).getUserNo());
-				managementDept.put("userName", list.get(i).getUserName());
-				managementDept.put("teamName", list.get(i).getTeamName());
-				managementDept.put("positionName", list.get(i).getPositionName());
-				managementDept.put("deptName", list.get(i).getDeptName());
+			if(teamList.get(i).getDeptName().equals("총무부")) {
+				managementDept.put("userNo", teamList.get(i).getUserNo());
+				managementDept.put("userName", teamList.get(i).getUserName());
+				managementDept.put("teamName", teamList.get(i).getTeamName());
+				managementDept.put("positionName", teamList.get(i).getPositionName());
+				managementDept.put("deptName", teamList.get(i).getDeptName());
 				maDeptList.add(managementDept);
 			}
 		}
@@ -284,14 +285,14 @@ public class PayController {
 		// 운영부의 이름, 팀이름, 직급(부장,과장,차장)
 		
 		
-		for(int i=0; i<list.size(); i++) {
-			if(list.get(i).getDeptName().equals("운영부")) {
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("운영부")) {
 				Map<String, Object> operationsDept = new HashMap<>();
-				operationsDept.put("userNo", list.get(i).getUserNo());
-				operationsDept.put("userName", list.get(i).getUserName());
-				operationsDept.put("teamName", list.get(i).getTeamName());
-				operationsDept.put("positionName", list.get(i).getPositionName());
-				operationsDept.put("deptName", list.get(i).getDeptName());
+				operationsDept.put("userNo", teamList.get(i).getUserNo());
+				operationsDept.put("userName", teamList.get(i).getUserName());
+				operationsDept.put("teamName", teamList.get(i).getTeamName());
+				operationsDept.put("positionName", teamList.get(i).getPositionName());
+				operationsDept.put("deptName", teamList.get(i).getDeptName());
 				operatDeptList.add(operationsDept);
 				
 			}
@@ -300,54 +301,54 @@ public class PayController {
 		// 마케팅부의 이름, 팀이름, 직급(부장,과장,차장)
 		
 		
-		for(int i=0; i<list.size(); i++) {
-			if(list.get(i).getDeptName().equals("마케팅부")) {
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("마케팅부")) {
 				Map<String, Object> marketingDept = new HashMap<>();
-				marketingDept.put("userNo", list.get(i).getUserNo());
-				marketingDept.put("userName", list.get(i).getUserName());
-				marketingDept.put("teamName", list.get(i).getTeamName());
-				marketingDept.put("positionName", list.get(i).getPositionName());
-				marketingDept.put("deptName", list.get(i).getDeptName());
+				marketingDept.put("userNo", teamList.get(i).getUserNo());
+				marketingDept.put("userName", teamList.get(i).getUserName());
+				marketingDept.put("teamName", teamList.get(i).getTeamName());
+				marketingDept.put("positionName", teamList.get(i).getPositionName());
+				marketingDept.put("deptName", teamList.get(i).getDeptName());
 				marketDeptList.add(marketingDept);
 			}
 		}
 		
 		// fb(호텔 운영부)의 이름, 팀이름, 직급(부장,과장,차장)
-		for(int i=0; i<list.size(); i++) {
-			if(list.get(i).getDeptName().equals("FB")) {
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("FB")) {
 				Map<String, Object> fbDept = new HashMap<>();
-				fbDept.put("userNo", list.get(i).getUserNo());
-				fbDept.put("userName", list.get(i).getUserName());
-				fbDept.put("teamName", list.get(i).getTeamName());
-				fbDept.put("positionName", list.get(i).getPositionName());
-				fbDept.put("deptName", list.get(i).getDeptName());
+				fbDept.put("userNo", teamList.get(i).getUserNo());
+				fbDept.put("userName", teamList.get(i).getUserName());
+				fbDept.put("teamName", teamList.get(i).getTeamName());
+				fbDept.put("positionName", teamList.get(i).getPositionName());
+				fbDept.put("deptName", teamList.get(i).getDeptName());
 				fbDeptList.add(fbDept);
 			}
 		}
 		
 		
 		// 인사부의 이름, 팀이름, 직급(부장,과장,차장)
-		for(int i=0; i<list.size(); i++) {
-			if(list.get(i).getDeptName().equals("인사부")) {
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("인사부")) {
 				Map<String, Object> hrDept = new HashMap<>();
-				hrDept.put("userNo", list.get(i).getUserNo());
-				hrDept.put("userName", list.get(i).getUserName());
-				hrDept.put("teamName", list.get(i).getTeamName());
-				hrDept.put("positionName", list.get(i).getPositionName());
-				hrDept.put("deptName", list.get(i).getDeptName());
+				hrDept.put("userNo", teamList.get(i).getUserNo());
+				hrDept.put("userName", teamList.get(i).getUserName());
+				hrDept.put("teamName", teamList.get(i).getTeamName());
+				hrDept.put("positionName", teamList.get(i).getPositionName());
+				hrDept.put("deptName", teamList.get(i).getDeptName());
 				hrDeptList.add(hrDept);
 			}
 		}
 		
 		// 서비스부의 이름, 팀이름, 직급(부장,과장,차장)
-		for(int i=0; i<list.size(); i++) {
-			if(list.get(i).getDeptName().equals("서비스부")) {
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("서비스부")) {
 				Map<String, Object> serviceDept = new HashMap<>();
-				serviceDept.put("userNo", list.get(i).getUserNo());
-				serviceDept.put("userName", list.get(i).getUserName());
-				serviceDept.put("teamName", list.get(i).getTeamName());
-				serviceDept.put("positionName", list.get(i).getPositionName());
-				serviceDept.put("deptName", list.get(i).getDeptName());
+				serviceDept.put("userNo", teamList.get(i).getUserNo());
+				serviceDept.put("userName", teamList.get(i).getUserName());
+				serviceDept.put("teamName", teamList.get(i).getTeamName());
+				serviceDept.put("positionName", teamList.get(i).getPositionName());
+				serviceDept.put("deptName", teamList.get(i).getDeptName());
 				serviceDeptList.add(serviceDept);
 			}
 		}
@@ -422,14 +423,21 @@ public class PayController {
 	public String mModify(@RequestParam Map<String, Object> map, Model model
 						  , HttpSession session) {
 		
+		//기존에 작성된 데이터값들
 		List<Map<String, Object>> list = payServiceImpl.expendModify(map);
 		
 		//-------------------------------------
+		
 		//로그인한 유저의 팀이름, 부서, 팀명, 직급
 		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
 		List<MemberDeptDto> member = payServiceImpl.selectloginUserDept(loginMember);
-			
-		List<MemberDeptDto> list2 = payServiceImpl.selectDepartment();
+		//---------------------------
+		
+		
+		//-----전체 팀이름, 부서, 팀명, 직급 (부장,차장,과장)--------
+		List<MemberDeptDto> teamList = payServiceImpl.selectDepartment(); 
+		
+		// 위에 데이터값을 가지고 부서로 따로 나눔
 		List<Map<String, Object>> maDeptList = new ArrayList<>();
 		List<Map<String, Object>> operatDeptList = new ArrayList<>();
 		List<Map<String, Object>> marketDeptList = new ArrayList<>();
@@ -441,14 +449,14 @@ public class PayController {
 		
 		// 총무부의 이름, 팀이름, 직급(부장,과장,차장)
 		
-		for(int i=0; i<list.size(); i++) {
+		for(int i=0; i<teamList.size(); i++) {
 			Map<String, Object> managementDept = new HashMap<>();;
-			if(list2.get(i).getDeptName().equals("총무부")) {
-				managementDept.put("userNo", list2.get(i).getUserNo());
-				managementDept.put("userName", list2.get(i).getUserName());
-				managementDept.put("teamName", list2.get(i).getTeamName());
-				managementDept.put("positionName", list2.get(i).getPositionName());
-				managementDept.put("deptName", list2.get(i).getDeptName());
+			if(teamList.get(i).getDeptName().equals("총무부")) {
+				managementDept.put("userNo", teamList.get(i).getUserNo());
+				managementDept.put("userName", teamList.get(i).getUserName());
+				managementDept.put("teamName", teamList.get(i).getTeamName());
+				managementDept.put("positionName", teamList.get(i).getPositionName());
+				managementDept.put("deptName", teamList.get(i).getDeptName());
 				maDeptList.add(managementDept);
 			}
 		}
@@ -456,14 +464,14 @@ public class PayController {
 		// 운영부의 이름, 팀이름, 직급(부장,과장,차장)
 		
 		
-		for(int i=0; i<list.size(); i++) {
-			if(list2.get(i).getDeptName().equals("운영부")) {
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("운영부")) {
 				Map<String, Object> operationsDept = new HashMap<>();
-				operationsDept.put("userNo", list2.get(i).getUserNo());
-				operationsDept.put("userName", list2.get(i).getUserName());
-				operationsDept.put("teamName", list2.get(i).getTeamName());
-				operationsDept.put("positionName", list2.get(i).getPositionName());
-				operationsDept.put("deptName", list2.get(i).getDeptName());
+				operationsDept.put("userNo", teamList.get(i).getUserNo());
+				operationsDept.put("userName", teamList.get(i).getUserName());
+				operationsDept.put("teamName", teamList.get(i).getTeamName());
+				operationsDept.put("positionName", teamList.get(i).getPositionName());
+				operationsDept.put("deptName", teamList.get(i).getDeptName());
 				operatDeptList.add(operationsDept);
 				
 			}
@@ -472,54 +480,54 @@ public class PayController {
 		// 마케팅부의 이름, 팀이름, 직급(부장,과장,차장)
 		
 		
-		for(int i=0; i<list.size(); i++) {
-			if(list2.get(i).getDeptName().equals("마케팅부")) {
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("마케팅부")) {
 				Map<String, Object> marketingDept = new HashMap<>();
-				marketingDept.put("userNo", list2.get(i).getUserNo());
-				marketingDept.put("userName", list2.get(i).getUserName());
-				marketingDept.put("teamName", list2.get(i).getTeamName());
-				marketingDept.put("positionName", list2.get(i).getPositionName());
-				marketingDept.put("deptName", list2.get(i).getDeptName());
+				marketingDept.put("userNo", teamList.get(i).getUserNo());
+				marketingDept.put("userName", teamList.get(i).getUserName());
+				marketingDept.put("teamName", teamList.get(i).getTeamName());
+				marketingDept.put("positionName", teamList.get(i).getPositionName());
+				marketingDept.put("deptName", teamList.get(i).getDeptName());
 				marketDeptList.add(marketingDept);
 			}
 		}
 		
 		// fb(호텔 운영부)의 이름, 팀이름, 직급(부장,과장,차장)
-		for(int i=0; i<list.size(); i++) {
-			if(list2.get(i).getDeptName().equals("FB")) {
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("FB")) {
 				Map<String, Object> fbDept = new HashMap<>();
-				fbDept.put("userNo", list2.get(i).getUserNo());
-				fbDept.put("userName", list2.get(i).getUserName());
-				fbDept.put("teamName", list2.get(i).getTeamName());
-				fbDept.put("positionName", list2.get(i).getPositionName());
-				fbDept.put("deptName", list2.get(i).getDeptName());
+				fbDept.put("userNo", teamList.get(i).getUserNo());
+				fbDept.put("userName", teamList.get(i).getUserName());
+				fbDept.put("teamName", teamList.get(i).getTeamName());
+				fbDept.put("positionName", teamList.get(i).getPositionName());
+				fbDept.put("deptName", teamList.get(i).getDeptName());
 				fbDeptList.add(fbDept);
 			}
 		}
 		
 		
 		// 인사부의 이름, 팀이름, 직급(부장,과장,차장)
-		for(int i=0; i<list.size(); i++) {
-			if(list2.get(i).getDeptName().equals("인사부")) {
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("인사부")) {
 				Map<String, Object> hrDept = new HashMap<>();
-				hrDept.put("userNo", list2.get(i).getUserNo());
-				hrDept.put("userName", list2.get(i).getUserName());
-				hrDept.put("teamName", list2.get(i).getTeamName());
-				hrDept.put("positionName", list2.get(i).getPositionName());
-				hrDept.put("deptName", list2.get(i).getDeptName());
+				hrDept.put("userNo", teamList.get(i).getUserNo());
+				hrDept.put("userName", teamList.get(i).getUserName());
+				hrDept.put("teamName", teamList.get(i).getTeamName());
+				hrDept.put("positionName", teamList.get(i).getPositionName());
+				hrDept.put("deptName", teamList.get(i).getDeptName());
 				hrDeptList.add(hrDept);
 			}
 		}
 		
 		// 서비스부의 이름, 팀이름, 직급(부장,과장,차장)
-		for(int i=0; i<list.size(); i++) {
-			if(list2.get(i).getDeptName().equals("서비스부")) {
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("서비스부")) {
 				Map<String, Object> serviceDept = new HashMap<>();
-				serviceDept.put("userNo", list2.get(i).getUserNo());
-				serviceDept.put("userName", list2.get(i).getUserName());
-				serviceDept.put("teamName", list2.get(i).getTeamName());
-				serviceDept.put("positionName", list2.get(i).getPositionName());
-				serviceDept.put("deptName", list2.get(i).getDeptName());
+				serviceDept.put("userNo", teamList.get(i).getUserNo());
+				serviceDept.put("userName", teamList.get(i).getUserName());
+				serviceDept.put("teamName", teamList.get(i).getTeamName());
+				serviceDept.put("positionName", teamList.get(i).getPositionName());
+				serviceDept.put("deptName", teamList.get(i).getDeptName());
 				serviceDeptList.add(serviceDept);
 			}
 		}
@@ -574,6 +582,92 @@ public class PayController {
 		
 		return "pay/paymain";
 	}
+	//로그인한 사용자 전체수신결재함 - 검색
+	@GetMapping("/userSearch.do")
+	public String userSearch(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
+							, Model model, HttpSession session) {
+		
+		String userName = ((MemberDto)session.getAttribute("loginMember")).getUserName();
+		map.put("userName", userName);
+		
+		//총갯수
+		int userSearchCount = payServiceImpl.userSearchCount(map);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(userSearchCount, currentPage, 5, 10);
+		
+		List<PayDto> list = payServiceImpl.userSearchList(map, pi);
+		
+		//개시글총갯수
+		int listCount = payServiceImpl.selectListCount();
+		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payServiceImpl.moreDateCount(userName);
+		int ulistCount = payServiceImpl.allUserCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payServiceImpl.successListCount(userName);
+		
+		model.addAttribute("pi", pi);
+		model.addAttribute("list", list);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("map", map);
+		model.addAttribute("userSearchList", "userSearchList");
+		
+		return "pay/paymain";
+		
+		
+	}
+	
+	
+	@PostMapping("/mReportUpdate.do")
+	public String mReportUpdate(@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes) {
+		
+		List<Map<String, Object>> list = new ArrayList<>();
+		map.put("totalSales", map.get("totalSales").toString().replace(",", ""));
+		
+		log.debug("map : {}", map);
+		for(int i=0; i<map.size(); i++) {
+			if(map.get("item" + i) != "") {
+				Map<String, Object> nameMap = new HashMap<>();
+				nameMap.put("item", map.get("item" + i));
+				nameMap.put("count", map.get("count" + i));
+				nameMap.put("salesAmount", map.get("sales" + i));
+				list.add(nameMap);
+			}
+		}
+		
+		
+			
+			
+		if(map.get("items") != "" && map.get("counts") != "" && map.get("salesAmounts") != "") {
+			
+			String[] items = ((String)map.get("items")).split(",");
+			String[] counts = ((String)map.get("counts")).split(",");
+			String[] sales = ((String)map.get("salesAmounts")).split(",");
+			
+			for(int i=0; i<items.length; i++) {
+				Map<String, Object> splitMap = new HashMap<>();
+				splitMap.put("expendNo", map.get("expendNo"));
+				splitMap.put("item", items[i].trim());
+				splitMap.put("count", counts[i].trim());
+				splitMap.put("salesAmount", sales[i].trim());
+				list.add(splitMap);
+			}
+		}
+		
+		log.debug("list : {}", list);
+		
+		int newlist = payServiceImpl.mReportUpdate(map, list);
+		
+		if(newlist == list.size()) {
+			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 수정되었습니다.");
+		}
+		
+		return "redirect:/pay/paymain.page";
+		
+	}
+	
 	
 	
 	
@@ -581,6 +675,6 @@ public class PayController {
 
 	
 	
-	
+
 
 }

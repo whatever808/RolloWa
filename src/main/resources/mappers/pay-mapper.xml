@@ -123,7 +123,8 @@
 		     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 		     , PAYMENT_STATUS
 		from approval A
-		WHERE STATUS = 'Y'
+    join member m on( USER_NO =  PAYMENT_WRITER_NO)
+		WHERE A.STATUS = 'Y'
 		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 		order
 			 by APPROVAL_NO desc
@@ -183,7 +184,7 @@
 				from approval
 				WHERE STATUS = 'Y'
 				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-				and ${condition} like '%' || #{keyword} || '%'
+				AND ${condition} LIKE '%' || #{keyword} || '%'
 	 </select>
 	 
 	 <!-- 카테고리 검색 리스트 조회용쿼리 -->
@@ -229,9 +230,9 @@
 		     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 		     , PAYMENT_STATUS
 		from approval A
-		WHERE STATUS = 'Y'
+		WHERE A.STATUS = 'Y'
 		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-		and ${condition} like '%' || #{keyword} || '%'
+		AND ${condition} LIKE '%' || #{keyword} || '%'
 		order
 			 by APPROVAL_NO desc
 		</select>
@@ -303,8 +304,9 @@
 		     , to_char(regist_date, 'YYYY-MM-DD') regist_date
 		     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 		     , PAYMENT_STATUS
-			from approval A
-			WHERE STATUS = 'Y'
+		from approval A
+    join member m on( USER_NO =  PAYMENT_WRITER_NO)
+		WHERE A.STATUS = 'Y'
 			AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 			<choose>
 				<when test="conditions == '전체'">
@@ -350,7 +352,7 @@
 			      , to_char(TOTAL_SALES, '999,999,999,999') TOTAL_SALES
 			      , ITEM
 			      , VOLUMES
-			      , to_char(SALES_AMOUNT, '999,999,999,999') SALES_AMOUNT 
+			      , SALES_AMOUNT 
 				from approval a
 	      left join expenditure_report e on (document_number = expend_no)
 			  left join item i on (expend_no = report_no)
@@ -419,8 +421,9 @@
 				     , to_char(regist_date, 'YYYY-MM-DD') regist_date
 				     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 				     , PAYMENT_STATUS
-				from approval A
-				WHERE STATUS = 'Y'
+		from approval A
+    join member m on( USER_NO =  PAYMENT_WRITER_NO)
+		WHERE A.STATUS = 'Y'
 				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 	      and( 
 	      		FIRST_APPROVAL = #{userName}
@@ -429,6 +432,7 @@
 	      	 )
 				order
 					 by APPROVAL_NO desc
+				 
    </select>
    
    
@@ -503,7 +507,8 @@
 				     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 				     , PAYMENT_STATUS
 				from approval A
-				WHERE STATUS = 'Y'
+		    join member m on( USER_NO =  PAYMENT_WRITER_NO)
+				WHERE A.STATUS = 'Y'
 				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 	      and( 
 	      		FIRST_APPROVAL = #{userName}
@@ -647,6 +652,7 @@
 		    , FIRST_APPROVAL
 		    , MIDDLE_APPROVAL
 		    , FINAL_APPROVAL
+		    , REGIST_DATE
 		    )
 		    VALUES
 		    (
@@ -666,14 +672,127 @@
 		    <if test='finalApproval != null'>
 		    ,#{finalApproval}
 		    </if>
+		    ,#{writerDate}
 		    )
    </insert>
-   
+   <!-- 반려 사유 update -->
    <insert id="updateReject">
 	   	update approval
 			   set document_status = 'N'
 			     , CANCELLATION_CONTENT = #{content}
 			where approval_no = #{no}
    </insert>
+   
+   <select id="userSearchCount" resultType="_int">
+	   	select 
+		     		count(*)
+				from approval A
+				WHERE STATUS = 'Y'
+				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+         and FIRST_APPROVAL = #{userName}
+	       or MIDDLE_APPROVAL = #{userName}
+	       or FINAL_APPROVAL = #{userName}
+		    AND ${condition} LIKE '%' || #{keyword} || '%'
+   </select>
+   
+   <select id="userSearchList" resultMap="payResult">
+   		select 
+			      APPROVAL_NO
+			    , case when document_type = 'C' then '출장보고서'
+			           when document_type = 'H' then '휴직신청서'
+			           when document_type = 'T' then '퇴직신청서'
+			           when document_type = 'B' then '비품신청서'
+			           when document_type = 'J' then '지출결의서'
+			           when document_type = 'G' then '기안서'
+			           when document_type = 'M' then '매출보고서'
+			      else '휴가신청서'
+				   end document_type
+				   , DOCUMENT_NUMBER
+				   , DEPARTMENT
+				   , PAYMENT_WRITER
+				   , PAYMENT_WRITER_NO
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           END) DOCUMENT_STATUS
+				   ,(SELECT count(*)
+				        FROM SALES_REPORT S
+				      WHERE A.DOCUMENT_NUMBER = S.SALES_NO
+				        AND A.document_type = 'G'
+				        AND S.STATUS = 'Y'
+				    )SALES_STATUS
+				    , (SELECT count(*)
+				        FROM DRAFT_REPORT D
+				        WHERE A.DOCUMENT_NUMBER = D.DRAFT_NO
+				         AND A.document_type = 'J'
+				         AND D.STATUS = 'Y'
+				     ) DRAFT_STATUS
+				    , (SELECT count(*)
+				        FROM BUSINESSTRIP_REPORT B
+				        WHERE A.DOCUMENT_NUMBER = B.BUSINESS_NO
+				        AND A.document_type = 'C'
+				        AND B.STATUS = 'Y'
+				     ) BUSINESSTRIP_STATUS
+				     , to_char(regist_date, 'YYYY-MM-DD') regist_date
+				     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+				     , PAYMENT_STATUS
+				from approval A
+				WHERE A.STATUS = 'Y'
+				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+	      and FIRST_APPROVAL = #{userName}
+	       or MIDDLE_APPROVAL = #{userName}
+	       or FINAL_APPROVAL = #{userName}
+	      AND ${condition} LIKE '%' || #{keyword} || '%'
+				order
+					 by APPROVAL_NO desc
+   </select>
+				 	
+		<update id="updateMreport">
+			update EXPENDITURE_REPORT
+			 	 set SALES_DIVISION = #{sales}
+			 	   , MANAGER_NAME = #{manager}
+			 	   , TOTAL_SALES = #{totalSales}
+			 where EXPEND_NO= #{expendNo}
+		</update>
+		
+		<delete id="deleteReport">
+			 delete ITEM
+			  where REPORT_NO = #{expendNo} 
+		</delete>
+		
+	 <insert id="updateInsertItems">
+	   	INSERT 
+		    INTO 
+		    		ITEM
+				    (
+				      REPORT_NO
+				    , REPORT_TYPE 
+				    , ITEM
+				    , VOLUMES
+				    , SALES_AMOUNT  
+				    )
+				    VALUES
+				    (
+				      #{expendNo}
+				    , 'M'
+				    , #{item}
+				    , #{count}
+				    , #{salesAmount}
+				    )
+	   </insert>
+	   
+	   <update id="updateApproval">
+	   		update APPROVAL
+	   		   set PAYMENT_STATUS = #{sales}
+	   		     , FIRST_APPROVAL = #{firstApproval}
+	   		     , MIDDLE_APPROVAL = #{middleApproval} 
+	   		     , FINAL_APPROVAL = #{finalApproval}
+	   		     , MODIFY_DATE = #{writerDate}
+	   		 where APPROVAL_NO = #{approvalNo}
+	   </update>
+		
+	  
+   
+   
    
 </mapper>

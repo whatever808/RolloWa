@@ -166,19 +166,27 @@
                 <!-- informations left area start -->
                 <div class="left_con">
                     <div><h3>매출 보고서</h3></div>
-                    <form action="${contextPath}/pay/mReportInsert.do" method="post" id="myForm">
+                    	<c:choose>
+                    	<c:when test="${ not empty list }">
+	                      <form action="${contextPath}/pay/mReportUpdate.do" method="post" id="myForm">
+	                    	</c:when>
+                    	<c:otherwise>
+		                    <form action="${contextPath}/pay/mReportInsert.do" method="post" id="myForm">
+		                   	</c:otherwise>
+                    	</c:choose>
                         <div id="sign_top">
                             <div id="sign_div_left">
                                 <table border="1" id="sign_left">
-                                   
                                     <tr>
                                         <th>부 서</th>
-                                        <td>${member.get(0).teamName}</td>
+                                        <td>${member.get(0).teamName}</td>                   
                                         <input type="hidden" name="deptName" value="${member.get(0).teamName}">
+                                        <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
+                                        <input type="hidden" name="expendNo" value="${list.get(0).EXPEND_NO}">
                                     </tr>
                                     <tr>
                                         <th>기안일</th>
-                                        <td><input type="date" name="writerDate" required></td>
+                                        <td><input type="date" name="writerDate" required value="${list.get(0).REGIST_DATE}"></td>
                                     </tr>
                                     <tr>
                                         <th>기안자</th>
@@ -188,7 +196,7 @@
                                     <tr>
                                         <th>상태</th>
                                         <td>
-                                            <select name="status" id="condition">
+                                            <select name="status" id="status">
                                                 <option value="보통">보통</option>
                                                 <option value="긴급">긴급</option>
                                             </select>
@@ -277,17 +285,16 @@
 		                                        <td>최종승인자</td>
 		                                      </c:when>
 	                                        <c:otherwise>
-	                                        	<td>${ list.get(0).FIRST_APPROVAL }</td>
-		                                        <td>${ list.get(0).MIDDLE_APPROVAL }</td>
-		                                        <td>${ list.get(0).FINAL_APPROVAL }</td>
+	                                        	<td id="f_name">${ list.get(0).FIRST_APPROVAL }</td>
+		                                        <td id="m_name">${ list.get(0).MIDDLE_APPROVAL }</td>
+		                                        <td id="l_name">${ list.get(0).FINAL_APPROVAL }</td>
 	                                        </c:otherwise>
                                         </c:choose>
-                                        
                                     </tr>
                                     <tr>
-                                        <td class="sing_name" id="f_name"></td>
-                                        <td class="sing_name" id="m_name"></td>
-                                        <td class="sing_name" id="l_name"></td>                                                      
+                                        <td class="sing_name"></td>
+                                        <td class="sing_name"></td>
+                                        <td class="sing_name"></td>                                                      
                                     </tr>
                                 </table>
                             </div>
@@ -301,9 +308,9 @@
                             <button id="del_btn" type="button">삭제</button>
                         </div>
                         <div class="table_middle">
-	                         <input type="hidden" name="firstApproval" id="first_name">
-	                         <input type="hidden" name="middleApproval" id="middle_name">
-	                         <input type="hidden" name="finalApproval" id="last_name">   
+	                         <input type="hidden" name="firstApproval" id="first_name" class="namecheck" value="${ list.get(0).FIRST_APPROVAL }">
+	                         <input type="hidden" name="middleApproval" id="middle_name" class="namecheck" value="${ list.get(0).MIDDLE_APPROVAL }">
+	                         <input type="hidden" name="finalApproval" id="last_name" class="namecheck" value="${ list.get(0).FINAL_APPROVAL }">   
                             <table border="1" id="tr_table">
                                 <tr>
                                     <th>매출구분</th>
@@ -317,11 +324,11 @@
                                 </tr>
                                 <tr>
                                     <th>담당자</th>
-                                    <td colspan="2"><input type="text" name="manager" required></td>
+                                    <td colspan="2"><input type="text" name="manager" value="${ list.get(0).MANAGER_NAME }" required></td>
                                 </tr>
                                 <tr>
                                     <th>총매출금액(VAT별도)</th>
-                                    <td colspan="2"><input type="text" name="totalSales" required></td>
+                                    <td colspan="2"><input type="text" name="totalSales" value="${ list.get(0).TOTAL_SALES.toString().trim() }" required style="text-align: right;"></td>
                                 </tr>
                                 <tr>
                                     <th colspan="3">매출정보</th>
@@ -334,44 +341,44 @@
                                 <c:choose>
                                 <c:when test="${ empty list }">
                                 <tr>
-                                    <td><input type="text" class="item" ></td>
-                                    <td><input type="number" class="count" min="1"></td>
-                                    <td><input type="text" class="sales_amount"></td>
+                                    <td><input type="text" class="item" name="item1"></td>
+                                    <td><input type="number" class="count" min="1" name="count1"></td>
+                                    <td><input type="text" class="sales_amount" name="sales2"></td>
                                 </tr>
                                 <tr>
-                                    <td><input type="text" class="item"></td>
-                                    <td><input type="number" class="count" min="1"></td>
-                                    <td><input type="text" class="sales_amount"></td>
+                                    <td><input type="text" class="item" name="item2"></td>
+                                    <td><input type="number" class="count" min="1" name="count2"></td>
+                                    <td><input type="text" class="sales_amount" name="sales3"></td>
                                 </tr>
                                 <tr>
-                                    <td><input type="text" class="item"></td>
-                                    <td><input type="number" class="count" min="1"></td>
-                                    <td><input type="text" class="sales_amount"></td>
+                                    <td><input type="text" class="item" name="item3"></td>
+                                    <td><input type="number" class="count" min="1" name="count3"></td>
+                                    <td><input type="text" class="sales_amount" name="sales4"></td>
                                 </tr>
                                 <tr id="tr_input">
-                                    <td><input type="text" class="item"></td>
-                                    <td><input type="number" class="count" min="1"></td>
-                                    <td><input type="text" class="sales_amount"></td>
+                                    <td><input type="text" class="item" name="item4"></td>
+                                    <td><input type="number" class="count" min="1" name="count4"></td>
+                                    <td><input type="text" class="sales_amount" name="sales5"></td>
                                 </tr>
                                 </c:when>
                                 <c:otherwise>
-	                                <c:forEach var="l" items="${ list }">
+	                                <c:forEach var="i" begin="0" end="${ list.size() - 1}">
 	                                	<tr id="tr_input">
-	                                    <td><input type="text" class="item">${l.ITEM}</td>
-	                                    <td><input type="number" class="count" min="1">${l.VOLUMES}</td>
-	                                    <td><input type="text" class="sales_amount">${l.SALES_AMOUNT}</td>
+	                                    <td><input type="text" name="item${i}" value="${list.get(i).ITEM}"></td>
+	                                    <td><input type="number" name="count${i}" min="1" value="${list.get(i).VOLUMES}"></td>
+	                                    <td><input type="text" name="sales${i}" value="${list.get(i).SALES_AMOUNT.toString().trim()}"></td>
 	                                	</tr>
 	                                </c:forEach>
                                 </c:otherwise>
                                 </c:choose>
                             </table>
-                            <input type="hidden" name="items" id="items">
-                            <input type="hidden" name="counts" id="counts">
-                            <input type="hidden" name="salesAmounts" id="sales_amounts">
+	                            <input type="hidden" name="items" id="items">
+	                            <input type="hidden" name="counts" id="counts">
+	                            <input type="hidden" name="salesAmounts" id="sales_amounts">
                         </div>
                         <!--버튼 영역-->
                         <div id="btn_div">
-                            <button class="btn btn-primary" onclick="submitbtn();" type="submit">제출</button>
+                        		<button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
                             <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
                             <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
                         </div>
@@ -384,61 +391,76 @@
     <c:if test="${ not empty list }">
     <script>
     	$(document).ready(function(){
-    			$("#condition").val("${list.get(0).PAYMENT_STATUS}");
+    			$("#status").val("${list.get(0).PAYMENT_STATUS}");
     			$("#sales").val("${list.get(0).SALES_DIVISION}")
     	})
     </script>
     </c:if>
- 
-    <!-- 추가버튼 스크립트 -->   
+     
     <script>
-    	function submitbtn(){
-    					let itemArr = [];
-    					let countArr = [];
-    					let salesArr = [];
-    					//금액
-    		$(".item").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			itemArr.push($(this).val());
-						}
-        })
-        
-        $("#items").val(itemArr);
-     					
-    					//수량
-   			$(".count").each(function(){
-			 		if($(this).val().trim() != ""){
-			 			countArr.push($(this).val());
-					}
-         })
-         $("#counts").val(countArr);
-    					
-   					// 매출금액
-    		$(".sales_amount").each(function(){
-			 		if($(this).val().trim() != ""){
-			 			salesArr.push($(this).val());
-					}
-          })
-         $("#sales_amounts").val(salesArr);	
-
-         if(confirm('정말로 제출하시겠습니까?') == true){
-            }
-                
-       }
-    
-    
-    
+    	
+    	$(document).ready(function(){
+    	
+    		$("#insertBtn").on("click", function(){
+	    		$(".namecheck").each(function(){
+		    		if($(this).val() == ""){
+		    			console.log($(this).val());
+		    			alert("승인자를 선택해주세요.");
+		    		}
+	    		})	    	
+    		})
+    	})
+    	
     </script>
+   
+ 
+    
+    <script>
+	    	function submitbtn(){
+   					let itemArr = [];
+   					let countArr = [];
+   					let salesArr = [];
+   					//금액
+	    		$(".item").each(function(){
+					 		if($(this).val().trim() != ""){
+					 			itemArr.push($(this).val());
+							}
+	        })
+	        
+	        $("#items").val(itemArr);
+	     					
+	    					//수량
+	   			$(".count").each(function(){
+				 		if($(this).val().trim() != ""){
+				 			countArr.push($(this).val());
+						}
+	         })
+	         $("#counts").val(countArr);
+	    					
+	   					// 매출금액
+	    		$(".sales_amount").each(function(){
+				 		if($(this).val().trim() != ""){
+				 			salesArr.push($(this).val());
+						}
+	          })
+	         $("#sales_amounts").val(salesArr);	
+	
+	         if(confirm('정말로 제출하시겠습니까?') == true){}
+	                
+	       }
+   	</script>
+    
     <script>
     $(document).ready(function(){
     	
     	$(document).on("click", "#plus_btn", function () {
-
-        var result = "<tr>"
-          result += "<td><input type='text' class='item'></td>";
-          result += "<td><input type='number' class='count' min='1'></td>";
-          result += "<td><input type='text' class='sales_amount'></td>";
-          result += "</tr>";
+    		
+    		
+    		var result = "<tr>";
+    		result += "<td><input type='text' class='item'></td>";
+    		result += "<td><input type='number' class='count' min='1'></td>";
+    		result += "<td><input type='text' class='sales_amount'></td>";
+    		result += "</tr>";
         
        $("#tr_table").children().last().after(result);
        
@@ -479,7 +501,16 @@
 	              $p.slideUp();
 	          } 
 	          })
+	          
+	         
 	
+	      })
+	      
+	       $("#modal_btn").on("click", function(){
+		    	   	$("#f_name").text("");
+		          $("#m_name").text("");
+		          $("#l_name").text("");
+		          $("#m_co2").children().remove();
 	      })
 	      
 	      
@@ -497,8 +528,12 @@
 	              alert("초기화할 승인자가 없습니다.");
 	          }
 	          
+	          
+	          
 	              
 	      })
+	      
+	      
 	
 	 	 	 $(document).on("click", ".btn_result", function(){
 	          

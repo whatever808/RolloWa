@@ -144,4 +144,34 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.userSelectList", map, rowBounds);
 	}
 	
+	public int userSearchCount(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.userSearchCount", map);
+	}
+	
+	public List<PayDto> userSearchList(Map<String, Object> map, PageInfoDto pi){
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.userSearchList", map, rowBounds);
+	}
+	
+	public int mReportUpdate(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.mReportUpdate", map);
+	}
+	
+	public int updateMreport(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.updateMreport", map);
+	}
+	
+	//아이템품목 지우고 = > insert
+	public int deleteReport(Map<String, Object> map) {
+		return sqlSessionTemplate.delete("payMapper.deleteReport", map);
+	}
+	//insert
+	public int updateInsertItems(Map<String, Object> item) {
+		return sqlSessionTemplate.update("payMapper.updateInsertItems", item);
+	}
+	
+	public int updateApproval(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.updateApproval", map);
+	}
+	
 }

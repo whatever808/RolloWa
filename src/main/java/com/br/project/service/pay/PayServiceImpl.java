@@ -158,5 +158,40 @@ public class PayServiceImpl {
 		return payDao.userSelectList(map, pi);
 	}
 	
+	//ㅇㅇ님의 전체수신함 - 키워드검색시 갯수
+	public int userSearchCount(Map<String, Object> map) {
+		return payDao.userSearchCount(map);
+	}
+	
+	public List<PayDto> userSearchList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.userSearchList(map, pi);
+	}
+	
+	public int mReportUpdate(Map<String, Object> map) {
+		return payDao.mReportUpdate(map);
+	}
+	
+	public int mReportUpdate(Map<String, Object> map, List<Map<String, Object>> list){
+		
+		//1.매출보고서테이블 등록
+		int result2 = payDao.updateMreport(map);
+		//2-1.아이템품목 등록하기전에 삭제하기..
+		int result4 = payDao.deleteReport(map);
+		
+		//2-2.품목공동테이블 등록
+		int result1 = 1;
+			if(!list.isEmpty()) {
+				result1 = 0;
+				for (Map<String, Object> item : list) { 
+
+					result1 += payDao.updateInsertItems(item);
+				}				
+			}
+		//3.결재이력공동테이블 등록
+	    int result3 = payDao.updateApproval(map);
+			
+		return result1 * result2 * result3;
+	}
+	
 		
 }

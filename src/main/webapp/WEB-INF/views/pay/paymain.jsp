@@ -33,7 +33,7 @@
     </c:if>
   
   
-  <c:if test="${ not  empty userAllList or not empty userAllListSelect }">
+  <c:if test="${ not  empty userAllList or not empty userAllListSelect or not empty userSearchList}">
   	<script>
 	  	function typeSelect(){
 				location.href="${contextPath}/pay/userSelectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
@@ -247,7 +247,15 @@
                                     </div>    
                                 </div>
                                 <div id="cen_bottom_search_center">
-                                     <form action="${contextPath}/pay/search.do" method="get">
+                                			<c:choose>
+                                				<c:when test="${ not empty userAllList or not empty userSearchList}">
+                                					 <form action="${contextPath}/pay/userSearch.do" method="get">
+                                				</c:when>
+                                				<c:otherwise>
+                                     			<form action="${contextPath}/pay/search.do" method="get">
+                                				</c:otherwise>
+                                			</c:choose>
+                                			
                                      		<input type="hidden" name="page" value="1">
                                     		<div class="input-group mb-3">
                                         <select name="condition" id="select_search">
@@ -255,14 +263,30 @@
                                             <option value="DEPARTMENT">부서</option>
                                         </select>
                                         <input type="text" name="keyword" value="${ search.keyword }"  id="search_input" class="form-control" placeholder="검색어를 입력하세요" style="width: 400px;">
-                                        <div class="input-group-append">
-                                       	<button type="submit" id="my-button">
-                                           <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
-                                           <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                           </svg>
-                                         </button>
+                                       
+                                        <c:choose>
+                                        	<c:when test="${ not empty userAllList or not empty userSearchList }">
+                                        	 <div class="input-group-append">
+                                        		<button type="submit" id="user_mybutton">
+                                           	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
+                                           	<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                           	</svg>
+                                         		</button>
+                                         		</div>
+                                        	</c:when>
+                                       		<c:otherwise>
+                                       		 <div class="input-group-append">
+                                       			<button type="submit" id="my_button">
+                                           	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
+                                           	<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                           	</svg>
+                                         		</button>
+                                         		</div>
+                                        	</c:otherwise>
+                                        </c:choose>
+                                        
                                      </form>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -358,6 +382,17 @@
 													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSelectList.do?page=${pi.currentPage+1}&conditions=${map.conditions}&status=${map.status}">Next</a></li>
 													             </ul>
                                    	</c:when>
+                                   		<c:when test="${not empty userSearchList }">
+                                			<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${p}&condition=${map.condition}&keyword=${map.keyword}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">Next</a></li>
+													             </ul>
+                                   	</c:when>
                                    	<c:otherwise>
                                    		<ul class="pagination">
 		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage-1}&condition=${search.condition}&keyword=${search.keyword}">Previous</a></li>
@@ -446,7 +481,7 @@
 	</c:choose>
 	
 	<script>
-		$("#my-button").on("click", function(){
+		$("#my_button").on("click", function(){
 			
 			if($("#search_input").val().trim().length == 0){
 				alert("다시입력해주세요.");
@@ -454,7 +489,15 @@
 			}
 			
 		})
-	
+		
+		$("#user_mybutton").on("click", function(){
+				
+			if($("#search_input").val().trim().length == 0){
+				alert("다시입력해주세요.");
+				return false;
+			}
+			
+		})
 	</script>
 	
 	
