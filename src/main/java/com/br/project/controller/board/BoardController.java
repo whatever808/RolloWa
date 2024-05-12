@@ -1,14 +1,18 @@
 package com.br.project.controller.board;
 
+import static com.br.project.controller.common.CommonController.getParameterMap;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -40,7 +44,7 @@ public class BoardController {
 	private final FileUtil fileUtil;
 	
 	/**
-	 * @method : 공지사항 목록조회
+	 * @method : 공지사항 목록조회(페이지별)
 	 */
 	@RequestMapping(value="/list.do")
 	public ModelAndView selectBoardList(@RequestParam(value="page", defaultValue="1") int currentPage
@@ -50,7 +54,7 @@ public class BoardController {
 		PageInfoDto pageInfo = pagingUtil.getPageInfoDto(boardService.selectTotalBoardCount(filter), currentPage, 5, 10);
 		
 		// 응답페이지 지정 및 응답데이터 반환
-		mv.addObject("boardList", boardService.selectBoardList(pageInfo, filter));		// 게시글 목록
+		mv.addObject("boardList", boardService.selectBoardList(pageInfo, filter));				// 게시글 목록
 		mv.addObject("pageInfo", pageInfo);
 		mv.addObject("departmentList", departmentService.selectDepartmentList("DEPT01"));		// 부서 목록
 		mv.addObject("filter", filter);
@@ -60,7 +64,7 @@ public class BoardController {
 	}
 	
 	/**
-	 * @method : 공지사항 목록조회 (AJAX)
+	 * @method : 공지사항 목록조회(페이지별) (AJAX)
 	 */
 	@RequestMapping(value="/list.ajax")
 	@ResponseBody
@@ -80,6 +84,76 @@ public class BoardController {
 	}
 	
 	/**
+	 * @method : 공지사항 목록조회(전체)(AJAX)
+	 */
+	@RequestMapping(value="/detail/list.ajax")
+	@ResponseBody
+	public List<BoardDto> ajaxSelectBoardList(HttpServletRequest request){
+		HashMap<String, Object> params = getParameterMap(request);
+		return boardService.selectBoardList(params);
+	}
+	
+	
+	/**
+	 * @method : 공지사항 조회수 증가 (로그인사용자 != 작성자)
+	 */
+	@RequestMapping(value="/reader/detail.do")
+	public String increaseReadCount(HttpServletRequest request) {
+		
+		HashMap<String, Object> params = getParameterMap(request);
+		
+		String category = params.get("category").toString();
+		String department = params.get("department").toString();
+		String condition = params.get("condition").toString();
+		String keyword = params.get("keyword").toString();
+		String no = params.get("no").toString();
+		
+		try {
+			boardService.updateReadCount(no);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "redirect:/board/detail.do?" + "category=" + category + "&"
+											+ "department=" + department + "&"
+											+ "condition=" + condition + "&"
+											+ "keyword=" + keyword + "&"
+											+ "no=" + no;
+	}
+	
+	/**
+	 * @method : 공지사항 상세조회
+	 */
+	@RequestMapping(value="/detail.do")
+	public String showBoardDetail(HttpServletRequest request
+								 ,Model model
+								 ,RedirectAttributes redirectAttributes) {
+		try {
+			HashMap<String, Object> params = getParameterMap(request);
+			
+			BoardDto board = boardService.selectBoard(params);
+			
+			if(board != null) {
+				// 조회된 공지사항이 있을경우(유효한 공지사항)
+				model.addAttribute("board", board);
+			}else {
+				// 조회된 공지사항이 없을경우
+				redirectAttributes.addFlashAttribute("alertTitle", "게시글 상세조회");
+				redirectAttributes.addFlashAttribute("alertMsg", "유효하지 않은 게시글입니다.");
+				return "redirect:" + request.getDateHeader("Referer");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			return "redirect:" + request.getDateHeader("Referer");
+		}
+		
+		return "board/detail";
+	}
+	
+	
+	
+	
+	/**
 	 * @method : 공지사항 등록페이지 반환
 	 */
 	@RequestMapping(value="/post.page")
@@ -92,9 +166,9 @@ public class BoardController {
 	*/ 
 	@RequestMapping(value="/post.do")
 	public String postBoard(BoardDto board
-						 ,List<MultipartFile> uploadFiles
-						 ,HttpSession session
-						 ,RedirectAttributes redirectAttributes) {
+						   ,List<MultipartFile> uploadFiles
+						   ,HttpServletRequest request
+						   ,RedirectAttributes redirectAttributes) {
 		try {
 			List<AttachmentDto> attachmentList = new ArrayList<>();
 			// 첨부파일 있을경우, 첨부파일 업로드
@@ -114,7 +188,7 @@ public class BoardController {
 			}
 
 			// 공지사항 등록
-			String writerNo = String.valueOf(((MemberDto)(session.getAttribute("loginMember"))).getUserNo());
+			String writerNo = String.valueOf(((MemberDto)(request.getSession().getAttribute("loginMember"))).getUserNo());
 			board.setRegistEmp(writerNo);
 			board.setModifyEmp(writerNo);
 			board.setAttachmentList(attachmentList);
@@ -144,6 +218,7 @@ public class BoardController {
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
+			return "redirect:" + request.getDateHeader("Referer");
 		}
 		return "redirect:/board/list.do";
 	}

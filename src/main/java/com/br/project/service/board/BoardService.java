@@ -21,24 +21,50 @@ public class BoardService {
 	private final BoardAttachmentService attachmentService;
 	
 	/**
-	 * @method : 총게시글 갯수조회(STATUS = 'Y')
-	 * @return : 총게시글수
+	 * @param filter : [카테고리], [부서코드], [검색조건], [검색키워드]
+	 * @return : 총 공지사항 갯수(STATUS = 'Y')
 	 */
 	public int selectTotalBoardCount(Map<String, String> filter) {
 		return boardDao.selectTotalBoardCount(filter);
 	}
 	
 	/**
-	 * @method : 게시글 목록조회
-	 * @return : 게시글 리스트
+	 * @param filter   : [카테고리], [부서코드], [검색조건], [검색키워드]
+	 * @param pageInfo : 페이징바 객체
+	 * @return : 공지사항 목록(페이지별)
 	 */
 	public List<BoardDto> selectBoardList(PageInfoDto pageInfo, Map<String, String> filter){
 		return boardDao.selectBoardList(pageInfo, filter);
 	}
 	
 	/**
-	 * @method : 게시글 등록
-	 * @return : {{게시글 등록행수}, [{등록실패 첨부파일},...]}
+	 * @param filter : [부서코드], [카테고리], [검색조건], [검색키워드], ([글번호])
+	 * @return : 공지사항 목록(전체)
+	 */
+	public List<BoardDto> selectBoardList(HashMap<String, Object> filter){
+		return boardDao.selectBoardList(filter);
+	}
+	
+	/**
+	 * @param boardNo : 공지사항 번호
+	 * @return : 공지사항 조회수 증가시킨 총 행수
+	 */
+	public int updateReadCount(String boardNo) {
+		return boardDao.updateReadCount(boardNo);
+	}
+	
+	/**
+	 * @param params : [글번호], [부서코드], ([카테고리], [검색조건], [검색키워드])
+	 * @return : 공지사항 상세정보가 담긴 공지사항 객체
+	 */
+	public BoardDto selectBoard(HashMap<String, Object> params) {
+		return boardDao.selectBoard(params);
+	}
+	
+	/**
+	 * @param board : 등록할 공지사항 정보가 담긴 공지사항 객체
+	 * @method : 공지사항 등록
+	 * @return : 등록된 공지사항 행 수, 등록실패한 첨부파일 객체 리스트
 	 */
 	public Map<String, Object> insertBoard(BoardDto board){
 		Map<String, Object> result = new HashMap<>();
