@@ -136,7 +136,7 @@
 		        newCell3.appendChild(input3);
 		        
 		        let deleteButton = document.createElement('button');
-		        deleteButton.innerText = '지우기';
+		        deleteButton.innerText = '삭제';
 		        deleteButton.className = 'btn btn-danger';
 		        deleteButton.onclick = function() {
 		            let row = this.parentNode.parentNode;
