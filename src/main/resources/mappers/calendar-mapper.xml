@@ -96,7 +96,7 @@ and
 	)values(
 		SEQ_COWNO.NEXTVAL
 		, SEQ_CALNO.CURRVAL
-		, #{woker}
+		, #{userNo}
 	)
 </insert>
 <!-- 일정 update문 쿼리 -->
@@ -106,14 +106,34 @@ and
 	set 
 		CAL_TITLE 		= #{calTitle}
 		, CAL_CONTENT 	= #{calContent}
-		, START_DATE 	= #{startDate}
-		, END_DATE 		= #{endDate}
+		, START_DATE 	= to_date(#{startDate} 	, 'YYYY-MM-DD HH24:MI:SS')
+		, END_DATE 		= to_date(#{endDate}	, 'YYYY-MM-DD HH24:MI:SS')
+		, CAL_PLACE		= #{place}
 		, CAL_COLOR 	= #{color}
 		, GROUP_CODE 	= #{groupCode}
 		, MODIFY_EMP 	= #{emp}
 	where
 		CAL_NO = #{calNO}
 </update>
+<delete id="coworkerDelete">
+	delete
+		co_worker
+	where cal_no = #{calNO}
+</delete>
+<insert id="reInserCoworker">
+	insert
+	into 
+		co_worker
+	(
+		WORKER_NO
+		, CAL_NO
+		, USER_NO
+	)values(
+		SEQ_COWNO.NEXTVAL
+		, #{calNO}
+		, #{userNo}
+	)
+</insert>
 
 
 </mapper>

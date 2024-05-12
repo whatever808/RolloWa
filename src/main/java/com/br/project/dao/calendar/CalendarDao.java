@@ -1,5 +1,6 @@
 package com.br.project.dao.calendar;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +25,8 @@ public class CalendarDao {
 		return sqlSession.insert("calMapper.insertCal", calendar);
 	}
 
-	public int insertCoworker(String woker) {
-		return sqlSession.insert("calMapper.inserCoworker", woker);
+	public int insertCoworker(String userNo) {
+		return sqlSession.insert("calMapper.inserCoworker", userNo);
 	}
 
 	public int calUpdate(CalendarDto calendar) {
@@ -35,6 +36,18 @@ public class CalendarDao {
 	public List<MemberDto> selectTeamPeer(String teamCode) {
 		return sqlSession.selectList("memberMapper.selectTeamPeer", teamCode);
 	}
-	
+
+	public int coworkerDelete(String calNO) {
+		return sqlSession.delete("calMapper.coworkerDelete", calNO);
+	}
+
+	public int reInserCoworker(String calNO, String userNo) {
+		Map<String, String> map = new HashMap<>();
+		map.put("userNo", userNo);
+		map.put("calNO", calNO);
+		return sqlSession.insert("calMapper.reInserCoworker", map);
+	}
+
+
 	
 }

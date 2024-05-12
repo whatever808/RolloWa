@@ -10,7 +10,9 @@ import com.br.project.dto.calendar.CoworkerDto;
 import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CalendarService {
@@ -35,8 +37,8 @@ public class CalendarService {
 		List<CoworkerDto> coArr = calendar.getCoworker();
 		
 		if(!coArr.isEmpty()) {
-			for(CoworkerDto w : coArr) {
-				outcome *= calDao.insertCoworker(w.getUserNo());							
+			for(CoworkerDto c : coArr) {
+				outcome *= calDao.insertCoworker(c.getUserNo());							
 			}
 		}
 		
@@ -49,7 +51,18 @@ public class CalendarService {
 	 */
 	public int calUpdate(CalendarDto calendar) {
 		int result = calDao.calUpdate(calendar);
-		return result;
+		int outcome = calDao.coworkerDelete(calendar.getCalNO());
+		int effect = 1;
+		
+		List<CoworkerDto> list = calendar.getCoworker();
+		
+		if(!list.isEmpty() && list != null) {
+			for(CoworkerDto c : list) {
+				effect *= calDao.reInserCoworker(calendar.getCalNO() , c.getUserNo());
+			}
+		}
+		
+		return result * outcome * effect;
 	}
 
 	/**

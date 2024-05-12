@@ -2,6 +2,7 @@ package com.br.project.controller.calendar;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -51,11 +52,11 @@ public class CalendarController {
 			}
 		}
 		
-//		log.debug("teams {}", teams);
+		//log.debug("teams {}", teams);
 		List<GroupDto> group = dService.selectDepartmentList("CALD01");
-//		log.debug("group {}", group);		
+		//log.debug("group {}", group);		
 		List<CalendarDto> list = calService.selectPCalendar();
-		log.debug("list = {}", list);
+		//log.debug("list = {}", list);
 		
 		mv.addObject("list", list)
 			.addObject("teams", teams)
@@ -119,7 +120,7 @@ public class CalendarController {
 //		calendar.setEmp(String.valueOf(member.getUserNo()));
 		calendar.setEmp("1051");
 		
-		log.debug("data == {}", calendar);
+		//log.debug("data == {}", calendar);
 		
 		int result = calService.insertCal(calendar);
 		
@@ -138,21 +139,29 @@ public class CalendarController {
 	 * @param time
 	 * @return
 	 */
-	@PostMapping("calUpdate.do")
-	public String calUpdate(CalendarDto calendar,
-							String[] date, String[] time) {
+	
+	@PostMapping("/calUpdate.do")
+	public ModelAndView calUpdate(CalendarDto calendar,
+									String[] date, String[] time
+									, ModelAndView mv) {
+		
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
-		log.debug("chekc {}", calendar);
+		//MemberDto member = (MemberDto)session.getAttribute("loginUser");
+		//calendar.setCalNO(String.valueOf(member.getUserNo()));
+		calendar.setEmp("1051");
+		log.debug("calendar {}", calendar);
 		
-		//int result = calService.calUpdate(calendar);
+		int result = calService.calUpdate(calendar);
+		log.debug("result {}", result);
 		
-		return null;
+		if(result > 0 ) {
+			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("redirect:pCalendar.page");
+		}else {
+			mv.addObject("alertMsg", "다시 시도해 주세요.").setViewName("redirect:pCalendar.page");
+		}
+		return mv;
 	}
 	
-	
-	
-	
-	
-	
+
 }

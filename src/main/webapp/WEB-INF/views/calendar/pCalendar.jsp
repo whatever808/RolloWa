@@ -17,8 +17,6 @@
 	.out-line {
 		min-height: 800px;
 		width: 100%;
-		display: flex;
-		flex-direction: row;
 		box-sizing: border-box;
 	}	
 	.member-search-area {
@@ -242,6 +240,7 @@
 									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
 									<span class="img_postion">${t.userName}</span>
 								</div>
+								<input type="hidden" value="${t.userNo}">
 							</div>
 						</c:when>
 						<c:otherwise>
@@ -250,13 +249,26 @@
 									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
 									<span class="img_postion">${t.userName}</span>
 								</div>
+								<input type="hidden" value="${t.userNo}">
 							</div>						
 						</c:otherwise>
 					</c:choose>
-			
 				</c:forEach>
-				
 			</div>
+			<script>
+				$(function(){
+					$(".memebrdiv-area").children().on('click', function(e){
+						console.log($(this).next());
+						console.log($(this).next().val());
+						
+						$.ajax({
+							url
+						})
+						
+					});
+				})
+			</script>
+			
 			<br> <br>
 			<!-- 캘린더 영역 -->
 			<div class="calender-area radious10 line-shadow "><div id="calendar"></div></div>
@@ -299,6 +311,7 @@
 							    $('#cal_modal').find('.content-text-area').val(extend.content);
 							    $('#cal_modal').find('input[name=place]').val(extend.place);
 							    $('input[name=calTitle]').val(extend.caltitle);
+							    $('input[name=calNO]').val(info.event.id);
 							    
 								if(extend.calSort == 'P'){
 									$('#cal_modal').find('input[name=calSort]').attr('checked', true);										
