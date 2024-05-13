@@ -1,11 +1,13 @@
 package com.br.project.controller.calendar;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +17,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.br.project.dto.calendar.CalendarDto;
 import com.br.project.dto.common.GroupDto;
+import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.calendar.CalendarService;
 import com.br.project.service.common.department.DepartmentService;
+import com.br.project.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +40,7 @@ public class CalendarController {
 	 * @param mv 조회된 객체와 view단을 선택하는 객체
 	 * @return 
 	 */
-	@GetMapping("/calendar.page")
+	@GetMapping("/pCalendar.page")
 	public ModelAndView selectPCalendar(HttpSession session, ModelAndView mv) {
 		
 		MemberDto member = (MemberDto)session.getAttribute("loginUser");
@@ -239,9 +243,38 @@ public class CalendarController {
 		return mv;
 	}
 	
+	/**
+	 * @param mv
+	 */
 	@GetMapping("/companyControllor.page")
-	public void companyControllor() {
+	public void companyControllor() {}
+	
+	@ResponseBody
+	@PostMapping(value="/companyControllor.ajax",  produces="application/json")
+	public Map<String, Object> AjaxcompanyControllor(@RequestParam(defaultValue = "1") int page
+													,String dataStart, String dataEnd) {
 		
+		log.debug("page {}", page);
+		log.debug("dataStart {}", dataStart);
+		log.debug("dataEnd {}", dataEnd);
+		
+		int listCount = calService.selectListCount();
+		PageInfoDto paging = new PagingUtil().getPageInfoDto(listCount, page, 5, 10);
+		log.debug("paging {}", paging);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("paging", paging);
+		map.put("dataStart", dataStart);
+		map.put("dataEnd", dataEnd);
+		List<CalendarDto> list = calService.selectListCalendar(map);
+		
+		map.remove(dataStart);
+		map.remove(dataEnd);
+		
+		map.put("list", list);
+		map.put("page", page);		
+		
+		return map;
 	}
 
 }

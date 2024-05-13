@@ -265,9 +265,7 @@
 							data:'userNo=' + $(this).next().val(),
 							success:function(event){
 								console.log(event);
-								calendar.remove();
-								$('.calendar-area').append("<div class='calendar'><div>");
-								var calendarEl = document.getElementById('calendar');
+							
 								for(let i= 0; i<event.lenght; i++){
 								calendar.addEventSource(
 									{

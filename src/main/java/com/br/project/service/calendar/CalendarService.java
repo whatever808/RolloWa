@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.br.project.dao.calendar.CalendarDao;
 import com.br.project.dto.calendar.CalendarDto;
 import com.br.project.dto.calendar.CoworkerDto;
+import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
@@ -103,5 +104,20 @@ public class CalendarService {
 	 */
 	public int companyCalUpdate(CalendarDto calendar) {
 		return calDao.insertCal(calendar);
+	}
+
+	/**
+	 * @return
+	 */
+	public List<CalendarDto> selectListCalendar(Map<String, Object> map) {
+		return calDao.selectListCalendar(map);
+	}
+
+	/**
+	 * 전제 리스트 수 반환
+	 * @return
+	 */
+	public int selectListCount() {
+		return calDao.selectListCount();
 	}
 }

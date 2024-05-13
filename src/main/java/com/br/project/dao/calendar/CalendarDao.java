@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.br.project.dto.calendar.CalendarDto;
+import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
@@ -54,6 +56,18 @@ public class CalendarDao {
 
 	public List<CalendarDto> selectCompanyCalendar() {
 		return sqlSession.selectList("calMapper.selectCompanyCalendar");
+	}
+
+	public List<CalendarDto> selectListCalendar(Map<String, Object> map) {
+		PageInfoDto page = (PageInfoDto)map.get("paging");
+		RowBounds row = new RowBounds(page.getListLimit()* (page.getCurrentPage()-1)
+									, page.getListLimit());
+		
+		return sqlSession.selectList("calMapper.selectListCalendar",map,row);
+	}
+
+	public int selectListCount() {
+		return sqlSession.selectOne("calMapper.selectListCount");
 	}
 	
 }

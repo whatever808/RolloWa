@@ -13,6 +13,7 @@
 	<result column="CAL_COLOR" property="color" />
 	<result column="GROUP_CODE" property="groupCode" />
 	<result column="team" property="team" />
+	<result column="duraDate" property="duraDate" />
 	<collection ofType="GroupDto" property="group" >
 		<result column="CODE_NAME" property="codeName" />
 		<result column="UPPER_CODE" property="upperCode" />
@@ -185,5 +186,41 @@ and
 	Months_between(end_DATE				, sysdate) >= -6
 ]]>
 </select>
+<select id="selectListCalendar"
+resultMap="calResultMap">
+	select
+    cal_no
+    , cal_color
+    , code_Name
+    , cal_title
+    , to_date(start_Date, 'YYYY-MM-DD')|| ' ~ ' || to_date(end_date, 'YYYY-MM-DD') duraDate 
+	from calender
+	join tb_group on (calender.GROUP_CODE = CODE and tb_group.GROUP_CODE = 'CALD02')
+	where cal_sort = 'C'
+	and 
+	    calender.status = 'Y'
+<![CDATA[
+	and 
+		Months_between(START_DATE , #{dataStart}) <= 1
+	and 
+		Months_between(end_DATE		, #{dataEnd}) >= -1
+]]>
+</select>
+
+<select id="selectListCount" resultType="_int">
+	select
+    count(*)
+	from calender
+	where cal_sort = 'C'
+	and 
+	    calender.status = 'Y'
+<![CDATA[
+	and 
+		Months_between(START_DATE , #{dataStart}) <= 1
+	and 
+		Months_between(end_DATE	, #{dataEnd}) >= -1
+]]>
+</select>
+
 
 </mapper>

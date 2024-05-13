@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>List 회사 일정</title>
 <style>
 .out-line {
 	min-height: 800px;
@@ -55,7 +55,44 @@
 </head>
 <body>
 	<div class="out-line">
-        <jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
+				<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
+				  <script>
+				  	$(document).ready(function(){
+				  		$.ajax({
+				  			url:'${path}/calendar/companyControllor.ajax',
+				  			type:'post',
+				  			data: {
+				  				'page':'${page}',
+				  				'dataStart': $('#currentDate1').val(),
+				  				'dataEnd': $('#currentDate2').val()
+				  			},
+				  			success:function(result){
+				  				console.log(result);
+				  				
+				  				const list = result.list;
+				  				const paging = result.paging;
+				  				
+				  				let tableEl = ''; 
+				  				for (let i =0; i<list.lenght; i++){
+											tableEl = 	'<tr><td>'+ result[i].calNO +'</td>'
+				  										+ '<td><input type="color" value="' + list[i].color + '" id="color-style" style="width: 35px; height: 15px;" onclick="return false"></td>'
+				  										+ '<td>'+ result[i].group.codeName +'</td>'
+				  										+ '<td class="over">'+ result[i].calTitle +'</td>'
+				  										+ '<td class="over">'+ result[i].duraDate +'</td>'
+				  										+ '<td><div class="pretty p-icon p-curve p-thick p-jelly">'
+		                          + '<input type="checkbox" name="check"'+ result[i].calNO +'" />'
+				  										+ '<div class="state p-danger"><label></label></div></div></td></tr>'
+	  							}
+				  				
+				  				$('tbody').append(tableEl);
+				  			},
+				  			error:function(){
+				  				console.log('실패');
+				  			}
+				  		})
+				  		
+				  	})
+				  </script>
         <!-- 컨텐츠 영역 -->
         <div class="content" style="max-width: 1120px; padding: 30px;">
           <fieldset class="radious10 inner-line line-shadow">
@@ -88,42 +125,35 @@
                       </thead>
                       <tbody>
                       
+                       
                        <tr>
-                         <td> 1 </td>
-                         <td><input type="color" value="#24E5F0" id="color-style" style="width: 35px; height: 15px;" onclick="return false"></td>
-                         <td> 이벤트 </td>
-                         <td class="over"> 제목 </td>
-                         <td class="over">'2024-04-24' + ' ~ ' + '2024-04-27'</td>
                          <td>
 	                         <div class="pretty p-icon p-curve p-thick p-jelly">
-	                            <input type="checkbox" name="check" value="1" />
+	                            <input type="checkbox" name="check" value="${c.calNO}" />
 	                            <div class="state p-danger">
 	                           				<label></label>
 	                       			</div>
 	                         </div>
                          </td>
-                       	</tr>
+                      	</tr>
+                       
                         
                  </tbody>
              </table>
          </div>
          <br>
-         <div align="center">
-         	<ul class="pagination">
-					  <li class="page-item disabled"><a class="page-link" href="#">◁</a></li>
-					  <li class="page-item active"><a class="page-link" href="#">1</a></li>
-					  <li class="page-item"><a class="page-link" href="#">2</a></li>
-					  <li class="page-item"><a class="page-link" href="#">3</a></li>
-					  <li class="page-item"><a class="page-link" href="#">▷</a></li>
-					</ul>
-         </div>
-         <br>     
-         <div align="end">
+         <div style="display: flex;justify-content: space-between;">
+         <div>
+         	<ul class="pagination"></ul>
+         </div>     
+         <div>
 					 <button class="btn btn-outline-danger">삭제</button>
+				 </div>
 				 </div>
       </fieldset>
    	</div>
   </div>
+  
 <script>
 const offset = new Date().getTimezoneOffset() * 60000;
 const today = new Date(Date.now()- offset);
