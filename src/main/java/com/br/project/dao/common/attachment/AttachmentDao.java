@@ -18,6 +18,16 @@ public class AttachmentDao {
 		return sqlSessionTemplate.insert("attachmentMapper.insertAttachment", attachment);
 	}
 	
+	/* ======================================= "가림" 구역 start ======================================= */
+	/**
+	 * @return : 등록한 첨부파일 갯수
+	 */
+	public int insertBoardAttachment(AttachmentDto attachment) {
+		return sqlSessionTemplate.insert("attachmentMapper.insertBoardAttachment", attachment);
+	}
+	
+	
+	/* ======================================= "가림" 구역 end ======================================= */
 	
 	
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.br.project.dao.board.BoardAttachmentDao;
+import com.br.project.dao.common.attachment.AttachmentDao;
 import com.br.project.dto.common.AttachmentDto;
 
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BoardAttachmentService {
 
-	private final BoardAttachmentDao attachmentDao;
+	private final AttachmentDao attachmentDao;
 	
 	/**
 	 * @method : 첨부파일 등록
@@ -24,7 +24,7 @@ public class BoardAttachmentService {
 		List<AttachmentDto> failedFiles = new ArrayList<>();
 		
 		for(AttachmentDto attachment : attachmentList) {
-			if(attachmentDao.insertAttachment(attachment) <= 0) {
+			if(attachmentDao.insertBoardAttachment(attachment) <= 0) {
 				failedFiles.add(attachment);
 			}
 		}

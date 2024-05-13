@@ -37,5 +37,35 @@
 					)
 	</insert>
 	
-	
+	<!-- ======================================= "가림" 구역 start ======================================= -->
+	<!-- 공지사항 첨부파일 등록 -->
+	<insert id="insertBoardAttachment" parameterType="AttachmentDto">
+		insert
+			into attachment
+				 (
+				   file_no
+				  ,origin_name
+				  ,modify_name
+				  ,attach_path
+				  ,ref_type
+				  ,ref_no
+				 )
+		  values 
+				(
+				  seq_ano.nextval
+				 ,#{originName}
+				 ,#{modifyName}
+				 ,#{attachPath}
+				 ,#{refType}
+				 <choose>
+				 	<when test="refNo != null">
+				 		,#{refNo}
+				 	</when>
+				 	<otherwise>
+				 		,seq_bdno.currval
+				 	</otherwise>
+				 </choose>
+				)
+	</insert>
+	<!-- ======================================= "가림" 구역 end ======================================= -->
 </mapper>
