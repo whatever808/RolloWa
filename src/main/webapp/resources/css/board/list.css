@@ -5,30 +5,43 @@
 }
 
 /* ------------- board category ------------- */
+#filter-category{
+	
+}
 #category{
-		display: inline-block;
+	display: inline-block;
     width: 200px;
 }
 #department{
-		display: inline-block;
-		margin-left: 50px;
-		width: 200px;
+	display: inline-block;
+	margin-left: 50px;
+	width: 200px;
 }
 
 /* ------------- search form ------------- */
-#search-form{
-    float: right;
+#filter-search{
+	float: right;
+}
+#keyword, #condition, #search-btn, #reset-search{
+	height: 40px;
 }
 #condition{
     display: inline-block;
-    width: 100px;
+    width: 150px;
 }
 #keyword{
-    display: inline-block;
-    width: 350px;
+	border: 1px solid lightgray;
 }
-#search-form button{
-    margin-top: -5px;
+
+/* ------------- reset search value ------------- */
+#reset-search{
+	display: inline-block;
+	color: #2985DB;
+	width: 160px;
+	align-content: center;
+}
+#reset-search:hover{
+	cursor: pointer;
 }
 
 /* ------------- board list ------------- */
@@ -48,11 +61,14 @@
     margin-right: 5px;
 }
 
-.board-list-pagination{
-    margin-top: 60px;
-}
-
 /* ------------- pagination ------------- */
+.board-list-pagination{
+    margin-top: 90px;
+    display: flex;
+    justify-content: center;
+    align-itmes: center;
+    
+}
 .board-list-pagination>.pagination span:hover{
 		cursor: pointer;
 }

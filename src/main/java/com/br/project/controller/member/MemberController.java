@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,22 +38,24 @@ import net.nurigo.sdk.message.service.DefaultMessageService;
 public class MemberController {
 	private final MemberService memberService;
 	private final FileUtil fileUtil;
+	private final BCryptPasswordEncoder bcryptPasswordEncoder;
 	DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSVIKI2KIZ8BWZP", "FRCLTDLTRNZ8AYQ3ABSZCF4JOBNBFIGK", "https://api.coolsms.co.kr");
 		
 	// 로그인
 	@PostMapping("/login.do")
-	public String MemberLogin(MemberDto member, HttpServletRequest request, RedirectAttributes redirectAttribute) {
-		MemberDto loginMember = memberService.selectMember(member);
+	public String MemberLogin(MemberDto member, HttpServletRequest request,
+				RedirectAttributes redirectAttributes) {
+		MemberDto loginMember = memberService.memberLogin(member);
 		HttpSession session = request.getSession();
+		redirectAttributes.addFlashAttribute("alertTitle", "로그인 서비스");
 		
-		redirectAttribute.addFlashAttribute("alertTitle", "로그인 서비스");
-		if(loginMember != null) {
+		if(bcryptPasswordEncoder.matches(member.getUserPwd(), loginMember.getUserPwd())) {
 			// 로그인 성공
 			session.setAttribute("loginMember", loginMember);
 		} else {
 			// 로그인 실패
 			log.debug("로그인 실패 실행됨");
-			redirectAttribute.addFlashAttribute("alertMsg", "로그인 실패");
+			redirectAttributes.addFlashAttribute("alertMsg", "로그인 실패");
 		}
 		
 		return "redirect:/";
@@ -86,28 +89,62 @@ public class MemberController {
 	// 휴대폰 인증번호 발송
     @PostMapping(value="/sendMsg.do", produces="aplication/json; charset=utf-8")
     @ResponseBody
-    public SingleMessageSentResponse ajaxSendOne(String phone) {
+    public String ajaxSendOne(String phone) {
         Message message = new Message();
         // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-        message.setFrom("송신 전화번호");
+        message.setFrom("01047547864");
         message.setTo(phone);
         String rand = RandomStringUtils.randomNumeric(6);
         log.debug(rand);
         
         message.setText("[CoolSMS] 인증번호를 확인하고 입력해주세요 : " + rand);
 
-        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-        System.out.println(response);
-
-        return response;
+        //SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        //log.debug("{}", response);
+        
+        return rand;
+    }
+    
+    // 임시 비밀번호 생성
+    @PostMapping("forgetPwd.do")
+    @ResponseBody
+    public Map<String, String> ajaxUpdateUserPwd(String userId) {	
+    	char[] charSet = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    				'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    				'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
+    				'!', '@', '#', '$', '%', '^', '&' };
+    
+    	String newPwd =  "pass1234"; //RandomStringUtils.random(10, charSet);
+    	log.debug("{}", newPwd);
+    	MemberDto member = MemberDto.builder()
+    								.userId(userId)
+    								.userPwd(bcryptPasswordEncoder.encode(newPwd))
+    								.build();
+    	
+    	int result = memberService.updateUserPwd(member);
+    	Map<String, String> map = new HashMap<>();
+    	
+    	if (result > 0) {
+    		map.put("msg", "SUCCESS");
+    		map.put("newPwd", newPwd);
+    	} else {
+    		map.put("msg", "FAIL");
+    	}
+    	
+    	return map;
     }
     
 	// 마이페이지 조회
 	@GetMapping("/mypage.page")
-	public String ToMyPage() {
+	public String ToMyPage(Model model, HttpSession session) {
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		loginMember = memberService.selectMember(loginMember);
+		
+		model.addAttribute("memberInfo", loginMember);
+		
 		return "member/mypage";
 	}
-	
+
 	// 마이페이지 프로필 이미지 수정
 	@PostMapping("/modifyProfile.do")
 	@ResponseBody
@@ -120,7 +157,7 @@ public class MemberController {
 		} else {
 			return "FAIL";
 		}
-		
+
 		Map<String, String> file = new HashMap<>(); 
 	
 		if(uploadFile != null && !uploadFile.isEmpty()) {
@@ -151,7 +188,13 @@ public class MemberController {
 		log.debug("{}", memberInfo);
 		
 		// 로그인한 멤버 번호 추출
-		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		MemberDto loginMember = null;
+		if ((MemberDto)session.getAttribute("loginMember") != null) {
+			loginMember = (MemberDto)session.getAttribute("loginMember");	
+		} else {
+			redirectAttributes.addFlashAttribute("alertMsg", "로그인 오류");
+			return "redirect:/";
+		}
 		memberInfo.put("userNo", String.valueOf(loginMember.getUserNo()));
 		
 		// 주소 합치기
@@ -167,14 +210,37 @@ public class MemberController {
 		// 회원정보 다시 조회
 		loginMember = memberService.selectMember(loginMember);
 		
-		redirectAttributes.addAttribute("alertTitle", "회원정보 수정");
+		redirectAttributes.addFlashAttribute("alertTitle", "회원정보 수정");
 		if (result > 0) {
 			session.setAttribute("loginMember", loginMember);
-			redirectAttributes.addAttribute("alertMsg", "회원정보 수정 성공");
+			redirectAttributes.addFlashAttribute("alertMsg", "회원정보 수정 성공");
 		} else {
-			redirectAttributes.addAttribute("alertMsg", "회원정보 수정 실패");
+			redirectAttributes.addFlashAttribute("alertMsg", "회원정보 수정 실패");
 		}
 		
-		return "redirect:/member/mypage.page/{alertTitle}/{alertMsg}";
+		return "redirect:/member/mypage.page";
+	}
+	
+	// 비밀번호 수정
+	@PostMapping("modifyPwd.do")
+	public String updateUserPwd(@RequestParam Map<String, String> map
+				, HttpSession session
+				, RedirectAttributes redirectAttributes) {
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		int result = 0;
+		
+		redirectAttributes.addFlashAttribute("alertTitle", "비밀번호 변경 서비스");
+		if (bcryptPasswordEncoder.matches(map.get("userPwd"), loginMember.getUserPwd())) {
+			loginMember.setUserPwd(bcryptPasswordEncoder.encode(map.get("updatePwd")));
+			result = memberService.updateUserPwd(loginMember);
+			
+			if (result > 0) {
+				session.invalidate();
+				redirectAttributes.addFlashAttribute("alertMsg", "비밀번호 변경 성공. 다시 로그인 해주세요.");
+				return "redirect:/";
+			}	
+		}
+		redirectAttributes.addFlashAttribute("alertMsg", "비밀번호 변경 실패. 현재 비밀번호를 다시 확인해주세요.");
+		return "redirect:/member/mypage.page";
 	}
 }

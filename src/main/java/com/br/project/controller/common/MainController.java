@@ -18,18 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MainController {
 	// 메인페이지
 	@RequestMapping("/")
-	public String mainPage(@SessionAttribute(value="loginMember", required=false) MemberDto loginMember 
-					, Model model
-					, @RequestParam(value="alertMsg", required=false) String alertMsg
-					, @RequestParam(value="alertTitle", required=false) String alertTitle) {
-
-		log.debug("alertMsg : {}", alertMsg);
-		
-		if(alertMsg != null) {
-			log.debug("로그인 메세지 실행됨");
-			model.addAttribute("alertTitle", alertTitle);
-			model.addAttribute("alertMsg",alertMsg);
-		}
+	public String mainPage(@SessionAttribute(value="loginMember", required=false) MemberDto loginMember ) {
 		
 		if(loginMember != null) {
 			return "mainpage/mainpage";

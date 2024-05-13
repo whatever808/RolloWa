@@ -1,6 +1,9 @@
 package com.br.project.dto.organization;
 
 import java.util.Date;
+import java.util.List;
+
+import com.br.project.dto.common.GroupDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,14 +20,33 @@ import lombok.ToString;
 @Builder
 public class OrganizationDto {
 
-	private String groupNo; // 부서 : DEPT01
-	private String groupCode; // 팀 : A
-	private String codeName; // 팀명 : 경리부
-	private Date registDate; // 생성일 : sysdate 
-	private Date ModifyDate; // 수정일 : sysdate
-	private String sysdate; // 상태
-	private int registEmp; // 생성자
-	private int modifyEmp; // 수정자
-	private String upperCode; // 상위코드 : 이 부서의 상위 부서
+	private int userNo;
+	private String userName;
+	private String userId;
+	private String userPwd;
+	private String phone;
+	private String address;
+	private String accountNo;
+	private String bank;
+	private String email;
+	private String profileUrl;
+	private int countFail;
+	private String enrollDate;
+	private int enrollUserNo;
+	private String modifyDate;
+	private int modifyUserNo;
+	private String status;
+	private int vacationCount;
+	private int authLevel;
+	private int salary;
+	private int deptNo;
+	private int teamNo;
+	private int positionNo;	
+	
+	private String dept;
+	private String team;
+	private String posi;
+
+	private List<GroupDto> groupList;
 	
 }

@@ -10,7 +10,7 @@
 	<result column="PHONE" property="phone"/>
 	<result column="POST_CODE" property="postCode"/>
 	<result column="ADDRESS" property="address"/>
-	<result column="DATAIL_ADDRESS" property="detailAddress"/>
+	<result column="DETAIL_ADDRESS" property="detailAddress"/>
 	<result column="TOTAL_ADDRESS" property="totalAddress"/>
 	<result column="BANK_ACCOUNT" property="bankAccount"/>
 	<result column="BANK" property="bank"/>
@@ -25,12 +25,23 @@
 </resultMap>
 
   <!--  회원 로그인  -->
+  <select id="memberLogin" resultMap="memberResult">
+  	select
+  		user_no, user_id, user_pwd, team_code
+  	from
+  		member
+  	where
+  		user_id = #{ userId }
+  	and
+  		status = 'Y'
+  </select>
+  
+  <!-- 회원 정보 조회 -->
 	<select id="selectMember" resultMap="memberResult"> 
-		select USER_NO , USER_NAME , USER_ID , USER_PWD , PHONE , ADDRESS , BANK_ACCOUNT , BANK , EMAIL , PROFILE_URL , COUNT_FAIL , VACATION_COUNT , AUTH_LEVEL , SALARY , TEAM_CODE , POSITION_CODE 
+		select USER_NO , USER_NAME , USER_ID , USER_PWD , PHONE , POST_CODE, ADDRESS, DETAIL_ADDRESS, TOTAL_ADDRESS , BANK_ACCOUNT , BANK , EMAIL , PROFILE_URL , COUNT_FAIL , VACATION_COUNT , AUTH_LEVEL , SALARY , TEAM_CODE , POSITION_CODE 
 		from member
 		where 
 		user_id = #{ userId } 
-		and user_pwd = #{ userPwd } 
 		and status = 'Y' 
 	</select>
  
@@ -42,6 +53,19 @@
 			user_no = #{ userNo }
 			and status = 'Y'
 	</select>
+	
+	<!-- 회원 랜덤 비밀번호로 수정 -->
+	<select id="updateUserPwd">
+		update
+			member
+		set
+			user_pwd = #{userPwd}
+			, modify_date = sysdate
+		where
+			user_id = #{userId}
+		and
+			status = 'Y'
+	</select>
 
 	<!-- 회원 프로필 이미지 변경 -->
 	<update id="updateProfile">
@@ -49,6 +73,7 @@
 			member
 		set
 			profile_url = #{ profileURL }
+			, modify_date = sysdate
 		where
 			user_no = #{ userNo }
 	</update>
@@ -62,7 +87,7 @@
 			, phone = #{ phone }
 			, post_code = #{ postNumber }
 			, address = #{ address }
-			, detail_address = #{ datailAddress }
+			, detail_address = #{ detailAddress }
 			, total_address = #{ totalAddress }
 			, email = #{ email }
 			, bank = #{ bank }
@@ -72,5 +97,21 @@
 		where
 			user_no = #{ userNo }
 	</update>
+ <!-- ================== 이예찬 ========================== -->
+ <!-- 이예찬 : Member 캘린더 위의 동료 선택 창에 필요한 데이터 조회 쿼리 -->
+	<select id="selectTeamPeer"
+	resultMap="memberResult">
+		select 
+     USER_NO
+     , USER_NAME
+     , PROFILE_URL
+     , (select code_name from tb_group where group_code = 'POSI01' and code = member.position_code) position
+		from Member
+		join tb_group on (code = team_code)
+		where Member.status = 'Y'
+		and team_code = #{teamCode}
+		and group_code = 'DEPT01'
+	</select>
+ <!-- ================== 이예찬 ========================== -->
  
 </mapper>

@@ -72,78 +72,93 @@
 	
 	<!-- 메인 영역 start -->
 	<div class="main_content">
-	    <h2>직원 검색</h2>
+	    <h2>조직 관리</h2>
 	    <hr>
 	    
 		<!-- ------------ -->
-		<table class="table">
+		
+		
+		<table id="table" class="table">
 		    <tr>
 		        <th>번호</th>
 		        <th>부서명</th>
 		        <th>팀명</th>
 		        <th>
-		            <button class="btn btn-success">행 추가</button>
+		            <button class="btn btn-success" onclick="addRow();">추가</button>
 		        </th>
 		    </tr>
 		
-		    <tr>
-		        <td>1</td>
-		        <td>
-		            <input type="text" value="총무부">
-		        </td>
-		        <td>
-		            <input type="text" value="경영지원팀">
-		        </td>
-		        <td>
-		            <button class="btn btn-danger">행 삭제</button>
-		        </td>
-		    </tr>
-		
-		    <tr>
-		        <td>2</td>
-		        <td>
-		            <input type="text" value="총무부">
-		        </td>
-		        <td>
-		            <input type="text" value="경영지원팀">
-		        </td>
-		        <td>
-		            <button class="btn btn-danger">행 삭제</button>
-		        </td>
-		    </tr>
-		
-		    <tr>
-		        <td>3</td>
-		        <td>
-		            <input type="text" value="총무부">
-		        </td>
-		        <td>
-		            <input type="text" value="경영지원팀">
-		        </td>
-		        <td>
-		            <button class="btn btn-danger">행 삭제</button>
-		        </td>
-		    </tr>
-		
-		    <tr>
-		        <td>4</td>
-		        <td>
-		            <input type="text" value="총무부">
-		        </td>
-		        <td>
-		            <input type="text" value="경영지원팀">
-		        </td>
-		        <td>
-		            <button class="btn btn-danger">행 삭제</button>
-		        </td>
-		    </tr>
+			<c:forEach var="d" items="${ dept }" begin="0" end="${ dept.size() }" varStatus="status">
+			    <tr>
+			        <td>${ status.index+1 }</td>
+				        <td>
+				            <input type="text" value="${ d.dept }">
+				        </td>
+				        <td>
+				            <input type="text" value="${ d.team }">
+				        </td>
+			        <td>
+			            <button class="btn btn-danger">삭제</button>
+			        </td>
+			    </tr>
+		    </c:forEach>
 		</table>
 		
 		<!-- 저장 버튼 -->
 		<div class="button">
 		    <button class="btn btn-outline-secondary" type="reset">원래대로</button>
-		    <button class="btn btn-primary">저장</button>
+		    <button class="btn btn-primary" onclick="saveData();">저장</button>
 		</div>
+	
+		<!-- 행 추가 스크립트 작성중 -->
+		<script>
+			function addRow() {
+				let table = document.getElementById('table');
+			    let newRow = table.insertRow(table.rows.length);
+				
+				let newCell1 = newRow.insertCell(0);
+				let newCell2 = newRow.insertCell(1);
+				let newCell3 = newRow.insertCell(2);
+				let newCell4 = newRow.insertCell(3);
+				
+				let input1 = document.createElement('span');
+		        input1.innerText = '';
+		        newCell1.appendChild(input1);
+
+		        let input2 = document.createElement('input');
+		        input2.setAttribute('type', 'text');
+		        input2.setAttribute('value', '');
+		        newCell2.appendChild(input2);
+
+		        let input3 = document.createElement('input');
+		        input3.setAttribute('type', 'text');
+		        input3.setAttribute('value', '');
+		        newCell3.appendChild(input3);
+		        
+		        let deleteButton = document.createElement('button');
+		        deleteButton.innerText = '삭제';
+		        deleteButton.className = 'btn btn-danger';
+		        deleteButton.onclick = function() {
+		            let row = this.parentNode.parentNode;
+		            row.parentNode.removeChild(row);
+		        };
+		        newCell4.appendChild(deleteButton);
+			}
+			
+			function saveData(){
+				let table = document.getElementById('table');
+				let rows = table.rows;
+				
+				for (let i = 1; i < rows.length; i++) {
+		            let cells = rows[i].cells;
+		            let departmentName = cells[1].getElementsByTagName('input')[0].value;
+		            let teamName = cells[2].getElementsByTagName('input')[0].value;
+
+		            console.log(i,") 부서명: ", departmentName, ", 팀명: ", teamName);
+		        }
+			}
+			
+		</script>
 	
 	
 		<!-- ------------ -->

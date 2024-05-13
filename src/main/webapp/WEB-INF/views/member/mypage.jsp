@@ -83,6 +83,19 @@
          font-size: 13px;
          margin: 3px;
      }
+     
+     .validation {
+     	font-size: 10px;
+     	color: gray;
+     }
+     
+     .disable {
+     	color: red;
+     }
+     
+     .able {
+     	color: green;
+     }
 </style>
 </head>
 <body>
@@ -92,7 +105,7 @@
 	             <div class="profile_box">
 	                 <div class="profile_img">
 	                     <div class="img_wrapper">
-	                         <img id="profileImg" src="${ contextPath }<c:out value='${ loginMember.profileURL }' default='/resources/images/defaultProfile.png'/>" onclick="$('#profileImgFile').click();">
+	                         <img id="profileImg" src="${ contextPath }<c:out value='${ memberInfo.profileURL }' default='/resources/images/defaultProfile.png'/>" onclick="$('#profileImgFile').click();">
 	                         <input type="file" id="profileImgFile" class="file" style="display:none;" accept="image/*">
 	                     </div>
 	                 </div>
@@ -121,34 +134,34 @@
 	                 <table class="table table-striped">
 	                     <tr>
 	                         <th>아이디 : </th>
-	                         <td colspan="2"><input type="text" value="${ loginMember.userId }" placeholder="기존 아이디" readonly></td>
+	                         <td colspan="2"><input type="text" value="${ memberInfo.userId }" placeholder="기존 아이디" readonly></td>
 	                     </tr>
 	                     <tr>
 	                         <th>이름 : </th>
-	                         <td colspan="2"><input type="text" name="userName" value="${ loginMember.userName }" placeholder="이름" required></td>
+	                         <td colspan="2"><input type="text" name="userName" value="${ memberInfo.userName }" placeholder="이름" required></td>
 	                     </tr>
 	                     <tr>
 	                         <th>핸드폰 번호 : </th>
-	                         <td><input type="text" name="phone" value="${ loginMember.phone }" placeholder="전화번호"></td>
+	                         <td><input type="text" name="phone" value="${ memberInfo.phone }" placeholder="전화번호"></td>
 	                         <td><button type="button" class="btn btn-sm btn-outline-primary">인증</button></td>
 	                     </tr>
 	                     <tr>
 	                         <th>우편번호 : </th>
-	                         <td><input class="form-control" type="text" id="postCode" name="postNumber" value="${ loginMember.postCode } }"></td>
+	                         <td><input class="form-control" type="text" id="postCode" name="postNumber" value="${ memberInfo.postCode }"></td>
 	                         <td><button type="button" class="btn btn-sm btn-outline-primary" onclick="findAddress();">주소 찾기</button></td>
 	
 	                     </tr>
 	                     <tr>
 	                         <th>주소 : </th>
-	                         <td colspan="2"><input type="text" id="address" name="address" value="${ loginMember.address }"></td>
+	                         <td colspan="2"><input type="text" id="address" name="address" value="${ memberInfo.address }"></td>
 	                     </tr>
 	                     <tr>
 	                         <th>상세주소 : </th>
-	                         <td colspan="2"><input type="text" id="detailAddress" name="detailAddress" value="${ loginMember.detailAddress }"></td>
+	                         <td colspan="2"><input type="text" id="detailAddress" name="detailAddress" value="${ memberInfo.detailAddress }"></td>
 	                     </tr>
 	                     <tr>
 	                         <th>이메일 : </th>
-	                         <td colspan="2"><input type="text" name="email" value="${ loginMember.email }"></td>
+	                         <td colspan="2"><input type="text" name="email" value="${ memberInfo.email }"></td>
 	                     </tr>
 	                     <tr>
 	                         <th>
@@ -163,7 +176,7 @@
 	                             </select>
 	                         </td>
 	                         <td>
-	                             <input type="text" name="bankAccount" value="${ loginMember.bankAccount }" placeholder="계좌번호">
+	                             <input type="text" name="bankAccount" value="${ memberInfo.bankAccount }" placeholder="계좌번호">
 	                         </td>
 	                     </tr>
 	                 </table>
@@ -180,12 +193,14 @@
 	     <div id="modify_pwd">
 	         <!-- Modal content -->
 	         <div class="m_content_style">
-	             <form action="" class="form-control">
-	                 현재 비밀번호 : <input class="form-control" type="password" name=""> <br>
-	                 변경 비밀번호 : <input class="form-control" type="password" name=""> <br>
-	                 비밀번호 확인 : <input class="form-control" type="password" name="">
+	             <form id="modify_pwd_form" action="${ contextPath }/member/modifyPwd.do" method="post" class="form-control">
+	                 현재 비밀번호 : <input class="form-control" type="password" name="userPwd"> <br>
+	                 변경 비밀번호 : <input class="form-control" type="password" name="updatePwd">
+	                 <label class="validation">유효한 형식(숫자, 영문자 포함 8~15자)의 비밀번호를 입력해주세요.</label> <br>
+	                 비밀번호 확인 : <input class="form-control" type="password" name="checkPwd">
+	                 <label class="validation"></label>
 	                 <div class="btn_wrapper" style="margin-top: 10px;">
-	                     <input type="submit" value="변경하기" class="btn1 forget_btn">
+	                     <input type="submit" value="변경하기" class="btn1 forget_btn" id="modify_pwd_btn">
 	                 </div>
 	             </form>
 	         </div>
@@ -246,7 +261,7 @@
 	// 은행정보
 	$(document).ready(function() {
 		$("#bank_select").children().each(function(index, el) {
-			if($(el).val() == '${loginMember.bank}') {
+			if($(el).val() == '${memberInfo.bank}') {
 				$(el).attr("selected", true);
 			}
 		})
@@ -299,6 +314,68 @@
         document.getElementById("detailAddress").focus();
 			}
 		}).open();
+	}
+	
+	// 비밀번호 변경
+	const $updatePwd = $("#modify_pwd_form>input[name=updatePwd]");
+	const $updatePwdLabel = $("#modify_pwd_form>input[name=updatePwd]+label");
+	const $checkPwd = $("#modify_pwd_form>input[name=checkPwd]")
+	const $checkPwdLabel = $("#modify_pwd_form>input[name=checkPwd]+label");
+	const $modifyBtn = $("#modify_pwd_btn");
+	const regExp = /^[a-zA-Z0-9]{8,15}$/;
+	var pwdVald = false;
+	var pwdCheck = false;
+	
+	$updatePwd.on("keyup", function() {
+		// 비밀번호 유효성 검사
+		pwdValidationCheck();
+		
+		// 비밀번호 일치 검사
+		pwdEqualCheck();
+	})
+	
+	$checkPwd.on("keyup", function() {
+		// 비밀번호 일치 검사
+		pwdEqualCheck();
+	})
+	
+	$("#modify_pwd_form").on("submit", function() {
+		if(pwdVald && pwdCheck) {
+			this.submit;
+		} else {
+			alert("비밀번호 변경 서비스", "변경할 비밀번호를 다시 확인해주세요");
+			return false;
+		}
+	})
+	
+	function validation(select, remove, add, text) {
+		select.removeClass(remove).addClass(add).text(text);
+		
+		return add == "able" ? true : false;
+	}
+	
+	function pwdValidationCheck() {
+		if($updatePwd.val().trim().length == 0) {
+			pwdVald = validation($updatePwdLabel, "able", "disable", "유효한 형식(숫자, 영문자 포함 8~15자)의 비밀번호를 입력해주세요.");
+		} else {
+			if(regExp.test($updatePwd.val())) {
+				pwdVald = validation($updatePwdLabel, "disable", "able", "사용 가능한 비밀번호입니다.");
+			} else {
+				pwdVald = validation($updatePwdLabel, "able", "disable", "유효한 형식(숫자, 영문자 포함 8~15자)의 비밀번호를 입력해주세요.");
+			}
+		}
+	}
+	
+	function pwdEqualCheck() {
+		if($checkPwd.val().trim().length == 0) {
+			pwdCheck = validation($checkPwdLabel, "able", "disable", "비밀번호가 일치하지 않습니다.");
+		} else {
+			if($checkPwd.val() == $updatePwd.val()) {
+				pwdCheck = validation($checkPwdLabel, "disable", "able", "비밀번호가 일치합니다.");
+			} else {
+				pwdCheck = validation($checkPwdLabel, "able", "disable", "비밀번호가 일치하지 않습니다.");
+			}
+		}
 	}
 </script>
 </html>

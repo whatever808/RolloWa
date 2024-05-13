@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <title>SideBar</title>
-		<!-- animate -->
+	<!-- animate -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <!-- bootstrap -->
@@ -320,28 +320,37 @@
                         </ul>
                     </div>
                 </li>
+                
+                <!-- 게시판 관련 (가림꺼 건들지 말것!!!) start -->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-                        Dashboard
+                        게시판
                     </button>
                     <div class="collapse" id="dashboard-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
+                        	
+                            <li><a href="${ contextPath }/board/list.do"
+                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 조회</a>
                             </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a>
-                            </li>
+                            <!-- 나중에 권한체크 추가하가(부장만 작성가능) -->
+                           	<li><a href="${ contextPath }/board/post.page"
+                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 등록</a>
+                           	</li>
+                            
+                            <!-- 
                             <li><a href="#"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
                             </li>
                             <li><a href="#"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
                             </li>
+                            -->
                         </ul>
                     </div>
                 </li>
+                <!-- 게시판 관련 (가림꺼 건들지 말것!!!) end -->
+                
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
@@ -374,11 +383,8 @@
                             <li><a href="${ contextPath }/member/mypage.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">My Page</a>
                             </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a>
+                            <li><a href="${ contextPath }/notification/list.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
                             </li>
                             <li><a href="${ contextPath }/member/logout.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
                                     out</a></li>

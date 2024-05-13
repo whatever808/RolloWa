@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="attendanceMapper">
+
+	<resultMap id="memberResult" type="AttendanceDto">
+		<id column="user_no" property="userNo" />
+		<result column="user_name" property="userName" />
+		<result column="user_id" property="userId" />
+		<result column="phone" property="phone" />
+		<result column="bank_account" property="bankAccount" />
+		<result column="bank" property="bank" />
+		<result column="email" property="email" />
+		<result column="post_code" property="postCode" />
+		<result column="address" property="address" />
+		<result column="detail_address" property="detailAddress" />
+		<result column="total_address" property="totalAddress" />
+		<result column="profile_url" property="profileUrl" />
+		<result column="modify_date" property="modifyDate" />
+		<result column="modify_user_no" property="modifyUserNo" />
+		<result column="status" property="status" />
+		<result column="vacation_count" property="vacationCount" />
+		<result column="auth_level" property="authLevel" />
+		<result column="salary" property="salary" />
+		<result column="dept_code" property="deptCode" />
+		<result column="team_code" property="teamCode" />
+		<result column="position_code" property="positionCode" />
+		<result column="regist_emp" property="registEmp" />
+		<result column="dept" property="dept" />
+		<result column="team" property="team" />
+		<result column="posi" property="posi" />
+		
+		<collection property="groupList" ofType="GroupDto">
+			<result column="group_code" property="groupCode"/>
+			<result column="code" property="code"/>
+			<result column="code_name" property="codeName"/>
+			<result column="upper_code" property="upperCode"/>
+		</collection>
+	</resultMap>
+
+	<!-- 출결 전체 카운트 -->
+	<select id="selectAttendanceListCount" resultType="_int">
+		SELECT
+			   COUNT(*)
+		  FROM ATTENDANCE
+	</select>
+
+	<!-- 출결 상태 출력 -->
+	<select id="selectAttendanceList" resultMap="memberResult">
+		SELECT USER_NO
+			 , PROFILE_URL
+       		 , USER_NAME
+       		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'DEPT%' AND CODE = TEAM_CODE) AS "DEPT"
+       		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'TEAM%' AND CODE = TEAM_CODE) AS "TEAM"
+      		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = POSITION_CODE) AS "POSI"
+		  FROM MEMBER
+		  JOIN TB_GROUP ON TEAM_CODE = CODE
+		   AND GROUP_CODE LIKE 'TEAM%'
+          JOIN ATTENDANCE USING (USER_NO)
+		 ORDER BY
+			   USER_NO ASC
+	</select>
+	<!-- 
+      		 , CLOCK_IN
+      		 , CLOCK_OUT
+             , REQUEST_DETAIL
+	
+	 -->
+
+</mapper>
+

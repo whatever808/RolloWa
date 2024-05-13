@@ -17,8 +17,6 @@
 	.out-line {
 		min-height: 800px;
 		width: 100%;
-		display: flex;
-		flex-direction: row;
 		box-sizing: border-box;
 	}	
 	.member-search-area {
@@ -41,15 +39,14 @@
 		padding: 10px;
 	}
 	.calender-area {padding: 10px;}
-	.mydiv-area {width: 20%;}
+	.mydiv-area {width: 20%; position: relative;}
 	.memebrdiv-area {
-		width: 80%;
-		gap: 30px;
+		width: 125px;
 		overflow-y: auto;
+		position: relative;
 	}
 	.line-cirecle {
-		border-radius: 100%;
-		height: 80px;
+		height: fit-content;
 		width: 80px;
 		cursor: pointer;
 	}
@@ -58,12 +55,8 @@
 		justify-content: center;
 		align-items: center;
 	}
-	.memebrdiv-area {
-		display: -webkit-box;
-		-webkit-box-align: center;
-	}
 	.font-size25 {font-size: 25px;}
-	.member-search-area, .content-area .calender-area {margin-left: 30px;}
+	.member-search-area {margin-left: 30px; gap: 25px;}
 	/* 모달 스타일 */
 	.Category, .Co-worker {
 		display: -webkit-box;
@@ -96,12 +89,25 @@
 	}
 	.fc-day-sat a {color: #007bff !important;}
 	.fc-day-sun a {color: #dc3545 !important;}
+	.img_postion{
+    position: absolute;
+    font-weight: bolder;
+    color: black;
+    font-size: x-large;
+    top: 0px;
+	}
 </style>
 </head>
 <body>
 	<!-- 상세보기 일정 모달 -->
 	<div id="cal_modal">
 	<form action="${path}/calendar/calUpdate.do" method="post">
+		<input type="hidden" name="calNO">
+		<div>
+			<div class="jua-regular">Title</div>
+			<div><input type="text" name="calTitle" style="width: 80%"></div>
+		</div>
+		<br>
 		<div style="display: flex; justify-content: space-between; align-items: center">
 			<div class="jua-regular">Category</div>
 			
@@ -112,82 +118,35 @@
 				<div class="state p-danger">
 					<label class="jua-regular">private</label>
 				</div>
-			</div>
+			</div>  
+
 		</div>
 		
 		<div class="Category">
-	    <div class="pretty p-default p-curve">
-	     	<input type="radio" name="groupCode" value="1">
-	       <div class="state p-success-o">
-	           <label>회의</label>
-	       </div>
-	    </div>
-       
-      <div class="pretty p-default p-curve">
-       <input type="radio" name="groupCode" value="1">
-       <div class="state p-success-o">
-           <label>미팅</label>
-       </div>
-      </div>
-       
-      <div class="pretty p-default p-curve">
-       <input type="radio" name="groupCode" value="1">
-       <div class="state p-success-o">
-           <label>이벤트</label>
-       </div>
-      </div>
-  
-      <div class="pretty p-default p-curve">
-	      <input type="radio" name="groupCode" value="1">
-	      <div class="state p-success-o">
-	          <label>계약</label>
-  			</div>
-      </div>
-      <div class="pretty p-default p-curve">
-	      <input type="radio" name="groupCode" value="1">
-	      <div class="state p-success-o">
-        	<label>기타</label>
-	      </div>
-      </div>       
+			<c:forEach var="g" items="${group}">
+		    <div class="pretty p-default p-curve">
+		     	<input type="radio" name="groupCode" value="${g.code}">
+		       <div class="state p-success-o">
+		           <label>${g.codeName}</label>
+		       </div>
+		    </div>
+			</c:forEach>
 		</div>
 		<br>
 		<div class="jua-regular">Co-worker</div>
 		<div class="Co-worker">
-	    <div class="pretty p-default p-round p-smooth p-plain">
-	        <input type="checkbox" name="coworker" value="2">
-	        <div class="state p-success-o">
-	            <label> 김우빈</label>
-	        </div>
-	    </div>
-	
-	    <div class="pretty p-default p-round p-smooth p-plain">
-	        <input type="checkbox" name="coworker" value="2">
-	        <div class="state p-success-o">
-	            <label> 전지현</label>
-	        </div>
-	    </div>
-	
-	    <div class="pretty p-default p-round p-smooth p-plain">
-	        <input type="checkbox" name="coworker" value="2">
-	        <div class="state p-success-o">
-	            <label> 아이유</label>
-	        </div>
-	    </div>
-	
-	    <div class="pretty p-default p-round p-smooth p-plain">
-	        <input type="checkbox" name="coworker" value="2">
-	        <div class="state p-success-o">
-	            <label> 뚱이</label>
-	        </div>
-	    </div>
-	
-	    <div class="pretty p-default p-round p-smooth p-plain">
-	        <input type="checkbox" name="coworker" value="2">
-	        <div class="state p-success-o">
-	            <label> 징징이</label>
-	        </div>
-	    </div>
+	    <c:forEach var="t" items="${teams}">
+		    <div class="pretty p-default p-round p-smooth p-plain">
+		        <input type="checkbox" name="coworker" value="${t.userNo}">
+		        <div class="state p-success-o">
+		            <label>${t.userName}</label>
+		        </div>
+		    </div>
+	    </c:forEach>
 		</div>
+		<script>
+			
+		</script>
 		<br>
 		<div class="jua-regular">
 			Color <input type="color" name="color" id="color-style" style="width: 30px; height: 30px;">
@@ -196,11 +155,11 @@
 		<div style="display: flex; justify-content: space-between;">
 			<div class="jua-regular">All Day</div>
 
-			<div class="pretty p-switch all_day">
+		<div class="pretty p-switch all_day">
 				<input type="checkbox">
 				<div class="state p-success">
 					<label>종일</label>
-				</div>
+				</div> 
 			</div>
 		</div>
 		<br>
@@ -270,18 +229,74 @@
 		<div class="content" style="max-width: 1120px; padding: 30px;">
 			<!-- 직원 div 영역 -->
 			<div class="member-search-area radious10 line-shadow">
-				<div class="mydiv-area display-item-center">
-					<div
-						class="line-cirecle display-item-center line-shadow my-element">홍길동</div>
-				</div>
-				<div class="memebrdiv-area display-item-center">
-					<div class="line-cirecle display-item-center line-shadow">아이유</div>
-					<div class="line-cirecle display-item-center line-shadow">지민</div>
-					<div class="line-cirecle display-item-center line-shadow">김가영</div>
-					<div class="line-cirecle display-item-center line-shadow">이누야샤</div>
-					<div class="line-cirecle display-item-center line-shadow">mama~</div>
-				</div>
+	
+				<!-- when : 로그인한 회원의 위치 -->
+				<!-- other :  같은 팀의 다른 사람들-->	
+				<c:forEach var="t" items="${teams}">
+					<c:choose>
+						<c:when test="${'1055' eq t.userNo}">
+							<div class="mydiv-area display-item-center">
+								<div class="line-cirecle display-item-center line-shadow">
+									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
+									<span class="img_postion">${t.userName}</span>
+								</div>
+								<input type="hidden" value="${t.userNo}">
+							</div>
+						</c:when>
+						<c:otherwise>
+							<div class="memebrdiv-area display-item-center">
+								<div class="line-cirecle display-item-center line-shadow">
+									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
+									<span class="img_postion">${t.userName}</span>
+								</div>
+								<input type="hidden" value="${t.userNo}">
+							</div>						
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
 			</div>
+			<script>
+				$(function(){
+					$(".memebrdiv-area").children().on('click', function(e){
+						$.ajax({
+							url:'${path}/calendar/oneMemCal.do',
+							type:'post',
+							data:'userNo=' + $(this).next().val(),
+							success:function(event){
+								console.log(event);
+								calendar.remove();
+								$('.calendar-area').append("<div class='calendar'><div>");
+								var calendarEl = document.getElementById('calendar');
+								for(let i= 0; i<event.lenght; i++){
+								calendar.addEventSource(
+									{
+										id:			event[i].calNO,
+										title: 		event[i].group.upperCode + event[i].group.codeName,
+										start: 		event[i].startDate,
+										end: 		event[i].endDate,
+										color: 		event[i].color,
+										extendeProps:{
+											content:  	event[i].calContent,
+											caltitle: 	event[i].calTitle,
+											place: 	  	event[i].place,
+											calSort:  	event[i].calSort,
+											groupCode: 	event[i].groupCode,
+											cowoker: 	event[i].coworker						
+										}
+									},
+								);
+								}// for end
+								calendar.render();
+							},
+							error:function(){
+								console.log('실패');
+							}
+						}); // ajax end
+						
+					});
+				})
+			</script>
+			
 			<br> <br>
 			<!-- 캘린더 영역 -->
 			<div class="calender-area radious10 line-shadow "><div id="calendar"></div></div>
@@ -291,34 +306,30 @@
 			document.addEventListener('DOMContentLoaded', function() {
 					var calendarEl = document.getElementById('calendar');
 					var calendar = new FullCalendar.Calendar(calendarEl, {
-							initialView: 'dayGridMonth',
-							locale: 'ko',
-							customButtons: {
-								 enrollButton:{
-								 text: '일정 등록',
-								 click: function(){
-								   location.href="${path}/calendar/calEnroll.page";
-								   }
-								 }
-							 },
-							buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주',},
-							headerToolbar:{start: 'prev today enrollButton',center: 'title',end: 'multiMonthYear,dayGridMonth,timeGridWeek next'},
-							views:{year: {titleFormat:{year: '2-digit'},multiMonthMaxColumns: 1},
-								  	month:{titleFormat:{year: '2-digit', month: 'short'}},
-										week: {titleFormat:{year: '2-digit'}},
-										day: {titleFormat:{month: 'short',day:'2-digit'}}},
-							buttonIcons: false,
-							navLinks: true,
-							slotMinTime: "06:00:00",
-							timeZone: 'Asia/Seoul',
-							editable: true,
-							droppable: true,
-							eventStartEditable: true,
-							eventResizableFromStart: true,
-							eventClick:function(info){
-			     	 		//console.log(info.event.extendedProps.extendeProps.place);
-						    //console.log($('#cal_modal').find('input[name=place]'));
-				     	 	$(document).on('opening', '#cal_modal', function (e) {
+						initialView: 'dayGridMonth',
+						locale: 'ko',
+						customButtons: {
+							 enrollButton:{text: '일정 등록',click: function(){location.href="${path}/calendar/calEnroll.page";}}
+						},
+						buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주'
+						},
+						headerToolbar:{start: 'prev today enrollButton',
+									   center: 'title',
+									   end: 'multiMonthYear,dayGridMonth,timeGridWeek next'
+					    },
+						views:{year: {titleFormat:{year: '2-digit'}, multiMonthMaxColumns: 1},
+						  	   month:{titleFormat:{year: '2-digit', month: 'short'} },
+							   week: {titleFormat:{year: '2-digit'} },
+							   day:  {titleFormat:{month: 'short', day:'2-digit'}}
+						},
+						buttonIcons: false,
+						navLinks: true,
+						slotMinTime: "06:00:00",
+						timeZone: 'Asia/Seoul',
+						eventClick:function(info){	
+							//console.log(info.event.extendedProps.extendeProps);
+							
+							$(document).on('opening', '#cal_modal', function (e) {
 							    const extend = info.event.extendedProps.extendeProps;
 							    $('#color-style').val(info.event.backgroundColor);
 							    $('#currentDate1').val(info.event.startStr.slice(0,10));
@@ -327,51 +338,74 @@
 							    $('#currentTime2').val(info.event.endStr.slice(11));
 							    $('#cal_modal').find('.content-text-area').val(extend.content);
 							    $('#cal_modal').find('input[name=place]').val(extend.place);
-									if(extend.calSort == 'P'){
+							    $('input[name=calTitle]').val(extend.caltitle);
+							    $('input[name=calNO]').val(info.event.id);
+							    
+								if(extend.calSort == 'P'){
 									$('#cal_modal').find('input[name=calSort]').attr('checked', true);										
-									}
-								});
-				     	 	$('#cal_modal').iziModal('setSubtitle', info.event.extendedProps.extendeProps.calNO);  
-				     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
-				      	$('#cal_modal').iziModal('open');
-							},
-							eventMouseEnter:function(info){
-									info.el.style.transform = 'scale(1.05)';
-									info.el.style.cursor = 'pointer';
-							},
-							eventMouseLeave:function(info){
-									info.el.style.transform = '';
-							},
-							events:[
-								<c:forEach var="c" items="${list}">
-									{
-										id:			'${c.calNO}',
-										title: 	'${c.calTitle }',
-										start: 	'${c.startDate }',
-										end: 		'${c.endDate }',
-										color: 	'${c.color }',
-										extendeProps:{
-											calNO:		'${c.calNO}',
-											content:  '${c.calContent}',
-											place: 	  '${c.place}',
-											calSort:  '${c.calSort}'
+								}else{
+									const $cate = $('input[name=groupCode]');
+									for (let i = 0; i<$cate.length; i++){
+										if($cate[i].value == extend.groupCode){
+											$cate[i].checked = true;
 										}
-									},
-								</c:forEach>
-							]
-						});
+									};
+								}
+								
+								$('input[name=coworker]').each(function(){
+			                        $(this).prop('checked', false);
+			                    });
+									
+								const sortArr = extend.cowoker.split(",");
+								sortArr.forEach(s => {
+									$('input[name=coworker]').each(function() {
+										if ($(this).val() == s) {
+											 $(this).prop('checked', true);
+										}
+									  });
+								});
+										
+							}); //ismodal open function
+				     	 	
+				     	 	$('#cal_modal').iziModal('setSubtitle', info.event.id);  
+				     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
+				      		$('#cal_modal').iziModal('open');
+						},// event click
+						eventMouseEnter:function(info){
+							info.el.style.transform = 'scale(1.05)';
+							info.el.style.cursor = 'pointer';
+						},
+						eventMouseLeave:function(info){
+							info.el.style.transform = '';
+						},	
+						events:[
+							<c:forEach var="c" items="${list}">
+								{
+									id:			'${c.calNO}',
+									title: 		'${c.group.upperCode}'+'${c.group.codeName}',
+									start: 		'${c.startDate }',
+									end: 		'${c.endDate }',
+									color: 		'${c.color }',
+									extendeProps:{
+										content:  	'${c.calContent}',
+										caltitle: 	'${c.calTitle }',
+										place: 	  	'${c.place}',
+										calSort:  	'${c.calSort}',
+										groupCode: 	'${c.groupCode}',
+										cowoker: 	'<c:forEach var="co" items="${c.coworker}">${co.userNo},</c:forEach>'								
+									}
+								},
+							</c:forEach>
+						]// event end
+					});
 					calendar.render();
-				});
+				});	
+
 	      </script>
 		</div>
 	</div>
-	
 	<!-- 모달 스크립트문 -->
 <script>
-     function repeat_anmation(){
-         animateCSS('.my-element', 'bounce');
-     }
-
      $('#cal_modal').iziModal({
      subtitle: '수정도 가능합니다.',
      headerColor: ' rgb(255,247,208)', 
@@ -379,8 +413,8 @@
      padding: '15px',
      radius: 10, 
      focusInput:	true,
-     restoreDefaultContent: false, 
-	  }); 
+     restoreDefaultContent: true, 
+	  });      
 </script>
 	
 	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>

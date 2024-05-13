@@ -32,14 +32,6 @@
     width: 1000px;
 }
 
-/* ckeditor style */
-.ck.ck-editor{
-    width: 800px;
-}
-.ck-editor__editable {
-    min-height: 300px;
-}
-
 .button-group{
     margin-left: 650px;
 }

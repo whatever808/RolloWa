@@ -93,20 +93,50 @@
         right: 0px;
         position: absolute;
         top: -.2em;
+        z-index: -1;
     }
     /* 세로줄 */
-    .tree ul:before, .tree code:before, .tree span:before {
+    /* .tree ul:before  :  대표이사 */
+    .tree ul:before{
+      outline: solid 1px gainsboro;
+      content: "";
+      height: 2.5em;
+      left: 50%;
+      position: absolute;
+      top: -2.8em !important;
+      z-index: -1;
+    }
+    /* .tree span:before : 부서 및 팀 줄 */
+    .tree span:before {
         outline: solid 1px gainsboro;
         content: "";
-        height: 2.5em;
+        height: 3.3em;
         left: 50%;
         position: absolute;
         top: -2.7em !important;
         z-index: -1;
     }
+    /* 팀 이름에만 빨간색 선이 표시되도록 스타일 적용 */
+    .tree ul > li > ul > li > a > .level3:before {
+      outline: solid 1px white !important;
+      z-index: -1;
+    }
+
+    /* 가로 수량 조절시 2개 같이 수정 */
     /* 줄 간격 넓히기 */
-    .tree li:nth-child(n+7) {
+    .tree li:nth-child(n+5) {
       margin-top: 50px;
+    }
+    /* 크기 조절 */
+    .tree code, .tree span {
+        border: solid .1em gainsboro;
+        border-radius: .3em;
+        display: inline-block;
+        /* 가운데 em : 가로 개수조절 */
+        margin: 0 3em 2.3em;
+        padding: 1em 1.5em;
+        position: relative;
+        width: 200px;
     }
 
     .tree li:first-child:before {
@@ -115,17 +145,6 @@
     .tree li:last-child:before {
         right: 50%;
     }
-    /* 크기 조절 */
-    .tree code, .tree span {
-        border: solid .1em gainsboro;
-        border-radius: .3em;
-        display: inline-block;
-        margin: 0 .2em 2.5em;
-        padding: 1em 1.5em;
-        position: relative;
-        width: 200px;
-    }
-    
     .tree ul:before {
         top: -1.8em;
     }
@@ -146,8 +165,9 @@
     }
     .level1{
       background-color: navy;
-      color: white; 
+      color: white !important;
       width: 12em;
+      z-index: -1;
     }
     .level2 {
       background-color: rgb(0, 183, 165);
@@ -158,12 +178,6 @@
       background-color: gainsboro;
       color: black !important;
       margin: -0.45em 0 !important;
-    }
-
-    /*  */
-    .tree > li > ul {
-      /* display: flex; */
-      flex-wrap: wrap;
     }
     </style>
 </head>
@@ -179,15 +193,16 @@
 
             <!-- 메인 영역 start -->
 
+            <!-- 일정한 개수 마다 다음줄로-->
             <script>
               $(document).ready(function() {
                   var treeItems = $('.tree > li > ul > li').length;
-                  if (treeItems > 6) {
+                  if (treeItems > 1) {
                       $('.tree > li > ul').css('display', 'flex');
                       $('.tree > li > ul').css('flex-wrap', 'wrap');
                     }
               });
-          </script>
+            </script>
             
             <ul class="tree">
               <li> <span class="level1">대표이사</span>
@@ -235,47 +250,6 @@
                     </ul>
                   </li>
 
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
-                  
-                  <li> <a href="http://www.naver.com"><span class="level2">부서이름입니다</span></a>
-                    <ul>
-                      <li> <a href=""><span class="level3">팀이름입니다</span></a> </li>
-                    </ul>
-                  </li>
 
                   
 
