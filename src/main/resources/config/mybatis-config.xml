@@ -25,7 +25,8 @@
 	
 	
 	<mappers>
-		<mapper resource="mappers/board-mapper.xml" />
+		<mapper resource="mappers/board/board-mapper.xml" />
+		<mapper resource="mappers/board/boardAttachment-mapper.xml" />
 		<mapper resource="mappers/attachment-mapper.xml" />
 		<mapper resource="mappers/department-mapper.xml" />
 		<mapper resource="mappers/member-mapper.xml" />

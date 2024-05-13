@@ -1,0 +1,125 @@
+.board-detail{
+    padding: 30px;
+    padding-bottom: 100px;
+    box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
+    border-radius: 10px;
+}
+
+/* -------------- page title -------------- */
+.page-title{
+    margin-bottom: 50px;
+    font-weight: bold;
+    font-family: "Jua";
+}
+
+/* ------------- board header area ------------- */
+.board-header{
+    display: flex;
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+.board-header-left, .board-header-right{
+	 width: 50%;
+}
+
+.board-header-left>.title{
+    font-weight: bold;
+    font-size: 30px;
+    margin-bottom: 10px;
+    margin-left: 0;
+}
+.writer-profile-image{
+    width: 26px;
+    height: 26px;
+}
+.board-info{
+    font-size: 16px;
+}
+.info-first{
+	display: inline-block;
+	padding: 0 20px 0 0;
+	border-right: 1.5px solid lightgray;
+}
+.info-middle{
+	display: inline-block;
+	padding: 0 20px 0 20px;
+	border-right: 1px solid lightgray;
+}
+.info-last{
+	display: inline-block;
+	padding-left: 20px;
+}
+
+.board-header-right{
+	display:flex;
+	flex-direction: column;
+	align-items: end;
+	float: right;
+}
+
+.board-regist-date{
+    margin-bottom: 33px;
+}
+
+.edit-area{
+    display: flex;
+    align-items: center;
+    float: right;
+}
+.edit-area>a{
+	 margin-left: 20px;
+}
+
+
+/* ------------- board attachment area ------------- */
+.board-attachment-list{
+    padding-bottom: 12px;
+}
+
+.attachment-list-info{
+    margin-bottom: 5px;
+}
+.bi{
+    margin-right: 10px;
+}
+.bi:hover{
+    cursor: pointer;
+}
+
+.list, .about-attachment-list{
+    font-size: 17px;
+    letter-spacing: 1px;
+}
+
+li{
+    list-style: none;
+}
+.attachment-list a{
+    color: dimgray;
+    text-decoration-line: none;
+}
+
+/* ------------- board content area ------------- */
+.board-content-area{
+    padding: 30px 0 70px 0;
+    min-height: 600px;
+    border-bottom: 0.3px solid rgb(188, 185, 185);
+    border-top: 0.3px solid rgb(188, 185, 185);
+}
+
+/* ------------- board change area ------------- */
+.change-board{
+	display: flex;
+	justify-content: space-between;
+	align-item: center;
+	margin-top: 50px;
+}
+a.list{
+	width: 30%;
+	text-align: center;
+	border-radius: 15px;
+	padding: 20px 0 20px 0;
+}
+
+
+

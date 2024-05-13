@@ -13,36 +13,13 @@
 
 	<!-- TinyMCE 에디터 CDN 연결 -->
 	<script src="https://cdn.tiny.cloud/1/kv8msifnng66ha7xgul5sc6cehyxcp480zm27swyti7b7u38/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+	<!-- TinyMCE 관련 스크립트 -->
+	<script src="${ contextPath }/resources/js/board/editor.js"></script>
 </head>
 <body>
 
 	<!-- side bar -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
-	
-	<script>
-		// TinyMCE 에디터 환경설정
-		tinymce.init({
-	        selector: "#board-content", // TinyMCE를 적용할 textarea 요소의 선택자를 지정
-	        plugins: "paste image imagetools", // 'paste', 'image', 'imagetools' 플러그인 추가
-	        height: 500,
-	        width: 900,
-	        toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | image", // 'image' 버튼 툴바에 추가
-	        paste_data_images: true, // 이미지 붙여넣기 설정 활성화
-	        file_picker_types: 'image', // TinyMCE에서 이미지를 선택할 때, 이미지 파일만 선택 (옵션 : media, file 등)
-	        images_upload_handler(blobInfo, success) { // 이미지를 업로드하는 핸들러 함수
-	            // blobInfo : TinyMCE에서 이미지 업로드 시 사용되는 정보를 담고 있는 객체
-	            const file = new File([blobInfo.blob()], blobInfo.filename());
-	            const fileName = blobInfo.filename();
-	 
-	            if (fileName.includes("blobid")) {
-	                success(URL.createObjectURL(file));
-	            } else {
-	                imageFiles.push(file);
-	                success(URL.createObjectURL(file)); // Blob 객체의 임시 URL을 생성해 이미지 미리보기 적용
-	            }
-	        }
-   		});
-	</script>
 	
 	<!-- content 추가 -->
   	<div class="content p-5">
@@ -60,32 +37,42 @@
                   <label for="board-category" class="field-title">게시판</label><br>              
                   <select name="category" class="board-category form-select" id="board-category">
                       <option value="">일반공지사항</option>
-                      <option value="${ loginUser.teamNo }">부서공지사항</option> <!-- 로그인 사용자가 속한 부서 -->
+                      <option value="${ loginMember.teamCode }">부서공지사항</option> <!-- 로그인 사용자가 속한 부서 -->
                   </select>
               </div>
 
               <!-- board title -->
               <div class="field-group">
-                  <label for="board-title" class="field-title">게시글 제목</label><br>
+                  <label for="board-title" class="field-title">글제목</label><br>
                   <input type="text" id="board-title" placeholder="제목을 입력하세요." name="title" required>
               </div>
 
               <!-- board attachment -->
               <div class="field-group">
                   <label class="field-title" for="board-attachment">첨부파일</label>
-                  <input type="file" name="uploadFiles" class="form-control" id="board-attachment" multiple>
+	            	<div id="add-attachment" onclick="addFileInput();">
+	            		<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#909090" viewBox="0 0 16 16">
+							  <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5"/>
+							  <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+							</svg>
+							<small>첨부파일 추가</small>
+	            	</div>
+                  <div id="attachment-div">
+                  	<input type="file" name="uploadFiles" class="form-control board-attachment">
+                  </div>
               </div>
               
               <!-- board content -->
                <div class="field-group">
-                  <label class="field-title" for="board-content">게시글 내용</label>
-                  <textarea name="boardContent" class="form-control" id="board-content" required></textarea>
-              </div>		
+                  <label class="field-title" for="board-content">글내용</label>
+                  <textarea class="form-control" name="content" id="board-content"></textarea>
+              </div>
 							
               <div class="button-group">
-                  <button type="reset" class="btn btn-outline-warning" onclick="resetForm();">초기화</button>
-                  <button type="submit" class="btn btn-outline-primary">등록하기</button>
-                  <button type="button" class="btn btn-outline-secondary">임시저장</button>
+              		<input type="hidden" name="status">
+                  <button type="reset" class="btn btn-outline-warning">초기화</button>
+                  <button type="button" class="btn btn-outline-primary" onclick="setBoardStatus('Y');">등록하기</button>
+                  <button type="button" class="btn btn-outline-secondary" onclick="setBoardStatus('T');">임시저장</button>
               </div>
 
           </form>
@@ -104,7 +91,36 @@
 </body>
 
 <script>
-				
+	// 업로드 첨부파일 추가 =================================================================================================
+	function addFileInput(){
+		if($("#attachment-div").children().length < 10){
+			// 추가한 첨부파일 업로드 요소가 10개 이하일 경우 첨부파일 요소 추가
+			$("#attachment-div").append("<input type='file' name='uploadFiles' class='form-control board-attachment'>");	
+		}else{
+			// 추가한 첨부파일 업로드 요소가 10개 초과일 경우 알림창
+			alert("업로드 가능 첨부파일 갯수는 최대 10개 까지입니다.");
+		}
+	}
+	
+	// 공지사항 저장형태값 지정 =================================================================================================
+	function setBoardStatus(status){
+		$("input[name=status]").val(status);
+		formSubmit();
+	}
+	
+	// 공지사항 등록 요청 ====================================================================================================
+	function formSubmit(){
+		// 에디터에 작성된 내용을 [name=content]로 함께 전달
+		$("textarea#board-content").val(tinymce.activeEditor.getContent("board-content"));
+		$("#post-form").submit();
+		console.log(tinymce.activeEditor.getContent("board-content"));
+		if($("#board-content").val().trim().length == 0 || $("#board-content").val().trim() == ''){
+			console.log("내용 미작성");
+		}else{
+			console.log("내용 작성");
+		}
+	}
+	
 </script>
 
 </html>
