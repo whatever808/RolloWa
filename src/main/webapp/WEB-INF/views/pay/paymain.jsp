@@ -7,161 +7,55 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
- <script src="../assets/js/color-modes.js"></script>
- 		 <!-- jQuery 라이브러리 -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
- 		
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.122.0">
-    <title>메인페이지</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
-
-    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
-    <script src="../../../resources/js/common/bootstrap.bundle.min.js"></script>
-    <script src="../../../resources/js/common/sidebars.js"></script>
-
-    <link href="/src/main/webapp/resources/css/mainPage/mainPage.css" rel="stylesheet">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https: //fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    
-    <!-- Custom styles for this template -->
-    <link href="../../resources/css/common/sidebars.css" rel="stylesheet">
-    
+ 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+ 
     <!-- 메인페이지스타일 -->
     <link href="${ contextPath }/resources/css/pay/paymain.css" rel="stylesheet">
     
 
 </head>
 <body>
+    <c:if test="${not empty paymain or not empty params}">
+			<script>
+        function typeSelect() {
+            location.href = "${contextPath}/pay/selectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
+        };
 
-	<script>
-		 function typeSelect(){
-			location.href="${contextPath}/pay/selectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
-		
-		};
-		
-			$(document).ready(function(){
-				
-				$("#selects").change(function(){
-					typeSelect();
+        $(document).ready(function () {
+            $("#selects").change(function () {
+                typeSelect();
+            });
+            $("#statusSelect").change(function () {
+                typeSelect();
+            });
+        });
+			</script>
+    </c:if>
+  
+  
+  <c:if test="${ not  empty userAllList or not empty userAllListSelect or not empty userSearchList}">
+  	<script>
+	  	function typeSelect(){
+				location.href="${contextPath}/pay/userSelectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
+			
+			};
+			
+				$(document).ready(function(){
+					$("#selects").change(function(){
+						typeSelect();
+						});
+					$("#statusSelect").change(function(){
+						typeSelect();
 					});
-				$("#statusSelect").change(function(){
-					typeSelect();
+					
 				});
-				
-			});
-  </script>
-                                   
-	<main class="d-flex flex-nowrap">
-        <div class="flex-shrink-0 p-3" style="width: 280px;">
-            <a href="/"
-                class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
-                <svg class="bi pe-none me-2" width="30" height="24">
-                    <use xlink:href="#bootstrap" />
-                </svg>
-                <span class="fs-5 fw-semibold">회사로고</span>
-            </a>
-            <ul class="list-unstyled ps-0">
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-                        Home
-                    </button>
-                    <div class="collapse show" id="home-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-                        Dashboard
-                    </button>
-                    <div class="collapse" id="dashboard-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-                        Orders
-                    </button>
-                    <div class="collapse" id="orders-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="border-top my-3"></li>
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-                        Account
-                    </button>
-                    <div class="collapse" id="account-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New...</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a>
-                            </li>
-                            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
-                                    out</a></li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-        <div class="b-example-divider b-example-vr"></div>
-
+		</script>
+  </c:if>
+  
+  
+  
+                               
+	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
         <!-- content 추가 -->
         <div class="content p-4">
             <!-- 프로필 영역 -->
@@ -173,8 +67,9 @@
                         <a href="${contextPath}/pay/allUserlist.do" method="get">
                             <div class="di_top" id="di_t_1">
                                 <div class="di_top_left">
-                                    <div><label>000님의 전체수신결재함</label></div>
-                                    <div class="biv_b"><b>00건</b></div>
+                                    <div><label>${loginMember.userName}님의 <br>전체수신결재함</label></div>
+                                    <div><b>${ ulistCount.length() == 1 ? "0" + ulistCount 
+                                    				 														: ulistCount == "0" ? "0" : ulistCount}건</b></div>
                                 </div>
                                 <div class="di_top_rigth">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard2-x-fill" viewBox="0 0 16 16">
@@ -187,8 +82,9 @@
                         <a href="">
                             <div class="di_top" id="di_t_2">
                                 <div class="di_top_left">                         
-                                    <div><label>000님의 처리하지 않은<br>수신결재</label></div>
-                                    <div><b>00건</b></div>
+                                    <div><label>${loginMember.userName}님의 <br> 승인완료한 수신결재함</label></div>
+                                    <div><b>${ slistCount.length() == 1 ? "0" + slistCount 
+                                    				 														: slistCount == "0" ? "0" : slistCount}건</b></div>
                                  </div>
                                 <div class="di_top_rigth">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard-check-fill" viewBox="0 0 16 16">
@@ -201,8 +97,9 @@
                         <a href="">
                             <div class="di_top" id="di_t_3">
                                 <div class="di_top_left">
-                                   <div><label>일주일 이상 지연 된 <br>수신결재</label></div>
-                                    <div><b>${ mdCount.length() == 1 ? '0' + mdCount : mdCount}건</b></div>
+                                   <div><label>${ loginMember.userName }님의 일주일 이상 <br>  지연 된 수신결재함</label></div>
+                                    <div><b>${ mdCount.length() == 1 ? "0" + mdCount 
+                                    				 														: mdCount == "0" ? "0" : mdCount}건</b></div>
                                 </div>
                                 <div class="di_top_rigth">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard-minus-fill" viewBox="0 0 16 16">
@@ -212,11 +109,12 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="">
+                        <a href="${contextPath}/pay/paymain.page">
                             <div class="di_top" id="di_t_4">
                                 <div class="di_top_left">
                                     <div><label>전체결재내역보기</label></div>
-                                    <div class="biv_b"><b>${ slistCount.length() == 1 ? '0'+ slistCount : slistCount}건</b></div>
+                                    <div class="biv_b"><b>${ listCount.length() == 1 ? "0" + listCount 
+                                    				 														: listCount == "0" ? "0" : listCount}건</b></div>
                                 </div>
                                 <div class="di_top_rigth">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard2-fill" viewBox="0 0 16 16">
@@ -346,12 +244,18 @@
                                             <option value="H">휴직신청서</option>
                                             <option value="V">휴가신청서</option>
                                         </select>
-                                    </div>
-                                   
-                                   
+                                    </div>    
                                 </div>
                                 <div id="cen_bottom_search_center">
-                                     <form action="${contextPath}/pay/search.do" method="get">
+                                			<c:choose>
+                                				<c:when test="${ not empty userAllList or not empty userSearchList}">
+                                					 <form action="${contextPath}/pay/userSearch.do" method="get">
+                                				</c:when>
+                                				<c:otherwise>
+                                     			<form action="${contextPath}/pay/search.do" method="get">
+                                				</c:otherwise>
+                                			</c:choose>
+                                			
                                      		<input type="hidden" name="page" value="1">
                                     		<div class="input-group mb-3">
                                         <select name="condition" id="select_search">
@@ -359,14 +263,30 @@
                                             <option value="DEPARTMENT">부서</option>
                                         </select>
                                         <input type="text" name="keyword" value="${ search.keyword }"  id="search_input" class="form-control" placeholder="검색어를 입력하세요" style="width: 400px;">
-                                        <div class="input-group-append">
-                                        <button type="submit" id="my-button">
+                                       
+                                        <c:choose>
+                                        	<c:when test="${ not empty userAllList or not empty userSearchList }">
+                                        	 <div class="input-group-append">
+                                        		<button type="submit" id="user_mybutton">
+                                           	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
+                                           	<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                           	</svg>
+                                         		</button>
+                                         		</div>
+                                        	</c:when>
+                                       		<c:otherwise>
+                                       		 <div class="input-group-append">
+                                       			<button type="submit" id="my_button">
+                                           	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
+                                           	<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                           	</svg>
+                                         		</button>
+                                         		</div>
+                                        	</c:otherwise>
+                                        </c:choose>
+                                        
                                      </form>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
-                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                            </svg>
-                                          </button>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -388,7 +308,7 @@
                                     <c:choose>
                                     <c:when test="${ not empty list }">
                                       <c:forEach var="l" items="${ list }">
-                                     		<tr onclick="location.href='${contextPath}/pay/detail.do?approvalNo=${ l.approvalNo }&documentNo=${ l.documentNo }&documentType=${ l.documentType }&payWriter=${ l.payWriter }';">
+                                     		<tr onclick="location.href='${contextPath}/pay/detail.do?approvalNo=${ l.approvalNo }&documentNo=${ l.documentNo }&documentType=${ l.documentType }&payWriter=${ l.payWriter }&payWriterNo=${ l.payWriterNo }';">
                                             <td>${ l.approvalNo }</td>
                                             <td>${ l.documentType } 
                                             		${ l.salesStatus + l.draftStatus + l.businessStatus == 1 ? '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">
@@ -419,7 +339,7 @@
                                 <div id="pagin_form">
                                    <c:choose>
                                    	<c:when test="${ not empty params }">
-                                   	<ul class="pagination">
+                                   		<ul class="pagination">
 		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/selectList.do?page=${pi.currentPage-1}&conditions=${params.conditions}&status=${params.status}">Previous</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
@@ -429,18 +349,7 @@
 													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/selectList.do?page=${pi.currentPage+1}&conditions=${params.conditions}&status=${params.status}">Next</a></li>
 													             </ul>
                                    	</c:when>
-                                   	<c:when test="${ not empty search }">
-                                   	<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage-1}&condition=${search.condition}&keyword=${search.keyword}">Previous</a></li>
-													                
-													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${p}&condition=${search.condition}&keyword=${search.keyword}">${ p }</a></li>
-													                </c:forEach>
-													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage+1}&condition=${search.condition}&keyword=${search.keyword}">Next</a></li>
-													             </ul>
-                                   	</c:when>
-                                   	<c:otherwise>
+                                   	<c:when test="${ not empty paymain }">
                                    		<ul class="pagination">
 		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${pi.currentPage-1}">Previous</a></li>
 													                
@@ -449,6 +358,50 @@
 													                </c:forEach>
 													                
 													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${pi.currentPage+1}">Next</a></li>
+													             </ul>
+                                   	</c:when>
+                                   	<c:when test="${not empty userAllList}">
+                                   		<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/allUserlist.do?page=${pi.currentPage-1}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/allUserlist.do?page=${p}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/allUserlist.do?page=${pi.currentPage+1}">Next</a></li>
+													             </ul>
+                                   	</c:when>
+                                   	<c:when test="${not empty userAllListSelect }">
+                                			<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSelectList.do?page=${pi.currentPage-1}&conditions=${map.conditions}&status=${map.status}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSelectList.do?page=${p}&conditions=${map.conditions}&status=${map.status}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSelectList.do?page=${pi.currentPage+1}&conditions=${map.conditions}&status=${map.status}">Next</a></li>
+													             </ul>
+                                   	</c:when>
+                                   		<c:when test="${not empty userSearchList }">
+                                			<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${p}&condition=${map.condition}&keyword=${map.keyword}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">Next</a></li>
+													             </ul>
+                                   	</c:when>
+                                   	<c:otherwise>
+                                   		<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage-1}&condition=${search.condition}&keyword=${search.keyword}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${p}&condition=${search.condition}&keyword=${search.keyword}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage+1}&condition=${search.condition}&keyword=${search.keyword}">Next</a></li>
 													             </ul>
                                    	</c:otherwise>
                                    </c:choose>
@@ -461,10 +414,8 @@
             
         </div>
         <!-- content 끝 -->
+        <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
     </main>
-    <script src="../../resources/js/common/bootstrap.bundle.min.js"></script>
-
-    <script src="../../resources/js/common/sidebars.js"></script>
     
     <script>
     $(document).ready(function(){
@@ -487,7 +438,6 @@
                 $(this).css("color", "rgb(49, 106, 153)");
             } 
         });
-        
     });
 	</script>
 	
@@ -519,7 +469,38 @@
 			
 			</script>
 		</c:when>
+		<c:when test="${not empty userAllListSelect}">
+				<script>
+					$(document).ready(function(){
+						//카테고리고정
+						$("#selects").val("${map.conditions}");
+						$("#statusSelect").val("${map.status}");
+					})
+				</script>
+		</c:when>
 	</c:choose>
+	
+	<script>
+		$("#my_button").on("click", function(){
+			
+			if($("#search_input").val().trim().length == 0){
+				alert("다시입력해주세요.");
+				return false;
+			}
+			
+		})
+		
+		$("#user_mybutton").on("click", function(){
+				
+			if($("#search_input").val().trim().length == 0){
+				alert("다시입력해주세요.");
+				return false;
+			}
+			
+		})
+	</script>
+	
+	
 	
 	
 	

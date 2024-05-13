@@ -18,8 +18,9 @@
 		<typeAlias type="com.br.project.dto.member.MemberDto" 								alias="MemberDto"/>
 		<typeAlias type="com.br.project.dto.pay.FixturesDto" 									alias="FixturesDto"/>
 		<typeAlias type="com.br.project.dto.calendar.CoworkerDto" 						alias="CoworkerDto"/>
-    	<typeAlias type="com.br.project.dto.notification.NotificationDto"     alias="NotificationDto"/>
-    	<typeAlias type="com.br.project.dto.attendance.AttendanceDto"			alias="AttendanceDto"/>
+    <typeAlias type="com.br.project.dto.notification.NotificationDto"     alias="NotificationDto"/>
+    <typeAlias type="com.br.project.dto.attendance.AttendanceDto"			    alias="AttendanceDto"/>
+    <typeAlias type="com.br.project.dto.pay.MemberDeptDto"                alias="MemberDeptDto"/>
 	</typeAliases>
 	
 	
