@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="boardMapper">
+
+	<resultMap 			 id="boardResultMap" 	type="BoardDto">
+		<id 			column="board_no" 			property="boardNo" />
+		<result 		column="writer_name"			property="writerName" />
+		<result 		column="regist_emp" 			property="registEmp" />
+		<result 		column="modify_emp" 			property="modifyEmp" />
+		<result 		column="regist_date" 		property="registDate" />
+		<result 		column="modify_date" 		property="modifyDate" />
+		<result 		column="title" 				property="title" />
+		<result 		column="content" 				property="content" />
+		<result 		column="read_count" 			property="readCount" />
+		<result 		column="status"				property="status" />
+		<result 		column="category" 			property="category" />
+		<result 		column="attachment_yn"		property="attachmentYN" />
+		<result		column="profile_url"			property="profileURL" />
+		<collection ofType="AttachmentDto" 		property="attachmentList">
+			<id 		column="file_no" 				property="fileNo" />
+			<result 	column="origin_name" 		property="originName" />
+			<result 	column="enroll_date" 		property="enrollDate" />
+			<result 	column="modify_name" 		property="modifyName" />
+			<result 	column="attach_path" 		property="attachPath" />
+			<result 	column="status" 				property="status" />
+			<result 	column="ref_type" 			property="refType" />
+			<result 	column="ref_no" 				property="refNo" />
+		</collection>
+	</resultMap>
+
+
+	<!-- 총 공지사항 갯수조회(STATUS ="Y") -->
+	<select id="selectTotalBoardCount" parameterType="map" resultType="_int">
+		select count(*) totalBoards
+		  from tb_board
+		  left outer join member on (user_no = tb_board.modify_emp)
+		 where tb_board.status = 'Y'
+		 <if test="category != null and !category.equals('')">
+			<choose>
+				<when test="category.equals('normal')">
+					and category is null
+				</when>
+				<when test="category.equals('department') and department.equals('')">
+					and category is not null
+				</when>
+				<when test="category.equals('department') and !department.equals('')">
+					and category = #{department}
+				</when>
+			</choose>
+		</if>
+		<if test="(condition != null and keyword != null) and (!condition.equals('') and !keyword.equals(''))">
+			<choose>
+				<when test="(condition.equals('') or condition.equals('all')) and !keyword.equals('')">
+					and 
+							(title like 	 		'%' || #{keyword} || '%'
+					 		 or content like 		'%' || #{keyword} || '%'
+					 		 or user_name like 	'%' || #{keyword} || '%'
+					 		 )
+				</when>
+				<when test="condition.equals('title') and !keyword.equals('')">
+					and title like 	 			'%' || #{keyword} || '%'
+				</when>
+				<when test="condition.equals('content') and !keyword.equals('')">
+					and content like 			 	'%' || #{keyword} || '%'
+				</when>
+				<when test="condition.equals('writer') and !keyword.equals('')">
+					and user_name like 		 	'%' || #{keyword} || '%'
+				</when>
+			</choose>
+		</if>
+	</select>
+
+	<!-- 공지사항 목록조회 -->
+	<select id="selectBoardList" parameterType="map" resultMap="boardResultMap">
+		select
+					 board_no
+					,title
+					,profile_url
+					,user_no				"modify_emp"
+					,user_name 			"writer_name"
+					,to_char(tb_board.modify_date, 'YYYY-MM-DD') "modify_date"
+					,read_count
+					,code_name 			"category"
+					,(
+						 select count(*) totalAttachments
+						   from attachment
+						  where status 		= 'Y'
+						    and ref_type 	= 'BD'
+						    and ref_no 		= tb_board.board_no
+						) "attachment_yn"
+			from tb_board
+			left outer join member     on (user_no = regist_emp)
+			left outer join tb_group   on (
+                                 		 group_code = 'DEPT01' 
+                                 		 and code	  = category
+                                 		 )
+			left outer join attachment on (ref_no = board_no)
+     where tb_board.status = 'Y'  
+     <if test="category != null and !category.equals('')">
+			<choose>
+				<when test="category.equals('normal')">
+					and category is null
+				</when>
+				<when test="category.equals('department') and department.equals('')">
+					and category is not null
+				</when>
+				<when test="category.equals('department') and !department.equals('')">
+					and category = #{department}
+				</when>
+			</choose>
+		</if>
+		<if test="(condition != null and keyword != null) and (!condition.equals('') and !keyword.equals(''))">
+			<choose>
+				<when test="(condition.equals('') or condition.equals('all')) and !keyword.equals('')">
+					and 
+							(title like 	 		'%' || #{keyword} || '%'
+					 		 or content like 		'%' || #{keyword} || '%'
+					 		 or user_name like 	'%' || #{keyword} || '%'
+					 		 )
+				</when>
+				<when test="condition.equals('title') and !keyword.equals('')">
+					and title like 	 			'%' || #{keyword} || '%'
+				</when>
+				<when test="condition.equals('content') and !keyword.equals('')">
+					and content like 			 	'%' || #{keyword} || '%'
+				</when>
+				<when test="condition.equals('writer') and !keyword.equals('')">
+					and user_name like 		 	'%' || #{keyword} || '%'
+				</when>
+			</choose>
+		</if>
+     order by to_number(board_no) desc
+	</select>
+	
+	<!-- 공지사항 조회수 증가 -->
+	<update id="updateReadCount" parameterType="string">
+		update tb_board
+		   set read_count = read_count + 1
+		 where board_no 	= #{boardNo}
+	</update>
+	
+	<!-- 공지사항 상세조회 -->
+	<select id="selectBoard" parameterType="hashmap" resultMap="boardResultMap">
+		select 
+				 board_no
+				,title
+				,content
+				,modify_emp
+				,user_name		"writer_name"
+				,(
+					select code_name
+					  from tb_group
+					 where group_code = 'DEPT01'
+					   and code = (
+					   				 select category
+					   				   from tb_board
+					   				  where board_no = #{no}
+					   				)
+				 ) "category"
+				,read_count
+				,to_char(tb_board.modify_date, 'YYYY-MM-DD HH:MI:SS') "modify_date"
+				,file_no
+				,origin_name
+				,modify_name
+				,attach_path
+		  from tb_board
+		  join member on (user_no = modify_emp)
+		  left outer join attachment on (ref_type  = 'BD'
+		  									  and ref_no 	 = #{no}
+		  									  and attachment.status = 'Y')
+		 where board_no = #{no}
+		   and tb_board.status = 'Y'
+	</select>
+	
+	<!-- 공지사항 등록 -->
+	<insert id="insertBoard" parameterType="BoardDto">
+		insert
+			into tb_board
+					 (
+					   board_no
+					  ,regist_emp
+					  ,modify_emp
+					  ,title
+					  ,content
+					  ,category
+					  ,status
+					 )
+		values 
+					(
+					  seq_bdno.nextval
+					 ,#{registEmp}
+					 ,#{modifyEmp}
+					 ,#{title}
+					 ,#{content}
+					 ,(
+					 	select upper_code
+					 	  from tb_group
+					 	 where group_code = 'TEAM01'
+					 	 	and code = #{category}
+					  )
+					 ,#{status}
+					)
+	</insert>
+	
+	
+	
+	<!-- 게시글 수정 -->
+
+
+  
+</mapper>

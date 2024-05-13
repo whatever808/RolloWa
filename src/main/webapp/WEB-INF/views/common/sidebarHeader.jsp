@@ -333,15 +333,16 @@
                             <li><a href="${ contextPath }/board/list.do"
                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 조회</a>
                             </li>
-                            <!-- 나중에 권한체크 추가하가(부장만 작성가능) -->
+                            <!-- 나중에 권한체크 추가하기(글작성 권한을 가진 부장일 경우 보여짐) -->
                            	<li><a href="${ contextPath }/board/post.page"
                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 등록</a>
                            	</li>
                             
-                            <!-- 
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
+                            <!-- 나중에 권한체크 추가하기(글작성 권한을 가진 부장일 경우 보여짐) -->
+                            <li><a href="${ contextPath }/board/writer/list.do"
+                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">내가 쓴 공지사항</a>
                             </li>
+                            <!--
                             <li><a href="#"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
                             </li>

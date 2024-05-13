@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -224,6 +223,49 @@ public class BoardController {
 	}
 	
 	
+	
+	/**
+	 * @method : 공지사항 수정페이지 이동
+	 */
+	@RequestMapping(value="/modify.page")
+	public ModelAndView showBoardModifyPage(HttpServletRequest request
+									 	   ,ModelAndView mv) {
+		
+		String teamCode = ((MemberDto)request.getSession().getAttribute("loginMember")).getTeamCode();
+		
+		Map<String, String> params = new HashMap<>();
+		params.put("upperGroupCode", "DEPT01");
+		params.put("groupCode", "TEAM01");
+		params.put("code", teamCode);
+		
+		mv.addObject("department", departmentService.selectUppderCode(params));
+		mv.addObject("board", boardService.selectBoard(getParameterMap(request)));
+		mv.setViewName("board/modify");
+		
+		return mv;
+	}
+	
+	/**
+	 * @method : 공지사항 수정
+	 */
+	@RequestMapping(value="/modify.do")
+	public void modifyBoard() {
+		/*
+		 * 첨부파일이 있는 공지사항
+		 * 		ㄴ 공지사항 수정 : [카테고리], [제목], [내용] 
+		 * 		ㄴ 첨부파일 수정
+		 * 			ㄴ 첨부파일 삭제 : 
+		 * 					1) 데이터베이스 파일 상태변경 : [파일번호]
+		 * 					2) 업로드된 기존 파일삭제 : [저장경로], [수정명] 조회
+		 * 			ㄴ 첨부파일 추가 : 
+		 * 					1) 파일업로드 
+		 *					2) [원본명], [수정명], [저장경로], [참조유형], [참조번호]
+		 *
+		 * 첨부파일이 없는 공지사항
+		 * 		ㄴ 공지사항 수정 : [카테고리], [제목], [내용]
+		 * 
+		 */
+	}
 	
 
 	

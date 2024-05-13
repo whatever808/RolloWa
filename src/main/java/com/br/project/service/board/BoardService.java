@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class BoardService {
 
 	private final BoardDao boardDao;
-	private final BoardAttachmentService attachmentService;
+	private final BoardAttachmentService attachmentService; 
 	
 	/**
 	 * @param filter : [카테고리], [부서코드], [검색조건], [검색키워드]

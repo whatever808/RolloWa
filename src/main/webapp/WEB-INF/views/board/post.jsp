@@ -50,26 +50,27 @@
               <!-- board attachment -->
               <div class="field-group">
                   <label class="field-title" for="board-attachment">첨부파일</label>
-	            	<div id="add-attachment" onclick="addFileInput();">
-	            		<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#909090" viewBox="0 0 16 16">
-							  <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5"/>
-							  <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
-							</svg>
-							<small>첨부파일 추가</small>
-	            	</div>
+	              <div id="add-attachment" onclick="addFileInput();">
+            		  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#909090" viewBox="0 0 16 16">
+					     <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5"/>
+					     <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+					  </svg>
+					  <small>첨부파일 추가</small>
+	              </div>
                   <div id="attachment-div">
                   	<input type="file" name="uploadFiles" class="form-control board-attachment">
+                  	
                   </div>
               </div>
               
               <!-- board content -->
                <div class="field-group">
-                  <label class="field-title" for="board-content">글내용</label>
-                  <textarea class="form-control" name="content" id="board-content"></textarea>
+                  <label class="field-title" for="editor">글내용</label>
+                  <textarea class="form-control" name="content" id="editor"></textarea>
               </div>
 							
               <div class="button-group">
-              		<input type="hidden" name="status">
+              	  <input type="hidden" name="status">
                   <button type="reset" class="btn btn-outline-warning">초기화</button>
                   <button type="button" class="btn btn-outline-primary" onclick="setBoardStatus('Y');">등록하기</button>
                   <button type="button" class="btn btn-outline-secondary" onclick="setBoardStatus('T');">임시저장</button>
@@ -98,7 +99,7 @@
 			$("#attachment-div").append("<input type='file' name='uploadFiles' class='form-control board-attachment'>");	
 		}else{
 			// 추가한 첨부파일 업로드 요소가 10개 초과일 경우 알림창
-			alert("업로드 가능 첨부파일 갯수는 최대 10개 까지입니다.");
+			alertify.alert("업로드 가능 첨부파일 갯수는 최대 10개 까지입니다.");
 		}
 	}
 	
@@ -108,13 +109,13 @@
 		formSubmit();
 	}
 	
-	// 공지사항 등록 요청 ====================================================================================================
+	// 공지사항 수정 요청 ====================================================================================================
 	function formSubmit(){
 		// 에디터에 작성된 내용을 [name=content]로 함께 전달
-		$("textarea#board-content").val(tinymce.activeEditor.getContent("board-content"));
+		$("textarea#editor").val(tinymce.activeEditor.getContent("editor"));
 		$("#post-form").submit();
-		console.log(tinymce.activeEditor.getContent("board-content"));
-		if($("#board-content").val().trim().length == 0 || $("#board-content").val().trim() == ''){
+		
+		if($("#editor").val().trim().length == 0 || $("#editor").val().trim() == ''){
 			console.log("내용 미작성");
 		}else{
 			console.log("내용 작성");

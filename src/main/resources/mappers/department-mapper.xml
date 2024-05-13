@@ -3,28 +3,47 @@
 
 <mapper namespace="departmentMapper">
 
-	<resultMap 			id="groupResultMap" type="GroupDto">
-		<id				column="group_code" 		property="groupCode" />
-		<result 	column="code"						property="code" />
+	<resultMap 			id="groupResultMap" 		type="GroupDto">
+		<id			column="group_code" 		property="groupCode" />
+		<result 	column="code"				property="code" />
 		<result 	column="code_name"			property="codeName" />
 		<result 	column="regist_date"		property="registDate" />
 		<result 	column="modify_date"		property="modifyDate" />
-		<result 	column="status"					property="status" />
+		<result 	column="status"				property="status" />
 		<result 	column="regist_emp"			property="registEmp" />
 		<result 	column="modify_emp"			property="modifyEmp" />
 		<result 	column="upper_code"			property="upperCode" />
 	</resultMap>
 
-  <!-- 부서 목록조회 -->
+  	<!-- 부서 목록조회 -->
 	<select id="selectDepartmentList" resultMap="groupResultMap">
 		select 
-					 group_code		
-					,code	
-					,code_name	
-			from tb_group
+			   group_code		
+			  ,code	
+			  ,code_name	
+		  from tb_group
 		 where status 		= 'Y'
 		   and group_code = #{code}
 		 order by code
 	</select>
+	
+	<!-- ========================== "가림" 영역 ========================== -->
+	<!-- 팀의 부서명 조회 -->
+	<select id="selectUppderCode" resultMap="groupResultMap" parameterType="hashmap">
+		select
+			   group_code
+			  ,code
+			  ,code_name
+		  from tb_group
+		 where group_code = #{upperGroupCode}
+		   and code = (
+		   				select upper_code
+		   				  from tb_group
+		   				 where group_code = #{groupCode}
+		   				   and code = #{code}
+		   			   )
+	</select>
+	
+	<!-- ========================== "가림" 영역 ========================== -->
 	
 </mapper>
