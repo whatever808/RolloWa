@@ -49,18 +49,9 @@
 
               <!-- board attachment -->
               <div class="field-group">
-                  <label class="field-title" for="board-attachment">첨부파일</label>
-	              <div id="add-attachment" onclick="addFileInput();">
-            		  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#909090" viewBox="0 0 16 16">
-					     <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5"/>
-					     <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
-					  </svg>
-					  <small>첨부파일 추가</small>
-	              </div>
-                  <div id="attachment-div">
-                  	<input type="file" name="uploadFiles" class="form-control board-attachment">
-                  	
-                  </div>
+                 <label class="field-title" for="board-attachment">첨부파일</label>
+                 <small class="text-secondary ms-3">파일 당 최대 10MB씩, 최대 10개까지만 업로드 가능합니다.</small>
+					  <input type="file" name="uploadFiles" id="uploadFiles" class="form-control board-attachment mb-3" multiple>
               </div>
               
               <!-- board content -->
@@ -92,16 +83,24 @@
 </body>
 
 <script>
-	// 업로드 첨부파일 추가 =================================================================================================
-	function addFileInput(){
-		if($("#attachment-div").children().length < 10){
-			// 추가한 첨부파일 업로드 요소가 10개 이하일 경우 첨부파일 요소 추가
-			$("#attachment-div").append("<input type='file' name='uploadFiles' class='form-control board-attachment'>");	
-		}else{
-			// 추가한 첨부파일 업로드 요소가 10개 초과일 경우 알림창
-			alertify.alert("업로드 가능 첨부파일 갯수는 최대 10개 까지입니다.");
+	//업로드가능 파일용량 및 갯수 제한 =================================================================
+	$("#uploadFiles").on("change", function(event){
+		const fileList = event.target.files;
+		
+		// 최대 업로드가능 파일갯수 제한
+		if(fileList.length > 10){
+			alertify.alert("첨부파일 업로드서비스", "최대 업로드가능 파일은 10개입니다.", $(event.target).val(""));
 		}
-	}
+		
+		// 파일당 최대 업로드용량 제한
+		for(let i=0 ; i<fileList.length ; i++){
+			if(fileList[i].size > (1024 * 1024 * 10)){
+				alertify.alert("첨부파일 업로드서비스", "첨부파일 최대 크기는 10MB를 초과할 수 없습니다.");
+				event.target.value = "";
+				return;
+			}
+		}
+	})
 	
 	// 공지사항 저장형태값 지정 =================================================================================================
 	function setBoardStatus(status){

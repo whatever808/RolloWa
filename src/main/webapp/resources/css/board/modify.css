@@ -28,52 +28,32 @@
     margin-right: 50px;
 }
 
-#board-title, #attachment-div, .original-attachments{
+#board-title, #attachment-div, .attachment-list, #uploadFiles{
     width: 1000px;
 }
 
 /* ------------- attachments area ------------- */
-#add-attachment{
-	display: inline-block;
-	margin-left: 15px;
-	align-item: center;
-}
-#add-attachment:hover{
-	cursor: pointer;
-}
-small{
-	color: #909090;
-}
-
-/* =============== 손볼곳 ================ */
-.attachment-div{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.original-attachments{
-	display: flex;
-	border-bottom: 1px solid #bebebe;
+.upload-btn{
 	margin-bottom: 10px;
+	margin-left: 10px;
 }
-.original-attachments>span, a.board-attachment{
-	margin: 4.5px 12px 10px 10px;
+.attachment-list{
+	flex-direction: column;
+	border: 1px solid lightgray;
+	border-style: dashed;
+	width: 1000px;
+	min-height: 150px;
 }
-.original-attachments>span{
-	border-right: 1px solid #bebebe;
-	padding-right: 10px;
-	margin-right: 0px;
+.original-attachments{
+	padding: 5px;
 }
-a.board-attachment{
-	display: inline-block;
+.delete-area{
+	width: 30px;
 }
-
-
-.delete-input-file:hover{
+.delete:hover{
 	cursor: pointer;
 }
-/* =============== 손볼곳 ================ */
+
 
 /* ------------- button area ------------- */
 .button-group{

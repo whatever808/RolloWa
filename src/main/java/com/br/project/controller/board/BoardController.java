@@ -249,7 +249,9 @@ public class BoardController {
 	 * @method : 공지사항 수정
 	 */
 	@RequestMapping(value="/modify.do")
-	public void modifyBoard() {
+	public void modifyBoard(BoardDto board
+						   //List<MultipartFile> uploadFiles
+						   ,HttpServletRequest request) {
 		/*
 		 * 첨부파일이 있는 공지사항
 		 * 		ㄴ 공지사항 수정 : [카테고리], [제목], [내용] 
@@ -265,6 +267,11 @@ public class BoardController {
 		 * 		ㄴ 공지사항 수정 : [카테고리], [제목], [내용]
 		 * 
 		 */
+		HashMap<String, Object> params = getParameterMap(request);
+		List<MultipartFile> upFiles = (List<MultipartFile>) params.get("uploadFiles");
+		log.debug("업로드 파일 : {}", upFiles);
+		log.debug("게시글 : {}", params.get("content"));
+		
 	}
 	
 
