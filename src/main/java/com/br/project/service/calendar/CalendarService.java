@@ -89,4 +89,19 @@ public class CalendarService {
 
 		return  calDao.selectPCalendar(map);
 	}
+
+	/**
+	 * @return
+	 */
+	public List<CalendarDto> selectCompanyCalendar() {
+		return calDao.selectCompanyCalendar();
+	}
+
+	/**
+	 * @param calendar
+	 * @return
+	 */
+	public int companyCalUpdate(CalendarDto calendar) {
+		return calDao.insertCal(calendar);
+	}
 }

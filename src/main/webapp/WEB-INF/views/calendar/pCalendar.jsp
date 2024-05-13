@@ -8,7 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Document</title>
+<title>개인일정</title>
 
 <!-- fullcalendar -->
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
@@ -255,6 +255,7 @@
 					</c:choose>
 				</c:forEach>
 			</div>
+			<!-- 직원 클릭시 clendar -->
 			<script>
 				$(function(){
 					$(".memebrdiv-area").children().on('click', function(e){
@@ -300,7 +301,6 @@
 			<br> <br>
 			<!-- 캘린더 영역 -->
 			<div class="calender-area radious10 line-shadow "><div id="calendar"></div></div>
-			<!-- 캘린더 스타일 -->
 			<script>
 			// 캘린더 설정 및 선언
 			document.addEventListener('DOMContentLoaded', function() {
@@ -353,8 +353,8 @@
 								}
 								
 								$('input[name=coworker]').each(function(){
-			                        $(this).prop('checked', false);
-			                    });
+                    $(this).prop('checked', false);
+                });
 									
 								const sortArr = extend.cowoker.split(",");
 								sortArr.forEach(s => {
@@ -404,10 +404,9 @@
 	      </script>
 		</div>
 	</div>
-	<!-- 모달 스크립트문 -->
+<!-- 모달 스크립트문 -->
 <script>
      $('#cal_modal').iziModal({
-     subtitle: '수정도 가능합니다.',
      headerColor: ' rgb(255,247,208)', 
      theme:'light',
      padding: '15px',
@@ -417,7 +416,7 @@
 	  });      
 </script>
 	
-	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
+<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
 </body>
 <!-- 이예찬 -->
 </html>
