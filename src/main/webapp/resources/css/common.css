@@ -89,7 +89,28 @@ textarea:focus {
 .myfile>div {
     border-bottom: 1px solid rgb(170, 170, 170);
 }
-
+/* 페이징 영역 스타일 */
+ .pagination > .active > a,
+ .pagination > .active > span {
+     background-color: rgb(255,247,208);
+     border-color: rgb(255,247,208);
+     color: black;
+}
+.pagination > li > a,
+.pagination > li > span {
+    color: black;
+}
+.page-item.active .page-link {
+    background-color: rgb(255,247,208);
+    border-color: rgb(255,247,208);
+}
+.page-link:hover,
+.page-link:focus{
+    z-index: 5;
+    color: #000000 !important;
+    background-color: rgb(255,247,208) !important;
+    border-color: #0a0a0a;
+}
 /* ---------------------------------------- 이예찬 ---------------------------------------- */
 .list-unstyled {
     padding-left: 0;

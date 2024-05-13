@@ -51,5 +51,9 @@ public class CalendarDao {
 	public List<String> selectCalNO(String userNo) {
 		return sqlSession.selectList("calMapper.selectCalNO", userNo);
 	}
+
+	public List<CalendarDto> selectCompanyCalendar() {
+		return sqlSession.selectList("calMapper.selectCompanyCalendar");
+	}
 	
 }

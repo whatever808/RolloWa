@@ -36,7 +36,7 @@ public class CalendarController {
 	 * @param mv 조회된 객체와 view단을 선택하는 객체
 	 * @return 
 	 */
-	@GetMapping("/pCalendar.page")
+	@GetMapping("/calendar.page")
 	public ModelAndView selectPCalendar(HttpSession session, ModelAndView mv) {
 		
 		MemberDto member = (MemberDto)session.getAttribute("loginUser");
@@ -139,8 +139,7 @@ public class CalendarController {
 	 * @param date
 	 * @param time
 	 * @return
-	 */
-	
+	 */	
 	@PostMapping("/calUpdate.do")
 	public ModelAndView calUpdate(CalendarDto calendar,
 									String[] date, String[] time
@@ -154,7 +153,6 @@ public class CalendarController {
 		log.debug("calendar {}", calendar);
 		
 		int result = calService.calUpdate(calendar);
-		log.debug("result {}", result);
 		
 		if(result > 0 ) {
 			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("redirect:pCalendar.page");
@@ -176,5 +174,74 @@ public class CalendarController {
 		return calService.selectOneMemberCal(userNo);
 	}
 	
+	
+	/**
+	 * @param session
+	 * @param mv
+	 * @return
+	 */
+	@GetMapping("/companyCalendar.page")
+	public ModelAndView selectCompanyCalendar(ModelAndView mv) {
+		
+		List<GroupDto> group = dService.selectDepartmentList("CALD02");	
+		List<CalendarDto> list = calService.selectCompanyCalendar();
+		
+		mv.addObject("list", list)
+			.addObject("group", group)
+			.setViewName("calendar/cCalendar");
+		
+		return mv;
+	}
+	
+	/**
+	 * @param session
+	 * @param mv
+	 * @return
+	 */
+	@GetMapping("/companyCalEnroll.page")
+	public ModelAndView moveCompanyEnroll(HttpSession session, ModelAndView mv) {
+		
+		List<GroupDto> group = dService.selectDepartmentList("CALD02");
+		
+		mv.addObject("group", group)
+		.setViewName("calendar/companyCalEnroll");
+		
+		return mv;
+	}
+	
+	/**
+	 * @param calendar
+	 * @param date
+	 * @param time
+	 * @param mv
+	 * @return
+	 */
+	@PostMapping("/companyCalUpdate.do")
+	public ModelAndView companyCalUpdate(CalendarDto calendar,
+										String[] date, String[] time
+										, ModelAndView mv) {
+		
+		calendar.setStartDate(date[0]+ " " + time[0]);
+		calendar.setEndDate(date[1] + " " + time[1]);
+		//MemberDto member = (MemberDto)session.getAttribute("loginUser");
+		//calendar.setCalNO(String.valueOf(member.getUserNo()));
+		calendar.setEmp("1050");
+		calendar.setCalSort("C");
+		log.debug("calendar {}", calendar);
+		
+		int result = calService.companyCalUpdate(calendar);
+		
+		if(result > 0 ) {
+			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("redirect:companyCalendar.page");
+		}else {
+			mv.addObject("alertMsg", "다시 시도해 주세요.").setViewName("redirect:companyCalEnroll.page");
+		}
+		return mv;
+	}
+	
+	@GetMapping("/companyControllor.page")
+	public void companyControllor() {
+		
+	}
 
 }

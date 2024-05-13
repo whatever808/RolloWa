@@ -12,6 +12,7 @@
 	<result column="CAL_PLACE" property="place" />
 	<result column="CAL_COLOR" property="color" />
 	<result column="GROUP_CODE" property="groupCode" />
+	<result column="team" property="team" />
 	<collection ofType="GroupDto" property="group" >
 		<result column="CODE_NAME" property="codeName" />
 		<result column="UPPER_CODE" property="upperCode" />
@@ -86,7 +87,7 @@ and
 		,#{calTitle}
 		,#{calContent}
 		,to_date(#{startDate} 	, 'YYYY-MM-DD HH24:MI:SS')
-		,to_date(#{endDate}		, 'YYYY-MM-DD HH24:MI:SS')
+		,to_date(#{endDate}			, 'YYYY-MM-DD HH24:MI:SS')
 		,#{color}
 		,#{emp}
 		,#{emp}
@@ -148,6 +149,41 @@ resultType="string">
 	select cal_no
 	from co_worker
 	where user_no = #{userNo}
+</select>
+
+<select id="selectCompanyCalendar"
+resultMap="calResultMap">
+	select
+    CAL_NO
+    , CAL_SORT
+    , CAL_TITLE
+    , CAL_CONTENT
+    , START_DATE
+    , END_DATE
+    , CAL_PLACE
+    , CAL_COLOR
+    , (select tb_group.code_NAME from tb_group where tb_group.GROUP_CODE = 'TEAM01' and code = (select TEAM_CODE from member where user_no =  calender.MODIFY_EMP)) team
+    , code_name
+    , upper_code
+    , calender.GROUP_CODE
+from 
+	calender
+join 
+    tb_group on ( calender.GROUP_CODE = code )
+join
+    member on (member.USER_NO = calender.MODIFY_EMP)
+where 
+	cal_sort = 'C'
+and 
+    tb_group.GROUP_CODE = 'CALD02'
+and 
+	calender.status = 'Y'
+<![CDATA[
+and 
+	Months_between(START_DATE     , sysdate) <= 6
+and 
+	Months_between(end_DATE				, sysdate) >= -6
+]]>
 </select>
 
 </mapper>
