@@ -21,6 +21,10 @@ public class PayDao {
 	
 	private final SqlSessionTemplate sqlSessionTemplate;
 	
+	//회원정보조회
+	public String loginUserMember(int userNo){
+		return sqlSessionTemplate.selectOne("payMapper.loginUserMember", userNo);
+	}
 	
 	public int selectListCount() {
 		return sqlSessionTemplate.selectOne("payMapper.selectListCount");
@@ -108,8 +112,8 @@ public class PayDao {
 	}
 	
 	//동적쿼리 재사용
-	public List<MemberDeptDto> selectloginUserDept(MemberDto loginMember) {
-		return sqlSessionTemplate.selectList("payMapper.selectDepartment", loginMember);
+	public List<MemberDeptDto> selectloginUserDept(Map<String, Object> mapUserMember) {
+		return sqlSessionTemplate.selectList("payMapper.selectDepartment", mapUserMember);
 	}
 	
 	//1.매출보고서 등록
@@ -173,5 +177,27 @@ public class PayDao {
 	public int updateApproval(Map<String, Object> map) {
 		return sqlSessionTemplate.update("payMapper.updateApproval", map);
 	}
+	
+	//기안서 sales_report insert
+	public int gReportInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.gReportInsert", map);
+	}
+	
+	//기안서 첨부파일 insert
+	public int gReportAttachInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.gReportAttachInsert", map);
+	}
+	
+	//기안서 공동테이블 (approval)
+	public int gReportApprovalInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.gReportApprovalInsert", map);
+	}
+	
+	//기안서 상세페이지
+	public List<Map<String, Object>> salesDetail(Map<String, Object> map){
+		return sqlSessionTemplate.selectList("payMapper.salesDetail", map);
+	}
+	
+	
 	
 }

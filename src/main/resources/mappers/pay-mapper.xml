@@ -70,6 +70,13 @@
 		<result column="DEPT_NAME" property="deptName"/>
 	</resultMap>
 	
+	<!-- 회원정보 조회용 -->
+	<select id="loginUserMember" resultType="string">
+		select USER_NAME
+			from member
+			where user_No = #{userNo}
+	</select>
+	
 
 	<!-- 메인페이지 목록갯수조회용 -->
 	<select id="selectListCount" resultType="_int">
@@ -783,14 +790,137 @@
 	   
 	   <update id="updateApproval">
 	   		update APPROVAL
-	   		   set PAYMENT_STATUS = #{sales}
+	   		   set PAYMENT_STATUS = #{status}
 	   		     , FIRST_APPROVAL = #{firstApproval}
 	   		     , MIDDLE_APPROVAL = #{middleApproval} 
 	   		     , FINAL_APPROVAL = #{finalApproval}
 	   		     , MODIFY_DATE = #{writerDate}
 	   		 where APPROVAL_NO = #{approvalNo}
 	   </update>
-		
+	   
+	   <insert id="gReportInsert">
+	   insert 
+	   			into SALES_REPORT
+	   			(
+	   			  SALES_NO
+					, EFFECTIVE_DATE
+					, COOPERATION_DEPARTMENT
+					, TITLE
+					, CONTENT
+					, STATUS
+	   			)
+	   			values
+	   			(
+	   			  SEQ_SRNO.NEXTVAL
+	   			, #{dateStart}
+	   			<if test="depWith != null">
+	   			, #{depWith}
+	   			</if>
+	   			, #{title}
+	   			, #{content}
+	   			, #{fileStatus}
+	   			)
+	   </insert>
+	   
+	   <insert id="gReportAttachInsert">
+	   		insert 
+	   				into ATTACHMENT
+	   				(
+	   				  FILE_NO
+	   				, ORIGIN_NAME
+	   				, ATTACH_PATH
+	   				, MODIFY_NAME
+	   				, REF_TYPE
+	   				, REF_NO
+	   				)
+	   				values
+	   				(
+	   				  SEQ_ANO.nextval
+	   				, #{originalName}
+	   				, #{filePath}
+	   				, #{filesystemName}
+	   				, #{RefType}
+	   				, SEQ_SRNO.CURRVAL
+	   				)
+	   				
+	   </insert>
+	   
+	   <insert id="gReportApprovalInsert">
+	   	 insert
+	   	      into APPROVAL
+	   	      (
+	   	        APPROVAL_NO
+						,	DOCUMENT_NUMBER
+						,	DOCUMENT_TYPE
+						,	DEPARTMENT
+						,	PAYMENT_WRITER
+						,	PAYMENT_WRITER_NO
+						,	PAYMENT_STATUS
+						,	FIRST_APPROVAL
+						,	MIDDLE_APPROVAL
+						,	FINAL_APPROVAL
+						,	REGIST_DATE
+	   	      )
+	   	     values
+	   	     (
+	   	       SEQ_APNO.NEXTVAL
+	   	     , SEQ_SRNO.CURRVAL
+	   	     , 'G'
+	   	     , #{deptName} 
+	   	     , #{writerName}
+	   	     , #{userNo}
+	   	     , #{status}
+	   	     , #{firstApproval}
+	   	     , #{middleApproval}
+	   	     , #{finalApproval}
+	   	     , #{writerDate}
+	   	     )
+	   </insert>
+	  
+	   
+	   <select id="salesDetail" resultType="map">
+        select
+                APPROVAL_NO
+              , DOCUMENT_NUMBER
+				      , DEPARTMENT
+				      , to_char(REGIST_DATE, 'YYYY"년 "MM"월 "DD"일"') REGIST_DATE
+				      , PAYMENT_WRITER
+				      , PAYMENT_WRITER_NO
+				      , PAYMENT_STATUS
+				      , FIRST_APPROVAL
+				      , MIDDLE_APPROVAL
+				      , FINAL_APPROVAL
+				      , DOCUMENT_STATUS
+				      , CANCELLATION_CONTENT
+				      , to_char(FIRST_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') FIRST_APPROVAL_DATE
+				      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') MIDDLE_APPROVAL_DATE
+				      , to_char(FINAL_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') FINAL_APPROVAL_DATE
+				      , S.SALES_NO
+				      , to_char(EFFECTIVE_DATE, 'YYYY"년 "MM"월 "DD"일"') EFFECTIVE_DATE
+              , COOPERATION_DEPARTMENT
+              , TITLE
+              , CONTENT
+              , FILE_NO
+              , ORIGIN_NAME
+              , ENROLL_DATE
+              , MODIFY_NAME
+              , ATTACH_PATH
+              , REF_NO
+          from approval ap
+          join SALES_REPORT s on (SALES_NO = DOCUMENT_NUMBER)
+          join ATTACHMENT at on (ref_no = SALES_NO)
+          where ref_type = #{refType}
+          and ap.STATUS = 'Y'
+          and at.STATUS = 'Y'
+          and REF_NO = #{documentNo}
+          and DOCUMENT_NUMBER = #{documentNo}
+          and APPROVAL_NO = #{approvalNo}
+          and DOCUMENT_TYPE = 'G'
+          and PAYMENT_WRITER_NO = #{payWriterNo}
+          and PAYMENT_WRITER = #{payWriter}
+	   
+	   </select>
+	   
 	  
    
    

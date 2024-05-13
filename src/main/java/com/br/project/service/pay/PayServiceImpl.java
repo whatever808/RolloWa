@@ -21,6 +21,12 @@ public class PayServiceImpl {
 	
 	private final PayDao payDao;
 	
+	//회원정보조회
+	public String loginUserMember(int userNo){
+		return payDao.loginUserMember(userNo);
+	}
+	
+	
 	//결재메인페이지 목록갯수조회용
 	public int selectListCount() {
 		return payDao.selectListCount();
@@ -116,8 +122,8 @@ public class PayServiceImpl {
 		return payDao.selectDepartment();
 	}
 	//보고서작성시 로그인한 회원의 부서, 번호, 이름, 팀이름, 직급이 담겨있음
-	public List<MemberDeptDto> selectloginUserDept(MemberDto loginMember) {
-		return payDao.selectloginUserDept(loginMember);
+	public List<MemberDeptDto> selectloginUserDept(Map<String, Object> mapUserMember) {
+		return payDao.selectloginUserDept(mapUserMember);
 	}
 	
 	
@@ -183,7 +189,6 @@ public class PayServiceImpl {
 			if(!list.isEmpty()) {
 				result1 = 0;
 				for (Map<String, Object> item : list) { 
-
 					result1 += payDao.updateInsertItems(item);
 				}				
 			}
@@ -191,6 +196,31 @@ public class PayServiceImpl {
 	    int result3 = payDao.updateApproval(map);
 			
 		return result1 * result2 * result3;
+	}
+	
+	public int gReportInsert(Map<String, Object> map, List<Map<String, Object>> attachList) {
+		
+		int result1 = payDao.gReportInsert(map);
+		
+		int result2 = 1;
+		if(attachList != null && !attachList.isEmpty()) {
+			result2 = 0;
+			for(Map<String, Object> list : attachList) {
+				result2 = payDao.gReportAttachInsert(list);
+			}
+		}
+		
+		int result3 = payDao.gReportApprovalInsert(map);
+			
+		
+		return result1 * result2 * result3;
+	}
+	
+	public List<Map<String, Object>> salesDetail(Map<String, Object> map){
+		
+		return payDao.salesDetail(map);
+		
+		
 	}
 	
 		

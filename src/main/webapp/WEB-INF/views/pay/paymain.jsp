@@ -11,7 +11,11 @@
  
     <!-- 메인페이지스타일 -->
     <link href="${ contextPath }/resources/css/pay/paymain.css" rel="stylesheet">
+    <style>
+    	.input-group-append{border: 1px solid white; background-color: white;}
     
+    
+    </style>
 
 </head>
 <body>
@@ -67,7 +71,7 @@
                         <a href="${contextPath}/pay/allUserlist.do" method="get">
                             <div class="di_top" id="di_t_1">
                                 <div class="di_top_left">
-                                    <div><label>${loginMember.userName}님의 <br>전체수신결재함</label></div>
+                                    <div><label>${userName}님의 <br>전체수신결재함</label></div>
                                     <div><b>${ ulistCount.length() == 1 ? "0" + ulistCount 
                                     				 														: ulistCount == "0" ? "0" : ulistCount}건</b></div>
                                 </div>
@@ -79,10 +83,10 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="">
+                        <a href="${contextPath}/pay/ApprovedList.do" method="get">
                             <div class="di_top" id="di_t_2">
                                 <div class="di_top_left">                         
-                                    <div><label>${loginMember.userName}님의 <br> 승인완료한 수신결재함</label></div>
+                                    <div><label>${userName}님의 <br> 승인완료한 수신결재함</label></div>
                                     <div><b>${ slistCount.length() == 1 ? "0" + slistCount 
                                     				 														: slistCount == "0" ? "0" : slistCount}건</b></div>
                                  </div>
@@ -97,7 +101,7 @@
                         <a href="">
                             <div class="di_top" id="di_t_3">
                                 <div class="di_top_left">
-                                   <div><label>${ loginMember.userName }님의 일주일 이상 <br>  지연 된 수신결재함</label></div>
+                                   <div><label>${ userName }님의 일주일 이상 <br>  지연 된 수신결재함</label></div>
                                     <div><b>${ mdCount.length() == 1 ? "0" + mdCount 
                                     				 														: mdCount == "0" ? "0" : mdCount}건</b></div>
                                 </div>
@@ -174,7 +178,7 @@
                                 <div><b>매출보고서</b></div>
                             </div>
                            </a>
-                            <a href="">
+                            <a href="" method="get">
                                 <div class="cen_bottom_left_div">
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-journals" viewBox="0 0 16 16" style="color: black;">
@@ -185,7 +189,7 @@
                                     <div><b>지출결의서</b></div>
                                 </div>
                             </a>
-                            <a href="">
+                            <a href="${ contextPath }/pay/gWriterForm.do" method="get">
                                 <div class="cen_bottom_left_div">
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-journal-bookmark" viewBox="0 0 16 16" style="color: black;">

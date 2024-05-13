@@ -73,8 +73,7 @@
 								        <div>
 								            <table border="1"  class="form-label table">
 								                <tr>
-								                    <th colspan="9" rowspan="3" 
-								                    style="width: 400px;" class="form-title" >매출 보고서</th>
+								                    <th colspan="9" rowspan="3" style="width: 400px;" class="form-title" >매출 보고서</th>
 								                    <th style="width: 120px;">${list.get(0).FIRST_APPROVAL}</th>
 								                    <th style="width: 120px;">${list.get(0).MIDDLE_APPROVAL}</th>
 								                    <th style="width: 120px;">${list.get(0).FINAL_APPROVAL}</th>
