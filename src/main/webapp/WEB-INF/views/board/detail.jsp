@@ -110,13 +110,23 @@
 	        <div class="change-board">
 	
 	            <!-- move to previous board -->
-	            <a id="prev-board" class="list list-group list-group-item-action list-group-item-light">이전 게시글 제목</a>
+	            <a id="prev-board" class="list list-group list-group-item-action list-group-item-light">
+	            	<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+					  <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+					</svg>
+					<span id="prev-board-title"></span>
+	            </a>
 	            
 	            <!-- move to board list page -->
 	            <a id="list-board" class="list list-group list-group-item-action list-group-item-warning">목록</a>
 	
 	            <!-- move to next board -->
-					<a id="next-board" class="list list-group list-group-item-action list-group-item-light">다음 게시글 제목</a>
+				<a id="next-board" class="list list-group list-group-item-action list-group-item-light">
+					<span id="next-board-title"></span>
+					<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+					  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+					</svg>
+				</a>
 	
 	        </div>
 	        <!-- board change button area end -->
@@ -160,8 +170,6 @@
 	    // attachment list show or hide function end ------------------------------------------------------------------------
 		
 	    // 공지사항 목록조회 ======================================================================================================		 
-	    // 현재 공지사항의 URL 파라미터값 스트링 객체
-		 const urlParams = new URLSearchParams(location.search);
 	    $.ajax({
 	    	url:"${ contextPath }/board/detail/list.ajax",
 	    	method:"get",
@@ -171,41 +179,37 @@
 	    		let boardIndex = boardList.findIndex(function(board){
 	    			return board.boardNo == ${ board.boardNo }
 	    		});
-	    		
+
 	    		// 이전 공지사항 이동
-	    		if(boardIndex != 0){
+	    		if(boardIndex != (boardList.length - 1)){
 	    			// 현재 공지사항 조회한 공지사항 목록의 첫번째 공지사항이 아닐경우
-	    			$("#prev-board").text(boardList[boardIndex - 1].title);
-	    			moveBoard($("#prev-board"), boardList[boardIndex - 1].boardNo);
-	    		}else{
+	    			$("#prev-board-title").text(boardList[boardIndex + 1].title);
+	    			
+	    			let requestBoardIndex = boardList.findIndex(function(board){
+		    			return board.boardNo == boardList[boardIndex + 1].boardNo
+		    		});
+	    			let requestBoardWriter = boardList[requestBoardIndex].modifyEmp;
+	    			moveBoard($("#prev-board"), boardList[boardIndex + 1].boardNo, requestBoardWriter);
+	    		}else if(boardIndex == (boardList.length - 1)){
 	    			// 현재 공지사항이 조회한 공지사항 목록의 첫번째 공지사항일 경우
 	    			$("#prev-board").text("이전 글이 없습니다.")
-	    								 .css("pointer-events", "none");
+	    							.css("pointer-events", "none");
 	    		}
 
 	    		// 다음 공지사항 이동
-	    		if(boardIndex != (boardList.length - 1)){
+	    		if(boardIndex != 0){
 	    			// 현재 공지사항이 조회한 공지사항 목록의 마지막 공지사항이 아닐 경우
-	    			$("#next-board").text(boardList[boardIndex + 1].title);
-	    			moveBoard($("#next-board"), boardList[boardIndex + 1].boardNo);
-	    		}else{
+	    			$("#next-board-title").text(boardList[boardIndex - 1].title);
+	    			let requestBoardIndex = boardList.findIndex(function(board){
+		    			return board.boardNo == boardList[boardIndex - 1].boardNo
+		    		});
+	    			let requestBoardWriter = boardList[requestBoardIndex].modifyEmp;
+	    			moveBoard($("#next-board"), boardList[boardIndex - 1].boardNo, requestBoardWriter);
+	    		}else if(boardIndex == 0){
 	    			// 현재 공지사항이 조회한 공지사항 목록의 마지막 공지사항일 경우
-	    			$("#prev-board").text("다음 글이 없습니다.")
-					 					 .css("pointer-events", "none");
+	    			$("#next-board").text("다음 글이 없습니다.")
+					 				.css("pointer-events", "none");
 	    		}
-
-	    		// 이전 | 다음 공지사항 페이지 이동
-    		   function moveBoard(element, boardNo){
-	    			// 글번호 파라미터값 변경
-	    			urlParams.set("no", boardNo);
-    		   	if(${ loginMember.userNo } != boardList[boardIndex - 1].modifyEmp){
-    		  			// 로그인 사용자가 이전 공지사항의 작성자가 아닐경우
-    		  			element.attr("href",  "${ contextPath }/board/reader/detail.do?" + urlParams.toString());
-    		  		}else{
-    		  			// 로그인 사용자가 이전 공지사항의 작성자일 경우
-    		  			element.attr("href", "${ contextPath }/board/detail.do?" + urlParams.toString());
-    		  		}
-    		   }
 	    		
 	    		// 공지사항 목록 이동
 	    		urlParams.delete("no");
@@ -217,6 +221,23 @@
 	    })
 	})
 	
+    // 현재 공지사항의 URL 파라미터값 스트링 객체
+	const urlParams = new URLSearchParams(location.search);
+	
+	// 이전 | 다음 공지사항 페이지 이동
+    function moveBoard(element, boardNo, requestBoardWriter){
+		// 글번호 파라미터값 변경
+		urlParams.set("no", boardNo);
+		
+   		if(${ loginMember.userNo } != requestBoardWriter){
+  			// 로그인 사용자가 이전 공지사항의 작성자가 아닐경우
+  			element.attr("href",  "${ contextPath }/board/reader/detail.do?" + urlParams.toString());
+  		}else{
+  			// 로그인 사용자가 이전 공지사항의 작성자일 경우
+  			element.attr("href", "${ contextPath }/board/detail.do?" + urlParams.toString());
+  		}
+		
+    }
 	
 </script>
 
