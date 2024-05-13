@@ -14,6 +14,11 @@
 		<result column="posi" property="posi" />
 		<result column="todayin" property="todayIn" />
 		<result column="todayout" property="todayOut" />
+		<result column="a" property="a" />
+		<result column="b" property="b" />
+		<result column="c" property="c" />
+		<result column="d" property="d" />
+		<result column="e" property="e" />
 		
 		<collection property="groupList" ofType="GroupDto">
 			<result column="group_code" property="groupCode"/>
@@ -57,6 +62,7 @@
 		 WHERE STATUS = 'Y'
 	</select>
 
+	<!-- 출결 상태 조회 -->
 	<select id="selectAttendanceList" resultType="hashmap">
 		SELECT M.USER_NO "userNo"
 		     , M.PROFILE_URL "profileURL"
@@ -97,15 +103,13 @@
 	<!-- 출결 개수 조회(출근|결근|퇴근|조퇴|휴가)-->
 	<select id="SelectAttendanceCount" resultMap="attendanceList">
 		SELECT
-			    SUM(CASE WHEN REQUEST_DETAIL = '출근' THEN 1 ELSE 0 END) AS 출근,
-			    SUM(CASE WHEN REQUEST_DETAIL = '결근' THEN 1 ELSE 0 END) AS 결근,
-			    SUM(CASE WHEN REQUEST_DETAIL = '퇴근' THEN 1 ELSE 0 END) AS 퇴근,
-			    SUM(CASE WHEN REQUEST_DETAIL = '조퇴' THEN 1 ELSE 0 END) AS 조퇴,
-			    SUM(CASE WHEN REQUEST_DETAIL = '휴가' THEN 1 ELSE 0 END) AS 휴가
-			FROM
-			    ATTENDANCE
-			WHERE
-			    TRUNC(CLOCK_IN) = TRUNC(SYSDATE-3)
+			    SUM(CASE WHEN REQUEST_DETAIL = '출근' THEN 1 ELSE 0 END) AS "a"
+			  , SUM(CASE WHEN REQUEST_DETAIL = '결근' THEN 1 ELSE 0 END) AS "b"
+			  , SUM(CASE WHEN REQUEST_DETAIL = '퇴근' THEN 1 ELSE 0 END) AS "c"
+			  , SUM(CASE WHEN REQUEST_DETAIL = '조퇴' THEN 1 ELSE 0 END) AS "d"
+			  , SUM(CASE WHEN REQUEST_DETAIL = '휴가' THEN 1 ELSE 0 END) AS "e"
+		   FROM ATTENDANCE
+		  WHERE TRUNC(CLOCK_IN) = TRUNC(SYSDATE-3)
 			    OR CLOCK_IN IS NULL
 	</select>
 

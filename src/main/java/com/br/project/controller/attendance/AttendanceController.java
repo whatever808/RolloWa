@@ -1,7 +1,10 @@
 package com.br.project.controller.attendance;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +37,14 @@ public class AttendanceController {
 	// 2.1 출결 상태 조회
 	@GetMapping("/list.do")
 	public ModelAndView list(@RequestParam(value="page", defaultValue="1") int currentPage
-					, ModelAndView mv) {
+	                , @RequestParam(value="nowDate", required=false) String nowDate
+	                , ModelAndView mv) {
+		
+		if(nowDate == null || nowDate.isEmpty()) {
+	        // 오늘 날짜를 얻어옵니다.
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREA);
+	        nowDate = sdf.format(new Date());
+	    }
 		
 		int listCount = attendanceService.selectAttendanceListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
@@ -43,14 +53,14 @@ public class AttendanceController {
 		List<AttendanceDto> attendanceCount = attendanceService.SelectAttendanceCount();
 		
 		//log.debug("pageInfo : {}", pi);
-		log.debug("list : {}", list);
-		
-		log.debug("attendanceCount : {}", attendanceCount);
+		//log.debug("list : {}", list);
+		//log.debug("attendanceCount : {}", attendanceCount);
 		
 		mv.addObject("pi", pi)
 		  .addObject("listCount", listCount)
 		  .addObject("list", list)
 		  .addObject("attendanceCount", attendanceCount)
+		  .addObject("nowDate", nowDate)
 		  .setViewName("attendance/list");
 		
 		return mv;
