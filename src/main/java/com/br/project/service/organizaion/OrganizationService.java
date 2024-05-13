@@ -14,12 +14,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class OrganizationService {
-	public final OrganizationDao organizationDao;
-
 	
-	public int selectDepartment(int result) {
-		return organizationDao.selectDepartment(result);
-	}
+	private final OrganizationDao organizationDao;
 
 	public int selectOrganizationListCount() {
 		return organizationDao.selectOrganizationListCount();

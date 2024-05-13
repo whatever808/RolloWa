@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="organizationMapper">
+<mapper namespace="attendanceMapper">
 
-	<resultMap id="memberResult" type="OrganizationDto">
+	<resultMap id="memberResult" type="AttendanceDto">
 		<id column="user_no" property="userNo" />
 		<result column="user_name" property="userName" />
 		<result column="user_id" property="userId" />
@@ -37,68 +37,35 @@
 			<result column="upper_code" property="upperCode"/>
 		</collection>
 	</resultMap>
-	
-	<!-- 부서와 팀 가져오기 -->
-	<select id="selectOrganizationChart" resultType="GroupDto">
-		SELECT D1.CODE_NAME AS "DEPT"
-		     , D2.CODE_NAME AS "TEAM"
-		  FROM TB_GROUP D1
-		  LEFT JOIN
-		       TB_GROUP D2 ON D2.UPPER_CODE = D1.CODE AND D2.GROUP_CODE LIKE 'TEAM%'
-		 WHERE D1.GROUP_CODE LIKE 'DEPT%'
-	 	   AND D1.STATUS = 'Y'
-	       AND D2.STATUS = 'Y'
-         ORDER BY 
-         	   D1.CODE_NAME DESC
-         	 , D2.CODE_NAME ASC
-	</select>
 
-	<!-- 직원 전체 카운트 -->
-	<select id="selectOrganizationListCount" resultType="_int">
+	<!-- 출결 전체 카운트 -->
+	<select id="selectAttendanceListCount" resultType="_int">
 		SELECT
 			   COUNT(*)
-		  FROM MEMBER
-         WHERE STATUS = 'Y'
+		  FROM ATTENDANCE
 	</select>
 
-	<!-- 직원 전체 조회(사진,성명,부서,팀명,직급,전화,이메일 -->
-	<select id="selectOrganizationList" resultMap="memberResult">
+	<!-- 출결 상태 출력 -->
+	<select id="selectAttendanceList" resultMap="memberResult">
 		SELECT USER_NO
 			 , PROFILE_URL
        		 , USER_NAME
        		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'DEPT%' AND CODE = TEAM_CODE) AS "DEPT"
        		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'TEAM%' AND CODE = TEAM_CODE) AS "TEAM"
       		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = POSITION_CODE) AS "POSI"
-      		 , PHONE
-      		 , EMAIL
 		  FROM MEMBER
 		  JOIN TB_GROUP ON TEAM_CODE = CODE
 		   AND GROUP_CODE LIKE 'TEAM%'
+          JOIN ATTENDANCE USING (USER_NO)
 		 ORDER BY
 			   USER_NO ASC
 	</select>
-	
-	<!-- 부서 조회 : 전체 부서 조회 -->
-	<select id="selectDept" resultType="GroupDto">
-		SELECT CODE_NAME "codeName" 
-		  FROM TB_GROUP
-		 WHERE GROUP_CODE LIKE 'DEPT%'
-	</select>
-	
-	<!-- 팀 조회 : 선택한 부서에 해당하는 팀만 조회 -->
-	<select id="selectTeam" resultMap="memberResult">
-		SELECT CODE_NAME
-		  FROM TB_GROUP
-		 WHERE GROUP_CODE LIKE 'TEAM%'
-		   AND CODE_NAME = #{codeName}
-	</select>
 	<!-- 
-	AND UPPER_CODE
-		       = (SELECT CODE
-	                FROM TB_GROUP
-	               WHERE GROUP_CODE LIKE 'DEPT%'
-	                 AND CODE_NAME = #{codeName})
-	 -->
+      		 , CLOCK_IN
+      		 , CLOCK_OUT
+             , REQUEST_DETAIL
 	
+	 -->
 
 </mapper>
+
