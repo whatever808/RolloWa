@@ -61,7 +61,7 @@
          WHERE STATUS = 'Y'
 	</select>
 
-	<!-- 직원 전체 조회(사진,성명,부서,팀명,직급,전화,이메일 -->
+	<!-- 직원 전체 조회(사진,성명,부서,팀명,직급,전화,이메일) -->
 	<select id="selectOrganizationList" resultMap="memberResult">
 		SELECT USER_NO
 			 , PROFILE_URL

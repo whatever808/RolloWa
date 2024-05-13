@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
@@ -91,8 +92,10 @@
     .employee_info td img{
         border: 1px solid gainsboro;
         border-radius: 100%;
-        width: 40px;
-        margin: -5px;
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        margin: -10px;
     }
 
     /* 맨 밑 여백 주기 */
@@ -152,11 +155,12 @@
             </table>
 
             <!-- 직원 출결 데이터 start -->
-            <!-- 전체 인원수 -->
             <table class="table table-responsive">
                 <tr class="search_menu">
                     <td>
-                        <h6 class="employee_count">전체 50명</h6>
+                        <!-- 전체 인원수 -->
+	    				<h5 class="employee_count">전체 ${ listCount }명</h5>
+                        
                     </td>
                     <td>
                         <select name="department" id="department" class="form-control">
@@ -204,150 +208,64 @@
                     <th>퇴근시간</th>
                     <th>상태</th>
                 </tr>
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td>08:00</td>
-                    <td>17:50</td>
-                    <td class="table-secondary">퇴근</td>
-                </tr>
                 
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td>08:00</td>
-                    <td></td>
-                    <td class="table-success">출근</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td>08:00</td>
-                    <td>11:50</td>
-                    <td class="table-warning">조퇴</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td>08:00</td>
-                    <td>17:50</td>
-                    <td class="table-secondary">퇴근</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td></td>
-                    <td></td>
-                    <td class="table-danger">결근</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td></td>
-                    <td></td>
-                    <td class="table-danger">결근</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td></td>
-                    <td></td>
-                    <td class="table-info">휴가</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td></td>
-                    <td></td>
-                    <td class="table-danger">결근</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td></td>
-                    <td></td>
-                    <td class="table-danger">결근</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td></td>
-                    <td></td>
-                    <td class="table-danger">결근</td>
-                </tr>
+                <!-- 출결 조회(이름,부서,팀명,직급, 오늘날짜의 출석시간, 오늘날짜 퇴근시간, 상태) -->
+                <c:choose>
+			        <c:when test="${ not empty list }">
+			        	<c:forEach var="m" items="${ list }">
+					        <tr>
+					            <td>
+						            <c:choose>
+						            	<c:when test="${ not empty m.profileURL }">
+							                <img src="${ m.profileURL }" class="profile_img">
+						            	</c:when>
+						            	<c:otherwise>
+							                <img src="${ contextPath }/resources/images/defaultProfile.png">
+						            	</c:otherwise>
+						            </c:choose>
+					            </td>
+					            <td>${ m.userName }</td>
+					            <td>${ m.dept }</td>
+					            <td>${ m.team }</td>
+					            <td>${ m.posi }</td>
+					            <td>
+					            	<fmt:formatDate value="${ m.todayIn }" pattern="HH:mm:ss"/>
+					            </td>
+					            <td>
+					            	<fmt:formatDate value="${ m.todayOut }" pattern="HH:mm:ss"/>
+					            </td>
+					            <td
+			                    <c:choose>
+			                        <c:when test="${ m.requestDetail == '출근' }">class="table-success"</c:when>
+			                        <c:when test="${ m.requestDetail == '결근' }">class="table-danger"</c:when>
+			                        <c:when test="${ m.requestDetail == '퇴근' }">class="table-secondary"</c:when>
+			                        <c:when test="${ m.requestDetail == '조퇴' }">class="table-warning"</c:when>
+			                        <c:when test="${ m.requestDetail == '휴가' }">class="table-info"</c:when>
+			                    </c:choose>
+								>
+			                    	${ m.requestDetail }
+			                	</td>
+					        </tr>
+				        </c:forEach>
+			        </c:when>
+	        	</c:choose>
+	        	
+                
             </table>
             <!-- 직원 테이블 end -->
+            
 
             <!--페이징 처리 start-->
-            <div class="container">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
-                </ul>
-            </div>
-            <!--페이징 처리 end-->
+		    <div class="container">
+		        <ul class="pagination justify-content-center">
+		        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/attendance/list.do?page=${pi.currentPage-1}">Previous</a></li>
+					<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+						<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/attendance/list.do?page=${p}">${ p }</a></li>
+					</c:forEach>
+					<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/attendance/list.do?page=${pi.currentPage+1}">Next</a></li> 
+		        </ul>
+		    </div>
+	    	<!--페이징 처리 end-->
 	
 	
 		<!-- ------------ -->

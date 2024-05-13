@@ -1,5 +1,6 @@
 package com.br.project.controller.attendance;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -8,9 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.br.project.dto.attendance.AttendanceDto;
+import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.attendance.AttendanceService;
+import com.br.project.service.organizaion.OrganizationService;
 import com.br.project.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -34,11 +38,19 @@ public class AttendanceController {
 		
 		int listCount = attendanceService.selectAttendanceListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
-		List<MemberDto> list = attendanceService.selectAttendanceList(pi);
-		log.debug("pageInfo : {}", pi);
+		List<HashMap<String, String>> list = attendanceService.selectAttendanceList(pi);
+
+		List<AttendanceDto> attendanceCount = attendanceService.SelectAttendanceCount();
+		
+		//log.debug("pageInfo : {}", pi);
+		log.debug("list : {}", list);
+		
+		log.debug("attendanceCount : {}", attendanceCount);
 		
 		mv.addObject("pi", pi)
+		  .addObject("listCount", listCount)
 		  .addObject("list", list)
+		  .addObject("attendanceCount", attendanceCount)
 		  .setViewName("attendance/list");
 		
 		return mv;
