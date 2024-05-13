@@ -17,6 +17,7 @@ import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.notification.NotificationDto;
 import com.br.project.service.notification.NotificationService;
 import com.br.project.util.PagingUtil;
+import com.google.firebase.FirebaseApp;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificationController {
 	private final NotificationService nService;
 	private final PagingUtil pagingUtil;
-	
+		
 	// 알림 조회
 	@GetMapping("list.page")
 	public String selectNotification(@RequestParam(value="page", defaultValue="1") int currentPage

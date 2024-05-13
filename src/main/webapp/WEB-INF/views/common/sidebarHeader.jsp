@@ -395,5 +395,28 @@
         </div>
 
         <div class="b-example-divider b-example-vr"></div>
+        <script type="module">
+  				// Import the functions you need from the SDKs you need
+  				import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+  				import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
+  				// TODO: Add SDKs for Firebase products that you want to use
+  				// https://firebase.google.com/docs/web/setup#available-libraries
+
+  				// Your web app's Firebase configuration
+  				// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  				const firebaseConfig = {
+    				apiKey: "AIzaSyCW-C6Jb8awS5BWUxv0PY4-Sh430suz4Gg",
+    				authDomain: "rollowa-5202a.firebaseapp.com",
+    				projectId: "rollowa-5202a",
+    				storageBucket: "rollowa-5202a.appspot.com",
+    				messagingSenderId: "483460104444",
+    				appId: "1:483460104444:web:0ae6e8dc0c76e0edb91779",
+    				measurementId: "G-45SHLF69ET"
+  				};
+
+  				// Initialize Firebase
+  				const app = initializeApp(firebaseConfig);
+  				const analytics = getAnalytics(app);
+				</script>
 </body>
 </html>
