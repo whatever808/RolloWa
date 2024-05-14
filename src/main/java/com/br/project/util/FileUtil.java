@@ -3,13 +3,17 @@ package com.br.project.util;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.br.project.dto.common.AttachmentDto;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,4 +57,36 @@ public class FileUtil {
 		
 	}
 	
+	
+	/* ================================================================= "가림" 구역 ================================================================= */
+	/**
+	 * @param uploadFiles : 업로드할 첨부파일 정보가 담긴 파일객체 리스트
+	 * @param fileInfo    : {"category" : {업로드폴더명}, "refType" : {참조유형}, "refNo" : {참조번호}, "status" : {저장상태}}
+	 * @return            : 업로드 완료된 파일개체 리스트
+	 */
+	public List<AttachmentDto> getAttachmentList(List<MultipartFile> uploadFiles, HashMap<String, Object> fileInfo){
+		
+		List<AttachmentDto> attachmentList = new ArrayList<>();
+		
+		// 첨부파일 있을경우, 첨부파일 업로드
+		for(MultipartFile uploadFile : uploadFiles) {
+			if(uploadFile != null && !uploadFile.isEmpty()) {
+				Map<String, String> uploadInfo = fileUpload(uploadFile, (String)fileInfo.get("category"));
+				
+				AttachmentDto attachment = AttachmentDto.builder()
+														.attachPath(uploadInfo.get("filePath"))
+														.originName(uploadInfo.get("originalName"))
+														.modifyName(uploadInfo.get("filesystemName"))
+														.refType((String)fileInfo.get("refType"))
+														.refNo((String)fileInfo.get("refNo"))
+														.status((String)fileInfo.get("status"))
+														.build();
+				
+				attachmentList.add(attachment);
+			}
+		}
+		
+		return attachmentList;
+	}
+	/* ================================================================= "가림" 구역 ================================================================= */
 }
