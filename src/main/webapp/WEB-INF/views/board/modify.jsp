@@ -31,7 +31,11 @@
 	
 	        <!-- board modify form start -->
 	        <form action="${ contextPath }/board/modify.do" method="post" id="modify-form" enctype="multipart/form-data">
-	
+				
+				<!-- board no -->
+				<input type="hidden" name="boardNo" value="${ board.boardNo }">
+				
+				<!-- board category -->
 	            <div class="field-group">
 	                <label for="board-category" class="field-title">게시판</label><br>
 	                <!-- board category -->
@@ -54,9 +58,9 @@
               	    <input type="file" name="uploadFiles" id="uploadFiles" class="form-control board-attachment mb-3" multiple>
               	    
               	    <!-- original attachment list start -->
-              	    <div class="attachment-list">
-              	    	<c:if test="${ not empty board.attachmentList }">
-	              	    	<table class="table table-sm table-borderless">
+              	    <c:if test="${ not empty board.attachmentList }">
+              	    	<div class="attachment-list">
+	            	    	<table class="table table-sm table-borderless">
 	              	    		
 	              	    		<thead>
 	              	    			<tr class="border-bottom">
@@ -79,13 +83,13 @@
 		              	    				</td>
 		              	    			</tr>
 		              	    			<!-- one attachment -->
-              	    				</c:forEach>
+	             	    				</c:forEach>
 	              	    		</tbody>
 	              	    		
 	              	    	</table>
-              	    	</c:if>
-              	    </div>
+              	    	</div>
               	    <!-- original attachment list end -->
+              	    </c:if>
               	    
               	    <!-- delete attachment input list -->
               	    <div id="delete-attachment-list" class="d-none"></div>
@@ -146,7 +150,7 @@
 	$(".attachment-list").on("click", ".delete", function(event){
 		let deleteFileNo = $(this).data("fileno");
 		// 1) 삭제할 파일번호 파라미터값으로 넘기기
-		$("#delete-attachment-list").append("<input type='hidden' name='delFiles' value='" + deleteFileNo + "'>");
+		$("#delete-attachment-list").append("<input type='hidden' name='delFileNoArr' value='" + deleteFileNo + "'>");
 		
 		// 2) 삭제할 파일요소 화면에서 지우기
 		$(this).parents("tr").remove();

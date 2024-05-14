@@ -23,6 +23,7 @@ import com.br.project.dto.board.BoardDto;
 import com.br.project.dto.common.AttachmentDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.service.board.BoardAttachmentService;
 import com.br.project.service.board.BoardService;
 import com.br.project.service.common.department.DepartmentService;
 import com.br.project.util.FileUtil;
@@ -38,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardController {
 
 	private final BoardService boardService;
+	private final BoardAttachmentService boardAttachmentService;
 	private final DepartmentService departmentService;
 	private final PagingUtil pagingUtil;
 	private final FileUtil fileUtil;
@@ -137,9 +139,9 @@ public class BoardController {
 				model.addAttribute("board", board);
 			}else {
 				// 조회된 공지사항이 없을경우
-				redirectAttributes.addFlashAttribute("alertTitle", "게시글 상세조회");
-				redirectAttributes.addFlashAttribute("alertMsg", "유효하지 않은 게시글입니다.");
-				return "redirect:" + request.getDateHeader("Referer");
+				redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상세조회");
+				redirectAttributes.addFlashAttribute("alertMsg", "유효하지 않은 공지사항입니다.");
+				return "redirect:" + request.getHeader("Referer");
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -148,9 +150,6 @@ public class BoardController {
 		
 		return "board/detail";
 	}
-	
-	
-	
 	
 	/**
 	 * @method : 공지사항 등록페이지 반환
@@ -169,22 +168,13 @@ public class BoardController {
 						   ,HttpServletRequest request
 						   ,RedirectAttributes redirectAttributes) {
 		try {
-			List<AttachmentDto> attachmentList = new ArrayList<>();
-			// 첨부파일 있을경우, 첨부파일 업로드
-			for(MultipartFile uploadFile : uploadFiles) {
-				if(uploadFile != null && !uploadFile.isEmpty()) {
-					Map<String, String> fileInfo = fileUtil.fileUpload(uploadFile, "board");
-					
-					AttachmentDto attachment = AttachmentDto.builder()
-															.attachPath(fileInfo.get("filePath"))
-															.originName(fileInfo.get("originalName"))
-															.modifyName(fileInfo.get("filesystemName"))
-															.refType("BD")
-															.build();
-					
-					attachmentList.add(attachment);
-				}
-			}
+			// 등록할 첨부파일 리스트
+			HashMap<String, Object> fileInfo = new HashMap<>();
+			fileInfo.put("category", "board");
+			fileInfo.put("refType", "BD");
+			fileInfo.put("refNo", board.getBoardNo());
+			fileInfo.put("status", board.getStatus());
+			List<AttachmentDto> attachmentList = fileUtil.getAttachmentList(uploadFiles, fileInfo);
 
 			// 공지사항 등록
 			String writerNo = String.valueOf(((MemberDto)(request.getSession().getAttribute("loginMember"))).getUserNo());
@@ -192,29 +182,19 @@ public class BoardController {
 			board.setModifyEmp(writerNo);
 			board.setAttachmentList(attachmentList);
 			
-			Map<String, Object> result = boardService.insertBoard(board);
+			int result = boardService.insertBoard(board);
 			
-			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 등록서비스");
 			String status = board.getStatus() == "Y" ? "등록" : "저장";
-			if(attachmentList.isEmpty()) {
-				// 첨부파일이 없는 게시글일 경우
-				if((int)result.get("boardResult") > 0) {
-					redirectAttributes.addFlashAttribute("alertMsg", "공지사항이 " + status + "되었습니다.");
-				}else {
-					redirectAttributes.addFlashAttribute("alertMsg", "공지사항 " + status + "이 정상적으로 처리되지 않았습니다.");
-				}
+			String alertMsg = "";
+			if(result > 0) {
+				// 공지사항 등록 성공
+				alertMsg = "공지사항이 " + status + " 되었습니다.";
 			}else {
-				// 첨부파일이 있는 게시글일 경우
-				List<AttachmentDto> failedFiles = (List<AttachmentDto>)result.get("failedFiles");
-				if(failedFiles.isEmpty()) {
-					redirectAttributes.addFlashAttribute("alertMsg", "공지사항이 " + status + "되었습니다.");
-				}else {
-					redirectAttributes.addFlashAttribute("alertMsg", "공지사항은 " + status + "되었으나, 일부 첨부파일이 정상적으로 처리되지 않았습니다.");
-					for(AttachmentDto file : failedFiles) {
-						new File(file.getAttachPath(), file.getModifyName()).delete();
-					}
-				}
+				// 공지사항 등록 실패
+				alertMsg = "공지사항 " + status + " 이 정상적으로 처리되지 못했습니다.";
 			}
+			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 등록서비스");
+			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);
 		}catch(Exception e) {
 			e.printStackTrace();
 			return "redirect:" + request.getDateHeader("Referer");
@@ -228,50 +208,93 @@ public class BoardController {
 	 * @method : 공지사항 수정페이지 이동
 	 */
 	@RequestMapping(value="/modify.page")
-	public ModelAndView showBoardModifyPage(HttpServletRequest request
-									 	   ,ModelAndView mv) {
-		
-		String teamCode = ((MemberDto)request.getSession().getAttribute("loginMember")).getTeamCode();
-		
-		Map<String, String> params = new HashMap<>();
-		params.put("upperGroupCode", "DEPT01");
-		params.put("groupCode", "TEAM01");
-		params.put("code", teamCode);
-		
-		mv.addObject("department", departmentService.selectUppderCode(params));
-		mv.addObject("board", boardService.selectBoard(getParameterMap(request)));
-		mv.setViewName("board/modify");
-		
-		return mv;
+	public String showBoardModifyPage(HttpServletRequest request
+									 ,Model model) {
+		try {
+			String teamCode = ((MemberDto)request.getSession().getAttribute("loginMember")).getTeamCode();
+			
+			Map<String, String> params = new HashMap<>();
+			params.put("upperGroupCode", "DEPT01");
+			params.put("groupCode", "TEAM01");
+			params.put("code", teamCode);
+			
+			model.addAttribute("department", departmentService.selectUppderCode(params));
+			model.addAttribute("board", boardService.selectBoard(getParameterMap(request)));
+			return "board/modify";
+		}catch(Exception e) {
+			e.printStackTrace();
+			return "redirect:" + request.getHeader("Referer");
+		}
 	}
 	
 	/**
 	 * @method : 공지사항 수정
 	 */
 	@RequestMapping(value="/modify.do")
-	public void modifyBoard(BoardDto board
-						   //List<MultipartFile> uploadFiles
-						   ,HttpServletRequest request) {
-		/*
-		 * 첨부파일이 있는 공지사항
-		 * 		ㄴ 공지사항 수정 : [카테고리], [제목], [내용] 
-		 * 		ㄴ 첨부파일 수정
-		 * 			ㄴ 첨부파일 삭제 : 
-		 * 					1) 데이터베이스 파일 상태변경 : [파일번호]
-		 * 					2) 업로드된 기존 파일삭제 : [저장경로], [수정명] 조회
-		 * 			ㄴ 첨부파일 추가 : 
-		 * 					1) 파일업로드 
-		 *					2) [원본명], [수정명], [저장경로], [참조유형], [참조번호]
-		 *
-		 * 첨부파일이 없는 공지사항
-		 * 		ㄴ 공지사항 수정 : [카테고리], [제목], [내용]
-		 * 
-		 */
-		HashMap<String, Object> params = getParameterMap(request);
-		List<MultipartFile> upFiles = (List<MultipartFile>) params.get("uploadFiles");
-		log.debug("업로드 파일 : {}", upFiles);
-		log.debug("게시글 : {}", params.get("content"));
+	public String modifyBoard(BoardDto board
+						     ,List<MultipartFile> uploadFiles
+						     ,String[] delFileNoArr
+						     ,HttpServletRequest request
+						     ,RedirectAttributes redirectAttributes) {
+		try {
+			HashMap<String, Object> params = new HashMap<>();
+			
+			// 삭제할 첨부파일 정보
+			List<AttachmentDto> delAttachmentList = new ArrayList<>();
+			if(delFileNoArr != null) {
+				params.put("delFileNoArr", delFileNoArr);
+				delAttachmentList = boardAttachmentService.selectAttachmentList(delFileNoArr);
+			}
+			
+			// 등록할 공지사항 정보
+			HashMap<String, Object> fileInfo = new HashMap<>();
+			fileInfo.put("category", "board");
+			fileInfo.put("refType", "BD");
+			fileInfo.put("refNo", board.getBoardNo());
+			fileInfo.put("status", board.getStatus());
+			board.setAttachmentList(fileUtil.getAttachmentList(uploadFiles, fileInfo));
+			params.put("board", board);
+			
+			// 공지사항 수정요청
+			int result = boardService.updateBoard(params);
+			
+			// 처리결과에 따른 응답페이지
+			String status = board.getStatus() == "Y" ? "등록" : "저장";
+			String alertMsg = "";
+			if(result > 0) {
+				alertMsg = "공지사항 수정이 완료되었습니다.";
+				
+				// 삭제할 첨부파일이 있었을 경우, 로컬저장소에서 업로드된 파일삭제
+				if(!delAttachmentList.isEmpty()) {
+					for(AttachmentDto attachment : delAttachmentList) {
+						new File(attachment.getAttachPath(), attachment.getModifyName()).delete();
+					}
+				}
+			}else {
+				alertMsg = "공지사항 수정이 정상적으로 처리되지 못했습니다.";
+				
+				// 업로드한 첨부파일이 있었을 경우, 로컬저장소에서 등록실패한 파일삭제
+				if(!board.getAttachmentList().isEmpty()) {
+					for(AttachmentDto attachment : board.getAttachmentList()) {
+						new File(attachment.getAttachPath(), attachment.getModifyName()).delete();
+					}
+				}
+			}
+			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 수정서비스");
+			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			/*
+			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 수정서비스");
+			redirectAttributes.addFlashAttribute("alertMsg", "공지사항 수정서비스 요청에 실패했습니다.");
+			
+			return "redirect:" + request.getHeader("Referer");
+			*/
+		}
 		
+		return "redirect:/board/list.do";
 	}
 	
 

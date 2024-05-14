@@ -1,5 +1,6 @@
 package com.br.project.service.board;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.br.project.dao.board.BoardDao;
+import com.br.project.dao.common.attachment.AttachmentDao;
 import com.br.project.dto.board.BoardDto;
 import com.br.project.dto.common.AttachmentDto;
 import com.br.project.dto.common.PageInfoDto;
@@ -18,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class BoardService {
 
 	private final BoardDao boardDao;
-	private final BoardAttachmentService attachmentService; 
+	private final AttachmentDao attachmentDao;
 	
 	/**
 	 * @param filter : [카테고리], [부서코드], [검색조건], [검색키워드]
@@ -63,25 +65,71 @@ public class BoardService {
 	
 	/**
 	 * @param board : 등록할 공지사항 정보가 담긴 공지사항 객체
-	 * @method : 공지사항 등록
-	 * @return : 등록된 공지사항 행 수, 등록실패한 첨부파일 객체 리스트
+	 * @method : 공지사항 등록 결과 (0|1)
 	 */
-	public Map<String, Object> insertBoard(BoardDto board){
-		Map<String, Object> result = new HashMap<>();
-		
+	public int insertBoard(BoardDto board){
 		// 1) 게시글 등록
-		int boardResult = boardDao.insertBoard(board);
-		result.put("boardResult", boardResult);
+		int result = boardDao.insertBoard(board);
 		
 		// 2) 첨부파일이 있을경우, 첨부파일 등록
 		List<AttachmentDto> attachmentList = board.getAttachmentList();
-		if(boardResult > 0) {
+		if(result > 0) {
 			if(attachmentList != null && !attachmentList.isEmpty()) {
-				result.put("failedFiles", attachmentService.insertAttachment(attachmentList));
+				for(AttachmentDto attachment : attachmentList) {
+					result = attachmentDao.insertBoardAttachment(attachment);
+				}
 			}
 		}
 		
 		return result;
 	}
 	
+	/**
+	 * @param params : {"delFileNoArr" : {삭제할첨부파일 번호 배열객체}, "board" : {등록할 공지사항 정보가 담긴 공지사항 객체}}
+	 * @method : 공지사항 수정 결과 (0|1)
+	 */
+	public int updateBoard(HashMap<String, Object> params) {
+		// 공지사항 수정에 사용할 파라미터
+		String[] delFileNoArr = (String[])params.get("delFileNoArr");
+		BoardDto board = (BoardDto)params.get("board");
+		List<AttachmentDto> uploadAttachmentList = board.getAttachmentList();
+		
+		// 공지사항 수정
+		int result = boardDao.updateBoard(board);
+		
+		// 공지사항 수정 성공시
+		if(result > 0) {
+			// 삭제할 첨부파일이 있을경우, 첨부파일 삭제(상태변경)
+			if(delFileNoArr != null) { 
+				for(String delFileNo : delFileNoArr) {
+					result = attachmentDao.deleteBoardAttachments(delFileNo);
+				}
+			}
+			
+			// 등록할 첨부파일이 있을경우, 첨부파일 등록
+			if(uploadAttachmentList != null && !uploadAttachmentList.isEmpty()) {
+				for(AttachmentDto attachment : uploadAttachmentList) {
+					result = attachmentDao.insertBoardAttachment(attachment);
+				}
+			}
+		}
+		
+		return result;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

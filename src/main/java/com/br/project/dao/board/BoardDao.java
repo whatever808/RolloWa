@@ -70,6 +70,14 @@ public class BoardDao {
 	public int insertBoard(BoardDto board) {
 		return sqlSessionTemplate.insert("boardMapper.insertBoard", board);
 	}
+	
+	/**
+	 * @param board : 수정할 공지사항 정보가 담긴 공지사항 객체
+	 * @return : 공지사항 수정 행수
+	 */
+	public int updateBoard(BoardDto board) {
+		return sqlSessionTemplate.update("boardMapper.updateBoard", board);
+	}
 
 	
 	

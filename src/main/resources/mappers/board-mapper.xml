@@ -116,17 +116,17 @@
 					and 
 							(title like 	 		'%' || #{keyword} || '%'
 					 		 or content like 		'%' || #{keyword} || '%'
-					 		 or user_name like 	'%' || #{keyword} || '%'
+					 		 or user_name like 		'%' || #{keyword} || '%'
 					 		 )
 				</when>
 				<when test="condition.equals('title') and !keyword.equals('')">
-					and title like 	 			'%' || #{keyword} || '%'
+					and title like 	 				'%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('content') and !keyword.equals('')">
 					and content like 			 	'%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('writer') and !keyword.equals('')">
-					and user_name like 		 	'%' || #{keyword} || '%'
+					and user_name like 		 		'%' || #{keyword} || '%'
 				</when>
 			</choose>
 		</if>
@@ -167,45 +167,52 @@
 		  from tb_board
 		  join member on (user_no = modify_emp)
 		  left outer join attachment on (ref_type  = 'BD'
-		  									  and ref_no 	 = #{no}
-		  									  and attachment.status = 'Y')
+  									 and ref_no    = #{no}
+  									 and attachment.status = 'Y')
 		 where board_no = #{no}
-		   and tb_board.status = 'Y'
+		   and tb_board.status   = 'Y'
 	</select>
 	
 	<!-- 공지사항 등록 -->
 	<insert id="insertBoard" parameterType="BoardDto">
 		insert
 			into tb_board
-					 (
-					   board_no
-					  ,regist_emp
-					  ,modify_emp
-					  ,title
-					  ,content
-					  ,category
-					  ,status
-					 )
+				 (
+				   board_no
+				  ,regist_emp
+				  ,modify_emp
+				  ,title
+				  ,content
+				  ,category
+				  ,status
+				 )
 		values 
-					(
-					  seq_bdno.nextval
-					 ,#{registEmp}
-					 ,#{modifyEmp}
-					 ,#{title}
-					 ,#{content}
-					 ,(
-					 	select upper_code
-					 	  from tb_group
-					 	 where group_code = 'TEAM01'
-					 	 	and code = #{category}
-					  )
-					 ,#{status}
-					)
+				(
+				  seq_bdno.nextval
+				 ,#{registEmp}
+				 ,#{modifyEmp}
+				 ,#{title}
+				 ,#{content}
+				 ,(
+				 	select upper_code
+				 	  from tb_group
+				 	 where group_code = 'TEAM01'
+				 	 	and code = #{category}
+				  )
+				 ,#{status}
+				)
 	</insert>
 	
-	
-	
-	<!-- 게시글 수정 -->
+	<!-- 공지사항 수정 -->
+	<update id="updateBoard" parameterType="BoardDto">
+		update tb_board
+		   set 
+		   	    title = #{title}
+		   	   ,content = #{content}
+		   	   ,category = #{category}
+		   	   ,modify_date = sysdate
+		 where board_no = #{boardNo}
+	</update>
 
 
   
