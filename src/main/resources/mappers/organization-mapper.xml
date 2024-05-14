@@ -36,6 +36,7 @@
 			<result column="code_name" property="codeName"/>
 			<result column="upper_code" property="upperCode"/>
 		</collection>
+		
 	</resultMap>
 	
 	<!-- 부서와 팀 가져오기 -->
@@ -79,26 +80,43 @@
 	</select>
 	
 	<!-- 부서 조회 : 전체 부서 조회 -->
+	<!-- 삭제 예정
 	<select id="selectDept" resultType="GroupDto">
 		SELECT CODE_NAME "codeName" 
 		  FROM TB_GROUP
 		 WHERE GROUP_CODE LIKE 'DEPT%'
 	</select>
-	
-	<!-- 팀 조회 : 선택한 부서에 해당하는 팀만 조회 -->
+ 	-->
+
+
+	<!-- 1. 부서 조회 -->
+	<select id="selectDepartment" resultMap="memberResult">
+		SELECT CODE_NAME
+		  FROM TB_GROUP
+		 WHERE GROUP_CODE LIKE 'DEPT%'
+	</select>
+
+	<!-- 2. 팀 조회 : 부서가 선택되어 있어야함 -->
 	<select id="selectTeam" resultMap="memberResult">
 		SELECT CODE_NAME
 		  FROM TB_GROUP
 		 WHERE GROUP_CODE LIKE 'TEAM%'
-		   AND CODE_NAME = #{codeName}
+		   AND UPPER_CODE
+			 = (SELECT CODE
+		  FROM TB_GROUP
+		 WHERE GROUP_CODE LIKE 'DEPT%'
+		   AND CODE_NAME = #{ codeName } )
 	</select>
-	<!-- 
-	AND UPPER_CODE
-		       = (SELECT CODE
-	                FROM TB_GROUP
-	               WHERE GROUP_CODE LIKE 'DEPT%'
-	                 AND CODE_NAME = #{codeName})
-	 -->
+	
+	<!-- 3. 직급 조회 -->
+	<select id="selectPosition" resultMap="memberResult">
+		SELECT CODE_NAME
+		  FROM TB_GROUP
+		 WHERE GROUP_CODE LIKE 'POSI%'
+	</select>
+	
+	
+	
 	
 
 </mapper>

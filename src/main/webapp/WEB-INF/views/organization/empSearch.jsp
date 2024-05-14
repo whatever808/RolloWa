@@ -120,7 +120,6 @@
 	                <!-- 검색 메뉴 1 : 부서명-->
                 	<th>부서명</th>
 	                <td>
-	                	
 	                    <select id="dept" name="dept" class="form-control">
 	                        <option value="전체 부서">전체 부서</option>
 	                        <c:forEach var="d" items="${ dept }">

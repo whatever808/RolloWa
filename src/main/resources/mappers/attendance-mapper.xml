@@ -112,6 +112,43 @@
 		  WHERE TRUNC(CLOCK_IN) = TRUNC(SYSDATE-3)
 			    OR CLOCK_IN IS NULL
 	</select>
+	
+	
+	
+	<!-- 아이디 중복체크 -->
+	<select id="selectUserIdCount" resultType="_int">
+		select count(*)
+		  from member
+		 where user_id = #{checkId}
+	</select>
+	
+	<!-- 회원 가입 : 사번,이름,아이디,비밀번호,생성한관리자번호,관리자권한여부,팀코드,직급-->
+	<insert id="insertMember">
+		insert
+		  into member
+		  	 (
+		  	   user_no
+		  	 , user_name
+		  	 , user_id
+		  	 , user_pwd
+		  	 , enroll_user_no
+		  	 , auth_level
+		  	 , team_code
+		  	 , position_code
+		  	 )
+		  	   values
+		  	 (
+			   seq_uno.nextval
+			 , #{userName}
+			 , #{userId}
+			 , #{userPwd}
+			 , #{userName}
+			 , #{authLevel}
+			 , #{teamCode}
+			 , #{positionCode}
+		  	 )
+	</insert>
+	
 
 </mapper>
 

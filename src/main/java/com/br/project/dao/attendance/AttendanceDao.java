@@ -8,7 +8,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.br.project.dto.attendance.AttendanceDto;
+import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
+import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,6 +38,27 @@ public class AttendanceDao {
 
 	public List<AttendanceDto> SelectAttendanceCount() {
 		return sqlSessionTemplate.selectList("attendanceMapper.SelectAttendanceCount");
+	}
+
+	// 아이디 중복체크
+	public int selectUserIdCount(String checkId) {
+		return sqlSessionTemplate.selectOne("attendanceMapper.selectUserIdCount", checkId);
+	}
+
+	// 회원가입
+	public int insertMember(MemberDto member) {
+		return sqlSessionTemplate.insert("attendanceMapper.insertMember", member);
+	}
+
+	/* 공통 : 부서, 팀, 직급 조회 */
+	public List<GroupDto> selectDepartment() {
+		return sqlSessionTemplate.selectList("organizationMapper.selectDepartment");
+	}
+	public List<GroupDto> selectTeam(String selectedDepartment) {
+		return sqlSessionTemplate.selectList("organizationMapper.selectTeam", selectedDepartment);
+	}
+	public List<GroupDto> selectPosition() {
+		return sqlSessionTemplate.selectList("organizationMapper.selectPosition");
 	}
 	
 }
