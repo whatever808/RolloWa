@@ -32,18 +32,26 @@ public class OrganizationDao {
 		return sqlSessionTemplate.selectList("organizationMapper.selectOrganizationList", null, rowBounds);
 		
 	}
-
-	public List<GroupDto> selectDept() {
-		return sqlSessionTemplate.selectList("organizationMapper.selectDept");
-	}
-
-	public List<GroupDto> selectTeam() {
-		return sqlSessionTemplate.selectList("organizationMapper.selectTeam");
-	}
-
 	public List<GroupDto> selectOrganizationChart() {
 		return sqlSessionTemplate.selectList("organizationMapper.selectOrganizationChart");
 	}
+
+	
+	
+	/* 부서, 팀, 직급 조회 DAO */
+	public List<GroupDto> selectDepartment() {
+		return sqlSessionTemplate.selectList("organizationMapper.selectDepartment");
+	}
+	public List<GroupDto> selectTeamAll(String selectedDepartment) {
+		return sqlSessionTemplate.selectList("organizationMapper.selectTeamAll", selectedDepartment);
+	}
+	public List<GroupDto> selectTeam(String selectedDepartment) {
+		return sqlSessionTemplate.selectList("organizationMapper.selectTeam", selectedDepartment);
+	}
+	public List<GroupDto> selectPosition() {
+		return sqlSessionTemplate.selectList("organizationMapper.selectPosition");
+	}
+
 	
 
 	

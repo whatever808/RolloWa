@@ -50,15 +50,5 @@ public class AttendanceDao {
 		return sqlSessionTemplate.insert("attendanceMapper.insertMember", member);
 	}
 
-	/* 공통 : 부서, 팀, 직급 조회 */
-	public List<GroupDto> selectDepartment() {
-		return sqlSessionTemplate.selectList("organizationMapper.selectDepartment");
-	}
-	public List<GroupDto> selectTeam(String selectedDepartment) {
-		return sqlSessionTemplate.selectList("organizationMapper.selectTeam", selectedDepartment);
-	}
-	public List<GroupDto> selectPosition() {
-		return sqlSessionTemplate.selectList("organizationMapper.selectPosition");
-	}
 	
 }

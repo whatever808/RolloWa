@@ -60,7 +60,7 @@
         position: relative;
     }
     .tree {
-        margin: 50px;
+        margin: 20px;
         text-align: center;
     }
     .tree, .tree ul {
@@ -123,7 +123,7 @@
         border-radius: .3em;
         display: inline-block;
         /* 가운데 em : 가로 개수조절 */
-        margin: 0 3em 2.3em;
+        margin: 0 2em 2.3em;
         padding: 1em 1.5em;
         position: relative;
         width: 200px;

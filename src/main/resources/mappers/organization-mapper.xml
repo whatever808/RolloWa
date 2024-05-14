@@ -89,14 +89,24 @@
  	-->
 
 
+	
+
+
 	<!-- 1. 부서 조회 -->
 	<select id="selectDepartment" resultMap="memberResult">
 		SELECT CODE_NAME
 		  FROM TB_GROUP
 		 WHERE GROUP_CODE LIKE 'DEPT%'
 	</select>
-
-	<!-- 2. 팀 조회 : 부서가 선택되어 있어야함 -->
+	
+	<!-- 2.1 팀 조회 : 부서가 선택되어 있어야함, 전체 팀 조회 -->
+	<select id="selectTeamAll" resultMap="memberResult">
+		SELECT CODE_NAME
+		  FROM TB_GROUP
+         WHERE GROUP_CODE LIKE 'TEAM%'
+	</select>
+	
+	<!-- 2.2 팀 조회 : 부서가 선택되어 있어야함, 선택한 부서의 팀만 조회 -->
 	<select id="selectTeam" resultMap="memberResult">
 		SELECT CODE_NAME
 		  FROM TB_GROUP

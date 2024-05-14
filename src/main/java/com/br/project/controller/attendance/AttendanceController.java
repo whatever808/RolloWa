@@ -23,6 +23,7 @@ import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.attendance.AttendanceService;
+import com.br.project.service.organizaion.OrganizationService;
 import com.br.project.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AttendanceController {
 
 	private final AttendanceService attendanceService;
+	private final OrganizationService organizationService;
 	private final PagingUtil pagingUtil;
 	private final BCryptPasswordEncoder bcryptPwdEncoder;
 
@@ -103,15 +105,16 @@ public class AttendanceController {
 	@ResponseBody
 	@GetMapping("/department.do")
 	public List<GroupDto> selectDepartment() {
-	    return attendanceService.selectDepartment();
+		log.debug("부서 조회 실행");
+	    return organizationService.selectDepartment();
 	}
 	/* 2. 팀 조회 */
 	@ResponseBody
 	@GetMapping("/team.do")
 	public List<GroupDto> selectTeam(@RequestParam("selectedDepartment") String selectedDepartment) {
-		
+		log.debug("팀 조회 실행");
 		log.debug("selectedDepartment 값 : {}", selectedDepartment);
-		List<GroupDto> result = attendanceService.selectTeam(selectedDepartment); 
+		List<GroupDto> result = organizationService.selectTeam(selectedDepartment); 
 		log.debug("result출력 : {}", result);
 		
 	    return result;
@@ -120,7 +123,8 @@ public class AttendanceController {
 	@ResponseBody
 	@GetMapping("/position.do")
 	public List<GroupDto> selectPosition() {
-	    return attendanceService.selectPosition();
+		log.debug("직급 조회 실행");
+	    return organizationService.selectPosition();
 	}
 	
 	

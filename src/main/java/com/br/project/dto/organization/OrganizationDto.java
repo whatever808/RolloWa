@@ -1,6 +1,5 @@
 package com.br.project.dto.organization;
 
-import java.util.Date;
 import java.util.List;
 
 import com.br.project.dto.common.GroupDto;

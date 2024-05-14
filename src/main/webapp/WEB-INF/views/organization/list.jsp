@@ -92,13 +92,14 @@
 		object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
 	    margin: -10px;
  	}
+ 	/*
  	.profile_img:hover {
 		transform: scale(10) translate(70%, -40%);
     	border-radius: 0;
     	border: 0px;
     	object-fit: contain;
 	}
-	
+	*/
  	
 	</style>
 </head>
@@ -113,19 +114,16 @@
 	    <hr>
 	    
 	    <!-- ------------ -->
-	    <form id="search_Form" action="${ contextPath }/orginfo/empSearch.do" method="GET">
+	    <form id="search_Form" action="${ contextPath }/orginfo/list.do" method="GET">
 	        <table class="table table_search">
 	
 	            <tr class="tr_search">
 	                <!-- 검색 메뉴 1 : 부서명-->
                 	<th>부서명</th>
 	                <td>
-	                    <select id="dept" name="dept" class="form-control">
-	                        <option value="전체 부서">전체 부서</option>
-	                        <c:forEach var="d" items="${ dept }">
-		                        <option value="${d.codeName}">${d.codeName}</option>
-	                        </c:forEach>
-	                    </select>
+	                    <select name="department" id="department" class="form-control">
+	                        	<option value="전체 부서">전체 부서</option>
+                    	</select>
 	                </td>
 	                <!-- 검색 메뉴 2 : 전화번호 -->
 	                <th>전화번호</th>
@@ -138,11 +136,8 @@
 	                <th>팀명</th>
 	                <td>
 	                    <select name="team" id="team" class="form-control">
-	                        <option value="전체 팀">전체 팀</option>
-	                        <c:forEach var="t" items="${ team }">
-		                        <option value="${t.codeName}">${t.codeName}</option>
-	                        </c:forEach>
-	                    </select>
+	                        	<option value="전체 팀">전체 팀</option>
+                    	</select>
 	                </td>
 	                <!-- 검색 메뉴 4 : 이름 -->
 	                <th>이름</th>
@@ -161,34 +156,99 @@
 	        </table>
 	    </form>
 	    
-	    <!-- 스크립트 작성중 -->
-	    <script>
-		    $(document).ready(function() {
-		        $('#dept').change(function() {
-		            let selectDept = $(this).val();
-		            console.log("선택한 부서명: ", selectDept);
-		            
-		            $.ajax({
-		                url: '${contextPath}/orginfo/empSearch.do', // 중복된 부분을 한 번만 포함
-		                type: 'GET',
-		                data: { codeName: selectDept },
-		                dataType: 'json',
-		                success: function(data){
-		                    $('#team').empty();
-		                    $('#team').append('<option value="전체">전체 팀</option>'); // 기본 옵션 추가
-		                    $.each(data, function(index, team) {
-		                        $('#team').append('<option value="' + team.codeName + '">' + team.codeName + '</option>');
-		                    });
-		                    console.log("선택한 부서의 팀 : ", data);
-		                },
-		                error: function(xhr, status, error) {
-		                    console.error('통신 실패', error);
-		                }
-		            });
-		        });
-		    });
-		</script>
 	    
+	    <!-- 검색 기능 : 부서, 팀 조회하기-->
+	    <script>
+			let departmentSelect = $("#department");
+			let teamSelect = $("#team");
+			let positionSelect = $("#position");
+	 		
+			$(document).ready(function(){
+				
+				departmentSelect.empty();
+				departmentSelect.append($('<option>', {
+					value: "전체 부서",
+					text: "전체 부서"
+				}));
+				
+				// 부서 조회 이동
+				selectDepartmentList();
+				
+				// 팀 조회 이동
+				selectTeamList();
+	 		})
+	 		
+	 		
+	 		// 부서조회
+	 		function selectDepartmentList(){
+				$.ajax({
+			 		url:"${contextPath}/orginfo/department.do",
+			 		type:"GET",
+			 		success: function(data){
+			 			$.each(data, function(index, organizationDto) {
+			 			    $.each(organizationDto.groupList, function(index, groupDto) {
+			 			        departmentSelect.append($('<option>', {
+			 			            value: groupDto.codeName,
+			 			            text: groupDto.codeName
+						        	}));
+						    	});
+						    });
+			 		},
+			 		error: function(){
+			 			console.log("ajax 부서 조회 실패 입니다.")
+			 		}
+				});
+				
+				console.log("선택한 부서1111 : ", departmentSelect.val());
+			}
+	 		
+	 		// 팀조회
+	 		function selectTeamList(){
+		 	    $.ajax({
+		 	        url:"${contextPath}/orginfo/team.do?selectedDepartment=" + departmentSelect.val(),
+		 	        type:"GET",
+		 	        success: function(data){
+		 	            $.each(data, function(index, organizationDto) {
+		 	                $.each(organizationDto.groupList, function(index, groupDto) {
+		 	                    teamSelect.append($('<option>', {
+		 	                        value: groupDto.codeName,
+		 	                        text: groupDto.codeName
+		 	                    }));
+		 	                });
+		 	            });
+		 	        },
+		 	        error: function(){
+		 	            console.log("ajax 팀 조회 실패 입니다.")
+		 	        }
+		 	    });
+		 	    
+		 	   console.log("선택한 팀11111 : ", teamSelect.val());
+			}
+	    
+	 		
+	 		// 부서를 선택했을 경우 실행될 function
+	 		departmentSelect.change(function() {
+		 	    
+		 	    // 팀 선택 옵션 초기화
+		 	    teamSelect.empty();
+		 	    teamSelect.append($('<option>', {
+		 	        value: "전체 팀",
+		 	        text: "전체 팀"
+		 	    }));
+		 	    
+		 	    // 팀 조회
+		 	   selectTeamList();
+		 	
+			    teamSelect.change(function(){
+			 	 	// 선택한 팀 콘솔 출력
+			 	    let selectedTeam = teamSelect.val();
+			    })
+	 		});
+	 		
+	 		
+	    </script>
+
+
 	
 	    <script>
 	        /* 전화번호 : 숫자만 입력되고 나머지 글자는 공백으로 변환 */
@@ -255,11 +315,11 @@
 	    <!--페이징 처리 start-->
 	    <div class="container">
 	        <ul class="pagination justify-content-center">
-	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/empSearch.do?page=${pi.currentPage-1}">Previous</a></li>
+	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/list.do?page=${pi.currentPage-1}">Previous</a></li>
 				<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/empSearch.do?page=${p}">${ p }</a></li>
+					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/list.do?page=${p}">${ p }</a></li>
 				</c:forEach>
-				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/empSearch.do?page=${pi.currentPage+1}">Next</a></li> 
+				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/list.do?page=${pi.currentPage+1}">Next</a></li> 
 	        </ul>
 	    </div>
 	    <!--페이징 처리 end-->

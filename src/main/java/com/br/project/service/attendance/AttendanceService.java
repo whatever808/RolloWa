@@ -40,20 +40,6 @@ public class AttendanceService {
 		return attendanceDao.insertMember(member);
 	}
 
-	/* 공통 : 부서 조회 */
-	public List<GroupDto> selectDepartment() {
-		return attendanceDao.selectDepartment();
-	}
-	/* 공통 : 팀 조회 */
-	public List<GroupDto> selectTeam(String selectedDepartment) {
-		return attendanceDao.selectTeam(selectedDepartment);
-	}
-	/* 공통 : 직급 조회 */
-	public List<GroupDto> selectPosition() {
-		return attendanceDao.selectPosition();
-	}
-
-	
 	
 	
 	
