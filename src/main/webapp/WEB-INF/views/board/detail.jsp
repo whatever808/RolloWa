@@ -27,19 +27,19 @@
 	        <!-- board header area start -->
 	        <div class="board-header">
 					
-					<!-- header left area start -->
+				<!-- header left area start -->
 	            <div class="board-header-left">
-	            	 <!-- board title -->
-	            	 <div class="title">${ board.title }</div>
+	            	<!-- board title -->
+	            	<div class="title">${ board.title }</div>
 						
-						 <!-- board info area start  -->
+					<!-- board info area start  -->
 	                <div class="board-info">
 	                    <div class="info-first">
-	                    		<img src="${ contextPath }/resources/images/defaultProfile.png" alt="profile image" class="writer-profile-image">
-	                    		<label class="ms-2">${ board.writerName }</label>
+                    		<img src="${ contextPath }/resources/images/defaultProfile.png" alt="profile image" class="writer-profile-image">
+                    		<label class="ms-2">${ board.writerName }</label>
 	                    </div>
 	                    <div class="info-middle">
-	                    		<c:out value="${ board.category }" default="일반" />
+	                    	<c:out value="${ board.category }" default="일반" />
 	                    </div>
 	                    <div class="info-last">조회수 ${ board.readCount }</div>
 	                </div>
@@ -56,8 +56,8 @@
 	            	 <c:if test="${ loginMember.userNo == board.modifyEmp }">
 					       <div class="edit-area">
 					           <a href="${ contextPath }/board/modify.page?no=${ board.boardNo }" class="text-primary">수정하기</a>
-					           <a href="#" class="text-warning">임시저장으로 변경</a>
-					           <a href="#" class="text-danger">삭제하기</a>
+					           <a href="${ contextPath }/board/status/modify.do?no=${ board.boardNo }" class="text-warning">임시저장으로 변경</a>
+					           <a href="${ contextPath }/board/delete.do?no=${ board.boardNo }" class="text-danger">삭제하기</a>
 					       </div>
 				       </c:if>
 	            </div>
@@ -116,7 +116,7 @@
 	            <a id="list-board" class="list list-group list-group-item-action list-group-item-warning">목록</a>
 	
 	            <!-- move to next board -->
-					<a id="next-board" class="list list-group list-group-item-action list-group-item-light">다음 게시글 제목</a>
+				<a id="next-board" class="list list-group list-group-item-action list-group-item-light">다음 게시글 제목</a>
 	
 	        </div>
 	        <!-- board change button area end -->
