@@ -48,6 +48,7 @@
 				  ,modify_name
 				  ,attach_path
 				  ,ref_type
+				  ,status
 				  ,ref_no
 				 )
 		  values 
@@ -57,8 +58,9 @@
 				 ,#{modifyName}
 				 ,#{attachPath}
 				 ,#{refType}
+				 ,#{status}
 				 <choose>
-				 	<when test="refNo != null">
+				 	<when test="refNo != null and !refNo.equals('')">
 				 		,#{refNo}
 				 	</when>
 				 	<otherwise>
@@ -67,5 +69,28 @@
 				 </choose>
 				)
 	</insert>
+	
+	<!-- 첨부파일 조회 -->
+	<select id="selectBoardAttachmentList" resultMap="attachmentResultMap">
+		select 
+			   file_no
+			  ,origin_name
+			  ,modify_name
+			  ,attach_path
+		  from attachment
+		<where>
+			<foreach item="fileNo" collection="array" open="file_no in(" separator="," close=")">
+				#{fileNo}
+			</foreach>
+		</where>  
+	</select>
+	
+	<!-- 첨부파일 삭제(상태변경) -->
+	<update id="deleteBoardAttachments" parameterType="string">
+		update attachment
+		   set status  = 'N'
+		 where file_no = #{delFileNo}
+	</update>
+	
 	<!-- ======================================= "가림" 구역 end ======================================= -->
 </mapper>
