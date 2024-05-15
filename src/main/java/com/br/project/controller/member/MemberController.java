@@ -220,4 +220,13 @@ public class MemberController {
 		
 		return "redirect:/member/mypage.page";
 	}
+	
+	/* ======================================= "가림" 구역 ======================================= */
+	@RequestMapping("/memInfo.do")
+	@ResponseBody
+	public MemberDto selectMemInfo(HttpSession session){
+		return memberService.selectMember((MemberDto)(session.getAttribute("loginMember")));
+	}
+	/* ======================================= "가림" 구역 ======================================= */
+	
 }
