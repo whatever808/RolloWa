@@ -1,6 +1,7 @@
 package com.br.project.dao.organization;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -50,6 +51,15 @@ public class OrganizationDao {
 	}
 	public List<GroupDto> selectPosition() {
 		return sqlSessionTemplate.selectList("organizationMapper.selectPosition");
+	}
+
+	/* 직원 검색 dao */
+	public int selectSearchListCount(Map<String, String> search) {
+		return sqlSessionTemplate.selectOne("organizationMapper.selectSearchListCount", search);
+	}
+	public List<MemberDto> selectSearchList(Map<String, String> search, PageInfoDto pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("organizationMapper.selectSearchList", search, rowBounds);
 	}
 
 	

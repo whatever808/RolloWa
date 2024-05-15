@@ -11,9 +11,11 @@ import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrganizationService {
 	
 	private final OrganizationDao organizationDao;
@@ -46,10 +48,10 @@ public class OrganizationService {
 
 	/* 직원 검색 service */
 	public int selectSearchListCount(Map<String, String> search) {
-		return 0;
+		return organizationDao.selectSearchListCount(search);
 	}
 	public List<MemberDto> selectSearchList(Map<String, String> search, PageInfoDto pi) {
-		return null;
+		return organizationDao.selectSearchList(search, pi);
 	}
 	
 

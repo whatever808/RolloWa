@@ -41,31 +41,6 @@ public class OrganizationInfoController {
 		return "organization/orgChart";
 	}	
 	
-	// 1.2 직원검색
-	/*
-	@ResponseBody
-	@RequestMapping(value = "/empSearch.do")
-	public ModelAndView list(@RequestParam(value = "page", defaultValue= "1") int currentPage,
-							 @RequestParam(value = "codeName", required = false) String codeName, 
-							 ModelAndView mv ){
-					
-		int listCount = organizationService.selectOrganizationListCount();
-		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
-		List<MemberDto> list = organizationService.selectOrganizationList(pi);
-		//List<GroupDto> dept = organizationService.selectDepartment();
-		//List<GroupDto> team = organizationService.selectTeam(codeName);
-
-		
-		mv.addObject("pi", pi)
-		  .addObject("list", list)
-		  .addObject("listCount", listCount)
-		  //.addObject("dept", dept)
-		  //.addObject("team", team)
-		  .setViewName("organization/empSearch");
-		
-		return mv;
-	}
-	*/
 	/* 1.2 직원 조회 및 검색 */
 	@GetMapping("/list.do")
 	public ModelAndView list(@RequestParam(value="page", defaultValue="1") int currentPage
@@ -78,6 +53,7 @@ public class OrganizationInfoController {
 		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
+		  .addObject("listCount", listCount)
 		  .setViewName("organization/list");
 		
 		return mv;
@@ -87,14 +63,26 @@ public class OrganizationInfoController {
 					   @RequestParam Map<String, String> search,
 					   ModelAndView mv) {
 		
-		log.debug("search: {}", search);
+		String department =search.get("department"); 
+		String team = search.get("team");
+		
+		if(department.equals("전체 부서")) {
+			search.put("department", "");
+		}
+		if(team.equals("전체 팀")) {
+			search.put("team", "");
+		}
+		
+		log.debug("◆◇◆◇◆◇◆◇◆ 직원 검색 ◆◇◆◇◆◇◆◇◆");
+		log.debug(" search: {}", search);
 		
 		int listCount = organizationService.selectSearchListCount(search);
-		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 5, 5);
+		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
 		List<MemberDto> list = organizationService.selectSearchList(search, pi);
 		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
+		  .addObject("listCount", listCount)
 		  .addObject("search", search)
 		  .setViewName("organization/list");
 		
@@ -126,8 +114,7 @@ public class OrganizationInfoController {
 			result = organizationService.selectTeam(selectedDepartment); 
 		}
 		
-		
-		log.debug("result출력 : {}", result);
+		//log.debug("result출력 : {}", result);
 		
 	    return result;
 	}
