@@ -321,7 +321,7 @@
                     </div>
                 </li>
                 
-                <!-- 게시판 관련 (가림꺼 건들지 말것!!!) start -->
+                <!-- ======================================= 게시판 관련 (가림꺼 건들지 말것!!!) start ======================================= -->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
@@ -333,15 +333,21 @@
                             <li><a href="${ contextPath }/board/list.do"
                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 조회</a>
                             </li>
-                            <!-- 나중에 권한체크 추가하기(글작성 권한을 가진 부장일 경우 보여짐) -->
-                           	<li><a href="${ contextPath }/board/post.page"
-                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 등록</a>
-                           	</li>
+                            <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
+                          	 <li><a href="${ contextPath }/board/post.page"
+                                  class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 등록</a>
+                          	 </li>
                             
-                            <!-- 나중에 권한체크 추가하기(글작성 권한을 가진 부장일 경우 보여짐) -->
-                            <li><a href="${ contextPath }/board/writer/list.do"
-                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">내가 쓴 공지사항</a>
+                            <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
+                            <li><a href="${ contextPath }/board/publisher/list.do?page=1&category=normal&department=&condition=&keyword="
+                                   class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">등록공지보관함</a>
                             </li>
+                            
+                            <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
+                            <li><a href="${ contextPath }/board/publisher/list.do?page=1&category=normal&department=&condition=&keyword="
+                                   class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">임시보관함</a>
+                            </li>
+                            
                             <!--
                             <li><a href="#"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
@@ -350,7 +356,28 @@
                         </ul>
                     </div>
                 </li>
-                <!-- 게시판 관련 (가림꺼 건들지 말것!!!) end -->
+                
+                <script>
+                	$(document).ready(function(){
+                		// 로그인 회원 정보조회
+                		$.ajax({
+                    		url:"${ contextPath }/member/memInfo.do",
+                    		method:"get",
+                    		data:"userId=${ loginMember.userNo }",
+                    		success:function(memInfo){
+                    			// 부장 or 사장일 경우, 공지사항 작성메뉴 노출
+                    			if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
+                    				$(".board-publisher").removeClass("d-none");
+                    			}
+                    		},error:function(){
+                    			console.log("로그인 회원 정보조회 AJAX 실패");
+                    		}
+                    	})
+                	})
+                </script>
+                
+               
+                <!-- ======================================= 게시판 관련 (가림꺼 건들지 말것!!!) end ======================================= -->
                 
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
