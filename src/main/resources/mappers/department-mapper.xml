@@ -35,11 +35,11 @@
 			  ,code
 			  ,code_name
 		  from tb_group
-		 where group_code = #{upperGroupCode}
+		 where group_code like #{upperGroupCode}
 		   and code = (
 		   				select upper_code
 		   				  from tb_group
-		   				 where group_code = #{groupCode}
+		   				 where group_code like #{groupCode}
 		   				   and code = #{code}
 		   			   )
 	</select>
