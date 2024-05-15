@@ -344,8 +344,8 @@
                             </li>
                             
                             <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
-                            <li><a href="${ contextPath }/board/publisher/list.do?page=1&category=normal&department=&condition=&keyword="
-                                   class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">임시보관함</a>
+                            <li><a href="${ contextPath }/board/temp/list.do?page=1&category=normal&department=&condition=&keyword="
+                                   class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">임시공지보관함</a>
                             </li>
                             
                             <!--

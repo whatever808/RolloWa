@@ -1,5 +1,6 @@
 package com.br.project.dao.common.attachment;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -41,8 +42,16 @@ public class AttachmentDao {
 	 * @param delFileNo : 삭제할 첨부파일 번호
 	 * @return : 삭제(상태변경)한 첨부파일 갯수
 	 */
-	public int deleteBoardAttachments(String delFileNo) {
-		return sqlSessionTemplate.update("attachmentMapper.deleteBoardAttachments", delFileNo);
+	public int deleteBoardAttachment(String delFileNo) {
+		return sqlSessionTemplate.update("attachmentMapper.deleteBoardAttachment", delFileNo);
+	}
+	
+	/**
+	 * @param params : {"refType" : {첨부파일 참조유형}, "no" : {첨부파일 참조번호}, "status" : {수정할 상태값}}
+	 * @return : 상태값이 수정된 첨부파일 갯수
+	 */
+	public int updateBoardAttachmentStatus(HashMap<String, Object> params) {
+		return sqlSessionTemplate.update("attachmentMapper.updateBoardAttachmentStatus", params);
 	}
 	
 	/* ======================================= "가림" 구역 end ======================================= */

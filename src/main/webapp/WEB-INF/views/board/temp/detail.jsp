@@ -32,7 +32,7 @@
 	            	<!-- board title -->
 	            	<div class="title">${ board.title }</div>
 						
-					<!-- board info area start  -->
+						 <!-- board info area start  -->
 	                <div class="board-info">
 	                    <div class="info-first">
                     		<img src="${ contextPath }/resources/images/defaultProfile.png" alt="profile image" class="writer-profile-image">
@@ -56,7 +56,7 @@
 	            	 <c:if test="${ loginMember.userNo == board.modifyEmp }">
 					       <div class="edit-area">
 					           <a href="${ contextPath }/board/modify.page?no=${ board.boardNo }" class="text-primary">수정하기</a>
-					           <a href="${ contextPath }/board/status/modify.do?boardNo=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y' }" class="text-warning temp">임시저장으로 변경</a>
+					           <a href="${ contextPath }/board/temp/post.do?no=${ board.boardNo }" class="text-warning temp" id="post-from-temp">등록하기</a>
 					           <a href="${ contextPath }/board/delete.do?boardNo=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y'}" class="text-danger delete">삭제하기</a>
 					       </div>
 				       </c:if>
@@ -163,7 +163,7 @@
 	    // 현재 공지사항의 URL 파라미터값 스트링 객체
 		 const urlParams = new URLSearchParams(location.search);
 	    $.ajax({
-	    	url:"${ contextPath }/board/detail/list.ajax",
+	    	url:"${ contextPath }/board/temp/detail/list.ajax",
 	    	method:"get",
 	    	data:urlParams.toString(),
 	    	success:function(boardList){
@@ -196,7 +196,7 @@
 
 	    		// 공지사항 목록 이동
 	    		urlParams.delete("no");
-	    		$("#list-board").attr("href", "${ contextPath }/board/list.do?" + urlParams.toString());
+	    		$("#list-board").attr("href", "${ contextPath }/board/temp/list.do?" + urlParams.toString());
 	    		
 	    	},error:function(){
 	    		console.log("공지사항 목록조회 AJAX 실패");
@@ -207,18 +207,12 @@
 	    function moveBoard(element, boardNo, boardWriter){
 			// 글번호 파라미터값 변경
 			urlParams.set("no", boardNo);
-	   	if(${ loginMember.userNo } != boardWriter){
-	  			// 로그인 사용자가 이전 or 다음 공지사항의 작성자가 아닐경우
-	  			element.attr("href",  "${ contextPath }/board/reader/detail.do?" + urlParams.toString());
-	  		}else{
-	  			// 로그인 사용자가 이전 or 다음 공지사항의 작성자일 경우
-	  			element.attr("href", "${ contextPath }/board/detail.do?" + urlParams.toString());
-	  		}
+			element.attr("href", "${ contextPath }/board/temp/detail.do?" + urlParams.toString());
 	    }
 	    
-	    // 임시저장으로 변경 or 공지사항 삭제요청시 요청사항 확인용 function ============================================================================
+	    // 공지사항 등록 or 공지사항 삭제요청시 요청사항 확인용 function ============================================================================
 	    $(".temp, .delete").on("click", function(){
-	    	let request = $(this).hasClass("delete") ? '삭제' : '임시저장';
+	    	let request = $(this).hasClass("delete") ? '삭제' : '등록';
 			if(confirm("공지사항을 " + request + " 하시겠습니까?")){
 				return true;
 			}
