@@ -393,30 +393,39 @@
                 </li>
             </ul>
         </div>
-
+				
+				<div>
+				<select name="teamCode" id="teamCode">
+					<option value="A">경영지원팀</option>
+					<option value="B">어트랙션 운영팀</option>
+					<option value="C">시설 유지보수팀</option>
+					<option value="D">안전 및 보안팀</option>
+				</select>
+				<button type="button" onclick="sendMessage();">전송</button>
+				</div>
+				
         <div class="b-example-divider b-example-vr"></div>
-        <script type="module">
-  				// Import the functions you need from the SDKs you need
-  				import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-  				import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
-  				// TODO: Add SDKs for Firebase products that you want to use
-  				// https://firebase.google.com/docs/web/setup#available-libraries
+        <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+				<script>
+					let socket;
+					
+					$(document).ready(function() {
+						// 웹소켓 연결
+						socket = new SockJS("${contextPath}/alram");
+	
+						socket.onmessage = function(evt) {
+							console.log("메세지 수신");
+							console.log(evt);
+							alertify.confirm('Confirm Title', 'Confirm Message' + evt.data, function(){ 
+								console.log("ok 클릭!");
+								alertify.success('Ok'); }
+			                , function(){ alertify.error('Cancel')}).set('labels', {ok:'이동하기', cancel:'취소'});;
+						}
+					})
 
-  				// Your web app's Firebase configuration
-  				// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  				const firebaseConfig = {
-    				apiKey: "AIzaSyCW-C6Jb8awS5BWUxv0PY4-Sh430suz4Gg",
-    				authDomain: "rollowa-5202a.firebaseapp.com",
-    				projectId: "rollowa-5202a",
-    				storageBucket: "rollowa-5202a.appspot.com",
-    				messagingSenderId: "483460104444",
-    				appId: "1:483460104444:web:0ae6e8dc0c76e0edb91779",
-    				measurementId: "G-45SHLF69ET"
-  				};
-
-  				// Initialize Firebase
-  				const app = initializeApp(firebaseConfig);
-  				const analytics = getAnalytics(app);
+					function sendMessage() {
+						socket.send(JSON.stringify({url: "공지사항 url", noticeNo: "공지사항 번호", teamCode : $("#teamCode").val()}));
+					}
 				</script>
 </body>
 </html>
