@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class PayServiceImpl {
+public class PayService {
 	
 	private final PayDao payDao;
 	
@@ -198,10 +198,11 @@ public class PayServiceImpl {
 		return result1 * result2 * result3;
 	}
 	
+	
 	public int gReportInsert(Map<String, Object> map, List<Map<String, Object>> attachList) {
-		
+		//1.기안서테이블 등록
 		int result1 = payDao.gReportInsert(map);
-		
+		//2. 파일등록
 		int result2 = 1;
 		if(attachList != null && !attachList.isEmpty()) {
 			result2 = 0;
@@ -209,7 +210,7 @@ public class PayServiceImpl {
 				result2 = payDao.gReportAttachInsert(list);
 			}
 		}
-		
+		//3.결재이력공동테이블 등록
 		int result3 = payDao.gReportApprovalInsert(map);
 			
 		
@@ -223,5 +224,86 @@ public class PayServiceImpl {
 		
 	}
 	
+	public List<PayDto> ApprovedList(PageInfoDto pi, String userName){
+		return payDao.ApprovedList(pi, userName);
+	}
+	
+	public int bReportInsert(Map<String, Object> map, List<Map<String, Object>> list) {
 		
+		
+		//1.비품신청서테이블 등록
+		int result2 = payDao.insertBreport(map);
+		//2.품목공동테이블 등록
+		int result1 = 1;
+			if(!list.isEmpty()) {
+				result1 = 0;
+				for (Map<String, Object> item : list) { 	
+					result1 += payDao.insertItemsB(item);
+				}				
+			}
+		//3.결재이력공동테이블 등록
+	    int result3 = payDao.bReportApprovalInsert(map);
+					
+		return result1 * result2 * result3;
+	} 
+	
+	// 비품상세 데이터값 불러오기
+	public List<Map<String, Object>> fixDetail(Map<String, Object> map){
+		return payDao.fixDetail(map);
+	}
+	// 휴가신청서 등록하기
+	public int hReportInsert(Map<String, Object> map) {
+		
+		int result1 = payDao.hReportInsert(map);
+		int result2 = payDao.hReportApprovalInsert(map);
+		
+		return result1 + result2;
+		
+	}
+	
+	// 휴가신청서 데이터값 불러오기
+	public List<Map<String, Object>> retireDetail(Map<String, Object> map){
+		return payDao.retireDetail(map);
+	}
+	
+	//
+	
+	
+
+	public int jReportInsert(Map<String, Object> map, List<Map<String, Object>> itemList
+							, List<Map<String, Object>> attachList) {
+		
+		//1.비품신청서테이블 등록
+		int result1 = payDao.insertJreport(map);
+		
+		//2.품목공동테이블 등록
+		int result2 = 1;
+			if(itemList != null && !itemList.isEmpty()) {
+				result2 = 0;
+				for (Map<String, Object> item : itemList) { 	
+					result2 += payDao.insertItemsJ(item);
+				}				
+			}
+		//3.결재이력공동테이블 등록
+	    int result3 = payDao.jReportApprovalInsert(map);
+	    
+	    //4.지출결의서 공동파일저장하기
+	    int result4 = 1;
+	    if(attachList != null && !attachList.isEmpty()) {
+			result4 = 0;
+			for(Map<String, Object> at : attachList) {
+				result4 = payDao.jReportAttachInsert(at);
+			}
+		}
+	    
+		return result1 * result2 * result3 * result4;
+		
+	}
+	
+	public List<Map<String, Object>> draftDetail(Map<String, Object> map){
+		
+		return payDao.draftDetail(map);
+	}
+	
+	
 }

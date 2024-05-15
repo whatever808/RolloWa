@@ -176,7 +176,8 @@
                                         <input type="hidden" name="deptName" value="${member.get(0).teamName}">
                                         <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
                                         <input type="hidden" name="expendNo" value="${list.get(0).EXPEND_NO}">
-                                        <input type="hidden" name="userNo" value="${userNo}">                                        
+                                        <input type="hidden" name="writerNo" value="${userNo}">
+                                                                                
                                     </tr>
                                     <tr>
                                         <th>기안일</th>

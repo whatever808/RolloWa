@@ -198,6 +198,74 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.salesDetail", map);
 	}
 	
+	//로그인한 사용자의 완료함갯수
+	public List<PayDto> ApprovedList(PageInfoDto pi, String userName){
+		RowBounds rowBounds = new RowBounds( (pi.getCurrentPage() -1) * pi.getListLimit(), pi.getListLimit() ); 
+		return sqlSessionTemplate.selectList("payMapper.paymainPage" , userName, rowBounds);
+	}
+	
+	//1_1)비품신청서 등록
+	public int insertBreport(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.insertBreport", map);
+	}
+		
+	//1_2)비품 아이템 등록
+	public int insertItemsB(Map<String, Object> item) {
+		return sqlSessionTemplate.insert("payMapper.insertItemsB", item);
+	}
+	
+	//1_3)공통테이블 등록 (코드재활용)
+	public int bReportApprovalInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.bReportApprovalInsert", map);
+	}
+	
+	// 비품신청서 상세페이지
+	public List<Map<String, Object>> fixDetail(Map<String, Object> map) {
+		return sqlSessionTemplate.selectList("payMapper.fixDetail", map);
+	}
+	
+	
+	//1_1) 휴가신청서 등록
+	public int hReportInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.hReportInsert", map);
+	}
+	
+	//1_2) 결재공동테이블 등록
+	public int hReportApprovalInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.hReportApprovalInsert", map);
+	}
+	
+	
+	// 휴가신청서 상세페이지
+	public List<Map<String, Object>> retireDetail(Map<String, Object> map) {
+		return sqlSessionTemplate.selectList("payMapper.retireDetail", map);
+	}
+	
+	//1_1)지출결의서 등록
+	public int insertJreport(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.insertJreport", map);
+
+	}
+	
+	//1_2)지출결의서 item테이블 등록
+	public int insertItemsJ(Map<String, Object> item) {
+		return sqlSessionTemplate.insert("payMapper.insertItemsJ", item);
+	}
+	
+	//1_3)지출결의서 결재이력공동테이블 등록
+	public int jReportApprovalInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.jReportApprovalInsert", map);
+	}
+	
+	//1_4)지출결의서 파일 등록하기
+	public int jReportAttachInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.jReportAttachInsert", map);
+	}
+	
+	//1.지출결의서 리스트 불러오기
+	public List<Map<String, Object>> draftDetail(Map<String, Object> map){
+		return sqlSessionTemplate.selectList("payMapper.draftDetail", map);
+	}
 	
 	
 }

@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="${contextPath}/pay/ApprovedList.do" method="get">
+                        <a href="${contextPath}/pay/approvedList.do" method="get">
                             <div class="di_top" id="di_t_2">
                                 <div class="di_top_left">                         
                                     <div><label>${userName}님의 <br> 승인완료한 수신결재함</label></div>
@@ -156,7 +156,7 @@
                                     <div><b>출장보고서</b></div>
                                 </div>
                             </a>
-                            <a href="">
+                            <a href="${contextPath}/pay/writerForm.page?writer=b">
                                 <div class="cen_bottom_left_div">
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-inboxes" viewBox="0 0 16 16" style="color: black;">
@@ -166,7 +166,7 @@
                                     <div><b>비품신청서</b></div>
                                 </div>
                             </a>
-                           <a href="${contextPath}/pay/mWriterForm.do" method="get">
+                           <a href="${contextPath}/pay/writerForm.page?writer=m">
                             <div class="cen_bottom_left_div">
                                 <div>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-clipboard-data" viewBox="0 0 16 16" style="color: black;">
@@ -178,7 +178,7 @@
                                 <div><b>매출보고서</b></div>
                             </div>
                            </a>
-                            <a href="" method="get">
+                            <a href="${ contextPath }/pay/writerForm.page?writer=j">
                                 <div class="cen_bottom_left_div">
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-journals" viewBox="0 0 16 16" style="color: black;">
@@ -189,7 +189,7 @@
                                     <div><b>지출결의서</b></div>
                                 </div>
                             </a>
-                            <a href="${ contextPath }/pay/gWriterForm.do" method="get">
+                            <a href="${ contextPath }/pay/writerForm.page?writer=g">
                                 <div class="cen_bottom_left_div">
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-journal-bookmark" viewBox="0 0 16 16" style="color: black;">
@@ -201,7 +201,7 @@
                                     <div><b>기안서</b></div>
                                 </div>
                             </a>
-                            <a href="">
+                            <a href="${ contextPath }/pay/writerForm.page?writer=h">
                                 <div class="cen_bottom_left_div">
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-journal-richtext" viewBox="0 0 16 16" style="color: black;">
@@ -395,6 +395,17 @@
 													                </c:forEach>
 													                
 													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">Next</a></li>
+													             </ul>
+                                   	</c:when>
+                                   	<c:when test="${ not empty userSuccessList }">
+                                   		<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvedList.do?page=${pi.currentPage-1}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvedList.do?page=${p}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvedList.do?page=${pi.currentPage+1}">Next</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:otherwise>

@@ -165,13 +165,13 @@
             <div class="informations">
                 <!-- informations left area start -->
                 <div class="left_con">
-                    <div><h3>매출 보고서</h3></div>
+                    <div><h3>비품 신청서</h3></div>
                     	<c:choose>
                     	<c:when test="${ not empty list }">
 	                      <form action="${contextPath}/pay/mReportUpdate.do" method="post" id="myForm">
 	                    	</c:when>
                     	<c:otherwise>
-		                    <form action="${contextPath}/pay/mReportInsert.do" method="post" id="myForm">
+		                    <form action="${contextPath}/pay/bReportInsert.do" method="post" id="myForm">
 		                   	</c:otherwise>
                     	</c:choose>
                         <div id="sign_top">
@@ -183,7 +183,7 @@
                                         <input type="hidden" name="deptName" value="${member.get(0).teamName}">
                                         <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
                                         <input type="hidden" name="expendNo" value="${list.get(0).EXPEND_NO}">
-                                        <input type="hidden" name="writerNo" value="${userNo}"> 
+                                        <input type="hidden" name="writerNo" value="${userNo}">                                                                           
                                     </tr>
                                     <tr>
                                         <th>기안일</th>
@@ -300,82 +300,75 @@
                                 </table>
                             </div>
                         </div>
-                                  
-                        <div>
-                        
-										    </div>
-                        <div id="mid_btn">
-                            <button id="plus_btn" type="button">추가</button>
-                            <button id="del_btn" type="button">삭제</button>
-                        </div>
-                        <div class="table_middle">
-	                         <input type="hidden" name="firstApproval" id="first_name" class="namecheck" value="${ list.get(0).FIRST_APPROVAL }">
+                                 
+                        <div class="table_middle" id="table_title_top">
+                        	 <input type="hidden" name="firstApproval" id="first_name" class="namecheck" value="${ list.get(0).FIRST_APPROVAL }">
 	                         <input type="hidden" name="middleApproval" id="middle_name" class="namecheck" value="${ list.get(0).MIDDLE_APPROVAL }">
-	                         <input type="hidden" name="finalApproval" id="last_name" class="namecheck" value="${ list.get(0).FINAL_APPROVAL }">   
-                            <table border="1" id="tr_table">
+	                         <input type="hidden" name="finalApproval" id="last_name" class="namecheck" value="${ list.get(0).FINAL_APPROVAL }"> 
+                            <table border="1">
                                 <tr>
-                                    <th>매출구분</th>
-                                    <td colspan="2">
-                                        <select name="sales" id="sales" required>
-                                            <option value="상품">상품</option>
-                                            <option value="티켓">티켓</option>
-                                            <option value="음식점">음식점</option>
-                                        </select>
-                                    </td>
+                                    <th>소속</th>
+                                    <td><input type="text" name="deptName" required></td>
+                                    <th>작성자</th>
+                                    <td><input type="text" name="writerName" required></td>
                                 </tr>
                                 <tr>
-                                    <th>담당자</th>
-                                    <td colspan="2"><input type="text" name="manager" value="${ list.get(0).MANAGER_NAME }" required></td>
+                                    <th>제목</th>
+                                    <td colspan="3"><input type="text" name="title" required></td>
                                 </tr>
-                                <tr>
-                                    <th>총매출금액(VAT별도)</th>
-                                    <td colspan="2"><input type="text" name="totalSales" value="${ list.get(0).TOTAL_SALES.toString().trim() }" required style="text-align: right;"></td>
-                                </tr>
-                                <tr>
-                                    <th colspan="3">매출정보</th>
-                                </tr>
-                                <tr>
-                                    <th>품목</th>
-                                    <th style="width: 100px;">수량</th>
-                                    <th>매출금액</th>
-                                </tr>
-                                <c:choose>
-                                <c:when test="${ empty list }">
-                                <tr>
-                                    <td><input type="text" class="item" name="item1"></td>
-                                    <td><input type="number" class="count" min="1" name="count1"></td>
-                                    <td><input type="text" class="sales_amount" name="sales2"></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="text" class="item" name="item2"></td>
-                                    <td><input type="number" class="count" min="1" name="count2"></td>
-                                    <td><input type="text" class="sales_amount" name="sales3"></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="text" class="item" name="item3"></td>
-                                    <td><input type="number" class="count" min="1" name="count3"></td>
-                                    <td><input type="text" class="sales_amount" name="sales4"></td>
-                                </tr>
-                                <tr id="tr_input">
-                                    <td><input type="text" class="item" name="item4"></td>
-                                    <td><input type="number" class="count" min="1" name="count4"></td>
-                                    <td><input type="text" class="sales_amount" name="sales5"></td>
-                                </tr>
-                                </c:when>
-                                <c:otherwise>
-	                                <c:forEach var="i" begin="0" end="${ list.size() - 1}">
-	                                	<tr id="tr_input">
-	                                    <td><input type="text" name="item${i}" value="${list.get(i).ITEM}"></td>
-	                                    <td><input type="number" name="count${i}" min="1" value="${list.get(i).VOLUMES}"></td>
-	                                    <td><input type="text" name="sales${i}" value="${list.get(i).SALES_AMOUNT.toString().trim()}"></td>
-	                                	</tr>
-	                                </c:forEach>
-                                </c:otherwise>
-                                </c:choose>
                             </table>
-	                            <input type="hidden" name="items" id="items">
-	                            <input type="hidden" name="counts" id="counts">
-	                            <input type="hidden" name="salesAmounts" id="sales_amounts">
+                        </div>
+
+                        <div id="mid_btn">
+                            <button type="button" id="plus_btn">추가</button>
+                            <button type="button" id="del_btn">삭제</button>
+                        </div>
+
+                        <div class="table_middle">
+                            <table id="tr_table" border="1">
+                                <tr>
+                                    <th id="pname">품명</th>
+                                    <th>규격</th>
+                                    <th style="width: 100px;">수량</th>
+                                    <th>단가</th>
+                                    <th>금액</th>
+                                    <th id="bgo">비고</th>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" class="text_1" name="pName1"></td>
+                                    <td><input type="text" class="text_2" name="size1"></td>
+                                    <td><input type="number"  min="1" class="text_3" name="amount1"></td>
+                                    <td><input type="text" class="text_4" name="unitprice1"></td>
+                                    <td><input type="text" class="text_5" name="price1"></td>
+                                    <td><input type="text" class="text_6" name="etc1"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" class="text_1" name="pName1"></td>
+                                    <td><input type="text" class="text_2" name="size2"></td>
+                                    <td><input type="number"  min="1" class="text_3" name="amount2"></td>
+                                    <td><input type="text" class="text_4" name="unitprice2"></td>
+                                    <td><input type="text" class="text_5" name="price2"></td>
+                                    <td><input type="text" class="text_6" name="etc2"></td>
+                                </tr>
+                                <tr id="next_tr">
+                                   <td><input type="text" class="text_1" name="pName3"></td>
+                                    <td><input type="text" class="text_2" name="size3"></td>
+                                    <td><input type="number"  min="1" class="text_3" name="amount3"></td>
+                                    <td><input type="text" class="text_4" name="unitprice3"></td>
+                                    <td><input type="text" class="text_5" name="price3"></td>
+                                    <td><input type="text" class="text_6" name="etc3"></td>
+                                </tr>
+                            </table>
+                            <table border="1">
+                                <tr>
+                                    <th style="width: 300px;" id="">합계</th>
+                                    <td colspan="5"><input type="text" name="totalSum" required></td>
+                                </tr>
+                                <tr>
+                                    <th>기타</th>
+                                    <td colspan="5"><textarea name="etcList" id="" cols="30" rows="10" name="etcList"></textarea></td>
+                                </tr>
+                            </table>
                         </div>
                         <!--버튼 영역-->
                         <div id="btn_div">
@@ -453,16 +446,17 @@
     
     <script>
     $(document).ready(function(){
-    	var i = 5; 
+    		let i = 4;
     	$(document).on("click", "#plus_btn", function () {
-    		
-    		
     		var result = "<tr>";
-    		result += "<td><input type='text' class='item'></td>";
-    		result += "<td><input type='number' class='count' min='1'></td>";
-    		result += "<td><input type='text' class='sales_amount'></td>";
+    		result += "<td><input type='text' class='text_1' name='pName" + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_2' name='size" + (i) +"'></td>";
+    		result += "<td><input type='number' min='1' class='text_3' name='amount"  + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_4' name='unitprice" + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_5' name='price" + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_6' name='etc" + (i) + "'></td>";
     		result += "</tr>";
-        
+    		i++;
        $("#tr_table").children().last().after(result);
        
        
@@ -473,6 +467,8 @@
     	    //$("#tr_table tr:last-child").remove();
     	    $("#tr_table").children("tr").last().remove();
     	});
+    
+    	
     })
     </script>
         

@@ -133,6 +133,11 @@
     join member m on( USER_NO =  PAYMENT_WRITER_NO)
 		WHERE A.STATUS = 'Y'
 		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+		<if test="userName != null">
+			and (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null
+        or MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null
+        or FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is not null)
+		</if>
 		order
 			 by APPROVAL_NO desc
 	</select>
@@ -363,12 +368,12 @@
 				from approval a
 	      left join expenditure_report e on (document_number = expend_no)
 			  left join item i on (expend_no = report_no)
-				where report_no = #{documentNo}
-				  and expend_no = #{documentNo}
-				  and approval_no = #{approvalNo}
-				  and PAYMENT_WRITER_NO = #{payWriterNo}
-				  and PAYMENT_WRITER = #{payWriter}
-				  and report_type = 'M'
+				where a.STATUS = 'Y'
+				 and DOCUMENT_NUMBER = #{documentNo}
+         and APPROVAL_NO = #{approvalNo}
+         and DOCUMENT_TYPE = 'M'
+         and PAYMENT_WRITER_NO = #{payWriterNo}
+         and PAYMENT_WRITER = #{payWriter}
    </select>
    
    <!-- 로그인한(관리자) 사용자의 전체 결재 리스트 갯수 -->
@@ -643,8 +648,6 @@
 			    , #{salesAmounts}
 			    )
    </insert>
-   
-      
    <insert id="insertApproval">
 	   INSERT
 		    INTO APPROVAL
@@ -664,24 +667,20 @@
 		    VALUES
 		    (
 		      SEQ_APNO.NEXTVAL
-		    , SEQ_EXNO.CURRVAL
+			  ,  SEQ_EXNO.currval
 		    , 'M'
 		    , #{deptName}
 		    , #{writerName}
 		    , #{writerNo}
 		    , #{status}
-		    <if test='firstApproval != null'>
-		    ,#{firstApproval}		    
-		    </if>
-		    <if test='middleApproval != null'>
-		    ,#{middleApproval}
-		    </if>
-		    <if test='finalApproval != null'>
-		    ,#{finalApproval}
-		    </if>
-		    ,#{writerDate}
+		    , #{firstApproval}
+		    , #{middleApproval}
+		    , #{finalApproval}
+		    , #{writerDate}
 		    )
    </insert>
+      
+   
    <!-- 반려 사유 update -->
    <insert id="updateReject">
 	   	update approval
@@ -813,9 +812,7 @@
 	   			(
 	   			  SEQ_SRNO.NEXTVAL
 	   			, #{dateStart}
-	   			<if test="depWith != null">
 	   			, #{depWith}
-	   			</if>
 	   			, #{title}
 	   			, #{content}
 	   			, #{fileStatus}
@@ -844,7 +841,7 @@
 	   				)
 	   				
 	   </insert>
-	   
+	    
 	   <insert id="gReportApprovalInsert">
 	   	 insert
 	   	      into APPROVAL
@@ -868,7 +865,7 @@
 	   	     , 'G'
 	   	     , #{deptName} 
 	   	     , #{writerName}
-	   	     , #{userNo}
+	   	     , #{writerNo}
 	   	     , #{status}
 	   	     , #{firstApproval}
 	   	     , #{middleApproval}
@@ -876,7 +873,7 @@
 	   	     , #{writerDate}
 	   	     )
 	   </insert>
-	  
+	   
 	   
 	   <select id="salesDetail" resultType="map">
         select
@@ -918,11 +915,364 @@
           and DOCUMENT_TYPE = 'G'
           and PAYMENT_WRITER_NO = #{payWriterNo}
           and PAYMENT_WRITER = #{payWriter}
-	   
 	   </select>
 	   
+	   
+	   <select id="insertBreport">
+	   insert 
+	   			into 
+	   				FIXTURES_REPORT
+	   				(
+				   	  FIX_NO
+				   	, DEPT_NAME
+						, WRITER_NAME
+						, FIX_TITLE
+						, TOTAL_SUM
+						, ETC_CONTENT   				
+	   				)
+						values
+						(
+						SEQ_FIXNO.NEXTVAL
+						, #{deptName}
+						, #{writerName}
+						, #{title}
+						, #{totalSum}
+						, #{etcList}
+						)
+	   </select>
+	   
+	   <select id="insertItemsB">
+	   	insert 
+				  into
+				    ITEM
+				    (
+				      REPORT_NO
+				    , REPORT_TYPE
+				    , PRODUCT_NAME
+				    , PRODUCT_SIZE
+				    , QUANTITY
+				    , UNIT_PRICE
+				    , PRICE
+				    , NOTE
+				    )
+				    values
+				    (
+				      seq_fixno.currval
+				    , 'B'
+				    , #{pName}
+				    , #{size}
+				    , #{amount}
+				    , #{unitPrice}
+				    , #{price}
+				    , #{etc}
+				     )
+	   </select>
+	   
+	   <insert id="bReportApprovalInsert">
+	   INSERT
+		    INTO APPROVAL
+		    (
+		      APPROVAL_NO
+		    , DOCUMENT_NUMBER
+		    , DOCUMENT_TYPE
+		    , DEPARTMENT
+		    , PAYMENT_WRITER
+		    , PAYMENT_WRITER_NO
+		    , PAYMENT_STATUS
+		    , FIRST_APPROVAL
+		    , MIDDLE_APPROVAL
+		    , FINAL_APPROVAL
+		    , REGIST_DATE
+		    )
+		    VALUES
+		    (
+		      SEQ_APNO.NEXTVAL
+			  , seq_fixno.currval
+		    , 'B'
+		    , #{deptName}
+		    , #{writerName}
+		    , #{writerNo}
+		    , #{status}
+		    , #{firstApproval}
+		    , #{middleApproval}
+		    , #{finalApproval}
+		    , #{writerDate}
+		    )
+   </insert>
+   
+   <select id="fixDetail" resultType="map">
+			select
+				    APPROVAL_NO
+				    , DOCUMENT_NUMBER
+				    , DOCUMENT_TYPE
+				    , DEPARTMENT
+				    , PAYMENT_WRITER
+				    , PAYMENT_WRITER_NO
+				    , PAYMENT_STATUS
+				    , DOCUMENT_STATUS
+				    , CANCELLATION_CONTENT
+				    , FIRST_APPROVAL
+				    , MIDDLE_APPROVAL
+				    , FINAL_APPROVAL
+			      , to_char(FIRST_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') FIRST_APPROVAL_DATE
+			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') MIDDLE_APPROVAL_DATE
+			      , to_char(FINAL_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') FINAL_APPROVAL_DATE
+			      , to_char(REGIST_DATE, 'YYYY"년 "MM"월 "DD"일"') REGIST_DATE
+				    , FIX_NO
+				    , DEPT_NAME
+				    , WRITER_NAME
+				    , FIX_TITLE
+				    , TOTAL_SUM
+				    , ETC_CONTENT 
+				    , REPORT_NO
+				    , REPORT_TYPE
+				    , PRODUCT_NAME
+				    , PRODUCT_SIZE
+				    , QUANTITY
+				    , UNIT_PRICE
+				    , PRICE
+				    , NOTE
+				from approval a
+				left join FIXTURES_REPORT  on ( DOCUMENT_NUMBER = FIX_NO )
+				left join item on ( FIX_NO = REPORT_NO )
+				 where a.STATUS = 'Y'
+					 and DOCUMENT_NUMBER = #{documentNo}
+	         and APPROVAL_NO = #{approvalNo}
+	         and DOCUMENT_TYPE = 'B'
+	         and PAYMENT_WRITER_NO = #{payWriterNo}
+	         and PAYMENT_WRITER = #{payWriter}
+   </select>
+   
+   <insert id="hReportInsert">
+   		insert 
+   					into RETIRE_REPORT
+   							(
+   							RETIRE_NO
+							,	RETIRE_TITLE
+							,	START_PERIOD
+							,	LAST_PERIOD
+							,	RETIRE_CONTENT
+							,	STATUS
+   							)
+   						VALUES
+   						(
+   						 SEQ_RETNO.NEXTVAL
+   						,#{title}
+   						,#{startDate}
+   						,#{endDate}
+   						,#{content}
+   						,#{distinguish}
+   						)	
+   </insert>
+   
+   <insert id="hReportApprovalInsert">
+   	   INSERT
+			    INTO APPROVAL
+			    (
+			      APPROVAL_NO
+			    , DOCUMENT_NUMBER
+			    , DOCUMENT_TYPE
+			    , DEPARTMENT
+			    , PAYMENT_WRITER
+			    , PAYMENT_WRITER_NO
+			    , PAYMENT_STATUS
+			    , FIRST_APPROVAL
+			    , MIDDLE_APPROVAL
+			    , FINAL_APPROVAL
+			    , REGIST_DATE
+			    )
+			    VALUES
+			    (
+			      SEQ_APNO.NEXTVAL
+				  , SEQ_RETNO.CURRVAL
+			    , 'H'
+			    , #{deptName}
+			    , #{writerName}
+			    , #{writerNo}
+			    , #{status}
+			    , #{firstApproval}
+			    , #{middleApproval}
+			    , #{finalApproval}
+			    , #{writerDate}
+			    )
+   </insert>
+   
+   <select id="retireDetail" resultType="map">
+   			select
+				    APPROVAL_NO
+				    , DOCUMENT_NUMBER
+				    , DOCUMENT_TYPE
+				    , DEPARTMENT
+				    , PAYMENT_WRITER
+				    , PAYMENT_WRITER_NO
+				    , PAYMENT_STATUS
+				    , DOCUMENT_STATUS
+				    , CANCELLATION_CONTENT
+				    , FIRST_APPROVAL
+				    , MIDDLE_APPROVAL
+				    , FINAL_APPROVAL
+			      , to_char(FIRST_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') FIRST_APPROVAL_DATE
+			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') MIDDLE_APPROVAL_DATE
+			      , to_char(FINAL_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') FINAL_APPROVAL_DATE
+			      , to_char(REGIST_DATE, 'YYYY"년 "MM"월 "DD"일"') REGIST_DATE
+			  	  , RETIRE_NO 
+			  	  , to_char(START_PERIOD, 'YYYY"년"MM"월"DD"일"') START_PERIOD
+			  	  , to_char(LAST_PERIOD, 'YYYY"년"MM"월"DD"일"') LAST_PERIOD
+            , RETIRE_CONTENT
+            , r.STATUS
+            , RETIRE_TITLE
+				from approval a
+				left join RETIRE_REPORT r on ( DOCUMENT_NUMBER = RETIRE_NO )
+				 where a.STATUS = 'Y'
+					 and DOCUMENT_NUMBER = #{documentNo}
+           and APPROVAL_NO = #{approvalNo}
+           and DOCUMENT_TYPE = 'H'
+           and PAYMENT_WRITER_NO = #{payWriterNo}
+           and PAYMENT_WRITER = #{payWriter}
+	  </select>
 	  
-   
-   
+	  <insert id="insertJreport">
+	  	insert 
+  				into
+  					DRAFT_REPORT
+  					(
+  					  DRAFT_NO
+						, SUM
+						, VAT
+						, TOTAL_SUM
+						, STATUS
+  					)
+  					VALUES
+  					(
+  					SEQ_DRNO.NEXTVAL
+  					,#{totalPrice}
+  					,#{vat}
+  					,#{totalExpendPrice}
+  					,#{fileStatus}
+  					)
+	  </insert>
+	  
+	  <insert id="insertItemsJ">
+	  	insert
+	  			into 
+	  			    ITEM
+	  			   (
+						   REPORT_NO
+						 , REPORT_TYPE
+						 , ACCOUNT
+						 , CONTENT
+						 , AMOUNT
+					   )
+					   values
+					   (
+					     SEQ_DRNO.currval
+					   , 'J'
+					   , #{account}
+					   , #{usage}
+					   , #{price}
+					   )
+	  </insert>
+	  
+	  <insert id="jReportApprovalInsert">
+		   insert
+		   	      into APPROVAL
+		   	      (
+		   	        APPROVAL_NO
+							,	DOCUMENT_NUMBER
+							,	DOCUMENT_TYPE
+							,	DEPARTMENT
+							,	PAYMENT_WRITER
+							,	PAYMENT_WRITER_NO
+							,	PAYMENT_STATUS
+							,	FIRST_APPROVAL
+							,	MIDDLE_APPROVAL
+							,	FINAL_APPROVAL
+							,	REGIST_DATE
+		   	      )
+		   	     values
+		   	     (
+		   	       SEQ_APNO.NEXTVAL
+		   	     , SEQ_DRNO.CURRVAL
+		   	     , 'J'
+		   	     , #{deptName} 
+		   	     , #{writerName}
+		   	     , #{writerNo}
+		   	     , #{status}
+		   	     , #{firstApproval}
+		   	     , #{middleApproval}
+		   	     , #{finalApproval}
+		   	     , #{writerDate}
+		   	     )
+	  </insert>
+	  
+	  <insert id="jReportAttachInsert">
+	  	insert 
+	   				into ATTACHMENT
+	   				(
+	   				  FILE_NO
+	   				, ORIGIN_NAME
+	   				, ATTACH_PATH
+	   				, MODIFY_NAME
+	   				, REF_TYPE
+	   				, REF_NO
+	   				)
+	   				values
+	   				(
+	   				  SEQ_ANO.nextval
+	   				, #{originalName}
+	   				, #{filePath}
+	   				, #{filesystemName}
+	   				, #{RefType}
+	   				, SEQ_DRNO.CURRVAL
+	   				)
+	  </insert>
+	  
+	  
+	 <select id="draftDetail" resultType="map">
+			 SELECT
+						DRAFT_NO
+						, SUM
+						, VAT
+						, TOTAL_SUM
+						, REPORT_NO
+						, ACCOUNT
+						, CONTENT
+						, AMOUNT
+						, APPROVAL_NO
+						, DOCUMENT_NUMBER
+						, DOCUMENT_TYPE
+						, DEPARTMENT
+						, PAYMENT_WRITER
+						, PAYMENT_WRITER_NO
+						, PAYMENT_STATUS
+						, FIRST_APPROVAL
+						, MIDDLE_APPROVAL
+						, FINAL_APPROVAL
+						, to_char(FIRST_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') FIRST_APPROVAL_DATE
+			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') MIDDLE_APPROVAL_DATE
+			      , to_char(FINAL_APPROVAL_DATE, 'YYYY"년"MM"월"DD"일"') FINAL_APPROVAL_DATE
+						, to_char(A.REGIST_DATE, 'YYYY"년 "MM"월 "DD"일"') REGIST_DATE
+						, FILE_NO
+						, ORIGIN_NAME
+						, ATTACH_PATH
+						, MODIFY_NAME
+				FROM approval A
+				JOIN DRAFT_REPORT DR ON (DOCUMENT_NUMBER = DRAFT_NO)
+				JOIN ITEM I ON (DRAFT_NO = REPORT_NO)
+				JOIN ATTACHMENT AT ON (REPORT_NO = REF_NO)
+				WHERE AT.REF_TYPE = 'PJ'
+				  AND REPORT_TYPE = 'J'
+				  AND AT.STATUS = 'Y'
+				  AND A.STATUS = 'Y'
+				  AND A.DOCUMENT_TYPE = 'J'
+				  AND A.APPROVAL_NO = #{approvalNo}
+				  AND DR.DRAFT_NO = #{documentNo}
+				  AND I.REPORT_NO = #{documentNo}
+				  AND AT.REF_NO = #{documentNo}
+				  AND A.PAYMENT_WRITER = #{payWriter}
+				  AND A.PAYMENT_WRITER_NO = #{payWriterNo}
+	 </select>
+	  
+	  
    
 </mapper>

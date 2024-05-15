@@ -88,7 +88,7 @@
 												
 												      <div>
 												          <table border="1" class="form-label table">
-											                <tr id="tr_style">
+											                 <tr id="tr_style">
 											                    <th>부서</th>
 											                    <td>${list.get(0).DEPARTMENT}</td>
 											                    <th>상태</th> 
@@ -123,7 +123,7 @@
 												              <th style="width: 200px;">첨부파일</th>
 												              <td colspan="3">
 												              	<c:forEach var="at" items="${ list }">
-												              		<a href="${ contextPath }${at.ATTACH_PATH}/${at.ORIGIN_NAME}" download="${ at.ORIGIN_NAME }">${at.ORIGIN_NAME}</a><br>
+												              		<a href="${ contextPath }${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${ at.ORIGIN_NAME }">${at.ORIGIN_NAME}</a><br>
 												              	</c:forEach>
 												              </td>
 												          </tr>
