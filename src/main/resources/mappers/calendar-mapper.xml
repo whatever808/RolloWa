@@ -23,7 +23,7 @@
 	</collection>	
 </resultMap>
 <!-- 개인 및 부서 일정 조회 -->
-<select id="selectPCalendar" 
+<select id="ajaxSelectPCalendar" 
 resultMap="calResultMap">
 select
     CAL_NO
@@ -62,8 +62,18 @@ and
         #{num}
     </foreach>
     order by 
-    	cal_no
+    		cal_no
 </if>
+</select>
+
+<select id="selectCalNO"
+resultType="string">
+	select 
+		cal_no
+	from 
+		co_worker
+	where 
+		user_no = #{userNo}
 </select>
 
 <!-- 갤린더 일정 등록 쿼리 -->
@@ -129,7 +139,8 @@ and
 <delete id="coworkerDelete">
 	delete
 		co_worker
-	where cal_no = #{calNO}
+	where 
+		cal_no = #{calNO}
 </delete>
 <insert id="reInserCoworker">
 	insert
@@ -145,12 +156,6 @@ and
 		, #{userNo}
 	)
 </insert>
-<select id="selectCalNO"
-resultType="string">
-	select cal_no
-	from co_worker
-	where user_no = #{userNo}
-</select>
 
 <select id="selectCompanyCalendar"
 resultMap="calResultMap">
@@ -183,9 +188,10 @@ and
 and 
 	Months_between(START_DATE     , sysdate) <= 6
 and 
-	Months_between(end_DATE				, sysdate) >= -6
+	Months_between(end_DATE		  , sysdate) >= -6
 ]]>
 </select>
+
 <select id="selectListCalendar"
 resultMap="calResultMap">
 	select
@@ -201,26 +207,42 @@ resultMap="calResultMap">
 	    calender.status = 'Y'
 <![CDATA[
 	and 
-		Months_between(START_DATE , #{dataStart}) <= 1
+		START_DATE >= #{dataStart}
 	and 
-		Months_between(end_DATE		, #{dataEnd}) >= -1
+		end_DATE <= #{dataEnd}
 ]]>
+   ORDER by 
+   		cal_no desc
 </select>
 
-<select id="selectListCount" resultType="_int">
+<select id="selectListCount" 
+resultType="_int">
 	select
-    count(*)
-	from calender
-	where cal_sort = 'C'
+    	count(*)
+	from 
+		calender
+	where 
+		cal_sort = 'C'
 	and 
 	    calender.status = 'Y'
 <![CDATA[
 	and 
-		Months_between(START_DATE , #{dataStart}) <= 1
+		START_DATE >= #{dataStart}
 	and 
-		Months_between(end_DATE	, #{dataEnd}) >= -1
+		end_DATE <= #{dataEnd}
 ]]>
 </select>
-
+<update id="ajaxDeletedCal">
+	update 
+     	calender
+	set 
+		status = 'N'
+	<where>
+		<foreach item="value" collection="array"
+	       open="cal_no in  (" separator="," close=")" >
+	        #{value}
+	    </foreach>
+	</where>
+</update>
 
 </mapper>

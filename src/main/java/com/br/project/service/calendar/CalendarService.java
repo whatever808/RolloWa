@@ -25,8 +25,15 @@ public class CalendarService {
 	 * @author dpcks
 	 * @return
 	 */
-	public List<CalendarDto> selectPCalendar(Map<String, Object> map) {
-		return calDao.selectPCalendar(map);
+	public List<CalendarDto> ajaxSelectPCalendar(Object userNo) {
+		Map<String, Object> map = new HashMap<>();
+		if(userNo != null) {
+			List<String> calNoList = calDao.selectCalNO(userNo);
+			map.put("calNoList", calNoList);
+			log.debug("calNoList == {}", calNoList);
+		}
+		
+		return calDao.ajaxSelectPCalendar(map);
 	}
 
 	/**
@@ -77,21 +84,6 @@ public class CalendarService {
 	}
 
 	/**
-	 * @param userNo
-	 * @return
-	 */
-	public List<CalendarDto> selectOneMemberCal(String userNo) {
-		
-		List<String> calNoList = calDao.selectCalNO(userNo);
-//		log.debug("calNoList == {}", calNoList);
-		
-		Map<String, Object> map = new HashMap<>();
-		map.put("calNoList", calNoList);
-
-		return  calDao.selectPCalendar(map);
-	}
-
-	/**
 	 * @return
 	 */
 	public List<CalendarDto> selectCompanyCalendar() {
@@ -117,7 +109,15 @@ public class CalendarService {
 	 * 전제 리스트 수 반환
 	 * @return
 	 */
-	public int selectListCount() {
-		return calDao.selectListCount();
+	public int selectListCount(Map<String, Object> map) {
+		return calDao.selectListCount(map);
+	}
+
+	/**
+	 * @param values
+	 * @return
+	 */
+	public int ajaxDeletedCal(String[] values) {
+		return calDao.ajaxDeletedCal(values);
 	}
 }

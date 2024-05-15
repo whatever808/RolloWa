@@ -17,6 +17,8 @@
 
 .search-date {
 	display: flex;
+	justify-content: space-evenly;
+    align-items: baseline;
 	gap: 5%;
 }
 
@@ -57,41 +59,120 @@
 	<div class="out-line">
 				<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 				  <script>
-				  	$(document).ready(function(){
+					function currentDate(){
+						const offset = new Date().getTimezoneOffset() * 60000;
+						const today = new Date(Date.now()- offset);
+						
+						let dateData = today.toISOString().slice(0, 10);
+						document.getElementById('currentDate1').value = dateData;
+						
+						today.setDate(today.getDate() + 1);
+						
+						dateData = today.toISOString().slice(0, 10);
+						document.getElementById('currentDate2').value = dateData;
+					};
+					
+				  	function importList(page) {
 				  		$.ajax({
 				  			url:'${path}/calendar/companyControllor.ajax',
 				  			type:'post',
 				  			data: {
-				  				'page':'${page}',
+				  				'page':page,
 				  				'dataStart': $('#currentDate1').val(),
 				  				'dataEnd': $('#currentDate2').val()
 				  			},
 				  			success:function(result){
 				  				console.log(result);
-				  				
-				  				const list = result.list;
-				  				const paging = result.paging;
-				  				
-				  				let tableEl = ''; 
-				  				for (let i =0; i<list.lenght; i++){
-											tableEl = 	'<tr><td>'+ result[i].calNO +'</td>'
-				  										+ '<td><input type="color" value="' + list[i].color + '" id="color-style" style="width: 35px; height: 15px;" onclick="return false"></td>'
-				  										+ '<td>'+ result[i].group.codeName +'</td>'
-				  										+ '<td class="over">'+ result[i].calTitle +'</td>'
-				  										+ '<td class="over">'+ result[i].duraDate +'</td>'
-				  										+ '<td><div class="pretty p-icon p-curve p-thick p-jelly">'
-		                          + '<input type="checkbox" name="check"'+ result[i].calNO +'" />'
-				  										+ '<div class="state p-danger"><label></label></div></div></td></tr>'
-	  							}
-				  				
-				  				$('tbody').append(tableEl);
+				  				creatTable(result.list);
+				  				creatPaging(result.paging)
 				  			},
 				  			error:function(){
-				  				console.log('실패');
+				  				console.log('paging error');
+				  			}
+				  		})
+				  	};
+				  	
+				  	function creatTable(list) {
+				  		$('tbody>tr').remove();
+		  				let tableEl = '';
+		  				if(list.length != 0){
+			  				for (let i = 0; i<list.length; i++){
+								tableEl += 	'<tr><td>'+ list[i].calNO +'</td>'
+	  										+ '<td><input type="color" value="' + list[i].color + '" id="color-style" style="width: 35px; height: 15px;" onclick="return false"></td>'
+	  										+ '<td>'+ list[i].group.codeName +'</td>'
+	  										+ '<td class="over">'+ list[i].calTitle +'</td>'
+	  										+ '<td class="over">'+ list[i].duraDate +'</td>'
+	  										+ '<td><div class="pretty p-icon p-curve p-thick p-jelly">'
+                     						+ '<input type="checkbox" name="check" value="'+ list[i].calNO +'" />'
+	  										+ '<div class="state p-danger"><label></label></div></div></td></tr>'
+  							}
+		  				}else {
+		  					tableEl += '<tr><td colspan="6">조회 되는 일정이 없습니다.</td>'
+		  				}
+		  				$('tbody').append(tableEl);
+				  	};
+				  	
+				  	function creatPaging(paging) {
+		  				$('.pagination>li').remove();
+		  				let page = '';
+		  				
+		  				if(paging.currentPage == 1){
+		  					page += '<li class="page-item disabled"><a class="page-link">◁</a></li>';
+		  				} else {
+		  					page += '<li class="page-item"><a class="page-link" onclick="importList('+ (paging.currentPage -1) +');">◁</a></li>';
+		  				}
+		  				
+		  				for(let i = paging.startPage; i<=paging.endPage; i++){
+		  					if(paging.currentPage == i){
+		  						page += '<li class="page-item active"><a class="page-link">'+ i +'</a></li>';
+		  					} else if(i <= paging.maxPage){
+		  						page += '<li class="page-item"><a class="page-link" onclick="importList('+ i +');">'+ i +'</a></li>';
+		  					} else {
+		  						page += '<li class="page-item disabled"><a class="page-link">'+ i +'</a></li>';
+		  					}
+		  				}
+		  				
+	  					if(paging.currentPage >= paging.maxPage){
+			  				page += '<li class="page-item disabled"><a class="page-link">▷</a></li>';
+	  					} else {
+	  						page += '<li class="page-item"><a class="page-link" onclick="importList('+ (Number(paging.currentPage) +1) +');">▷</a></li>';
+	  					}
+		  				$('.pagination').append(page);
+				  	};
+				  	
+				  	function deleteCal(){
+/* 				  		var checkedValues = $('input[name=check]:checked').map(function() {
+				  		    return this.value;
+				  		}).get(); */
+						
+				  		//console.log(checkedValues);
+				  		
+				  		$.ajax({
+				  			url:'${path}/calendar/deletedCheck.do',
+				  			type:'post',
+				  			data: $('input[name=check]:checked').serialize(),
+/* 				  		    contentType: 'application/json',
+				  		    data: JSON.stringify({ check: checkedValues }), */
+				  			success:function(result){
+				  				//console.log(page);
+				  				if(result > 0){
+				  					alert("성공적으로 삭제 되었습니다.");
+				  					importList($('.page-item.active>a').text())
+				  				}else {
+				  					alert("다시 시도 해주세요. 관리자를 호출 해 주세요.");
+				  				}
+				  			},
+				  			error:function(){
+				  				console.log('삭제ajax 실패');
 				  			}
 				  		})
 				  		
-				  	})
+				  	};
+				  	
+				  	$(document).ready(function(){
+				  		currentDate();
+				  		importList();
+				  	});
 				  </script>
         <!-- 컨텐츠 영역 -->
         <div class="content" style="max-width: 1120px; padding: 30px;">
@@ -101,14 +182,17 @@
 						</legend>
                 <br><br>
                 <div class="search-date">
-                 <div class="font-size25 jua-regular">날짜</div>
+                 <div class="font-size25 jua-regular" style="white-space: nowrap;">날짜</div>
                  <div class="size-fit">
-									<input type="date" id="currentDate1" class="date-area jua-regular">
-									</div>
-	                  <div>~</div>
-	                  <div class="size-fit">
-										<input type="date" id="currentDate2" class="date-area jua-regular">
-									</div>
+				<input type="date" id="currentDate1" class="date-area jua-regular">
+				</div>
+                 <div style="font-size: x-large;">~</div>
+                 <div class="size-fit">
+					<input type="date" id="currentDate2" class="date-area jua-regular">
+				</div>
+				<div style="white-space: nowrap;" >
+					<button class="btn btn-outline-dark jua-regular" onclick="importList();">검색</button>
+				</div>
                 </div>
                 <br>
                 <div >
@@ -116,29 +200,14 @@
                       <thead>
                           <tr>
                             <th class="font-size20 jua-regular" style="width: 10px;">No</th>
-                            <th class="font-size20 jua-regular" style="width: 10px;">color</th>
+                            <th class="font-size20 jua-regular" style="width: 10px;">Color</th>
                             <th class="font-size20 jua-regular">Category</th>
                             <th class="font-size20 jua-regular">Title</th>
                             <th class="font-size20 jua-regular">Date</th>
                             <th class="font-size20 jua-regular" style="width: 10px;">Check</th>
                           </tr>
                       </thead>
-                      <tbody>
-                      
-                       
-                       <tr>
-                         <td>
-	                         <div class="pretty p-icon p-curve p-thick p-jelly">
-	                            <input type="checkbox" name="check" value="${c.calNO}" />
-	                            <div class="state p-danger">
-	                           				<label></label>
-	                       			</div>
-	                         </div>
-                         </td>
-                      	</tr>
-                       
-                        
-                 </tbody>
+                      <tbody></tbody>
              </table>
          </div>
          <br>
@@ -147,26 +216,11 @@
          	<ul class="pagination"></ul>
          </div>     
          <div>
-					 <button class="btn btn-outline-danger">삭제</button>
-				 </div>
-				 </div>
+		 <button class="btn btn-outline-danger jua-regular" onclick="deleteCal();">삭제</button>
+ 		</div>
+		 </div>
       </fieldset>
    	</div>
   </div>
-  
-<script>
-const offset = new Date().getTimezoneOffset() * 60000;
-const today = new Date(Date.now()- offset);
-
-let dateData = today.toISOString().slice(0, 10);
-document.getElementById('currentDate1').value = dateData;
-
-today.setDate(today.getDate() + 1);
-today.setTime(today.getTime()+ 12* 1000* 60* 60);
-
-dateData0 = today.toISOString().slice(0, 10);
-
-document.getElementById('currentDate2').value = dateData0;
-</script>
 </body>
 </html>

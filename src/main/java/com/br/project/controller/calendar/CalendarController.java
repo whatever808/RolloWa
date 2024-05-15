@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,7 +42,7 @@ public class CalendarController {
 	 * @return 
 	 */
 	@GetMapping("/pCalendar.page")
-	public ModelAndView selectPCalendar(HttpSession session, ModelAndView mv) {
+	public ModelAndView importPCalendar(HttpSession session, ModelAndView mv) {
 		
 		MemberDto member = (MemberDto)session.getAttribute("loginUser");
 		
@@ -56,20 +57,29 @@ public class CalendarController {
 				teams.add(0, teams.remove(i));
 			}
 		}
-		
 		//log.debug("teams {}", teams);
+		
 		List<GroupDto> group = dService.selectDepartmentList("CALD01");
 		//log.debug("group {}", group);		
-		List<CalendarDto> list = calService.selectPCalendar(null);
-		//log.debug("list = {}", list);
 		
-		mv.addObject("list", list)
-			.addObject("teams", teams)
-			.addObject("group", group)
-			.setViewName("calendar/pCalendar");
+		mv.addObject("teams", teams)
+		  .addObject("group", group)
+		  .setViewName("calendar/pCalendar");
 		return mv;
 	}
 	
+	/**
+	 * @param userNo
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value="/selectCal.ajax", produces="application/json")
+	public List<CalendarDto> ajaxSelectPCalendar(@RequestBody Map<String, Object> request) {
+		//log.debug("userNo {}", request.get("userNO"));
+		List<CalendarDto> list = calService.ajaxSelectPCalendar(request.get("userNO"));
+		//log.debug("list = {}", list);
+		return list;
+	}
 
 	/**
 	 * 일정을 등록하기 위한 페이지를 이동 하는 매서드
@@ -165,22 +175,8 @@ public class CalendarController {
 		}
 		return mv;
 	}
-	
+
 	/**
-	 * @param userNo
-	 * @return
-	 */
-	@ResponseBody
-	@PostMapping(value="/oneMemCal.do", produces="application/json")
-	public List<CalendarDto> selectOneMemberCal(String userNo) {
-//		log.debug("userno {}", userNo);
-		
-		return calService.selectOneMemberCal(userNo);
-	}
-	
-	
-	/**
-	 * @param session
 	 * @param mv
 	 * @return
 	 */
@@ -212,7 +208,7 @@ public class CalendarController {
 		
 		return mv;
 	}
-	
+
 	/**
 	 * @param calendar
 	 * @param date
@@ -242,39 +238,88 @@ public class CalendarController {
 		}
 		return mv;
 	}
-	
+
 	/**
-	 * @param mv
+	 * 
 	 */
 	@GetMapping("/companyControllor.page")
 	public void companyControllor() {}
 	
+	/**
+	 * @param page
+	 * @param dataStart
+	 * @param dataEnd
+	 * @return
+	 */
 	@ResponseBody
 	@PostMapping(value="/companyControllor.ajax",  produces="application/json")
-	public Map<String, Object> AjaxcompanyControllor(@RequestParam(defaultValue = "1") int page
+	public Map<String, Object> ajaxcompanyControllor(@RequestParam(defaultValue = "1") int page
 													,String dataStart, String dataEnd) {
 		
-		log.debug("page {}", page);
-		log.debug("dataStart {}", dataStart);
-		log.debug("dataEnd {}", dataEnd);
-		
-		int listCount = calService.selectListCount();
-		PageInfoDto paging = new PagingUtil().getPageInfoDto(listCount, page, 5, 10);
-		log.debug("paging {}", paging);
+		//log.debug("page {}", page);
+		//log.debug("dataStart {}", dataStart);
+		//log.debug("dataEnd {}", dataEnd);
 		
 		Map<String, Object> map = new HashMap<>();
-		map.put("paging", paging);
 		map.put("dataStart", dataStart);
 		map.put("dataEnd", dataEnd);
+		
+		int listCount = calService.selectListCount(map);
+		PageInfoDto paging = new PagingUtil().getPageInfoDto(listCount, page, 5, 5);
+		map.put("paging", paging);
+		
 		List<CalendarDto> list = calService.selectListCalendar(map);
 		
-		map.remove(dataStart);
-		map.remove(dataEnd);
-		
-		map.put("list", list);
-		map.put("page", page);		
+		map.remove("dataStart");
+		map.remove("dataEnd");
+
+		map.put("list", list);	
 		
 		return map;
 	}
+	
+	/**
+	 * @param check
+	 */
+	/*
+	 * 1) view단에 .serialize()을 사용 할떄 
+	 * 공통된 name(check)에서 값을 추출 할때는 HttpServletRequest을 이용해서 
+	 * 배열로 값을 받아 올 수 있다.
+	 * String[] checkValues = request.getParameterValues("check");
+	 * log.debug("check values: {}", Arrays.toString(checkValues));
+	 * 
+	 * 2) 
+	 * JSON.stringify(value, replacer, space)
+	 * 	- value :   JSON 문자열로 변환할 값이다.(배열, 객체, 숫자, 문자)
+	 * 	- replacer: 함수 또는 배열이 될 수 있다. 
+	 * 				함수일떄 한번 걸치고 해당하는 값만을 반환
+	 * 				배열일때 값과 일치하는 값만 문자열화 한다.
+	 * 	- space :   해당하는 공백(숫자) 이나 구분자(",")를 넣어서 문자열화 한다.
+	 * 	주의 : value 값들을 객체든, 배열이든 모두 String 타입으로 변환 되어 생성된다.
+	 * 	
+	 * 	- .get() : 선택된 요소를 배열로 가져옴 == 제이쿼리 객체를 배열로 가져올 수 있음
+	 *	- .map(Array, function(value, key[index]){
+	 *			return value +1;
+	 *		})
+	 * 	
+	 * 
+	 * Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `[Ljava.lang.String;` from Object value (token `JsonToken.START_OBJECT`); 
+	 * nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot deserialize value of type `[Ljava.lang.String; ` from Object value (token `JsonToken.START_OBJECT`)<EOL> at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 1, column: 1]]
+	 */
+//	@ResponseBody
+//	@PostMapping(value="/deletedCheck.do", produces = "application/json; charset=utf8")
+//	public void ajaxDeleredCal(@RequestBody String[] check) {
+//		 log.debug("String   { }", Arrays.toString(check));
+//		 log.debug("String   { }", check);
+//	}
+	
+	@ResponseBody
+	@PostMapping(value="/deletedCheck.do", produces = "application/json; charset=utf8")
+	public int ajaxDeletedCal(HttpServletRequest request) {
+		 String[] values = request.getParameterValues("check");
+		 //log.debug("values: {}", Arrays.toString(values));
+		 return calService.ajaxDeletedCal(values);
+	}
+	
 
 }
