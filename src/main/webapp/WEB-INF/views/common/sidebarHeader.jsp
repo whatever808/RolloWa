@@ -25,6 +25,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 
+ 		<!-- socket 통신을 위한 js -->
+    <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <!-- jQuery -->
     <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
 
@@ -463,14 +467,52 @@
                             <li><a href="${ contextPath }/notification/list.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
                             </li>
-                            <li><a href="${ contextPath }/member/logout.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
+                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
                                     out</a></li>
                         </ul>
                     </div>
                 </li>
             </ul>
         </div>
-
+				
+				<div>
+					<button type="button" onclick="sendMsg();">메세지</button>
+				</div>
+				
         <div class="b-example-divider b-example-vr"></div>
+				<script>
+					let alram;
+					let chatting;
+					var stompClient;
+					
+					$(document).ready(function() {
+						// 알람용 웹소켓 연결
+						alram = new SockJS("${contextPath}/alram");
+						
+						// 알람 수신 시 alert 발생
+						alram.onmessage = function(evt) {
+							const obj = JSON.parse(evt.data);
+							alertify.confirm('부서 알림', obj.message, function(){ 
+								location.href = "${contextPath}/board/detail.do?category=department&department=" + obj.teamCode + "&condition=&keyword&no=" + obj.boardNo;
+								alertify.success('공지사항 페이지로 이동'); }
+			                , function(){ alertify.error('Cancel')}).set('labels', {ok:'이동하기', cancel:'취소'});;
+						}
+						
+						// 채팅용 웹소켓 연결
+						chatting = new SockJS("${contextPath}/endpoint");
+						stompClient = Stomp.over(chatting);
+						stompClient.connect({}, function(frame) {
+							console.log("Connected : " + frame);
+							stompClient.subscribe("${contextPath}/subscribe/test", function() {
+								console.log("수신완료!");
+							})
+						})
+					})
+					
+					function sendMsg() {
+						stompClient.send("${contextPath}/subscribe/test", {}, JSON.stringify({"name" : "test"}));
+					}
+
+				</script>
 </body>
 </html>

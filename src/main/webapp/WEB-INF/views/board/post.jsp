@@ -110,6 +110,14 @@
 	
 	// 공지사항 수정 요청 ====================================================================================================
 	function formSubmit(){
+		
+		// [기웅] 부서 공지사항 등록 시 부서원들에게 알림 전송
+		if($("input[name=status]").val() == 'Y') {
+			if($("select[name=category]").val() != "") {
+				alram.send(JSON.stringify({ teamCode : '${loginMember.teamCode}' }));
+			}
+		}
+
 		// 에디터에 작성된 내용을 [name=content]로 함께 전달
 		$("textarea#editor").val(tinymce.activeEditor.getContent("editor"));
 		$("#post-form").submit();

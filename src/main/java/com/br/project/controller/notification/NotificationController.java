@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificationController {
 	private final NotificationService nService;
 	private final PagingUtil pagingUtil;
-	
+		
 	// 알림 조회
 	@GetMapping("list.page")
 	public String selectNotification(@RequestParam(value="page", defaultValue="1") int currentPage
