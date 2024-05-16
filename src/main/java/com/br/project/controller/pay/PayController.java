@@ -3,6 +3,7 @@ package com.br.project.controller.pay;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,13 +14,16 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.controller.common.CommonController;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.dto.pay.MemberDeptDto;
 import com.br.project.dto.pay.PayDto;
 import com.br.project.service.pay.PayServiceImpl;
 import com.br.project.util.PagingUtil;
@@ -47,21 +51,24 @@ public class PayController {
 		//페이지인포객체 생성
 		PageInfoDto pi =  pagingUtil.getPageInfoDto(listCount, currentPage, 5, 10);
 		
-		//로그인한 유저의 이름값 꺼내기
-		//MemberDto loginUser = (MemeberDto)session.getAttribute("loginUser");
-		//String userName = loginUser.getUserName();
-		//userName 전달 = > 해야됨
+		String userName = (String)((MemberDto)session.getAttribute("loginMember")).getUserName();
+			
 		List<PayDto> list = payServiceImpl.paymainPage(pi);
 		
-		//일주일이상승인완료가 안된 게시글총갯수
-		int mdCount = payServiceImpl.moreDateCount();
-		//결재내역 게시글 총갯수
-		int slistCount = payServiceImpl.successListCount();
+		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payServiceImpl.moreDateCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payServiceImpl.successListCount(userName);
+		// 로그인한 사용자의 전체수신갯수
+		int ulistCount = payServiceImpl.allUserCount(userName);
 		
 		model.addAttribute("list", list);
 		model.addAttribute("pi", pi);
+		model.addAttribute("listCount", String.valueOf(listCount));		
 		model.addAttribute("mdCount", String.valueOf(mdCount));
 		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("paymain", "paymain");
 		
 		
 		
@@ -72,27 +79,34 @@ public class PayController {
 	@GetMapping("/search.do")
 	public ModelAndView searchList(@RequestParam Map<String, String> search
 								 , @RequestParam(value="page", defaultValue="1") int currentPage
-								 , ModelAndView mv) {
+								 , ModelAndView mv, HttpSession session) {
 		
+		String userName = ((MemberDto)session.getAttribute("loginMember")).getUserName();
+		//개시글총갯수
+		int listCount = payServiceImpl.selectListCount();
 		
-		//갯수조회
-		int listCount = payServiceImpl.searchListCount(search);
+		//검색한갯수조회
+		int searchlistCount = payServiceImpl.searchListCount(search);
 		//페이지
-		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 5, 10);
+		PageInfoDto pi = pagingUtil.getPageInfoDto(searchlistCount, currentPage, 5, 10);
 		//리스트
 		List<PayDto> list = payServiceImpl.searchList(pi, search);
-		//일주일이상승인완료가 안된 게시글총갯수
-		int mdCount = payServiceImpl.moreDateCount();
-		//결재내역 게시글 총갯수
-		int slistCount = payServiceImpl.successListCount();
-		
+		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payServiceImpl.moreDateCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payServiceImpl.successListCount(userName);
+		// 로그인한 사용자의 전체수신갯수
+		int ulistCount = payServiceImpl.allUserCount(userName);
+
 		
 		mv.addObject("list", list)
 		  .addObject("pi", pi)
 		  .addObject("search", search)
-		  .addObject("listCount", listCount)
+		  .addObject("searchlistCount", searchlistCount)
+		  .addObject("listCount", String.valueOf(listCount))		  
 		  .addObject("mdCount", String.valueOf(mdCount))
 		  .addObject("slistCount", String.valueOf(slistCount))
+		  .addObject("ulistCount", String.valueOf(ulistCount))
 		  .setViewName("pay/paymain");
 		
 		
@@ -104,7 +118,9 @@ public class PayController {
 	@RequestMapping(value="/selectList.do")
 	public String selectList(HttpServletRequest request,
 			 @RequestParam (value="page", defaultValue="1") int currentPage
-						, Model model) {
+						, Model model, HttpSession session) {
+		
+		String userName = ((MemberDto)session.getAttribute("loginMember")).getUserName();
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		
@@ -112,113 +128,56 @@ public class PayController {
 		log.debug(request.toString());
 		//(카테고리별)페이지갯수
 		int clistCount = payServiceImpl.slistCount(params);
-		
-		//일주일이상승인완료가 안된 게시글총갯수
-		int mdCount = payServiceImpl.moreDateCount();
-		
-		//결재내역 게시글 총갯수
-		int slistCount = payServiceImpl.successListCount();
-		
+	
 		//페이지
 		PageInfoDto pi =  pagingUtil.getPageInfoDto(clistCount, currentPage, 5, 10);
-		
 		//리스트
 		List<PayDto> list = payServiceImpl.categoryList(params, pi);
 		
+		//개시글총갯수
+		int listCount = payServiceImpl.selectListCount();
+		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payServiceImpl.moreDateCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payServiceImpl.successListCount(userName);
+		// 로그인한 사용자의 전체수신갯수
+		int ulistCount = payServiceImpl.allUserCount(userName);
+
+		
 		model.addAttribute("clistCount", clistCount);
 		model.addAttribute("params", params);
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
 		model.addAttribute("pi", pi);
 		model.addAttribute("list", list);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
 		
 		
 		return "pay/paymain";
 		
 	}
-	
-	/*
-	//메인결재 보고서 카테고리----------------------
-	@GetMapping(value="/selects.do")
-	public String selectList(String conditions, @RequestParam (value="page", defaultValue="1") int currentPage
-						, Model model) {
-		
-		//(카테고리별)페이지갯수
-		int clistCount = 1;//payServiceImpl.slistCount(conditions);
-		
-		//일주일이상승인완료가 안된 게시글총갯수
-		int mdCount = payServiceImpl.moreDateCount();
-		
-		//결재내역 게시글 총갯수
-		int slistCount = payServiceImpl.successListCount();
-		
-		//페이지
-		PageInfoDto pi =  pagingUtil.getPageInfoDto(clistCount, currentPage, 5, 10);
-		
-		//리스트
-		List<PayDto> list = payServiceImpl.categoryList(conditions, pi);
-		
-		model.addAttribute("clistCount", clistCount);
-		model.addAttribute("slistCount", slistCount);
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
-		model.addAttribute("pi", pi);
-		model.addAttribute("list", list);
-		model.addAttribute("conditions", conditions);
-		
-		return "pay/paymain";
-		
-	}
-	*/
-	//---------------------------------------------
-	
-	/*
-	//메인결재 보고서 카테고리----------------------
-		@GetMapping(value="/status.do")
-		public String statusList(String status, @RequestParam (value="page", defaultValue="1") int currentPage
-							, Model model) {
-			
-			//(카테고리별)페이지갯수
-			int clistCount = 1;//payServiceImpl.slistCount(status);
-			
-			//일주일이상승인완료가 안된 게시글총갯수
-			int mdCount = payServiceImpl.moreDateCount();
-			
-			//결재내역 게시글 총갯수
-			int slistCount = payServiceImpl.successListCount();
-			
-			//페이지
-			PageInfoDto pi =  pagingUtil.getPageInfoDto(clistCount, currentPage, 5, 10);
-			
-			//리스트
-			List<PayDto> list = payServiceImpl.statusList(status, pi);
-			
-			model.addAttribute("clistCount", clistCount);
-			model.addAttribute("slistCount", slistCount);
-			model.addAttribute("mdCount", String.valueOf(mdCount));
-			model.addAttribute("slistCount", String.valueOf(slistCount));
-			model.addAttribute("pi", pi);
-			model.addAttribute("list", list);
-			model.addAttribute("status", status);
-			
-			return "pay/paymain";
-			
-		}
-		//---------------------------------------------
-		*/
-	
 	
 	// 메인결재 상세페이지목록클릭-----------------------
 	@RequestMapping("/detail.do")
-	public String detail(PayDto pDto, Model model) {
-		log.debug("documentType : {}", pDto.getDocumentType() );
-		log.debug("dto : {}", pDto );
-		String documentType = pDto.getDocumentType();
-		if(documentType.equals("매출보고서")) {
-			PayDto payDto = payServiceImpl.mdetail(pDto);
-			model.addAttribute("payDto", payDto);
-			return "pay/mdetail";
-		}else if(documentType.equals("비품신청서")){
+	public String detail(@RequestParam Map<String, Object> map, Model model
+						, HttpSession session) {
+		
+		
+		String userName = ((MemberDto)session.getAttribute("loginMember")).getUserName();
+		int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		if(map.get("documentType").equals("매출보고서")) {
+			List<Map<String, Object>> list = payServiceImpl.expendDetail(map);
+			model.addAttribute("list", list);
+			model.addAttribute("userNo", userNo);
+			model.addAttribute("userName", userName);
+			log.debug("list : {}", list);
+			return "pay/expendDetail";
+		}
+		
+		return "pay/expendDetail";
+		
+		/*else if(documentType.equals("비품신청서")){
 			PayDto payDto = payServiceImpl.bdetail(pDto);
 			model.addAttribute("payDto", payDto);
 			return "pay/bdetail";
@@ -243,6 +202,7 @@ public class PayController {
 			model.addAttribute("payDto", payDto);
 			return "pay/cdetail";
 		}
+		*/
 		
 	}
 	
@@ -251,33 +211,37 @@ public class PayController {
 	public String allUserlist(@RequestParam (value="page", defaultValue="1") int currentPage
 								,HttpSession session, Model model) {
 		
-		//session 멤버객체
-		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
-		// 로그인한 userName
-		String userName = loginMember.getUserName();
+		
+		// userName
+		String userName  = ((MemberDto)session.getAttribute("loginMember")).getUserName();
+		
 		log.debug("userName : {}", userName);
 		
-		//로그인한 유저의 승인자결재목록갯수
+		//로그인한 유저 승인자결재함목록갯수
 		int ulistCount = payServiceImpl.allUserCount(userName);
+		log.debug("ulistCount : {}", ulistCount);
 		
-		//페이지
-		PageInfoDto pi = pagingUtil.getPageInfoDto(ulistCount, ulistCount, 5, 10);
+		PageInfoDto pi = pagingUtil.getPageInfoDto(ulistCount, currentPage, 5, 10);
 		
-		//로그인한 유저의 승인자결재목록리스트
+		//로그인한 유저 승인자결재함목록리스트
 		List<PayDto> list = payServiceImpl.allUserList(userName, pi);
 		
-		//일주일이상승인완료가 안된 게시글총갯수
-		int mdCount = payServiceImpl.moreDateCount();
+		//개시글총갯수
+		int listCount = payServiceImpl.selectListCount();
+		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payServiceImpl.moreDateCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payServiceImpl.successListCount(userName);
 		
-		//결재내역 게시글 총갯수
-		int slistCount = payServiceImpl.successListCount();
-		
+		log.debug("list : {}", list);
 		
 		model.addAttribute("list", list);
 		model.addAttribute("pi", pi);
-		model.addAttribute("ulistCount", ulistCount);
-		model.addAttribute("mdCount", mdCount);
-		model.addAttribute("slistCount", slistCount);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("userAllList", "userAllList");
 		
 		return "pay/paymain";
 		
@@ -286,16 +250,423 @@ public class PayController {
 	
 	
 	//글작성페이지폼-------------------------------------------
-	@GetMapping("/mWriterForm.do")
-	public void mWriterForm() {
+	@RequestMapping("/mWriterForm.do")
+	public String mWriterForm(Model model, HttpSession session) {
+		
+		//로그인한 유저의 팀이름 + 부서 + 직급
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		List<MemberDeptDto> member = payServiceImpl.selectloginUserDept(loginMember);
+			
+		List<MemberDeptDto> teamList = payServiceImpl.selectDepartment();
+		
+		List<Map<String, Object>> maDeptList = new ArrayList<>();
+		List<Map<String, Object>> operatDeptList = new ArrayList<>();
+		List<Map<String, Object>> marketDeptList = new ArrayList<>();
+		List<Map<String, Object>> fbDeptList = new ArrayList<>();
+		List<Map<String, Object>> hrDeptList = new ArrayList<>();
+		List<Map<String, Object>> serviceDeptList = new ArrayList<>();
+		
+		
+		
+		// 총무부의 이름, 팀이름, 직급(부장,과장,차장)
+		
+		for(int i=0; i<teamList.size(); i++) {
+			Map<String, Object> managementDept = new HashMap<>();;
+			if(teamList.get(i).getDeptName().equals("총무부")) {
+				managementDept.put("userNo", teamList.get(i).getUserNo());
+				managementDept.put("userName", teamList.get(i).getUserName());
+				managementDept.put("teamName", teamList.get(i).getTeamName());
+				managementDept.put("positionName", teamList.get(i).getPositionName());
+				managementDept.put("deptName", teamList.get(i).getDeptName());
+				maDeptList.add(managementDept);
+			}
+		}
+		
+		// 운영부의 이름, 팀이름, 직급(부장,과장,차장)
+		
+		
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("운영부")) {
+				Map<String, Object> operationsDept = new HashMap<>();
+				operationsDept.put("userNo", teamList.get(i).getUserNo());
+				operationsDept.put("userName", teamList.get(i).getUserName());
+				operationsDept.put("teamName", teamList.get(i).getTeamName());
+				operationsDept.put("positionName", teamList.get(i).getPositionName());
+				operationsDept.put("deptName", teamList.get(i).getDeptName());
+				operatDeptList.add(operationsDept);
+				
+			}
+		}
+		
+		// 마케팅부의 이름, 팀이름, 직급(부장,과장,차장)
+		
+		
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("마케팅부")) {
+				Map<String, Object> marketingDept = new HashMap<>();
+				marketingDept.put("userNo", teamList.get(i).getUserNo());
+				marketingDept.put("userName", teamList.get(i).getUserName());
+				marketingDept.put("teamName", teamList.get(i).getTeamName());
+				marketingDept.put("positionName", teamList.get(i).getPositionName());
+				marketingDept.put("deptName", teamList.get(i).getDeptName());
+				marketDeptList.add(marketingDept);
+			}
+		}
+		
+		// fb(호텔 운영부)의 이름, 팀이름, 직급(부장,과장,차장)
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("FB")) {
+				Map<String, Object> fbDept = new HashMap<>();
+				fbDept.put("userNo", teamList.get(i).getUserNo());
+				fbDept.put("userName", teamList.get(i).getUserName());
+				fbDept.put("teamName", teamList.get(i).getTeamName());
+				fbDept.put("positionName", teamList.get(i).getPositionName());
+				fbDept.put("deptName", teamList.get(i).getDeptName());
+				fbDeptList.add(fbDept);
+			}
+		}
+		
+		
+		// 인사부의 이름, 팀이름, 직급(부장,과장,차장)
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("인사부")) {
+				Map<String, Object> hrDept = new HashMap<>();
+				hrDept.put("userNo", teamList.get(i).getUserNo());
+				hrDept.put("userName", teamList.get(i).getUserName());
+				hrDept.put("teamName", teamList.get(i).getTeamName());
+				hrDept.put("positionName", teamList.get(i).getPositionName());
+				hrDept.put("deptName", teamList.get(i).getDeptName());
+				hrDeptList.add(hrDept);
+			}
+		}
+		
+		// 서비스부의 이름, 팀이름, 직급(부장,과장,차장)
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("서비스부")) {
+				Map<String, Object> serviceDept = new HashMap<>();
+				serviceDept.put("userNo", teamList.get(i).getUserNo());
+				serviceDept.put("userName", teamList.get(i).getUserName());
+				serviceDept.put("teamName", teamList.get(i).getTeamName());
+				serviceDept.put("positionName", teamList.get(i).getPositionName());
+				serviceDept.put("deptName", teamList.get(i).getDeptName());
+				serviceDeptList.add(serviceDept);
+			}
+		}
+		
+		model.addAttribute("maDeptList", maDeptList);
+		model.addAttribute("operatDeptList", operatDeptList);
+		model.addAttribute("marketDeptList", marketDeptList);
+		model.addAttribute("fbDeptList", fbDeptList);
+		model.addAttribute("hrDeptList", hrDeptList);
+		model.addAttribute("serviceDeptList", serviceDeptList);
+		model.addAttribute("member", member);
+		
+		log.debug("maDeptList : {}", maDeptList);
+		
+		return "pay/mWriterForm";
 		
 	}
 	//----------------------------------------------------
 	
+	//---------매출 보고서 ----------------------
+	@PostMapping("/mReportInsert.do")
+	public String mReportInsert(@RequestParam Map<String, Object> map
+							  , HttpSession session, RedirectAttributes redirectAttributes) {
+		//map =>최초/중간/최종 승인자의 이름, 매출구분, 담당자, 총매출 금액이 담겨있음
+		log.debug("{}", map.get("items"));
+		
+		// 품목, 수량, 매출금액이 담긴 리스트
+		List<Map<String, Object>> list = new ArrayList<>();
+		
+		String[] itemsArr = ((String)map.get("items")).split(",");
+		String[] countArr = ((String)map.get("counts")).split(",");
+		String[] salesArr = ((String)map.get("salesAmounts")).split(",");
+		
+		for(int i=0; i<itemsArr.length; i++) {
+			Map<String, Object> maps = new HashMap<>();
+			maps.put("items", itemsArr[i]);
+			maps.put("counts", countArr[i]);
+			maps.put("salesAmounts", salesArr[i]);
+			list.add(maps);
+		}
+		log.debug("list : {}", list);
+		int writerNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		map.put("writerNo", writerNo);
+		
+		int result = payServiceImpl.mReportInsert(map, list);
+		
+		
+		if(result == list.size()) {
+			redirectAttributes.addFlashAttribute("alertTitle", "게시글등록");
+			redirectAttributes.addFlashAttribute("alertMsg", "등록이 성공적으로 완료되었습니다.");
+		}
+		
+		
+		return "redirect:/pay/paymain.page";
+	}
+	
+	@RequestMapping("/reject.do")
+	public String reject(@RequestParam Map<String, Object> map, HttpSession session) {
+		
+		int result = payServiceImpl.updateReject(map);
+		
+		if(result == 1) {
+			session.setAttribute("alertMsg", "성공적으로 제출이 완료되었습니다.");
+		}
+		
+		return "pay/paymain"; 
+		
+	}
 	
 	
+	@RequestMapping("/mModify.do")
+	public String mModify(@RequestParam Map<String, Object> map, Model model
+						  , HttpSession session) {
+		
+		//기존에 작성된 데이터값들
+		List<Map<String, Object>> list = payServiceImpl.expendModify(map);
+		
+		//-------------------------------------
+		
+		//로그인한 유저의 팀이름, 부서, 팀명, 직급
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		List<MemberDeptDto> member = payServiceImpl.selectloginUserDept(loginMember);
+		//---------------------------
+		
+		
+		//-----전체 팀이름, 부서, 팀명, 직급 (부장,차장,과장)--------
+		List<MemberDeptDto> teamList = payServiceImpl.selectDepartment(); 
+		
+		// 위에 데이터값을 가지고 부서로 따로 나눔
+		List<Map<String, Object>> maDeptList = new ArrayList<>();
+		List<Map<String, Object>> operatDeptList = new ArrayList<>();
+		List<Map<String, Object>> marketDeptList = new ArrayList<>();
+		List<Map<String, Object>> fbDeptList = new ArrayList<>();
+		List<Map<String, Object>> hrDeptList = new ArrayList<>();
+		List<Map<String, Object>> serviceDeptList = new ArrayList<>();
+		
+		
+		
+		// 총무부의 이름, 팀이름, 직급(부장,과장,차장)
+		
+		for(int i=0; i<teamList.size(); i++) {
+			Map<String, Object> managementDept = new HashMap<>();;
+			if(teamList.get(i).getDeptName().equals("총무부")) {
+				managementDept.put("userNo", teamList.get(i).getUserNo());
+				managementDept.put("userName", teamList.get(i).getUserName());
+				managementDept.put("teamName", teamList.get(i).getTeamName());
+				managementDept.put("positionName", teamList.get(i).getPositionName());
+				managementDept.put("deptName", teamList.get(i).getDeptName());
+				maDeptList.add(managementDept);
+			}
+		}
+		
+		// 운영부의 이름, 팀이름, 직급(부장,과장,차장)
+		
+		
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("운영부")) {
+				Map<String, Object> operationsDept = new HashMap<>();
+				operationsDept.put("userNo", teamList.get(i).getUserNo());
+				operationsDept.put("userName", teamList.get(i).getUserName());
+				operationsDept.put("teamName", teamList.get(i).getTeamName());
+				operationsDept.put("positionName", teamList.get(i).getPositionName());
+				operationsDept.put("deptName", teamList.get(i).getDeptName());
+				operatDeptList.add(operationsDept);
+				
+			}
+		}
+		
+		// 마케팅부의 이름, 팀이름, 직급(부장,과장,차장)
+		
+		
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("마케팅부")) {
+				Map<String, Object> marketingDept = new HashMap<>();
+				marketingDept.put("userNo", teamList.get(i).getUserNo());
+				marketingDept.put("userName", teamList.get(i).getUserName());
+				marketingDept.put("teamName", teamList.get(i).getTeamName());
+				marketingDept.put("positionName", teamList.get(i).getPositionName());
+				marketingDept.put("deptName", teamList.get(i).getDeptName());
+				marketDeptList.add(marketingDept);
+			}
+		}
+		
+		// fb(호텔 운영부)의 이름, 팀이름, 직급(부장,과장,차장)
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("FB")) {
+				Map<String, Object> fbDept = new HashMap<>();
+				fbDept.put("userNo", teamList.get(i).getUserNo());
+				fbDept.put("userName", teamList.get(i).getUserName());
+				fbDept.put("teamName", teamList.get(i).getTeamName());
+				fbDept.put("positionName", teamList.get(i).getPositionName());
+				fbDept.put("deptName", teamList.get(i).getDeptName());
+				fbDeptList.add(fbDept);
+			}
+		}
+		
+		
+		// 인사부의 이름, 팀이름, 직급(부장,과장,차장)
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("인사부")) {
+				Map<String, Object> hrDept = new HashMap<>();
+				hrDept.put("userNo", teamList.get(i).getUserNo());
+				hrDept.put("userName", teamList.get(i).getUserName());
+				hrDept.put("teamName", teamList.get(i).getTeamName());
+				hrDept.put("positionName", teamList.get(i).getPositionName());
+				hrDept.put("deptName", teamList.get(i).getDeptName());
+				hrDeptList.add(hrDept);
+			}
+		}
+		
+		// 서비스부의 이름, 팀이름, 직급(부장,과장,차장)
+		for(int i=0; i<teamList.size(); i++) {
+			if(teamList.get(i).getDeptName().equals("서비스부")) {
+				Map<String, Object> serviceDept = new HashMap<>();
+				serviceDept.put("userNo", teamList.get(i).getUserNo());
+				serviceDept.put("userName", teamList.get(i).getUserName());
+				serviceDept.put("teamName", teamList.get(i).getTeamName());
+				serviceDept.put("positionName", teamList.get(i).getPositionName());
+				serviceDept.put("deptName", teamList.get(i).getDeptName());
+				serviceDeptList.add(serviceDept);
+			}
+		}
+		
+		model.addAttribute("maDeptList", maDeptList);
+		model.addAttribute("operatDeptList", operatDeptList);
+		model.addAttribute("marketDeptList", marketDeptList);
+		model.addAttribute("fbDeptList", fbDeptList);
+		model.addAttribute("hrDeptList", hrDeptList);
+		model.addAttribute("serviceDeptList", serviceDeptList);
+		model.addAttribute("member", member);
+		//-------------------------------------
+		model.addAttribute("list", list);
+		
+		return "pay/mWriterForm";
+		
+	}
+	
+	//로그인한 사용자 전체수신결재함
+	@RequestMapping("/userSelectList.do")
+	public String userSelectList(@RequestParam (value="page", defaultValue="1") int currenPage
+								, Model model, @RequestParam Map<String, Object> map
+								, HttpSession session) {
+		String userName = (String)((MemberDto)session.getAttribute("loginMember")).getUserName();
+		
+		map.put("userName", userName);
+		int userSelectListCount = payServiceImpl.userSelectListCount(map);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(userSelectListCount, currenPage, 5, 10);
+		
+		List<PayDto> list = payServiceImpl.userSelectList(map, pi);
+		
+		
+		//개시글총갯수
+		int listCount = payServiceImpl.selectListCount();
+		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payServiceImpl.moreDateCount(userName);
+		int ulistCount = payServiceImpl.allUserCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payServiceImpl.successListCount(userName);
+		
+		model.addAttribute("pi", pi);
+		model.addAttribute("list", list);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("map", map);
+		model.addAttribute("userAllListSelect", "userAllListSelect");
+		
+		
+		
+		return "pay/paymain";
+	}
+	//로그인한 사용자 전체수신결재함 - 검색
+	@GetMapping("/userSearch.do")
+	public String userSearch(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
+							, Model model, HttpSession session) {
+		
+		String userName = ((MemberDto)session.getAttribute("loginMember")).getUserName();
+		map.put("userName", userName);
+		
+		//총갯수
+		int userSearchCount = payServiceImpl.userSearchCount(map);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(userSearchCount, currentPage, 5, 10);
+		
+		List<PayDto> list = payServiceImpl.userSearchList(map, pi);
+		
+		//개시글총갯수
+		int listCount = payServiceImpl.selectListCount();
+		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payServiceImpl.moreDateCount(userName);
+		int ulistCount = payServiceImpl.allUserCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payServiceImpl.successListCount(userName);
+		
+		model.addAttribute("pi", pi);
+		model.addAttribute("list", list);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("map", map);
+		model.addAttribute("userSearchList", "userSearchList");
+		
+		return "pay/paymain";
+		
+		
+	}
 	
 	
+	@PostMapping("/mReportUpdate.do")
+	public String mReportUpdate(@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes) {
+		
+		List<Map<String, Object>> list = new ArrayList<>();
+		map.put("totalSales", map.get("totalSales").toString().replace(",", ""));
+		
+		log.debug("map : {}", map);
+		for(int i=0; i<map.size(); i++) {
+			if(map.get("item" + i) != "") {
+				Map<String, Object> nameMap = new HashMap<>();
+				nameMap.put("item", map.get("item" + i));
+				nameMap.put("count", map.get("count" + i));
+				nameMap.put("salesAmount", map.get("sales" + i));
+				list.add(nameMap);
+			}
+		}
+		
+		
+			
+			
+		if(map.get("items") != "" && map.get("counts") != "" && map.get("salesAmounts") != "") {
+			
+			String[] items = ((String)map.get("items")).split(",");
+			String[] counts = ((String)map.get("counts")).split(",");
+			String[] sales = ((String)map.get("salesAmounts")).split(",");
+			
+			for(int i=0; i<items.length; i++) {
+				Map<String, Object> splitMap = new HashMap<>();
+				splitMap.put("expendNo", map.get("expendNo"));
+				splitMap.put("item", items[i].trim());
+				splitMap.put("count", counts[i].trim());
+				splitMap.put("salesAmount", sales[i].trim());
+				list.add(splitMap);
+			}
+		}
+		
+		log.debug("list : {}", list);
+		
+		int newlist = payServiceImpl.mReportUpdate(map, list);
+		
+		if(newlist == list.size()) {
+			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 수정되었습니다.");
+		}
+		
+		return "redirect:/pay/paymain.page";
+		
+	}
 	
 	
 	
@@ -304,6 +675,6 @@ public class PayController {
 
 	
 	
-	
+
 
 }

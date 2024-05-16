@@ -23,6 +23,7 @@ public class BoardDto {
 	private String boardNo;
 	private String registEmp;
 	private String modifyEmp;
+	private String writerName;
 	private String registDate;
 	private String modifyDate;
 	private String title;

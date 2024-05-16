@@ -90,13 +90,14 @@
 		SELECT CODE_NAME
 		  FROM TB_GROUP
 		 WHERE GROUP_CODE LIKE 'TEAM%'
-		   AND UPPER_CODE
+		   AND CODE_NAME = #{codeName}
+	</select>
+	<!-- 
+	AND UPPER_CODE
 		       = (SELECT CODE
 	                FROM TB_GROUP
 	               WHERE GROUP_CODE LIKE 'DEPT%'
 	                 AND CODE_NAME = #{codeName})
-	</select>
+	 -->
 	
-	
-
 </mapper>

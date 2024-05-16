@@ -27,7 +27,7 @@ public class FileUtil {
 	 */
 	public Map<String, String> fileUpload(MultipartFile uploadFile, String category) {
 		
-		String filePath = "/upload/" + category + new SimpleDateFormat("/YYYY/MM/DD").format(new Date());
+		String filePath = "/upload/" + category + new SimpleDateFormat("/yyyy/MM/dd").format(new Date());
 		File filePathDir = new File(filePath);
 		if(!filePathDir.exists()) {
 			filePathDir.mkdirs();

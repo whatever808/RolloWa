@@ -19,11 +19,14 @@
 		<typeAlias type="com.br.project.dto.pay.FixturesDto" 									alias="FixturesDto"/>
 		<typeAlias type="com.br.project.dto.calendar.CoworkerDto" 						alias="CoworkerDto"/>
     <typeAlias type="com.br.project.dto.notification.NotificationDto"     alias="NotificationDto"/>
+    <typeAlias type="com.br.project.dto.attendance.AttendanceDto"			    alias="AttendanceDto"/>
+    <typeAlias type="com.br.project.dto.pay.MemberDeptDto"                alias="MemberDeptDto"/>
 	</typeAliases>
 	
 	
 	<mappers>
-		<mapper resource="mappers/board-mapper.xml" />
+		<mapper resource="mappers/board/board-mapper.xml" />
+		<mapper resource="mappers/board/boardAttachment-mapper.xml" />
 		<mapper resource="mappers/attachment-mapper.xml" />
 		<mapper resource="mappers/department-mapper.xml" />
 		<mapper resource="mappers/member-mapper.xml" />
@@ -31,6 +34,7 @@
 		<mapper resource="mappers/calendar-mapper.xml" />
 		<mapper resource="mappers/organization-mapper.xml" />
 		<mapper resource="mappers/notification-mapper.xml" />
+		<mapper resource="mappers/attendance-mapper.xml" />
 	</mappers>
 
 </configuration>

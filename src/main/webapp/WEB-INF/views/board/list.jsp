@@ -108,7 +108,7 @@
 	                		<c:forEach var="board" items="${ boardList }">
 	                 		<tr>
 	                      <td>${ board.category eq null ? "일반" : board.category }</td>
-	                      <td class="board-title">${ board.title }</td>
+	                      <td class="board-title" onclick="showDetail('${ board.boardNo }', '${ board.modifyEmp }');">${ board.title }</td>
 	                      <td>
 	                     		<c:choose>
 	                     			<c:when test="${ not empty board.profileURL }">
@@ -118,7 +118,7 @@
 	                     				<img src="${ contextPath }/resources/images/defaultProfile.png" alt="profile image" class="board-writer-profile">
 	                     			</c:otherwise>
 	                     		</c:choose>
-	                        <span>${ board.modifyEmp }</span>
+	                        <span>${ board.writerName }</span>
 	                      </td>
 	                      <td>${ board.modifyDate }</td>
 	                      <td>${ board.readCount }</td>
@@ -212,8 +212,8 @@
 	function categoryChange(option){
 		// 1) 부서 선택 <select> 요소 숨김여부 처리
 		$(option).val() == 'department' ? $("#department").removeClass("d-none")
-										: $("#department").addClass("d-none")
-														  .children("[value=all]").select();
+												  : $("#department").addClass("d-none")
+														  				  .children("[value=all]").select();
 		// 2) 게시글 목록조회 요청
 		ajaxBoardList();
 	}
@@ -239,7 +239,6 @@
 			ajaxBoardList();
 		}
 	}
-	
 	// 검색값 설정값 초기화
 	$("#reset-search").on("click", function(){
 		// 1) 선택값 모두 초기화
@@ -267,7 +266,7 @@
 	function ajaxBoardList(){
 		// 1) 요청 페이지값 설정
 		let page = event.target.dataset.pageno == undefined ? 1
-															:event.target.dataset.pageno;
+																			 :event.target.dataset.pageno;
 		
 		// 2) 게시글 목록조회 AJAX
 		$.ajax({
@@ -299,11 +298,11 @@
 					for(let i=0 ; i<boardList.length ; i++){
 						list += "<tr>";
 						list += 	"<td>" + (boardList[i].category == null ? "일반" : boardList[i].category) + "</td>";
-						list += 	"<td class='board-title'>" + boardList[i].title + "</td>";
+						list += 	"<td class='board-title' onclick='showDetail(" + boardList[i].boardNo + ", " + boardList[i].modifyEmp + ")'>" + boardList[i].title + "</td>";
 						list += 	"<td>";
 						list += 		"<img src='" + (boardList[i].profileURL == null ? "${ contextPath }/resources/images/defaultProfile.png"
 																					 	: boardList[i].profileURL) + "' alt ='profile image' class='board-writer-profile'>" 
-						list += 		"<span>" + boardList[i].modifyEmp + "</span>";
+						list += 		"<span>" + boardList[i].writerName + "</span>";
 						list += 	"</td>";
 						list += 	"<td>" + boardList[i].modifyDate + "</td>";
 						list += 	"<td>" + boardList[i].readCount + "</td>";
@@ -345,6 +344,23 @@
 			}
 		})
 		
+	}
+	
+	// 게시글 상세페이지 이동 ============================================================================================================
+	function showDetail(boardNo, writerNo){
+		let params = "category=" + $("#category").val() + "&"
+					  + "department=" + $("#department").val() +"&"
+					  + "condition=" + $("#condition").val() + "&"
+					  + "keyword=" + $("#keyword").val() + "&"
+					  + "no=" + boardNo;
+		
+		if(${ loginMember.userNo } == writerNo){
+			// 로그인한 사용자가 게시글 작성자일 경우(상세조회페이지)
+			location.href = "${ contextPath }/board/detail.do?" + params;
+		}else{
+			// 로그인한 사용자가 게시글 작성자가 아닐 경우(조회수증가 ==> 상세조회)
+			location.href = "${ contextPath }/board/reader/detail.do?" + params;
+		}
 	}
 
 </script>

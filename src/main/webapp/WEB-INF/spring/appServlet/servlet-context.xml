@@ -35,5 +35,12 @@
 		</websocket:handshake-interceptors>
 		<websocket:sockjs/>
 	</websocket:handlers>
+	<!-- Interceptors -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/board/*" />
+			<beans:bean class="com.br.project.interceptor.loginCheckInterceptor" id="loginCheckInterceptor" />
+		</interceptor>
+	</interceptors>
 	
 </beans:beans>
