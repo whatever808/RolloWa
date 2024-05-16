@@ -268,4 +268,33 @@ public class PayDao {
 	}
 	
 	
+	//지출결의서 수정하기페이지 (리스트불러오기)
+	public List<Map<String, Object>> draftModify(Map<String, Object> map){
+		return sqlSessionTemplate.selectList("payMapper.draftDetail", map);
+	}
+	
+	//-------------------
+	//지출결의서 업데이트
+	public int updateJReport(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.updateJReport", map);
+	}
+	
+	//지출결의서 아이템 품목 등록하기전에 삭제하기
+	public int deleteJItem(Map<String, Object> map) {
+		return sqlSessionTemplate.delete("payMapper.deleteJItem", map);
+	}
+	
+	//지출결의서 아이템품목 등록 재사용
+	
+	//파일등록하기전에 기존파일 삭제한거있으면 삭제
+	public int deleteAttachment(String[] delFileNo) {
+		return sqlSessionTemplate.delete("payMapper.deleteAttachment", delFileNo);
+	}
+	
+	//새로운 파일 등록하기
+	public int insertAttachment(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.insertAttachment", map);
+	}
+	//-------------------
+	
 }

@@ -166,18 +166,30 @@
                 <!-- informations left area start -->
                 <div class="left_con">
                     <div><h3>지출결의서</h3></div>
-                    <form action="${contextPath}/pay/jReportInsert.do" method="post" enctype="multipart/form-data">
+                    <c:choose>
+                    	<c:when test="${ empty list }">
+	                    	<form action="${contextPath}/pay/jReportInsert.do" method="post" enctype="multipart/form-data">
+	                    </c:when>
+	                    <c:otherwise>
+	                    	<form action="${contextPath}/pay/jReportUpdate.do" method="post" enctype="multipart/form-data">
+	                    </c:otherwise>
+                    </c:choose>
                         <div id="sign_top">
                             <div id="sign_div_left">
                                 <table border="1" id="sign_left">
                                     <tr>
                                         <th>부 서</th>
-                                        <td>${member.get(0).teamName}</td>                   
+                                        <td>${list.get(0).DEPARTMENT} ${member.get(0).teamName}</td>                   
                                         <input type="hidden" name="deptName" value="${member.get(0).teamName}">
                                         <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
-                                        <input type="hidden" name="expendNo" value="${list.get(0).EXPEND_NO}">
+                                        <input type="hidden" name="draftNo" value="${list.get(0).DRAFT_NO}">
+                                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
+                                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
                                         <input type="hidden" name="writerNo" value="${userNo}">
-                                                                                
+                                        <input type="hidden" name="documentNo" value="${list.get(0).DOCUMENT_NUMBER}">
+                                        <input type="hidden" name="writerName" value="${member.get(0).userName}">
+                                        
+                                                                           
                                     </tr>
                                     <tr>
                                         <th>기안일</th>
@@ -185,8 +197,9 @@
                                     </tr>
                                     <tr>
                                         <th>기안자</th>
-                                        <td>${member.get(0).userName}</td>
-                                        <input type="hidden" name="writerName" value="${member.get(0).userName}">
+                                        <td>${list.get(0).PAYMENT_WRITER} ${member.get(0).userName}</td>
+                                        <input type="hidden" name="payWriter" value="${list.get(0).PAYMENT_WRITER}">
+                                        <input type="hidden" name="payWriterNo" value="${list.get(0).PAYMENT_WRITER_NO}">
                                     </tr>
                                     <tr>
                                         <th>상태</th>
@@ -308,49 +321,82 @@
                                     <th>사용내역 및 용도</th>
                                     <th>금액</th>
                                 </tr>
-                                <tr>
-                                    <td><input type="text" name="account1"></td>
-                                    <td><input type="text" name="usage1"></td>
-                                    <td class="num"><input type="text" name="price1"></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="text" name="account2"></td>
-                                    <td><input type="text" name="usage2"></td>
-                                    <td class="num"><input type="text" name="price2"></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="text" name="account3"></td>
-                                    <td><input type="text" name="usage3"></td>
-                                    <td class="num"><input type="text" name="price3"></td>
-                                </tr>
-                                <tr>
-                                   	<td><input type="text" name="account4"></td>
-                                    <td><input type="text" name="usage4"></td>
-                                    <td class="num"><input type="text" name="price4"></td>
-                                </tr>
+                                <c:choose>
+                                <c:when test="${ empty list }">
+	                                <tr>
+	                                    <td><input type="text" name="account1"></td>
+	                                    <td><input type="text" name="usage1"></td>
+	                                    <td class="num"><input type="text" name="price1"></td>
+	                                </tr>
+	                                <tr>
+	                                    <td><input type="text" name="account2"></td>
+	                                    <td><input type="text" name="usage2"></td>
+	                                    <td class="num"><input type="text" name="price2"></td>
+	                                </tr>
+	                                <tr>
+	                                    <td><input type="text" name="account3"></td>
+	                                    <td><input type="text" name="usage3"></td>
+	                                    <td class="num"><input type="text" name="price3"></td>
+	                                </tr>
+	                                <tr>
+	                                   	<td><input type="text" name="account4"></td>
+	                                    <td><input type="text" name="usage4"></td>
+	                                    <td class="num"><input type="text" name="price4"></td>
+	                                </tr>
+	                               </c:when>
+	                               <c:otherwise>
+	                               	<c:forEach var="i" begin="0" end="${ list.size() - 1 }">
+			                               	<tr>
+			                                   	<td><input type="text" name="account${i}" value="${ list.get(i).ACCOUNT }"></td>
+			                                    <td><input type="text" name="usage${i}" value="${ list.get(i).CONTENT }"></td>
+			                                    <td class="num"><input type="text${i}" name="price"  value="${ list.get(i).AMOUNT }"></td>
+			                                </tr>
+		                                </c:forEach>
+	                               </c:otherwise>
+                                </c:choose>
                            </table>
                            <table>
                                 <tr>
                                     <th colspan="2">합계</th>
-                                    <td><input type="text" name="totalPrice"></td>
+                                    <td><input type="text" name="totalPrice" value="${ list.get(0).SUM }"></td>
                                 </tr>
                                 <tr>
                                     <th colspan="2">부가가치세</th>
-                                    <td><input type="text" name="vat"></td>
+                                    <td><input type="text" name="vat" value="${ list.get(0).VAT }"></td>
                                 </tr>
                                 <tr>
                                     <th colspan="2">총 지출 합계</th>
-                                    <td><input type="text" name="totalExpendPrice"></td>
+                                    <td><input type="text" name="totalExpendPrice"  value="${ list.get(0).TOTAL_SUM }"></td>
                                 </tr>
                                 <tr>
                                     <th>파일첨부</th>
-                                    <td colspan="2"><input type="file"  name="uploadFiles" multiple required></td>
+                                    <td colspan="2">
+                                    	<input type="file"  name="uploadFiles" multiple>
+                                    </td>
                                 </tr>
+                               <c:if test="${ not empty list }">
+                                <tr id="trFile">
+                                  <th>기존첨부파일</th> 
+                                  <td colspan="2">
+                                   <!-- 기존의 첨부파일 목록들 -->
+		                            		<c:forEach var="at" items="${ list }">
+		                            			<div class="attach">
+		                            				<a href="${contextPath}${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${at.ORIGIN_NAME}">${at.ORIGIN_NAME}</a>
+		                            				<span class="origin_del" data-fileno="${ at.FILE_NO }">x</span>
+		                            			</div>
+		                            		</c:forEach>
+                                  </td>
+                                </tr>
+                               </c:if>
+                               <input type="hidden" name="fileLength">
+                               <input type="hidden" name="fileDelete">
                             </table>
                         </div>
                         <!--버튼 영역-->
                         <div id="btn_div">
+
                             <button type="submit" class="btn btn-primary" id="submit_btn">제출</button>
+ 
                             <button type="button" class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
                             <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
                         </div>
@@ -359,7 +405,35 @@
                 </div>
             </div>
         </div>
-
+        <script>
+        	$(document).ready(function(){
+        		let atlength = $(".attach").length;
+        		$("#fileLength").val(atlength);
+        		console.log($("#fileLength").val(atlength));
+        	  
+        		if($(".attach").children("a").length == 0){
+        			$("#trFile").remove();
+        		}
+        		
+        	})
+        </script>
+        
+       <script>
+       	$(document).on("click", ".origin_del", function(){
+       			
+       			let arr = [];
+       			$(".origin_del").each(function(){
+       				arr.push($(this).data("fileno"));
+       			})
+       			
+       			$("#fileDelete").val(arr);
+       			
+       			$(this).parent().remove();
+       			
+       	})
+       
+       </script>
+       
        <script>
 	    	function submitbtn(){
    					let itemArr = [];
@@ -398,16 +472,16 @@
     <script>
     $(document).ready(function(){
     	
-    	let i = 5; 
+    	let i = 40;
     	$(document).on("click", "#plus_btn", function () {
     		
     		let result = "<tr>";
     		result += "<td><input type='text' name='account" + (i) + "'></td>";
     		result += "<td><input type='text' name='usage" + (i) + "'></td>";
-    		result += "<td class='num'><input type='text' name='price " + (i) + "'></td>";
+    		result += "<td class='num'><input type='text' name='price" + (i) + "'></td>";
     		result += "</tr>";
     		i++;
-        
+    		
        $("#tr_table").children().last().after(result);
        
        

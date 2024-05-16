@@ -182,7 +182,8 @@
                                         <td>${member.get(0).teamName}</td>                   
                                         <input type="hidden" name="deptName" value="${member.get(0).teamName}">
                                         <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
-                                        <input type="hidden" name="expendNo" value="${list.get(0).EXPEND_NO}">
+                                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
+                                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
                                         <input type="hidden" name="writerNo" value="${userNo}"> 
                                     </tr>
                                     <tr>
@@ -453,7 +454,7 @@
     
     <script>
     $(document).ready(function(){
-    	var i = 5; 
+    
     	$(document).on("click", "#plus_btn", function () {
     		
     		

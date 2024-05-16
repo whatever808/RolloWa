@@ -520,13 +520,13 @@ public class PayController {
 	}
 	
 	
-	@RequestMapping("/mModify.do")
+	@RequestMapping("/modify.do")
 	public String mModify(@RequestParam Map<String, Object> map, Model model
 						  , HttpSession session) {
 		
 		//기존에 작성된 데이터값들
-		List<Map<String, Object>> list = payService.expendModify(map);
-		
+		List<Map<String, Object>> Mlist = payService.expendModify(map);
+		List<Map<String, Object>> Jlist = payService.draftModify(map);
 		//-------------------------------------
 		
 		//로그인한 유저의 팀이름, 부서, 팀명, 직급
@@ -637,16 +637,37 @@ public class PayController {
 			}
 		}
 		
-		model.addAttribute("maDeptList", maDeptList);
-		model.addAttribute("operatDeptList", operatDeptList);
-		model.addAttribute("marketDeptList", marketDeptList);
-		model.addAttribute("fbDeptList", fbDeptList);
-		model.addAttribute("hrDeptList", hrDeptList);
-		model.addAttribute("serviceDeptList", serviceDeptList);
-		model.addAttribute("member", member);
-		model.addAttribute("userName", userName);
-		//-------------------------------------
-		model.addAttribute("list", list);
+		
+		
+		if(map.get("report").equals("m")) {
+			model.addAttribute("maDeptList", maDeptList);
+			model.addAttribute("operatDeptList", operatDeptList);
+			model.addAttribute("marketDeptList", marketDeptList);
+			model.addAttribute("fbDeptList", fbDeptList);
+			model.addAttribute("hrDeptList", hrDeptList);
+			model.addAttribute("serviceDeptList", serviceDeptList);
+			model.addAttribute("member", member);
+			model.addAttribute("userName", userName);
+			//-------------------------------------
+			model.addAttribute("list", Mlist);
+			
+			return "pay/mWriterForm";
+			
+		}else if(map.get("report").equals("j")){
+			model.addAttribute("maDeptList", maDeptList);
+			model.addAttribute("operatDeptList", operatDeptList);
+			model.addAttribute("marketDeptList", marketDeptList);
+			model.addAttribute("fbDeptList", fbDeptList);
+			model.addAttribute("hrDeptList", hrDeptList);
+			model.addAttribute("serviceDeptList", serviceDeptList);
+			model.addAttribute("member", member);
+			model.addAttribute("userName", userName);
+			//-------------------------------------
+			model.addAttribute("list", Jlist);
+			
+			return "pay/jWriterForm";
+		}
+		
 		
 		return "pay/mWriterForm";
 		
@@ -972,6 +993,55 @@ public class PayController {
 		return "redirect:/pay/paymain.page";
 	}
 	
+	
+	
+	@PostMapping("/jReportUpdate.do")
+	public String jReportUpdate(@RequestParam Map<String, Object> map, List<MultipartFile> uploadFiles
+							  , RedirectAttributes redirectAttributes) {
+		
+		String[] delFileNo = (String[]) map.get("delFileNo");
+		
+		
+		//품목들
+		List<Map<String, Object>> list = new ArrayList<>();
+		for(int i=0; i<map.size(); i++) {
+			if(map.get("account" + i) != null && !map.get("account" + i).toString().equals("")) {
+				Map<String, Object> itemMap = new HashMap<>();
+				itemMap.put("account", map.get("account" + i));
+				itemMap.put("usage", map.get("account" + i));
+				itemMap.put("price", map.get("price" + i));
+				list.add(itemMap);
+			}
+		}
+		
+		//추가한 파일들
+		List<Map<String, Object>> fileList = new ArrayList<>();
+		for(MultipartFile uploadFile : uploadFiles) {
+			if(uploadFile != null && !uploadFile.isEmpty()) {
+				Map<String, String> fileMap = fileUtil.fileUpload(uploadFile, "approval");
+				Map<String, Object> file = new HashMap<>();
+				file.put("filePath", fileMap.get("filePath"));
+				file.put("filesystemName", fileMap.get("filesystemName"));
+				file.put("originalName", fileMap.get("originalName"));
+				file.put("RefType", "PJ");
+				file.put("draftNo", map.get("draftNo"));
+				fileList.add(file);
+			}
+		}
+		log.debug("fileLength : {}", map.get("fileLength"));
+		
+		
+		int result = payService.jReportUpdate(map, list, fileList, delFileNoArr);
+		
+		redirectAttributes.addFlashAttribute("alertTitle", "지출결의서");
+		if(result > 0) {
+			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
+		}
+		
+		return "redirect:/pay/paymain.page";
+		
+		
+	}
 	
 
 	

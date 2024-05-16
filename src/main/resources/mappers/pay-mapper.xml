@@ -362,6 +362,8 @@
 			      , SALES_DIVISION
 			      , MANAGER_NAME
 			      , to_char(TOTAL_SALES, '999,999,999,999') TOTAL_SALES
+			      , REPORT_NO
+			      , REPORT_TYPE
 			      , ITEM
 			      , VOLUMES
 			      , SALES_AMOUNT 
@@ -762,8 +764,9 @@
 		</update>
 		
 		<delete id="deleteReport">
-			 delete ITEM
-			  where REPORT_NO = #{expendNo} 
+			 delete from ITEM
+			  where REPORT_NO = #{reportNo} 
+			  and REPORT_TYPE = #{reportType}
 		</delete>
 		
 	 <insert id="updateInsertItems">
@@ -1230,11 +1233,12 @@
 	  
 	 <select id="draftDetail" resultType="map">
 			 SELECT
-						DRAFT_NO
+						  DRAFT_NO
 						, SUM
 						, VAT
 						, TOTAL_SUM
 						, REPORT_NO
+						, REPORT_TYPE
 						, ACCOUNT
 						, CONTENT
 						, AMOUNT
@@ -1256,6 +1260,8 @@
 						, ORIGIN_NAME
 						, ATTACH_PATH
 						, MODIFY_NAME
+						, REF_TYPE
+						,	REF_NO
 				FROM approval A
 				JOIN DRAFT_REPORT DR ON (DOCUMENT_NUMBER = DRAFT_NO)
 				JOIN ITEM I ON (DRAFT_NO = REPORT_NO)
@@ -1272,6 +1278,59 @@
 				  AND A.PAYMENT_WRITER = #{payWriter}
 				  AND A.PAYMENT_WRITER_NO = #{payWriterNo}
 	 </select>
+	 
+	 <update id="updateJReport">
+	 	update DRAFT_REPORT
+	 	   set SUM = #{totalPrice}
+				 , VAT = #{vat}
+				 , TOTAL_SUM = #{totalExpendPrice}
+	 	  where DRAFT_NO = #{draftNo}
+	 </update>
+	 
+	 <delete id="deleteJItem">
+	 	delete ITEM
+		 where REPORT_NO = #{REPORT_NO}
+		   and REPORT_TYPE = #{REPORT_TYPE}
+	 </delete>
+	 
+		<delete id="deleteAttachment">
+			delete from ATTACHMENT 
+		 	 <where>
+				<foreach item="item" collection="array"
+								open="file_no in(" separator="," close=")" >
+							#{item}
+				</foreach>
+			</where>
+		</delete>
+		
+		<insert id="insertAttachment">
+			insert 
+	   				into ATTACHMENT
+	   				(
+	   				  FILE_NO
+	   				, ORIGIN_NAME
+	   				, ATTACH_PATH
+	   				, MODIFY_NAME
+	   				, REF_TYPE
+	   				, REF_NO
+	   				)
+	   				values
+	   				(
+	   				  SEQ_ANO.nextval
+	   				, #{originalName}
+	   				, #{filePath}
+	   				, #{filesystemName}
+	   				, #{RefType}
+	   				, #{draftNo}
+	   				)
+		</insert>
+		
+		
+		
+		
+		
+		
+		
 	  
 	  
    

@@ -187,7 +187,7 @@
 		        </div>
 		    </div>
         
-        
+    
         
         
 		<script>
@@ -217,10 +217,11 @@
     	if(writerNo == "true"){
 	    	 	if(confirm('수정하시겠습니까?')){
 						alert("작성페이지로 이동합니다.");
-							location.href="${contextPath}/pay/mModify.do?documentNo=" + ${list.get(0).EXPEND_NO} 
+							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).DOCUMENT_NUMBER} 
 																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
 																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
-																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}";
+																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
+																									 			+ "&report=j";
 	    		}
     	}else{
     		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
