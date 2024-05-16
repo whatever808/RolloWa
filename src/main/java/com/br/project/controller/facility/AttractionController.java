@@ -1,12 +1,16 @@
 package com.br.project.controller.facility;
 
+import static com.br.project.controller.common.CommonController.getParameterMap;
+
+import java.util.HashMap;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.br.project.dto.facility.AttractionDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.facility.AttractionService;
 import com.br.project.service.location.LocationService;
@@ -31,33 +35,71 @@ public class AttractionController {
 	 * @method : 어트랙션 목록조회
 	 */
 	@RequestMapping("/list.do")
-	public String selectAttractionList() {
-		return "facility/attraction/list";
+	public String selectAttractionList(HttpServletRequest request) {
+		try {
+			return "facility/attraction/list";
+		}catch(Exception e) {
+			e.printStackTrace();
+			request.getSession().setAttribute("alertTitle", "어트랙션 조회서비스");
+			request.getSession().setAttribute("alertMsg", "어트랙션 목록조회에 실패했습니다.");
+			return "redirect:" + request.getHeader("Referer");
+		}
 	}
 	
+	/**
+	 * @method : 어트랙션 목록조회 (AJAX)
+	 */
+	@RequestMapping("/list.ajax")
+	@ResponseBody
+	public List<HashMap<String, String>> ajaxSelectAttractionList(HttpServletRequest request){
+		return null;
+	}
 	
 	/**
-	 * @method : 어트랙션 등록페이지 반환
+	 * @method : 어트랙션 상세조회
+	 */
+	@RequestMapping("/detail.do")
+	public String selectAttraction(HttpServletRequest request) {
+		try {
+			request.setAttribute("attraction", getParameterMap(request));
+			return "facility/attraction/detail";
+		}catch(Exception e){
+			e.printStackTrace();
+			request.getSession().setAttribute("alertTitle", "어트랙션 조회서비스");
+			request.getSession().setAttribute("alertMsg", "어트랙션 상세조회에 실패했습니다.");
+			return "redirect:" + request.getHeader("Referer");
+		}
+	}
+	
+	/**
+	 * @method : 어트랙션 등록페이지
 	 */
 	@RequestMapping("/regist.page")
-	public String showRegistPage(Model model) {
-		// 위치 목록조회 
-		model.addAttribute("locationList", locationService.selectLocationList());
-		return "facility/attraction/regist";
+	public String showRegistPage(HttpServletRequest request) {
+		try {
+			request.setAttribute("locationList", locationService.selectLocationList());
+			return "facility/attraction/regist";
+		}catch(Exception e) {
+			e.printStackTrace();
+			request.getSession().setAttribute("alertTitle", "어트랙션 등록서비스");
+			request.getSession().setAttribute("alertMsg", "어트랙션 등록요청에 실패했습니다.");
+			return "redirect:" + request.getHeader("Referer");
+		}
 	}
 	
 	/**
 	 * @method : 어트랙션 등록
 	 */
 	@RequestMapping("/regist.do")
-	public void insertAttraction(AttractionDto attraction
-								,HttpServletRequest request) {
+	public void insertAttraction(HttpServletRequest request) {
 		try {
+			HashMap<String, Object> params = getParameterMap(request);
 			MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
-			attraction.setRegistEmp(String.valueOf(loginMember.getUserNo()));
-			attraction.setModifyEmp(String.valueOf(loginMember.getUserNo()));
+			params.put("registEmp", loginMember.getUserNo());
+			params.put("modifyEmp", loginMember.getUserNo());
+			params.put("manageEmp", loginMember.getUserNo());
 			
-			if(attractionService.insertAttraction(attraction) > 0) {
+			if(attractionService.insertAttraction(params) > 0) {
 				log.debug("등록성공");
 				// 리스트 페이지 리다이렉트
 			}else {
@@ -73,8 +115,18 @@ public class AttractionController {
 	 * @method : 어트랙션 정보수정 페이지
 	 */
 	@RequestMapping("/modify.page")
-	public String showModifyPage() {
-		return "facility/attraction/modify";
+	public String showModifyPage(HttpServletRequest request) {
+		try {
+			request.setAttribute("locationList", locationService.selectLocationList());
+			request.setAttribute("attraction", attractionService.selectAttraction(getParameterMap(request)));
+			return "facility/attraction/modify";
+		}catch(Exception e) {
+			e.printStackTrace();
+			e.printStackTrace();
+			request.getSession().setAttribute("alertTitle", "어트랙션 수정서비스");
+			request.getSession().setAttribute("alertMsg", "어트랙션 수정요청에 실패했습니다.");
+			return "redirect:" + request.getHeader("Referer");
+		}
 	}
 	
 	

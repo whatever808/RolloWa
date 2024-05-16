@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${ pageContext.request.contextPath }" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,12 +17,12 @@
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
 	<!-- content 추가 -->
-   <div class="content m-5">
+  <div class="content m-5">
 
        <h1 class="page-title">어트랙션 조회</h1>
 
        <!-- attraction status start -->
-       <select class="attraction-status form-select border-primary">
+       <select class="attraction-status form-select" style="width: 200px;">
            <option>전체</option>
            <option>운영중</option>
            <option>운영중지</option>

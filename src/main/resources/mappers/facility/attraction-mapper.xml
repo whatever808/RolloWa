@@ -3,8 +3,45 @@
 
 <mapper namespace="attractionMapper">
 	
+	<!-- 총 어트랙션 갯수 -->
+	<select id="selectTotalAttractionCount" resultType="_int">
+		select count(attraction_no) "totalAttractions"
+		  from tb_attraction
+	</select>
+	
+	<!-- 어트랙션 목록조회 -->
+	<select id="selectAttractionList" resultType="hashmap">
+		select 
+					 attraction_no "attractionNo"
+					,location_no "locationNo"
+					,location_name "locationName"
+					,attraction_name "attractionName"
+					,nvl2(age_limit, age_limit || '세 ' || age_limit_range, '') "ageLimit"
+					,nvl2(height_limit, height_limit || 'cm ' || height_limit_range, '') "heightLimit"
+					,tb_attraction.status "status"
+		 from tb_attraction
+		 join tb_location on (location = location_no)
+	</select>
+	
+	<!-- 어트랙션 상세조회 -->
+	<select id="selectAttraction" resultType="hashmap" parameterType="hashmap">
+		select 
+					 attraction_no "attractionNo"
+					,location_name "locationName"
+					,attraction_name "attractionName"
+					,attraction_intro "attractionIntro"
+					,customer_limit "customerLimit"
+					,nvl2(age_limit, age_limit || '세 ' || age_limit_range, '') "ageLimit"
+					,nvl2(height_limit, height_limit || 'cm ' || height_limit_range, '') "heightLimit"
+					,tb_attraction.status "status"
+					,status_reason "statusReason"
+		 from tb_attraction
+		 join tb_location on (location_no = location)
+		where attraction_no = #{no}
+	</select>
+	
 	<!-- 어트랙션 등록 -->
-	<insert id="insertAttraction" parameterType="AttractionDto">
+	<insert id="insertAttraction" parameterType="hashmap">
 		insert 
 		  into tb_attraction
 		  	   (
@@ -23,25 +60,25 @@
 		  	   ,status_reason
 		  	   )
 		 values 
-		 		(
-		 		 seq_atrtno.nextval
-		 		,#{location}
-		 		,#{registEmp}
-		 		,#{modifyEmp}
-		 		,#{attractionName}
-		 		,#{attractionIntro}
-		 		,#{customerLimit}
-		 		,#{ageLimit}
-		 		,#{ageLimitRange}
-		 		,#{heightLimit}
-		 		,#{heightLimitRange}
-		 		,#{status}
-		 		,#{statusReason}
-		 		)
+			 		(
+			 		 seq_atrtno.nextval
+			 		,#{location}
+			 		,#{registEmp}
+			 		,#{modifyEmp}
+			 		,#{attractionName}
+			 		,#{attractionIntro}
+			 		,#{customerLimit}
+			 		,#{ageLimit}
+			 		,#{ageLimitRange}
+			 		,#{heightLimit}
+			 		,#{heightLimitRange}
+			 		,#{status}
+			 		,#{statusReason}
+			 		)
 	</insert>
 	
 	<!-- 어트랙션 수정 -->
-	<update id="updateAttraction" parameterType="AttractionDto">
+	<update id="updateAttraction" parameterType="hashmap">
 		update tb_attraction
 		   set location = #{location}
 		   	  ,modify_emp = #{modifyEmp}
@@ -56,5 +93,6 @@
 		   	  ,status_reason = #{statusReason}
 		 where attraction_no = #{attractionNo}
 	</update>
+	
 	
 </mapper>
