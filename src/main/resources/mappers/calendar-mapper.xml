@@ -35,19 +35,23 @@ select
     , CAL_PLACE
     , CAL_COLOR
     , calender.GROUP_CODE
+    , member.user_NO
     , code_name
     , upper_code
-    , user_NO
 from 
 	calender
 join 
-     tb_group on ( calender.GROUP_CODE = code ) 
+    tb_group on ( calender.GROUP_CODE = code ) 
 left join 
-     co_worker using (cal_no)      
+     co_worker using (cal_no)
+join 
+    member on (calender.REGIST_EMP = member.USER_NO)
 where 
-	cal_sort = 'D'
+		cal_sort = 'D'
 and 
-     tb_group.GROUP_CODE = 'CALD01'
+    tb_group.GROUP_CODE in 'CALD01'
+and 
+    member.team_code = #{teamCode}
 and 
 	calender.status = 'Y'
 <![CDATA[
@@ -61,8 +65,6 @@ and
        open="and cal_no in (" separator="," close=")" >
         #{num}
     </foreach>
-    order by 
-    		cal_no
 </if>
 </select>
 
@@ -73,7 +75,7 @@ resultType="string">
 	from 
 		co_worker
 	where 
-		user_no = #{userNo}
+		user_no = #{userNO}
 </select>
 
 <!-- 갤린더 일정 등록 쿼리 -->

@@ -19,8 +19,8 @@ import lombok.RequiredArgsConstructor;
 public class CalendarDao {
 	private final SqlSessionTemplate sqlSession;
 
-	public List<CalendarDto> ajaxSelectPCalendar(Map<String, Object> map) {
-		return sqlSession.selectList("calMapper.ajaxSelectPCalendar", map);
+	public List<CalendarDto> ajaxSelectPCalendar(Map<String, Object> request) {
+		return sqlSession.selectList("calMapper.ajaxSelectPCalendar", request);
 	}
 
 	public int insertCal(CalendarDto calendar) {

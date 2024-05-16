@@ -25,15 +25,16 @@ public class CalendarService {
 	 * @author dpcks
 	 * @return
 	 */
-	public List<CalendarDto> ajaxSelectPCalendar(Object userNo) {
-		Map<String, Object> map = new HashMap<>();
-		if(userNo != null) {
-			List<String> calNoList = calDao.selectCalNO(userNo);
-			map.put("calNoList", calNoList);
-			log.debug("calNoList == {}", calNoList);
+	public List<CalendarDto> ajaxSelectPCalendar(Map<String, Object> request) {
+		Object userNO = request.get("userNO");
+		log.debug("userNO {}",userNO);
+		if(userNO != null) {
+			List<String> calNoList = calDao.selectCalNO(userNO);
+			request.put("calNoList", calNoList);
+			//log.debug("calNoList == {}", calNoList);
 		}
 		
-		return calDao.ajaxSelectPCalendar(map);
+		return calDao.ajaxSelectPCalendar(request);
 	}
 
 	/**
@@ -124,14 +125,14 @@ public class CalendarService {
 	/**
 	 * @return
 	 */
-	public Map<String, List<CalendarDto>> ajaxMainCalendar() {
-		List<CalendarDto> depart = calDao.ajaxSelectPCalendar(null);
+	public Map<String, Object> ajaxMainCalendar(HashMap<String, Object> map) {
+		List<CalendarDto> depart = calDao.ajaxSelectPCalendar(map);
 		List<CalendarDto> company = calDao.ajaxCompanyCalendar();
 		
-		Map<String, List<CalendarDto>> map = new HashMap<>();
 		
 		map.put("depart", depart);
 		map.put("company", company);
+		map.remove("teamCode");
 		
 		return map;
 	}

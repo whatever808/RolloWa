@@ -200,7 +200,7 @@
 				<br>
 				<br>
 				<div class="search-date">
-				  <select name="calSort" class="custom-select custom-select-sm">
+				  <select name="calSort" class="form-select" style="width: fit-content;">
 				    <option value="C" selected>Company</option>
 				    <option value="D">Department</option>
 

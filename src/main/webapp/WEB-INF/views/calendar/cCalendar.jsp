@@ -238,9 +238,14 @@
 					  })
 				  }
 				  
+				  function checkAdmin(){
+					  
+				  }
+				  
 		   		/* document 후 실행 될 함수 */
 					$(document).ready(function(){
 						addEvent();
+						condole.log('${loginMember}');
 					})
 				</script>
         <!-- 컨텐츠 영역 -->

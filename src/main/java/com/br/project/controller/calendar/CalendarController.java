@@ -20,8 +20,10 @@ import com.br.project.dto.calendar.CalendarDto;
 import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.dto.pay.VacationDto;
 import com.br.project.service.calendar.CalendarService;
 import com.br.project.service.common.department.DepartmentService;
+import com.br.project.service.pay.VacationService;
 import com.br.project.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CalendarController {
 	private final CalendarService calService;
 	private final DepartmentService dService;
-
+	private final VacationService vService;
 
 	/**
 	 * 일정 캘린더를 이동 하면서 부서 내부에 팀원 과 부서 카테고리를 조회해서 가져오는 매서드
@@ -45,7 +47,7 @@ public class CalendarController {
 	@GetMapping("/pCalendar.page")
 	public ModelAndView importPCalendar(HttpSession session, ModelAndView mv) {
 		
-		MemberDto member = (MemberDto)session.getAttribute("loginUser");
+		MemberDto member = (MemberDto)session.getAttribute("loginMember");
 		
 //		String teamCode = member.getTeamCode();
 		String teamCode = "A";
@@ -77,11 +79,19 @@ public class CalendarController {
 	 */
 	@ResponseBody
 	@PostMapping(value="/selectCal.ajax", produces="application/json")
-	public List<CalendarDto> ajaxSelectPCalendar(@RequestBody Map<String, Object> request) {
+	public Map<String, Object> ajaxSelectPCalendar(@RequestBody Map<String, Object> request,
+												 HttpSession session) {
 		//log.debug("userNo {}", request.get("userNO"));
-		List<CalendarDto> list = calService.ajaxSelectPCalendar(request.get("userNO"));
-		//log.debug("list = {}", list);
-		return list;
+		MemberDto member = (MemberDto)session.getAttribute("loginMember");
+		//request.put("team", member.getTeamCode());
+		request.put("teamCode", "A");
+
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("list", calService.ajaxSelectPCalendar(request));
+		map.put("vacaList", vService.ajaxSelectVacation(request.get("userNO")));
+		
+		return map;
 	}
 
 

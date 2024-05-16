@@ -163,48 +163,48 @@
 	   	
 		  /* 캘린더 이벤트를 믈릭시 실행되는  */
 			function modalOn(info){
-				$(document).on('opening', '#cal_modal', function (e) {
-						const event = info.event;
-				    const extend = info.event.extendedProps;
-				    $('#color-style').val(event.backgroundColor);
-				    $('#currentDate1').val(event.startStr.slice(0,10));
-				    $('#currentTime1').val(event.startStr.slice(11));
-				    $('#currentDate2').val(event.endStr.slice(0,10));
-				    $('#currentTime2').val(event.endStr.slice(11));
-				    $('#cal_modal').find('.content-text-area').val(extend.content);
-				    $('#cal_modal').find('input[name=place]').val(extend.place);
-				    $('input[name=calTitle]').val(extend.caltitle);
-				    $('input[name=calNO]').val(event.id);
-				    /* 카테고리를 선택하는 부분 */
-						if(extend.calSort == 'P'){
-							$('#cal_modal').find('input[name=calSort]').attr('checked', true);										
-						}else{
+			  console.log(info.event.extendedProps.status);
+			  if(info.event.extendedProps.status != 'Y'){
+					$(document).on('opening', '#cal_modal', function (e) {
+							const event = info.event;
+					    const extend = info.event.extendedProps;
+					    $('#color-style').val(event.backgroundColor);
+					    $('#currentDate1').val(event.startStr.slice(0,10));
+					    $('#currentTime1').val(event.startStr.slice(11));
+					    $('#currentDate2').val(event.endStr.slice(0,10));
+					    $('#currentTime2').val(event.endStr.slice(11));
+					    $('#cal_modal').find('.content-text-area').val(extend.content);
+					    $('#cal_modal').find('input[name=place]').val(extend.place);
+					    $('input[name=calTitle]').val(extend.caltitle);
+					    $('input[name=calNO]').val(event.id);
+					    /* 카테고리를 선택하는 부분 */
 							const $cate = $('input[name=groupCode]');
 							for (let i = 0; i<$cate.length; i++){
 								if($cate[i].value == extend.groupCode){
 									$cate[i].checked = true;
 								}
 							}
-						}
-						/* 동료 체크 부분 초기화 */
-						$('input[name=coworker]').each(function(){
-	       				$(this).prop('checked', false);
-	    			})
-	    
-						/* 동료를 체크하는 부분   */
-						extend.cowoker.forEach(w => {
-							$('input[name=coworker]').each(function() {
-								if ($(this).val() == w.userNo) {
-									 $(this).prop('checked', true);
-								}
-						  })
-						})
-							
-				}) //ismodal open function
-     	 	
-     	 	$('#cal_modal').iziModal('setSubtitle', info.event.id);  
-     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
-  			$('#cal_modal').iziModal('open');
+						
+							/* 동료 체크 부분 초기화 */
+							$('input[name=coworker]').each(function(){
+		       				$(this).prop('checked', false);
+		    			})
+		    
+							/* 동료를 체크하는 부분   */
+							extend.cowoker.forEach(w => {
+								$('input[name=coworker]').each(function() {
+									if ($(this).val() == w.userNo) {
+										 $(this).prop('checked', true);
+									}
+							  })
+							})
+								
+					}) //ismodal open function
+	     	 	
+	     	 	$('#cal_modal').iziModal('setSubtitle', info.event.id);  
+	     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
+	  			$('#cal_modal').iziModal('open');
+			  }// if End
 			}
 		  
 		  /* 이벤트를 불러들어 오는 부분 */
@@ -214,9 +214,11 @@
 					type:'post',
 				  contentType: 'application/json',
 					data:JSON.stringify({ userNO: num }),
-					success:function(list){
+					success:function(map){
+						console.log(map);
+						
 						removeAll();
-						list.forEach((e) => {
+						map.list.forEach((e) => {
 							 calendar.addEventSource(
 							 [{
 									  id:						e.calNO,
@@ -231,6 +233,20 @@
 											calSort:  	e.calSort,
 											groupCode: 	e.groupCode,
 											cowoker:		e.coworker
+											}		 
+								 }]
+							 );
+						})
+						map.vacaList.forEach((e) => {
+							 calendar.addEventSource(
+							 [{
+									  id:						e.vacaNO,
+										title:				e.group.upperCode+ e.group.codeName + e.member.userName,
+										start: 				e.vacaStart,
+										end:					e.vacaEnd,
+										color: 				e.vacaColor,
+										extendedProps:{
+											status:			e.vacationApprorvalStatus,
 											}		 
 								 }]
 							 );
@@ -278,6 +294,7 @@
 				addEvent(null);
 
 				$('.memebrdiv-area div').click(function(){
+					//console.log($(this).next().val());
 					addEvent($(this).next().val());
 				})
 			})
