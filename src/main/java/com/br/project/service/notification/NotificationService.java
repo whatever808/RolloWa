@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.br.project.dao.notification.NotificationDao;
 import com.br.project.dto.common.PageInfoDto;
-import com.br.project.dto.fcm.NotificationRequest;
 import com.br.project.dto.notification.NotificationDto;
 
 import lombok.RequiredArgsConstructor;
