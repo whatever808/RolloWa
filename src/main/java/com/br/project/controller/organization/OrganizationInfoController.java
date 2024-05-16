@@ -126,8 +126,6 @@ public class OrganizationInfoController {
 	    return organizationService.selectPosition();
 	}
 	
-	
-	
 	// 1.3 조직관리(관리자 전용)
 	@GetMapping("/orgManager.do")
 	public String deptManager(Model model) {

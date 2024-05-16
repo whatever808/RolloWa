@@ -351,6 +351,29 @@
                 </li>
                 <!-- 게시판 관련 (가림꺼 건들지 말것!!!) end -->
                 
+                <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                        조직안내
+                    </button>
+                    <div class="collapse" id="account-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="${ contextPath }/orginfo/orgChart.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
+                            </li>
+                            <li><a href="${ contextPath }/orginfo/list.do"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
+                            </li>
+                            <li><a href="${ contextPath }/orginfo/orgManager.do"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 end ◆◇◆◇◆◇◆◇◆◇◆◇-->
+                
+                
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
