@@ -235,11 +235,11 @@
 	<update id="updateBoard" parameterType="BoardDto">
 		update tb_board
 		   set 
-	   	    title = #{title}
-	   	   ,content = #{content}
-	   	   ,category = #{category}
-	   	   ,status = #{status}
-	   	   ,modify_date = sysdate
+		   	    title = #{title}
+		   	   ,content = #{content}
+		   	   ,category = #{category}
+		   	   ,status = #{status}
+		   	   ,modify_date = sysdate
 		 where board_no = #{boardNo}
 	</update>
 	

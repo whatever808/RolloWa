@@ -139,7 +139,7 @@ public class BoardController {
 	}
 	
 	/**
-	 * @method : 내가 쓴 공지사항 목록조회
+	 * @method : 내가 쓴 공지 or 임시공지 목록조회
 	 */
 	@RequestMapping(value={"/publisher/list.do", "/temp/list.do"})
 	public String showBoardList(@RequestParam(value="page", defaultValue="1") int currentPage
@@ -181,10 +181,10 @@ public class BoardController {
 			
 			if(request.getRequestURL().indexOf("temp") != -1) {
 				// 임시저장 공지사항 목록조회 요청일 경우
-				return "board/publisher/list";				
+				return "board/temp/list";				
 			}else {
 				// 내가 쓴 공지사항 목록조회 요청일 경우
-				return "board/temp/list";
+				return "board/publisher/list";
 			}
 			
 		}catch(Exception e) {
@@ -239,9 +239,8 @@ public class BoardController {
 		try {
 			HashMap<String, Object> params = getParameterMap(request);
 			// 조회할 공지사항 상태값
-			params.put("status", request.getRequestURL().indexOf("tmep") != -1 ? "T" : "Y");
-			log.debug("요청 url : {}", request.getRequestURL());
-			log.debug("상태값 : {}", params.get("status"));
+			params.put("status", request.getRequestURL().indexOf("temp") != -1 ? "T" : "Y");
+			
 			BoardDto board = boardService.selectBoard(params);
 			
 			if(board != null) {
@@ -264,6 +263,7 @@ public class BoardController {
 				redirectAttributes.addFlashAttribute("alertMsg", "유효하지 않은 공지사항입니다.");
 				return "redirect:" + request.getHeader("Referer");
 			}
+			
 		}catch(Exception e){
 			e.printStackTrace();
 			return "redirect:" + request.getDateHeader("Referer");
@@ -325,7 +325,7 @@ public class BoardController {
 	/**
 	 * @method : 공지사항 수정페이지 이동
 	 */
-	@RequestMapping(value="/modify.page")
+	@RequestMapping(value={"/modify.page", "/publisher/modify.page", "/temp/modify.page"})
 	public String showBoardModifyPage(HttpServletRequest request
 									 ,Model model) {
 		try {
@@ -335,10 +335,20 @@ public class BoardController {
 			params.put("upperGroupCode", "DEPT01");
 			params.put("groupCode", "TEAM01");
 			params.put("code", teamCode);
-			
 			model.addAttribute("department", departmentService.selectUppderCode(params));
-			model.addAttribute("board", boardService.selectBoard(getParameterMap(request)));
-			return "board/modify";
+			
+			HashMap<String, Object> parameterMap = getParameterMap(request);
+			parameterMap.put("status", request.getRequestURL().indexOf("temp") != -1 ? "T" : "Y");;
+			model.addAttribute("board", boardService.selectBoard(parameterMap));
+			
+			if(request.getRequestURL().indexOf("publisher") != -1) {
+				return "board/publisher/modify";
+			}else if(request.getRequestURL().indexOf("temp") != -1) {
+				return "board/temp/modify";
+			}else {
+				return "board/modify";				
+			}
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 			return "redirect:" + request.getHeader("Referer");
@@ -348,7 +358,7 @@ public class BoardController {
 	/**
 	 * @method : 공지사항 수정
 	 */
-	@RequestMapping(value={"/modify.do", "/publisher/modify.do"})
+	@RequestMapping(value={"/modify.do", "/publisher/modify.do", "/temp/modify.do"})
 	public String modifyBoard(BoardDto board
 						     ,List<MultipartFile> uploadFiles
 						     ,String[] delFileNoArr
@@ -409,8 +419,14 @@ public class BoardController {
 			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);
 		}
 		
-		return request.getRequestURL().indexOf("publisher") != -1 ? "redirect:/board/publisher/list.do"
-																  : "redirect:/board/list.do";
+		if(request.getRequestURL().indexOf("publisher") != -1) {
+			return "redirect:/board/publisher/list.do";
+		}else if(request.getRequestURL().indexOf("temp") != -1) {
+			return "redirect:/board/temp/list.do";
+		}else {
+			return "redirect:/board/list.do";
+		}
+		
 	}
 	
 	/**
@@ -423,7 +439,8 @@ public class BoardController {
 						   "/delete.do", 
 						   "/publisher/status/modify.do", 
 						   "/publisher/delete.do",
-						   "/temp/post.do"})
+						   "/temp/post.do",
+						   "/temp/delete.do"})
 	public String modifyBoardStatus(HttpServletRequest request
 								   ,RedirectAttributes redirectAttributes) {
 		
@@ -460,19 +477,28 @@ public class BoardController {
 			// 공지사항 및 공지사항 첨부파일 상태값 수정
 			if(boardService.updateBoardStatus(params) > 0) {
 				alertMsg = "공지사항이 " + statusMsg + "되었습니다.";
-				pageURL = requestURL.indexOf("publisher") != -1 ? "/board/publisher/list.do" : "/board/list.do";
+				if(requestURL.indexOf("publisher") != -1) {
+					pageURL = "/board/publisher/list.do";
+				}else if(requestURL.indexOf("temp") != -1) {
+					pageURL = "/board/temp/list.do";
+				}else {
+					pageURL = "/board/list.do";
+				}
+				
+				redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상태변경서비스");
+				redirectAttributes.addFlashAttribute("alertMsg", alertMsg);
+				return "redirect:" + pageURL;
+				
 			}else {
 				alertMsg = "공지사항 " + statusMsg + "이(가) 정상적으로 처리되지 않았습니다.";
-				pageURL = request.getHeader("Referer");
+				return "redirect:" + request.getHeader("Referer");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			alertMsg = "공지사항 " + statusMsg + "요청이 실패되었습니다.";
-			pageURL = request.getHeader("Referer");
-		}finally {
 			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상태변경서비스");
 			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);
-			return "redirect:" + pageURL;
+			return "redirect:" + request.getHeader("Referer");
 		}
 	
 	}

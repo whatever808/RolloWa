@@ -55,9 +55,9 @@
 	            	 <!-- edit area (로그인 사용자 == 게시글 작성자일 경우에만 보여짐) -->
 	            	 <c:if test="${ loginMember.userNo == board.modifyEmp }">
 					       <div class="edit-area">
-					           <a href="${ contextPath }/board/modify.page?no=${ board.boardNo }" class="text-primary">수정하기</a>
-					           <a href="${ contextPath }/board/temp/post.do?no=${ board.boardNo }" class="text-warning temp" id="post-from-temp">등록하기</a>
-					           <a href="${ contextPath }/board/delete.do?boardNo=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y'}" class="text-danger delete">삭제하기</a>
+					           <a href="${ contextPath }/board/temp/modify.page?no=${ board.boardNo }" class="text-primary">수정하기</a>
+					           <a href="${ contextPath }/board/temp/post.do?boardNo=${ board.boardNo }" class="text-warning temp" id="post-from-temp">등록하기</a>
+					           <a href="${ contextPath }/board/temp/delete.do?boardNo=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y'}" class="text-danger delete">삭제하기</a>
 					       </div>
 				       </c:if>
 	            </div>
