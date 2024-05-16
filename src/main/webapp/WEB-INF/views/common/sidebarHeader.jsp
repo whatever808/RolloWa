@@ -409,23 +409,13 @@
                             <li><a href="${ contextPath }/notification/list.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
                             </li>
-                            <li><a href="${ contextPath }/member/logout.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
+                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
                                     out</a></li>
                         </ul>
                     </div>
                 </li>
             </ul>
         </div>
-				
-				<div>
-				<select name="teamCode" id="teamCode">
-					<option value="A">경영지원팀</option>
-					<option value="B">어트랙션 운영팀</option>
-					<option value="C">시설 유지보수팀</option>
-					<option value="D">안전 및 보안팀</option>
-				</select>
-				<button type="button" onclick="sendMessage();">전송</button>
-				</div>
 				
         <div class="b-example-divider b-example-vr"></div>
         <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
@@ -435,20 +425,16 @@
 					$(document).ready(function() {
 						// 웹소켓 연결
 						socket = new SockJS("${contextPath}/alram");
-	
+	//http://localhost:8888/project/board/detail.do?category=department&department=A&condition=&keyword=&no=14
 						socket.onmessage = function(evt) {
-							console.log("메세지 수신");
-							console.log(evt);
-							alertify.confirm('Confirm Title', 'Confirm Message' + evt.data, function(){ 
-								console.log("ok 클릭!");
-								alertify.success('Ok'); }
+							const obj = JSON.parse(evt.data);
+							alertify.confirm('부서 알림', obj.message, function(){ 
+								location.href = "${contextPath}/board/detail.do?category=department&department=" + obj.teamCode + "&condition=&keyword&no=" + obj.boardNo;
+								alertify.success('공지사항 페이지로 이동'); }
 			                , function(){ alertify.error('Cancel')}).set('labels', {ok:'이동하기', cancel:'취소'});;
 						}
 					})
 
-					function sendMessage() {
-						socket.send(JSON.stringify({url: "공지사항 url", noticeNo: "공지사항 번호", teamCode : $("#teamCode").val()}));
-					}
 				</script>
 </body>
 </html>
