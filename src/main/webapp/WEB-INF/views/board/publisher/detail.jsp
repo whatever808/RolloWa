@@ -32,7 +32,7 @@
 	            	<!-- board title -->
 	            	<div class="title">${ board.title }</div>
 						
-					<!-- board info area start  -->
+						 <!-- board info area start  -->
 	                <div class="board-info">
 	                    <div class="info-first">
                     		<img src="${ contextPath }/resources/images/defaultProfile.png" alt="profile image" class="writer-profile-image">
@@ -55,9 +55,9 @@
 	            	 <!-- edit area (로그인 사용자 == 게시글 작성자일 경우에만 보여짐) -->
 	            	 <c:if test="${ loginMember.userNo == board.modifyEmp }">
 					       <div class="edit-area">
-					           <a href="${ contextPath }/board/modify.page?no=${ board.boardNo }" class="text-primary">수정하기</a>
-					           <a href="${ contextPath }/board/status/modify.do?boardNo=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y' }" class="text-warning temp">임시저장으로 변경</a>
-					           <a href="${ contextPath }/board/delete.do?boardNo=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y'}" class="text-danger delete">삭제하기</a>
+					           <a href="${ contextPath }/board/publisher/modify.page?no=${ board.boardNo }" class="text-primary">수정하기</a>
+					           <a href="${ contextPath }/board/publisher/status/modify.do?boardNo=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y' }" class="text-warning temp">임시저장으로 변경</a>
+					           <a href="${ contextPath }/board/publisher/delete.do?boardNo=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y'}" class="text-danger delete">삭제하기</a>
 					       </div>
 				       </c:if>
 	            </div>
@@ -110,20 +110,13 @@
 	        <div class="change-board">
 	
 	            <!-- move to previous board -->
-	            <a id="prev-board" class="list list-group list-group-item-action list-group-item-light">
-	            	<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-					  <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
-					</svg>
-					<span id="prev-board-title"></span>
-	            </a>
+	            <a id="prev-board" class="list list-group list-group-item-action list-group-item-light">이전 게시글 제목</a>
 	            
 	            <!-- move to board list page -->
 	            <a id="list-board" class="list list-group list-group-item-action list-group-item-warning">목록</a>
 	
 	            <!-- move to next board -->
-
 				<a id="next-board" class="list list-group list-group-item-action list-group-item-light">다음 게시글 제목</a>
-
 	
 	        </div>
 	        <!-- board change button area end -->
@@ -167,8 +160,10 @@
 	    // attachment list show or hide function end ------------------------------------------------------------------------
 		
 	    // 공지사항 목록조회 ======================================================================================================		 
+	    // 현재 공지사항의 URL 파라미터값 스트링 객체
+		 const urlParams = new URLSearchParams(location.search);
 	    $.ajax({
-	    	url:"${ contextPath }/board/detail/list.ajax",
+	    	url:"${ contextPath }/board/publisher/detail/list.ajax",
 	    	method:"get",
 	    	data:urlParams.toString(),
 	    	success:function(boardList){
@@ -199,10 +194,9 @@
 					 					 .css("pointer-events", "none");
 	    		}
 
-
 	    		// 공지사항 목록 이동
 	    		urlParams.delete("no");
-	    		$("#list-board").attr("href", "${ contextPath }/board/list.do?" + urlParams.toString());
+	    		$("#list-board").attr("href", "${ contextPath }/board/publisher/list.do?" + urlParams.toString());
 	    		
 	    	},error:function(){
 	    		console.log("공지사항 목록조회 AJAX 실패");
@@ -213,13 +207,7 @@
 	    function moveBoard(element, boardNo, boardWriter){
 			// 글번호 파라미터값 변경
 			urlParams.set("no", boardNo);
-	   	if(${ loginMember.userNo } != boardWriter){
-	  			// 로그인 사용자가 이전 or 다음 공지사항의 작성자가 아닐경우
-	  			element.attr("href",  "${ contextPath }/board/reader/detail.do?" + urlParams.toString());
-	  		}else{
-	  			// 로그인 사용자가 이전 or 다음 공지사항의 작성자일 경우
-	  			element.attr("href", "${ contextPath }/board/detail.do?" + urlParams.toString());
-	  		}
+			element.attr("href", "${ contextPath }/board/publisher/detail.do?" + urlParams.toString());
 	    }
 	    
 	    // 임시저장으로 변경 or 공지사항 삭제요청시 요청사항 확인용 function ============================================================================
@@ -233,23 +221,6 @@
 	    
 	})
 	
-    // 현재 공지사항의 URL 파라미터값 스트링 객체
-	const urlParams = new URLSearchParams(location.search);
-	
-	// 이전 | 다음 공지사항 페이지 이동
-    function moveBoard(element, boardNo, requestBoardWriter){
-		// 글번호 파라미터값 변경
-		urlParams.set("no", boardNo);
-		
-   		if(${ loginMember.userNo } != requestBoardWriter){
-  			// 로그인 사용자가 이전 공지사항의 작성자가 아닐경우
-  			element.attr("href",  "${ contextPath }/board/reader/detail.do?" + urlParams.toString());
-  		}else{
-  			// 로그인 사용자가 이전 공지사항의 작성자일 경우
-  			element.attr("href", "${ contextPath }/board/detail.do?" + urlParams.toString());
-  		}
-		
-    }
 	
 </script>
 

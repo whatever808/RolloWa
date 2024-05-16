@@ -321,27 +321,35 @@
                     </div>
                 </li>
                 
-                <!-- 게시판 관련 (가림꺼 건들지 말것!!!) start -->
+                <!-- ======================================= "가림" 구역 start ======================================= -->
+                <!-- ======================================= 게시판 관련 start ======================================= -->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                        data-bs-toggle="collapse" data-bs-target="#board-collapse" aria-expanded="false">
                         게시판
                     </button>
-                    <div class="collapse" id="dashboard-collapse">
+                    <div class="collapse" id="board-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         	
                             <li><a href="${ contextPath }/board/list.do"
                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 조회</a>
                             </li>
-                            <!-- 나중에 권한체크 추가하가(부장만 작성가능) -->
-                           	<li><a href="${ contextPath }/board/post.page"
-                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 등록</a>
-                           	</li>
+                            <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
+                          	 <li><a href="${ contextPath }/board/post.page"
+                                  class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 등록</a>
+                          	 </li>
                             
-                            <!-- 
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
+                            <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
+                            <li><a href="${ contextPath }/board/publisher/list.do?page=1&category=normal&department=&condition=&keyword="
+                                   class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">등록공지보관함</a>
                             </li>
+                            
+                            <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
+                            <li><a href="${ contextPath }/board/temp/list.do?page=1&category=normal&department=&condition=&keyword="
+                                   class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">임시공지보관함</a>
+                            </li>
+                            
+                            <!--
                             <li><a href="#"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
                             </li>
@@ -349,7 +357,55 @@
                         </ul>
                     </div>
                 </li>
-                <!-- 게시판 관련 (가림꺼 건들지 말것!!!) end -->
+                
+                <script>
+                	$(document).ready(function(){
+                		// 로그인 회원 정보조회
+                		$.ajax({
+                    		url:"${ contextPath }/member/memInfo.do",
+                    		method:"get",
+                    		data:"userId=${ loginMember.userNo }",
+                    		success:function(memInfo){
+                    			// 부장 or 사장일 경우, 공지사항 작성메뉴 노출
+                    			if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
+                    				$(".board-publisher").removeClass("d-none");
+                    			}
+                    		},error:function(){
+                    			console.log("로그인 회원 정보조회 AJAX 실패");
+                    		}
+                    	})
+                	})
+                </script>
+                <!-- ======================================= 게시판 관련 end ======================================= -->
+                
+                <!-- ======================================= 어트랙션 관련 start ======================================= -->
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#attraction-collapse" aria-expanded="false">
+                        어트랙션
+                    </button>
+                    <div class="collapse" id="attraction-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        	
+                            <li><a href=""
+                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 조회</a>
+                            </li>
+                            
+                            <li><a href="${ contextPath }/attraction/regist.page"
+                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
+                            </li>
+                            
+                            <li><a href=""
+                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
+                            </li>
+                            
+                            
+                        </ul>
+                    </div>
+                </li>
+                <!-- ======================================= 어트랙션 관련 end ======================================= -->
+               
+                <!-- ======================================= "가림" 구역 end ======================================= -->
                 
                 <!-- calendar page -->
                 <li class="mb-1">

@@ -1,0 +1,74 @@
+.page-title{
+    margin-bottom: 50px;
+    font-weight: bold;
+    font-family: "Jua";
+}
+
+/* ------------- board category ------------- */
+#filter-category{
+	
+}
+#category{
+	display: inline-block;
+    width: 200px;
+}
+#department{
+	display: inline-block;
+	margin-left: 50px;
+	width: 200px;
+}
+
+/* ------------- search form ------------- */
+#filter-search{
+	float: right;
+}
+#keyword, #condition, #search-btn, #reset-search{
+	height: 40px;
+}
+#condition{
+    display: inline-block;
+    width: 150px;
+}
+#keyword{
+	border: 1px solid lightgray;
+}
+
+/* ------------- reset search value ------------- */
+#reset-search{
+	display: inline-block;
+	color: #2985DB;
+	width: 160px;
+	align-content: center;
+}
+#reset-search:hover{
+	cursor: pointer;
+}
+
+/* ------------- board list ------------- */
+.board-list{
+    margin-top: 150px;
+    text-align: center;
+}
+.board-list tbody>tr>.board-title{
+    cursor: pointer;
+}
+.bi-star:hover{ 
+    cursor: pointer; 
+}
+.board-writer-profile{
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+}
+
+/* ------------- pagination ------------- */
+.board-list-pagination{
+    margin-top: 90px;
+    display: flex;
+    justify-content: center;
+    align-itmes: center;
+    
+}
+.board-list-pagination>.pagination span:hover{
+		cursor: pointer;
+}
