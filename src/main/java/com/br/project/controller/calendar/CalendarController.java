@@ -308,24 +308,24 @@ public class CalendarController {
 	 * Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `[Ljava.lang.String;` from Object value (token `JsonToken.START_OBJECT`); 
 	 * nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot deserialize value of type `[Ljava.lang.String; ` from Object value (token `JsonToken.START_OBJECT`)<EOL> at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 1, column: 1]]
 	 */
-	@ResponseBody
-	@PostMapping(value="/deletedCheck.do")
-	public void ajaxDeleredCal(@RequestBody Map<String, Object> request) {
-		Object str = request.get("check");
-		 log.debug("check  { }", str);
-	}
-	
-//	/**
-//	 * 체크된 일정 번호를 받아와서 상태를 'N'으로 변경하는 매서드 
-//	 * @param request	체크된 값들을 배열로 받기위한 필요 매개변수
-//	 * @return 			삭게된 행수를 반환
-//	 */
 //	@ResponseBody
-//	@PostMapping(value="/deletedCheck.do", produces = "application/json; charset=utf8")
-//	public int ajaxDeletedCal(HttpServletRequest request) {
-//		 String[] values = request.getParameterValues("check");
-//		 //log.debug("values: {}", Arrays.toString(values));
-//		 return calService.ajaxDeletedCal(values);
+//	@PostMapping(value="/deletedCheck.do")
+//	public void ajaxDeleredCal(@RequestBody Map<String, Object> request) {
+//		Object str = request.get("check");
+//		 log.debug("check  { }", str);
 //	}
+	
+	/**
+	 * 체크된 일정 번호를 받아와서 상태를 'N'으로 변경하는 매서드 
+	 * @param request	체크된 값들을 배열로 받기위한 필요 매개변수
+	 * @return 			삭게된 행수를 반환
+	 */
+	@ResponseBody
+	@PostMapping(value="/deletedCheck.do", produces = "application/json; charset=utf8")
+	public int ajaxDeletedCal(HttpServletRequest request) {
+		 String[] values = request.getParameterValues("check");
+		 //log.debug("values: {}", Arrays.toString(values));
+		 return calService.ajaxDeletedCal(values);
+	}
 
 }
