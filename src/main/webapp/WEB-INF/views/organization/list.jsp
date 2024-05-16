@@ -119,8 +119,7 @@
 	                <!-- 검색 메뉴 1 : 부서명-->
                 	<th>부서명</th>
 	                <td>
-	                    <select name="department" id="department" class="form-control">
-	                        	<!-- <option value="전체 부서">전체 부서</option> -->
+	                    <select name="department" id="department" class="form-select">
                     	</select>
 	                </td>
 	                <!-- 검색 메뉴 2 : 전화번호 -->
@@ -133,8 +132,7 @@
 	                <!-- 검색 메뉴 3 : 팀명 -->
 	                <th>팀명</th>
 	                <td>
-	                    <select name="team" id="team" class="form-control">
-	                        	<!-- <option value="전체 팀">전체 팀</option> -->
+	                    <select name="team" id="team" class="form-select">
                     	</select>
 	                </td>
 	                <!-- 검색 메뉴 4 : 이름 -->

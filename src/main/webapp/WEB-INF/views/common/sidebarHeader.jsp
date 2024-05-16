@@ -354,20 +354,43 @@
                 <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                        data-bs-toggle="collapse" data-bs-target="#org-collapse" aria-expanded="false">
                         조직안내
                     </button>
-                    <div class="collapse" id="account-collapse">
+                    <div class="collapse" id="org-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="${ contextPath }/orginfo/orgChart.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
+                            <li>
+                            	<a href="${ contextPath }/orginfo/orgChart.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
                             </li>
-                            <li><a href="${ contextPath }/orginfo/list.do"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
+                            <li>
+                            	<a href="${ contextPath }/orginfo/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
                             </li>
-                            <li><a href="${ contextPath }/orginfo/orgManager.do"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
+                            <li>
+                            	<a href="${ contextPath }/orginfo/orgManager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
                             </li>
+                        </ul>
+                    </div>
+                </li>
+                
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#mem-collapse" aria-expanded="false">
+                        구성원 관리
+                    </button>
+                    <div class="collapse" id="mem-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li>
+                            	<a href="${ contextPath }/attendance/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">출결 조회</a>
+                            </li>
+                            <li>
+                            	<a href="${ contextPath }/attendance/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</a>
+                            </li>
+                            <li>
+                            	<a href="${ contextPath }/attendance" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 상세 조회</a>
+                            </li>
+                            <li>
+                            	<a href="${ contextPath }/attendance/signup.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 추가</a>
+							</li>
                         </ul>
                     </div>
                 </li>

@@ -48,7 +48,7 @@ public class AttendanceController {
 			@RequestParam(value = "nowDate", required = false) String nowDate, ModelAndView mv) {
 
 		if (nowDate == null || nowDate.isEmpty()) {
-			// 오늘 날짜를 얻어옵니다.
+			// 오늘 날짜
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREA);
 			nowDate = sdf.format(new Date());
 		}
@@ -67,6 +67,37 @@ public class AttendanceController {
 				.addObject("attendanceCount", attendanceCount).addObject("nowDate", nowDate)
 				.setViewName("attendance/list");
 
+		return mv;
+	}
+	// 2.2 출결 검색
+	@GetMapping("/search.do")
+	public ModelAndView search(@RequestParam(value="page", defaultValue="1") int currentPage,
+					   @RequestParam Map<String, String> search,
+					   ModelAndView mv) {
+		
+		String department =search.get("department"); 
+		String team = search.get("team");
+		
+		if(department.equals("전체 부서")) {
+			search.put("department", "");
+		}
+		if(team.equals("전체 팀")) {
+			search.put("team", "");
+		}
+		
+		log.debug("◆◇◆◇◆◇◆◇◆ 출결 검색 ◆◇◆◇◆◇◆◇◆");
+		log.debug(" search: {}", search);
+		
+		int listCount = organizationService.selectSearchListCount(search);
+		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
+		List<MemberDto> list = organizationService.selectSearchList(search, pi);
+		
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .addObject("listCount", listCount)
+		  .addObject("search", search)
+		  .setViewName("attendance/list");
+		
 		return mv;
 	}
 
@@ -101,31 +132,43 @@ public class AttendanceController {
 		return "redirect:/";
 	}
 
-	/* 1. 부서 조회 */
+	// select box 컨트롤러
+	// 1. 부서 조회
 	@ResponseBody
 	@GetMapping("/department.do")
 	public List<GroupDto> selectDepartment() {
-		log.debug("부서 조회 실행");
-	    return organizationService.selectDepartment();
+		log.debug("◆◇◆◇◆◇◆◇◆ 부서 조회 실행 ◆◇◆◇◆◇◆◇◆");
+
+		return organizationService.selectDepartment();
 	}
-	/* 2. 팀 조회 */
+	// 2. 팀 조회
 	@ResponseBody
 	@GetMapping("/team.do")
 	public List<GroupDto> selectTeam(@RequestParam("selectedDepartment") String selectedDepartment) {
-		log.debug("팀 조회 실행");
+		log.debug("◆◇◆◇◆◇◆◇◆ 팀 조회 실행 ◆◇◆◇◆◇◆◇◆");
 		log.debug("selectedDepartment 값 : {}", selectedDepartment);
-		List<GroupDto> result = organizationService.selectTeam(selectedDepartment); 
-		log.debug("result출력 : {}", result);
+		
+		// 초기값 설정
+		List<GroupDto> result = null;
+		
+		if(selectedDepartment.equals("전체 부서")) {
+			result = organizationService.selectTeamAll(selectedDepartment); 
+		} else {
+			result = organizationService.selectTeam(selectedDepartment); 
+		}
+		
+		//log.debug("result출력 : {}", result);
 		
 	    return result;
 	}
-	/* 3. 직급 조회 */
+	// 3. 직급 조회
 	@ResponseBody
 	@GetMapping("/position.do")
 	public List<GroupDto> selectPosition() {
 		log.debug("직급 조회 실행");
 	    return organizationService.selectPosition();
 	}
+	// 4. 
 	
 	
 	/*

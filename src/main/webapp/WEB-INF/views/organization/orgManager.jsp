@@ -165,12 +165,6 @@
 	        departmentList.appendChild(newDepartment);
 	        alert("부서가 추가되었습니다.");
 	    }
-		
-		// 팀 추가
-		function addTeam(){
-			
-		}
-		
 		// 부서 삭제
 		function deleteDepartment(button) {
 		    // 삭제할 부서 요소의 부모 노드(li) 찾기
@@ -179,6 +173,33 @@
 		    departmentItem.parentNode.removeChild(departmentItem);
 		    alert("부서가 삭제되었습니다.");
 		}
+		
+		// 팀 추가
+	    function addTeam() {
+	        let newTeam = document.createElement("li");
+	        newTeam.innerHTML = `
+	            <ul>
+	                <li>
+						<a href="#"><span class="level3">새로운 팀</span></a>
+						<button class="btn btn-danger delete_team" onclick="deleteTeam();">팀 삭제</button>
+	                </li>
+	            </ul>
+	        `;
+	
+	        // 새로운 부서 요소 추가
+	        let TeamList = document.querySelector('.tree > li > ul');
+	        TeamList.appendChild(newTeam);
+	        alert("팀이 추가되었습니다.");
+	    }
+		// 팀 삭제
+		function deleteTeam(button) {
+		    let teamItem = button.parentNode;
+		    // 해당 부서 요소를 부모 노드에서 제거
+		    teamItem.parentNode.removeChild(teamItem);
+		    alert("팀이 삭제되었습니다.");
+		}
+
+		
 		</script>
 		
 		<!-- ------------ -->

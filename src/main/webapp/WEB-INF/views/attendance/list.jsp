@@ -75,17 +75,43 @@
         width: 600px !important;
         text-align: center;
     }
+    .table_1 tr{}
     .table_2{
         font-size: 25px;
         margin: auto;   
         width: 350px;
     }
     /* 조회 메뉴 css */
-    .search_menu td{
-        table-layout: fixed !important;
+    .table_search{
+    	/* display: flex;
+    	flex: wrap; */
+    	justify-content: space-between;
+    	align-items: center;
+    	width: 100% !important;
     }
-    .td_1{
-        text-align: right;
+    .search_menu {
+        flex: 1 1 auto;
+        margin-right: 10px; /* 필요에 따라 조정 */
+    }
+    .employee_count{
+    }
+    .td_search{
+    	display: flex;
+    	align-items: center;
+    	white-space: nowrap;
+    }
+    .td_search input{
+    	width: 150px;
+    }
+    .td_search button{
+    	margin: 0 10px;
+    	width: 100px;
+    }
+    .input_name{
+    	width: 100px;
+    }
+    .search_menu select{
+        width: 150px;
     }
     .employee_info {
         text-align: center;
@@ -119,12 +145,12 @@
 </head>
 <body>
 
-	<!-- 사이드바 영역 -->
-	<jsp:include page="/WEB-INF/views/common/sidebar.jsp"/>
+	<!-- 사이드바 해더 영역 -->
+	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 	
 	<!-- 메인 영역 start -->
 	<div class="main_content">
-	    <h2>직원 검색</h2>
+	    <h2>출결 조회</h2>
 	    <hr>
 	    
 		<!-- ------------ -->
@@ -276,46 +302,190 @@
             </table>
 
             <!-- 직원 출결 데이터 start -->
-            <table class="table table-responsive">
-                <tr class="search_menu">
-                    <td>
-                        <!-- 전체 인원수 -->
-	    				<h5 class="employee_count">전체 ${ listCount }명</h5>
-                        
-                    </td>
-                    <td>
-                        <select name="department" id="department" class="form-control">
-                            <option value="">전체 부서</option>
-                            <option value="">부서1</option>
-                            <option value="">부서2</option>
-                            <option value="">부서3</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select name="" id="" class="form-control">
-                            <option value="">전체 팀</option>
-                            <option value="">1팀</option>
-                            <option value="">2팀</option>
-                            <option value="">3팀</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select name="" id="" class="form-control">
-                            <option value="">전체 상태</option>
-                            <option value="">출근</option>
-                            <option value="">결근</option>
-                            <option value="">퇴근</option>
-                            <option value="">휴가</option>
-                            <option value="">조퇴</option>
-                        </select>
-                    </td>
-                    <td class="td_1">
-                        <input type="text" placeholder="이름 입력">
-                        <button class="btn btn-primary">검색</button>
-                        <button class="btn btn-outline-primary">초기화</button>
-                    </td>
-                </tr>
-            </table>
+            <form id="search_Form" action="${ contextPath }/attendance/search.do" method="GET">
+		    	<input type="hidden" name="page" value="1">
+	            <table class="table table_search">
+	                <tr class="search_menu">
+	                    <td>
+	                        <!-- 전체 인원수 -->
+		    				<h5 class="employee_count">전체 ${ listCount }명</h5>
+	                        
+	                    </td>
+	                    <td>
+	                    	<!-- 부서, 팀, 상태, 이름 검색 -->
+	                        <select name="department" id="department" class="form-select">
+	                        </select>
+	                    </td>
+	                    <td>
+	                        <select name="team" id="team" class="form-select">
+	                    	</select>
+	                    </td>
+	                    <td>
+	                        <select name="status" id="status" class="form-select">
+	                            <option value="">전체 상태</option>
+	                            <option value="">출근</option>
+	                            <option value="">결근</option>
+	                            <option value="">퇴근</option>
+	                            <option value="">휴가</option>
+	                            <option value="">조퇴</option>
+	                        </select>
+	                    </td>
+	                    <td class="td_search">
+	                        <input type="text" id="name" placeholder="이름 입력" class="form-control input_name">
+	                        <button class="btn btn-primary">검색</button>
+	                        <button type="reset" class="btn btn-outline-primary">초기화</button>
+	                    </td>
+	                </tr>
+	            </table>
+            </form>
+            
+        <!-- 검색 기능 : 부서, 팀 조회하기-->
+	    <script>
+			let departmentSelect = $("#department");
+			let teamSelect = $("#team");
+	 		
+			$(document).ready(function(){
+				
+				// 팀 조회 이동
+				selectTeamList();
+				
+				// 부서 조회 이동
+				selectDepartmentList();
+				
+				
+	 		})
+	 		
+	 		
+	 		// 부서조회
+	 		function selectDepartmentList(){
+				departmentSelect.empty();
+				departmentSelect.append($('<option>', {
+					value: "전체 부서",
+					text: "전체 부서"
+				}));
+				
+				$.ajax({
+			 		url:"${contextPath}/attendance/department.do",
+			 		type:"GET",
+			 		async:"false",
+			 		success: function(data){
+			 			
+			 			$.each(data, function(index, organizationDto) {
+			 			    $.each(organizationDto.groupList, function(index, groupDto) {
+			 			        departmentSelect.append($('<option>', {
+			 			            value: groupDto.codeName,
+			 			            text: groupDto.codeName
+						        	}));
+						    	});
+						    });
+			 			
+			 				if(${ not empty search }){
+			 					$("#search_Form #department").children("option").each(function(){
+						        	$(this).val() == "${ search.department }" && $(this).attr("selected", true);
+						        })
+			 				} 
+			 				
+			 		},
+			 		error: function(){
+			 			console.log("ajax 부서 조회 실패 입니다.")
+			 		}
+				});
+			}
+	 		
+	 		// 팀조회
+	 		function selectTeamList(){
+	 			
+	 			teamSelect.empty();
+ 			 	teamSelect.append($('<option>', {
+		 	        value: "전체 팀",
+		 	        text: "전체 팀"
+		 	    }));
+	 			
+		 	    $.ajax({
+		 	        url:"${contextPath}/attendance/team.do?selectedDepartment=" + departmentSelect.val(),
+		 	        type:"GET",
+		 	        async:"false",
+		 	        success: function(data){
+		 	        	
+		 	            $.each(data, function(index, organizationDto) {
+		 	                $.each(organizationDto.groupList, function(index, groupDto) {
+		 	                    teamSelect.append($('<option>', {
+		 	                        value: groupDto.codeName,
+		 	                        text: groupDto.codeName
+		 	                    }));
+		 	                });
+		 	            });
+						if(${ not empty search }){
+		 					$("#search_Form #team").children("option").each(function(){
+					        	$(this).val() == "${ search.team }" && $(this).attr("selected", true);
+					        })
+		 				}
+		 	        },
+		 	        error: function(){
+		 	            console.log("ajax 팀 조회 실패 입니다.")
+		 	        }
+		 	    });
+			}
+	    	
+	 		
+	 		// 부서를 선택했을 경우 실행될 function
+	 		departmentSelect.on("change", function() {
+	 			let selectedDepartment = $(this).val();
+				selectTeamList(selectedDepartment);
+	 		});
+	 		
+	 		
+	 		// 검색 이후 초기화 작동하도록 하기
+	 		/*
+	 		$(document).ready(function(){
+	 		    $("#search_Form button[type=reset]").click(function() {
+	 		        $("#search_Form")[0].reset();
+	 		        
+	 		        $("#search_Form #department").val("전체 부서");
+	 		        $("#search_Form #team").val("전체 팀");
+
+	 		        return false;
+	 		    });
+	 		});
+	 		*/
+	 		
+	 		
+	 		// 검색 버튼
+	 		function search(){
+		 		let department = $("#department").val();
+		 		let phone =  $("#phone").val();
+		 		let team = $("#team").val();
+		 	    let name = $("#name").val();
+		 	 
+	 			$.ajax({
+	 				url:"${contextPath}/attendance/search.do",
+	 				type: "GET",
+	 				data: {
+	 		            department: department,
+	 		            phone: phone,
+	 		            team: team,
+	 		            name: name
+	 		        },
+					success: function(response) {
+	 		            console.log("검색 결과:", response);
+	 		        },
+	 		        error: function() {
+	 		            console.log("검색 요청 실패");
+	 		        }
+	 			})
+	 		}
+	    </script>
+	    
+	    <script>
+	        /* 이름 : 한글만 입력되고 나머지 글자는 공백으로 변환 */
+	        $("#search_Form input[name=name]").on("keyup", function(){
+	            let regExp = $(this).val().replace(/[^가-힣ㄱ-ㅎ]+/g, '');
+	            $(this).val(regExp);
+	        })
+	    </script>
+	    
+            
+            
 
             <!-- 직원 정보 테이블 start-->
             <table class="table employee_info">
@@ -393,6 +563,9 @@
 	
 	</div>
 	<!-- 메인 영역 end-->
+	
+	<!-- 사이드바 푸터 영역 -->
+	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
 		
 </body>
 </html>
