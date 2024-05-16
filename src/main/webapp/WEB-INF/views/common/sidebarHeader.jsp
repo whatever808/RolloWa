@@ -499,18 +499,19 @@
 						}
 						
 						// 채팅용 웹소켓 연결
-						chatting = new SockJS("${contextPath}/endpoint");
+						chatting = new SockJS("${contextPath}/chatting");
 						stompClient = Stomp.over(chatting);
 						stompClient.connect({}, function(frame) {
 							console.log("Connected : " + frame);
-							stompClient.subscribe("${contextPath}/subscribe/test", function() {
-								console.log("수신완료!");
+							stompClient.subscribe("/topic/a", function(msg) {
+								console.log("메세지 전송됨");
+								console.log(msg);
 							})
 						})
 					})
 					
 					function sendMsg() {
-						stompClient.send("${contextPath}/subscribe/test", {}, JSON.stringify({"name" : "test"}));
+						stompClient.send("/app/user", {}, JSON.stringify({name : '${loginMember.userId}'}));
 					}
 
 				</script>

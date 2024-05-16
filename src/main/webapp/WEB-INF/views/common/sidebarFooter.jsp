@@ -19,7 +19,6 @@
         <!-- Modal structure -->
         <div id="people_list">
             <!-- Modal content -->
-            <!-- 스타일에 한해서는 이런식으로 class명을 주시기 바랍니다. -->
             <div class="m_content_style">
                 <div class="people_list">
                     <div class="search_bar form-outline" data-mdb-input-init style="margin-top: 15px;">
@@ -293,7 +292,7 @@
                             </h5>
                             <div class="msg_btn_wrapper btn_wrapper">
                                 <button data-izimodal-open="#people_list" class="btn1 forget_btn"><i
-                                        class="fa-solid fa-comment"></i></button>
+                                        class="fa-solid fa-comment" onclick="selectMember();"></i></button>
                             </div>
 
                             <div class="card" style="margin-top: 10px; overflow: auto;
@@ -698,5 +697,11 @@
         restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
     });
 
+    // 채팅 - 전체 사원 조회
+    function selectMember() {
+    	$.ajax({
+    		url: '${contextPath}/'
+    	})
+    }
 </script>
 </html>

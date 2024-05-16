@@ -1,6 +1,7 @@
 package com.br.project.controller.member;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dto.common.AttachmentDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.service.common.department.DepartmentService;
 import com.br.project.service.member.MemberService;
 import com.br.project.util.FileUtil;
 
@@ -37,6 +39,7 @@ import net.nurigo.sdk.message.service.DefaultMessageService;
 @RequestMapping("/member")
 public class MemberController {
 	private final MemberService memberService;
+	private final DepartmentService departmentService;
 	private final FileUtil fileUtil;
 	private final BCryptPasswordEncoder bcryptPasswordEncoder;
 	DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSVIKI2KIZ8BWZP", "FRCLTDLTRNZ8AYQ3ABSZCF4JOBNBFIGK", "https://api.coolsms.co.kr");
@@ -241,6 +244,13 @@ public class MemberController {
 		}
 		redirectAttributes.addFlashAttribute("alertMsg", "비밀번호 변경 실패. 현재 비밀번호를 다시 확인해주세요.");
 		return "redirect:/member/mypage.page";
+	}
+	
+	// 채팅 - 전체 사원 조회
+	@GetMapping("/select.do")
+	@ResponseBody
+	public List<MemberDto> selectMember() {
+		return memberService.selectAllMember();
 	}
 
 	/* ======================================= "가림" 구역 ======================================= */
