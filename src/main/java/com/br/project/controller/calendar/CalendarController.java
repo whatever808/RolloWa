@@ -309,10 +309,11 @@ public class CalendarController {
 	 * nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot deserialize value of type `[Ljava.lang.String; ` from Object value (token `JsonToken.START_OBJECT`)<EOL> at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 1, column: 1]]
 	 */
 //	@ResponseBody
-//	@PostMapping(value="/deletedCheck.do")
-//	public void ajaxDeleredCal(@RequestBody Map<String, Object> request) {
-//		Object str = request.get("check");
-//		 log.debug("check  { }", str);
+//	@PostMapping(value="/deletedCheck.do", produces = "application/json")
+//	public void ajaxDeleredCal(@RequestBody Map<String, String> map) {
+//		//Object str = request.get("check");
+//		log.debug("request  { }", map);
+////		 log.debug("check  { }", str);
 //	}
 	
 	/**

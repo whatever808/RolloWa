@@ -54,7 +54,7 @@ and
 and 
 	Months_between(START_DATE     , sysdate) <= 6
 and 
-	Months_between(end_DATE		, sysdate) >= -6
+	Months_between(end_DATE				, sysdate) >= -6
 ]]>
 <if test="calNoList != null">
     <foreach item="num" collection="calNoList"
@@ -125,14 +125,14 @@ resultType="string">
 	update
 		calender
 	set 
-		CAL_TITLE 		= #{calTitle}
+		CAL_TITLE 			= #{calTitle}
 		, CAL_CONTENT 	= #{calContent}
-		, START_DATE 	= to_date(#{startDate} 	, 'YYYY-MM-DD HH24:MI:SS')
-		, END_DATE 		= to_date(#{endDate}	, 'YYYY-MM-DD HH24:MI:SS')
-		, CAL_PLACE		= #{place}
-		, CAL_COLOR 	= #{color}
-		, GROUP_CODE 	= #{groupCode}
-		, MODIFY_EMP 	= #{emp}
+		, START_DATE 		= to_date(#{startDate} 	, 'YYYY-MM-DD HH24:MI:SS')
+		, END_DATE 			= to_date(#{endDate}	, 'YYYY-MM-DD HH24:MI:SS')
+		, CAL_PLACE			= #{place}
+		, CAL_COLOR 		= #{color}
+		, GROUP_CODE 		= #{groupCode}
+		, MODIFY_EMP 		= #{emp}
 	where
 		CAL_NO = #{calNO}
 </update>
@@ -263,6 +263,5 @@ set
 where
     cal_no = #{calNO}
 </update>
-
 
 </mapper>

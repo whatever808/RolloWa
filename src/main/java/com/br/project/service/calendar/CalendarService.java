@@ -120,4 +120,19 @@ public class CalendarService {
 	public int ajaxDeletedCal(String[] values) {
 		return calDao.ajaxDeletedCal(values);
 	}
+
+	/**
+	 * @return
+	 */
+	public Map<String, List<CalendarDto>> ajaxMainCalendar() {
+		List<CalendarDto> depart = calDao.ajaxSelectPCalendar(null);
+		List<CalendarDto> company = calDao.ajaxCompanyCalendar();
+		
+		Map<String, List<CalendarDto>> map = new HashMap<>();
+		
+		map.put("depart", depart);
+		map.put("company", company);
+		
+		return map;
+	}
 }

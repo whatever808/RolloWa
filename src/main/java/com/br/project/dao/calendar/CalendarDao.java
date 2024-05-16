@@ -77,5 +77,9 @@ public class CalendarDao {
 	public int companyCalUpdate(CalendarDto calendar) {
 		return sqlSession.update("calMapper.companyCalUpdate", calendar);
 	}
+
+	public List<CalendarDto> ajaxMainCalendar() {
+		return sqlSession.selectList("calMapper.ajaxMainCalendar");
+	}
 	
 }

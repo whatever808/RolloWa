@@ -7,9 +7,6 @@
 <head>
 <meta charset="UTF-8">
 <title>SideBar</title>
-	<!-- animate -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
     <!-- bootstrap -->
     <link href="${ contextPath }/resources/css/common/bootstrap.min.css" rel="stylesheet">
 
@@ -425,7 +422,7 @@
                             <li><a  href="${contextPath}/calendar/companyCalendar.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">회사일정</a>
                             </li>
-                            <li><a href="${contextPath}/calendar/companyControllor.page?page=1"
+                            <li><a href="${contextPath}/calendar/calendarList.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정관리</a>
                             </li>
                         </ul>

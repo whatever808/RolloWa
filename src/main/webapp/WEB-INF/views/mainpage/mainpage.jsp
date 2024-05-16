@@ -10,12 +10,35 @@
 	
 	<!-- 메인페이지 스타일시트 -->
 	<link href="${ contextPath }/resources/css/mainPage/mainPage.css" rel="stylesheet">
+	
+	<!-- fullcalendar -->
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+	<style>
+		/* 캘린더 스타일  */
+		#calendar a {
+			color: rgb(130, 130, 130);
+			text-decoration-line: none;
+		}
+		.fc-button-primary {
+			background-color: rgb(160, 160, 160) !important;
+			border: 0 !important;
+		}
+		.fc-day-sat a {color: #007bff !important;}
+		.fc-day-sun a {color: #dc3545 !important;}
+		.img_postion{
+		   position: absolute;
+		   font-weight: bolder;
+		   color: black;
+		   font-size: x-large;
+		   top: 0px;
+		}
+	</style>
 </head>
 <body>
 	
 	<!-- side bar -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
-	
+	<jsp:include page="/WEB-INF/views/common/mainCal.jsp" />
 	<!-- content 추가 -->
 	<div class="content p-5">
 		
@@ -46,7 +69,7 @@
 			
 			<!-- calendar start -->
 			<div class="calendar box">
-			
+				<div id="calendar"></div>
 			</div>
 			<!-- calendar end -->
 			
