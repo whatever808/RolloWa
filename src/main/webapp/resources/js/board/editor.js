@@ -1,6 +1,6 @@
 // TinyMCE Editor Settings
 tinymce.init({
-	  selector: 'textarea#board-content',
+	  selector: 'textarea#editor',
 	  language:"ko_KR",
 	  menubar: false,
 	  plugins: 'advlist autolink lists link image charmap preview anchor ' +

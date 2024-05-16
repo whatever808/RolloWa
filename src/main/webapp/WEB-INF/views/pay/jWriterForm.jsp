@@ -1,14 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${ pageContext.request.contextPath }" />
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
- 
- 		<!-- 사인관련 스크립트 -->
+<!-- 사인관련 스크립트 -->
 		<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
 		<!-- ------------ -->
@@ -20,10 +19,14 @@
 
     <!-- 결재신청서 공통스타일 -->
     <link href="${contextPath}/resources/css/pay/writer.css" rel="stylesheet">
-   	
-<style>
-		
-    .b-example-divider {
+    
+    
+    <!-- TinyMCE 에디터 CDN 연결 -->
+	   <script src="https://cdn.tiny.cloud/1/kv8msifnng66ha7xgul5sc6cehyxcp480zm27swyti7b7u38/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+	   <!-- TinyMCE 관련 스크립트 -->
+	   <script src="${ contextPath }/resources/js/board/editor.js"></script>
+ <style>
+       .b-example-divider {
         width: 100%;
         height: 3rem;
         background-color: rgba(0, 0, 0, .1);
@@ -150,41 +153,43 @@
 	    BACKGROUND: WHITE;
 	    BORDER: 1PX SOLID WHITE;
     }
-		
-</style>
+    </style>
 
 </head>
 <body>
-
-
-		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
-		
-       <!-- content 추가 -->
+	<!-- <script src="${contextPath}/resources/js/pay/paymodal.js"></script> -->
+	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
+	 <!-- content 추가 -->
         <div class="content p-4">
             <!-- 프로필 영역 -->
             <div class="informations">
                 <!-- informations left area start -->
                 <div class="left_con">
-                    <div><h3>매출 보고서</h3></div>
-                    	<c:choose>
-                    	<c:when test="${ not empty list }">
-	                      <form action="${contextPath}/pay/mReportUpdate.do" method="post" id="myForm">
-	                    	</c:when>
-                    	<c:otherwise>
-		                    <form action="${contextPath}/pay/mReportInsert.do" method="post" id="myForm">
-		                   	</c:otherwise>
-                    	</c:choose>
+                    <div><h3>지출결의서</h3></div>
+                    <c:choose>
+                    	<c:when test="${ empty list }">
+	                    	<form action="${contextPath}/pay/jReportInsert.do" method="post" enctype="multipart/form-data">
+	                    </c:when>
+	                    <c:otherwise>
+	                    	<form action="${contextPath}/pay/jReportUpdate.do" method="post" enctype="multipart/form-data">
+	                    </c:otherwise>
+                    </c:choose>
                         <div id="sign_top">
                             <div id="sign_div_left">
                                 <table border="1" id="sign_left">
                                     <tr>
                                         <th>부 서</th>
-                                        <td>${member.get(0).teamName}</td>                   
+                                        <td>${list.get(0).DEPARTMENT} ${member.get(0).teamName}</td>                   
                                         <input type="hidden" name="deptName" value="${member.get(0).teamName}">
                                         <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
+                                        <input type="hidden" name="draftNo" value="${list.get(0).DRAFT_NO}">
                                         <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
                                         <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
-                                        <input type="hidden" name="writerNo" value="${userNo}"> 
+                                        <input type="hidden" name="writerNo" value="${userNo}">
+                                        <input type="hidden" name="documentNo" value="${list.get(0).DOCUMENT_NUMBER}">
+                                        <input type="hidden" name="writerName" value="${member.get(0).userName}">
+                                        
+                                                                           
                                     </tr>
                                     <tr>
                                         <th>기안일</th>
@@ -192,8 +197,9 @@
                                     </tr>
                                     <tr>
                                         <th>기안자</th>
-                                        <td>${member.get(0).userName}</td>
-                                        <input type="hidden" name="writerName" value="${member.get(0).userName}">
+                                        <td>${list.get(0).PAYMENT_WRITER} ${member.get(0).userName}</td>
+                                        <input type="hidden" name="payWriter" value="${list.get(0).PAYMENT_WRITER}">
+                                        <input type="hidden" name="payWriterNo" value="${list.get(0).PAYMENT_WRITER_NO}">
                                     </tr>
                                     <tr>
                                         <th>상태</th>
@@ -206,11 +212,9 @@
                                     </tr>
                                 </table>
                             </div>
-                           
-
                             <div>
                                 <table id="sign_table">
-                                		<div style="margin: 10px">
+                                		<div style="margin: -12px">
                                         <button data-izimodal-open="#modal" id="modal_btn"><h4>결&nbsp;&nbsp;재&nbsp;&nbsp;승&nbsp;&nbsp;인</h4></button>
                                 		</div>
 		                                <div id="modal">
@@ -301,87 +305,99 @@
                                 </table>
                             </div>
                         </div>
-                                  
-                        <div>
                         
-										    </div>
                         <div id="mid_btn">
                             <button id="plus_btn" type="button">추가</button>
                             <button id="del_btn" type="button">삭제</button>
                         </div>
-                        <div class="table_middle">
-	                         <input type="hidden" name="firstApproval" id="first_name" class="namecheck" value="${ list.get(0).FIRST_APPROVAL }">
-	                         <input type="hidden" name="middleApproval" id="middle_name" class="namecheck" value="${ list.get(0).MIDDLE_APPROVAL }">
-	                         <input type="hidden" name="finalApproval" id="last_name" class="namecheck" value="${ list.get(0).FINAL_APPROVAL }">   
+                       
+                         <div class="table_middle">
+		                         <input type="hidden" name="firstApproval" id="first_name" class="namecheck" value="${ list.get(0).FIRST_APPROVAL }">
+		                         <input type="hidden" name="middleApproval" id="middle_name" class="namecheck" value="${ list.get(0).MIDDLE_APPROVAL }">
+		                         <input type="hidden" name="finalApproval" id="last_name" class="namecheck" value="${ list.get(0).FINAL_APPROVAL }"> 
                             <table border="1" id="tr_table">
                                 <tr>
-                                    <th>매출구분</th>
-                                    <td colspan="2">
-                                        <select name="sales" id="sales" required>
-                                            <option value="상품">상품</option>
-                                            <option value="티켓">티켓</option>
-                                            <option value="음식점">음식점</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>담당자</th>
-                                    <td colspan="2"><input type="text" name="manager" value="${ list.get(0).MANAGER_NAME }" required></td>
-                                </tr>
-                                <tr>
-                                    <th>총매출금액(VAT별도)</th>
-                                    <td colspan="2"><input type="text" name="totalSales" value="${ list.get(0).TOTAL_SALES.toString().trim() }" required style="text-align: right;"></td>
-                                </tr>
-                                <tr>
-                                    <th colspan="3">매출정보</th>
-                                </tr>
-                                <tr>
-                                    <th>품목</th>
-                                    <th style="width: 100px;">수량</th>
-                                    <th>매출금액</th>
+                                    <th>거래처</th>
+                                    <th>사용내역 및 용도</th>
+                                    <th>금액</th>
                                 </tr>
                                 <c:choose>
                                 <c:when test="${ empty list }">
-                                <tr>
-                                    <td><input type="text" class="item" name="item1"></td>
-                                    <td><input type="number" class="count" min="1" name="count1"></td>
-                                    <td><input type="text" class="sales_amount" name="sales2"></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="text" class="item" name="item2"></td>
-                                    <td><input type="number" class="count" min="1" name="count2"></td>
-                                    <td><input type="text" class="sales_amount" name="sales3"></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="text" class="item" name="item3"></td>
-                                    <td><input type="number" class="count" min="1" name="count3"></td>
-                                    <td><input type="text" class="sales_amount" name="sales4"></td>
-                                </tr>
-                                <tr id="tr_input">
-                                    <td><input type="text" class="item" name="item4"></td>
-                                    <td><input type="number" class="count" min="1" name="count4"></td>
-                                    <td><input type="text" class="sales_amount" name="sales5"></td>
-                                </tr>
-                                </c:when>
-                                <c:otherwise>
-	                                <c:forEach var="i" begin="0" end="${ list.size() - 1}">
-	                                	<tr id="tr_input">
-	                                    <td><input type="text" name="item${i}" value="${list.get(i).ITEM}"></td>
-	                                    <td><input type="number" name="count${i}" min="1" value="${list.get(i).VOLUMES}"></td>
-	                                    <td><input type="text" name="sales${i}" value="${list.get(i).SALES_AMOUNT.toString().trim()}"></td>
-	                                	</tr>
-	                                </c:forEach>
-                                </c:otherwise>
+	                                <tr>
+	                                    <td><input type="text" name="account1"></td>
+	                                    <td><input type="text" name="usage1"></td>
+	                                    <td class="num"><input type="text" name="price1"></td>
+	                                </tr>
+	                                <tr>
+	                                    <td><input type="text" name="account2"></td>
+	                                    <td><input type="text" name="usage2"></td>
+	                                    <td class="num"><input type="text" name="price2"></td>
+	                                </tr>
+	                                <tr>
+	                                    <td><input type="text" name="account3"></td>
+	                                    <td><input type="text" name="usage3"></td>
+	                                    <td class="num"><input type="text" name="price3"></td>
+	                                </tr>
+	                                <tr>
+	                                   	<td><input type="text" name="account4"></td>
+	                                    <td><input type="text" name="usage4"></td>
+	                                    <td class="num"><input type="text" name="price4"></td>
+	                                </tr>
+	                               </c:when>
+	                               <c:otherwise>
+	                               	<c:forEach var="i" begin="0" end="${ list.size() - 1 }">
+			                               	<tr>
+			                                   	<td><input type="text" name="account${i}" value="${ list.get(i).ACCOUNT }"></td>
+			                                    <td><input type="text" name="usage${i}" value="${ list.get(i).CONTENT }"></td>
+			                                    <td class="num"><input type="text${i}" name="price"  value="${ list.get(i).AMOUNT }"></td>
+			                                </tr>
+		                                </c:forEach>
+	                               </c:otherwise>
                                 </c:choose>
+                           </table>
+                           <table>
+                                <tr>
+                                    <th colspan="2">합계</th>
+                                    <td><input type="text" name="totalPrice" value="${ list.get(0).SUM }"></td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">부가가치세</th>
+                                    <td><input type="text" name="vat" value="${ list.get(0).VAT }"></td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">총 지출 합계</th>
+                                    <td><input type="text" name="totalExpendPrice"  value="${ list.get(0).TOTAL_SUM }"></td>
+                                </tr>
+                                <tr>
+                                    <th>파일첨부</th>
+                                    <td colspan="2">
+                                    	<input type="file"  name="uploadFiles" multiple>
+                                    </td>
+                                </tr>
+                               <c:if test="${ not empty list }">
+                                <tr id="trFile">
+                                  <th>기존첨부파일</th> 
+                                  <td colspan="2">
+                                   <!-- 기존의 첨부파일 목록들 -->
+		                            		<c:forEach var="at" items="${ list }">
+		                            			<div class="attach">
+		                            				<a href="${contextPath}${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${at.ORIGIN_NAME}">${at.ORIGIN_NAME}</a>
+		                            				<span class="origin_del" data-fileno="${ at.FILE_NO }">x</span>
+		                            			</div>
+		                            		</c:forEach>
+                                  </td>
+                                </tr>
+                               </c:if>
+                               <input type="hidden" name="fileLength">
+                               <input type="hidden" name="fileDelete">
                             </table>
-	                            <input type="hidden" name="items" id="items">
-	                            <input type="hidden" name="counts" id="counts">
-	                            <input type="hidden" name="salesAmounts" id="sales_amounts">
                         </div>
                         <!--버튼 영역-->
                         <div id="btn_div">
-                        		<button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
-                            <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
+
+                            <button type="submit" class="btn btn-primary" id="submit_btn">제출</button>
+ 
+                            <button type="button" class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
                             <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
                         </div>
                         <!------------>
@@ -389,35 +405,36 @@
                 </div>
             </div>
         </div>
+        <script>
+        	$(document).ready(function(){
+        		let atlength = $(".attach").length;
+        		$("#fileLength").val(atlength);
+        		console.log($("#fileLength").val(atlength));
+        	  
+        		if($(".attach").children("a").length == 0){
+        			$("#trFile").remove();
+        		}
+        		
+        	})
+        </script>
         
-    <c:if test="${ not empty list }">
-    <script>
-    	$(document).ready(function(){
-    			$("#status").val("${list.get(0).PAYMENT_STATUS}");
-    			$("#sales").val("${list.get(0).SALES_DIVISION}")
-    	})
-    </script>
-    </c:if>
-     
-    <script>
-    	
-    	$(document).ready(function(){
-    	
-    		$("#insertBtn").on("click", function(){
-	    		$(".namecheck").each(function(){
-		    		if($(this).val() == ""){
-		    			alert("승인자를 선택해주세요.");
-		    			return false;
-		    		}
-	    		})	    	
-    		})
-    	})
-    	
-    </script>
-   
- 
-    
-    <script>
+       <script>
+       	$(document).on("click", ".origin_del", function(){
+       			
+       			let arr = [];
+       			$(".origin_del").each(function(){
+       				arr.push($(this).data("fileno"));
+       			})
+       			
+       			$("#fileDelete").val(arr);
+       			
+       			$(this).parent().remove();
+       			
+       	})
+       
+       </script>
+       
+       <script>
 	    	function submitbtn(){
    					let itemArr = [];
    					let countArr = [];
@@ -454,16 +471,17 @@
     
     <script>
     $(document).ready(function(){
-    
+    	
+    	let i = 40;
     	$(document).on("click", "#plus_btn", function () {
     		
-    		
-    		var result = "<tr>";
-    		result += "<td><input type='text' class='item'></td>";
-    		result += "<td><input type='number' class='count' min='1'></td>";
-    		result += "<td><input type='text' class='sales_amount'></td>";
+    		let result = "<tr>";
+    		result += "<td><input type='text' name='account" + (i) + "'></td>";
+    		result += "<td><input type='text' name='usage" + (i) + "'></td>";
+    		result += "<td class='num'><input type='text' name='price" + (i) + "'></td>";
     		result += "</tr>";
-        
+    		i++;
+    		
        $("#tr_table").children().last().after(result);
        
        
@@ -635,11 +653,9 @@
             $('#modal2').iziModal('open');
         });
     </script>
-        
-        
-        
-   <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
-   
-    
+	
+	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
+	
+
 </body>
 </html>
