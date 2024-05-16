@@ -17,7 +17,6 @@ import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.notification.NotificationDto;
 import com.br.project.service.notification.NotificationService;
 import com.br.project.util.PagingUtil;
-import com.google.firebase.FirebaseApp;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -37,9 +37,9 @@ public class NotificationService {
 		return nDao.deleteNoti(notiNo);
 	}
 
-	// 토큰 등록
-	public void register(String userId, String token) {
-		tokenMap.put(userId, token);
+	// 최신 공지사항 글 번호 조회
+	public int selectLatestBno(String teamCode) {
+		return nDao.selectLatestBno(teamCode);
 	}	
 	
 }
