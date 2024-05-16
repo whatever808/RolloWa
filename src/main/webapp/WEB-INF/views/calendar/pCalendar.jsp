@@ -152,19 +152,18 @@
 	 			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();
 	 			let checkDate =  new Date(date2) >= new Date(date1);
 	 			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
-	       console.log(checkDate);
-	       console.log(checkTime);
+	       //console.log(checkDate);
+	       //console.log(checkTime);
 	       if(checkDate && checkTime){
-	       	return true;
+	    	   updateCal();
 	       }else {
 	       	alert('날짜 및 시간을 확인 해 주세요.');
-	        return false;		        	
 	       }  
 	   	}; 
+	   	
 		  /* 캘린더 이벤트를 믈릭시 실행되는  */
 			function modalOn(info){
 				$(document).on('opening', '#cal_modal', function (e) {
-						console.log(info);
 						const event = info.event;
 				    const extend = info.event.extendedProps;
 				    $('#color-style').val(event.backgroundColor);
@@ -191,7 +190,7 @@
 						$('input[name=coworker]').each(function(){
 	       				$(this).prop('checked', false);
 	    			})
-	    			console.log(extend.cowoker);
+	    
 						/* 동료를 체크하는 부분   */
 						extend.cowoker.forEach(w => {
 							$('input[name=coworker]').each(function() {
@@ -203,8 +202,8 @@
 							
 				}) //ismodal open function
      	 	
-     	 	$('#cal_modal').iziModal('setSubtitle', event.id);  
-     	 	$('#cal_modal').iziModal('setTitle', event.title);  
+     	 	$('#cal_modal').iziModal('setSubtitle', info.event.id);  
+     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
   			$('#cal_modal').iziModal('open');
 			}
 		  
@@ -216,10 +215,7 @@
 				  contentType: 'application/json',
 					data:JSON.stringify({ userNO: num }),
 					success:function(list){
-						console.log(list);
-						/* for(let e of list){
-							console.log(e);
-						} */
+						removeAll();
 						list.forEach((e) => {
 							 calendar.addEventSource(
 							 [{
@@ -247,9 +243,43 @@
 			  })
 		  }
 		  
+	   	/* 일정 update ajax */
+		  function updateCal(){
+	   		//console.log($('#updateForm').serialize());
+			  $.ajax({
+				  url:'${path}/calendar/calUpdate.do',
+				  type: 'post',
+				  data: $('#updateForm').serialize(),
+				  success:function(result){
+						if(result > 0){
+							alert('성공적으로 갱신 되었습니다.');
+						} else {
+							alert('관리자를 호출해 주세요.');
+						}
+					  
+						removeAll();
+					  addEvent(null);
+					  $('#cal_modal').iziModal('close');
+				  },
+				  error:function(){
+					  console.log('update Calendar fail');
+				  }
+			  })
+		  }
+	   	
+	   	function removeAll(){
+			  calendar.getEvents().forEach((e) => {
+				  e.remove();
+			  })
+	   	}
+		  
    		/* document 후 실행 될 함수 */
 			$(document).ready(function(){
 				addEvent(null);
+
+				$('.memebrdiv-area div').click(function(){
+					addEvent($(this).next().val());
+				})
 			})
 		</script>
 		<!-- 컨텐츠 영역 content-area -->
@@ -290,7 +320,7 @@
 	</div>
 	<!-- 상세보기 일정 모달 -->
 	<div id="cal_modal">
-	<form action="${path}/calendar/calUpdate.do" method="post">
+	<form id="updateForm">
 		<input type="hidden" name="calNO">
 		<div>
 			<div class="jua-regular">Title</div>
@@ -300,14 +330,14 @@
 		<div style="display: flex; justify-content: space-between; align-items: center">
 			<div class="jua-regular">Category</div>
 			
-			<div
+<!-- 			<div
 				class="pretty p-default p-round p-smooth font-size20 privateArea"
 				id="privateName">
 				<input type="checkbox" name="calSort" value="P">
 				<div class="state p-danger">
 					<label class="jua-regular">private</label>
 				</div>
-			</div>  
+			</div>   -->
 
 		</div>
 		
@@ -386,7 +416,7 @@
 		<br>
 		
 		<div align="end">
-			<button class="btn btn-outline-warning" onclick="return checkDate();">수정</button>
+			<button class="btn btn-outline-warning" type="button" onclick="checkDate();">수정</button>
 		</div>
 	</form>
 	</div>

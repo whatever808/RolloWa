@@ -200,9 +200,12 @@ resultMap="calResultMap">
     , code_Name
     , cal_title
     , to_date(start_Date, 'YYYY-MM-DD')|| ' ~ ' || to_date(end_date, 'YYYY-MM-DD') duraDate 
-	from calender
-	join tb_group on (calender.GROUP_CODE = CODE and tb_group.GROUP_CODE = 'CALD02')
-	where cal_sort = 'C'
+	from 
+		calender
+	join 
+		tb_group on (calender.GROUP_CODE = CODE and tb_group.GROUP_CODE = 'CALD02')
+	where 
+			cal_sort = #{calSort}
 	and 
 	    calender.status = 'Y'
 <![CDATA[
@@ -222,7 +225,7 @@ resultType="_int">
 	from 
 		calender
 	where 
-		cal_sort = 'C'
+		cal_sort = #{calSort}
 	and 
 	    calender.status = 'Y'
 <![CDATA[

@@ -131,9 +131,8 @@ public class CalendarController {
 							, String[] date, String[] time
 							, HttpSession session
 							, ModelAndView mv) {
-		if(calendar.getCalSort() != "P") {
-			calendar.setCalSort("D");			
-		}
+
+		calendar.setCalSort("D");			
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
 		
@@ -161,10 +160,10 @@ public class CalendarController {
 	 * @param mv		알림 문구와 view단을 선택하는 객체
 	 * @return
 	 */	
+	@ResponseBody
 	@PostMapping("/calUpdate.do")
-	public ModelAndView calUpdate(CalendarDto calendar,
-									String[] date, String[] time
-									, ModelAndView mv) {
+	public int calUpdate(CalendarDto calendar
+						, String[] date, String[] time, ModelAndView mv) {
 		
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
@@ -173,14 +172,7 @@ public class CalendarController {
 		calendar.setEmp("1051");
 		//log.debug("calendar {}", calendar);
 		
-		int result = calService.calUpdate(calendar);
-		
-		if(result > 0 ) {
-			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("redirect:pCalendar.page");
-		}else {
-			mv.addObject("alertMsg", "다시 시도해 주세요.").setViewName("redirect:pCalendar.page");
-		}
-		return mv;
+		return calService.calUpdate(calendar);
 	}
 
 	/**
@@ -234,9 +226,8 @@ public class CalendarController {
 	 */
 	@ResponseBody
 	@PostMapping("/companyCalUpdate.do")
-	public int companyCalUpdate(CalendarDto calendar,
-										String[] date, String[] time
-										, ModelAndView mv) {
+	public int companyCalUpdate(CalendarDto calendar
+								, String[] date, String[] time, ModelAndView mv) {
 		
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
@@ -244,7 +235,7 @@ public class CalendarController {
 		//calendar.setCalNO(String.valueOf(member.getUserNo()));
 		calendar.setEmp("1050");
 		calendar.setCalSort("C");
-		log.debug("################# calendar {}", calendar);
+		//log.debug("calendar {}", calendar);
 		
 		return calService.companyCalUpdate(calendar);
 	}
@@ -252,8 +243,8 @@ public class CalendarController {
 	/**
 	 * 회사 일정을 List로 보여주는 위한 페이지로 이동하는 매서드
 	 */
-	@GetMapping("/companyList.page")
-	public void companyControllor() {}
+	@GetMapping("/calendarList.page")
+	public void calendarControllor() {}
 	
 
 	/**
@@ -264,17 +255,18 @@ public class CalendarController {
 	 * @return map			paging처리를 위한 객체와 page에 맞는 List 객체 반환
 	 */
 	@ResponseBody
-	@PostMapping(value="/companyControllor.ajax",  produces="application/json")
+	@PostMapping(value="/calendarControllor.ajax", produces="application/json")
 	public Map<String, Object> ajaxCompanyControllor(@RequestParam(defaultValue = "1") int page
-													,String dataStart, String dataEnd) {
+													,String dataStart, String dataEnd, String calSort) {
 		
 		//log.debug("page {}", page);
 		//log.debug("dataStart {}", dataStart);
 		//log.debug("dataEnd {}", dataEnd);
-		
+		//log.debug("calSort {}", calSort);
 		Map<String, Object> map = new HashMap<>();
 		map.put("dataStart", dataStart);
 		map.put("dataEnd", dataEnd);
+		map.put("calSort", calSort);
 		
 		int listCount = calService.selectListCount(map);
 		PageInfoDto paging = new PagingUtil().getPageInfoDto(listCount, page, 5, 5);
@@ -284,6 +276,7 @@ public class CalendarController {
 		
 		map.remove("dataStart");
 		map.remove("dataEnd");
+		map.remove("calSort");
 
 		map.put("list", list);	
 		
@@ -315,25 +308,24 @@ public class CalendarController {
 	 * Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `[Ljava.lang.String;` from Object value (token `JsonToken.START_OBJECT`); 
 	 * nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot deserialize value of type `[Ljava.lang.String; ` from Object value (token `JsonToken.START_OBJECT`)<EOL> at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 1, column: 1]]
 	 */
-//	@ResponseBody
-//	@PostMapping(value="/deletedCheck.do", produces = "application/json; charset=utf8")
-//	public void ajaxDeleredCal(@RequestBody String[] check) {
-//		 log.debug("String   { }", Arrays.toString(check));
-//		 log.debug("String   { }", check);
-//	}
-	
-	/**
-	 * 체크된 일정 번호를 받아와서 상태를 'N'으로 변경하는 매서드 
-	 * @param request	체크된 값들을 배열로 받기위한 필요 매개변수
-	 * @return 			삭게된 행수를 반환
-	 */
 	@ResponseBody
-	@PostMapping(value="/deletedCheck.do", produces = "application/json; charset=utf8")
-	public int ajaxDeletedCal(HttpServletRequest request) {
-		 String[] values = request.getParameterValues("check");
-		 //log.debug("values: {}", Arrays.toString(values));
-		 return calService.ajaxDeletedCal(values);
+	@PostMapping(value="/deletedCheck.do")
+	public void ajaxDeleredCal(@RequestBody Map<String, Object> request) {
+		Object str = request.get("check");
+		 log.debug("check  { }", str);
 	}
 	
+//	/**
+//	 * 체크된 일정 번호를 받아와서 상태를 'N'으로 변경하는 매서드 
+//	 * @param request	체크된 값들을 배열로 받기위한 필요 매개변수
+//	 * @return 			삭게된 행수를 반환
+//	 */
+//	@ResponseBody
+//	@PostMapping(value="/deletedCheck.do", produces = "application/json; charset=utf8")
+//	public int ajaxDeletedCal(HttpServletRequest request) {
+//		 String[] values = request.getParameterValues("check");
+//		 //log.debug("values: {}", Arrays.toString(values));
+//		 return calService.ajaxDeletedCal(values);
+//	}
 
 }

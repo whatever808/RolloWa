@@ -360,9 +360,7 @@
                     <div class="collapse" id="orders-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li><a href="${contextPath}/calendar/pCalendar.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정</a></li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정</a>
                             </li>
                             <li><a  href="${contextPath}/calendar/companyCalendar.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">회사일정</a>
