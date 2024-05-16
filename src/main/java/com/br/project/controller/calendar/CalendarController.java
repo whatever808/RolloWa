@@ -20,7 +20,6 @@ import com.br.project.dto.calendar.CalendarDto;
 import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
-import com.br.project.dto.pay.VacationDto;
 import com.br.project.service.calendar.CalendarService;
 import com.br.project.service.common.department.DepartmentService;
 import com.br.project.service.pay.VacationService;

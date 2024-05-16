@@ -56,7 +56,7 @@
 		align-items: center;
 	}
 	.font-size25 {font-size: 25px;}
-	.member-search-area {margin-left: 30px; gap: 25px;}
+	.member-search-area {gap: 25px;}
 	/* 모달 스타일 */
 	.Category, .Co-worker {
 		display: -webkit-box;
@@ -84,8 +84,11 @@
 		text-decoration-line: none;
 	}
 	.fc-button-primary {
-		background-color: rgb(160, 160, 160) !important;
+		background-color: #000 !important;
 		border: 0 !important;
+		border-radius: 20px !important;
+    color: #ffffff !important;
+    font-weight: bolder !important;
 	}
 	.fc-day-sat a {color: #007bff !important;}
 	.fc-day-sun a {color: #dc3545 !important;}
@@ -95,6 +98,42 @@
     color: black;
     font-size: x-large;
     top: 0px;
+	}
+	.fc-event-time{
+		display: none;
+	}
+	.fc-toolbar-title{
+    padding: 5px !important;
+    border-radius: 20px !important;
+    background: black !important;
+    color: #ffffff !important;
+    width: 10em;
+	}
+	.fc-direction-ltr{
+		text-align: center;
+	}
+	.fc .fc-daygrid-day.fc-day-today{
+		background-color: rgb(160 160 160 / 30%) !important;
+	}
+	.fc .fc-timegrid-col.fc-day-today{
+		background-color: rgb(160 160 160 / 30%) !important;
+	}
+	.fc-scroller.fc-scroller-liquid-absolute{
+    overflow: hidden;
+	}
+	.fc-theme-standard td, .fc-theme-standard th,
+	table.fc-scrollgrid.fc-scrollgrid-liquid, td{
+		border: 0px; 
+	}
+ 	.fc-daygrid-day-frame.fc-scrollgrid-sync-inner{
+		background-color: rgb(200 200 200 / 20%) !important;
+    padding: 1px;
+    background-clip: content-box;
+	}
+	td.fc-day.fc-timegrid-col{
+		background-color: rgb(200 200 200 / 20%) !important;
+    padding: 1px;
+    background-clip: content-box;
 	}
 </style>
 </head>
@@ -114,11 +153,11 @@
 						customButtons: {
 							 enrollButton:{text: '일정 등록',click: function(){location.href="${path}/calendar/calEnroll.page";}}
 						},
-						buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주'
+						buttonText:{prev:'◁',next:'▷',today: '오늘',year:'연도',month:'월',week:'주'
 						},
 						headerToolbar:{start: 'prev today enrollButton',
 									   center: 'title',
-									   end: 'multiMonthYear,dayGridMonth,timeGridWeek next'
+									   end: 'multiMonthYear dayGridMonth timeGridWeek next'
 					    },
 						views:{year: {titleFormat:{year: '2-digit'}, multiMonthMaxColumns: 1},
 						  	   month:{titleFormat:{year: '2-digit', month: 'short'} },
@@ -241,7 +280,7 @@
 							 calendar.addEventSource(
 							 [{
 									  id:						e.vacaNO,
-										title:				e.group.upperCode+ e.group.codeName + e.member.userName,
+										title:				e.group.upperCode + e.member.userName,
 										start: 				e.vacaStart,
 										end:					e.vacaEnd,
 										color: 				e.vacaColor,
