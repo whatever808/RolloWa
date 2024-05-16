@@ -32,14 +32,74 @@
     <!-- fontawesome -->
     <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
 
+    <!-- 체크박스 관련 스타일 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
+
+
 </head>
-<body>
-    <div class="line-border-square line-shadow">
-        <a href="#" data-izimodal-open="#draft">
-            <div>소집일<br>
-                <i class="fa-solid fa-tower-observation"></i>
+<body style="padding: 35px;">
+    <input type="text" id="ko">
+    <div class="font-size25 jua-regular" id="co-workerName">Co-worker</div>
+        <div class="Co-worker">
+            <div class="pretty p-default p-round p-smooth p-plain">
+                <input type="checkbox" name="cowoker" value="1">
+                <div class="state p-success-o">
+                    <label> 김우빈</label>
+                </div>
             </div>
-        </a>
-    </div>
+
+            <div class="pretty p-default p-round p-smooth p-plain">
+                <input type="checkbox" name="cowoker" value="2">
+                <div class="state p-success-o">
+                    <label> 전지현</label>
+                </div>
+            </div>
+
+            <div class="pretty p-default p-round p-smooth p-plain">
+                <input type="checkbox" name="cowoker" value="3">
+                <div class="state p-success-o">
+                    <label> 아이유</label>
+                </div>
+            </div>
+
+            <div class="pretty p-default p-round p-smooth p-plain">
+                <input type="checkbox" name="cowoker" value="4">
+                <div class="state p-success-o">
+                    <label> 뚱이</label>
+                </div>
+            </div>
+
+            <div class="pretty p-default p-round p-smooth p-plain">
+                <input type="checkbox" name="cowoker" value="5">
+                <div class="state p-success-o">
+                    <label> 징징이</label>
+                </div>
+            </div>
+        </div>
+        <button onclick="check();">check</button>
+        <button onclick="undo();">undo</button>
+        <script>
+            $(document).ready(function(){
+                const ko = $('#ko');
+            })
+            function check(){
+                    console.log('ko', ko.value.split(","));
+                    ko.value.split(",").forEach(element => {
+                        $('input[name=cowoker]').each(function(e){
+                        if($(this).val() == element){
+                            $(this).prop('checked', true);
+                            }
+                        });
+                    });
+                }
+            function undo(){
+                    console.log('ko', ko);
+                    $('input[name=cowoker]').each(function(e){
+                        $(this).prop('checked', false);
+                        
+                    });
+                }
+        </script>
+
 </body>
 </html>

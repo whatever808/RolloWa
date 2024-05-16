@@ -1,6 +1,7 @@
 package com.br.project.dao.organization;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -18,11 +19,6 @@ public class OrganizationDao {
 	
 	private final SqlSessionTemplate sqlSessionTemplate;
 
-	public int selectDepartment(int result) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	public int selectOrganizationListCount() {
 		return sqlSessionTemplate.selectOne("organizationMapper.selectOrganizationListCount");
 	}
@@ -37,14 +33,37 @@ public class OrganizationDao {
 		return sqlSessionTemplate.selectList("organizationMapper.selectOrganizationList", null, rowBounds);
 		
 	}
-
-	public List<GroupDto> selectDept() {
-		return sqlSessionTemplate.selectList("organizationMapper.selectDept");
+	public List<GroupDto> selectOrganizationChart() {
+		return sqlSessionTemplate.selectList("organizationMapper.selectOrganizationChart");
 	}
 
-	public List<GroupDto> selectTeam() {
-		return sqlSessionTemplate.selectList("organizationMapper.selectTeam");
+	
+	
+	/* 부서, 팀, 직급 조회 DAO */
+	public List<GroupDto> selectDepartment() {
+		return sqlSessionTemplate.selectList("organizationMapper.selectDepartment");
+	}
+	public List<GroupDto> selectTeamAll(String selectedDepartment) {
+		return sqlSessionTemplate.selectList("organizationMapper.selectTeamAll", selectedDepartment);
+	}
+	public List<GroupDto> selectTeam(String selectedDepartment) {
+		return sqlSessionTemplate.selectList("organizationMapper.selectTeam", selectedDepartment);
+	}
+	public List<GroupDto> selectPosition() {
+		return sqlSessionTemplate.selectList("organizationMapper.selectPosition");
 	}
 
+	/* 직원 검색 dao */
+	public int selectSearchListCount(Map<String, String> search) {
+		return sqlSessionTemplate.selectOne("organizationMapper.selectSearchListCount", search);
+	}
+	public List<MemberDto> selectSearchList(Map<String, String> search, PageInfoDto pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("organizationMapper.selectSearchList", search, rowBounds);
+	}
+
+	
+
+	
 	
 }

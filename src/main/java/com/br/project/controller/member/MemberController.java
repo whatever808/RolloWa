@@ -220,7 +220,29 @@ public class MemberController {
 		
 		return "redirect:/member/mypage.page";
 	}
-	
+		// 비밀번호 수정
+	@PostMapping("modifyPwd.do")
+	public String updateUserPwd(@RequestParam Map<String, String> map
+				, HttpSession session
+				, RedirectAttributes redirectAttributes) {
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		int result = 0;
+		
+		redirectAttributes.addFlashAttribute("alertTitle", "비밀번호 변경 서비스");
+		if (bcryptPasswordEncoder.matches(map.get("userPwd"), loginMember.getUserPwd())) {
+			loginMember.setUserPwd(bcryptPasswordEncoder.encode(map.get("updatePwd")));
+			result = memberService.updateUserPwd(loginMember);
+			
+			if (result > 0) {
+				session.invalidate();
+				redirectAttributes.addFlashAttribute("alertMsg", "비밀번호 변경 성공. 다시 로그인 해주세요.");
+				return "redirect:/";
+			}	
+		}
+		redirectAttributes.addFlashAttribute("alertMsg", "비밀번호 변경 실패. 현재 비밀번호를 다시 확인해주세요.");
+		return "redirect:/member/mypage.page";
+	}
+
 	/* ======================================= "가림" 구역 ======================================= */
 	@RequestMapping("/memInfo.do")
 	@ResponseBody
@@ -229,4 +251,7 @@ public class MemberController {
 	}
 	/* ======================================= "가림" 구역 ======================================= */
 	
+
+
+
 }

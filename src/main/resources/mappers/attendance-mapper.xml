@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="attendanceMapper">
+
+	<resultMap id="attendanceList" type="AttendanceDto">
+		<id column="attendance_no" property="attendanceNo"/>
+		<result column="user_no" property="userNo"/>
+		<result column="clock_in" property="clockIn"/>
+		<result column="clock_out" property="clockOut"/>
+		<result column="request_detail" property="requestDetail"/>
+		<result column="dept" property="dept" />
+		<result column="team" property="team" />
+		<result column="posi" property="posi" />
+		<result column="todayin" property="todayIn" />
+		<result column="todayout" property="todayOut" />
+		<result column="a" property="a" />
+		<result column="b" property="b" />
+		<result column="c" property="c" />
+		<result column="d" property="d" />
+		<result column="e" property="e" />
+		
+		<collection property="groupList" ofType="GroupDto">
+			<result column="group_code" property="groupCode"/>
+			<result column="code" property="code"/>
+			<result column="code_name" property="codeName"/>
+			<result column="upper_code" property="upperCode"/>
+		</collection>
+		
+		<collection property="memberList" ofType="MemberDto">
+			<result column="user_no" property="userNo" />
+			<result column="user_name" property="userName" />
+			<result column="user_id" property="userId" />
+			<result column="phone" property="phone" />
+			<result column="bank_account" property="bankAccount" />
+			<result column="bank" property="bank" />
+			<result column="email" property="email" />
+			<result column="post_code" property="postCode" />
+			<result column="address" property="address" />
+			<result column="detail_address" property="detailAddress" />
+			<result column="total_address" property="totalAddress" />
+			<result column="profile_url" property="profileURL" />
+			<result column="modify_date" property="modifyDate" />
+			<result column="modify_user_no" property="modifyUserNo" />
+			<result column="status" property="status" />
+			<result column="vacation_count" property="vacationCount" />
+			<result column="auth_level" property="authLevel" />
+			<result column="salary" property="salary" />
+			<result column="dept_code" property="deptCode" />
+			<result column="team_code" property="teamCode" />
+			<result column="position_code" property="positionCode" />
+			<result column="regist_emp" property="registEmp" />
+		</collection>
+		
+	</resultMap>
+
+	<!-- 출결 전체 카운트 -->
+	<select id="selectAttendanceListCount" resultType="_int">
+		SELECT
+			   COUNT(*)
+		  FROM MEMBER
+		 WHERE STATUS = 'Y'
+	</select>
+
+	<!-- 출결 상태 조회 -->
+	<select id="selectAttendanceList" resultType="hashmap">
+		SELECT M.USER_NO "userNo"
+		     , M.PROFILE_URL "profileURL"
+		     , M.USER_NAME "userName"
+		     , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'DEPT%' AND CODE = M.TEAM_CODE) AS "dept"
+		     , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'TEAM%' AND CODE = M.TEAM_CODE) AS "team"
+		     , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = M.POSITION_CODE) AS "posi"
+		     , (SELECT CLOCK_IN FROM ATTENDANCE WHERE USER_NO = M.USER_NO AND TRUNC(CLOCK_IN) = TRUNC(SYSDATE-3)) AS "todayIn"
+		     , (SELECT CLOCK_OUT FROM ATTENDANCE WHERE USER_NO = M.USER_NO AND TRUNC(CLOCK_OUT) = TRUNC(SYSDATE-3)) AS "todayOut"
+		     , A.REQUEST_DETAIL "requestDetail"
+		  FROM MEMBER M
+		  JOIN TB_GROUP TB ON M.TEAM_CODE = TB.CODE
+		   AND TB.GROUP_CODE LIKE 'TEAM%'
+		  JOIN ATTENDANCE A ON M.USER_NO = A.USER_NO
+		 ORDER BY M.USER_NO ASC
+	</select>
+	
+	<!-- 출결 상태 조회 
+	<select id="selectAttendanceList" resultMap="attendanceList">
+		SELECT M.USER_NO
+		     , M.PROFILE_URL
+		     , M.USER_NAME
+		     , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'DEPT%' AND CODE = M.TEAM_CODE) AS "DEPT"
+		     , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'TEAM%' AND CODE = M.TEAM_CODE) AS "TEAM"
+		     , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = M.POSITION_CODE) AS "POSI"
+		     , (SELECT CLOCK_IN FROM ATTENDANCE WHERE USER_NO = M.USER_NO AND TRUNC(CLOCK_IN) = TRUNC(SYSDATE-3)) AS "TODAYIN"
+		     , (SELECT CLOCK_OUT FROM ATTENDANCE WHERE USER_NO = M.USER_NO AND TRUNC(CLOCK_OUT) = TRUNC(SYSDATE-3)) AS "TODAYOUT"
+		     , A.REQUEST_DETAIL
+		  FROM MEMBER M
+		  JOIN TB_GROUP TB ON M.TEAM_CODE = TB.CODE
+		   AND TB.GROUP_CODE LIKE 'TEAM%'
+		  JOIN ATTENDANCE A ON M.USER_NO = A.USER_NO
+		 ORDER BY M.USER_NO ASC
+	</select>
+	-->
+	
+	
+	<!-- 출결 개수 조회(출근|결근|퇴근|조퇴|휴가)-->
+	<select id="SelectAttendanceCount" resultMap="attendanceList">
+		SELECT
+			    SUM(CASE WHEN REQUEST_DETAIL = '출근' THEN 1 ELSE 0 END) AS "a"
+			  , SUM(CASE WHEN REQUEST_DETAIL = '결근' THEN 1 ELSE 0 END) AS "b"
+			  , SUM(CASE WHEN REQUEST_DETAIL = '퇴근' THEN 1 ELSE 0 END) AS "c"
+			  , SUM(CASE WHEN REQUEST_DETAIL = '조퇴' THEN 1 ELSE 0 END) AS "d"
+			  , SUM(CASE WHEN REQUEST_DETAIL = '휴가' THEN 1 ELSE 0 END) AS "e"
+		   FROM ATTENDANCE
+		  WHERE TRUNC(CLOCK_IN) = TRUNC(SYSDATE-3)
+			    OR CLOCK_IN IS NULL
+	</select>
+	
+	
+	
+	<!-- 아이디 중복체크 -->
+	<select id="selectUserIdCount" resultType="_int">
+		select count(*)
+		  from member
+		 where user_id = #{checkId}
+	</select>
+	
+	<!-- 회원 가입 : 사번,이름,아이디,비밀번호,생성한관리자번호,관리자권한여부,팀코드,직급-->
+	<insert id="insertMember">
+		insert
+		  into member
+		  	 (
+		  	   user_no
+		  	 , user_name
+		  	 , user_id
+		  	 , user_pwd
+		  	 , enroll_user_no
+		  	 , auth_level
+		  	 , team_code
+		  	 , position_code
+		  	 )
+		  	   values
+		  	 (
+			   seq_uno.nextval
+			 , #{userName}
+			 , #{userId}
+			 , #{userPwd}
+			 , #{userName}
+			 , #{authLevel}
+			 , #{teamCode}
+			 , #{positionCode}
+		  	 )
+	</insert>
+	
+
+</mapper>
+

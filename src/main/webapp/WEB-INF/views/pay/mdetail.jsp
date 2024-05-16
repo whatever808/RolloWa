@@ -216,104 +216,8 @@
 </head>
 <body>
 
-    <main class="d-flex flex-nowrap">
-        <div class="flex-shrink-0 p-3" style="width: 280px;">
-            <a href="/"
-                class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
-                <svg class="bi pe-none me-2" width="30" height="24">
-                    <use xlink:href="#bootstrap" />
-                </svg>
-                <span class="fs-5 fw-semibold">회사로고</span>
-            </a>
-            <ul class="list-unstyled ps-0">
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-                        Home
-                    </button>
-                    <div class="collapse show" id="home-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-                        Dashboard
-                    </button>
-                    <div class="collapse" id="dashboard-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-                        Orders
-                    </button>
-                    <div class="collapse" id="orders-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="border-top my-3"></li>
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-                        Account
-                    </button>
-                    <div class="collapse" id="account-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New...</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a>
-                            </li>
-                            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
-                                    out</a></li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </div>
 
-        <div class="b-example-divider b-example-vr"></div>
+		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 
         <!-- content 추가 -->
         <div class="content p-4">
@@ -328,25 +232,23 @@
                                 <table border="1" id="sign_left">
                                     <tr>
                                         <th>문서번호</th>
-                                        <td></td>
+                                        <td>${list.get(0).EXPEND_NO}</td>
                                     </tr>
                                     <tr>
                                         <th>부  서</th>
-                                        <td>${payDto.department}</td>
+                                        <td>${list.get(0).DEPARTMENT}</td>
                                     </tr>
                                     <tr>
                                         <th>기안일</th>
-                                        <td>${payDto.registDt}</td>
+                                        <td>${list.get(0).REGIST_DATE}</td>
                                     </tr>
                                     <tr>
                                         <th>기안자</th>
-                                        <td>${payDto.payWriter}</td>
+                                        <td>${list.get(0).PAYMENT_WRITER}</td>
                                     </tr>
                                     <tr>
                                         <th>상태</th>
-                                        <td>
-                                            ${payDto.payStatus}
-                                        </td>
+                                        <td>${list.get(0).PAYMENT_STATUS}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -356,23 +258,19 @@
                                 	<tbody>
                                 	 <tr>
                                         <th rowspan="3">승 <br> 인</th>
-                                        <td class="left_td">${payDto.firstApproval}</td>
-                                        <td class="left_td">${payDto.middleApproval}</td>
-                                        <td class="left_td">${payDto.finalApproval}</td>
-                                        <th rowspan="3">결 <br> 재</th>
-                                        <td class="left_td"></td>
+                                        <td class="left_td">${list.get(0).FIRST_APPROVAL}</td>
+                                        <td class="left_td">${list.get(0).MIDDLE_APPROVAL}</td>
+                                        <td class="left_td">${list.get(0).FINAL_APPROVAL}</td>
                                     </tr>
                                     <tr>
                                         <td class="sing_name"><div></div></td>
                                         <td class="sing_name"><div></div></td>
                                         <td class="sing_name"><div></div></td>
-                                        <td class="sing_name"><div></div></td>
                                     </tr>
                                     <tr>
-                                        <td class="left_td">${payDto.firstApproDt == null ? "" : payDto.firstApproDt}</td>
-                                        <td class="left_td">${payDto.middleApproDt == null ? "" : payDto.middleApproDt}</td>
-                                        <td class="left_td">${payDto.finalApproDt == null ? "" : payDto.finalApproDt}</td>
-                                        <td class="left_td">${payDto.registDt}</td>
+                                        <td class="left_td">${list.get(0).FIRST_APPROVAL_DATE}</td>
+                                        <td class="left_td">${list.get(0).MIDDLE_APPROVAL_DATE}</td>
+                                        <td class="left_td">${list.get(0).FINAL_APPROVAL_DATE}</td>
                                     </tr>
                                 	</tbody>   
                                 </table>
@@ -383,21 +281,15 @@
                             <table border="1">
                                 <tr>
                                     <th style="width: 300px;">매출구분</th>
-                                    <td colspan="2">
-                                        <select name="" id="">
-                                            <option value="">상품</option>
-                                            <option value="">티켓</option>
-                                            <option value="">음식점</option>
-                                        </select>
-                                    </td>
+                                    <td colspan="2">${ list.get(0).SALES_DIVISION }</td>
                                 </tr>
                                 <tr>
                                     <th>담당자</th>
-                                    <td colspan="2"></td>
+                                    <td colspan="2">${ list.get(0).MANAGER_NAME }</td>
                                 </tr>
                                 <tr>
                                     <th>총매출금액(VAT별도)</th>
-                                    <td colspan="2"></td>
+                                    <td colspan="2">${ list.get(0).TOTAL_SALES }</td>
                                 </tr>
                                 <tr>
                                     <th colspan="3">매출정보</th>
@@ -407,33 +299,20 @@
                                     <th style="width: 100px;">수량</th>
                                     <th>매출금액</th>
                                 </tr>
+                                <c:forEach var="l" items="${list}">
+		                                <tr>
+		                                    <td>${l.ITEM}</td>
+		                                    <td>${l.VOLUMES}</td>
+		                                    <td>${l.SALES_AMOUNT}</td>
+		                                </tr> 			
+                                </c:forEach>
                                 
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
                             </table>
                         </div>
                         <!--버튼 영역-->
                         <div id="btn_div">
                             <button id="my-button" onclick="submitbtn();" >완료</button>
-                          	<button data-izimodal-open="#modal">반려</button>
+                          	<button data-izimodal-open="#modal" type="submit">반려</button>
                             <button id="end_button" onclick="successbtn();">최종승인</button>
                         </div>
                         <!------------>
@@ -489,12 +368,9 @@
            
         </script>
         
-        
+        <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
         <!-- content 끝 -->
     </main>
-    <script src="../../resources/js/common/bootstrap.bundle.min.js"></script>
-
-    <script src="../../resources/js/common/sidebars.js"></script>
 
 </body>
 </html>

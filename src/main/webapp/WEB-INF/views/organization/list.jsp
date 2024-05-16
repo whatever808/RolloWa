@@ -92,13 +92,14 @@
 		object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
 	    margin: -10px;
  	}
+ 	/*
  	.profile_img:hover {
 		transform: scale(10) translate(70%, -40%);
     	border-radius: 0;
     	border: 0px;
     	object-fit: contain;
 	}
-	
+	*/
  	
 	</style>
 </head>
@@ -113,19 +114,18 @@
 	    <hr>
 	    
 	    <!-- ------------ -->
-	    <form id="search_Form" action="검색_처리_페이지_주소_입력" method="GET">
+	    <form id="search_Form" action="${ contextPath }/orginfo/search.do" method="GET">
+	    	<input type="hidden" name="page" value="1">
+			
 	        <table class="table table_search">
 	
 	            <tr class="tr_search">
 	                <!-- 검색 메뉴 1 : 부서명-->
-	                <th>부서명</th>
+                	<th>부서명</th>
 	                <td>
-	                    <select id="dept" name="dept" class="form-control">
-	                        <option value="전체 부서">전체 부서</option>
-	                        <c:forEach var="d" items="${ dept }">
-		                        <option value="${d.codeName}">${d.codeName}</option>
-	                        </c:forEach>
-	                    </select>
+	                    <select name="department" id="department" class="form-control">
+	                        	<!-- <option value="전체 부서">전체 부서</option> -->
+                    	</select>
 	                </td>
 	                <!-- 검색 메뉴 2 : 전화번호 -->
 	                <th>전화번호</th>
@@ -138,11 +138,8 @@
 	                <th>팀명</th>
 	                <td>
 	                    <select name="team" id="team" class="form-control">
-	                        <option value="전체 팀">전체 팀</option>
-	                        <c:forEach var="t" items="${ team }">
-		                        <option value="${t.codeName}">${t.codeName}</option>
-	                        </c:forEach>
-	                    </select>
+	                        	<!-- <option value="전체 팀">전체 팀</option> -->
+                    	</select>
 	                </td>
 	                <!-- 검색 메뉴 4 : 이름 -->
 	                <th>이름</th>
@@ -154,34 +151,151 @@
 	                <td class="btn_center" colspan="4">
 	                    <h2>
 	                        <button class="btn btn-outline-primary" type="reset">초기화</button>
-	                        <button class="btn btn-primary">검색</button>
+	                        <button class="btn btn-primary" onclick="search();">검색</button>
 	                    </h2>
 	                </td>
 	            </tr>
 	        </table>
 	    </form>
 	    
-	    <!-- 스크립트 작성중 -->
-	    <script>
-		    document.getElementById('dept').addEventListener('change', function() {
-		        let codeName = this.value;
-		        console.log("codeName: ", codeName);
-		        
-		        $.ajax({
-		            url: "${contextPath}/orginfo/empSearch.do",
-		            type: "post",
-		            data: { codeName: codeName },
-		            success: function(result) {
-		                console.log("결과값 : ", result);
-		            },
-		            error: function(result) {
-		                console.log("실패");
-		            }
-		        });
-		        
-		    });
-	    </script>
 	    
+	    <!-- 검색 기능 : 부서, 팀 조회하기-->
+	    <script>
+			let departmentSelect = $("#department");
+			let teamSelect = $("#team");
+	 		
+			$(document).ready(function(){
+				
+				// 부서 조회 이동
+				selectDepartmentList();
+				
+				// 팀 조회 이동
+				selectTeamList();
+				
+	 		})
+	 		
+	 		
+	 		// 부서조회
+	 		function selectDepartmentList(){
+				departmentSelect.empty();
+				departmentSelect.append($('<option>', {
+					value: "전체 부서",
+					text: "전체 부서"
+				}));
+				
+				$.ajax({
+			 		url:"${contextPath}/orginfo/department.do",
+			 		type:"GET",
+			 		async:"false",
+			 		success: function(data){
+			 			
+			 			$.each(data, function(index, organizationDto) {
+			 			    $.each(organizationDto.groupList, function(index, groupDto) {
+			 			        departmentSelect.append($('<option>', {
+			 			            value: groupDto.codeName,
+			 			            text: groupDto.codeName
+						        	}));
+						    	});
+						    });
+			 			
+			 				if(${ not empty search }){
+			 					$("#search_Form #department").children("option").each(function(){
+						        	$(this).val() == "${ search.department }" && $(this).attr("selected", true);
+						        })
+			 				} 
+			 				
+			 		},
+			 		error: function(){
+			 			console.log("ajax 부서 조회 실패 입니다.")
+			 		}
+				});
+			}
+	 		
+	 		// 팀조회
+	 		function selectTeamList(){
+	 			
+	 			teamSelect.empty();
+ 			 	teamSelect.append($('<option>', {
+		 	        value: "전체 팀",
+		 	        text: "전체 팀"
+		 	    }));
+	 			
+		 	    $.ajax({
+		 	        url:"${contextPath}/orginfo/team.do?selectedDepartment=" + departmentSelect.val(),
+		 	        type:"GET",
+		 	        async:"false",
+		 	        success: function(data){
+		 	        	
+		 	            $.each(data, function(index, organizationDto) {
+		 	                $.each(organizationDto.groupList, function(index, groupDto) {
+		 	                    teamSelect.append($('<option>', {
+		 	                        value: groupDto.codeName,
+		 	                        text: groupDto.codeName
+		 	                    }));
+		 	                });
+		 	            });
+						if(${ not empty search }){
+		 					$("#search_Form #team").children("option").each(function(){
+					        	$(this).val() == "${ search.team }" && $(this).attr("selected", true);
+					        })
+		 				}
+		 	        },
+		 	        error: function(){
+		 	            console.log("ajax 팀 조회 실패 입니다.")
+		 	        }
+		 	    });
+			}
+	    	
+	 		
+	 		
+	 		// 부서를 선택했을 경우 실행될 function
+	 		departmentSelect.on("change", function() {
+		 	    // 팀 조회
+		 	   selectTeamList();
+			    
+	 		});
+	 		
+	 		
+	 		// 검색 이후 초기화 작동하도록 하기
+	 		$(document).ready(function(){
+	 		    $("#search_Form button[type=reset]").click(function() {
+	 		        $("#search_Form")[0].reset();
+	 		        
+	 		        $("#search_Form #department").val("전체 부서");
+	 		        $("#search_Form #team").val("전체 팀");
+
+	 		        return false;
+	 		    });
+	 		});
+	 		
+	 		
+	 		// 검색 버튼
+	 		function search(){
+		 		let department = $("#department").val();
+		 		let phone =  $("#phone").val();
+		 		let team = $("#team").val();
+		 	    let name = $("#name").val();
+		 	 
+	 			$.ajax({
+	 				url:"${contextPath}/orginfo/search.do",
+	 				type: "GET",
+	 				data: {
+	 		            department: department,
+	 		            phone: phone,
+	 		            team: team,
+	 		            name: name
+	 		        },
+					success: function(response) {
+	 		            console.log("검색 결과:", response);
+	 		        },
+	 		        error: function() {
+	 		            console.log("검색 요청 실패");
+	 		        }
+	 			})
+	 		}
+	    </script>
+
+
 	
 	    <script>
 	        /* 전화번호 : 숫자만 입력되고 나머지 글자는 공백으로 변환 */
@@ -197,8 +311,6 @@
 	        })
 	    </script>
 	    
-	   
-	
 	    <!-- 전체 인원수 -->
 	    <h5 class="employee_count">전체 ${ listCount }명</h5>
 	
@@ -206,7 +318,7 @@
 	    <table class="table table_empinfo line-shadow">
 	        <tr>
 	            <th>프로필 사진</th>
-	            <th>성명</th>
+	            <th>이름</th>
 	            <th>부서</th>
 	            <th>팀명</th>
 	            <th>직급</th>
@@ -219,7 +331,6 @@
 		        <c:when test="${ not empty list }">
 		        	<c:forEach var="m" items="${ list }">
 				        <tr>
-
 				            <td>
 					            <c:choose>
 					            	<c:when test="${ not empty m.profileUrl }">
@@ -239,6 +350,11 @@
 				        </tr>
 			        </c:forEach>
 		        </c:when>
+		        <c:otherwise>
+		        	<tr>
+		        		<td colspan="7">조회된 직원이 없습니다.</td>
+		        	</tr>
+		        </c:otherwise>
 	        </c:choose>
 	        
 	    </table>
@@ -246,15 +362,48 @@
 	    <!-- 직원 테이블 end -->
 	
 	    <!--페이징 처리 start-->
-	    <div class="container">
+		<div id="pagingArea" class="container">
 	        <ul class="pagination justify-content-center">
-	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/empSearch.do?page=${pi.currentPage-1}">Previous</a></li>
+	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/list.do?page=${pi.currentPage-1}">Previous</a></li>
+				
 				<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/empSearch.do?page=${p}">${ p }</a></li>
+					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/list.do?page=${p}">${ p }</a></li>
 				</c:forEach>
-				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/empSearch.do?page=${pi.currentPage+1}">Next</a></li> 
+				
+				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/list.do?page=${pi.currentPage+1}">Next</a></li> 
 	        </ul>
 	    </div>
+	    
+	    <c:if test="${ not empty search }">
+			<script>
+			     $(document).ready(function(){
+			        /* $("#search_Form #department").val("${ search.department }");
+			        $("#search_Form #department").children("option").each(function(){
+			        	$(this).val() == "${ search.department }" && $(this).attr("selected", true);
+			        })
+			        */
+			        $("#search_Form #team").val("${ search.team }");
+			        $("#search_Form #phone").val("${ search.phone }");
+			        $("#search_Form #name").val("${ search.name }");
+			        
+			        // 검색결과 페이지일 경우 페이징바 페이지 요청시 ==> <a> 기본이벤트 제거
+			        $("#pagingArea a").on("click", function(){
+						if($(this).text() == 'Previous'){
+							$("#search_Form input[name=page]").val("${pi.currentPage}" - 1);
+						}else if($(this).text() == 'Next' ){
+							$("#search_Form input[name=page]").val(Number("${pi.currentPage}") + 1);
+						}else{
+							$("#search_Form input[name=page]").val($(this).text());                   
+						}
+						$("#search_Form").submit();
+			           
+						return false;
+					})
+					
+				})
+			</script>
+		</c:if>
+	     
 	    <!--페이징 처리 end-->
 		
 	</div>

@@ -21,7 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.PayDto;
-import com.br.project.service.pay.PayServiceImpl;
+import com.br.project.service.pay.PayService;
 import com.br.project.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;

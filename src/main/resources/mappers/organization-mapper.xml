@@ -38,6 +38,21 @@
 		</collection>
 		
 	</resultMap>
+	
+	<!-- 부서와 팀 가져오기 -->
+	<select id="selectOrganizationChart" resultType="GroupDto">
+		SELECT D1.CODE_NAME AS "DEPT"
+		     , D2.CODE_NAME AS "TEAM"
+		  FROM TB_GROUP D1
+		  LEFT JOIN
+		       TB_GROUP D2 ON D2.UPPER_CODE = D1.CODE AND D2.GROUP_CODE LIKE 'TEAM%'
+		 WHERE D1.GROUP_CODE LIKE 'DEPT%'
+	 	   AND D1.STATUS = 'Y'
+	       AND D2.STATUS = 'Y'
+         ORDER BY 
+         	   D1.CODE_NAME DESC
+         	 , D2.CODE_NAME ASC
+	</select>
 
 	<!-- 직원 전체 카운트 -->
 	<select id="selectOrganizationListCount" resultType="_int">
@@ -47,40 +62,123 @@
          WHERE STATUS = 'Y'
 	</select>
 
-	<!-- 직원 전체 조회(사진,성명,부서,팀명,직급,전화,이메일 -->
+	<!-- 직원 전체 조회(사진,성명,부서,팀명,직급,전화,이메일) -->
 	<select id="selectOrganizationList" resultMap="memberResult">
 		SELECT USER_NO
 			 , PROFILE_URL
        		 , USER_NAME
-       		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'DEPT%' AND CODE = TEAM_CODE) AS "DEPT"
-       		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'TEAM%' AND CODE = TEAM_CODE) AS "TEAM"
-      		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = POSITION_CODE) AS "POSI"
+       		 , D1.CODE_NAME AS "DEPT"
+       		 , D2.CODE_NAME AS "TEAM"
+      		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = MEMBER.POSITION_CODE) AS "POSI"
       		 , PHONE
       		 , EMAIL
 		  FROM MEMBER
-		  JOIN TB_GROUP ON TEAM_CODE = CODE
-		   AND GROUP_CODE LIKE 'TEAM%'
+		  JOIN TB_GROUP D2 ON MEMBER.TEAM_CODE = D2.CODE
+     LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
+         WHERE D1.STATUS = 'Y'
+           AND D2.STATUS = 'Y'
 		 ORDER BY
 			   USER_NO ASC
 	</select>
 	
 	<!-- 부서 조회 : 전체 부서 조회 -->
+	<!-- 삭제 예정
 	<select id="selectDept" resultType="GroupDto">
 		SELECT CODE_NAME "codeName" 
 		  FROM TB_GROUP
 		 WHERE GROUP_CODE LIKE 'DEPT%'
 	</select>
+ 	-->
+ 	
+ 	<!-- 직원 검색 -->
+ 	<select id="selectSearchListCount" resultType="_int">
+ 		SELECT COUNT(*)
+       	  FROM MEMBER
+    	  JOIN TB_GROUP D2 ON MEMBER.TEAM_CODE = D2.CODE
+     LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
+    	 WHERE D1.STATUS = 'Y'
+           AND D2.STATUS = 'Y'
+	       <if test="department != ''">
+				AND D1.CODE_NAME = #{ department }
+	       </if>
+	       <if test="team != ''">
+				AND D2.CODE_NAME = #{ team }
+	       </if>
+	       <if test="phone != ''">
+				AND PHONE LIKE '%' || #{ phone } || '%'
+	       </if>
+	       <if test="name != ''">
+				AND USER_NAME LIKE '%' || #{ name } || '%'
+	       </if>
+ 	</select>
+ 	<select id="selectSearchList" resultMap="memberResult">
+	 	SELECT USER_NO
+			 , PROFILE_URL
+       		 , USER_NAME
+       		 , D1.CODE_NAME AS "DEPT"
+       		 , D2.CODE_NAME AS "TEAM"
+      		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = MEMBER.POSITION_CODE) AS "POSI"
+      		 , PHONE
+      		 , EMAIL
+		  FROM MEMBER
+		  JOIN TB_GROUP D2 ON MEMBER.TEAM_CODE = D2.CODE
+     LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
+         WHERE D1.STATUS = 'Y'
+           AND D2.STATUS = 'Y'
+           <if test="department != ''">
+			    AND D1.CODE_NAME = #{ department }
+			</if>
+			<if test="team != ''">
+			    AND D2.CODE_NAME = #{ team }
+			</if>
+			<if test="phone != ''">
+			    AND PHONE LIKE '%' || #{ phone } || '%'
+			</if>
+			<if test="name != ''">
+			    AND USER_NAME LIKE '%' || #{ name } || '%'
+			</if>
+		 ORDER BY
+			   USER_NO ASC
+ 	</select>
+
+
 	
-	<!-- 팀 조회 : 선택한 부서에 해당하는 팀만 조회 -->
+
+
+	<!-- 1. 부서 조회 -->
+	<select id="selectDepartment" resultMap="memberResult">
+		SELECT CODE_NAME
+		  FROM TB_GROUP
+		 WHERE GROUP_CODE LIKE 'DEPT%'
+	</select>
+	
+	<!-- 2.1 팀 조회 : 부서가 선택되어 있어야함, 전체 팀 조회 -->
+	<select id="selectTeamAll" resultMap="memberResult">
+		SELECT CODE_NAME
+		  FROM TB_GROUP
+         WHERE GROUP_CODE LIKE 'TEAM%'
+	</select>
+	
+	<!-- 2.2 팀 조회 : 부서가 선택되어 있어야함, 선택한 부서의 팀만 조회 -->
 	<select id="selectTeam" resultMap="memberResult">
 		SELECT CODE_NAME
 		  FROM TB_GROUP
 		 WHERE GROUP_CODE LIKE 'TEAM%'
 		   AND UPPER_CODE
-		       = (SELECT CODE
-	                FROM TB_GROUP
-	               WHERE GROUP_CODE LIKE 'DEPT%'
-	                 AND CODE_NAME = #{codeName})
+			 = (SELECT CODE
+		  FROM TB_GROUP
+		 WHERE GROUP_CODE LIKE 'DEPT%'
+		   AND CODE_NAME = #{ codeName } )
 	</select>
-
+	
+	<!-- 3. 직급 조회 -->
+	<select id="selectPosition" resultMap="memberResult">
+		SELECT CODE_NAME
+		  FROM TB_GROUP
+		 WHERE GROUP_CODE LIKE 'POSI%'
+	</select>
+	
+	
+	
+	
 </mapper>

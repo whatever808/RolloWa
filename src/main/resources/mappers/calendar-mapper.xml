@@ -11,11 +11,20 @@
 	<result column="END_DATE" property="endDate" />
 	<result column="CAL_PLACE" property="place" />
 	<result column="CAL_COLOR" property="color" />
-	<result column="STATUS" property="status" />
 	<result column="GROUP_CODE" property="groupCode" />
+	<result column="team" property="team" />
+	<result column="duraDate" property="duraDate" />
+	<collection ofType="GroupDto" property="group" >
+		<result column="CODE_NAME" property="codeName" />
+		<result column="UPPER_CODE" property="upperCode" />
+	</collection>
+	<collection ofType="CoworkerDto" property="coworker">
+		<result column="USER_NO" property="userNo"/>
+	</collection>	
 </resultMap>
 <!-- 개인 및 부서 일정 조회 -->
-<select id="selectPCalendar" resultMap="calResultMap">
+<select id="ajaxSelectPCalendar" 
+resultMap="calResultMap">
 select
     CAL_NO
     , CAL_SORT
@@ -25,19 +34,48 @@ select
     , END_DATE
     , CAL_PLACE
     , CAL_COLOR
+    , calender.GROUP_CODE
+    , code_name
+    , upper_code
+    , user_NO
 from 
 	calender
+join 
+     tb_group on ( calender.GROUP_CODE = code ) 
+left join 
+     co_worker using (cal_no)      
 where 
-	cal_sort in ('P', 'D')
+	cal_sort = 'D'
 and 
-	status = 'Y'
+     tb_group.GROUP_CODE = 'CALD01'
+and 
+	calender.status = 'Y'
 <![CDATA[
 and 
-	Months_between(START_DATE 	, sysdate) <= 6
+	Months_between(START_DATE     , sysdate) <= 6
 and 
 	Months_between(end_DATE		, sysdate) >= -6
 ]]>
+<if test="calNoList != null">
+    <foreach item="num" collection="calNoList"
+       open="and cal_no in (" separator="," close=")" >
+        #{num}
+    </foreach>
+    order by 
+    		cal_no
+</if>
 </select>
+
+<select id="selectCalNO"
+resultType="string">
+	select 
+		cal_no
+	from 
+		co_worker
+	where 
+		user_no = #{userNo}
+</select>
+
 <!-- 갤린더 일정 등록 쿼리 -->
 <insert id="insertCal">
 	insert 
@@ -45,6 +83,7 @@ and
 		calender
 	(
 		CAL_NO
+		,CAL_SORT
 		,CAL_TITLE
 		,CAL_CONTENT
 		,START_DATE
@@ -55,14 +94,15 @@ and
 		,GROUP_CODE
 	) values ( 
 		SEQ_CALNO.nextval
+		,#{calSort}
 		,#{calTitle}
 		,#{calContent}
 		,to_date(#{startDate} 	, 'YYYY-MM-DD HH24:MI:SS')
-		,to_date(#{endDate}		, 'YYYY-MM-DD HH24:MI:SS')
+		,to_date(#{endDate}			, 'YYYY-MM-DD HH24:MI:SS')
 		,#{color}
-		,1 <!-- REGIST_EMP -->
-		,1 <!-- MODIFY_EMP -->
-		,1 <!-- GROUP_CODE -->
+		,#{emp}
+		,#{emp}
+		,#{groupCode}
 		)
 </insert>
 <!-- 일정 별 동행자 추가 쿼리 -->
@@ -77,7 +117,7 @@ and
 	)values(
 		SEQ_COWNO.NEXTVAL
 		, SEQ_CALNO.CURRVAL
-		, #{woker}
+		, #{userNo}
 	)
 </insert>
 <!-- 일정 update문 쿼리 -->
@@ -87,13 +127,141 @@ and
 	set 
 		CAL_TITLE 		= #{calTitle}
 		, CAL_CONTENT 	= #{calContent}
-		, START_DATE 	= #{startDate}
-		, END_DATE 		= #{endDate}
+		, START_DATE 	= to_date(#{startDate} 	, 'YYYY-MM-DD HH24:MI:SS')
+		, END_DATE 		= to_date(#{endDate}	, 'YYYY-MM-DD HH24:MI:SS')
+		, CAL_PLACE		= #{place}
 		, CAL_COLOR 	= #{color}
 		, GROUP_CODE 	= #{groupCode}
-		, MODIFY_EMP 	= SYSDATE
+		, MODIFY_EMP 	= #{emp}
 	where
 		CAL_NO = #{calNO}
+</update>
+<delete id="coworkerDelete">
+	delete
+		co_worker
+	where 
+		cal_no = #{calNO}
+</delete>
+<insert id="reInserCoworker">
+	insert
+	into 
+		co_worker
+	(
+		WORKER_NO
+		, CAL_NO
+		, USER_NO
+	)values(
+		SEQ_COWNO.NEXTVAL
+		, #{calNO}
+		, #{userNo}
+	)
+</insert>
+
+<select id="ajaxCompanyCalendar"
+resultMap="calResultMap">
+	select
+    CAL_NO
+    , CAL_SORT
+    , CAL_TITLE
+    , CAL_CONTENT
+    , START_DATE
+    , END_DATE
+    , CAL_PLACE
+    , CAL_COLOR
+    , (select tb_group.code_NAME from tb_group where tb_group.GROUP_CODE = 'TEAM01' and code = (select TEAM_CODE from member where user_no =  calender.MODIFY_EMP)) team
+    , code_name
+    , upper_code
+    , calender.GROUP_CODE
+from 
+	calender
+join 
+    tb_group on ( calender.GROUP_CODE = code )
+join
+    member on (member.USER_NO = calender.MODIFY_EMP)
+where 
+	cal_sort = 'C'
+and 
+    tb_group.GROUP_CODE = 'CALD02'
+and 
+	calender.status = 'Y'
+<![CDATA[
+and 
+	Months_between(START_DATE     , sysdate) <= 6
+and 
+	Months_between(end_DATE		  , sysdate) >= -6
+]]>
+</select>
+
+<select id="selectListCalendar"
+resultMap="calResultMap">
+	select
+    cal_no
+    , cal_color
+    , code_Name
+    , cal_title
+    , to_date(start_Date, 'YYYY-MM-DD')|| ' ~ ' || to_date(end_date, 'YYYY-MM-DD') duraDate 
+	from 
+		calender
+	join 
+		tb_group on (calender.GROUP_CODE = CODE and tb_group.GROUP_CODE = 'CALD02')
+	where 
+			cal_sort = #{calSort}
+	and 
+	    calender.status = 'Y'
+<![CDATA[
+	and 
+		START_DATE >= #{dataStart}
+	and 
+		end_DATE <= #{dataEnd}
+]]>
+   ORDER by 
+   		cal_no desc
+</select>
+
+<select id="selectListCount" 
+resultType="_int">
+	select
+    	count(*)
+	from 
+		calender
+	where 
+		cal_sort = #{calSort}
+	and 
+	    calender.status = 'Y'
+<![CDATA[
+	and 
+		START_DATE >= #{dataStart}
+	and 
+		end_DATE <= #{dataEnd}
+]]>
+</select>
+
+<update id="ajaxDeletedCal">
+	update 
+     	calender
+	set 
+		status = 'N'
+	<where>
+		<foreach item="value" collection="array"
+	       open="cal_no in  (" separator="," close=")" >
+	        #{value}
+	    </foreach>
+	</where>
+</update>
+
+<update id="companyCalUpdate">
+	update calender
+set 
+    cal_title = 		#{calTitle}
+    , cal_content = #{calContent}
+    , start_date = 	to_date(#{startDate} 	, 'YYYY-MM-DD HH24:MI:SS')
+    , end_date = 		to_date(#{endDate} 		, 'YYYY-MM-DD HH24:MI:SS')
+    , cal_place = 	#{place}
+    , cal_color = 	#{color}
+    , modify_emp = 	#{emp}
+    , group_code = 	#{groupCode}
+where
+    cal_no = #{calNO}
 </update>
 
 

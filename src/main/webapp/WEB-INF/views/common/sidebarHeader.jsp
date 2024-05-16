@@ -407,7 +407,28 @@
                
                 <!-- ======================================= "가림" 구역 end ======================================= -->
                 
+                <!-- calendar page -->
                 <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                        일정
+                    </button>
+                    <div class="collapse" id="orders-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="${contextPath}/calendar/pCalendar.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정</a>
+                            </li>
+                            <li><a  href="${contextPath}/calendar/companyCalendar.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">회사일정</a>
+                            </li>
+                            <li><a href="${contextPath}/calendar/companyControllor.page?page=1"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정관리</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- calendar page -->
+                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
                         Orders
@@ -439,11 +460,8 @@
                             <li><a href="${ contextPath }/member/mypage.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">My Page</a>
                             </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a>
+                            <li><a href="${ contextPath }/notification/list.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
                             </li>
                             <li><a href="${ contextPath }/member/logout.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
                                     out</a></li>
