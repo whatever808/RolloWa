@@ -28,6 +28,15 @@ public class AttractionController {
 	private final FileUtil fileUtil;
 	
 	/**
+	 * @method : 어트랙션 목록조회
+	 */
+	@RequestMapping("/list.do")
+	public String selectAttractionList() {
+		return "facility/attraction/list";
+	}
+	
+	
+	/**
 	 * @method : 어트랙션 등록페이지 반환
 	 */
 	@RequestMapping("/regist.page")
