@@ -110,13 +110,20 @@
 	        <div class="change-board">
 	
 	            <!-- move to previous board -->
-	            <a id="prev-board" class="list list-group list-group-item-action list-group-item-light">이전 게시글 제목</a>
+	            <a id="prev-board" class="list list-group list-group-item-action list-group-item-light">
+	            	<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+					  <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+					</svg>
+					<span id="prev-board-title"></span>
+	            </a>
 	            
 	            <!-- move to board list page -->
 	            <a id="list-board" class="list list-group list-group-item-action list-group-item-warning">목록</a>
 	
 	            <!-- move to next board -->
+
 				<a id="next-board" class="list list-group list-group-item-action list-group-item-light">다음 게시글 제목</a>
+
 	
 	        </div>
 	        <!-- board change button area end -->
@@ -160,8 +167,6 @@
 	    // attachment list show or hide function end ------------------------------------------------------------------------
 		
 	    // 공지사항 목록조회 ======================================================================================================		 
-	    // 현재 공지사항의 URL 파라미터값 스트링 객체
-		 const urlParams = new URLSearchParams(location.search);
 	    $.ajax({
 	    	url:"${ contextPath }/board/detail/list.ajax",
 	    	method:"get",
@@ -193,6 +198,7 @@
 	    			$("#prev-board").text("이전 글이 없습니다.")
 					 					 .css("pointer-events", "none");
 	    		}
+
 
 	    		// 공지사항 목록 이동
 	    		urlParams.delete("no");
@@ -227,6 +233,23 @@
 	    
 	})
 	
+    // 현재 공지사항의 URL 파라미터값 스트링 객체
+	const urlParams = new URLSearchParams(location.search);
+	
+	// 이전 | 다음 공지사항 페이지 이동
+    function moveBoard(element, boardNo, requestBoardWriter){
+		// 글번호 파라미터값 변경
+		urlParams.set("no", boardNo);
+		
+   		if(${ loginMember.userNo } != requestBoardWriter){
+  			// 로그인 사용자가 이전 공지사항의 작성자가 아닐경우
+  			element.attr("href",  "${ contextPath }/board/reader/detail.do?" + urlParams.toString());
+  		}else{
+  			// 로그인 사용자가 이전 공지사항의 작성자일 경우
+  			element.attr("href", "${ contextPath }/board/detail.do?" + urlParams.toString());
+  		}
+		
+    }
 	
 </script>
 
