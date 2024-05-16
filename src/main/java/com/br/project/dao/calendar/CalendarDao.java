@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.br.project.dto.calendar.CalendarDto;
+import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
@@ -17,8 +19,8 @@ import lombok.RequiredArgsConstructor;
 public class CalendarDao {
 	private final SqlSessionTemplate sqlSession;
 
-	public List<CalendarDto> selectPCalendar(Map<String, Object> map) {
-		return sqlSession.selectList("calMapper.selectPCalendar", map);
+	public List<CalendarDto> ajaxSelectPCalendar(Map<String, Object> map) {
+		return sqlSession.selectList("calMapper.ajaxSelectPCalendar", map);
 	}
 
 	public int insertCal(CalendarDto calendar) {
@@ -48,8 +50,32 @@ public class CalendarDao {
 		return sqlSession.insert("calMapper.reInserCoworker", map);
 	}
 
-	public List<String> selectCalNO(String userNo) {
+	public List<String> selectCalNO(Object userNo) {
 		return sqlSession.selectList("calMapper.selectCalNO", userNo);
+	}
+
+	public List<CalendarDto> ajaxCompanyCalendar() {
+		return sqlSession.selectList("calMapper.ajaxCompanyCalendar");
+	}
+
+	public List<CalendarDto> selectListCalendar(Map<String, Object> map) {
+		PageInfoDto page = (PageInfoDto)map.get("paging");
+		RowBounds row = new RowBounds(page.getListLimit()* (page.getCurrentPage()-1)
+									, page.getListLimit());
+		
+		return sqlSession.selectList("calMapper.selectListCalendar",map,row);
+	}
+
+	public int selectListCount(Map<String, Object> map) {
+		return sqlSession.selectOne("calMapper.selectListCount", map);
+	}
+
+	public int ajaxDeletedCal(String[] values) {
+		return sqlSession.update("calMapper.ajaxDeletedCal", values);
+	}
+
+	public int companyCalUpdate(CalendarDto calendar) {
+		return sqlSession.update("calMapper.companyCalUpdate", calendar);
 	}
 	
 }

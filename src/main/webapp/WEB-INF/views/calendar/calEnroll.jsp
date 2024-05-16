@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>일정 등록</title>
  <style>
      /* *{border: 1px solid black;} */
      .out-line{
@@ -165,7 +165,7 @@
                       <div><input class="time-area jua-regular" type="time" id="currentTime2" name="time"></div>
                   </div>
               </div>
-
+							<br>
               <div class="font-size25 jua-regular">Content</div> 
               <div><textarea class="content-text-area" style="resize: none;" name="calContent"></textarea></div>
               
