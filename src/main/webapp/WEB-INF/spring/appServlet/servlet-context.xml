@@ -28,13 +28,16 @@
 	
 	<!-- * websocket 등록 -->
 	<beans:bean class="com.br.project.handler.AlramEchoHandler" id="alramEchoHandler"/>
+	<beans:bean class="com.br.project.handler.ChatEchoHandler" id="chatEchoHandler"/>
 	<websocket:handlers><!-- 어떤 url 요청 시 어떤 handler를 실행할지  -->
 		<websocket:mapping path="/alram" handler="alramEchoHandler"/>
+		<websocket:mapping path="/chat" handler="chatEchoHandler"/>
 		<websocket:handshake-interceptors>
 			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
 		</websocket:handshake-interceptors>
 		<websocket:sockjs/>
 	</websocket:handlers>
+	
 	<!-- Interceptors -->
 	<interceptors>
 		<interceptor>

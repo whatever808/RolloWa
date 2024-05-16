@@ -114,7 +114,7 @@
 		// [기웅] 부서 공지사항 등록 시 부서원들에게 알림 전송
 		if($("input[name=status]").val() == 'Y') {
 			if($("select[name=category]").val() != "") {
-				socket.send(JSON.stringify({ teamCode : '${loginMember.teamCode}' }));
+				alram.send(JSON.stringify({ teamCode : '${loginMember.teamCode}' }));
 			}
 		}
 

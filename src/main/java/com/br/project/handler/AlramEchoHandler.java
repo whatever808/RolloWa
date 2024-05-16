@@ -5,9 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.web.socket.BinaryMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.PongMessage;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -23,11 +22,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 public class AlramEchoHandler extends TextWebSocketHandler {
 	
 	private List<WebSocketSession> sessionList = new ArrayList();
-	private final NotificationService notificationService;
+	@Autowired
+	private NotificationService notificationService;
 	
 	//json을 Map으로 변환
 	public Map<String, String> jsonToMap(String json) throws Exception
