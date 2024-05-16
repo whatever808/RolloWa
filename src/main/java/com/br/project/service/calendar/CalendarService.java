@@ -86,8 +86,8 @@ public class CalendarService {
 	/**
 	 * @return
 	 */
-	public List<CalendarDto> selectCompanyCalendar() {
-		return calDao.selectCompanyCalendar();
+	public List<CalendarDto> ajaxCompanyCalendar() {
+		return calDao.ajaxCompanyCalendar();
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class CalendarService {
 	 * @return
 	 */
 	public int companyCalUpdate(CalendarDto calendar) {
-		return calDao.insertCal(calendar);
+		return calDao.companyCalUpdate(calendar);
 	}
 
 	/**

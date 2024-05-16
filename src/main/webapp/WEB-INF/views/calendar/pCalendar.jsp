@@ -103,128 +103,12 @@
 		<!-- 메뉴판 -->
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 		<script>
-	    /* 수정시 입력 받은 데이터 유효성 체크 */
-	 		function checkDate(){
-	 			let date2 = $('#currentDate2').val()+ " " + $('#currentTime2').val();
-	 			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();
-	 			let checkDate =  new Date(date2) >= new Date(date1);
-	 			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
-	       console.log(checkDate);
-	       console.log(checkTime);
-	       if(checkDate && checkTime){
-	       	return true;
-	       }else {
-	       	alert('날짜 및 시간을 확인 해 주세요.');
-	        return false;		        	
-	       }  
-	   	}; 
-		  /* 캘린더 이벤트를 믈릭시 실행되는  */
-			function modalOn(info){
-				$(document).on('opening', '#cal_modal', function (e) {
-						const event = info.event;
-				    const extend = info.event.extendedProps.extendeProps;
-				    $('#color-style').val(event.backgroundColor);
-				    $('#currentDate1').val(event.startStr.slice(0,10));
-				    $('#currentTime1').val(event.startStr.slice(11));
-				    $('#currentDate2').val(event.endStr.slice(0,10));
-				    $('#currentTime2').val(event.endStr.slice(11));
-				    $('#cal_modal').find('.content-text-area').val(extend.content);
-				    $('#cal_modal').find('input[name=place]').val(extend.place);
-				    $('input[name=calTitle]').val(extend.caltitle);
-				    $('input[name=calNO]').val(event.id);
-				    /* 카테고리를 선택하는 부분 */
-						if(extend.calSort == 'P'){
-							$('#cal_modal').find('input[name=calSort]').attr('checked', true);										
-						}else{
-							const $cate = $('input[name=groupCode]');
-							for (let i = 0; i<$cate.length; i++){
-								if($cate[i].value == extend.groupCode){
-									$cate[i].checked = true;
-								}
-							}
-						}
-						/* 동료 체크 부분 초기화 */
-						$('input[name=coworker]').each(function(){
-	       				$(this).prop('checked', false);
-	    			})
-						/* 동료를 체크하는 부분   */
-						const sortArr = extend.cowoker.split(",");
-						sortArr.forEach(s => {
-							$('input[name=coworker]').each(function() {
-								if ($(this).val() == s) {
-									 $(this).prop('checked', true);
-								}
-						  })
-						})
-							
-				}) //ismodal open function
-     	 	
-     	 	$('#cal_modal').iziModal('setSubtitle', event.id);  
-     	 	$('#cal_modal').iziModal('setTitle', event.title);  
-  			$('#cal_modal').iziModal('open');
-			}
-		  
-		  /* 이벤트를 불러들어 오는 부분 */
-		  function addEvent(num){
-			  console.log(num);
-			  $.ajax({
-					url:'${path}/calendar/selectCal.ajax',
-					type:'post',
-				  contentType: 'application/json',
-					data:JSON.stringify({ userNO: num }),
-					success:function(list){
-						console.log(list);
-						/*
-								{
-									id:			'${c.calNO}',
-									title: 		'${c.group.upperCode}'+'${c.group.codeName}',
-									start: 		'${c.startDate }',
-									end: 		'${c.endDate }',
-									color: 		'${c.color }',
-									extendeProps:{
-										content:  	'${c.calContent}',
-										caltitle: 	'${c.calTitle }',
-										place: 	  	'${c.place}',
-										calSort:  	'${c.calSort}',
-										groupCode: 	'${c.groupCode}',
-										cowoker: 	'<c:forEach var="co" items="${c.coworker}">${co.userNo},</c:forEach>'								
-									}
-						*/
-						/* for(let e of list){
-							console.log(e);
-						} */
-						list.forEach((e) => {
-							 console.log(e);
-							 console.log(e.calNO);
-							 calendar.addEvent({
-										id:						e.calNO,
-										title:				e.group.upperCode + group.codeName,
-										start: 				e.startDate,
-										end:					e.endDate,
-										color: 				e.color,
-										extendeProps:{
-											content:  	e.calContent,
-											caltitle: 	e.calTitle,
-											place: 			e.place,
-											calSort:  	e.calSort,
-											groupCode: 	e.groupCode,
-											cowoker: 		
-											},
-								})
-						})
-						calendar.render();
-					},
-					error:function(){
-						console.log('calendar import error');
-					}
-			  })
-		  }
-		  
-			/* 캘린더 설정 및 선언 */
+		/* 캘린더 설정 및 선언 */
+		  let calendar;
 			function declareCalendar(){
 				document.addEventListener('DOMContentLoaded', function() {
 					var calendarEl = document.getElementById('calendar');
-					var calendar = new FullCalendar.Calendar(calendarEl, {
+					calendar = new FullCalendar.Calendar(calendarEl, {
 						initialView: 'dayGridMonth',
 						locale: 'ko',
 						customButtons: {
@@ -257,13 +141,114 @@
 							info.el.style.transform = '';
 						},	
 					});
-					calendar.render();
 				});					
 			}
+			/* 미리 선언 하지않으면 뒤에서 let calendar에서 undifieded로 변수가 설정 되어 버림 */
+			declareCalendar();
+			
+	    /* 수정시 입력 받은 데이터 유효성 체크 */
+	 		function checkDate(){
+	 			let date2 = $('#currentDate2').val()+ " " + $('#currentTime2').val();
+	 			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();
+	 			let checkDate =  new Date(date2) >= new Date(date1);
+	 			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
+	       console.log(checkDate);
+	       console.log(checkTime);
+	       if(checkDate && checkTime){
+	       	return true;
+	       }else {
+	       	alert('날짜 및 시간을 확인 해 주세요.');
+	        return false;		        	
+	       }  
+	   	}; 
+		  /* 캘린더 이벤트를 믈릭시 실행되는  */
+			function modalOn(info){
+				$(document).on('opening', '#cal_modal', function (e) {
+						console.log(info);
+						const event = info.event;
+				    const extend = info.event.extendedProps;
+				    $('#color-style').val(event.backgroundColor);
+				    $('#currentDate1').val(event.startStr.slice(0,10));
+				    $('#currentTime1').val(event.startStr.slice(11));
+				    $('#currentDate2').val(event.endStr.slice(0,10));
+				    $('#currentTime2').val(event.endStr.slice(11));
+				    $('#cal_modal').find('.content-text-area').val(extend.content);
+				    $('#cal_modal').find('input[name=place]').val(extend.place);
+				    $('input[name=calTitle]').val(extend.caltitle);
+				    $('input[name=calNO]').val(event.id);
+				    /* 카테고리를 선택하는 부분 */
+						if(extend.calSort == 'P'){
+							$('#cal_modal').find('input[name=calSort]').attr('checked', true);										
+						}else{
+							const $cate = $('input[name=groupCode]');
+							for (let i = 0; i<$cate.length; i++){
+								if($cate[i].value == extend.groupCode){
+									$cate[i].checked = true;
+								}
+							}
+						}
+						/* 동료 체크 부분 초기화 */
+						$('input[name=coworker]').each(function(){
+	       				$(this).prop('checked', false);
+	    			})
+	    			console.log(extend.cowoker);
+						/* 동료를 체크하는 부분   */
+						extend.cowoker.forEach(w => {
+							$('input[name=coworker]').each(function() {
+								if ($(this).val() == w.userNo) {
+									 $(this).prop('checked', true);
+								}
+						  })
+						})
+							
+				}) //ismodal open function
+     	 	
+     	 	$('#cal_modal').iziModal('setSubtitle', event.id);  
+     	 	$('#cal_modal').iziModal('setTitle', event.title);  
+  			$('#cal_modal').iziModal('open');
+			}
+		  
+		  /* 이벤트를 불러들어 오는 부분 */
+		  function addEvent(num){
+			  $.ajax({
+					url:'${path}/calendar/selectCal.ajax',
+					type:'post',
+				  contentType: 'application/json',
+					data:JSON.stringify({ userNO: num }),
+					success:function(list){
+						console.log(list);
+						/* for(let e of list){
+							console.log(e);
+						} */
+						list.forEach((e) => {
+							 calendar.addEventSource(
+							 [{
+									  id:						e.calNO,
+										title:				e.group.upperCode + e.group.codeName,
+										start: 				e.startDate,
+										end:					e.endDate,
+										color: 				e.color,
+										extendedProps:{
+											content:  	e.calContent,
+											caltitle: 	e.calTitle,
+											place: 			e.place,
+											calSort:  	e.calSort,
+											groupCode: 	e.groupCode,
+											cowoker:		e.coworker
+											}		 
+								 }]
+							 );
+						})
+						calendar.render();
+					},
+					error:function(){
+						console.log('calendar import error');
+					}
+			  })
+		  }
 		  
    		/* document 후 실행 될 함수 */
 			$(document).ready(function(){
-				declareCalendar();
 				addEvent(null);
 			})
 		</script>
