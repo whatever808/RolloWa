@@ -116,6 +116,7 @@
 	    <!-- ------------ -->
 	    <form id="search_Form" action="${ contextPath }/orginfo/search.do" method="GET">
 	    	<input type="hidden" name="page" value="1">
+			
 	        <table class="table table_search">
 	
 	            <tr class="tr_search">
@@ -123,7 +124,7 @@
                 	<th>부서명</th>
 	                <td>
 	                    <select name="department" id="department" class="form-control">
-	                        	<option value="전체 부서">전체 부서</option>
+	                        	<!-- <option value="전체 부서">전체 부서</option> -->
                     	</select>
 	                </td>
 	                <!-- 검색 메뉴 2 : 전화번호 -->
@@ -137,7 +138,7 @@
 	                <th>팀명</th>
 	                <td>
 	                    <select name="team" id="team" class="form-control">
-	                        	<option value="전체 팀">전체 팀</option>
+	                        	<!-- <option value="전체 팀">전체 팀</option> -->
                     	</select>
 	                </td>
 	                <!-- 검색 메뉴 4 : 이름 -->
@@ -162,30 +163,32 @@
 	    <script>
 			let departmentSelect = $("#department");
 			let teamSelect = $("#team");
-			let positionSelect = $("#position");
 	 		
 			$(document).ready(function(){
-				
-				departmentSelect.empty();
-				departmentSelect.append($('<option>', {
-					value: "전체 부서",
-					text: "전체 부서"
-				}));
 				
 				// 부서 조회 이동
 				selectDepartmentList();
 				
 				// 팀 조회 이동
 				selectTeamList();
+				
 	 		})
 	 		
 	 		
 	 		// 부서조회
 	 		function selectDepartmentList(){
+				departmentSelect.empty();
+				departmentSelect.append($('<option>', {
+					value: "전체 부서",
+					text: "전체 부서"
+				}));
+				
 				$.ajax({
 			 		url:"${contextPath}/orginfo/department.do",
 			 		type:"GET",
+			 		async:"false",
 			 		success: function(data){
+			 			
 			 			$.each(data, function(index, organizationDto) {
 			 			    $.each(organizationDto.groupList, function(index, groupDto) {
 			 			        departmentSelect.append($('<option>', {
@@ -194,20 +197,35 @@
 						        	}));
 						    	});
 						    });
+			 			
+			 				if(${ not empty search }){
+			 					$("#search_Form #department").children("option").each(function(){
+						        	$(this).val() == "${ search.department }" && $(this).attr("selected", true);
+						        })
+			 				} 
+			 				
 			 		},
 			 		error: function(){
 			 			console.log("ajax 부서 조회 실패 입니다.")
 			 		}
 				});
-				
 			}
 	 		
 	 		// 팀조회
 	 		function selectTeamList(){
+	 			
+	 			teamSelect.empty();
+ 			 	teamSelect.append($('<option>', {
+		 	        value: "전체 팀",
+		 	        text: "전체 팀"
+		 	    }));
+	 			
 		 	    $.ajax({
 		 	        url:"${contextPath}/orginfo/team.do?selectedDepartment=" + departmentSelect.val(),
 		 	        type:"GET",
+		 	        async:"false",
 		 	        success: function(data){
+		 	        	
 		 	            $.each(data, function(index, organizationDto) {
 		 	                $.each(organizationDto.groupList, function(index, groupDto) {
 		 	                    teamSelect.append($('<option>', {
@@ -216,31 +234,40 @@
 		 	                    }));
 		 	                });
 		 	            });
+						if(${ not empty search }){
+		 					$("#search_Form #team").children("option").each(function(){
+					        	$(this).val() == "${ search.team }" && $(this).attr("selected", true);
+					        })
+		 				}
 		 	        },
 		 	        error: function(){
 		 	            console.log("ajax 팀 조회 실패 입니다.")
 		 	        }
 		 	    });
 			}
-	    
+	    	
+	 		
 	 		
 	 		// 부서를 선택했을 경우 실행될 function
-	 		departmentSelect.change(function() {
-		 	    
- 			 	teamSelect.empty();
-		 	    teamSelect.append($('<option>', {
-		 	        value: "전체 팀",
-		 	        text: "전체 팀"
-		 	    }));
-		 	    
+	 		departmentSelect.on("change", function() {
 		 	    // 팀 조회
 		 	   selectTeamList();
-		 	
-			    teamSelect.change(function(){
-			 	    let selectedTeam = teamSelect.val();
-			    })
 			    
 	 		});
+	 		
+	 		
+	 		// 검색 이후 초기화 작동하도록 하기
+	 		$(document).ready(function(){
+	 		    $("#search_Form button[type=reset]").click(function() {
+	 		        $("#search_Form")[0].reset();
+	 		        
+	 		        $("#search_Form #department").val("전체 부서");
+	 		        $("#search_Form #team").val("전체 팀");
+
+	 		        return false;
+	 		    });
+	 		});
+	 		
 	 		
 	 		// 검색 버튼
 	 		function search(){
@@ -258,7 +285,7 @@
 	 		            team: team,
 	 		            name: name
 	 		        },
-	 		       success: function(response) {
+					success: function(response) {
 	 		            console.log("검색 결과:", response);
 	 		        },
 	 		        error: function() {
@@ -291,7 +318,7 @@
 	    <table class="table table_empinfo line-shadow">
 	        <tr>
 	            <th>프로필 사진</th>
-	            <th>성명</th>
+	            <th>이름</th>
 	            <th>부서</th>
 	            <th>팀명</th>
 	            <th>직급</th>
@@ -350,26 +377,30 @@
 	    <c:if test="${ not empty search }">
 			<script>
 			     $(document).ready(function(){
- 	 
-			        $("#search_Form #department").val("${ search.department }");
+			        /* $("#search_Form #department").val("${ search.department }");
+			        $("#search_Form #department").children("option").each(function(){
+			        	$(this).val() == "${ search.department }" && $(this).attr("selected", true);
+			        })
+			        */
 			        $("#search_Form #team").val("${ search.team }");
 			        $("#search_Form #phone").val("${ search.phone }");
 			        $("#search_Form #name").val("${ search.name }");
 			        
 			        // 검색결과 페이지일 경우 페이징바 페이지 요청시 ==> <a> 기본이벤트 제거
 			        $("#pagingArea a").on("click", function(){
-			           if($(this).text() == 'Previous'){
-			              $("#search_Form input[name=page]").val("${pi.currentPage}" - 1);
-			           }else if($(this).text() == 'Next' ){
-			              $("#search_Form input[name=page]").val(Number("${pi.currentPage}") + 1);
-			           }else{
-			              $("#search_Form input[name=page]").val($(this).text());                   
-			           }
-			           $("#search_Form").submit();   // form 강제 submit
+						if($(this).text() == 'Previous'){
+							$("#search_Form input[name=page]").val("${pi.currentPage}" - 1);
+						}else if($(this).text() == 'Next' ){
+							$("#search_Form input[name=page]").val(Number("${pi.currentPage}") + 1);
+						}else{
+							$("#search_Form input[name=page]").val($(this).text());                   
+						}
+						$("#search_Form").submit();
 			           
-			           return false;
-			        })
-			     })
+						return false;
+					})
+					
+				})
 			</script>
 		</c:if>
 	     

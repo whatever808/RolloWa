@@ -67,14 +67,16 @@
 		SELECT USER_NO
 			 , PROFILE_URL
        		 , USER_NAME
-       		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'DEPT%' AND CODE = TEAM_CODE) AS "DEPT"
-       		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'TEAM%' AND CODE = TEAM_CODE) AS "TEAM"
-      		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = POSITION_CODE) AS "POSI"
+       		 , D1.CODE_NAME AS "DEPT"
+       		 , D2.CODE_NAME AS "TEAM"
+      		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = MEMBER.POSITION_CODE) AS "POSI"
       		 , PHONE
       		 , EMAIL
 		  FROM MEMBER
-		  JOIN TB_GROUP ON TEAM_CODE = CODE
-		   AND GROUP_CODE LIKE 'TEAM%'
+		  JOIN TB_GROUP D2 ON MEMBER.TEAM_CODE = D2.CODE
+     LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
+         WHERE D1.STATUS = 'Y'
+           AND D2.STATUS = 'Y'
 		 ORDER BY
 			   USER_NO ASC
 	</select>
@@ -92,47 +94,51 @@
  	<select id="selectSearchListCount" resultType="_int">
  		SELECT COUNT(*)
        	  FROM MEMBER
-         WHERE STATUS = 'Y'
-          <if test="department != ''">
-          	AND (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'DEPT%' AND CODE = TEAM_CODE) = #{ department }
-          </if>
-          <if test="team != ''">
-          	AND (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'TEAM%' AND CODE = TEAM_CODE) = #{ team }
-          </if>
-          <if test="phone != ''">
-          	AND PHONE LIKE '%' || #{ phone } || '%'
-          </if>
-          <if test="name != ''">
-         	AND USER_NAME LIKE '%' || #{ name } || '%'
-       	  </if>
+    	  JOIN TB_GROUP D2 ON MEMBER.TEAM_CODE = D2.CODE
+     LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
+    	 WHERE D1.STATUS = 'Y'
+           AND D2.STATUS = 'Y'
+	       <if test="department != ''">
+				AND D1.CODE_NAME = #{ department }
+	       </if>
+	       <if test="team != ''">
+				AND D2.CODE_NAME = #{ team }
+	       </if>
+	       <if test="phone != ''">
+				AND PHONE LIKE '%' || #{ phone } || '%'
+	       </if>
+	       <if test="name != ''">
+				AND USER_NAME LIKE '%' || #{ name } || '%'
+	       </if>
  	</select>
  	<select id="selectSearchList" resultMap="memberResult">
 	 	SELECT USER_NO
-				 , PROFILE_URL
-	       		 , USER_NAME
-	       		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'DEPT%' AND CODE = TEAM_CODE) AS "DEPT"
-	       		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'TEAM%' AND CODE = TEAM_CODE) AS "TEAM"
-	      		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = POSITION_CODE) AS "POSI"
-	      		 , PHONE
-	      		 , EMAIL
-			  FROM MEMBER M
-			  JOIN TB_GROUP ON TEAM_CODE = CODE
-			   AND GROUP_CODE LIKE 'TEAM%'
-	         WHERE M.STATUS = 'Y'
-	           <if test="department != ''">
-	           AND (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'DEPT%' AND CODE = TEAM_CODE) = #{ department }
-	           </if>
-	           <if test="team != ''">
-	           AND (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'TEAM%' AND CODE = TEAM_CODE) = #{ team }
-	           </if>
-	           <if test="phone != ''">
-	           	AND PHONE LIKE '%' || #{ phone } || '%'
-	           </if>
-	           <if test="name != ''">
-	           	AND USER_NAME LIKE '%' || #{ name } || '%'
-           	   </if>
-			 ORDER BY
-				   USER_NO ASC
+			 , PROFILE_URL
+       		 , USER_NAME
+       		 , D1.CODE_NAME AS "DEPT"
+       		 , D2.CODE_NAME AS "TEAM"
+      		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = MEMBER.POSITION_CODE) AS "POSI"
+      		 , PHONE
+      		 , EMAIL
+		  FROM MEMBER
+		  JOIN TB_GROUP D2 ON MEMBER.TEAM_CODE = D2.CODE
+     LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
+         WHERE D1.STATUS = 'Y'
+           AND D2.STATUS = 'Y'
+           <if test="department != ''">
+			    AND D1.CODE_NAME = #{ department }
+			</if>
+			<if test="team != ''">
+			    AND D2.CODE_NAME = #{ team }
+			</if>
+			<if test="phone != ''">
+			    AND PHONE LIKE '%' || #{ phone } || '%'
+			</if>
+			<if test="name != ''">
+			    AND USER_NAME LIKE '%' || #{ name } || '%'
+			</if>
+		 ORDER BY
+			   USER_NO ASC
  	</select>
 
 
