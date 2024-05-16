@@ -268,14 +268,11 @@ public class PayService {
 		return payDao.retireDetail(map);
 	}
 	
-	//
-	
-	
-
+	//지출결의서 등록
 	public int jReportInsert(Map<String, Object> map, List<Map<String, Object>> itemList
 							, List<Map<String, Object>> attachList) {
 		
-		//1.비품신청서테이블 등록
+		//1.지출결의서테이블 등록
 		int result1 = payDao.insertJreport(map);
 		
 		//2.품목공동테이블 등록
@@ -294,7 +291,7 @@ public class PayService {
 	    if(attachList != null && !attachList.isEmpty()) {
 			result4 = 0;
 			for(Map<String, Object> at : attachList) {
-				result4 = payDao.jReportAttachInsert(at);
+				result4 += payDao.jReportAttachInsert(at);
 			}
 		}
 	    
@@ -305,6 +302,10 @@ public class PayService {
 	public List<Map<String, Object>> draftDetail(Map<String, Object> map){
 		
 		return payDao.draftDetail(map);
+	}
+	
+	public List<Map<String, Object>> fileDraftDetail(Map<String, Object> map){
+		return payDao.fileDraftDetail(map);
 	}
 	
 	//지출결의서 수정페이지 =>리스트 불러오기
@@ -324,12 +325,12 @@ public class PayService {
 		
 		//2_2.품목공동테이블 등록
 		int result3 = 1;
-			if(!list.isEmpty()) {
-				result3 = 0;
-				for (Map<String, Object> item : list) { 
-					result3 += payDao.insertItemsJ(item); // insert재사용
-				}				
-			}
+		if(!list.isEmpty()) {
+			result3 = 0;
+			for (Map<String, Object> item : list) { 
+				result3 += payDao.updateInsertItemsJ(item); // insert재사용
+			}				
+		}
 		//3.결재이력공동테이블 등록
 	    int result4 = payDao.updateApproval(map);
 	    
@@ -349,6 +350,23 @@ public class PayService {
 			
 		return result1;
 		
+	}
+	
+	//일주일이상처리가 지연된 목록리스트조회
+	public List<PayDto> delayDateList(String userName, PageInfoDto pi){
+		return payDao.delayDateList(userName, pi);
+	}
+	
+	public int moreDateSelectCount(Map<String, Object> map) {
+		return payDao.moreDateSelectCount(map);
+	}
+	
+	public List<PayDto> delayDateSelectList(Map<String, Object> userMap, PageInfoDto pi) {
+		return payDao.delayDateSelectList(userMap, pi);
+	}
+	
+	public int moreDateSearchCount(Map<String, Object> userMap) {
+		return payDao.moreDateSearchCount(userMap);
 	}
 	
 	

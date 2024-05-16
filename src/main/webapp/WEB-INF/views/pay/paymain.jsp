@@ -56,6 +56,24 @@
 		</script>
   </c:if>
   
+    <c:if test="${ not  empty delayDateList or not empty delayDateSelect}">
+  	<script>
+	  	function typeSelect(){
+				location.href="${contextPath}/pay/delayDateSelectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
+			
+			};
+			
+				$(document).ready(function(){
+					$("#selects").change(function(){
+						typeSelect();
+						});
+					$("#statusSelect").change(function(){
+						typeSelect();
+					});
+					
+				});
+		</script>
+  </c:if>
   
   
                                
@@ -98,7 +116,7 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="">
+                        <a href="${contextPath}/pay/delayDateList.do">
                             <div class="di_top" id="di_t_3">
                                 <div class="di_top_left">
                                    <div><label>${ userName }님의 일주일 이상 <br>  지연 된 수신결재함</label></div>
@@ -109,7 +127,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard-minus-fill" viewBox="0 0 16 16">
                                         <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"/>
                                         <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5zM6 9h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1 0-1"/>
-                                      </svg>
+                                    </svg>
                                 </div>
                             </div>
                         </a>
@@ -240,8 +258,11 @@
                                 </div>
                                 <div id="cen_bottom_search_center">
                                 			<c:choose>
-                                				<c:when test="${ not empty userAllList or not empty userSearchList}">
+                                				<c:when test="${ not empty userAllList or not empty userSearchList or not empty userSearchList}">
                                 					 <form action="${contextPath}/pay/userSearch.do" method="get">
+                                				</c:when>
+                                				<c:when test="${ not empty delayDateList or not empty delayDateSelect or not empty delayDateSearch}">
+                                					 <form action="${contextPath}/pay/delayDateSearch.do" method="get">
                                 				</c:when>
                                 				<c:otherwise>
                                      			<form action="${contextPath}/pay/search.do" method="get">
@@ -257,7 +278,16 @@
                                         <input type="text" name="keyword" value="${ search.keyword }"  id="search_input" class="form-control" placeholder="검색어를 입력하세요" style="width: 400px;">
                                        
                                         <c:choose>
-                                        	<c:when test="${ not empty userAllList or not empty userSearchList }">
+                                        	<c:when test="${ not empty userAllList or not empty userSearchList or not empty userSearchList}">
+                                        	 <div class="input-group-append">
+                                        		<button type="submit" id="user_mybutton">
+                                           	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
+                                           	<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                           	</svg>
+                                         		</button>
+                                         		</div>
+                                        	</c:when>
+                                        	<c:when test="${ not empty delayDateList or not empty delayDateSelect or not empty delayDateSearch}">
                                         	 <div class="input-group-append">
                                         		<button type="submit" id="user_mybutton">
                                            	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
@@ -394,6 +424,28 @@
 													                </c:forEach>
 													                
 													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvedList.do?page=${pi.currentPage+1}">Next</a></li>
+													             </ul>
+                                   	</c:when>
+                                   	<c:when test="${ not empty delayDate }">
+                                   		<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateList.do?page=${pi.currentPage-1}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateList.do?page=${p}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateList.do?page=${pi.currentPage+1}">Next</a></li>
+													             </ul>
+                                   	</c:when>
+                                   	<c:when test="${ not empty delayDateSelect }">
+                                   		<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSelectList.do?page=${pi.currentPage-1}&conditions=${map.conditions}&status=${map.status}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSelectList.do?page=${p}&conditions=${map.conditions}&status=${map.status}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSelectList.do?page=${pi.currentPage+1}&conditions=${map.conditions}&status=${map.status}">Next</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:otherwise>

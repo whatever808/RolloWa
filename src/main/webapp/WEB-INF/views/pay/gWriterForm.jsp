@@ -329,7 +329,6 @@
                     </form>
                 </div>
             </div>
-        </div>
 
        <script>
        $("#submit_btn").click(function(){

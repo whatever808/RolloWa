@@ -179,7 +179,7 @@
                                 <table border="1" id="sign_left">
                                     <tr>
                                         <th>부 서</th>
-                                        <td>${list.get(0).DEPARTMENT} ${member.get(0).teamName}</td>                   
+                                        <td>${member.get(0).teamName}</td>                   
                                         <input type="hidden" name="deptName" value="${member.get(0).teamName}">
                                         <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
                                         <input type="hidden" name="draftNo" value="${list.get(0).DRAFT_NO}">
@@ -188,8 +188,7 @@
                                         <input type="hidden" name="writerNo" value="${userNo}">
                                         <input type="hidden" name="documentNo" value="${list.get(0).DOCUMENT_NUMBER}">
                                         <input type="hidden" name="writerName" value="${member.get(0).userName}">
-                                        
-                                                                           
+                                                                      
                                     </tr>
                                     <tr>
                                         <th>기안일</th>
@@ -379,7 +378,7 @@
                                   <th>기존첨부파일</th> 
                                   <td colspan="2">
                                    <!-- 기존의 첨부파일 목록들 -->
-		                            		<c:forEach var="at" items="${ list }">
+		                            		<c:forEach var="at" items="${ fileList }">
 		                            			<div class="attach">
 		                            				<a href="${contextPath}${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${at.ORIGIN_NAME}">${at.ORIGIN_NAME}</a>
 		                            				<span class="origin_del" data-fileno="${ at.FILE_NO }">x</span>

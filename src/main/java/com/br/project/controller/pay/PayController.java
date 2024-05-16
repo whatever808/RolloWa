@@ -207,9 +207,11 @@ public class PayController {
 			model.addAttribute("userName", userName);
 			return "pay/retireDetail";
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("지출결의서")) {
-			map.put("refType", "PG");
 			List<Map<String, Object>> list = payService.draftDetail(map);
+			map.put("refType", "PJ");
+			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
 			model.addAttribute("list", list);
+			model.addAttribute("fileList", fileList);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
 			return "pay/draftDetail";
@@ -525,8 +527,12 @@ public class PayController {
 						  , HttpSession session) {
 		
 		//기존에 작성된 데이터값들
+		//매출
 		List<Map<String, Object>> Mlist = payService.expendModify(map);
+		//지출
 		List<Map<String, Object>> Jlist = payService.draftModify(map);
+		
+		
 		//-------------------------------------
 		
 		//로그인한 유저의 팀이름, 부서, 팀명, 직급
@@ -654,6 +660,8 @@ public class PayController {
 			return "pay/mWriterForm";
 			
 		}else if(map.get("report").equals("j")){
+			map.put("refType", "PJ");
+			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
 			model.addAttribute("maDeptList", maDeptList);
 			model.addAttribute("operatDeptList", operatDeptList);
 			model.addAttribute("marketDeptList", marketDeptList);
@@ -664,6 +672,7 @@ public class PayController {
 			model.addAttribute("userName", userName);
 			//-------------------------------------
 			model.addAttribute("list", Jlist);
+			model.addAttribute("fileList", fileList);
 			
 			return "pay/jWriterForm";
 		}
@@ -935,6 +944,7 @@ public class PayController {
 	public String jReportInsert(@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes
 								, List<MultipartFile> uploadFiles) {
 		
+		
 		// 품목들 담기
 		List<Map<String, Object>> itemList = new ArrayList<>();
 		for(int i=0; i<map.size(); i++) {
@@ -1000,13 +1010,14 @@ public class PayController {
 							  , RedirectAttributes redirectAttributes) {
 		
 		String[] delFileNo = (String[]) map.get("delFileNo");
-		
+		String reportNo = (String)map.get("reportNo");
 		
 		//품목들
 		List<Map<String, Object>> list = new ArrayList<>();
 		for(int i=0; i<map.size(); i++) {
 			if(map.get("account" + i) != null && !map.get("account" + i).toString().equals("")) {
-				Map<String, Object> itemMap = new HashMap<>();
+				Map<String, Object> itemMap = new HashMap<>();			
+				itemMap.put("reportNo", reportNo);
 				itemMap.put("account", map.get("account" + i));
 				itemMap.put("usage", map.get("account" + i));
 				itemMap.put("price", map.get("price" + i));
@@ -1030,16 +1041,126 @@ public class PayController {
 		}
 		log.debug("fileLength : {}", map.get("fileLength"));
 		
+		int result = payService.jReportUpdate(map, list, fileList, delFileNo);
 		
-		int result = payService.jReportUpdate(map, list, fileList, delFileNoArr);
-		
-		redirectAttributes.addFlashAttribute("alertTitle", "지출결의서");
-		if(result > 0) {
-			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
-		}
 		
 		return "redirect:/pay/paymain.page";
 		
+		
+	}
+	
+	@RequestMapping("/delayDateList.do")
+	public String delayDateList(@RequestParam (value="page", defaultValue="1") int currentPage
+												 , HttpSession session, Model model){
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);
+		
+		//일주일이상 처리가안된 목록갯수
+		int mdCount = payService.moreDateCount(userName);
+		PageInfoDto pi = pagingUtil.getPageInfoDto(mdCount, currentPage, 5, 10);
+		
+		List<PayDto> list = payService.delayDateList(userName, pi);
+		
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payService.successListCount(userName);
+		// 로그인한 사용자의 전체수신갯수
+		int ulistCount = payService.allUserCount(userName);
+		//개시글총갯수
+		int listCount = payService.selectListCount();
+		
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("userName", userName);	
+		model.addAttribute("delayDate", "delayDate");
+		
+		return "pay/paymain";
+		
+	}
+	
+	
+	@RequestMapping("/delayDateSelectList.do")
+	public String delayDateSelectList(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
+							, Model model, HttpSession session) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);
+		
+		Map<String, Object> userMap = new HashMap<>();
+		userMap.put("userName", userName);
+		userMap.put("conditions", map.get("conditions"));
+		userMap.put("status", map.get("status"));
+		
+		//일주일이상 처리가안된 목록갯수
+		int moreDateSelectCount = payService.moreDateSelectCount(userMap);
+		PageInfoDto pi = pagingUtil.getPageInfoDto(moreDateSelectCount, currentPage, 5, 10);
+		
+		List<PayDto> list = payService.delayDateSelectList(userMap, pi);
+		
+		int mdCount = payService.moreDateCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payService.successListCount(userName);
+		// 로그인한 사용자의 전체수신갯수
+		int ulistCount = payService.allUserCount(userName);
+		//개시글총갯수
+		int listCount = payService.selectListCount();
+		
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("userName", userName);
+		model.addAttribute("map", map);
+		model.addAttribute("delayDateSelect", "delayDateSelect");
+		
+		return "pay/paymain";
+	}
+	
+	@RequestMapping("/delayDateSearch.do")
+	public String delayDateSearch(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
+							, Model model, HttpSession session) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);
+		
+		Map<String, Object> userMap = new HashMap<>();
+		userMap.put("userName", userName);
+		userMap.put("condition", map.get("condition"));
+		userMap.put("keyword", map.get("keyword"));;
+		
+		//일주일이상 처리가안된 목록갯수
+		int moreDateSearchCount = payService.moreDateSearchCount(userMap);
+		PageInfoDto pi = pagingUtil.getPageInfoDto(moreDateSearchCount, currentPage, 5, 10);
+		//여기까지했음
+		List<PayDto> list = payService.delayDateSelectList(userMap, pi);
+		
+		int mdCount = payService.moreDateCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payService.successListCount(userName);
+		// 로그인한 사용자의 전체수신갯수
+		int ulistCount = payService.allUserCount(userName);
+		//개시글총갯수
+		int listCount = payService.selectListCount();
+		
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("userName", userName);
+		model.addAttribute("map", map);
+		model.addAttribute("delayDateSelect", "delayDateSelect");
+		
+		return "pay/paymain";
 		
 	}
 	

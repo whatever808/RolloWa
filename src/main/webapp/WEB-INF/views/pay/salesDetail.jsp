@@ -128,6 +128,8 @@
 												              </td>
 												          </tr>
 												         </table>
+												         
+												         <div><c:out value="${ list.get(0).content }" escapeXml="false" /></div>
 												      </div>
 												      <div id="text_div_bottom" >
 											            <div id="text_div" class="form-label">
@@ -156,7 +158,9 @@
 				          
 				          
 				           		<button class="btn btn-warning" id="modifyWriter" type="submit">수정</button>
-				     
+				     					
+				     					
+				     					
 				          <!------------>
 										
 								</div>
