@@ -6,25 +6,25 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>어트랙션 등록</title>
+	<title>어트랙션 수정</title>
 	
-	<!-- 놀이기구등록페이지 스타일 -->
-    <link href="${ contextPath }/resources/css/facility/attraction/regist.css" rel="stylesheet">
+	<!-- 어트랙션 수정페이지 스타일 -->
+	<link href="${ contextPath }/resources/css/facility/attraction/modify.css" rel="stylesheet">
 </head>
 <body>
 
 	<!-- side bar -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
-
+	
 	<!-- content 추가 -->
 	<div class="content p-5">
 	
 	    <div class="registForm">
 	
-	        <h1 class="page-title">어트랙션 등록</h1>
+	        <h1 class="page-title">어트랙션 수정</h1>
 	
-	        <!-- regist form start -->
-	        <form action="${ contextPath }/attraction/regist.do" method="post" id="regist-form">
+	        <!-- modify form start -->
+	        <form action="${ contextPath }/attraction/modify.do" method="post" id="modify-form">
 	            
 	            <div class="field-group">
 	                <label for="attraction-name" class="field-title">기구명</label><br>
@@ -114,20 +114,19 @@
 	            </div>
 	        
 	        </form>
-	        <!-- regist form end -->
-	
+	        <!-- modify form end -->
 	
 	    </div>
 	
 	</div>
 	<!-- content 끝 -->
-	
-	<!-- chat floating -->
+    
+    <!-- chat floating -->
   	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />
 
 </body>
 
-<!-- 어트랙션 등록페이지 스크립트 -->
+<!-- 어트랙션 수정페이지 스크립트 -->
 <script>
 	$(document).ready(function(){
 		
@@ -180,4 +179,5 @@
 	
 	})
 </script>
+
 </html>

@@ -1,9 +1,7 @@
 package com.br.project.service.board;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -14,6 +12,7 @@ import com.br.project.dto.common.AttachmentDto;
 import com.br.project.dto.common.PageInfoDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor

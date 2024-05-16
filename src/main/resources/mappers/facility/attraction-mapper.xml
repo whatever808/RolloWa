@@ -20,6 +20,7 @@
 		  	   ,height_limit
 		  	   ,height_limit_range
 		  	   ,status
+		  	   ,status_reason
 		  	   )
 		 values 
 		 		(
@@ -34,8 +35,26 @@
 		 		,#{ageLimitRange}
 		 		,#{heightLimit}
 		 		,#{heightLimitRange}
-		 		.#{status}
+		 		,#{status}
+		 		,#{statusReason}
 		 		)
 	</insert>
+	
+	<!-- 어트랙션 수정 -->
+	<update id="updateAttraction" parameterType="AttractionDto">
+		update tb_attraction
+		   set location = #{location}
+		   	  ,modify_emp = #{modifyEmp}
+		   	  ,attraction_name = #{attractionName}
+		   	  ,attraction_intro = #{attractionIntro}
+		   	  ,customer_limit = #{customerLimit}
+		   	  ,age_limit = #{ageLimit}
+		   	  ,age_limit_range = #{ageLimitRange}
+		   	  ,height_limit = #{heightLimit}
+		   	  ,height_limit_range = #{heightLimitRange}
+		   	  ,status = #{status}
+		   	  ,status_reason = #{statusReason}
+		 where attraction_no = #{attractionNo}
+	</update>
 	
 </mapper>

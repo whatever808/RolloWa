@@ -32,5 +32,5 @@ public class AttractionDto {
 	private Date registDate;
 	private Date modifyDate;
 	private String status;
-	private String operation;
+	private String statusReason;
 }
