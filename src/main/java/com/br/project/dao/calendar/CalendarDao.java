@@ -54,8 +54,8 @@ public class CalendarDao {
 		return sqlSession.selectList("calMapper.selectCalNO", userNo);
 	}
 
-	public List<CalendarDto> selectCompanyCalendar() {
-		return sqlSession.selectList("calMapper.selectCompanyCalendar");
+	public List<CalendarDto> ajaxCompanyCalendar() {
+		return sqlSession.selectList("calMapper.ajaxCompanyCalendar");
 	}
 
 	public List<CalendarDto> selectListCalendar(Map<String, Object> map) {
@@ -72,6 +72,10 @@ public class CalendarDao {
 
 	public int ajaxDeletedCal(String[] values) {
 		return sqlSession.update("calMapper.ajaxDeletedCal", values);
+	}
+
+	public int companyCalUpdate(CalendarDto calendar) {
+		return sqlSession.update("calMapper.companyCalUpdate", calendar);
 	}
 	
 }

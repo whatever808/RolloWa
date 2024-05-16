@@ -182,7 +182,9 @@
                                         <td>${member.get(0).teamName}</td>                   
                                         <input type="hidden" name="deptName" value="${member.get(0).teamName}">
                                         <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
-                                        <input type="hidden" name="expendNo" value="${list.get(0).EXPEND_NO}">
+                                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
+                                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
+                                        <input type="hidden" name="writerNo" value="${userNo}"> 
                                     </tr>
                                     <tr>
                                         <th>기안일</th>
@@ -280,9 +282,9 @@
                                         <th rowspan="3">승 <br> 인</th>
                                         <c:choose>
 	                                        <c:when test="${ empty list }">
-		                                        <td>최초승인자</td>
-		                                        <td>중간승인자</td>
-		                                        <td>최종승인자</td>
+		                                        <td id="f_name">최초승인자</td>
+		                                        <td id="m_name">중간승인자</td>
+		                                        <td id="l_name">최종승인자</td>
 		                                      </c:when>
 	                                        <c:otherwise>
 	                                        	<td id="f_name">${ list.get(0).FIRST_APPROVAL }</td>
@@ -404,8 +406,8 @@
     		$("#insertBtn").on("click", function(){
 	    		$(".namecheck").each(function(){
 		    		if($(this).val() == ""){
-		    			console.log($(this).val());
 		    			alert("승인자를 선택해주세요.");
+		    			return false;
 		    		}
 	    		})	    	
     		})
@@ -452,7 +454,7 @@
     
     <script>
     $(document).ready(function(){
-    	
+    
     	$(document).on("click", "#plus_btn", function () {
     		
     		
@@ -472,8 +474,6 @@
     	    //$("#tr_table tr:last-child").remove();
     	    $("#tr_table").children("tr").last().remove();
     	});
-    
-    	
     })
     </script>
         
@@ -640,6 +640,6 @@
         
    <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
    
-    </main>
+    
 </body>
 </html>

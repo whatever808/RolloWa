@@ -35,11 +35,12 @@ public class CalendarController {
 	private final CalendarService calService;
 	private final DepartmentService dService;
 
+
 	/**
-	 * 개인 일정 과 같은 팀원들의 정보를 불러오는 매서드
-	 * @author dpcks
-	 * @param mv 조회된 객체와 view단을 선택하는 객체
-	 * @return 
+	 * 일정 캘린더를 이동 하면서 부서 내부에 팀원 과 부서 카테고리를 조회해서 가져오는 매서드
+	 * @param session 로그인한 직원의 부서 코드를 받아오기 위한 매개변수
+	 * @param mv 	  조회된 데이터를 전달하고 view을 선택하는 배개변수	
+	 * @return
 	 */
 	@GetMapping("/pCalendar.page")
 	public ModelAndView importPCalendar(HttpSession session, ModelAndView mv) {
@@ -68,9 +69,11 @@ public class CalendarController {
 		return mv;
 	}
 	
+
 	/**
-	 * @param userNo
-	 * @return
+	 * ajax을 이용해서 userNO값[null: 전체, userNo: 특정 사원]을 받아와서 조회하는 매서드
+	 * @param request 전달 받은 data null값을 받기 위해 json으로 받아옴
+	 * @return userNo값에 따라 조회되는 일정 List
 	 */
 	@ResponseBody
 	@PostMapping(value="/selectCal.ajax", produces="application/json")
@@ -81,9 +84,13 @@ public class CalendarController {
 		return list;
 	}
 
+
 	/**
-	 * 일정을 등록하기 위한 페이지를 이동 하는 매서드
-	 * @author dpcks
+	 * 일정 등록 페이지로 이동하면서 team과 카테고리(group)를 조회해 오는 매서드
+	 * for 문 => front단에서 본인이 가장 먼저 나오도록 정렬 시킴
+	 * @param session 로그안 유저의 부서를 가져오기 위한 매서드
+	 * @param mv team, group, view을 전달 및 선택하는 객체
+	 * @return
 	 */
 	@GetMapping("/calEnroll.page")
 	public ModelAndView moveEnroll(HttpSession session, ModelAndView mv) {
@@ -112,12 +119,11 @@ public class CalendarController {
 	}
 	
 	/**
-	 * 일정 등록 페이지에서 전달 받은 객체, 데이터를 형 변환을 해서
-	 * db에 저장 시키고 그 결과를 반환하는 매서드
-	 * @param calendar db로 부터 전달 받은 calendarDto 데이터
-	 * @param date 사용자가 선탣한 시작, 끝 날짜
-	 * @param time 사용자가 선탣한 시작, 끝 시간
-	 * @param mv 성공 문구와 view단을 선택하기 위한 객체
+	 * 일정 등록 페이지에서 전달 받은 객체, 데이터를 형 변환을 해서 db에 저장 시키고 그 결과를 반환하는 매서드
+	 * @param calendar 	db로 부터 전달 받은 calendarDto 데이터
+	 * @param date 		사용자가 선탣한 시작, 끝 날짜
+	 * @param time 		사용자가 선탣한 시작, 끝 시간
+	 * @param mv 		알림 문구와 view단을 선택하기 위한 객체
 	 * @return 
 	 */
 	@PostMapping("/calEnroll.do")
@@ -125,9 +131,8 @@ public class CalendarController {
 							, String[] date, String[] time
 							, HttpSession session
 							, ModelAndView mv) {
-		if(calendar.getCalSort() != "P") {
-			calendar.setCalSort("D");			
-		}
+
+		calendar.setCalSort("D");			
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
 		
@@ -148,35 +153,30 @@ public class CalendarController {
 	}
 	
 	/**
-	 * 수정을 필요를 하는 데이터를 받아와서 형변환(date + time) 후 db엣 저장
-	 * @param calendar
-	 * @param date
-	 * @param time
+	 * 수정을 필요를 하는 데이터를 받아와서 형변환(date + time) 후 db에 저장
+	 * @param calendar  수정된 data를 받아오는 받아오는 Dto 객체
+	 * @param date 		날짜에 해당하는 값
+	 * @param time		시간에 해당하는 값
+	 * @param mv		알림 문구와 view단을 선택하는 객체
 	 * @return
 	 */	
+	@ResponseBody
 	@PostMapping("/calUpdate.do")
-	public ModelAndView calUpdate(CalendarDto calendar,
-									String[] date, String[] time
-									, ModelAndView mv) {
+	public int calUpdate(CalendarDto calendar
+						, String[] date, String[] time, ModelAndView mv) {
 		
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
 		//MemberDto member = (MemberDto)session.getAttribute("loginUser");
 		//calendar.setCalNO(String.valueOf(member.getUserNo()));
 		calendar.setEmp("1051");
-		log.debug("calendar {}", calendar);
+		//log.debug("calendar {}", calendar);
 		
-		int result = calService.calUpdate(calendar);
-		
-		if(result > 0 ) {
-			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("redirect:pCalendar.page");
-		}else {
-			mv.addObject("alertMsg", "다시 시도해 주세요.").setViewName("redirect:pCalendar.page");
-		}
-		return mv;
+		return calService.calUpdate(calendar);
 	}
 
 	/**
+	 * 회사일정에 관한 카테고리를 조회해서 이동해주는 매서드
 	 * @param mv
 	 * @return
 	 */
@@ -184,22 +184,29 @@ public class CalendarController {
 	public ModelAndView selectCompanyCalendar(ModelAndView mv) {
 		
 		List<GroupDto> group = dService.selectDepartmentList("CALD02");	
-		List<CalendarDto> list = calService.selectCompanyCalendar();
 		
-		mv.addObject("list", list)
-			.addObject("group", group)
-			.setViewName("calendar/cCalendar");
+		mv.addObject("group", group)
+		  .setViewName("calendar/cCalendar");
 		
 		return mv;
 	}
 	
 	/**
-	 * @param session
+	 * ajax을 통해 회사 일정을 조회해 오는 매서드
+	 */
+	@ResponseBody
+	@PostMapping(value="/companyCal.ajax", produces="application/json; charset=UTF-8")
+	public List<CalendarDto> ajaxCompanyCalendar() {
+		return calService.ajaxCompanyCalendar();
+	}
+	
+	/**
+	 * 회사 일정 등록 페이지로 이동 및 카테고리를 조회해서 가져오는 매서드
 	 * @param mv
 	 * @return
 	 */
 	@GetMapping("/companyCalEnroll.page")
-	public ModelAndView moveCompanyEnroll(HttpSession session, ModelAndView mv) {
+	public ModelAndView moveCompanyEnroll(ModelAndView mv) {
 		
 		List<GroupDto> group = dService.selectDepartmentList("CALD02");
 		
@@ -210,16 +217,17 @@ public class CalendarController {
 	}
 
 	/**
-	 * @param calendar
-	 * @param date
-	 * @param time
-	 * @param mv
+	 * 회사 일정을 갱신하기 위한 매서드
+	 * @param calendar 	해당 일정의 calendarDto값을 받아옴
+	 * @param date		유저가 입력한 data값
+	 * @param time		유저가 입력한 time값
+	 * @param mv		
 	 * @return
 	 */
+	@ResponseBody
 	@PostMapping("/companyCalUpdate.do")
-	public ModelAndView companyCalUpdate(CalendarDto calendar,
-										String[] date, String[] time
-										, ModelAndView mv) {
+	public int companyCalUpdate(CalendarDto calendar
+								, String[] date, String[] time, ModelAndView mv) {
 		
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
@@ -227,42 +235,38 @@ public class CalendarController {
 		//calendar.setCalNO(String.valueOf(member.getUserNo()));
 		calendar.setEmp("1050");
 		calendar.setCalSort("C");
-		log.debug("calendar {}", calendar);
+		//log.debug("calendar {}", calendar);
 		
-		int result = calService.companyCalUpdate(calendar);
-		
-		if(result > 0 ) {
-			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("redirect:companyCalendar.page");
-		}else {
-			mv.addObject("alertMsg", "다시 시도해 주세요.").setViewName("redirect:companyCalEnroll.page");
-		}
-		return mv;
+		return calService.companyCalUpdate(calendar);
 	}
 
 	/**
-	 * 
+	 * 회사 일정을 List로 보여주는 위한 페이지로 이동하는 매서드
 	 */
-	@GetMapping("/companyControllor.page")
-	public void companyControllor() {}
+	@GetMapping("/calendarList.page")
+	public void calendarControllor() {}
 	
+
 	/**
-	 * @param page
-	 * @param dataStart
-	 * @param dataEnd
-	 * @return
+	 * ajax을 통해서 필요한 부분만 일정을 불러 들이는 매서드
+	 * @param page			현재 페이지값을 전달받은 매개변수
+	 * @param dataStart		검색을 위한 시작 날짜
+	 * @param dataEnd		검색을 위한 끝 날짜
+	 * @return map			paging처리를 위한 객체와 page에 맞는 List 객체 반환
 	 */
 	@ResponseBody
-	@PostMapping(value="/companyControllor.ajax",  produces="application/json")
-	public Map<String, Object> ajaxcompanyControllor(@RequestParam(defaultValue = "1") int page
-													,String dataStart, String dataEnd) {
+	@PostMapping(value="/calendarControllor.ajax", produces="application/json")
+	public Map<String, Object> ajaxCompanyControllor(@RequestParam(defaultValue = "1") int page
+													,String dataStart, String dataEnd, String calSort) {
 		
 		//log.debug("page {}", page);
 		//log.debug("dataStart {}", dataStart);
 		//log.debug("dataEnd {}", dataEnd);
-		
+		//log.debug("calSort {}", calSort);
 		Map<String, Object> map = new HashMap<>();
 		map.put("dataStart", dataStart);
 		map.put("dataEnd", dataEnd);
+		map.put("calSort", calSort);
 		
 		int listCount = calService.selectListCount(map);
 		PageInfoDto paging = new PagingUtil().getPageInfoDto(listCount, page, 5, 5);
@@ -272,15 +276,13 @@ public class CalendarController {
 		
 		map.remove("dataStart");
 		map.remove("dataEnd");
+		map.remove("calSort");
 
 		map.put("list", list);	
 		
 		return map;
 	}
 	
-	/**
-	 * @param check
-	 */
 	/*
 	 * 1) view단에 .serialize()을 사용 할떄 
 	 * 공통된 name(check)에서 값을 추출 할때는 HttpServletRequest을 이용해서 
@@ -307,12 +309,17 @@ public class CalendarController {
 	 * nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot deserialize value of type `[Ljava.lang.String; ` from Object value (token `JsonToken.START_OBJECT`)<EOL> at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 1, column: 1]]
 	 */
 //	@ResponseBody
-//	@PostMapping(value="/deletedCheck.do", produces = "application/json; charset=utf8")
-//	public void ajaxDeleredCal(@RequestBody String[] check) {
-//		 log.debug("String   { }", Arrays.toString(check));
-//		 log.debug("String   { }", check);
+//	@PostMapping(value="/deletedCheck.do")
+//	public void ajaxDeleredCal(@RequestBody Map<String, Object> request) {
+//		Object str = request.get("check");
+//		 log.debug("check  { }", str);
 //	}
 	
+	/**
+	 * 체크된 일정 번호를 받아와서 상태를 'N'으로 변경하는 매서드 
+	 * @param request	체크된 값들을 배열로 받기위한 필요 매개변수
+	 * @return 			삭게된 행수를 반환
+	 */
 	@ResponseBody
 	@PostMapping(value="/deletedCheck.do", produces = "application/json; charset=utf8")
 	public int ajaxDeletedCal(HttpServletRequest request) {
@@ -320,6 +327,5 @@ public class CalendarController {
 		 //log.debug("values: {}", Arrays.toString(values));
 		 return calService.ajaxDeletedCal(values);
 	}
-	
 
 }

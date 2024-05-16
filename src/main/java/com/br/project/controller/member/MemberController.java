@@ -220,8 +220,7 @@ public class MemberController {
 		
 		return "redirect:/member/mypage.page";
 	}
-	
-	// 비밀번호 수정
+		// 비밀번호 수정
 	@PostMapping("modifyPwd.do")
 	public String updateUserPwd(@RequestParam Map<String, String> map
 				, HttpSession session
@@ -243,4 +242,16 @@ public class MemberController {
 		redirectAttributes.addFlashAttribute("alertMsg", "비밀번호 변경 실패. 현재 비밀번호를 다시 확인해주세요.");
 		return "redirect:/member/mypage.page";
 	}
+
+	/* ======================================= "가림" 구역 ======================================= */
+	@RequestMapping("/memInfo.do")
+	@ResponseBody
+	public MemberDto selectMemInfo(HttpSession session){
+		return memberService.selectMember((MemberDto)(session.getAttribute("loginMember")));
+	}
+	/* ======================================= "가림" 구역 ======================================= */
+	
+
+
+
 }

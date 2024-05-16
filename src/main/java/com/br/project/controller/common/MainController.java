@@ -1,20 +1,12 @@
 package com.br.project.controller.common;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dto.member.MemberDto;
 

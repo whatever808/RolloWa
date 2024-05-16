@@ -73,8 +73,7 @@
 								        <div>
 								            <table border="1"  class="form-label table">
 								                <tr>
-								                    <th colspan="9" rowspan="3" 
-								                    style="width: 400px;" class="form-title" >매출 보고서</th>
+								                    <th colspan="9" rowspan="3" style="width: 400px;" class="form-title" >매출 보고서</th>
 								                    <th style="width: 120px;">${list.get(0).FIRST_APPROVAL}</th>
 								                    <th style="width: 120px;">${list.get(0).MIDDLE_APPROVAL}</th>
 								                    <th style="width: 120px;">${list.get(0).FINAL_APPROVAL}</th>
@@ -206,15 +205,16 @@
     
     $("#modifyWriter").on("click", function(){
     	
-    	let writerNo = "${ not empty list and list.get(0).FIRST_APPROVAL_DATE == null and loginMember.userNo == list.get(0).PAYMENT_WRITER_NO }";
+    	let writerNo = "${ not empty list and list.get(0).FIRST_APPROVAL_DATE == null and userNo == list.get(0).PAYMENT_WRITER_NO }";
     	
     	if(writerNo == "true"){
 	    	 	if(confirm('수정하시겠습니까?')){
 						alert("작성페이지로 이동합니다.");
-							location.href="${contextPath}/pay/mModify.do?documentNo=" + ${list.get(0).EXPEND_NO} 
+							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).EXPEND_NO} 
 																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
 																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
-																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}";
+																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
+																									 			+ "&report=m";
 	    		}
     	}else{
     		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");

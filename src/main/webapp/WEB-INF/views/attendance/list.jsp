@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
@@ -51,6 +52,13 @@
         top: -40px;
         left: 230px;
     }
+    #currentDate{
+    	white-space: nowrap;
+    	font-size: 25px;
+    }
+    .mouse_pointer{
+    	cursor: pointer;	
+   	}
     h3{
         display: flex;
         align-items: center;
@@ -91,8 +99,10 @@
     .employee_info td img{
         border: 1px solid gainsboro;
         border-radius: 100%;
-        width: 40px;
-        margin: -5px;
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        margin: -10px;
     }
 
     /* 맨 밑 여백 주기 */
@@ -100,7 +110,11 @@
         padding-bottom: 100px;
     }
     
-
+    /*
+    input[type=text]::-ms-clear {
+		display:none;
+	}
+  	*/
     </style>
 </head>
 <body>
@@ -116,22 +130,132 @@
 		<!-- ------------ -->
 	
 		<!-- 일별, 월별 조회-->
-            <div>
-                <button class="btn btn-primary">일별 조회</button>
-                <button class="btn btn-secondary">월별 조회</button>
-            </div>
+        <div>
+            <button class="btn btn-primary">일별 조회</button>
+            <button class="btn btn-secondary">월별 조회</button>
+        </div>
 
-            <!--날짜, 오늘 선택-->
-            <div class="select_date">
-                <table class="table_2">
-                    <tr>
-                        <td><h2><div class="arrow">◀</div></h2></td>
-                        <td><h2>2024년 5월 2일 (목)</h2></td>
-                        <td><h2><div class="arrow">▶</div></h2></td>
-                    </tr>
-                </table>
-                <button class="btn btn-outline-primary today_btn">오늘</button>
-            </div>
+        <!--날짜, 오늘 선택-->
+        <div class="select_date">
+            <table class="table_2">
+                <tr class="mouse_pointer">
+                    <td><h3><div class="arrow" onclick="changeDate(-1);">◀</div></h3></td>
+                    <!-- <td><h3 id="currentDate" onclick="editDate();"></h3></td> -->
+                    <td><h3 id="currentDate"></h3></td>
+                    <td><h3><div class="arrow" onclick="changeDate(1);">▶</div></h3></td>
+                </tr>
+            </table>
+            <button class="btn btn-outline-primary today_btn" onclick="goToToday();">오늘</button>
+        </div>
+            
+        <script>
+		var daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+		let nowDate = getCurrentDate();
+		
+		function getCurrentDate() {
+		    var currentDate = new Date();
+		    var dayOfWeekIndex = currentDate.getDay();
+		    var dayOfWeek = '(' + daysOfWeek[dayOfWeekIndex] + ')';
+		    var year = currentDate.getFullYear();
+		    var month = currentDate.getMonth() + 1;
+		    var day = currentDate.getDate();
+		    var formattedDate = year + '년 ' + month + '월 ' + day + '일 ' + dayOfWeek;
+		    return formattedDate;
+		}
+		
+		function updateCurrentDate() {
+		    var currentDateElement = document.getElementById('currentDate');
+		    if (currentDateElement) {
+		        currentDateElement.textContent = getCurrentDate();
+			    nowDate = currentDateElement.textContent;
+			    console.log(nowDate);
+		    }
+		}
+		
+		function changeDate(offset) {
+		    var currentDateElement = document.getElementById('currentDate');
+		    var currentDateText = currentDateElement.textContent;
+		    var dateRegex = /(\d{4})년 (\d{1,2})월 (\d{1,2})일/; // 날짜 형식을 정의합니다.
+		    var matches = dateRegex.exec(currentDateText); // 현재 날짜에서 년, 월, 일을 추출합니다.
+		    var year = parseInt(matches[1]);
+		    var month = parseInt(matches[2]) - 1; // JavaScript의 월은 0부터 시작하므로 1을 빼줍니다.
+		    var day = parseInt(matches[3]);
+		    var currentDate = new Date(year, month, day);
+		    currentDate.setDate(currentDate.getDate() + offset); // 날짜를 변경합니다.
+		    
+		    var dayOfWeekIndex = currentDate.getDay();
+		    var dayOfWeek = '(' + daysOfWeek[dayOfWeekIndex] + ')';
+		    var newDateText = currentDate.getFullYear() + '년 ' + (currentDate.getMonth() + 1) + '월 ' + currentDate.getDate() + '일 ' + dayOfWeek;
+		    
+		    currentDateElement.textContent = newDateText; // 변경된 날짜를 화면에 표시합니다.
+		    
+		    nowDate = newDateText;
+		    console.log(nowDate);
+		}
+		
+		function goToToday() {
+		    updateCurrentDate();
+		    // 현재 날짜를 URL에 추가하여 페이지 이동
+		    var url = "${contextPath}/attendance/list.do?nowDate=" + encodeURIComponent(nowDate);
+		    window.location.href = url;
+		}
+		/*
+		function editDate() {
+		    var currentDateElement = document.getElementById('currentDate');
+		    var currentDateText = currentDateElement.textContent;
+		    var dateRegex = /(\d{4})년 (\d{1,2})월 (\d{1,2})일/; // 날짜 형식을 정의합니다.
+		    var matches = dateRegex.exec(currentDateText); // 현재 날짜에서 년, 월, 일을 추출합니다.
+		    var year = parseInt(matches[1]);
+		    var month = parseInt(matches[2]) - 1; // JavaScript의 월은 0부터 시작하므로 1을 빼줍니다.
+		    var day = parseInt(matches[3]);
+
+		    var currentDate = new Date(year, month, day);
+
+		    // <input type="date"> 엘리먼트를 생성합니다.
+		    var inputDateElement = document.createElement('input');
+		    inputDateElement.type = 'date';
+		    inputDateElement.value = currentDate.toISOString().split('T')[0]; // ISO 형식의 날짜를 설정합니다.
+		    inputDateElement.addEventListener('change', function() {
+		        // 변경된 날짜를 처리합니다.
+		        var selectedDate = new Date(this.value);
+		        var dayOfWeekIndex = selectedDate.getDay();
+		        var dayOfWeek = '(' + daysOfWeek[dayOfWeekIndex] + ')';
+		        var newDateText = selectedDate.getFullYear() + '년 ' + (selectedDate.getMonth() + 1) + '월 ' + selectedDate.getDate() + '일 ' + dayOfWeek;
+		        currentDateElement.textContent = newDateText;
+		        nowDate = newDateText;
+		        console.log(nowDate);
+		    });
+
+		    // <input type="date"> 엘리먼트로 교체합니다.
+		    currentDateElement.textContent = '';
+		    currentDateElement.appendChild(inputDateElement);
+
+		    // <input type="date">에 포커스를 줍니다.
+		    inputDateElement.focus();
+		}
+		*/
+		
+		// 초기 실행 시, 저장된 날짜 불러오기
+		window.onload = function() {
+		    updateCurrentDate();
+		};
+		
+		/* 날짜값 컨트롤러로 넘기기 */
+		function sendNowDate(){
+			$.ajax({
+				type:"GET",
+				url:"${ contextPath }/attendance/list.do",
+				data: { nowDate: nowDate},
+				success: function(response){
+					console.log("날짜 전송 성공");
+				},
+				error: function(xhr, status, error) {
+		            console.error("전송 실패 : ", error);
+		        }
+			})
+		}
+		</script>
+		    
 
             <!--출근, 퇴근, 결근, 조퇴, 휴가 현황 조회-->
             <table class="table table_1" border="1">     
@@ -143,20 +267,21 @@
                     <td class="table-info">휴가</td>
                 </tr>
                 <tr>
-                    <td class="table-success">50</td>
-                    <td class="table-danger">19</td>
-                    <td class="table-secondary">5</td>
-                    <td class="table-warning">5</td>
-                    <td class="table-info">3</td>
+                    <td class="table-success">${ attendanceCount[0].a }</td>
+                    <td class="table-danger">${ attendanceCount[0].b }</td>
+                    <td class="table-secondary">${ attendanceCount[0].c }</td>
+                    <td class="table-warning">${ attendanceCount[0].d }</td>
+                    <td class="table-info">${ attendanceCount[0].e }</td>
                 </tr>
             </table>
 
             <!-- 직원 출결 데이터 start -->
-            <!-- 전체 인원수 -->
             <table class="table table-responsive">
                 <tr class="search_menu">
                     <td>
-                        <h6 class="employee_count">전체 50명</h6>
+                        <!-- 전체 인원수 -->
+	    				<h5 class="employee_count">전체 ${ listCount }명</h5>
+                        
                     </td>
                     <td>
                         <select name="department" id="department" class="form-control">
@@ -204,150 +329,64 @@
                     <th>퇴근시간</th>
                     <th>상태</th>
                 </tr>
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td>08:00</td>
-                    <td>17:50</td>
-                    <td class="table-secondary">퇴근</td>
-                </tr>
                 
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td>08:00</td>
-                    <td></td>
-                    <td class="table-success">출근</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td>08:00</td>
-                    <td>11:50</td>
-                    <td class="table-warning">조퇴</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td>08:00</td>
-                    <td>17:50</td>
-                    <td class="table-secondary">퇴근</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td></td>
-                    <td></td>
-                    <td class="table-danger">결근</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td></td>
-                    <td></td>
-                    <td class="table-danger">결근</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td></td>
-                    <td></td>
-                    <td class="table-info">휴가</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td></td>
-                    <td></td>
-                    <td class="table-danger">결근</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td></td>
-                    <td></td>
-                    <td class="table-danger">결근</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <img src="../../../resources/images/defaultProfile.png" class="profile_img">
-                    </td>
-                    <td>고미옥</td>
-                    <td>총무부</td>
-                    <td>팀명</td>
-                    <td>대표이사</td>
-                    <td></td>
-                    <td></td>
-                    <td class="table-danger">결근</td>
-                </tr>
+                <!-- 출결 조회(이름,부서,팀명,직급, 오늘날짜의 출석시간, 오늘날짜 퇴근시간, 상태) -->
+                <c:choose>
+			        <c:when test="${ not empty list }">
+			        	<c:forEach var="m" items="${ list }">
+					        <tr>
+					            <td>
+						            <c:choose>
+						            	<c:when test="${ not empty m.profileURL }">
+							                <img src="${ m.profileURL }" class="profile_img">
+						            	</c:when>
+						            	<c:otherwise>
+							                <img src="${ contextPath }/resources/images/defaultProfile.png">
+						            	</c:otherwise>
+						            </c:choose>
+					            </td>
+					            <td>${ m.userName }</td>
+					            <td>${ m.dept }</td>
+					            <td>${ m.team }</td>
+					            <td>${ m.posi }</td>
+					            <td>
+					            	<fmt:formatDate value="${ m.todayIn }" pattern="HH:mm:ss"/>
+					            </td>
+					            <td>
+					            	<fmt:formatDate value="${ m.todayOut }" pattern="HH:mm:ss"/>
+					            </td>
+					            <td
+			                    <c:choose>
+			                        <c:when test="${ m.requestDetail == '출근' }">class="table-success"</c:when>
+			                        <c:when test="${ m.requestDetail == '결근' }">class="table-danger"</c:when>
+			                        <c:when test="${ m.requestDetail == '퇴근' }">class="table-secondary"</c:when>
+			                        <c:when test="${ m.requestDetail == '조퇴' }">class="table-warning"</c:when>
+			                        <c:when test="${ m.requestDetail == '휴가' }">class="table-info"</c:when>
+			                    </c:choose>
+								>
+			                    	${ m.requestDetail }
+			                	</td>
+					        </tr>
+				        </c:forEach>
+			        </c:when>
+	        	</c:choose>
+	        	
+                
             </table>
             <!-- 직원 테이블 end -->
+            
 
             <!--페이징 처리 start-->
-            <div class="container">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
-                </ul>
-            </div>
-            <!--페이징 처리 end-->
+		    <div class="container">
+		        <ul class="pagination justify-content-center">
+		        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/attendance/list.do?page=${pi.currentPage-1}">Previous</a></li>
+					<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+						<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/attendance/list.do?page=${p}">${ p }</a></li>
+					</c:forEach>
+					<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/attendance/list.do?page=${pi.currentPage+1}">Next</a></li> 
+		        </ul>
+		    </div>
+	    	<!--페이징 처리 end-->
 	
 	
 		<!-- ------------ -->

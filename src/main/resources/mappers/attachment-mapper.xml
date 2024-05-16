@@ -37,5 +37,68 @@
 					)
 	</insert>
 	
+	<!-- ======================================= "가림" 구역 start ======================================= -->
+	<!-- 첨부파일 조회 -->
+	<select id="selectBoardAttachmentList" resultMap="attachmentResultMap">
+		select 
+			   file_no
+			  ,origin_name
+			  ,modify_name
+			  ,attach_path
+		  from attachment
+		<where>
+			<foreach item="fileNo" collection="array" open="file_no in(" separator="," close=")">
+				#{fileNo}
+			</foreach>
+		</where>  
+	</select>
 	
+	<!-- 공지사항 첨부파일 등록 -->
+	<insert id="insertBoardAttachment" parameterType="AttachmentDto">
+		insert
+			into attachment
+				 (
+				   file_no
+				  ,origin_name
+				  ,modify_name
+				  ,attach_path
+				  ,ref_type
+				  ,status
+				  ,ref_no
+				 )
+		  values 
+				(
+				  seq_ano.nextval
+				 ,#{originName}
+				 ,#{modifyName}
+				 ,#{attachPath}
+				 ,#{refType}
+				 ,#{status}
+				 <choose>
+				 	<when test="refNo != null and !refNo.equals('')">
+				 		,#{refNo}
+				 	</when>
+				 	<otherwise>
+				 		,seq_bdno.currval
+				 	</otherwise>
+				 </choose>
+				)
+	</insert>
+	
+	<!-- 첨부파일 삭제(상태변경) -->
+	<update id="deleteBoardAttachment" parameterType="string">
+		update attachment
+		   set status  = 'N'
+		 where file_no = #{delFileNo}
+	</update>
+	
+	<!-- 첨부파일 상태 수정 or 첨부파일 삭제 -->
+	<update id="updateBoardAttachmentStatus" parameterType="hashmap">
+		update attachment
+		   set status   = #{status}
+		 where ref_type = #{refType}
+		   and ref_no   = #{no}
+	</update>
+	
+	<!-- ======================================= "가림" 구역 end ======================================= -->
 </mapper>
