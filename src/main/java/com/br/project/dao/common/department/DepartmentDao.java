@@ -2,6 +2,7 @@ package com.br.project.dao.common.department;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -33,7 +34,13 @@ public class DepartmentDao {
 	public GroupDto selectUppderCode(HashMap<String, Object> params) {
 		return sqlSessionTemplate.selectOne("departmentMapper.selectUppderCode", params);
 	}
-	
 	/* ================================================= "가림" 구역 end ================================================= */
 	
+	/* ================================================= "기웅" 구역 start ================================================= */
+	
+	// 부서의 팀 조회
+	public List<GroupDto> selectTeam(Map<String, String> map) {
+		return sqlSessionTemplate.selectList("departmentMapper.selectDepartmentList", map);
+	}
+	/* ================================================= "기웅" 구역 end ================================================= */
 }

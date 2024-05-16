@@ -697,7 +697,7 @@
         restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
     });
 
-    // 채팅 - 전체 사원 조회
+    // 채팅 - 전체 부서&사원 조회
     function selectMember() {
     	$.ajax({
     		url: '${contextPath}/'

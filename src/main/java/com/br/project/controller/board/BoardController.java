@@ -314,7 +314,7 @@ public class BoardController {
 				alertMsg = "공지사항 " + status + " 이 정상적으로 처리되지 않았습니다.";
 			}
 			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 등록서비스");
-			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);
+			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);			
 		}catch(Exception e) {
 			e.printStackTrace();
 			return "redirect:" + request.getDateHeader("Referer");

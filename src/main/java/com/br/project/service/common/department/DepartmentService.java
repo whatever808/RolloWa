@@ -2,6 +2,7 @@ package com.br.project.service.common.department;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -35,4 +36,13 @@ public class DepartmentService {
 	
 	/* ================================================= "가림" 구역 end ================================================= */
 	
+	/* ================================================= "기웅" 구역 start ================================================= */
+	
+	// 부서의 팀 조회
+	public List<GroupDto> selectTeam(Map<String, String> map) {
+		return departmentDao.selectTeam(map);
+	}
+	
+	
+	/* ================================================= "기웅" 구역 end ================================================= */
 }

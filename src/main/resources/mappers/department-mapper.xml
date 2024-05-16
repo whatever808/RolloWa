@@ -24,6 +24,9 @@
 		  from tb_group
 		 where status 		= 'Y'
 		   and group_code = #{code}
+		   <if test="upperCode != null">
+		   and upper_code = #{upperCode}
+		   </if>
 		 order by code
 	</select>
 	
@@ -45,5 +48,20 @@
 	</select>
 	
 	<!-- ========================== "가림" 영역 ========================== -->
+	
+		<!-- ========================== "기웅" 영역 ========================== -->	
+	<!-- 부서의 팀 조회 -->
+	<select id="selectTeam" resultMap="groupResultMap">
+				select 
+			   group_code		
+			  ,code	
+			  ,code_name	
+		  from tb_group
+		 where status 		= 'Y'
+		   and group_code = 'TEAM01'
+		 order by code
+	</select>
+	
+	<!-- ========================== "기웅" 영역 ========================== -->
 	
 </mapper>

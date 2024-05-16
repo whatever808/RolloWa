@@ -75,6 +75,8 @@ public class AlramEchoHandler extends TextWebSocketHandler {
 		// 공지사항 글번호
 		int boardNo = notificationService.selectLatestBno(teamCode);
 		
+		log.debug("boardNo : {}", boardNo);
+		
 		// message에 팀코드를 포함해서 전송되면 해당 팀코드를 갖는 사원에게만 알림 전송
 		for(WebSocketSession webSession : sessionList) {
 			// 로그인한 모든 회원

@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dto.common.AttachmentDto;
+import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.common.department.DepartmentService;
 import com.br.project.service.member.MemberService;
@@ -223,7 +224,7 @@ public class MemberController {
 		
 		return "redirect:/member/mypage.page";
 	}
-		// 비밀번호 수정
+	// 비밀번호 수정
 	@PostMapping("modifyPwd.do")
 	public String updateUserPwd(@RequestParam Map<String, String> map
 				, HttpSession session
@@ -246,10 +247,27 @@ public class MemberController {
 		return "redirect:/member/mypage.page";
 	}
 	
+	// 채팅 - 전체 부서 조회
+	@GetMapping("/selectDept.do")
+	@ResponseBody
+	public List<GroupDto> selectDept() {
+		return departmentService.selectDepartmentList("DEPT01");
+	}
+	
+	// 채팅 - 부서의 팀 조회
+	@GetMapping("/selectTeam.do")
+	@ResponseBody
+	public List<GroupDto> selectTeam(String upperCode) {
+		Map<String, String> map = new HashMap<>();
+		map.put("code", "TEAM01");
+		map.put("upperCode", upperCode);
+		return departmentService.selectTeam(map);
+	}
+	
 	// 채팅 - 전체 사원 조회
 	@GetMapping("/select.do")
 	@ResponseBody
-	public List<MemberDto> selectMember() {
+	public List<MemberDto> selectMember(String teamCode) {
 		return memberService.selectAllMember();
 	}
 
