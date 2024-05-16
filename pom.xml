@@ -23,12 +23,6 @@
 		    <artifactId>spring-websocket</artifactId>
 		    <version>${org.springframework-version}</version>
 		</dependency>
-		<!-- * FCM 사용 -->
-		<dependency>
-		  <groupId>com.google.firebase</groupId>
-		  <artifactId>firebase-admin</artifactId>
-		  <version>9.2.0</version>
-		</dependency>
    
 		<!-- * RandomStringUtils 사용 -->		
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
