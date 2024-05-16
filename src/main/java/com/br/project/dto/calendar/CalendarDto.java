@@ -33,4 +33,5 @@ public class CalendarDto {
 	private String team;// 회사 일정을 등록한 팀
 	private GroupDto group;
 	private List<CoworkerDto> coworker;
+	private String duraDate;
 }

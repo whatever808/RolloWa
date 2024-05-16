@@ -99,101 +99,161 @@
     <div class="out-line">
         <!-- 메뉴판 -->
 				<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
+			  <script>
+				// 캘린더 설정 및 선언
+				  let calendar;	
+				  function declareCalendar(){
+				  document.addEventListener('DOMContentLoaded', function() {
+				  		var calendarEl = document.getElementById('calendar');
+				  		calendar = new FullCalendar.Calendar(calendarEl, {
+				  			initialView: 'dayGridMonth',
+				  			locale: 'ko',
+				  			customButtons: {
+				  				 enrollButton:{text: '일정 등록',click: function(){location.href="${path}/calendar/companyCalEnroll.page";}}
+				  			},
+				  			buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주'
+				  			},
+				  			headerToolbar:{start: 'prev today enrollButton',
+				  						   center: 'title',
+				  						   end: 'multiMonthYear,dayGridMonth,timeGridWeek next'
+				  		    },
+				  			views:{year: {titleFormat:{year: '2-digit'}, multiMonthMaxColumns: 1},
+				  			  	   month:{titleFormat:{year: '2-digit', month: 'short'} },
+				  				   	 week: {titleFormat:{year: '2-digit'} },
+				  				   	 day:  {titleFormat:{month: 'short', day:'2-digit'}}
+				  			},
+				  			buttonIcons: false,
+				  			navLinks: true,
+				  			slotMinTime: "06:00:00",
+				  			timeZone: 'Asia/Seoul',
+				  			eventClick:function(info){	
+				  				modalOn(info);
+				  			},
+				  			eventMouseEnter:function(info){
+				  				info.el.style.transform = 'scale(1.05)';
+				  				info.el.style.cursor = 'pointer';
+				  			},
+				  			eventMouseLeave:function(info){
+				  				info.el.style.transform = '';
+				  			},	
+				  		})
+				  	})
+				  }	
+				  declareCalendar();
+				  
+			 		function checkDate(){
+			 			let date2 = $('#currentDate2').val()+ " " + $('#currentTime2').val();
+			 			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();
+			 			let checkDate =  new Date(date2) >= new Date(date1);
+			 			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
+			       //console.log(checkDate);
+			       //console.log(checkTime);
+			       if(checkDate && checkTime){
+			       	updateCal();
+			       }else {
+			       	alert('날짜 및 시간을 확인 해 주세요.');
+			       }
+			   	};
+			   	/* 일정 update ajax */
+				  function updateCal(){
+			   		//console.log($('#updateForm').serialize());
+					  $.ajax({
+						  url:'${path}/calendar/companyCalUpdate.do',
+						  type: 'post',
+						  data: $('#updateForm').serialize(),
+						  success:function(result){
+							  console.log(result);
+							  console.log(calendar.getEvents());
+							  calendar.getEvents().forEach((e) => {
+								  e.remove();
+							  })
+							  addEvent();
+							  $('#cal_modal').iziModal('close');
+						  },
+						  error:function(){
+							  console.log('update Calendar fail');
+						  }
+					  })
+				  }
+				  
+			   	function modalOn(info){
+						$(document).on('opening', '#cal_modal', function (e) {
+						    const extend = info.event.extendedProps;
+						    $('#color-style').val(info.event.backgroundColor);
+						    $('#currentDate1').val(info.event.startStr.slice(0,10));
+						    $('#currentTime1').val(info.event.startStr.slice(11));
+						    $('#currentDate2').val(info.event.endStr.slice(0,10));
+						    $('#currentTime2').val(info.event.endStr.slice(11));
+						    $('#cal_modal').find('.content-text-area').val(extend.content);
+						    $('#cal_modal').find('input[name=place]').val(extend.place);
+						    $('input[name=calTitle]').val(extend.caltitle);
+						    $('input[name=calNO]').val(info.event.id);
+						    $('input[name=team]').val(extend.team);
+						    
+								const $cate = $('input[name=groupCode]');
+								for (let i = 0; i<$cate.length; i++){
+									if($cate[i].value == extend.groupCode){
+										$cate[i].checked = true;
+									}
+								};
+					    
+					}); //ismodal open function
+		     	 	
+		     	 	$('#cal_modal').iziModal('setSubtitle', info.event.id);  
+		     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
+	      		$('#cal_modal').iziModal('open');
+			   	}
+				  /* 이벤트를 불러들어 오는 부분 */
+				  function addEvent(){
+					  $.ajax({
+							url:'${path}/calendar/companyCal.ajax',
+							type:'post',
+						  contentType: 'application/json',
+							success:function(list){
+								//console.log(list);
+								list.forEach((e) => {
+									calendar.addEventSource(
+									 [{
+											  id:						e.calNO,
+												title:				e.group.upperCode + e.group.codeName,
+												start: 				e.startDate,
+												end:					e.endDate,
+												color: 				e.color,
+												extendedProps:{
+													content:  	e.calContent,
+													caltitle: 	e.calTitle,
+													place: 			e.place,
+													calSort:  	e.calSort,
+													groupCode: 	e.groupCode,
+													team:		e.team
+													}		 
+										 }]
+									 );
+								})
+								calendar.render();
+							},
+							error:function(){
+								console.log('calendar import error');
+							}
+					  })
+				  }
+				  
+		   		/* document 후 실행 될 함수 */
+					$(document).ready(function(){
+						addEvent();
+					})
+				</script>
         <!-- 컨텐츠 영역 -->
        <div class="content" style="max-width: 1120px; padding: 30px;">
             <!-- 캘린더 영역 -->
             <div class="calender-area radious10 line-shadow "><div id="calendar"></div></div>
         </div>
     </div>
-<script>
-// 캘린더 설정 및 선언
-document.addEventListener('DOMContentLoaded', function() {
-		var calendarEl = document.getElementById('calendar');
-		var calendar = new FullCalendar.Calendar(calendarEl, {
-			initialView: 'dayGridMonth',
-			locale: 'ko',
-			customButtons: {
-				 enrollButton:{text: '일정 등록',click: function(){location.href="${path}/calendar/companyCalEnroll.page";}}
-			},
-			buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주'
-			},
-			headerToolbar:{start: 'prev today enrollButton',
-						   center: 'title',
-						   end: 'multiMonthYear,dayGridMonth,timeGridWeek next'
-		    },
-			views:{year: {titleFormat:{year: '2-digit'}, multiMonthMaxColumns: 1},
-			  	   month:{titleFormat:{year: '2-digit', month: 'short'} },
-				   week: {titleFormat:{year: '2-digit'} },
-				   day:  {titleFormat:{month: 'short', day:'2-digit'}}
-			},
-			buttonIcons: false,
-			navLinks: true,
-			slotMinTime: "06:00:00",
-			timeZone: 'Asia/Seoul',
-			eventClick:function(info){	
-				//console.log(info.event.extendedProps.extendeProps);
-				
-				$(document).on('opening', '#cal_modal', function (e) {
-				    const extend = info.event.extendedProps.extendeProps;
-				    $('#color-style').val(info.event.backgroundColor);
-				    $('#currentDate1').val(info.event.startStr.slice(0,10));
-				    $('#currentTime1').val(info.event.startStr.slice(11));
-				    $('#currentDate2').val(info.event.endStr.slice(0,10));
-				    $('#currentTime2').val(info.event.endStr.slice(11));
-				    $('#cal_modal').find('.content-text-area').val(extend.content);
-				    $('#cal_modal').find('input[name=place]').val(extend.place);
-				    $('input[name=calTitle]').val(extend.caltitle);
-				    $('input[name=calNO]').val(info.event.id);
-				    $('input[name=team]').val(extend.team);
-				    
-						const $cate = $('input[name=groupCode]');
-						for (let i = 0; i<$cate.length; i++){
-							if($cate[i].value == extend.groupCode){
-								$cate[i].checked = true;
-							}
-						};
-				    
-				}); //ismodal open function
-	     	 	
-	     	 	$('#cal_modal').iziModal('setSubtitle', info.event.id);  
-	     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
-      		$('#cal_modal').iziModal('open');
-			},// event click
-			eventMouseEnter:function(info){
-				info.el.style.transform = 'scale(1.05)';
-				info.el.style.cursor = 'pointer';
-			},
-			eventMouseLeave:function(info){
-				info.el.style.transform = '';
-			},	
-			events:[
-				<c:forEach var="c" items="${list}">
-					{
-						id:			'${c.calNO}',
-						title: 		'${c.group.upperCode}'+'${c.group.codeName}',
-						start: 		'${c.startDate }',
-						end: 		'${c.endDate }',
-						color: 		'${c.color }',
-						extendeProps:{
-							content:  	'${c.calContent}',
-							caltitle: 	'${c.calTitle }',
-							place: 	  	'${c.place}',
-							calSort:  	'${c.calSort}',
-							groupCode: 	'${c.groupCode}',
-							team: 			'${c.team}'								
-						}
-					},
-				</c:forEach>
-			]// event end
-		});
-		calendar.render();
-	});	
 
-</script>
 
 	<!-- 상세보기 일정 모달 -->
 	<div id="cal_modal">
-	<form action="${path}/calendar/calUpdate.do" method="post">
+	<form id='updateForm'>
 		<input type="hidden" name="calNO">
 		<div>
 			<div class="jua-regular">Title</div>
@@ -273,25 +333,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		<br>
 		
 		<div align="end">
-			<button class="btn btn-outline-warning" onclick="return checkDate();">수정</button>
+			<button class="btn btn-outline-warning" type="button" onclick="checkDate();">수정</button>
 		</div>
 	</form>
-  <script>
- 		function checkDate(){
- 			let date2 = $('#currentDate2').val()+ " " + $('#currentTime2').val();
- 			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();
- 			let checkDate =  new Date(date2) >= new Date(date1);
- 			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
-       console.log(checkDate);
-       console.log(checkTime);
-       if(checkDate && checkTime){
-       	return true;
-       }else {
-       	alert('날짜 및 시간을 확인 해 주세요.');
-        return false;		        	
-       }  
-   	};
-	</script>
 	</div>
 	
 	<!-- 모달 스크립트문 -->

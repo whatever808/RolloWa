@@ -73,7 +73,7 @@
 								        <div>
 								            <table border="1"  class="form-label table">
 								                <tr>
-								                    <th colspan="9" rowspan="3" style="width: 400px;" class="form-title" >매출 보고서</th>
+								                    <th colspan="9" rowspan="3" style="width: 400px;" class="form-title" >휴직 신청서</th>
 								                    <th style="width: 120px;">${list.get(0).FIRST_APPROVAL}</th>
 								                    <th style="width: 120px;">${list.get(0).MIDDLE_APPROVAL}</th>
 								                    <th style="width: 120px;">${list.get(0).FINAL_APPROVAL}</th>
@@ -104,39 +104,27 @@
 								
 								        <div>
 								            <table border="1" class="form-label table">
-								                <tr>
-								                    <th style="width: 200px;">매출구분</th>
-								                    <td style="width: 200px;">${ list.get(0).SALES_DIVISION }</td>
-								                    <th style="width: 200px;">담당자</th>
-								                    <td>${ list.get(0).MANAGER_NAME }</td>
-								                </tr>
-								                <tr>
-								                    <th colspan="4" style="text-align: center;">매출정보</th>
-								                </tr>
-								                <tr>
-								                    <th>품목</th>
-								                    <th >수량</th>
-								                    <th colspan="2">매출금액</th>
-								                </tr>
-								               	
-								               	<c:forEach var="l" items="${list}">
-		                                <tr>
-		                                    <td>${l.ITEM}</td>
-		                                    <td>${l.VOLUMES}</td>
-		                                    <td colspan="2">${l.SALES_AMOUNT}</td>
-		                                </tr> 			
-                                </c:forEach>
+                                <tr>
+                                    <th>시작일</th>
+                                    <td>${ list.get(0).START_PERIOD }</td>
+                                    <th>마지막일</th>
+                                    <td>${ list.get(0).LAST_PERIOD }</td>
+                                </tr>
+                                <tr>
+                                    <th style="width: 150px;">제목</th>
+                                    <td colspan="3">${ list.get(0).RETIRE_TITLE }</td>
+                                </tr>
+                                <tr>
+                                    <th style="width: 150px;">사유</th>
+                                    <td colspan="3">${list.get(0).RETIRE_CONTENT}</td>
+                                </tr>
                                 
-								                <tr>
-								                    <th colspan="2">총매출금액(VAT별도)</th>
-								                    <td colspan="2">${ list.get(0).TOTAL_SALES }</td>
-								                </tr>
 								            </table>    
 								        </div>
 								        
 								        <div id="text_div_bottom" >
 								            <div id="text_div" class="form-label">
-								                <div>위와 같이 매출보고서를 제출합니다.</div>
+								                <div>위와 같이 휴직신청서를 제출합니다.</div>
 								                <div>${list.get(0).REGIST_DATE}</div>
 								                <div id="writer">
 								                    <div>기안자 :  ${list.get(0).PAYMENT_WRITER} (인)</div>
@@ -210,11 +198,10 @@
     	if(writerNo == "true"){
 	    	 	if(confirm('수정하시겠습니까?')){
 						alert("작성페이지로 이동합니다.");
-							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).EXPEND_NO} 
+							location.href="${contextPath}/pay/mModify.do?documentNo=" + ${list.get(0).EXPEND_NO} 
 																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
 																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
-																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
-																									 			+ "&report=m";
+																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}";
 	    		}
     	}else{
     		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");

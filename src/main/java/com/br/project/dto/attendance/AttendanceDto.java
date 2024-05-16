@@ -21,40 +21,28 @@ import lombok.ToString;
 @Builder
 public class AttendanceDto {
 
-	private int userNo;
-	private String userName;
-	private String userId;
-	private String userPwd;
-	private String phone;
-	private String address;
-	private String accountNo;
-	private String bank;
-	private String email;
-	private String profileUrl;
-	private int countFail;
-	private String enrollDate;
-	private int enrollUserNo;
-	private String modifyDate;
-	private int modifyUserNo;
-	private String status;
-	private int vacationCount;
-	private int authLevel;
-	private int salary;
-	private int deptNo;
-	private int teamNo;
-	private int positionNo;	
+	private int attendanceNo; // 근무번호 : 시퀀스
+	private int userNo; // 사번 : member 테이블
+	private Date clockIn; // 근무시작 시간
+	private Date clockOut; // 근무종료 시간
+	private String requestDetail; // 상태 (출근|결근|퇴근|조회|휴가)
 	
 	private String dept;
 	private String team;
 	private String posi;
+	private Date todayIn;
+	private Date todayOut;
 
 	private List<GroupDto> groupList;
+	private List<MemberDto> memberList;
 	
-	private int attendanceNo; // 근무번호 : 시퀀스
-	//private int userNo; // 사번
-	private Date clockIn; // 시작시간
-	private Date clockOut; // 종료시간
-	private String requestDetail; // 상태 : 출근|결근|퇴근|조퇴|휴가
+	private String profileURL;
+	private String userName;
 	
-	
+	private String a;
+	private String b;
+	private String c;
+	private String d;
+	private String e;
+
 }

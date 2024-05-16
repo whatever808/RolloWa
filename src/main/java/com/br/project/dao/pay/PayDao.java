@@ -21,6 +21,10 @@ public class PayDao {
 	
 	private final SqlSessionTemplate sqlSessionTemplate;
 	
+	//회원정보조회
+	public String loginUserMember(int userNo){
+		return sqlSessionTemplate.selectOne("payMapper.loginUserMember", userNo);
+	}
 	
 	public int selectListCount() {
 		return sqlSessionTemplate.selectOne("payMapper.selectListCount");
@@ -108,8 +112,8 @@ public class PayDao {
 	}
 	
 	//동적쿼리 재사용
-	public List<MemberDeptDto> selectloginUserDept(MemberDto loginMember) {
-		return sqlSessionTemplate.selectList("payMapper.selectDepartment", loginMember);
+	public List<MemberDeptDto> selectloginUserDept(Map<String, Object> mapUserMember) {
+		return sqlSessionTemplate.selectList("payMapper.selectDepartment", mapUserMember);
 	}
 	
 	//1.매출보고서 등록
@@ -173,5 +177,124 @@ public class PayDao {
 	public int updateApproval(Map<String, Object> map) {
 		return sqlSessionTemplate.update("payMapper.updateApproval", map);
 	}
+	
+	//기안서 sales_report insert
+	public int gReportInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.gReportInsert", map);
+	}
+	
+	//기안서 첨부파일 insert
+	public int gReportAttachInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.gReportAttachInsert", map);
+	}
+	
+	//기안서 공동테이블 (approval)
+	public int gReportApprovalInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.gReportApprovalInsert", map);
+	}
+	
+	//기안서 상세페이지
+	public List<Map<String, Object>> salesDetail(Map<String, Object> map){
+		return sqlSessionTemplate.selectList("payMapper.salesDetail", map);
+	}
+	
+	//로그인한 사용자의 완료함갯수
+	public List<PayDto> ApprovedList(PageInfoDto pi, String userName){
+		RowBounds rowBounds = new RowBounds( (pi.getCurrentPage() -1) * pi.getListLimit(), pi.getListLimit() ); 
+		return sqlSessionTemplate.selectList("payMapper.paymainPage" , userName, rowBounds);
+	}
+	
+	//1_1)비품신청서 등록
+	public int insertBreport(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.insertBreport", map);
+	}
+		
+	//1_2)비품 아이템 등록
+	public int insertItemsB(Map<String, Object> item) {
+		return sqlSessionTemplate.insert("payMapper.insertItemsB", item);
+	}
+	
+	//1_3)공통테이블 등록 (코드재활용)
+	public int bReportApprovalInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.bReportApprovalInsert", map);
+	}
+	
+	// 비품신청서 상세페이지
+	public List<Map<String, Object>> fixDetail(Map<String, Object> map) {
+		return sqlSessionTemplate.selectList("payMapper.fixDetail", map);
+	}
+	
+	
+	//1_1) 휴가신청서 등록
+	public int hReportInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.hReportInsert", map);
+	}
+	
+	//1_2) 결재공동테이블 등록
+	public int hReportApprovalInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.hReportApprovalInsert", map);
+	}
+	
+	
+	// 휴가신청서 상세페이지
+	public List<Map<String, Object>> retireDetail(Map<String, Object> map) {
+		return sqlSessionTemplate.selectList("payMapper.retireDetail", map);
+	}
+	
+	//1_1)지출결의서 등록
+	public int insertJreport(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.insertJreport", map);
+
+	}
+	
+	//1_2)지출결의서 item테이블 등록
+	public int insertItemsJ(Map<String, Object> item) {
+		return sqlSessionTemplate.insert("payMapper.insertItemsJ", item);
+	}
+	
+	//1_3)지출결의서 결재이력공동테이블 등록
+	public int jReportApprovalInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.jReportApprovalInsert", map);
+	}
+	
+	//1_4)지출결의서 파일 등록하기
+	public int jReportAttachInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.jReportAttachInsert", map);
+	}
+	
+	//1.지출결의서 리스트 불러오기
+	public List<Map<String, Object>> draftDetail(Map<String, Object> map){
+		return sqlSessionTemplate.selectList("payMapper.draftDetail", map);
+	}
+	
+	
+	//지출결의서 수정하기페이지 (리스트불러오기)
+	public List<Map<String, Object>> draftModify(Map<String, Object> map){
+		return sqlSessionTemplate.selectList("payMapper.draftDetail", map);
+	}
+	
+	//-------------------
+	//지출결의서 업데이트
+	public int updateJReport(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.updateJReport", map);
+	}
+	
+	//지출결의서 아이템 품목 등록하기전에 삭제하기
+	public int deleteJItem(Map<String, Object> map) {
+		return sqlSessionTemplate.delete("payMapper.deleteJItem", map);
+	}
+	
+	//지출결의서 아이템품목 등록 재사용
+	
+	//파일등록하기전에 기존파일 삭제한거있으면 삭제
+	public int deleteAttachment(String[] delFileNo) {
+		return sqlSessionTemplate.delete("payMapper.deleteAttachment", delFileNo);
+	}
+	
+	//새로운 파일 등록하기
+	public int insertAttachment(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.insertAttachment", map);
+	}
+	//-------------------
 	
 }

@@ -60,7 +60,7 @@
         position: relative;
     }
     .tree {
-        margin: 50px;
+        margin: 20px;
         text-align: center;
     }
     .tree, .tree ul {
@@ -123,7 +123,7 @@
         border-radius: .3em;
         display: inline-block;
         /* 가운데 em : 가로 개수조절 */
-        margin: 0 3em 2.3em;
+        margin: 0 2em 2.3em;
         padding: 1em 1.5em;
         position: relative;
         width: 200px;
@@ -188,12 +188,12 @@
 				<c:forEach var="d" items="${dept}">
 				    <c:if test="${d.dept ne prevDept}">
 				        <li>
-				            <a href="#"><span class="level2">${d.dept}</span></a>
+				            <a href="${contextPath}/orginfo/search.do?page=1&department=${d.dept}&phone=&team=전체 팀&name="><span class="level2">${d.dept}</span></a>
 				            <ul>
 				                <c:forEach var="team" items="${dept}">
 				                    <c:if test="${d.dept eq team.dept}">
 				                    <ul>
-				                        <li><a href=""><span class="level3">${team.team}</span></a></li>
+				                        <li><a href="${contextPath}/orginfo/search.do?page=1&department=${team.dept}&team=${team.team}&phone=&name="><span class="level3">${team.team}</span></a></li>
 			                        </ul>
 				                    </c:if>
 				                </c:forEach>
@@ -207,7 +207,6 @@
 		  </li>
 		</ul>
 		
-		<!-- 일정한 개수 마다 줄간격 맞춤 -->
 		<script>
 		  $(document).ready(function() {
 		      var treeItems = $('.tree > li > ul > li').length;
