@@ -275,6 +275,7 @@ public class PayService {
 		//1.지출결의서테이블 등록
 		int result1 = payDao.insertJreport(map);
 		
+		
 		//2.품목공동테이블 등록
 		int result2 = 1;
 			if(itemList != null && !itemList.isEmpty()) {
@@ -367,6 +368,10 @@ public class PayService {
 	
 	public int moreDateSearchCount(Map<String, Object> userMap) {
 		return payDao.moreDateSearchCount(userMap);
+	}
+	
+	public List<PayDto> delayDateSearchList(Map<String, Object> userMap, PageInfoDto pi){
+		return payDao.delayDateSearchList(userMap, pi);
 	}
 	
 	

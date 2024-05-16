@@ -56,7 +56,7 @@
 		</script>
   </c:if>
   
-    <c:if test="${ not  empty delayDateList or not empty delayDateSelect}">
+    <c:if test="${ not  empty delayDate or not empty delayDateSelect or not empty delayDateSearch}">
   	<script>
 	  	function typeSelect(){
 				location.href="${contextPath}/pay/delayDateSelectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
@@ -261,7 +261,7 @@
                                 				<c:when test="${ not empty userAllList or not empty userSearchList or not empty userSearchList}">
                                 					 <form action="${contextPath}/pay/userSearch.do" method="get">
                                 				</c:when>
-                                				<c:when test="${ not empty delayDateList or not empty delayDateSelect or not empty delayDateSearch}">
+                                				<c:when test="${ not empty delayDate or not empty delayDateSelect or not empty delayDateSearch}">
                                 					 <form action="${contextPath}/pay/delayDateSearch.do" method="get">
                                 				</c:when>
                                 				<c:otherwise>
@@ -287,7 +287,7 @@
                                          		</button>
                                          		</div>
                                         	</c:when>
-                                        	<c:when test="${ not empty delayDateList or not empty delayDateSelect or not empty delayDateSearch}">
+                                        	<c:when test="${ not empty delayDate or not empty delayDateSelect or not empty delayDateSearch}">
                                         	 <div class="input-group-append">
                                         		<button type="submit" id="user_mybutton">
                                            	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
@@ -448,15 +448,26 @@
 													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSelectList.do?page=${pi.currentPage+1}&conditions=${map.conditions}&status=${map.status}">Next</a></li>
 													             </ul>
                                    	</c:when>
-                                   	<c:otherwise>
-                                   		<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage-1}&condition=${search.condition}&keyword=${search.keyword}">Previous</a></li>
+                                   		<c:when test="${not empty delayDateSearch }">
+                                			<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">Previous</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${p}&condition=${search.condition}&keyword=${search.keyword}">${ p }</a></li>
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${p}&condition=${map.condition}&keyword=${map.keyword}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/search.do?page=${pi.currentPage+1}&condition=${search.condition}&keyword=${search.keyword}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">Next</a></li>
+													             </ul>
+                                   	</c:when>
+                                   	<c:otherwise>
+                                   		<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSearch.do?page=${p}&condition=${map.condition}&keyword=${map.keyword}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">Next</a></li>
 													             </ul>
                                    	</c:otherwise>
                                    </c:choose>
@@ -524,6 +535,36 @@
 			
 			</script>
 		</c:when>
+		<c:when test="${ not empty delayDateSelect }">
+			<script>
+				$(document).ready(function(){
+					//카테고리 고정시키기
+					$("#selects").val("${map.conditions}");
+					$("#statusSelect").val("${map.status}");
+					
+				})
+			
+			</script>
+		</c:when>
+		<c:when test="${ not empty delayDateSearch }">
+			<script>
+				$(document).ready(function(){
+					//카테고리 고정시키기
+					$("#select_search").val("${map.condition}");
+					 
+					
+				})
+			
+			</script>
+		</c:when>
+		
+		
+		
+		
+		
+		
+		
+		
 		<c:when test="${not empty userAllListSelect}">
 				<script>
 					$(document).ready(function(){

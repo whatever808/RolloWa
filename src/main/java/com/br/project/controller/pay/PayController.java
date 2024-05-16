@@ -674,7 +674,7 @@ public class PayController {
 			model.addAttribute("list", Jlist);
 			model.addAttribute("fileList", fileList);
 			
-			return "pay/jWriterForm";
+			return "pay/jModifyForm";
 		}
 		
 		
@@ -1004,13 +1004,27 @@ public class PayController {
 	}
 	
 	
-	
+	//............
 	@PostMapping("/jReportUpdate.do")
 	public String jReportUpdate(@RequestParam Map<String, Object> map, List<MultipartFile> uploadFiles
 							  , RedirectAttributes redirectAttributes) {
+		//기존파일을 삭제한 번호들
+		String[] delFileNo = null;
+		try {
+		    delFileNo = (String[]) map.get("delFileNo");
+		} catch (ClassCastException e) {
+		}
+		//기존파일을 삭제한 갯수(길이)
+		int delFileNoleng = (delFileNo != null) ? delFileNo.length : 0;
 		
-		String[] delFileNo = (String[]) map.get("delFileNo");
+		log.debug("delFileNo : {}", delFileNo);
+		
+		//기존파일의배열길이(삭제되기전)
+		int fileLength = (int)map.get("fileLength");
+
 		String reportNo = (String)map.get("reportNo");
+		
+		log.debug(reportNo);
 		
 		//품목들
 		List<Map<String, Object>> list = new ArrayList<>();
@@ -1039,7 +1053,12 @@ public class PayController {
 				fileList.add(file);
 			}
 		}
-		log.debug("fileLength : {}", map.get("fileLength"));
+		
+		if(delFileNoleng == fileLength && fileList.isEmpty()) {
+			map.put("fileStatus", "N");
+		}else {
+			map.put("fileStatus", "Y");
+		}
 		
 		int result = payService.jReportUpdate(map, list, fileList, delFileNo);
 		
@@ -1138,8 +1157,8 @@ public class PayController {
 		//일주일이상 처리가안된 목록갯수
 		int moreDateSearchCount = payService.moreDateSearchCount(userMap);
 		PageInfoDto pi = pagingUtil.getPageInfoDto(moreDateSearchCount, currentPage, 5, 10);
-		//여기까지했음
-		List<PayDto> list = payService.delayDateSelectList(userMap, pi);
+		
+		List<PayDto> list = payService.delayDateSearchList(userMap, pi);
 		
 		int mdCount = payService.moreDateCount(userName);
 		//로그인한 사용자의 결재한 내역 게시글 총갯수
@@ -1158,7 +1177,7 @@ public class PayController {
 		model.addAttribute("ulistCount", String.valueOf(ulistCount));
 		model.addAttribute("userName", userName);
 		model.addAttribute("map", map);
-		model.addAttribute("delayDateSelect", "delayDateSelect");
+		model.addAttribute("delayDateSearch", "delayDateSearch");
 		
 		return "pay/paymain";
 		
