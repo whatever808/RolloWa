@@ -188,7 +188,6 @@
 			$(document).ready(function() {
 				currentDate();
 				importList();
-				console.log($('select :selected').val());
 			});
 		</script>
 		<!-- 컨텐츠 영역 -->

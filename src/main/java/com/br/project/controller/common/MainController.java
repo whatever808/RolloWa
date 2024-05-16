@@ -1,11 +1,9 @@
 package com.br.project.controller.common;
 
-import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.br.project.dto.member.MemberDto;

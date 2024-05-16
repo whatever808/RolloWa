@@ -1029,14 +1029,7 @@ public class PayController {
 			}
 		}
 		log.debug("fileLength : {}", map.get("fileLength"));
-		
-		
-		int result = payService.jReportUpdate(map, list, fileList, delFileNoArr);
-		
-		redirectAttributes.addFlashAttribute("alertTitle", "지출결의서");
-		if(result > 0) {
-			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
-		}
+
 		
 		return "redirect:/pay/paymain.page";
 		
