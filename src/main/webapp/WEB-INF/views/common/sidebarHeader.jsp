@@ -321,13 +321,14 @@
                     </div>
                 </li>
                 
-                <!-- ======================================= 게시판 관련 (가림꺼 건들지 말것!!!) start ======================================= -->
+                <!-- ======================================= "가림" 구역 start ======================================= -->
+                <!-- ======================================= 게시판 관련 start ======================================= -->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                        data-bs-toggle="collapse" data-bs-target="#board-collapse" aria-expanded="false">
                         게시판
                     </button>
-                    <div class="collapse" id="dashboard-collapse">
+                    <div class="collapse" id="board-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         	
                             <li><a href="${ contextPath }/board/list.do"
@@ -375,9 +376,36 @@
                     	})
                 	})
                 </script>
+                <!-- ======================================= 게시판 관련 end ======================================= -->
                 
+                <!-- ======================================= 어트랙션 관련 start ======================================= -->
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#attraction-collapse" aria-expanded="false">
+                        어트랙션
+                    </button>
+                    <div class="collapse" id="attraction-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        	
+                            <li><a href=""
+                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 조회</a>
+                            </li>
+                            
+                            <li><a href="${ contextPath }/attraction/regist.page"
+                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
+                            </li>
+                            
+                            <li><a href=""
+                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
+                            </li>
+                            
+                            
+                        </ul>
+                    </div>
+                </li>
+                <!-- ======================================= 어트랙션 관련 end ======================================= -->
                
-                <!-- ======================================= 게시판 관련 (가림꺼 건들지 말것!!!) end ======================================= -->
+                <!-- ======================================= "가림" 구역 end ======================================= -->
                 
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"

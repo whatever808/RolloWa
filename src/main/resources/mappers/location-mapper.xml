@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="locationMapper">
+	
+	<resultMap 		id="locationResultMap" 	type="LocationDto">
+		<id 	column="location_no" 		property="locationNo" />
+		<result column="modify_emp" 		property="modifyEmp" />
+		<result column="regist_emp" 		property="registEmp" />
+		<result column="location_name" 		property="locationName" />
+		<result column="regist_date" 		property="registDate" />
+		<result column="modify_date" 		property="modifyDate" />
+		<result column="status" 			property="status" />
+	</resultMap>
+	
+	<!-- 위치 목록조회 -->
+	<select id="selectLocationList" resultMap="locationResultMap">
+		select
+			   location_no
+			  ,location_name
+	  	  from tb_location
+	  	 where status = 'Y'
+	</select>
+	
+</mapper>

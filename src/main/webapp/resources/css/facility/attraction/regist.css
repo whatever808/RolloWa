@@ -58,14 +58,14 @@ input:focus, textarea:focus {
     margin-right: 60px;
 }
 
-.age-limit{
+.age-limit, .height-limit{
     display: inline-block;
 }
-#age-limit{
+#age-limit, #height-limit{
     margin-left: 30px;
     width: 200px;
 }
-.age-limit>select{
+.age-limit>select, .height-limit>select{
     display: inline-block;
     margin-left: 20px;
     width: 100px;
