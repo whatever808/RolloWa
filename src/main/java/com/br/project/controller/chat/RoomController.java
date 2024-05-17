@@ -20,7 +20,7 @@ public class RoomController {
 	// 채팅방 목록 조회
 	@GetMapping("/rooms")
 	public String rooms(Model model) {
-		model.addAttribute("list", chatDao.findAllRooms());
+		//model.addAttribute("list", chatDao.findAllRooms());
 		
 		return "chat/rooms";
 	}
@@ -28,13 +28,13 @@ public class RoomController {
 	// 채팅방 생성
 	@PostMapping("/room")
 	public String create(String name, RedirectAttributes redirectAttribute) {
-		redirectAttribute.addFlashAttribute("roomName", chatDao.createChatRoomDto(name));
+		//redirectAttribute.addFlashAttribute("roomName", chatDao.createChatRoomDto(name));
 		return "redirect:/chat/rooms";
 	}
 	
 	// 채팅방 조회
 	@GetMapping("/room")
 	public void getRoom(String roomId, Model model) {
-		model.addAttribute("room", chatDao.findRoomById(roomId));
+		//model.addAttribute("room", chatDao.findRoomById(roomId));
 	}
 }

@@ -425,87 +425,85 @@
 
             })
         })
-    })
-    // 1. 해당 아이디의 모달 등록이 필요함
-    $('#people_list').iziModal({
-        title: '사원 목록',
-        subtitle: '',
-        headerColor: '#FEEFAD', // 헤더 색깔
-        theme: 'light', //Theme of the modal, can be empty or "light".
-        padding: '15px', // content안의 padding
-        radius: 10, // 모달 외각의 선 둥글기
-        group: 'name111',
-        loop: true,
-        arrowKeys: true,
-        navigateCaption: true,
-        navigateArrows: true,
-        zindex: 300, // zindex 모달의 화면 우선 순위 입니다. 
-        focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
-        restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
-    });
-    
-    // 채팅 - 전체 부서 조회    
-    const $deptListWrapper = $(".dept_list_wrapper");
-    $(".msg_btn_wrapper").on("click", function() {
-    	
-    	$.ajax({
-    		url: '${contextPath}/member/select.do'
-    		, method: 'get'
-    		, success: function(map) {
-    			for(let i = 0; i < map.deptList.length; i++) {
-    				var deptText = "<div class='d-inline-flex gap-1 dept_list'>";
-   		          deptText += "<button class='btn1 forget_btn dept' type='button' data-bs-toggle='collapse'";   			
-   		       		deptText += "data-bs-target='#" + map.deptList[i].codeName + "' aria-expanded='false' data-mdb-ripple-init>";
-   		       		//deptText += "data-uppercode='" + map.deptList[i].code + "' data-counti='" + i + "'>";
-   		       		deptText += map.deptList[i].codeName;
-   		     			deptText += "</button>";
-   		  				deptText += "</div>";
-   		  				
-   		  		var teamText = "<div class='collapse multi-collapse' id='" + map.deptList[i].codeName + "'>"
-   		  		for(let j = 0; j < map.teamList.length; j++) {
-   		  			// 부서에 해당하는 팀
-   		  			if(map.deptList[i].code == map.teamList[j].upperCode) {
-   		  				teamText += "<div class='card card-body team'>";
-								teamText += "<button class='btn btn-outline-info team' type='button' data-bs-toggle='collapse'";
-								teamText += "data-bs-target='#team_" + map.teamList[j].code + "' aria-expanded='false' data-mdb-ripple-init>";
-								teamText += map.teamList[j].codeName;
-								teamText += "</button>";
-								teamText += "</div>";  	
+	    $('#people_list').iziModal({
+	        title: '사원 목록',
+	        subtitle: '',
+	        headerColor: '#FEEFAD', // 헤더 색깔
+	        theme: 'light', //Theme of the modal, can be empty or "light".
+	        padding: '15px', // content안의 padding
+	        radius: 10, // 모달 외각의 선 둥글기
+	        group: 'name111',
+	        loop: true,
+	        arrowKeys: true,
+	        navigateCaption: true,
+	        navigateArrows: true,
+	        zindex: 300, // zindex 모달의 화면 우선 순위 입니다. 
+	        focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
+	        restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
+	    });
+    	 // 채팅 - 전체 사원 조회    
+       const $deptListWrapper = $(".dept_list_wrapper");
+       $(".msg_btn_wrapper").on("click", function() {
+       	
+       	$.ajax({
+       		url: '${contextPath}/member/select.do'
+       		, method: 'get'
+       		, success: function(map) {
+       			for(let i = 0; i < map.deptList.length; i++) {
+       				var deptText = "<div class='d-inline-flex gap-1 dept_list'>";
+      		          deptText += "<button class='btn1 forget_btn dept' type='button' data-bs-toggle='collapse'";   			
+      		       		deptText += "data-bs-target='#" + map.deptList[i].codeName + "' aria-expanded='false' data-mdb-ripple-init>";
+      		       		//deptText += "data-uppercode='" + map.deptList[i].code + "' data-counti='" + i + "'>";
+      		       		deptText += map.deptList[i].codeName;
+      		     			deptText += "</button>";
+      		  				deptText += "</div>";
+      		  				
+      		  		var teamText = "<div class='collapse multi-collapse' id='" + map.deptList[i].codeName + "'>"
+      		  		for(let j = 0; j < map.teamList.length; j++) {
+      		  			// 부서에 해당하는 팀
+      		  			if(map.deptList[i].code == map.teamList[j].upperCode) {
+      		  				teamText += "<div class='card card-body team'>";
+   								teamText += "<button class='btn btn-outline-info team' type='button' data-bs-toggle='collapse'";
+   								teamText += "data-bs-target='#team_" + map.teamList[j].code + "' aria-expanded='false' data-mdb-ripple-init>";
+   								teamText += map.teamList[j].codeName;
+   								teamText += "</button>";
+   								teamText += "</div>";  	
 
-	   		  			var memberText = "<div class='collapse multi-collapse team_list' id='team_" + map.teamList[j].code + "'>";
-	   		  			memberText += "<ul>";
-	   		  			for(let k = 0; k < map.memberList.length; k++) {
-	   		  				// 팀에 해당하는 팀원
-	   		  				if(map.teamList[j].code == map.memberList[k].teamCode) {
-	   		  					memberText += "<li class='list-group-item'>";
-	   		  					memberText += "<div class='pretty p-icon p-smooth'>";
-	   		  					memberText += "<input type='checkbox' value='" + map.memberList[k].userNo + "'/>";
-	   		  					memberText += "<div class='state p-success'>";
-	   		  					memberText += "<i class='icon fa fa-check'></i>"
-	   		  					memberText += "<label>" + map.memberList[k].position + " " + map.memberList[k].userName + "</label>";
-	   		  					memberText += "</div>";
-	   		  					memberText += "</div>";
-	   		  					memberText += "</li>";
-	   		  				}
-	   		  			}
-	   		  			memberText += "</ul>";
-	   		  			memberText += "</div>";
-	   		  			
-	   		  			teamText += memberText;
-   		  			}
-   		  		}
-			  		teamText += "</div>"
+   	   		  			var memberText = "<div class='collapse multi-collapse team_list' id='team_" + map.teamList[j].code + "'>";
+   	   		  			memberText += "<ul>";
+   	   		  			for(let k = 0; k < map.memberList.length; k++) {
+   	   		  				// 팀에 해당하는 팀원
+   	   		  				if(map.teamList[j].code == map.memberList[k].teamCode) {
+   	   		  					memberText += "<li class='list-group-item'>";
+   	   		  					memberText += "<div class='pretty p-icon p-smooth'>";
+   	   		  					memberText += "<input type='checkbox' value='" + map.memberList[k].userNo + "'/>";
+   	   		  					memberText += "<div class='state p-success'>";
+   	   		  					memberText += "<i class='icon fa fa-check'></i>"
+   	   		  					memberText += "<label>" + map.memberList[k].position + " " + map.memberList[k].userName + "</label>";
+   	   		  					memberText += "</div>";
+   	   		  					memberText += "</div>";
+   	   		  					memberText += "</li>";
+   	   		  				}
+   	   		  			}
+   	   		  			memberText += "</ul>";
+   	   		  			memberText += "</div>";
+   	   		  			
+   	   		  			teamText += memberText;
+      		  			}
+      		  		}
+   			  		teamText += "</div>"
 
-    		    $deptListWrapper.append(deptText + teamText);    		    						
-          }
-    			 			
-    		}
-    		, error: function() {
-    			console.log("부서 조회 ajax 통신 실패")
-    		}
-    	})
+       		    $deptListWrapper.append(deptText + teamText);    		    						
+             }
+       			 			
+       		}
+       		, error: function() {
+       			console.log("부서 조회 ajax 통신 실패")
+       		}
+       	})
+       })
     })
-    
+
     // 채팅하기 버튼 클릭 시 체크된 회원들과 채팅방 생성
     function createChatRoom() {
     	$(".list-group-item").each(function(index, el) {
