@@ -6,21 +6,23 @@ import java.util.UUID;
 
 import org.springframework.web.socket.WebSocketSession;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class ChatRoomDto {
-	private String roomId;
-	private String name;
-	private Set<WebSocketSession> sessions = new HashSet();
-	
-	public static ChatRoomDto create(String name) {
-		ChatRoomDto room = new ChatRoomDto();
-		
-		room.roomId = UUID.randomUUID().toString();
-		room.name = name;
-		return room;
-	}
+	private int chatRoomNo;
+	private String chatRoomName;
+	private String enrollDate;
+	private String modifyDate;
+	private String status;
+	private int enrollUserNo;
+	private int modifyUserNo;
 }

@@ -25,6 +25,7 @@ public class ChatController {
 		template.convertAndSend("/topic/a", "test String");
 	}
 	
+	/*
 	@MessageMapping(value = "/chat/enter")
     public void enter(ChatMessageDto message){
         message.setMessage(message.getWriter() + "님이 채팅방에 참여하였습니다.");
@@ -35,4 +36,5 @@ public class ChatController {
     public void message(ChatMessageDto message){
         template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
+    */
 }
