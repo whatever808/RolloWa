@@ -81,5 +81,9 @@ public class CalendarDao {
 	public List<CalendarDto> ajaxMainCalendar() {
 		return sqlSession.selectList("calMapper.ajaxMainCalendar");
 	}
+
+	public int insertCompany(CalendarDto calendar) {
+		return sqlSession.insert("calMapper.insertCal", calendar);
+	}
 	
 }

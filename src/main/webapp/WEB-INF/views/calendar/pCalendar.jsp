@@ -8,7 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>개인일정</title>
+<title>부서 일정</title>
 
 <!-- fullcalendar -->
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
@@ -191,12 +191,10 @@
 	 			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();
 	 			let checkDate =  new Date(date2) >= new Date(date1);
 	 			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
-	       //console.log(checkDate);
-	       //console.log(checkTime);
 	       if(checkDate && checkTime){
 	    	   updateCal();
 	       }else {
-	       	alert('날짜 및 시간을 확인 해 주세요.');
+	    	   alertify.alert('일정 수정','날짜 및 시간을 확인 해 주세요.');
 	       }  
 	   	}; 
 	   	
@@ -300,16 +298,15 @@
 		  
 	   	/* 일정 update ajax */
 		  function updateCal(){
-	   		//console.log($('#updateForm').serialize());
 			  $.ajax({
 				  url:'${path}/calendar/calUpdate.do',
 				  type: 'post',
 				  data: $('#updateForm').serialize(),
 				  success:function(result){
 						if(result > 0){
-							alert('성공적으로 갱신 되었습니다.');
+							 alertify.alert('일정 수정','성공적으로 갱신 되었습니다.');
 						} else {
-							alert('관리자를 호출해 주세요.');
+							 alertify.alert('일정 수정','관리자를 호출해 주세요.');
 						}
 					  
 						removeAll();
@@ -385,15 +382,6 @@
 		<br>
 		<div style="display: flex; justify-content: space-between; align-items: center">
 			<div class="jua-regular">Category</div>
-			
-<!-- 			<div
-				class="pretty p-default p-round p-smooth font-size20 privateArea"
-				id="privateName">
-				<input type="checkbox" name="calSort" value="P">
-				<div class="state p-danger">
-					<label class="jua-regular">private</label>
-				</div>
-			</div>   -->
 
 		</div>
 		

@@ -62,7 +62,7 @@ public class BoardController {
 			// 응답페이지 지정 및 응답데이터 반환
 			model.addAttribute("boardList", boardService.selectBoardList(pageInfo, filter));				// 게시글 목록
 			model.addAttribute("pageInfo", pageInfo);
-			model.addAttribute("departmentList", departmentService.selectDepartmentList("DEPT01"));		// 부서 목록
+			//model.addAttribute("departmentList", departmentService.selectDepartmentList("DEPT01"));		// 부서 목록
 			model.addAttribute("filter", filter);
 			
 			return "/board/list";

@@ -154,7 +154,7 @@
 				  			},
 				  			headerToolbar:{start: 'prev today enrollButton',
 				  						   center: 'title',
-				  						   end: 'multiMonthYear,dayGridMonth,timeGridWeek next'
+				  						   end: 'multiMonthYear dayGridMonth timeGridWeek next'
 				  		    },
 				  			views:{year: {titleFormat:{year: '2-digit'}, multiMonthMaxColumns: 1},
 				  			  	   month:{titleFormat:{year: '2-digit', month: 'short'} },
@@ -185,17 +185,14 @@
 			 			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();
 			 			let checkDate =  new Date(date2) >= new Date(date1);
 			 			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
-			       //console.log(checkDate);
-			       //console.log(checkTime);
 			       if(checkDate && checkTime){
 			       	updateCal();
 			       }else {
-			       	alert('날짜 및 시간을 확인 해 주세요.');
+			    	   alertify.alert('일정 수정','날짜 및 시간을 확인 해 주세요.');
 			       }
 			   	};
 			   	/* 일정 update ajax */
 				  function updateCal(){
-			   		//console.log($('#updateForm').serialize());
 					  $.ajax({
 						  url:'${path}/calendar/companyCalUpdate.do',
 						  type: 'post',
@@ -249,7 +246,6 @@
 							type:'post',
 						  contentType: 'application/json',
 							success:function(list){
-								//console.log(list);
 								list.forEach((e) => {
 									calendar.addEventSource(
 									 [{

@@ -2,6 +2,7 @@ package com.br.project.service.common.department;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,8 @@ public class DepartmentService {
 	 * @param code : [그룹코드]
 	 * @return : 해당 그룹코드를 가진 그룹객체 리스트
 	 */
-	public List<GroupDto> selectDepartmentList(String code){
-		return departmentDao.selectDepartmentList(code);
+	public List<GroupDto> selectDepartmentList(Map<String, String> map){
+		return departmentDao.selectDepartmentList(map);
 	}
 	
 	/* ================================================= "가림" 구역 start ================================================= */

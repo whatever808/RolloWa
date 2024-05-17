@@ -18,7 +18,6 @@
 	
 	<!-- side bar -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
-	<jsp:include page="/WEB-INF/views/common/mainCal.jsp" />
 	<!-- content 추가 -->
 	<div class="content p-5">
 		
@@ -49,6 +48,8 @@
 			
 			<!-- calendar start -->
 			<div class="calendar box">
+				<!-- main calendar -->
+				<jsp:include page="/WEB-INF/views/common/mainCal.jsp" />
 				<div id="calendar"></div>
 			</div>
 			<!-- calendar end -->

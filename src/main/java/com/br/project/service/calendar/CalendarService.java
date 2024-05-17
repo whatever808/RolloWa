@@ -27,11 +27,9 @@ public class CalendarService {
 	 */
 	public List<CalendarDto> ajaxSelectPCalendar(Map<String, Object> request) {
 		Object userNO = request.get("userNO");
-		log.debug("userNO {}",userNO);
 		if(userNO != null) {
 			List<String> calNoList = calDao.selectCalNO(userNO);
 			request.put("calNoList", calNoList);
-			//log.debug("calNoList == {}", calNoList);
 		}
 		
 		return calDao.ajaxSelectPCalendar(request);
@@ -135,5 +133,9 @@ public class CalendarService {
 		map.remove("teamCode");
 		
 		return map;
+	}
+
+	public int insertCompany(CalendarDto calendar) {
+		return calDao.insertCompany(calendar);
 	}
 }

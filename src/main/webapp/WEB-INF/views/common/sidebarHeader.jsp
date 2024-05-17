@@ -292,6 +292,7 @@
 	alertify.alert('${alertTitle}','${alertMsg}');
 </script>
 </c:if>
+
 <main class="d-flex flex-nowrap">
         <div class="flex-shrink-0 p-3" style="width: 280px;">
             <a href="/"
@@ -408,7 +409,7 @@
                
                 <!-- ======================================= "가림" 구역 end ======================================= -->
                 
-                <!-- calendar page -->
+                <!-- ======================================= calendar page ========================================= -->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
@@ -417,24 +418,25 @@
                     <div class="collapse" id="orders-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li><a href="${contextPath}/calendar/pCalendar.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정</a>
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 일정</a>
                             </li>
                             <li><a  href="${contextPath}/calendar/companyCalendar.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">회사일정</a>
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">회사 일정</a>
                             </li>
                             <li><a href="${contextPath}/calendar/calendarList.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정관리</a>
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정 관리</a>
                             </li>
                         </ul>
                     </div>
                 </li>
-                <!-- calendar page -->
+                <!-- ======================================= calendar page ========================================= -->
+             
                  <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                        data-bs-toggle="collapse" data-bs-target="#-collapse" aria-expanded="false">
                         Orders
                     </button>
-                    <div class="collapse" id="orders-collapse">
+                    <div class="collapse" id="-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li><a href="#"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>

@@ -8,6 +8,7 @@ import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+
 public class loginCheckInterceptor implements HandlerInterceptor{
 
 	/**
@@ -15,8 +16,8 @@ public class loginCheckInterceptor implements HandlerInterceptor{
 	 */
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 		   throws Exception {
-
-		if((request.getSession()).getAttribute("loginMember") == null) {
+		
+		if(request.getSession().getAttribute("loginMember") == null) {
 			FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);
 			
 			FlashMap flashMap = new FlashMap();

@@ -99,7 +99,7 @@
 		<!-- 컨텐츠 영역 -->
 		<div class="content" style="max-width: 1000px; padding: 30px;">
 			<fieldset class="clander-add-area radious10 inner-line line-shadow">
-				<form action="${path}/calendar/companyCalUpdate.do" method="post">
+				<form action="${path}/calendar/insertCompanyCal.do" method="post">
 					<legend>
 						<h1 class="jua-regular">일정 추가</h1>
 					</legend>
@@ -201,7 +201,7 @@
 					if (checkDate && checkTime) {
 						return true;
 					} else {
-						alert('날짜 및 시간을 확인 해 주세요.');
+						 alertify.alert('일정 등록','날짜 및 시간을 확인 해 주세요.');
 						return false;
 					}
 				};

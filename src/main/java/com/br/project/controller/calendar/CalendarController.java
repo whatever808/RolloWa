@@ -47,22 +47,18 @@ public class CalendarController {
 	public ModelAndView importPCalendar(HttpSession session, ModelAndView mv) {
 		
 		MemberDto member = (MemberDto)session.getAttribute("loginMember");
-		
-//		String teamCode = member.getTeamCode();
-		String teamCode = "A";
-		
+		String teamCode = member.getTeamCode();
 		List<MemberDto> teams = calService.selectTeamPeer(teamCode);
+		Map<String, String> map = new HashMap<>();
+		map.put("code", "CALD01");
+		List<GroupDto> group = dService.selectDepartmentList(map);	
 		
 		for(int i =0; i<teams.size(); i++) {
 			MemberDto m = teams.get(i);
-			if(m.getUserNo() == 1051) {
+			if(m.getUserNo() == member.getUserNo()) {
 				teams.add(0, teams.remove(i));
 			}
 		}
-		//log.debug("teams {}", teams);
-		
-		List<GroupDto> group = dService.selectDepartmentList("CALD01");
-		//log.debug("group {}", group);		
 		
 		mv.addObject("teams", teams)
 		  .addObject("group", group)
@@ -80,10 +76,8 @@ public class CalendarController {
 	@PostMapping(value="/selectCal.ajax", produces="application/json")
 	public Map<String, Object> ajaxSelectPCalendar(@RequestBody Map<String, Object> request,
 												 HttpSession session) {
-		//log.debug("userNo {}", request.get("userNO"));
 		MemberDto member = (MemberDto)session.getAttribute("loginMember");
-		//request.put("team", member.getTeamCode());
-		request.put("teamCode", "A");
+		request.put("teamCode", member.getTeamCode());
 
 		Map<String, Object> map = new HashMap<>();
 		
@@ -104,21 +98,20 @@ public class CalendarController {
 	@GetMapping("/calEnroll.page")
 	public ModelAndView moveEnroll(HttpSession session, ModelAndView mv) {
 		
-		MemberDto member = (MemberDto)session.getAttribute("loginUser");
-		
-//		String teamCode = member.getTeamCode();
-		String teamCode = "A";
+		MemberDto member = (MemberDto)session.getAttribute("loginMember");
+		String teamCode = member.getTeamCode();
 		
 		List<MemberDto> teams = calService.selectTeamPeer(teamCode);
+		Map<String, String> map = new HashMap<>();
+		map.put("code", "CALD01");
+		List<GroupDto> group = dService.selectDepartmentList(map);	
 		
 		for(int i =0; i<teams.size(); i++) {
 			MemberDto m = teams.get(i);
-			if(m.getUserNo() == 1051) {
+			if(m.getUserNo() == member.getUserNo()) {
 				teams.add(0, teams.remove(i));
 			}
 		}
-		
-		List<GroupDto> group = dService.selectDepartmentList("CALD01");
 		
 		mv.addObject("teams", teams)
 		.addObject("group", group)
@@ -145,11 +138,8 @@ public class CalendarController {
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
 		
-		MemberDto member = (MemberDto)session.getAttribute("loginUser");
-//		calendar.setEmp(String.valueOf(member.getUserNo()));
-		calendar.setEmp("1051");
-		
-		//log.debug("data == {}", calendar);
+		MemberDto member = (MemberDto)session.getAttribute("loginMember");
+		calendar.setEmp(String.valueOf(member.getUserNo()));
 		
 		int result = calService.insertCal(calendar);
 		
@@ -172,14 +162,14 @@ public class CalendarController {
 	@ResponseBody
 	@PostMapping("/calUpdate.do")
 	public int calUpdate(CalendarDto calendar
-						, String[] date, String[] time, ModelAndView mv) {
+						, HttpSession session
+						, String[] date, String[] time
+						, ModelAndView mv) {
 		
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
-		//MemberDto member = (MemberDto)session.getAttribute("loginUser");
-		//calendar.setCalNO(String.valueOf(member.getUserNo()));
-		calendar.setEmp("1051");
-		//log.debug("calendar {}", calendar);
+		MemberDto member = (MemberDto)session.getAttribute("loginMember");
+		calendar.setEmp(String.valueOf(member.getUserNo()));
 		
 		return calService.calUpdate(calendar);
 	}
@@ -191,11 +181,44 @@ public class CalendarController {
 	 */
 	@GetMapping("/companyCalendar.page")
 	public ModelAndView selectCompanyCalendar(ModelAndView mv) {
-		
-		List<GroupDto> group = dService.selectDepartmentList("CALD02");	
+		Map<String, String> map = new HashMap<>();
+		map.put("code", "CALD02");
+		List<GroupDto> group = dService.selectDepartmentList(map);	
 		
 		mv.addObject("group", group)
 		  .setViewName("calendar/cCalendar");
+		
+		return mv;
+	}
+	
+	/**
+	 * 회사 일정을 등록 하기 위한 매서드
+	 * @param calendar 	입력한 정보
+	 * @param session 	현재 회원의 정보을 받기 위한 session 객체
+	 * @param date		입력된 날짜
+	 * @param time		입력된 시간
+	 * @param mv		알림 문구를 보내기 위한 객체
+	 * @return
+	 */
+	@PostMapping("/insertCompanyCal.do")
+	public ModelAndView insertCompany(CalendarDto calendar
+									  , HttpSession session
+									  , String[] date, String[] time
+									  , ModelAndView mv) {
+		calendar.setCalSort("C");			
+		calendar.setStartDate(date[0]+ " " + time[0]);
+		calendar.setEndDate(date[1] + " " + time[1]);
+		
+		MemberDto member = (MemberDto)session.getAttribute("loginMember");
+		calendar.setEmp(String.valueOf(member.getUserNo()));
+		
+		int result = calService.insertCompany(calendar);
+		
+		if(result > 0 ) {
+			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("redirect:companyCalendar.page");
+		}else {
+			mv.addObject("alertMsg", "다시 시도해 주세요.").setViewName("redirect:companyCalEnroll.page");
+		}
 		
 		return mv;
 	}
@@ -216,8 +239,9 @@ public class CalendarController {
 	 */
 	@GetMapping("/companyCalEnroll.page")
 	public ModelAndView moveCompanyEnroll(ModelAndView mv) {
-		
-		List<GroupDto> group = dService.selectDepartmentList("CALD02");
+		Map<String, String> map = new HashMap<>();
+		map.put("code", "CALD02");
+		List<GroupDto> group = dService.selectDepartmentList(map);	
 		
 		mv.addObject("group", group)
 		.setViewName("calendar/companyCalEnroll");
@@ -235,16 +259,14 @@ public class CalendarController {
 	 */
 	@ResponseBody
 	@PostMapping("/companyCalUpdate.do")
-	public int companyCalUpdate(CalendarDto calendar
+	public int companyCalUpdate(CalendarDto calendar, HttpSession session
 								, String[] date, String[] time, ModelAndView mv) {
 		
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
-		//MemberDto member = (MemberDto)session.getAttribute("loginUser");
-		//calendar.setCalNO(String.valueOf(member.getUserNo()));
-		calendar.setEmp("1050");
+		MemberDto member = (MemberDto)session.getAttribute("loginMember");
+		calendar.setEmp(String.valueOf(member.getUserNo()));
 		calendar.setCalSort("C");
-		//log.debug("calendar {}", calendar);
 		
 		return calService.companyCalUpdate(calendar);
 	}
@@ -253,7 +275,9 @@ public class CalendarController {
 	 * 회사 일정을 List로 보여주는 위한 페이지로 이동하는 매서드
 	 */
 	@GetMapping("/calendarList.page")
-	public void calendarControllor() {}
+	public String calendarList() {
+		return "calendar/calendarList";
+	}
 	
 
 	/**
@@ -268,10 +292,6 @@ public class CalendarController {
 	public Map<String, Object> ajaxCompanyControllor(@RequestParam(defaultValue = "1") int page
 													,String dataStart, String dataEnd, String calSort) {
 		
-		//log.debug("page {}", page);
-		//log.debug("dataStart {}", dataStart);
-		//log.debug("dataEnd {}", dataEnd);
-		//log.debug("calSort {}", calSort);
 		Map<String, Object> map = new HashMap<>();
 		map.put("dataStart", dataStart);
 		map.put("dataEnd", dataEnd);
@@ -334,7 +354,6 @@ public class CalendarController {
 	@PostMapping(value="/deletedCheck.do", produces = "application/json; charset=utf8")
 	public int ajaxDeletedCal(HttpServletRequest request) {
 		 String[] values = request.getParameterValues("check");
-		 //log.debug("values: {}", Arrays.toString(values));
 		 return calService.ajaxDeletedCal(values);
 	}
 

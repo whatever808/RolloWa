@@ -2,6 +2,7 @@ package com.br.project.dao.common.department;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -21,8 +22,8 @@ public class DepartmentDao {
 	 * @param code : [그룹코드]
 	 * @return : 조회된 부서 리스트
 	 */
-	public List<GroupDto> selectDepartmentList(String code){
-		return sqlSessionTemplate.selectList("departmentMapper.selectDepartmentList", code);
+	public List<GroupDto> selectDepartmentList(Map<String, String> map){
+		return sqlSessionTemplate.selectList("departmentMapper.selectDepartmentList", map);
 	}
 	
 	/* ================================================= "가림" 구역 start ================================================= */

@@ -78,38 +78,27 @@
 				locale: 'ko',
 				buttonText:{prev:'◁',next:'▷',today: '오늘',year:'연도',month:'월',week:'주'
 				},
-				headerToolbar:{start: 'prev today',
-							   center: 'title',
-							   end: 'multiMonthYear,dayGridMonth,timeGridWeek next'
+				headerToolbar:{start: '',center: 'title',end: ''
 			    },
-				views:{year: {titleFormat:{year: '2-digit'}, multiMonthMaxColumns: 1},
-				  	   month:{titleFormat:{year: '2-digit', month: 'short'} },
-					   week: {titleFormat:{year: '2-digit'} },
-					   day:  {titleFormat:{month: 'short', day:'2-digit'}}
+				views:{ month:{titleFormat:{year: '2-digit', month: 'short'} },
 				},
 				buttonIcons: false,
-				navLinks: true,
 				slotMinTime: "06:00:00",
 				timeZone: 'Asia/Seoul',
 			});
 		});					
 	}
-	/* 미리 선언 하지않으면 뒤에서 let calendar에서 undifieded로 변수가 설정 되어 버림 */
 	declareCalendar();
 
-	/* 이벤트를 불러들어 오는 부분 */
 	function addEvent(){
 	  $.ajax({
 			url:'${path}/mainCalendar.ajax',
 			type:'post',
 		  contentType: 'application/json',
 			success:function(map){
-				console.log("map",map);
 				const depart =  map.depart;
-				console.log("depart",depart);
 				const company =  map.company;
-				console.log("company",company);
-				
+	
 				let arr = [];
 				arr.push(depart);
 				arr.push(company);

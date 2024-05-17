@@ -26,18 +26,7 @@
 <select id="ajaxSelectPCalendar" 
 resultMap="calResultMap">
 select
-    CAL_NO
-    , CAL_SORT
-    , CAL_TITLE
-    , CAL_CONTENT
-    , START_DATE
-    , END_DATE
-    , CAL_PLACE
-    , CAL_COLOR
-    , calender.GROUP_CODE
-    , member.user_NO
-    , code_name
-    , upper_code
+    CAL_NO, CAL_SORT, CAL_TITLE, CAL_CONTENT, START_DATE, END_DATE, CAL_PLACE, CAL_COLOR, calender.GROUP_CODE, member.user_NO, code_name, upper_code
 from 
 	calender
 join 
@@ -81,19 +70,7 @@ resultType="string">
 <!-- 갤린더 일정 등록 쿼리 -->
 <insert id="insertCal">
 	insert 
-	into 
-		calender
-	(
-		CAL_NO
-		,CAL_SORT
-		,CAL_TITLE
-		,CAL_CONTENT
-		,START_DATE
-		,END_DATE
-		,CAL_COLOR
-		,REGIST_EMP
-		,MODIFY_EMP
-		,GROUP_CODE
+	into calender(CAL_NO,CAL_SORT,CAL_TITLE,CAL_CONTENT,START_DATE,END_DATE,CAL_COLOR,CAL_PLACE,REGIST_EMP,MODIFY_EMP,GROUP_CODE
 	) values ( 
 		SEQ_CALNO.nextval
 		,#{calSort}
@@ -102,6 +79,7 @@ resultType="string">
 		,to_date(#{startDate} 	, 'YYYY-MM-DD HH24:MI:SS')
 		,to_date(#{endDate}			, 'YYYY-MM-DD HH24:MI:SS')
 		,#{color}
+		,#{place}
 		,#{emp}
 		,#{emp}
 		,#{groupCode}
@@ -265,5 +243,4 @@ set
 where
     cal_no = #{calNO}
 </update>
-
 </mapper>
