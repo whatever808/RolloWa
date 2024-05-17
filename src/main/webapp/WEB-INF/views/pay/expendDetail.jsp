@@ -111,9 +111,8 @@
 								                </tr>
 								                <tr>
 								                    <td style="height: 80px;">
-									                    <c:if test="${list.get(0).FIRST_APPROVAL eq userName}">
 									                    	<button class="btn btn-danger" data-izimodal-open="#modal2">싸인</button>
-									                    </c:if>
+									                    
 								                    </td>
 								                    <td>
 									                    <c:if test="${list.get(0).FIRST_APPROVAL eq userName}">

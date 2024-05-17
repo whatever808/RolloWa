@@ -200,7 +200,7 @@ public class PayController {
 			List<Map<String, Object>> list = payService.expendDetail(map);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
-			model.addAttribute("userName", userName);
+			model.addAttribute("userName", String.valueOf(userName));
 			return "pay/expendDetail";
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("기안서")){
 			map.put("refType", "PG");
