@@ -158,17 +158,18 @@
 			};
 
 			function deleteCal() {
-/* 			var checkedValues = $('input[name=check]:checked').map(function() {
+ 	/* 		var checkedValues = $('input[name=check]:checked').map(function() {
 				 return this.value;
-				 }).get();  */
+				 }).get();  */ 
 
-				//console.log(checkedValues);
+				console.log(checkedValues);
 				$.ajax({
 					url : '${path}/calendar/deletedCheck.do',
 					type : 'post',
 					data : $('input[name=check]:checked').serialize(),
-/* 					contentType: 'application/json',
-				 	data: JSON.stringify({ check: checkedValues }),  */
+				 /* 	data: JSON.stringify({ check: "1" }), 
+ 					contentType: 'application/json', 
+				 	traditional: true, */
 					success : function(result) {
 						//console.log(page);
 						if (result > 0) {
@@ -199,7 +200,7 @@
 				<br>
 				<br>
 				<div class="search-date">
-				  <select name="calSort" class="custom-select custom-select-sm">
+				  <select name="calSort" class="form-select" style="width: fit-content;">
 				    <option value="C" selected>Company</option>
 				    <option value="D">Department</option>
 
@@ -246,5 +247,6 @@
 			</fieldset>
 		</div>
 	</div>
+	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
 </body>
 </html>

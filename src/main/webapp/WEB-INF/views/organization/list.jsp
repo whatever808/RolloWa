@@ -6,13 +6,13 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>1.2 직원검색</title>
+	<title>1.2 직원 검색</title>
 
 	<!-- animate -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
 	<!-- bootstrap -->
-	<link href="${contextPath}/resources/css/common/bootstrap.min.css" rel="stylesheet">
+	<link href="${ contextPath }/resources/css/common/bootstrap.min.css" rel="stylesheet">
 	
 	<!-- fontawesome -->
 	<script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
@@ -29,10 +29,14 @@
 	<!-- jQuery -->
 	<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
 	
+	<!-- 모달 관련 -->
+    <script src="${ contextPath }/resources/js/iziModal.min.js"></script>
+    <link rel="stylesheet" href="${ contextPath }/resources/css/iziModal.min.css">
+	
 	<!-- css -->
-	<link href="${contextPath}/resources/css/common/sidebars.css" rel="stylesheet">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
+	<link href="${ contextPath }/resources/css/common/sidebars.css" rel="stylesheet">
+	<link rel="stylesheet" href="${ contextPath }/resources/css/common.css">
+	<link rel="stylesheet" href="${ contextPath }/resources/css/common/mdb.min.css" />
   
 	<style>
 	.main_content{
@@ -92,21 +96,13 @@
 		object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
 	    margin: -10px;
  	}
- 	/*
- 	.profile_img:hover {
-		transform: scale(10) translate(70%, -40%);
-    	border-radius: 0;
-    	border: 0px;
-    	object-fit: contain;
-	}
-	*/
  	
 	</style>
 </head>
 <body>
 
-	<!-- 사이드바 영역 -->
-	<jsp:include page="/WEB-INF/views/common/sidebar.jsp"/>
+	<!-- 사이드바 해더 영역 -->
+	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 	
 	<!-- 메인 영역 -->
 	<div class="main_content">
@@ -123,8 +119,7 @@
 	                <!-- 검색 메뉴 1 : 부서명-->
                 	<th>부서명</th>
 	                <td>
-	                    <select name="department" id="department" class="form-control">
-	                        	<!-- <option value="전체 부서">전체 부서</option> -->
+	                    <select name="department" id="department" class="form-select">
                     	</select>
 	                </td>
 	                <!-- 검색 메뉴 2 : 전화번호 -->
@@ -137,8 +132,7 @@
 	                <!-- 검색 메뉴 3 : 팀명 -->
 	                <th>팀명</th>
 	                <td>
-	                    <select name="team" id="team" class="form-control">
-	                        	<!-- <option value="전체 팀">전체 팀</option> -->
+	                    <select name="team" id="team" class="form-select">
                     	</select>
 	                </td>
 	                <!-- 검색 메뉴 4 : 이름 -->
@@ -173,7 +167,6 @@
 				selectTeamList();
 				
 	 		})
-	 		
 	 		
 	 		// 부서조회
 	 		function selectDepartmentList(){
@@ -245,14 +238,11 @@
 		 	        }
 		 	    });
 			}
-	    	
-	 		
 	 		
 	 		// 부서를 선택했을 경우 실행될 function
 	 		departmentSelect.on("change", function() {
-		 	    // 팀 조회
-		 	   selectTeamList();
-			    
+	 			let selectedDepartment = $(this).val();
+				selectTeamList(selectedDepartment);
 	 		});
 	 		
 	 		
@@ -337,7 +327,7 @@
 						                <img src="${ m.profileUrl }" class="profile_img">
 					            	</c:when>
 					            	<c:otherwise>
-						                <img src="${contextPath}/resources/images/defaultProfile.png">
+						                <img src="${ contextPath }/resources/images/defaultProfile.png">
 					            	</c:otherwise>
 					            </c:choose>
 				            </td>
@@ -409,6 +399,9 @@
 	</div>
 	<!-- 메인 영역 end-->
 		
+	<!-- 사이드바 푸터 영역 -->
+	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
+	
 </body>
 </html>
 

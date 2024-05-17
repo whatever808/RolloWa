@@ -22,10 +22,12 @@ public class DepartmentService {
 	 * @return : 해당 그룹코드를 가진 그룹객체 리스트
 	 */
 	public List<GroupDto> selectDepartmentList(Map<String, String> map){
+
 		/*
 		 * groud_code 조회 시 Map의 key : code
 		 * upper_code 조회 시 Map의 key : upperCdoe
 		 */
+
 		return departmentDao.selectDepartmentList(map);
 	}
 	

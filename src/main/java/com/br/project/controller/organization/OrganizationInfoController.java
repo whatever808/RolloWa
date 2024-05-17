@@ -32,6 +32,8 @@ public class OrganizationInfoController {
 
 	private final OrganizationService organizationService;
 	private final PagingUtil pagingUtil;
+
+	
 	
 	// 1.1 조직도
 	@GetMapping("/orgChart.page")
@@ -125,8 +127,6 @@ public class OrganizationInfoController {
 		log.debug("직급 조회 실행");
 	    return organizationService.selectPosition();
 	}
-	
-	
 	
 	// 1.3 조직관리(관리자 전용)
 	@GetMapping("/orgManager.do")

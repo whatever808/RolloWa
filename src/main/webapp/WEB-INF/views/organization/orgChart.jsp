@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1.1 조직도</title>
+    <title>1.3 조직 관리</title>
 
     <!-- 조직도 참고 사이트
        https://www.cssscript.com/clean-tree-diagram/
@@ -42,143 +42,25 @@
     <!-- sidebar -->
     <script src="${contextPath}/resources/js/common/sidebars.js"></script>
     
+	<!-- 조직도 관련 css -->
+	<link rel="stylesheet" href="${contextPath}/resources/css/organization/organization.css">
+	
     <style>
     .main_content{
     	width: 1200px !important;
         padding: 20px;
     }
-
-    /* 조직도 관련 css */
-    /* 대표이사 위치 */
-    .tree{
-      width: 77.5em;
-    }
-    .tree, .tree ul, .tree li {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        position: relative;
-    }
-    .tree {
-        margin: 20px;
-        text-align: center;
-    }
-    .tree, .tree ul {
-        display: table;
-    }
-    .tree ul {
-        width: 100%;
-    }
-    .tree li {
-        display: table-cell;
-        padding: .5em 0;
-        vertical-align: top;
-        position: relative;
-    }
-    /* 가로줄 */
-    .tree li:before {
-        outline: solid 1px lightgray; 
-        content: "";
-        left: 0px;
-        right: 0px;
-        position: absolute;
-        top: -.2em;
-        z-index: -1;
-    }
-    /* 세로줄 */
-    /* .tree ul:before  :  대표이사 */
-    .tree ul:before{
-      outline: solid 1px gainsboro;
-      content: "";
-      height: 2.5em;
-      left: 50%;
-      position: absolute;
-      top: -2.8em !important;
-      z-index: -1;
-    }
-    /* .tree span:before : 부서 및 팀 줄 */
-    .tree span:before {
-        outline: solid 1px gainsboro;
-        content: "";
-        height: 3.3em;
-        left: 50%;
-        position: absolute;
-        top: -2.7em !important;
-        z-index: -1;
-    }
-    /* 팀 이름에만 빨간색 선이 표시되도록 스타일 적용 */
-    .tree ul > li > ul > li > a > .level3:before {
-      outline: solid 1px white !important;
-      z-index: -1;
-    }
-
-    /* 가로 수량 조절시 2개 같이 수정 */
-    /* 줄 간격 넓히기 */
-    .tree li:nth-child(n+5) {
-      margin-top: 50px;
-    }
-    /* 크기 조절 */
-    .tree code, .tree span {
-        border: solid .1em gainsboro;
-        border-radius: .3em;
-        display: inline-block;
-        /* 가운데 em : 가로 개수조절 */
-        margin: 0 2em 2.3em;
-        padding: 1em 1.5em;
-        position: relative;
-        width: 200px;
-    }
-
-    .tree li:first-child:before {
-        left: 50%;
-    }
-    .tree li:last-child:before {
-        right: 50%;
-    }
-    .tree ul:before {
-        top: -1.8em;
-    }
-    .tree code:before, .tree span:before {
-        top: -.55em;
-    }
-    .tree>li {
-        margin-top: 0;
-    }
-    .tree>li:before,
-    .tree>li:after,
-    .tree>li>code:before,
-    .tree>li>span:before {
-        outline: none;
-    }
-    a:hover{
-      text-decoration: none !important;
-    }
-    .level1{
-      background-color: navy;
-      color: white !important;
-      width: 12em;
-      z-index: 2;
-    }
-    .level2 {
-      background-color: rgb(0, 183, 165);
-      color: white !important;
-      bottom: -2em;
-    }
-    .level3 {
-      background-color: gainsboro;
-      color: black !important;
-      margin: -0.45em 0 !important;
-    }
+    
     </style>
 </head>
 <body>
 
-	<!-- 사이드바 영역 -->
-	<jsp:include page="/WEB-INF/views/common/sidebar.jsp"/>
+	<!-- 사이드바 푸터 영역 -->
+	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 	
 	<!-- 메인 영역 start -->
 	<div class="main_content">
-	    <h2>직원 검색</h2>
+	    <h2>조직도</h2>
 	    <hr>
             
 		<ul class="tree">
@@ -221,6 +103,9 @@
 	
 	</div>
 	<!-- 메인 영역 end-->
+	
+	<!-- 사이드바 푸터 영역 -->
+	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
 		
 </body>
 </html>

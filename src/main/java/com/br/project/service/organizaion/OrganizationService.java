@@ -32,7 +32,7 @@ public class OrganizationService {
 		return organizationDao.selectOrganizationChart();
 	}
 	
-	/* 부서, 팀, 직급 조회 service */
+	/* 부서, 팀, 직급, 상태 조회 service */
 	public List<GroupDto> selectDepartment() {
 		return organizationDao.selectDepartment();
 	}
@@ -46,6 +46,7 @@ public class OrganizationService {
 		return organizationDao.selectPosition();
 	}
 
+
 	/* 직원 검색 service */
 	public int selectSearchListCount(Map<String, String> search) {
 		return organizationDao.selectSearchListCount(search);
@@ -53,6 +54,7 @@ public class OrganizationService {
 	public List<MemberDto> selectSearchList(Map<String, String> search, PageInfoDto pi) {
 		return organizationDao.selectSearchList(search, pi);
 	}
+
 	
 
 }

@@ -40,6 +40,11 @@ public class AttendanceService {
 		return attendanceDao.insertMember(member);
 	}
 
+	// 출결 상태 조회
+	public List<GroupDto> selectStatus() {
+		return attendanceDao.selectStatus();
+	}
+
 	
 	
 	
