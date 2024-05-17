@@ -22,7 +22,6 @@
     <typeAlias type="com.br.project.dto.attendance.AttendanceDto"			    alias="AttendanceDto"/>
     <typeAlias type="com.br.project.dto.pay.MemberDeptDto"                alias="MemberDeptDto"/>
     <typeAlias type="com.br.project.dto.location.LocationDto"             alias="LocationDto" />
-    <typeAlias type="com.br.project.dto.facility.AttractionDto"           alias="AttractionDto" />
 	</typeAliases>
 	
 	

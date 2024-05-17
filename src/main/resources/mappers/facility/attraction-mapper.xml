@@ -47,6 +47,7 @@
 		  	   (
 		  	    attraction_no
 		  	   ,location
+		  	   ,manage_emp
 		  	   ,regist_emp
 		  	   ,modify_emp
 		  	   ,attraction_name
@@ -63,6 +64,7 @@
 			 		(
 			 		 seq_atrtno.nextval
 			 		,#{location}
+			 		,#{manageEmp}
 			 		,#{registEmp}
 			 		,#{modifyEmp}
 			 		,#{attractionName}
