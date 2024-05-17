@@ -106,7 +106,9 @@ li{
     border-bottom: 0.3px solid rgb(188, 185, 185);
     border-top: 0.3px solid rgb(188, 185, 185);
 }
-
+.board-content-area table{
+	  border: 1px solid black;
+}
 /* ------------- board change area ------------- */
 .change-board{
 	display: flex;

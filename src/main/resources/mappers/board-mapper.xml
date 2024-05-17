@@ -220,7 +220,7 @@
 				 ,#{registEmp}
 				 ,#{modifyEmp}
 				 ,#{title}
-				 ,#{content}
+				 ,REPLACE(REPLACE(#{content}, CHR(13), ''), CHR(10), '')
 				 ,(
 				 	select upper_code
 				 	  from tb_group
@@ -236,7 +236,7 @@
 		update tb_board
 		   set 
 		   	    title = #{title}
-		   	   ,content = #{content}
+		   	   ,content = REPLACE(REPLACE(#{content}, CHR(13), ''), CHR(10), '')
 		   	   ,category = #{category}
 		   	   ,status = #{status}
 		   	   ,modify_date = sysdate

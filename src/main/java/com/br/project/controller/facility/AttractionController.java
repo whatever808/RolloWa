@@ -124,15 +124,19 @@ public class AttractionController {
 			params.put("manageEmp", loginMember.getUserNo());
 			
 			if(attractionService.insertAttraction(params) > 0) {
+				request.getSession().setAttribute("alertMsg", "어트랙션이 등록되었습니다.");
 				return "redirect:/attraction/list.do";
 			}else {
+				request.getSession().setAttribute("alertMsg", "어트랙션 등록에 실패했습니다.");
 				return "redirect:" + request.getHeader("Referer");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
-			request.getSession().setAttribute("alertTitle", "어트랙션 등록서비스");
 			request.getSession().setAttribute("alertMsg", "어트랙션 등록에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
+		}finally {
+			request.getSession().setAttribute("alertTitle", "어트랙션 등록서비스");
+			
 		}
 	}
 	
@@ -164,7 +168,6 @@ public class AttractionController {
 			MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
 			params.put("modifyEmp", loginMember.getUserNo());
 			
-			redirectAttributes.addAttribute("alertTitle", "어트랙션 정보수정서비스");
 			if(attractionService.updateAttraction(params) > 0) {
 				redirectAttributes.addAttribute("alertMsg", "어트랙션 정보가 수정되었습니다.");
 				return "redirect:/attraction/detail.do?no=" + params.get("no");
@@ -174,9 +177,11 @@ public class AttractionController {
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
-			request.getSession().setAttribute("alertTitle", "어트랙션 수정서비스");
 			request.getSession().setAttribute("alertMsg", "어트랙션 수정요청에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
+		}finally {
+			request.getSession().setAttribute("alertTitle", "어트랙션 수정서비스");
+			
 		}
 	}
 	
