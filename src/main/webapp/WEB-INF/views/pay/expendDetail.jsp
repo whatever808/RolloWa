@@ -13,8 +13,7 @@
     <link rel="stylesheet" href="${contextPath}/resources/css/iziModal.min.css">
     
     <!-- 싸인 관련 -->
-		<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+		<!-- <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> -->
 <style>
     #table_y{ width: 800px; display: flex; flex-direction: column;  margin: auto; text-align: center;}
     #table_y tbody{width: 800px;}
@@ -65,8 +64,10 @@
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
 
 <script>
+$(document).ready(function(){
 	var canvas = $("#signature")[0];
 	var signature = new SignaturePad(canvas, {
 	    minWidth: 2,
@@ -86,6 +87,8 @@
 	        window.open(data, "test", "width=600, height=200, scrollbars=no");
 	    }
 	});
+});
+	
 	
 </script>
 
@@ -212,7 +215,7 @@
         </div>
         
         <div id="modal2">
-		        <div class="m_content_style">
+		        <div class="m_content_style"  >
 		        <canvas id="signature" width="600" height="200"></canvas>
                 <div>
 									<button id="save">Save</button>
