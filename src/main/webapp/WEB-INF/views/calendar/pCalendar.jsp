@@ -8,7 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Document</title>
+<title>부서 일정</title>
 
 <!-- fullcalendar -->
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
@@ -17,8 +17,6 @@
 	.out-line {
 		min-height: 800px;
 		width: 100%;
-		display: flex;
-		flex-direction: row;
 		box-sizing: border-box;
 	}	
 	.member-search-area {
@@ -58,7 +56,7 @@
 		align-items: center;
 	}
 	.font-size25 {font-size: 25px;}
-	.member-search-area {margin-left: 30px; gap: 25px;}
+	.member-search-area {gap: 25px;}
 	/* 모달 스타일 */
 	.Category, .Co-worker {
 		display: -webkit-box;
@@ -86,8 +84,11 @@
 		text-decoration-line: none;
 	}
 	.fc-button-primary {
-		background-color: rgb(160, 160, 160) !important;
+		background-color: #000 !important;
 		border: 0 !important;
+		border-radius: 20px !important;
+    color: #ffffff !important;
+    font-weight: bolder !important;
 	}
 	.fc-day-sat a {color: #007bff !important;}
 	.fc-day-sun a {color: #dc3545 !important;}
@@ -98,12 +99,281 @@
     font-size: x-large;
     top: 0px;
 	}
+	.fc-event-time{
+		display: none;
+	}
+	.fc-toolbar-title{
+    padding: 5px !important;
+    border-radius: 20px !important;
+    background: black !important;
+    color: #ffffff !important;
+    width: 10em;
+	}
+	.fc-direction-ltr{
+		text-align: center;
+	}
+	.fc .fc-daygrid-day.fc-day-today{
+		background-color: rgb(160 160 160 / 30%) !important;
+	}
+	.fc .fc-timegrid-col.fc-day-today{
+		background-color: rgb(160 160 160 / 30%) !important;
+	}
+	.fc-scroller.fc-scroller-liquid-absolute{
+    overflow: hidden;
+	}
+	.fc-theme-standard td, .fc-theme-standard th,
+	table.fc-scrollgrid.fc-scrollgrid-liquid, td{
+		border: 0px; 
+	}
+ 	.fc-daygrid-day-frame.fc-scrollgrid-sync-inner{
+		background-color: rgb(200 200 200 / 20%) !important;
+    padding: 1px;
+    background-clip: content-box;
+	}
+	td.fc-day.fc-timegrid-col{
+		background-color: rgb(200 200 200 / 20%) !important;
+    padding: 1px;
+    background-clip: content-box;
+	}
 </style>
 </head>
 <body>
+	<div class="out-line">
+		<!-- 메뉴판 -->
+		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
+		<script>
+		/* 캘린더 설정 및 선언 */
+		  let calendar;
+			function declareCalendar(){
+				document.addEventListener('DOMContentLoaded', function() {
+					var calendarEl = document.getElementById('calendar');
+					calendar = new FullCalendar.Calendar(calendarEl, {
+						initialView: 'dayGridMonth',
+						locale: 'ko',
+						customButtons: {
+							 enrollButton:{text: '일정 등록',click: function(){location.href="${path}/calendar/calEnroll.page";}}
+						},
+						buttonText:{prev:'◁',next:'▷',today: '오늘',year:'연도',month:'월',week:'주'
+						},
+						headerToolbar:{start: 'prev today enrollButton',
+									   center: 'title',
+									   end: 'multiMonthYear dayGridMonth timeGridWeek next'
+					    },
+						views:{year: {titleFormat:{year: '2-digit'}, multiMonthMaxColumns: 1},
+						  	   month:{titleFormat:{year: '2-digit', month: 'short'} },
+							   week: {titleFormat:{year: '2-digit'} },
+							   day:  {titleFormat:{month: 'short', day:'2-digit'}}
+						},
+						buttonIcons: false,
+						navLinks: true,
+						slotMinTime: "06:00:00",
+						timeZone: 'Asia/Seoul',
+						eventClick:function(info){	
+							//console.log(info.event.extendedProps.extendeProps);
+							modalOn(info);
+						},
+						eventMouseEnter:function(info){
+							info.el.style.transform = 'scale(1.05)';
+							info.el.style.cursor = 'pointer';
+						},
+						eventMouseLeave:function(info){
+							info.el.style.transform = '';
+						},	
+					});
+				});					
+			}
+			/* 미리 선언 하지않으면 뒤에서 let calendar에서 undifieded로 변수가 설정 되어 버림 */
+			declareCalendar();
+			
+	    /* 수정시 입력 받은 데이터 유효성 체크 */
+	 		function checkDate(){
+	 			let date2 = $('#currentDate2').val()+ " " + $('#currentTime2').val();
+	 			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();
+	 			let checkDate =  new Date(date2) >= new Date(date1);
+	 			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
+	       if(checkDate && checkTime){
+	    	   updateCal();
+	       }else {
+	    	   alertify.alert('일정 수정','날짜 및 시간을 확인 해 주세요.');
+	       }  
+	   	}; 
+	   	
+		  /* 캘린더 이벤트를 믈릭시 실행되는  */
+			function modalOn(info){
+			  console.log(info.event.extendedProps.status);
+			  if(info.event.extendedProps.status != 'Y'){
+					$(document).on('opening', '#cal_modal', function (e) {
+							const event = info.event;
+					    const extend = info.event.extendedProps;
+					    $('#color-style').val(event.backgroundColor);
+					    $('#currentDate1').val(event.startStr.slice(0,10));
+					    $('#currentTime1').val(event.startStr.slice(11));
+					    $('#currentDate2').val(event.endStr.slice(0,10));
+					    $('#currentTime2').val(event.endStr.slice(11));
+					    $('#cal_modal').find('.content-text-area').val(extend.content);
+					    $('#cal_modal').find('input[name=place]').val(extend.place);
+					    $('input[name=calTitle]').val(extend.caltitle);
+					    $('input[name=calNO]').val(event.id);
+					    /* 카테고리를 선택하는 부분 */
+							const $cate = $('input[name=groupCode]');
+							for (let i = 0; i<$cate.length; i++){
+								if($cate[i].value == extend.groupCode){
+									$cate[i].checked = true;
+								}
+							}
+						
+							/* 동료 체크 부분 초기화 */
+							$('input[name=coworker]').each(function(){
+		       				$(this).prop('checked', false);
+		    			})
+		    
+							/* 동료를 체크하는 부분   */
+							extend.cowoker.forEach(w => {
+								$('input[name=coworker]').each(function() {
+									if ($(this).val() == w.userNo) {
+										 $(this).prop('checked', true);
+									}
+							  })
+							})
+								
+					}) //ismodal open function
+	     	 	
+	     	 	$('#cal_modal').iziModal('setSubtitle', info.event.id);  
+	     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
+	  			$('#cal_modal').iziModal('open');
+			  }// if End
+			}
+		  
+		  /* 이벤트를 불러들어 오는 부분 */
+		  function addEvent(num){
+			  $.ajax({
+					url:'${path}/calendar/selectCal.ajax',
+					type:'post',
+				  contentType: 'application/json',
+					data:JSON.stringify({ userNO: num }),
+					success:function(map){
+						console.log(map);
+						
+						removeAll();
+						map.list.forEach((e) => {
+							 calendar.addEventSource(
+							 [{
+									  id:						e.calNO,
+										title:				e.group.upperCode + e.group.codeName,
+										start: 				e.startDate,
+										end:					e.endDate,
+										color: 				e.color,
+										extendedProps:{
+											content:  	e.calContent,
+											caltitle: 	e.calTitle,
+											place: 			e.place,
+											calSort:  	e.calSort,
+											groupCode: 	e.groupCode,
+											cowoker:		e.coworker
+											}		 
+								 }]
+							 );
+						})
+						map.vacaList.forEach((e) => {
+							 calendar.addEventSource(
+							 [{
+									  id:						e.vacaNO,
+										title:				e.group.upperCode + e.member.userName,
+										start: 				e.vacaStart,
+										end:					e.vacaEnd,
+										color: 				e.vacaColor,
+										extendedProps:{
+											status:			e.vacationApprorvalStatus,
+											}		 
+								 }]
+							 );
+						})
+						calendar.render();
+					},
+					error:function(){
+						console.log('calendar import error');
+					}
+			  })
+		  }
+		  
+	   	/* 일정 update ajax */
+		  function updateCal(){
+			  $.ajax({
+				  url:'${path}/calendar/calUpdate.do',
+				  type: 'post',
+				  data: $('#updateForm').serialize(),
+				  success:function(result){
+						if(result > 0){
+							 alertify.alert('일정 수정','성공적으로 갱신 되었습니다.');
+						} else {
+							 alertify.alert('일정 수정','관리자를 호출해 주세요.');
+						}
+					  
+						removeAll();
+					  addEvent(null);
+					  $('#cal_modal').iziModal('close');
+				  },
+				  error:function(){
+					  console.log('update Calendar fail');
+				  }
+			  })
+		  }
+	   	
+	   	function removeAll(){
+			  calendar.getEvents().forEach((e) => {
+				  e.remove();
+			  })
+	   	}
+		  
+   		/* document 후 실행 될 함수 */
+			$(document).ready(function(){
+				addEvent(null);
+
+				$('.memebrdiv-area div').click(function(){
+					//console.log($(this).next().val());
+					addEvent($(this).next().val());
+				})
+			})
+		</script>
+		<!-- 컨텐츠 영역 content-area -->
+		<div class="content" style="max-width: 1120px; padding: 30px;">
+			<!-- 직원 div 영역 -->
+			<div class="member-search-area radious10 line-shadow">
+	
+				<!-- when : 로그인한 회원의 위치 -->
+				<!-- other :  같은 팀의 다른 사람들-->	
+				<c:forEach var="t" items="${teams}">
+					<c:choose>
+						<c:when test="${'1055' eq t.userNo}">
+							<div class="mydiv-area display-item-center">
+								<div class="line-cirecle display-item-center line-shadow">
+									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
+									<span class="img_postion">${t.userName}</span>
+								</div>
+								<input type="hidden" value="${t.userNo}">
+							</div>
+						</c:when>
+						<c:otherwise>
+							<div class="memebrdiv-area display-item-center">
+								<div class="line-cirecle display-item-center line-shadow">
+									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
+									<span class="img_postion">${t.userName}</span>
+								</div>
+								<input type="hidden" value="${t.userNo}">
+							</div>						
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+			</div>
+			
+			<br> <br>
+			<!-- 캘린더 영역 -->
+			<div class="calender-area radious10 line-shadow "><div id="calendar"></div></div>
+		</div>
+	</div>
 	<!-- 상세보기 일정 모달 -->
 	<div id="cal_modal">
-	<form action="${path}/calendar/calUpdate.do" method="post">
+	<form id="updateForm">
 		<input type="hidden" name="calNO">
 		<div>
 			<div class="jua-regular">Title</div>
@@ -112,15 +382,6 @@
 		<br>
 		<div style="display: flex; justify-content: space-between; align-items: center">
 			<div class="jua-regular">Category</div>
-			
-<!-- 			<div
-				class="pretty p-default p-round p-smooth font-size20 privateArea"
-				id="privateName">
-				<input type="checkbox" name="calSort" value="P">
-				<div class="state p-danger">
-					<label class="jua-regular">private</label>
-				</div>
-			</div>  -->
 
 		</div>
 		
@@ -146,9 +407,6 @@
 		    </div>
 	    </c:forEach>
 		</div>
-		<script>
-			
-		</script>
 		<br>
 		<div class="jua-regular">
 			Color <input type="color" name="color" id="color-style" style="width: 30px; height: 30px;">
@@ -202,167 +460,22 @@
 		<br>
 		
 		<div align="end">
-			<button class="btn btn-outline-warning" onclick="return checkDate();">수정</button>
+			<button class="btn btn-outline-warning" type="button" onclick="checkDate();">수정</button>
 		</div>
 	</form>
-  <script>
- 		function checkDate(){
- 			let date2 = $('#currentDate2').val()+ " " + $('#currentTime2').val();
- 			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();
- 			let checkDate =  new Date(date2) >= new Date(date1);
- 			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
-       console.log(checkDate);
-       console.log(checkTime);
-       if(checkDate && checkTime){
-       	return true;
-       }else {
-       	alert('날짜 및 시간을 확인 해 주세요.');
-        return false;		        	
-       }  
-   	};
+	</div>
+	<script>
+	/* 모달 스크립트문 */
+    $('#cal_modal').iziModal({
+    headerColor: ' rgb(255,247,208)', 
+    theme:'light',
+    padding: '15px',
+    radius: 10, 
+    focusInput:	true,
+    restoreDefaultContent: true, 
+	  });
 	</script>
-	</div>
-	
-	<div class="out-line">
-		<!-- 메뉴판 -->
-		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 
-		<!-- 컨텐츠 영역 content-area -->
-		<div class="content" style="max-width: 1120px; padding: 30px;">
-			<!-- 직원 div 영역 -->
-			<div class="member-search-area radious10 line-shadow">
-	
-				<!-- when : 로그인한 회원의 위치 -->
-				<!-- other :  같은 팀의 다른 사람들-->	
-				<c:forEach var="t" items="${teams}">
-					<c:choose>
-						<c:when test="${'1055' eq t.userNo}">
-							<div class="mydiv-area display-item-center">
-								<div class="line-cirecle display-item-center line-shadow">
-									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
-									<span class="img_postion">${t.userName}</span>
-								</div>
-							</div>
-						</c:when>
-						<c:otherwise>
-							<div class="memebrdiv-area display-item-center">
-								<div class="line-cirecle display-item-center line-shadow">
-									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
-									<span class="img_postion">${t.userName}</span>
-								</div>
-							</div>						
-						</c:otherwise>
-					</c:choose>
-			
-				</c:forEach>
-				
-			</div>
-			<br> <br>
-			<!-- 캘린더 영역 -->
-			<div class="calender-area radious10 line-shadow "><div id="calendar"></div></div>
-			<!-- 캘린더 스타일 -->
-			<script>
-			// 캘린더 설정 및 선언
-			document.addEventListener('DOMContentLoaded', function() {
-					var calendarEl = document.getElementById('calendar');
-					var calendar = new FullCalendar.Calendar(calendarEl, {
-							initialView: 'dayGridMonth',
-							locale: 'ko',
-							customButtons: {
-								 enrollButton:{
-								 text: '일정 등록',
-								 click: function(){
-								   location.href="${path}/calendar/calEnroll.page";
-								   }
-								 }
-							 },
-							buttonText:{prev:'이전',next:'다음',today: '오늘',year:'연도',month:'월',week:'주',},
-							headerToolbar:{start: 'prev today enrollButton',center: 'title',end: 'multiMonthYear,dayGridMonth,timeGridWeek next'},
-							views:{year: {titleFormat:{year: '2-digit'},multiMonthMaxColumns: 1},
-								  	month:{titleFormat:{year: '2-digit', month: 'short'}},
-										week: {titleFormat:{year: '2-digit'}},
-										day: {titleFormat:{month: 'short',day:'2-digit'}}},
-							buttonIcons: false,
-							navLinks: true,
-							slotMinTime: "06:00:00",
-							timeZone: 'Asia/Seoul',
-							eventClick:function(info){
-			     	 		console.log(info.event.extendedProps.extendeProps);
-						   // console.log($('input[name=groupCode]'));
-				     	 	$(document).on('opening', '#cal_modal', function (e) {
-							    const extend = info.event.extendedProps.extendeProps;
-							    $('#color-style').val(info.event.backgroundColor);
-							    $('#currentDate1').val(info.event.startStr.slice(0,10));
-							    $('#currentTime1').val(info.event.startStr.slice(11));
-							    $('#currentDate2').val(info.event.endStr.slice(0,10));
-							    $('#currentTime2').val(info.event.endStr.slice(11));
-							    $('#cal_modal').find('.content-text-area').val(extend.content);
-							    $('#cal_modal').find('input[name=place]').val(extend.place);
-							    $('input[name=calTitle]').val(extend.caltitle);
-									if(extend.calSort == 'P'){
-										$('#cal_modal').find('input[name=calSort]').attr('checked', true);										
-									}
-									const $cate = $('input[name=groupCode]');
-									for (let i = 0; i<$cate.length; i++){
-										if($cate[i].value == extend.groupCode){
-											$cate[i].checked = true;
-										}
-									}
-								});
-				     	 	
-				     	 	$('#cal_modal').iziModal('setSubtitle', info.event.id);  
-				     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
-				      	$('#cal_modal').iziModal('open');
-							},
-							editable: true,
-							eventMouseEnter:function(info){
-									info.el.style.transform = 'scale(1.05)';
-									info.el.style.cursor = 'pointer';
-							},
-							eventMouseLeave:function(info){
-									info.el.style.transform = '';
-							},
-							events:[
-								<c:forEach var="c" items="${list}">
-									{
-										id:			'${c.calNO}',
-										title: 	'[부서]'+'휴가종류',
-										start: 	'${c.startDate }',
-										end: 		'${c.endDate }',
-										color: 	'${c.color }',
-										extendeProps:{
-											content:  '${c.calContent}',
-											caltitle: 	'${c.calTitle }',
-											place: 	  '${c.place}',
-											calSort:  '${c.calSort}',
-											groupCode: '${c.groupCode}',
-											cowoker: 		'1050'										
-										}
-									},
-								</c:forEach>
-							]
-						});
-					calendar.render();
-				});	
-
-	      </script>
-		</div>
-	</div>
-	
-	<!-- 모달 스크립트문 -->
-<script>
-     $('#cal_modal').iziModal({
-     subtitle: '수정도 가능합니다.',
-     headerColor: ' rgb(255,247,208)', 
-     theme:'light',
-     padding: '15px',
-     radius: 10, 
-     focusInput:	true,
-     restoreDefaultContent: false, 
-	  }); 
-</script>
-	
-	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
+<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
 </body>
-<!-- 이예찬 -->
 </html>

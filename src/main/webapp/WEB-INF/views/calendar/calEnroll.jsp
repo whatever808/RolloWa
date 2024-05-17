@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>일정 등록</title>
  <style>
      /* *{border: 1px solid black;} */
      .out-line{
@@ -90,89 +90,37 @@
               <legend><h1 class="jua-regular">일정 추가</h1></legend>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div class="font-size25 jua-regular" id="categoryName">Category</div>
-
-                  <div class="pretty p-default p-round p-smooth font-size20 privateArea">
-                      <input type="checkbox" name="calSort" value="P">
-                      <div class="state p-danger">
-                          <label class="jua-regular">private</label>
-                      </div>
-                  </div>
               </div> 
 
               <div class="Category">
-                  <div class="pretty p-default p-curve">
-                      <input type="radio" name="groupCode" value="A" >
-                      <div class="state p-success-o">
-                          <label>회의</label>
-                      </div>
-                  </div>
-              
-                  <div class="pretty p-default p-curve">
-                      <input type="radio" name="groupCode" value="B">
-                      <div class="state p-success-o">
-                          <label>미팅</label>
-                      </div>
-                  </div>
-              
-                  <div class="pretty p-default p-curve">
-                      <input type="radio" name="groupCode" value="C">
-                      <div class="state p-success-o">
-                          <label>이벤트</label>
-                      </div>
-                  </div>
-              
-                  <div class="pretty p-default p-curve">
-                      <input type="radio" name="groupCode" value="D">
-                      <div class="state p-success-o">
-                          <label>계약</label>
-                      </div>
-                  </div>
-              
-                  <div class="pretty p-default p-curve">
-                      <input type="radio" name="groupCode" value="E">
-                      <div class="state p-success-o">
-                          <label>기타</label>
-                      </div>
-                  </div>                
+				<c:forEach var="g" items="${group}">
+			    <div class="pretty p-default p-curve">
+			     	<input type="radio" name="groupCode" value="${g.code}">
+			       <div class="state p-success-o">
+			           <label>${g.codeName}</label>
+			       </div>
+			    </div>
+				</c:forEach>              
               </div>
 			  <br>
 
               <div class="font-size25 jua-regular">Co-worker</div>
               <div class="Co-worker">
-                  <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" name="coworker" value="1">
-                      <div class="state p-success-o">
-                          <label> 김우빈</label>
-                      </div>
-                  </div>
-
-                  <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" name="coworker" value="1">
-                      <div class="state p-success-o">
-                          <label> 전지현</label>
-                      </div>
-                  </div>
-
-                  <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" name="coworker" value="1">
-                      <div class="state p-success-o">
-                          <label> 아이유</label>
-                      </div>
-                  </div>
-
-                  <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" name="coworker" value="1">
-                      <div class="state p-success-o">
-                          <label> 뚱이</label>
-                      </div>
-                  </div>
-
-                  <div class="pretty p-default p-round p-smooth p-plain">
-                      <input type="checkbox" name="coworker" value="1">
-                      <div class="state p-success-o">
-                          <label> 징징이</label>
-                      </div>
-                  </div>
+              <c:forEach var="t" items="${teams}">
+			    <div class="pretty p-default p-round p-smooth p-plain">
+			    	<c:choose>
+			    		<c:when test="${t.userNo eq 1051 }">
+				        <input type="checkbox" name="coworker" value="${t.userNo}" checked>
+			    		</c:when>
+			    		<c:otherwise>
+			    		<input type="checkbox" name="coworker" value="${t.userNo}">
+			    		</c:otherwise>
+			    	</c:choose>
+			        <div class="state p-success-o">
+			            <label>${t.userName}</label>
+			        </div>
+			    </div>
+		      </c:forEach>
               </div>
               
               <br>
@@ -184,7 +132,7 @@
               <br>
               <label class="font-size25 jua-regular" for="title">Title</label>
               <div class="Title"><input class="font-size20" type="text" id="title" name="calTitle"></div>
-				<br>
+			  <br>
               <div style="width: 80%; display: flex; justify-content: space-between;">
                   <div class="font-size25 jua-regular" id="all_day">All Day</div>
 
@@ -210,7 +158,7 @@
                       <div><input class="time-area jua-regular" type="time" id="currentTime2" name="time"></div>
                   </div>
               </div>
-
+							<br>
               <div class="font-size25 jua-regular">Content</div> 
               <div><textarea class="content-text-area" style="resize: none;" name="calContent"></textarea></div>
               
@@ -232,7 +180,7 @@
 		        if(checkDate && checkTime){
 		        	return true;
 		        }else {
-		        	alert('날짜 및 시간을 확인 해 주세요.');
+		        	 alertify.alert('일정 등록','날짜 및 시간을 확인 해 주세요.');
 			        return false;		        	
 		        }  
 	     	};

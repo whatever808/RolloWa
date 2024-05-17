@@ -13,36 +13,13 @@
 
 	<!-- TinyMCE 에디터 CDN 연결 -->
 	<script src="https://cdn.tiny.cloud/1/kv8msifnng66ha7xgul5sc6cehyxcp480zm27swyti7b7u38/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+	<!-- TinyMCE 관련 스크립트 -->
+	<script src="${ contextPath }/resources/js/board/editor.js"></script>
 </head>
 <body>
 
 	<!-- side bar -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
-	
-	<script>
-		// TinyMCE 에디터 환경설정
-		tinymce.init({
-	        selector: "#board-content", // TinyMCE를 적용할 textarea 요소의 선택자를 지정
-	        plugins: "paste image imagetools", // 'paste', 'image', 'imagetools' 플러그인 추가
-	        height: 500,
-	        width: 900,
-	        toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | image", // 'image' 버튼 툴바에 추가
-	        paste_data_images: true, // 이미지 붙여넣기 설정 활성화
-	        file_picker_types: 'image', // TinyMCE에서 이미지를 선택할 때, 이미지 파일만 선택 (옵션 : media, file 등)
-	        images_upload_handler(blobInfo, success) { // 이미지를 업로드하는 핸들러 함수
-	            // blobInfo : TinyMCE에서 이미지 업로드 시 사용되는 정보를 담고 있는 객체
-	            const file = new File([blobInfo.blob()], blobInfo.filename());
-	            const fileName = blobInfo.filename();
-	 
-	            if (fileName.includes("blobid")) {
-	                success(URL.createObjectURL(file));
-	            } else {
-	                imageFiles.push(file);
-	                success(URL.createObjectURL(file)); // Blob 객체의 임시 URL을 생성해 이미지 미리보기 적용
-	            }
-	        }
-   		});
-	</script>
 	
 	<!-- content 추가 -->
   	<div class="content p-5">
@@ -60,32 +37,34 @@
                   <label for="board-category" class="field-title">게시판</label><br>              
                   <select name="category" class="board-category form-select" id="board-category">
                       <option value="">일반공지사항</option>
-                      <option value="${ loginUser.teamNo }">부서공지사항</option> <!-- 로그인 사용자가 속한 부서 -->
+                      <option value="${ loginMember.teamCode }">부서공지사항</option> <!-- 로그인 사용자가 속한 부서 -->
                   </select>
               </div>
 
               <!-- board title -->
               <div class="field-group">
-                  <label for="board-title" class="field-title">게시글 제목</label><br>
+                  <label for="board-title" class="field-title">글제목</label><br>
                   <input type="text" id="board-title" placeholder="제목을 입력하세요." name="title" required>
               </div>
 
               <!-- board attachment -->
               <div class="field-group">
-                  <label class="field-title" for="board-attachment">첨부파일</label>
-                  <input type="file" name="uploadFiles" class="form-control" id="board-attachment" multiple>
+                 <label class="field-title" for="board-attachment">첨부파일</label>
+                 <small class="text-secondary ms-3">파일 당 최대 10MB씩, 최대 10개까지만 업로드 가능합니다.</small>
+					  <input type="file" name="uploadFiles" id="uploadFiles" class="form-control board-attachment mb-3" multiple>
               </div>
               
               <!-- board content -->
                <div class="field-group">
-                  <label class="field-title" for="board-content">게시글 내용</label>
-                  <textarea name="boardContent" class="form-control" id="board-content" required></textarea>
-              </div>		
+                  <label class="field-title" for="editor">글내용</label>
+                  <textarea class="form-control" name="content" id="editor"></textarea>
+              </div>
 							
               <div class="button-group">
-                  <button type="reset" class="btn btn-outline-warning" onclick="resetForm();">초기화</button>
-                  <button type="submit" class="btn btn-outline-primary">등록하기</button>
-                  <button type="button" class="btn btn-outline-secondary">임시저장</button>
+              	  <input type="hidden" name="status">
+                  <button type="reset" class="btn btn-outline-warning">초기화</button>
+                  <button type="button" class="btn btn-outline-primary" onclick="setBoardStatus('Y');">등록하기</button>
+                  <button type="button" class="btn btn-outline-secondary" onclick="setBoardStatus('T');">임시저장</button>
               </div>
 
           </form>
@@ -104,7 +83,52 @@
 </body>
 
 <script>
-				
+	//업로드가능 파일용량 및 갯수 제한 =================================================================
+	$("#uploadFiles").on("change", function(event){
+		const fileList = event.target.files;
+		
+		// 최대 업로드가능 파일갯수 제한
+		if(fileList.length > 10){
+			alertify.alert("첨부파일 업로드서비스", "최대 업로드가능 파일은 10개입니다.", $(event.target).val(""));
+		}
+		
+		// 파일당 최대 업로드용량 제한
+		for(let i=0 ; i<fileList.length ; i++){
+			if(fileList[i].size > (1024 * 1024 * 10)){
+				alertify.alert("첨부파일 업로드서비스", "첨부파일 최대 크기는 10MB를 초과할 수 없습니다.");
+				event.target.value = "";
+				return;
+			}
+		}
+	})
+	
+	// 공지사항 저장형태값 지정 =================================================================================================
+	function setBoardStatus(status){
+		$("input[name=status]").val(status);
+		formSubmit();
+	}
+	
+	// 공지사항 수정 요청 ====================================================================================================
+	function formSubmit(){
+		
+		// [기웅] 부서 공지사항 등록 시 부서원들에게 알림 전송
+		if($("input[name=status]").val() == 'Y') {
+			if($("select[name=category]").val() != "") {
+				alram.send(JSON.stringify({ teamCode : '${loginMember.teamCode}' }));
+			}
+		}
+
+		// 에디터에 작성된 내용을 [name=content]로 함께 전달
+		$("textarea#editor").val(tinymce.activeEditor.getContent("editor"));
+		$("#post-form").submit();
+		
+		if($("#editor").val().trim().length == 0 || $("#editor").val().trim() == ''){
+			console.log("내용 미작성");
+		}else{
+			console.log("내용 작성");
+		}
+	}
+	
 </script>
 
 </html>

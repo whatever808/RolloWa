@@ -28,13 +28,30 @@
     margin-right: 50px;
 }
 
-#board-title, #board-attachment{
+#board-title, #attachment-div{
     width: 1000px;
 }
 
+#add-attachment{
+	display: inline-block;
+	margin-left: 15px;
+	align-item: center;
+}
+#add-attachment:hover{
+	cursor: pointer;
+}
+small{
+	color: #909090;
+}
+
 .button-group{
-    margin-left: 650px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 60px;
 }
 .button-group>button{
-    margin-left: 20px;
+	 width: 30%;
+    padding: 15px 0 15px 0;
+    font-size: 18px;
+    border-radius: 10px;
 }

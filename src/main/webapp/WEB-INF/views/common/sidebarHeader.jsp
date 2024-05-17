@@ -7,9 +7,6 @@
 <head>
 <meta charset="UTF-8">
 <title>SideBar</title>
-	<!-- animate -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
     <!-- bootstrap -->
     <link href="${ contextPath }/resources/css/common/bootstrap.min.css" rel="stylesheet">
 
@@ -24,6 +21,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+ 		<!-- socket 통신을 위한 js -->
+    <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- jQuery -->
     <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -291,6 +292,7 @@
 	alertify.alert('${alertTitle}','${alertMsg}');
 </script>
 </c:if>
+
 <main class="d-flex flex-nowrap">
         <div class="flex-shrink-0 p-3" style="width: 280px;">
             <a href="/"
@@ -321,27 +323,35 @@
                     </div>
                 </li>
                 
-                <!-- 게시판 관련 (가림꺼 건들지 말것!!!) start -->
+                <!-- ======================================= "가림" 구역 start ======================================= -->
+                <!-- ======================================= 게시판 관련 start ======================================= -->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                        data-bs-toggle="collapse" data-bs-target="#board-collapse" aria-expanded="false">
                         게시판
                     </button>
-                    <div class="collapse" id="dashboard-collapse">
+                    <div class="collapse" id="board-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         	
                             <li><a href="${ contextPath }/board/list.do"
                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 조회</a>
                             </li>
-                            <!-- 나중에 권한체크 추가하가(부장만 작성가능) -->
-                           	<li><a href="${ contextPath }/board/post.page"
-                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 등록</a>
-                           	</li>
+                            <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
+                          	 <li><a href="${ contextPath }/board/post.page"
+                                  class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 등록</a>
+                          	 </li>
                             
-                            <!-- 
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
+                            <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
+                            <li><a href="${ contextPath }/board/publisher/list.do?page=1&category=normal&department=&condition=&keyword="
+                                   class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">등록공지보관함</a>
                             </li>
+                            
+                            <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
+                            <li><a href="${ contextPath }/board/temp/list.do?page=1&category=normal&department=&condition=&keyword="
+                                   class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">임시공지보관함</a>
+                            </li>
+                            
+                            <!--
                             <li><a href="#"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
                             </li>
@@ -349,8 +359,54 @@
                         </ul>
                     </div>
                 </li>
-                <!-- 게시판 관련 (가림꺼 건들지 말것!!!) end -->
-                
+              
+               <script>
+                $(document).ready(function(){
+                  // 로그인 회원 정보조회
+                  $.ajax({
+                      url:"${ contextPath }/member/memInfo.do",
+                      method:"get",
+                      data:"userId=${ loginMember.userNo }",
+                      success:function(memInfo){
+                        // 부장 or 사장일 경우, 공지사항 작성메뉴 노출
+                        if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
+                          $(".board-publisher").removeClass("d-none");
+                        }
+                      },error:function(){
+                        console.log("로그인 회원 정보조회 AJAX 실패");
+                      }
+                    })
+                })
+              </script>
+             <!-- ======================================= 게시판 관련 end ======================================= -->
+             <!-- ======================================= 어트랙션 관련 start ======================================= -->
+              <li class="mb-1">
+                  <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                      data-bs-toggle="collapse" data-bs-target="#attraction-collapse" aria-expanded="false">
+                      어트랙션
+                  </button>
+                  <div class="collapse" id="attraction-collapse">
+                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                          <li><a href=""
+                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 조회</a>
+                          </li>
+
+                          <li><a href="${ contextPath }/attraction/regist.page"
+                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
+                          </li>
+
+                          <li><a href=""
+                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
+                          </li>
+
+
+                      </ul>
+                  </div>
+              </li>
+              <!-- ======================================= 어트랙션 관련 end ======================================= -->
+              <!-- ======================================= "가림" 구역 end ======================================= -->
+
                 <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
@@ -415,14 +471,36 @@
                     </div>
                 </li>
                 <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 end ◆◇◆◇◆◇◆◇◆◇◆◇-->
-                
-                
+                            
+                <!-- ======================================= calendar page ========================================= -->
+
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-                        Orders
+                        일정
                     </button>
                     <div class="collapse" id="orders-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="${contextPath}/calendar/pCalendar.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 일정</a>
+                            </li>
+                            <li><a  href="${contextPath}/calendar/companyCalendar.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">회사 일정</a>
+                            </li>
+                            <li><a href="${contextPath}/calendar/calendarList.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정 관리</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- ======================================= calendar page ========================================= -->
+             
+                 <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#-collapse" aria-expanded="false">
+                        Orders
+                    </button>
+                    <div class="collapse" id="-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li><a href="#"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
@@ -452,14 +530,52 @@
                             <li><a href="${ contextPath }/notification/list.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
                             </li>
-                            <li><a href="${ contextPath }/member/logout.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
+                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
                                     out</a></li>
                         </ul>
                     </div>
                 </li>
             </ul>
         </div>
-
+				
+				<div>
+					<button type="button" onclick="sendMsg();">메세지</button>
+				</div>
+				
         <div class="b-example-divider b-example-vr"></div>
+				<script>
+					let alram;
+					let chatting;
+					var stompClient;
+					
+					$(document).ready(function() {
+						// 알람용 웹소켓 연결
+						alram = new SockJS("${contextPath}/alram");
+						
+						// 알람 수신 시 alert 발생
+						alram.onmessage = function(evt) {
+							const obj = JSON.parse(evt.data);
+							alertify.confirm('부서 알림', obj.message, function(){ 
+								location.href = "${contextPath}/board/detail.do?category=department&department=" + obj.teamCode + "&condition=&keyword&no=" + obj.boardNo;
+								alertify.success('공지사항 페이지로 이동'); }
+			                , function(){ alertify.error('Cancel')}).set('labels', {ok:'이동하기', cancel:'취소'});;
+						}
+						
+						// 채팅용 웹소켓 연결
+						chatting = new SockJS("${contextPath}/endpoint");
+						stompClient = Stomp.over(chatting);
+						stompClient.connect({}, function(frame) {
+							console.log("Connected : " + frame);
+							stompClient.subscribe("${contextPath}/subscribe/test", function() {
+								console.log("수신완료!");
+							})
+						})
+					})
+					
+					function sendMsg() {
+						stompClient.send("${contextPath}/subscribe/test", {}, JSON.stringify({"name" : "test"}));
+					}
+
+				</script>
 </body>
 </html>

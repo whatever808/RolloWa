@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/mvc"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
@@ -23,5 +25,27 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="com.br.project" />
+	
+	<!-- * websocket 등록 -->
+	<beans:bean class="com.br.project.handler.AlramEchoHandler" id="alramEchoHandler"/>
+	<beans:bean class="com.br.project.handler.ChatEchoHandler" id="chatEchoHandler"/>
+	<websocket:handlers><!-- 어떤 url 요청 시 어떤 handler를 실행할지  -->
+		<websocket:mapping path="/alram" handler="alramEchoHandler"/>
+		<websocket:mapping path="/chat" handler="chatEchoHandler"/>
+		<websocket:handshake-interceptors>
+			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
+		</websocket:handshake-interceptors>
+		<websocket:sockjs/>
+	</websocket:handlers>
+	
+	<!-- Interceptors -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/board/*" />
+			<beans:bean class="com.br.project.interceptor.loginCheckInterceptor" id="loginCheckInterceptor" />
+		</interceptor>
+	</interceptors>
+	
+
 	
 </beans:beans>
