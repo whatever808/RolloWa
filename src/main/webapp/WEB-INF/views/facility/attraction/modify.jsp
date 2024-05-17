@@ -8,8 +8,8 @@
 	<meta charset="UTF-8">
 	<title>어트랙션 등록</title>
 	
-	<!-- 놀이기구등록페이지 스타일 -->
-    <link href="${ contextPath }/resources/css/facility/attraction/regist.css" rel="stylesheet">
+	<!-- 어트랙션 수정페이지 스타일 -->
+    <link href="${ contextPath }/resources/css/facility/attraction/modify.css" rel="stylesheet">
 </head>
 <body>
 
@@ -21,10 +21,10 @@
 	
 	    <div class="registForm">
 	
-	        <h1 class="page-title">어트랙션 등록</h1>
+	        <h1 class="page-title">어트랙션 정보수정</h1>
 	
 	        <!-- regist form start -->
-	        <form action="${ contextPath }/attraction/regist.do" method="post" id="regist-form">
+	        <form action="${ contextPath }/attraction/modify.do" method="post" id="modify-form">
 	            
 	            <div class="field-group">
 	                <label for="attraction-name" class="field-title">어트랙션명</label><br>

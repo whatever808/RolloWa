@@ -101,7 +101,7 @@
 	        <!-- board content area start -->
 	        <div class="board-content-area">
 	            <div class="board-content" id="board-content">
-	                <c:out value="${ board.content }" escapeXml="false" />
+	                <!--<c:out value="${ board.content }" escapeXml="false" />-->
 	            </div>
 	        </div>
 	        <!-- board content area end -->
@@ -141,6 +141,10 @@
 
 <script>
 	$(document).ready(function(){
+		var data = '${ board.content }';
+		
+		$("#board-content").html(data);
+		
 	    // attachment list show or hide function start ------------------------------------------------------------------------
 	    $(".show-hide").on("click", function(){
 	        if($(this).hasClass("show")){       // 리스트 노출요청

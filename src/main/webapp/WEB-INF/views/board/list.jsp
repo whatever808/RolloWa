@@ -307,6 +307,7 @@
 						list += 	"<td>" + boardList[i].modifyDate + "</td>";
 						list += 	"<td>" + boardList[i].readCount + "</td>";
 						list += 	"<td>" + (boardList[i].attachmentYN != 0 ? "🗂️" : "") + "</td>";
+						list += "</tr>";
 					}
 					
 					// 생성할 페이징바 태그 문자열

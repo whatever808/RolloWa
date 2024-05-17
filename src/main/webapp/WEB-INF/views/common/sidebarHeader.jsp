@@ -407,9 +407,9 @@
                   <div class="collapse" id="attraction-collapse">
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 
-                          <li><a href=""
+                          <li><a href="${ contextPath }/attraction/list.do"
                                  class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 조회</a>
-                          </li>
+                           </li> 
 
                           <li><a href="${ contextPath }/attraction/regist.page"
                                  class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>

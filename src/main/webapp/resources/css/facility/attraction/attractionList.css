@@ -6,8 +6,9 @@
 }
 
 /* ------------- attraction status select box ------------- */
-.attraction-status{
-    width: 200px;
+.form-select{
+    width: 300px;
+    border: 1px solid tomato;
 }
 
 /* ------------- search form ------------- */

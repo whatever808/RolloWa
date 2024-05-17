@@ -242,10 +242,14 @@ public class BoardController {
 			params.put("status", request.getRequestURL().indexOf("temp") != -1 ? "T" : "Y");
 			
 			BoardDto board = boardService.selectBoard(params);
+			String content = board.getContent().replaceAll("\"", "&quot;").replaceAll("/\\n/g", "");
+			log.info(board.getContent().replaceAll("\"", "&quot;").replaceAll("/\\n/g", ""));
+			
 			
 			if(board != null) {
 				// 조회된 공지사항이 있을경우(유효한 공지사항)
 				model.addAttribute("board", board);
+				model.addAttribute("content", content);
 				if(request.getRequestURL().indexOf("publisher") != -1) {
 					// 등록공지보관함에서 공지사항 상세요청시(작성자)
 					return "board/publisher/detail";
