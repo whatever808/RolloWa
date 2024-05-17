@@ -104,8 +104,8 @@
 </head>
 <body>
 
-	<!-- 사이드바 영역 -->
-	<jsp:include page="/WEB-INF/views/common/sidebar.jsp"/>
+	<!-- 사이드바 해더 영역 -->
+	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 	
 	<!-- 메인 영역 start -->
 	<div class="main_content">
@@ -435,6 +435,10 @@
 	
 	</div>
 	<!-- 메인 영역 end-->
+	
+	<!-- 사이드바 푸터 영역 -->
+	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
+	
 		
 </body>
 </html>

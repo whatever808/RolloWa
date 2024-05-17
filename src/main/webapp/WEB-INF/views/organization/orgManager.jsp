@@ -7,164 +7,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1.3 조직관리</title>
+    <title>1.1 조직도</title>
+
+    <!-- 조직도 참고 사이트
+       https://www.cssscript.com/clean-tree-diagram/
+    -->
 
     <!-- animate -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
-	<!-- bootstrap -->
-	<link href="${contextPath}/resources/css/common/bootstrap.min.css" rel="stylesheet">
-	
-	<!-- fontawesome -->
-	<script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
-	
-	<!-- Google Fonts Roboto -->
-	<link rel="stylesheet"
-	    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
-	
-	<!-- Google Fonts Jua -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-	
-	<!-- jQuery -->
-	<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
-	
-	<!-- css -->
-	<link href="${contextPath}/resources/css/common/sidebars.css" rel="stylesheet">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
-  
-	<style>
+    <!-- bootstrap -->
+    <link href="${contextPath}/resources/css/common/bootstrap.min.css" rel="stylesheet">
+
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
+
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+
+    <!-- Google Fonts Jua -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- css -->
+    <link href="${contextPath}/resources/css/common/sidebars.css" rel="stylesheet">
+    <link rel="stylesheet" href="${contextPath}/resources/css/common.css">
+    <link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
+
+    <!-- sidebar -->
+    <script src="${contextPath}/resources/js/common/sidebars.js"></script>
+    
+    <!-- 조직도 css : 기존 조직도에서 가져옴 -->
+    <link rel="stylesheet" href="${contextPath}/resources/css/organization/organization.css">
+    
+    <style>
     .main_content{
     	width: 1200px !important;
         padding: 20px;
-        width: 100%;
+    }
+    .level2:hover{
+		background-color: rgb(0, 183, 165);
+	}
+	.level3:hover {
+		background-color: gainsboro;
+	}
+	.level2, .level3 {
+		cursor: default;
+	}
+	.add_department{
+		position: absolute;
+    	z-index: 1;
+    	top: 20px;
+    	right: 400px;
+    	white-space: nowrap;
+    	outline: none;
+	}
+    .add_team{
+    	position: absolute;
+    	z-index: 1;
+    	top: 50px;
+    	left: 200px;
+    	white-space: nowrap;
+    }
+    .delete_department{
+		position: absolute;
+    	z-index: 1;
+    	top: 10px;
+    	left: 40px;
+    	white-space: nowrap;
+    }
+    .delete_team{
+    	position: absolute;
+    	z-index: 1;
+    	top: 15px;
+    	left: 200px;
+    	white-space: nowrap;
+    }
+    input[type="text"]{
+    	width: 150px;
+    }
+    .div_btn{
+		display: flex;
+		justify-content: center;
+    }
+    .div_btn button{
+    	margin: 30px 0;
+		font-size: 20px;
+		width: 200px;
+		height: 50px;
     }
     
-    /* 조직관리 css */
-	.table{
-		text-align: center;
-	}
-	.table th{
-	    background-color: lightgray !important;
-	    vertical-align: middle !important;
-	    font-size: 20px;
-	}
-	.table td{
-	    vertical-align: middle !important;
-	}
-	.table td input{
-	    width: 100%;
-	}
-	
-	.button{
-	     text-align: center;
-	}
-
-
+    
     </style>
 </head>
 <body>
 
-	<!-- 사이드바 영역 -->
-	<jsp:include page="/WEB-INF/views/common/sidebar.jsp"/>
+	<!-- 사이드바 푸터 영역 -->
+	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 	
 	<!-- 메인 영역 start -->
 	<div class="main_content">
 	    <h2>조직 관리</h2>
 	    <hr>
 	    
-		<!-- ------------ -->
-		
-		
-		<table id="table" class="table">
-		    <tr>
-		        <th>번호</th>
-		        <th>부서명</th>
-		        <th>팀명</th>
-		        <th>
-		            <button class="btn btn-success" onclick="addRow();">추가</button>
-		        </th>
-		    </tr>
-		
-			<c:forEach var="d" items="${ dept }" begin="0" end="${ dept.size() }" varStatus="status">
-			    <tr>
-			        <td>${ status.index+1 }</td>
-				        <td>
-				            <input type="text" value="${ d.dept }">
-				        </td>
-				        <td>
-				            <input type="text" value="${ d.team }">
-				        </td>
-			        <td>
-			            <button class="btn btn-danger">삭제</button>
-			        </td>
-			    </tr>
-		    </c:forEach>
-		</table>
-		
-		<!-- 저장 버튼 -->
-		<div class="button">
-		    <button class="btn btn-outline-secondary" type="reset">원래대로</button>
-		    <button class="btn btn-primary" onclick="saveData();">저장</button>
-		</div>
-	
-		<!-- 행 추가 스크립트 작성중 -->
-		<script>
-			function addRow() {
-				let table = document.getElementById('table');
-			    let newRow = table.insertRow(table.rows.length);
-				
-				let newCell1 = newRow.insertCell(0);
-				let newCell2 = newRow.insertCell(1);
-				let newCell3 = newRow.insertCell(2);
-				let newCell4 = newRow.insertCell(3);
-				
-				let input1 = document.createElement('span');
-		        input1.innerText = '';
-		        newCell1.appendChild(input1);
-
-		        let input2 = document.createElement('input');
-		        input2.setAttribute('type', 'text');
-		        input2.setAttribute('value', '');
-		        newCell2.appendChild(input2);
-
-		        let input3 = document.createElement('input');
-		        input3.setAttribute('type', 'text');
-		        input3.setAttribute('value', '');
-		        newCell3.appendChild(input3);
-		        
-		        let deleteButton = document.createElement('button');
-		        deleteButton.innerText = '삭제';
-		        deleteButton.className = 'btn btn-danger';
-		        deleteButton.onclick = function() {
-		            let row = this.parentNode.parentNode;
-		            row.parentNode.removeChild(row);
-		        };
-		        newCell4.appendChild(deleteButton);
-			}
-			
-			function saveData(){
-				let table = document.getElementById('table');
-				let rows = table.rows;
-				
-				for (let i = 1; i < rows.length; i++) {
-		            let cells = rows[i].cells;
-		            let departmentName = cells[1].getElementsByTagName('input')[0].value;
-		            let teamName = cells[2].getElementsByTagName('input')[0].value;
-
-		            console.log(i,") 부서명: ", departmentName, ", 팀명: ", teamName);
+	    <script>
+		  $(document).ready(function() {
+		      var treeItems = $('.tree > li > ul > li').length;
+		      if (treeItems > 4) {
+		          $('.tree > li > ul').css('display', 'flex');
+		          $('.tree > li > ul').css('flex-wrap', 'wrap');
 		        }
-			}
-			
+		  });
 		</script>
+        
+        <form id="org_Form" action="" method="GET" onsubmit="return false;">
+			<ul class="tree">
+			    <li>
+			        <span class="level1">대표이사</span>
+			        <button class="btn btn-success add_department" onclick="addDepartment();">부서 추가</button>
+			        <ul id="departmentList">
+			            <c:set var="prevDept" value="" />
+			            <c:forEach var="d" items="${dept}">
+			                <c:if test="${d.dept ne prevDept}">
+			                    <li>
+			                    	<button class="btn btn-danger delete_department" onclick="deleteDepartment(this);">부서 삭제</button>
+			                        <button class="btn btn-success add_team" onclick="addTeam(this);">팀 추가</button>
+			                        <a href="#"><span class="level2"><input type="text" value="${d.dept}"></span></a>
+			                        <ul>
+			                            <c:forEach var="team" items="${dept}">
+			                                <c:if test="${d.dept eq team.dept}">
+			                                    <ul>
+			                                        <li>
+			                                            <a href="#"><span class="level3"><input type="text" value="${team.team}"></span></a>
+			                                            <button class="btn btn-danger delete_team" onclick="deleteTeam();">팀 삭제</button>
+			                                        </li>
+			                                    </ul>
+			                                </c:if>
+			                            </c:forEach>
+			                        </ul>
+			                    </li>
+			                    <c:set var="prevDept" value="${d.dept}" />
+			                </c:if>
+			            </c:forEach>
+			        </ul>
+			    </li>	
+			</ul>
+			
+			<div class="div_btn">
+				<h2>
+					<button type="reset" class="btn btn-outline-primary" onclick="resetForm();">되돌리기</button>
+					<button type="button" class="btn btn-primary" onclick="saveForm();">저장</button>
+				</h2>
+			</div>
+		</form>
+		
+		<script>
+		// 부서 추가
+	    function addDepartment() {
+	        // 새로운 부서 요소 생성
+	        let newDepartment = document.createElement("li");
+	        newDepartment.innerHTML = `
+               	<button class="btn btn-danger delete_department" onclick="deleteDepartment(this);">부서 삭제</button>
+	            <button class="btn btn-success add_team" onclick="addTeam(this);">팀 추가</button>
+	            <a href="#"><span class="level2"><input type="text" value="새로운 부서"></span></a>
+	            <ul>
+	            	<ul>
+		                <li>
+		                    <a href="#"><span class="level3"><input type="text" value="새로운 팀"></span></a>
+		                    <button class="btn btn-danger delete_team" onclick="deleteTeam();">팀 삭제</button>
+		                </li>
+	                </ul>
+	            </ul>
+	        `;
 	
-	
+	        // 새로운 부서 요소 추가
+	        let departmentList = document.querySelector('.tree > li > ul');
+	        departmentList.appendChild(newDepartment);
+	        alert("부서가 추가되었습니다.");
+	    }
+		// 부서 삭제
+		function deleteDepartment(button) {
+		    // 삭제할 부서 요소의 부모 노드(li) 찾기
+		    let departmentItem = button.parentNode;
+		    // 해당 부서 요소를 부모 노드에서 제거
+		    departmentItem.parentNode.removeChild(departmentItem);
+		    alert("부서가 삭제되었습니다.");
+		}
+		
+		// 팀 추가
+        function addTeam(button) {
+            let newTeam = document.createElement("ul");
+            newTeam.innerHTML = `
+            	<li>
+	                <a href="#"><span class="level3"><input type="text" value="새로운 팀"></span></a>
+	                <button type="button" class="btn btn-danger delete_team" onclick="deleteTeam(this);">팀 삭제</button>
+                </li>
+            `;
+            let departmentItem = button.parentNode.querySelector('ul');
+            departmentItem.appendChild(newTeam);
+            alert("팀이 추가되었습니다.");
+        }
+
+		/*
+		// 팀 삭제
+		function deleteTeam(button) {
+		    let teamItem = button.parentNode;
+		    teamItem.parentNode.removeChild(teamItem);
+		    alert("팀이 삭제되었습니다.");
+		}
+		function deleteTeam(button) {
+		    // 팀 요소의 부모 요소(li)를 찾아서 삭제
+		    let teamItem = button.closest('li');
+		    teamItem.parentNode.removeChild(teamItem);
+		    alert("팀이 삭제되었습니다.");
+		}*/
+		function deleteTeam(button) {
+		    // 팀 요소의 부모 요소(li)를 찾아서 삭제
+		    let teamItem = button.parentElement;
+		    teamItem.parentNode.removeChild(teamItem);
+		    alert("팀이 삭제되었습니다.");
+		}
+		
+		// 폼 되돌리기
+		function resetForm() {
+
+		}
+		// 폼 저장
+		function saveForm() {
+			// 추가 작성
+			alert("폼 데이터가 저장되었습니다.");
+		}
+		</script>
+		
+		
+		
 		<!-- ------------ -->
 	
 	</div>
 	<!-- 메인 영역 end-->
+	
+	<!-- 사이드바 푸터 영역 -->
+	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
 		
 </body>
 </html>

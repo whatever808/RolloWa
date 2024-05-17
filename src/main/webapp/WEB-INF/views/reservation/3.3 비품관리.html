@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 예약 조회</title>
+    <!-- animate -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!-- bootstrap -->
+    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
+
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
+
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+
+    <!-- Google Fonts Jua -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- css -->
+    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../resources/css/common.css">
+    <link rel="stylesheet" href="../../../resources/css/common/mdb.min.css" />
+
+    <!-- sidebar -->
+    <script src="../../../resources/js/common/sidebars.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.sidebar').load('../common/sidebar.html');
+        });
+    </script>
+
+    <!-- 모달 관련 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.1/css/iziModal.min.css" integrity="sha512-3c5WiuZUnVWCQGwVBf8XFg/4BKx48Xthd9nXi62YK0xnf39Oc2FV43lIEIdK50W+tfnw2lcVThJKmEAOoQG84Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.1/js/iziModal.min.js" integrity="sha512-lR/2z/m/AunQdfBTSR8gp9bwkrjwMq1cP0BYRIZu8zd4ycLcpRYJopB+WsBGPDjlkJUwC6VHCmuAXwwPHlacww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- 날짜 관련 -->
+    <script src="../../../resources/js/calendarUpdate.js"></script>
+
+    <style>
+    /* 전체 영역 css */
+    .content{
+        display: flex;
+    }
+    .sidebar{
+        /* background-color: orange; */        
+        width: 300px;
+    }
+    .main_content{
+        /* background-color: yellowgreen; */
+        margin: 20px;
+        width: 100%;
+    }
+
+    /* 비품 예약 css */
+    .div_date{
+        margin-top: 20px;
+        text-align: center;
+    }
+    .table_date{
+        font-size: 25px;
+        margin: auto;   
+        width: 350px;
+    }
+    .button_today{
+        position: relative;
+        top: -40px;
+        left: 250px;
+    }
+    .div_search table{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 50px;
+    }
+    .th_title{
+        background-color: aquamarine !important;
+        width: 170px;
+        height: 60px;
+        text-align: center;
+        border-radius: 10px;
+    }
+    .div_search input{
+        width: 400px !important;
+        margin-left: 20px;
+    }
+    .date{
+        font-size: 20px !important;
+    }
+    .td_noSelect{
+        user-select: none;
+    }
+    .btn_center{
+        display: flex;
+        text-align: center;
+    }
+    .div_searchBtn{
+        display: flexbox;
+        text-align: center;
+    }
+    .div_searchBtn button{
+        margin: 20px 5px;
+        width: 100px;
+    }
+    .div_common{
+        display: flex;
+        justify-content: center;
+    }
+    .table_count{
+        width: 100%;
+        margin: 10px 50px;
+    }
+    .td_left{
+        text-align: left;
+    }
+    .td_right{
+        text-align: right;
+    }
+    
+    h6{
+        font-size: 15px !important;
+    }
+    .tr_time th,td{
+        width: 18px;
+        height: 35px;
+        text-align: center;
+    }
+    .th_white{
+        white-space: nowrap;
+    }
+    .th_name{
+        width: 200px !important;
+    }
+    .tr_time th{
+        background-color: gainsboro;
+    }
+
+    .td_reserve{
+        background-color: cyan;
+        white-space: nowrap;
+    }
+    .td_limit{
+        background-color: red;
+        color: white;
+    }
+
+    .tr_cursor{
+        cursor: pointer;
+    }
+    .tr_cursor:hover{
+        background-color: rgb(255,247,208);
+    }
+
+    .table_modal{
+        margin:auto;
+        display: flex;
+        justify-content: center;
+        width: 500px;
+        text-align: center;
+    }
+    .table_modal th{
+        width: 100px;
+        background-color: gainsboro;
+    }
+    .table_modal td{
+        width: 300px;
+    }
+    .table_modal input[type="text"]{
+        width: 80%;
+    }
+    .div_reserveTime{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .div_count{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+    }
+    .div_count i {
+        width: 1.5em;
+        height: 1.5em;
+    }
+    .modal_count{
+        width: 80px !important;
+        text-align: center;
+    }
+    .i_minus{
+        background-color: red;
+    }
+    .i_plus{
+        background-color: green ;
+    }
+    .div_count h5{
+        margin: 0 30px;
+    }
+    .h6_separator{
+        margin: 0  10px;
+    }
+
+   
+    .div_page{
+        margin-top: 30px;
+    }
+
+    /* css */
+    .div_1{
+        display: flex;
+    }
+    .div_1 h4{
+        margin-right: auto;
+    }
+    .div_1 div{
+        justify-content: flex-end;
+    }
+
+
+    .table th{
+        background-color: gainsboro;
+    }
+    .td_1{
+        background-color: rgb(184, 184, 184) !important;
+    }
+    .td_2{
+        background-color: rgb(95, 164, 255) !important;
+    }
+    
+    </style>
+</head>
+<body>
+    <div class="content">
+
+        <!-- 사이드바 영역 -->
+        <div class="sidebar"></div>
+        
+        <div class="main_content">
+            <h2>내 예약 조회</h2>
+            <hr>
+
+            <!-- 메인 영역 start -->
+            
+            <div class="div_1">
+                <h4>전체 12개</h4>
+                <div>
+                    <button>상태 수정</button>
+                    <button>비품 삭제</button>
+                    <button>비품 추가</button>
+                </div>
+            </div>
+
+            <table class="table">
+                <tr>
+                    <th>
+                        <input type="checkbox">
+                        체크 박스
+                    </th>
+                    <th>관리번호</th>
+                    <th>비품명</th>
+                    <th>예약 상태 설정</th>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>1</td>
+                    <td>비품명1</td>
+                    <td class="td_1">예약불가 설정</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>1</td>
+                    <td>비품명1</td>
+                    <td class="td_1">예약불가 설정</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>1</td>
+                    <td>비품명1</td>
+                    <td class="td_2">예약불가 해제</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>1</td>
+                    <td>비품명1</td>
+                    <td class="td_1">예약불가 설정</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>1</td>
+                    <td>비품명1</td>
+                    <td class="td_1">예약불가 설정</td>
+                </tr>
+            </table>
+
+
+            <!--페이징 처리 start-->
+            <div class="div_page">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
+                </ul>
+            </div>
+            <!--페이징 처리 end-->
+            
+            <!-- 메인 영역 end -->
+
+        </div>
+    </div>
+
+</body>
+</html>

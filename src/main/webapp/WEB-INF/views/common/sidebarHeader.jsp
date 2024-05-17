@@ -359,57 +359,121 @@
                         </ul>
                     </div>
                 </li>
-                
-                <script>
-                	$(document).ready(function(){
-                		// 로그인 회원 정보조회
-                		$.ajax({
-                    		url:"${ contextPath }/member/memInfo.do",
-                    		method:"get",
-                    		data:"userId=${ loginMember.userNo }",
-                    		success:function(memInfo){
-                    			// 부장 or 사장일 경우, 공지사항 작성메뉴 노출
-                    			if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
-                    				$(".board-publisher").removeClass("d-none");
-                    			}
-                    		},error:function(){
-                    			console.log("로그인 회원 정보조회 AJAX 실패");
-                    		}
-                    	})
-                	})
-                </script>
-                <!-- ======================================= 게시판 관련 end ======================================= -->
-                
-                <!-- ======================================= 어트랙션 관련 start ======================================= -->
+              
+               <script>
+                $(document).ready(function(){
+                  // 로그인 회원 정보조회
+                  $.ajax({
+                      url:"${ contextPath }/member/memInfo.do",
+                      method:"get",
+                      data:"userId=${ loginMember.userNo }",
+                      success:function(memInfo){
+                        // 부장 or 사장일 경우, 공지사항 작성메뉴 노출
+                        if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
+                          $(".board-publisher").removeClass("d-none");
+                        }
+                      },error:function(){
+                        console.log("로그인 회원 정보조회 AJAX 실패");
+                      }
+                    })
+                })
+              </script>
+             <!-- ======================================= 게시판 관련 end ======================================= -->
+             <!-- ======================================= 어트랙션 관련 start ======================================= -->
+              <li class="mb-1">
+                  <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                      data-bs-toggle="collapse" data-bs-target="#attraction-collapse" aria-expanded="false">
+                      어트랙션
+                  </button>
+                  <div class="collapse" id="attraction-collapse">
+                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                          <li><a href=""
+                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 조회</a>
+                          </li>
+
+                          <li><a href="${ contextPath }/attraction/regist.page"
+                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
+                          </li>
+
+                          <li><a href=""
+                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
+                          </li>
+
+
+                      </ul>
+                  </div>
+              </li>
+              <!-- ======================================= 어트랙션 관련 end ======================================= -->
+              <!-- ======================================= "가림" 구역 end ======================================= -->
+
+                <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#attraction-collapse" aria-expanded="false">
-                        어트랙션
+                        data-bs-toggle="collapse" data-bs-target="#org-collapse" aria-expanded="false">
+                        조직안내
                     </button>
-                    <div class="collapse" id="attraction-collapse">
+                    <div class="collapse" id="org-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                        	
-                            <li><a href=""
-                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 조회</a>
+                            <li>
+                            	<a href="${ contextPath }/orginfo/orgChart.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
                             </li>
-                            
-                            <li><a href="${ contextPath }/attraction/regist.page"
-                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
+                            <li>
+                            	<a href="${ contextPath }/orginfo/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
                             </li>
-                            
-                            <li><a href=""
-                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
+                            <li>
+                            	<a href="${ contextPath }/orginfo/orgManager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
                             </li>
-                            
-                            
                         </ul>
                     </div>
                 </li>
-                <!-- ======================================= 어트랙션 관련 end ======================================= -->
-               
-                <!-- ======================================= "가림" 구역 end ======================================= -->
                 
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#mem-collapse" aria-expanded="false">
+                        구성원 관리
+                    </button>
+                    <div class="collapse" id="mem-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li>
+                            	<a href="${ contextPath }/attendance/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">출결 조회</a>
+                            </li>
+                            <li>
+                            	<a href="${ contextPath }/attendance/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</a>
+                            </li>
+                            <li>
+                            	<a href="${ contextPath }/attendance" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 상세 조회</a>
+                            </li>
+                            <li>
+                            	<a href="${ contextPath }/attendance/signup.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 추가</a>
+							</li>
+                        </ul>
+                    </div>
+                </li>
+                
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#reservation-collapse" aria-expanded="false">
+                        예약 관리
+                    </button>
+                    <div class="collapse" id="reservation-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li>
+                            	<a href="${ contextPath }/reservation/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 예약</a>
+                            </li>
+                            <li>
+                            	<a href="${ contextPath }/reservation/myList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">내 예약 조회</a>
+                            </li>
+                            <li>
+                            	<a href="${ contextPath }/reservation/reManager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 관리</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 end ◆◇◆◇◆◇◆◇◆◇◆◇-->
+                            
                 <!-- ======================================= calendar page ========================================= -->
+
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
