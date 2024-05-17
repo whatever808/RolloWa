@@ -32,6 +32,8 @@ public class OrganizationInfoController {
 
 	private final OrganizationService organizationService;
 	private final PagingUtil pagingUtil;
+
+	
 	
 	// 1.1 조직도
 	@GetMapping("/orgChart.page")

@@ -177,8 +177,7 @@
 		  FROM TB_GROUP
 		 WHERE GROUP_CODE LIKE 'POSI%'
 	</select>
-	
-	
+
 	
 	
 

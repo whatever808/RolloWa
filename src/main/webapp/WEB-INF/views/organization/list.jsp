@@ -168,7 +168,6 @@
 				
 	 		})
 	 		
-	 		
 	 		// 부서조회
 	 		function selectDepartmentList(){
 				departmentSelect.empty();
@@ -239,7 +238,6 @@
 		 	        }
 		 	    });
 			}
-	    	
 	 		
 	 		// 부서를 선택했을 경우 실행될 function
 	 		departmentSelect.on("change", function() {

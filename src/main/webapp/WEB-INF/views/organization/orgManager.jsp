@@ -88,6 +88,20 @@
     	left: 200px;
     	white-space: nowrap;
     }
+    input[type="text"]{
+    	width: 150px;
+    }
+    .div_btn{
+		display: flex;
+		justify-content: center;
+    }
+    .div_btn button{
+    	margin: 30px 0;
+		font-size: 20px;
+		width: 200px;
+		height: 50px;
+    }
+    
     
     </style>
 </head>
@@ -110,38 +124,47 @@
 		        }
 		  });
 		</script>
-            
-		<ul class="tree">
-		    <li>
-		        <span class="level1">대표이사</span>
-		        <button class="btn btn-success add_department" onclick="addDepartment();">부서 추가</button>
-		        <ul id="departmentList">
-		            <c:set var="prevDept" value="" />
-		            <c:forEach var="d" items="${dept}">
-		                <c:if test="${d.dept ne prevDept}">
-		                    <li>
-		                    	<button class="btn btn-danger delete_department" onclick="deleteDepartment(this);">부서 삭제</button>
-		                        <button class="btn btn-success add_team" onclick="addTeam();">팀 추가</button>
-		                        <a href="#"><span class="level2">${d.dept}</span></a>
-		                        <ul>
-		                            <c:forEach var="team" items="${dept}">
-		                                <c:if test="${d.dept eq team.dept}">
-		                                    <ul>
-		                                        <li>
-		                                            <a href="#"><span class="level3">${team.team}</span></a>
-		                                            <button class="btn btn-danger delete_team" onclick="deleteTeam();">팀 삭제</button>
-		                                        </li>
-		                                    </ul>
-		                                </c:if>
-		                            </c:forEach>
-		                        </ul>
-		                    </li>
-		                    <c:set var="prevDept" value="${d.dept}" />
-		                </c:if>
-		            </c:forEach>
-		        </ul>
-		    </li>	
-		</ul>
+        
+        <form id="org_Form" action="" method="GET" onsubmit="return false;">
+			<ul class="tree">
+			    <li>
+			        <span class="level1">대표이사</span>
+			        <button class="btn btn-success add_department" onclick="addDepartment();">부서 추가</button>
+			        <ul id="departmentList">
+			            <c:set var="prevDept" value="" />
+			            <c:forEach var="d" items="${dept}">
+			                <c:if test="${d.dept ne prevDept}">
+			                    <li>
+			                    	<button class="btn btn-danger delete_department" onclick="deleteDepartment(this);">부서 삭제</button>
+			                        <button class="btn btn-success add_team" onclick="addTeam(this);">팀 추가</button>
+			                        <a href="#"><span class="level2"><input type="text" value="${d.dept}"></span></a>
+			                        <ul>
+			                            <c:forEach var="team" items="${dept}">
+			                                <c:if test="${d.dept eq team.dept}">
+			                                    <ul>
+			                                        <li>
+			                                            <a href="#"><span class="level3"><input type="text" value="${team.team}"></span></a>
+			                                            <button class="btn btn-danger delete_team" onclick="deleteTeam();">팀 삭제</button>
+			                                        </li>
+			                                    </ul>
+			                                </c:if>
+			                            </c:forEach>
+			                        </ul>
+			                    </li>
+			                    <c:set var="prevDept" value="${d.dept}" />
+			                </c:if>
+			            </c:forEach>
+			        </ul>
+			    </li>	
+			</ul>
+			
+			<div class="div_btn">
+				<h2>
+					<button type="reset" class="btn btn-outline-primary" onclick="resetForm();">되돌리기</button>
+					<button type="button" class="btn btn-primary" onclick="saveForm();">저장</button>
+				</h2>
+			</div>
+		</form>
 		
 		<script>
 		// 부서 추가
@@ -150,13 +173,15 @@
 	        let newDepartment = document.createElement("li");
 	        newDepartment.innerHTML = `
                	<button class="btn btn-danger delete_department" onclick="deleteDepartment(this);">부서 삭제</button>
-	            <button class="btn btn-success add_team" onclick="addTeam();">팀 추가</button>
-	            <a href="#"><span class="level2">새로운 부서</span></a>
+	            <button class="btn btn-success add_team" onclick="addTeam(this);">팀 추가</button>
+	            <a href="#"><span class="level2"><input type="text" value="새로운 부서"></span></a>
 	            <ul>
-	                <li>
-	                    <a href="#"><span class="level3">새로운 팀</span></a>
-	                    <button class="btn btn-danger delete_team" onclick="deleteTeam();">팀 삭제</button>
-	                </li>
+	            	<ul>
+		                <li>
+		                    <a href="#"><span class="level3"><input type="text" value="새로운 팀"></span></a>
+		                    <button class="btn btn-danger delete_team" onclick="deleteTeam();">팀 삭제</button>
+		                </li>
+	                </ul>
 	            </ul>
 	        `;
 	
@@ -175,32 +200,51 @@
 		}
 		
 		// 팀 추가
-	    function addTeam() {
-	        let newTeam = document.createElement("li");
-	        newTeam.innerHTML = `
-	            <ul>
-	                <li>
-						<a href="#"><span class="level3">새로운 팀</span></a>
-						<button class="btn btn-danger delete_team" onclick="deleteTeam();">팀 삭제</button>
-	                </li>
-	            </ul>
-	        `;
-	
-	        // 새로운 부서 요소 추가
-	        let TeamList = document.querySelector('.tree > li > ul');
-	        TeamList.appendChild(newTeam);
-	        alert("팀이 추가되었습니다.");
-	    }
+        function addTeam(button) {
+            let newTeam = document.createElement("ul");
+            newTeam.innerHTML = `
+            	<li>
+	                <a href="#"><span class="level3"><input type="text" value="새로운 팀"></span></a>
+	                <button type="button" class="btn btn-danger delete_team" onclick="deleteTeam(this);">팀 삭제</button>
+                </li>
+            `;
+            let departmentItem = button.parentNode.querySelector('ul');
+            departmentItem.appendChild(newTeam);
+            alert("팀이 추가되었습니다.");
+        }
+
+		/*
 		// 팀 삭제
 		function deleteTeam(button) {
 		    let teamItem = button.parentNode;
-		    // 해당 부서 요소를 부모 노드에서 제거
 		    teamItem.parentNode.removeChild(teamItem);
 		    alert("팀이 삭제되었습니다.");
 		}
-
+		function deleteTeam(button) {
+		    // 팀 요소의 부모 요소(li)를 찾아서 삭제
+		    let teamItem = button.closest('li');
+		    teamItem.parentNode.removeChild(teamItem);
+		    alert("팀이 삭제되었습니다.");
+		}*/
+		function deleteTeam(button) {
+		    // 팀 요소의 부모 요소(li)를 찾아서 삭제
+		    let teamItem = button.parentElement;
+		    teamItem.parentNode.removeChild(teamItem);
+		    alert("팀이 삭제되었습니다.");
+		}
 		
+		// 폼 되돌리기
+		function resetForm() {
+
+		}
+		// 폼 저장
+		function saveForm() {
+			// 추가 작성
+			alert("폼 데이터가 저장되었습니다.");
+		}
 		</script>
+		
+		
 		
 		<!-- ------------ -->
 	

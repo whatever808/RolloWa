@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.text.ParseException;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,29 +46,58 @@ public class AttendanceController {
 	@GetMapping("/list.do")
 	public ModelAndView list(@RequestParam(value = "page", defaultValue = "1") int currentPage,
 			@RequestParam(value = "nowDate", required = false) String nowDate, ModelAndView mv) {
-
+		
 		if (nowDate == null || nowDate.isEmpty()) {
-			// 오늘 날짜
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREA);
-			nowDate = sdf.format(new Date());
+		    // nowDate가 null이거나 비어 있는 경우에만 현재 날짜 생성
+		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREA);
+		    nowDate = sdf.format(new Date());
+		} else {
+		    // 사용자가 선택한 날짜를 Date 객체로 변환
+		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA);
+		    Date selectedDate = null;
+		    try {
+		        selectedDate = sdf.parse(nowDate);
+		    } catch (ParseException e) {
+		        // 파싱에 실패한 경우 처리
+		        e.printStackTrace();
+		    }
+		    // 현재 날짜 생성
+		    nowDate = sdf.format(selectedDate);
 		}
+
+		// 사용자가 선택한 날짜를 Date 객체로 변환
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA);
+		Date userSelectedDate = null;
+		try {
+		    userSelectedDate = sdf.parse(nowDate);
+		} catch (ParseException e) {
+		    // 파싱에 실패한 경우 처리
+		    e.printStackTrace();
+		}
+
+		// 로그에 출력
+		log.debug("사용자 날짜 : {}", userSelectedDate);
 
 		int listCount = attendanceService.selectAttendanceListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
 		List<HashMap<String, String>> list = attendanceService.selectAttendanceList(pi);
 
 		List<AttendanceDto> attendanceCount = attendanceService.SelectAttendanceCount();
+		// 오늘 날짜
+		Date today = new Date();
 
-		// log.debug("pageInfo : {}", pi);
-		// log.debug("list : {}", list);
-		// log.debug("attendanceCount : {}", attendanceCount);
-
+		// 로그에 출력
+		log.debug("오늘 날짜 : {}", today);
+		log.debug("사용자 날짜 : {}", nowDate);
+		
 		mv.addObject("pi", pi).addObject("listCount", listCount).addObject("list", list)
 				.addObject("attendanceCount", attendanceCount).addObject("nowDate", nowDate)
 				.setViewName("attendance/list");
 
 		return mv;
 	}
+	
+	
 	// 2.2 출결 검색
 	@GetMapping("/search.do")
 	public ModelAndView search(@RequestParam(value="page", defaultValue="1") int currentPage,
@@ -132,6 +161,9 @@ public class AttendanceController {
 		return "redirect:/";
 	}
 
+	
+	
+	
 	// select box 컨트롤러
 	// 1. 부서 조회
 	@ResponseBody
@@ -168,7 +200,13 @@ public class AttendanceController {
 		log.debug("직급 조회 실행");
 	    return organizationService.selectPosition();
 	}
-	// 4. 
+	// 4. 상태 조회
+	@ResponseBody
+	@GetMapping("/status.do")
+	public List<GroupDto> selectStatus() {
+		log.debug("상태 조회 실행");
+	    return attendanceService.selectStatus();
+	}
 	
 	
 	/*
