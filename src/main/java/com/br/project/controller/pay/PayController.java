@@ -1108,7 +1108,8 @@ public class PayController {
 		}
 		
 		int result = payService.jReportUpdate(map, list, fileList, delFileNo == null ? null : delFileNo);
-		
+
+		//log.debug("fileLength : {}", map.get("fileLength"));
 		
 		return "redirect:/pay/paymain.page";
 		

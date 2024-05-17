@@ -114,11 +114,14 @@ li{
 	align-item: center;
 	margin-top: 50px;
 }
+
 a.list{
 	width: 30%;
-	text-align: center;
 	border-radius: 15px;
 	padding: 20px 0 20px 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 

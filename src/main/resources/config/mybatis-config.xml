@@ -21,12 +21,14 @@
     <typeAlias type="com.br.project.dto.notification.NotificationDto"     alias="NotificationDto"/>
     <typeAlias type="com.br.project.dto.attendance.AttendanceDto"			    alias="AttendanceDto"/>
     <typeAlias type="com.br.project.dto.pay.MemberDeptDto"                alias="MemberDeptDto"/>
+    <typeAlias type="com.br.project.dto.location.LocationDto"             alias="LocationDto" />
+    <typeAlias type="com.br.project.dto.facility.AttractionDto"           alias="AttractionDto" />
+    <typeAlias type="com.br.project.dto.pay.VacationDto"           				alias="VacationDto" />
 	</typeAliases>
 	
 	
 	<mappers>
-		<mapper resource="mappers/board/board-mapper.xml" />
-		<mapper resource="mappers/board/boardAttachment-mapper.xml" />
+		<mapper resource="mappers/board-mapper.xml" />
 		<mapper resource="mappers/attachment-mapper.xml" />
 		<mapper resource="mappers/department-mapper.xml" />
 		<mapper resource="mappers/member-mapper.xml" />
@@ -35,6 +37,9 @@
 		<mapper resource="mappers/organization-mapper.xml" />
 		<mapper resource="mappers/notification-mapper.xml" />
 		<mapper resource="mappers/attendance-mapper.xml" />
+    <mapper resource="mappers/facility/attraction-mapper.xml" />
+		<mapper resource="mappers/location-mapper.xml" />
+		<mapper resource="mappers/vacation-mapper.xml" />
 	</mappers>
 
 </configuration>

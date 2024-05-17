@@ -50,5 +50,10 @@ public class AttendanceDao {
 		return sqlSessionTemplate.insert("attendanceMapper.insertMember", member);
 	}
 
+	// 출결 상태 조회
+	public List<GroupDto> selectStatus() {
+		return sqlSessionTemplate.selectList("attendanceMapper.selectStatus");
+	}
+
 	
 }

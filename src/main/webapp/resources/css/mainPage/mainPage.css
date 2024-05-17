@@ -1,105 +1,44 @@
-*{box-sizing: border-box;}
-
-.main-page{
-    padding: 30px;
-    padding-bottom: 100px;
-    box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
-    border-radius: 10px;
-    width: 100%;
+.box{
+	padding: 30px;
+   box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
+   border-radius: 10px;
 }
 
-/* ------------- profile area ------------- */
-.profile{
-    border-radius: 20px;
-    display: flex;
-    padding: 10px;
-    height: 200px;
-    align-items: center;
-
- }
-.profile>.left{
-    width: 15%;
-    display: flex;
-    justify-content: center;
- }
-.profile>.left>#profileImg{
-    border-radius: 50%;
-    width: 150px; 
-    height:150px;
-    border: 1px solid lightgrey;
+/* ------------- header ------------- */
+.home-nav{
+	display: flex;
+	justity-content: space-around;
+	align-items: center;
+	flex-wrap: wrap;
+	max-height: 280px;
+	margin-bottom: 30px;
 }
 
-.profile>.right{
-     width: 85%;
- }
-.profile>.right>.user-name{
-    margin-bottom: 15px;
-    font-size: 24px;
-    letter-spacing: 2px;
-    border-bottom: 1.5px solid lightgrey;
-    padding-bottom: 10px;
+.home-nav>.menu:hover{
+	opacity: 0.6;
 }
-.profile>.right table{
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 10px 10px;
+.home-nav *:hover{
+	cursor: pointer;
+}
+.home-nav .icon{
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	border: 1px solid lightgray;
+	border-radius: 100px;
+	width: 50px;
+	height:50px;
 }
 
-/* ------------- informations area common ------------- */
-.informations{
-    display: flex;
-    margin-top: 70px;
-    justify-content: space-between;
+/* --------------- content ------------- */
+.content-wrap{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
-.bi{color: tomato;}
 
-/* ------------- informations left area ------------- */
-.informations>.left{
-    width: 30%;
-    max-height: 1000px;
-    border: 1px solid lightgray;
+.profile, .calendar{
+	width: 100%;
+	margin-bottom: 30px;
 }
-.informations .year-month{
-    text-align: center;
-    font-size: 20px;
-    padding: 10px 0 10px 0;
-    height: 50px;
-}
-.year-month>label{
-    display: inline-block;
-    letter-spacing: 3px;
-    margin-right: 20px;
-    margin-left: 20px;
-}
-.cal-before-month:hover, .cal-next-month:hover{ cursor: pointer; }
 
-/* ------------- informations right area ------------- */
-.informations>.right{
-    width: 70%; 
-    display: flex;
-    flex-direction: column;
-}
-.right>.top, .right>.bottom{ display: flex; }
-.notice, .edsm{
-    margin-left: 100px;
-    margin-bottom: 50px;
-}
-.notification, .chat{
-    margin-left: 100px;
-}
-.notice>table, .edsm>table, .notification>table, .chat>table{
-    width: 400px;
-    height: 450px;
-    border: 1px solid lightgrey;
-}
-.regist-date-writer, .chatting-preview{
-    display: inline-block;
-    margin-top: 5px; 
-    color: lightslategray;
-    letter-spacing: 1px;
-}
-.bi-plus{
-    display: inline-block;
-    float: right;
-}
-.bi-plus:hover{cursor:pointer}

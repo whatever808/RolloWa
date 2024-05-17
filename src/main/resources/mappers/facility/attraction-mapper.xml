@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="attractionMapper">
+	
+	<!-- 어트랙션 등록 -->
+	<insert id="insertAttraction" parameterType="AttractionDto">
+		insert 
+		  into tb_attraction
+		  	   (
+		  	    attraction_no
+		  	   ,location
+		  	   ,regist_emp
+		  	   ,modify_emp
+		  	   ,attraction_name
+		  	   ,attraction_intro
+		  	   ,customer_limit
+		  	   ,age_limit
+		  	   ,age_limit_range
+		  	   ,height_limit
+		  	   ,height_limit_range
+		  	   ,status
+		  	   )
+		 values 
+		 		(
+		 		 seq_atrtno.nextval
+		 		,#{location}
+		 		,#{registEmp}
+		 		,#{modifyEmp}
+		 		,#{attractionName}
+		 		,#{attractionIntro}
+		 		,#{customerLimit}
+		 		,#{ageLimit}
+		 		,#{ageLimitRange}
+		 		,#{heightLimit}
+		 		,#{heightLimitRange}
+		 		.#{status}
+		 		)
+	</insert>
+	
+</mapper>

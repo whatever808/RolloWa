@@ -174,7 +174,7 @@
 	//페이지 로드 즉시 실행되어야할 functions ===========================================================================
 	$(document).ready(function(){
 		// 노출 URL값 변경
-		if(location.href == '${ contextPath }/board/list.do'){
+		if((location.href).endsWith('${ contextPath }/board/list.do')){
 			history.pushState(null, null, "${ contextPath }/board/list.do?page=1&category=&department=&condition=&keyword=")
 		}
 		
@@ -349,10 +349,10 @@
 	// 게시글 상세페이지 이동 ============================================================================================================
 	function showDetail(boardNo, writerNo){
 		let params = "category=" + $("#category").val() + "&"
-					  + "department=" + $("#department").val() +"&"
-					  + "condition=" + $("#condition").val() + "&"
-					  + "keyword=" + $("#keyword").val() + "&"
-					  + "no=" + boardNo;
+				   + "department=" + $("#department").val() +"&"
+				   + "condition=" + $("#condition").val() + "&"
+				   + "keyword=" + $("#keyword").val() + "&"
+				   + "no=" + boardNo;
 		
 		if(${ loginMember.userNo } == writerNo){
 			// 로그인한 사용자가 게시글 작성자일 경우(상세조회페이지)
