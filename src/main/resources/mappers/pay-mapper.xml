@@ -385,9 +385,9 @@
 				from approval A
 				WHERE STATUS = 'Y'
 				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-		        and FIRST_APPROVAL = #{userName}
+		        and (FIRST_APPROVAL = #{userName}
 		        or MIDDLE_APPROVAL = #{userName}
-		        or FINAL_APPROVAL = #{userName}
+		        or FINAL_APPROVAL = #{userName})
    </select>
    
    
@@ -456,9 +456,9 @@
 					from approval A
 					WHERE STATUS = 'Y'
 					AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-			        and FIRST_APPROVAL = #{userName}
+			        and (FIRST_APPROVAL = #{userName}
 			        or MIDDLE_APPROVAL = #{userName}
-			        or FINAL_APPROVAL = #{userName}
+			        or FINAL_APPROVAL = #{userName})
 		      <choose>
 						<when test="conditions == '전체'">
 						and DOCUMENT_TYPE IN ('T','C','B','M','J','G','H','V')
@@ -697,9 +697,9 @@
 				from approval A
 				WHERE STATUS = 'Y'
 				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-         and FIRST_APPROVAL = #{userName}
+         and (FIRST_APPROVAL = #{userName}
 	       or MIDDLE_APPROVAL = #{userName}
-	       or FINAL_APPROVAL = #{userName}
+	       or FINAL_APPROVAL = #{userName})
 		    AND ${condition} LIKE '%' || #{keyword} || '%'
    </select>
    
@@ -747,9 +747,9 @@
 				from approval A
 				WHERE A.STATUS = 'Y'
 				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-	      and FIRST_APPROVAL = #{userName}
+	      and (FIRST_APPROVAL = #{userName}
 	       or MIDDLE_APPROVAL = #{userName}
-	       or FINAL_APPROVAL = #{userName}
+	       or FINAL_APPROVAL = #{userName})
 	      AND ${condition} LIKE '%' || #{keyword} || '%'
 				order
 					 by APPROVAL_NO desc

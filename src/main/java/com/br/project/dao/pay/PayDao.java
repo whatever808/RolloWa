@@ -325,7 +325,7 @@ public class PayDao {
 	
 	public List<PayDto> delayDateSearchList(Map<String, Object> userMap, PageInfoDto pi){
 		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
-		return sqlSessionTemplate.selectList("payMapper.delayDateSelectList", userMap, rowBounds);
+		return sqlSessionTemplate.selectList("payMapper.delayDateSearchList", userMap, rowBounds);
 	}
 	
 	public List<Map<String, Object>> retireModify(Map<String, Object> map){

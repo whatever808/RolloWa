@@ -69,23 +69,24 @@
 <script>
 	var canvas = $("#signature")[0];
 	var signature = new SignaturePad(canvas, {
-		minWidth : 2,
-		maxWidth : 2,
-		penColor : "rgb(0, 0, 0)"
+	    minWidth: 2,
+	    maxWidth: 2,
+	    penColor: "rgb(0, 0, 0)"
 	});
 	
 	$("#clear").on("click", function() {
-		signature.clear();
+	    signature.clear();
 	});
 	
 	$("#save").on("click", function() {
-		if(signature.isEmpty()) {
-			alert("내용이 없습니다.");
-		} else {
-			var data = signature.toDataURL("image/png");
-			window.open(data, "test", "width=600, height=200, scrollbars=no");
-		}
+	    if (signature.isEmpty()) {
+	        alert("내용이 없습니다.");
+	    } else {
+	        var data = signature.toDataURL("image/png");
+	        window.open(data, "test", "width=600, height=200, scrollbars=no");
+	    }
 	});
+	
 </script>
 
 
@@ -109,9 +110,21 @@
 								                    <th style="width: 120px;">${list.get(0).FINAL_APPROVAL}</th>
 								                </tr>
 								                <tr>
-								                    <td style="height: 80px;"><button class="btn btn-danger" data-izimodal-open="#modal2">싸인</button></td>
-								                    <td></td>
-								                    <td></td>
+								                    <td style="height: 80px;">
+									                    <c:if test="${list.get(0).FIRST_APPROVAL eq userName}">
+									                    	<button class="btn btn-danger" data-izimodal-open="#modal2">싸인</button>
+									                    </c:if>
+								                    </td>
+								                    <td>
+									                    <c:if test="${list.get(0).FIRST_APPROVAL eq userName}">
+									                    	<button class="btn btn-danger" data-izimodal-open="#modal2">싸인</button>
+									                    </c:if>
+								                    </td>
+								                    <td>
+									                    <c:if test="${list.get(0).FIRST_APPROVAL eq userName}">
+									                    	<button class="btn btn-danger" data-izimodal-open="#modal2">싸인</button>
+									                    </c:if>
+								                    </td>
 								                </tr>
 								                <tr>
 								                    <td>${list.get(0).FIRST_APPROVAL_DATE}</td>
@@ -186,10 +199,10 @@
 	                            <button class="btn btn-warning" id="end_button" onclick="successbtn();">최종승인</button>
 	                        </div>                        	
                         </c:if>
-                        
-                        
+                        	
+                        		<c:if test="${ list.get(0).PAYMENT_WRITER_NO eq userNo}">
                          		<button class="btn btn-warning" id="modifyWriter" type="submit">수정</button>
-                   
+                   					</c:if>
                         <!------------>
 								
 								     </div>
