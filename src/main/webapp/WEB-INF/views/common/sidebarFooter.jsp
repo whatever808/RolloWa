@@ -513,6 +513,7 @@
         	console.log($(el).children().children().val());
     		}
     		// 채팅용 웹소켓 연결
+				/*
 				chatting = new SockJS("${contextPath}/chatting");
 				stompClient = Stomp.over(chatting);
 				stompClient.connect({}, function(frame) {
@@ -521,6 +522,7 @@
 						console.log(msg);
 					})
 				})
+				*/
     	})
     }
     
