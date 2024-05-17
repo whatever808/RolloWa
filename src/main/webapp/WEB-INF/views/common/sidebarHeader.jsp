@@ -285,22 +285,41 @@
 
         /* 채팅방 스타일 끝 */
     </style>
+<style>
+#main_logo span {
+  color: #black;
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  animation: bounce 0.3s ease infinite alternate;
+}
+#main_logo span:{animation-delay: 0.1s;}
+@keyframes bounce {
+  100% {top: -3px;}
+}
+.allposition{
+	display: flex;
+}
+</style>
 </head>
-<body>
+<body class="allposition">
 <c:if test="${ alertMsg != null }" >
 <script>
 	alertify.alert('${alertTitle}','${alertMsg}');
 </script>
 </c:if>
 
-<main class="d-flex flex-nowrap">
+<main class="d-flex flex-nowrap"></main>
         <div class="flex-shrink-0 p-3" style="width: 280px;">
-            <a href="/"
+            <a href="${contextPath}/"
                 class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
                 <svg class="bi pe-none me-2" width="30" height="24">
                     <use xlink:href="#bootstrap" />
                 </svg>
-                <span class="fs-5 fw-semibold">회사로고</span>
+                <span id="main_logo" class="fs-5 fw-semibold font-size25 jua-regular">
+	                <span>RoLLoWa</span>
+                </span>
             </a>
             <ul class="list-unstyled ps-0">
                 <li class="mb-1">
