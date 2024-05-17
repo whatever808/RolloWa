@@ -83,15 +83,15 @@ public class AttractionController {
 				request.setAttribute("attraction", attraction);				
 				return "facility/attraction/detail";
 			}else {
+				request.getSession().setAttribute("alertTitle", "어트랙션 조회서비스");
 				request.getSession().setAttribute("alertMsg", "존재하지 않는 어트랙션입니다.");
 				return "redirect:" + request.getHeader("Referer");
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+			request.getSession().setAttribute("alertTitle", "어트랙션 조회서비스");
 			request.getSession().setAttribute("alertMsg", "어트랙션 상세조회에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
-		}finally {
-			request.getSession().setAttribute("alertTitle", "어트랙션 조회서비스");
 		}
 	}
 	
