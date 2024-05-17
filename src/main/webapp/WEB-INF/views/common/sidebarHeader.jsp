@@ -474,11 +474,7 @@
                 </li>
             </ul>
         </div>
-				
-				<div>
-					<button type="button" onclick="sendMsg();">메세지</button>
-				</div>
-				
+								
         <div class="b-example-divider b-example-vr"></div>
 				<script>
 					let alram;
@@ -498,22 +494,8 @@
 			                , function(){ alertify.error('Cancel')}).set('labels', {ok:'이동하기', cancel:'취소'});;
 						}
 						
-						// 채팅용 웹소켓 연결
-						chatting = new SockJS("${contextPath}/chatting");
-						stompClient = Stomp.over(chatting);
-						stompClient.connect({}, function(frame) {
-							console.log("Connected : " + frame);
-							stompClient.subscribe("/topic/a", function(msg) {
-								console.log("메세지 전송됨");
-								console.log(msg);
-							})
-						})
 					})
 					
-					function sendMsg() {
-						stompClient.send("/app/user", {}, JSON.stringify({name : '${loginMember.userId}'}));
-					}
-
 				</script>
 </body>
 </html>

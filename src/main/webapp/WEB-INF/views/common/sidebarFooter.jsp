@@ -26,255 +26,10 @@
                         <label class="form-label" for="form12">인물 검색</label>
                     </div>
                     <div class="btn_wrapper">
-                        <button type="button" class="btn1 forget_btn">채팅하기</button>
+                        <button type="button" class="btn1 forget_btn" onclick="createChatRoom();">채팅하기</button>
                     </div>
-                    <div class="dept_list_wrapper">
-                        <div class="d-inline-flex gap-1 dept_list">
-                            <button class="btn1 forget_btn dept" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#dept1" aria-expanded="false" data-mdb-ripple-init>
-                                경리부
-                            </button>
-                        </div>
-                        <div class="collapse multi-collapse" id="dept1">
-                            <div class="card card-body team">
-                                <button class="btn btn-outline-info team" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#team1" aria-expanded="false" data-mdb-ripple-init>
-                                    경리1팀
-                                </button>
-                            </div>
-                            <div class="collapse multi-collapse team_list" id="team1">
-                                <ul>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="card card-body team">
-                                <button class="btn btn-outline-info team" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#team2" aria-expanded="false" data-mdb-ripple-init>
-                                    경리1팀
-                                </button>
-                            </div>
-                            <div class="collapse multi-collapse team_list" id="team2">
-                                <ul>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="d-inline-flex gap-1 dept_list">
-                            <button class="btn1 forget_btn dept" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#dept2" aria-expanded="false" data-mdb-ripple-init>
-                                경리부
-                            </button>
-                        </div>
-                        <div class="collapse multi-collapse" id="dept2">
-                            <div class="card card-body team">
-                                <button class="btn btn-outline-info team" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#team3" aria-expanded="false" data-mdb-ripple-init>
-                                    경리1팀
-                                </button>
-                            </div>
-                            <div class="collapse multi-collapse team_list" id="team3">
-                                <ul>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="card card-body team">
-                                <button class="btn btn-outline-info team" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#team4" aria-expanded="false" data-mdb-ripple-init>
-                                    경리1팀
-                                </button>
-                            </div>
-                            <div class="collapse multi-collapse team_list" id="team4">
-                                <ul>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="d-inline-flex gap-1 dept_list">
-                            <button class="btn1 forget_btn dept" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#dept3" aria-expanded="false" data-mdb-ripple-init>
-                                경리부
-                            </button>
-                        </div>
-                        <div class="collapse multi-collapse" id="dept3">
-                            <div class="card card-body team">
-                                <button class="btn btn-outline-info team" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#team5" aria-expanded="false" data-mdb-ripple-init>
-                                    경리1팀
-                                </button>
-                            </div>
-                            <div class="collapse multi-collapse team_list" id="team5">
-                                <ul>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="card card-body team">
-                                <button class="btn btn-outline-info team" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#team6" aria-expanded="false" data-mdb-ripple-init>
-                                    경리1팀
-                                </button>
-                            </div>
-                            <div class="collapse multi-collapse team_list" id="team6">
-                                <ul>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="pretty p-icon p-smooth">
-                                            <input type="checkbox" />
-                                            <div class="state p-success">
-                                                <i class="icon fa fa-check"></i>
-                                                <label>부장 유재석</label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="dept_list_wrapper">                       
+										<!-- 부서 리스트 --> 
                     </div>
                 </div>
             </div>
@@ -292,7 +47,7 @@
                             </h5>
                             <div class="msg_btn_wrapper btn_wrapper">
                                 <button data-izimodal-open="#people_list" class="btn1 forget_btn"><i
-                                        class="fa-solid fa-comment" onclick="selectMember();"></i></button>
+                                        class="fa-solid fa-comment"></i></button>
                             </div>
 
                             <div class="card" style="margin-top: 10px; overflow: auto;
@@ -638,18 +393,10 @@
             $(".msgbox").css("display", "flex");
         })
 
-        $(".msg_open_btn").on("click", function () {
-            animateCSS('.msg_close_btn', 'bounce');
-        })
-
         $(".msg_close_btn").on("click", function () {
             $(".msg_open_btn").css("display", "block");
             $(".msg_close_btn").css("display", "none");
             $(".msgbox").css("display", "none");
-        })
-
-        $(".msg_close_btn").on("click", function () {
-            animateCSS('.msg_open_btn', 'bounce');
         })
 
         $(".pl_btn").on("click", function () {
@@ -696,12 +443,89 @@
         focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
         restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
     });
-
-    // 채팅 - 전체 부서&사원 조회
-    function selectMember() {
+    
+    // 채팅 - 전체 부서 조회    
+    const $deptListWrapper = $(".dept_list_wrapper");
+    $(".msg_btn_wrapper").on("click", function() {
+    	
     	$.ajax({
-    		url: '${contextPath}/'
+    		url: '${contextPath}/member/select.do'
+    		, method: 'get'
+    		, success: function(map) {
+    			for(let i = 0; i < map.deptList.length; i++) {
+    				var deptText = "<div class='d-inline-flex gap-1 dept_list'>";
+   		          deptText += "<button class='btn1 forget_btn dept' type='button' data-bs-toggle='collapse'";   			
+   		       		deptText += "data-bs-target='#" + map.deptList[i].codeName + "' aria-expanded='false' data-mdb-ripple-init>";
+   		       		//deptText += "data-uppercode='" + map.deptList[i].code + "' data-counti='" + i + "'>";
+   		       		deptText += map.deptList[i].codeName;
+   		     			deptText += "</button>";
+   		  				deptText += "</div>";
+   		  				
+   		  		var teamText = "<div class='collapse multi-collapse' id='" + map.deptList[i].codeName + "'>"
+   		  		for(let j = 0; j < map.teamList.length; j++) {
+   		  			// 부서에 해당하는 팀
+   		  			if(map.deptList[i].code == map.teamList[j].upperCode) {
+   		  				teamText += "<div class='card card-body team'>";
+								teamText += "<button class='btn btn-outline-info team' type='button' data-bs-toggle='collapse'";
+								teamText += "data-bs-target='#team_" + map.teamList[j].code + "' aria-expanded='false' data-mdb-ripple-init>";
+								teamText += map.teamList[j].codeName;
+								teamText += "</button>";
+								teamText += "</div>";  	
+
+	   		  			var memberText = "<div class='collapse multi-collapse team_list' id='team_" + map.teamList[j].code + "'>";
+	   		  			memberText += "<ul>";
+	   		  			for(let k = 0; k < map.memberList.length; k++) {
+	   		  				// 팀에 해당하는 팀원
+	   		  				if(map.teamList[j].code == map.memberList[k].teamCode) {
+	   		  					memberText += "<li class='list-group-item'>";
+	   		  					memberText += "<div class='pretty p-icon p-smooth'>";
+	   		  					memberText += "<input type='checkbox' value='" + map.memberList[k].userNo + "'/>";
+	   		  					memberText += "<div class='state p-success'>";
+	   		  					memberText += "<i class='icon fa fa-check'></i>"
+	   		  					memberText += "<label>" + map.memberList[k].position + " " + map.memberList[k].userName + "</label>";
+	   		  					memberText += "</div>";
+	   		  					memberText += "</div>";
+	   		  					memberText += "</li>";
+	   		  				}
+	   		  			}
+	   		  			memberText += "</ul>";
+	   		  			memberText += "</div>";
+	   		  			
+	   		  			teamText += memberText;
+   		  			}
+   		  		}
+			  		teamText += "</div>"
+
+    		    $deptListWrapper.append(deptText + teamText);    		    						
+          }
+    			 			
+    		}
+    		, error: function() {
+    			console.log("부서 조회 ajax 통신 실패")
+    		}
+    	})
+    })
+    
+    // 채팅하기 버튼 클릭 시 체크된 회원들과 채팅방 생성
+    function createChatRoom() {
+    	$(".list-group-item").each(function(index, el) {
+    		if($(el).children().children().is(':checked')) {
+        	console.log($(el).children().children().val());
+    		}
+    		// 채팅용 웹소켓 연결
+				chatting = new SockJS("${contextPath}/chatting");
+				stompClient = Stomp.over(chatting);
+				stompClient.connect({}, function(frame) {
+					console.log("Connected : " + frame);
+					stompClient.subscribe("/topic/a", function(msg) {
+						console.log(msg);
+					})
+				})
     	})
     }
+    
+		function sendMsg() {
+			stompClient.send("/app/user", {}, JSON.stringify({name : '${loginMember.userId}'}));
+		}
 </script>
 </html>

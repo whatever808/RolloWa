@@ -248,28 +248,45 @@ public class MemberController {
 	}
 	
 	// 채팅 - 전체 부서 조회
-	@GetMapping("/selectDept.do")
+	@GetMapping("/select.do")
 	@ResponseBody
-	public List<GroupDto> selectDept() {
-		return departmentService.selectDepartmentList("DEPT01");
+	public Map<String, List> selectDept() {
+		Map<String, List> groupMap = new HashMap<>();
+		Map<String, String> codeMap = new HashMap<>();
+		
+		// 부서 조회
+		codeMap.put("code", "DEPT01");
+		groupMap.put("deptList", departmentService.selectDepartmentList(codeMap));
+		
+		// 팀 조회
+		codeMap.put("code", "TEAM01");
+		groupMap.put("teamList", departmentService.selectDepartmentList(codeMap));
+		
+		// 사원 조회
+		groupMap.put("memberList", memberService.selectAllMember());
+		
+		return groupMap;
 	}
 	
 	// 채팅 - 부서의 팀 조회
 	@GetMapping("/selectTeam.do")
 	@ResponseBody
 	public List<GroupDto> selectTeam(String upperCode) {
-		Map<String, String> map = new HashMap<>();
-		map.put("code", "TEAM01");
-		map.put("upperCode", upperCode);
-		return departmentService.selectTeam(map);
+		Map<String, String> codeMap = new HashMap<>();
+		codeMap.put("code", "TEAM01");
+		codeMap.put("upperCode", upperCode);
+		return departmentService.selectDepartmentList(codeMap);
 	}
 	
 	// 채팅 - 전체 사원 조회
-	@GetMapping("/select.do")
+	@GetMapping("/selectMember.do")
 	@ResponseBody
 	public List<MemberDto> selectMember(String teamCode) {
 		return memberService.selectAllMember();
 	}
+	
+	// 채팅 - 전체 부서&팀&사원 조회
+	@GetMapping("/selectMember.do")
 
 	/* ======================================= "가림" 구역 ======================================= */
 	@RequestMapping("/memInfo.do")
