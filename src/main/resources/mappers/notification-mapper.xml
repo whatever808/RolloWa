@@ -57,4 +57,29 @@
 		notification
 	set
 	</update>
+	
+	<!-- 부서의 최신 공지사항 글 번호 조회 -->
+	<select id="selectLatestBno" resultType="_int">
+	SELECT
+	    BOARD_NO
+	    , ROWNUM
+	FROM
+	    (
+	    SELECT
+	        BOARD_NO
+	        , CATEGORY
+	        , ROWNUM
+	    FROM
+	        TB_BOARD
+	    WHERE
+	        STATUS = 'Y'
+	    AND
+	        CATEGORY = #{ teamCode }
+	    ORDER BY
+	        MODIFY_DATE DESC
+	    )
+	WHERE
+	    ROWNUM = 1
+	</select>
+	
 </mapper>

@@ -33,4 +33,9 @@ public class NotificationDao {
 	public int deleteNoti(String notiNo) {
 		return sqlSessionTemplate.update("notificationMapper.deleteNoti", notiNo);
 	}
+
+	// 최신 공지사항 글 번호 조회
+	public int selectLatestBno(String teamCode) {
+		return sqlSessionTemplate.selectOne("notificationMapper.selectLatestBno", teamCode);
+	}
 }

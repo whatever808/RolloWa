@@ -1,5 +1,6 @@
 package com.br.project.service.member;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -46,5 +47,10 @@ public class MemberService {
 	// 회원 비밀번호 변경
 	public int updateUserPwd(MemberDto member) {
 		return memberDao.updateUserPwd(member);
+	}
+
+	// 전체 회원 조회
+	public List<MemberDto> selectAllMember() {
+		return memberDao.selectAllMember();
 	}
 }

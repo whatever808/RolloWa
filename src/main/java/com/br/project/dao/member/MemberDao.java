@@ -1,5 +1,6 @@
 package com.br.project.dao.member;
 
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -41,5 +42,10 @@ public class MemberDao {
 
 	public int updateUserPwd(MemberDto member) {
 		return sqlSessionTemplate.update("memberMapper.updateUserPwd", member);
+	}
+	
+	// 전체 사원 조회
+	public List<MemberDto> selectAllMember() {
+		return sqlSessionTemplate.selectList("memberMapper.selectAllMember");
 	}
 }

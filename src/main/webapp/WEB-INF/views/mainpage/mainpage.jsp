@@ -10,12 +10,14 @@
 	
 	<!-- 메인페이지 스타일시트 -->
 	<link href="${ contextPath }/resources/css/mainPage/mainPage.css" rel="stylesheet">
+	
+	<!-- fullcalendar -->
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
 </head>
 <body>
 	
 	<!-- side bar -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
-	
 	<!-- content 추가 -->
 	<div class="content p-5">
 		
@@ -46,7 +48,9 @@
 			
 			<!-- calendar start -->
 			<div class="calendar box">
-			
+				<!-- main calendar -->
+				<jsp:include page="/WEB-INF/views/common/mainCal.jsp" />
+				<div id="calendar"></div>
 			</div>
 			<!-- calendar end -->
 			

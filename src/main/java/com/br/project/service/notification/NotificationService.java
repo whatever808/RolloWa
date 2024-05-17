@@ -1,6 +1,8 @@
 package com.br.project.service.notification;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NotificationService {
 	private final NotificationDao nDao;
+	private Map<String, String> tokenMap = new HashMap();
 	
 	// 전체 알림 갯수 조회
 	public int selectNotiListCount() {
@@ -32,6 +35,10 @@ public class NotificationService {
 	public int deleteNoti(String notiNo) {
 		return nDao.deleteNoti(notiNo);
 	}
-	
+
+	// 최신 공지사항 글 번호 조회
+	public int selectLatestBno(String teamCode) {
+		return nDao.selectLatestBno(teamCode);
+	}	
 	
 }

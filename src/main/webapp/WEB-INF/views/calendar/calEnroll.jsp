@@ -90,13 +90,6 @@
               <legend><h1 class="jua-regular">일정 추가</h1></legend>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div class="font-size25 jua-regular" id="categoryName">Category</div>
-
-                  <div class="pretty p-default p-round p-smooth font-size20 privateArea">
-                      <input type="checkbox" name="calSort" value="P">
-                      <div class="state p-danger">
-                          <label class="jua-regular">private</label>
-                      </div>
-                  </div>
               </div> 
 
               <div class="Category">
@@ -187,7 +180,7 @@
 		        if(checkDate && checkTime){
 		        	return true;
 		        }else {
-		        	alert('날짜 및 시간을 확인 해 주세요.');
+		        	 alertify.alert('일정 등록','날짜 및 시간을 확인 해 주세요.');
 			        return false;		        	
 		        }  
 	     	};

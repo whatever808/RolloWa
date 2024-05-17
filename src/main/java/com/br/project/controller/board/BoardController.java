@@ -62,7 +62,7 @@ public class BoardController {
 			// 응답페이지 지정 및 응답데이터 반환
 			model.addAttribute("boardList", boardService.selectBoardList(pageInfo, filter));				// 게시글 목록
 			model.addAttribute("pageInfo", pageInfo);
-			model.addAttribute("departmentList", departmentService.selectDepartmentList("DEPT01"));		// 부서 목록
+			//model.addAttribute("departmentList", departmentService.selectDepartmentList("DEPT01"));		// 부서 목록
 			model.addAttribute("filter", filter);
 			
 			return "/board/list";
@@ -305,7 +305,9 @@ public class BoardController {
 			board.setRegistEmp(writerNo);
 			board.setModifyEmp(writerNo);
 			board.setAttachmentList(attachmentList);
-			
+			if(board.getCategory().equals("")) {
+				log.debug("board : {}", board);
+			}
 			int result = boardService.insertBoard(board);
 			
 			String status = board.getStatus().equals("Y") ? "등록" : "저장";
@@ -318,7 +320,11 @@ public class BoardController {
 				alertMsg = "공지사항 " + status + " 이 정상적으로 처리되지 않았습니다.";
 			}
 			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 등록서비스");
-			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);
+			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);	
+			
+			/* ===== 기웅 추가 ===== */
+						
+			/* ===== 기웅 추가 =====*/
 		}catch(Exception e) {
 			e.printStackTrace();
 			return "redirect:" + request.getDateHeader("Referer");
