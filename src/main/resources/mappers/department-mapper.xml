@@ -16,14 +16,18 @@
 	</resultMap>
 
   	<!-- 부서 목록조회 -->
-	<select id="selectDepartmentList" resultMap="groupResultMap">
+	<select id="selectDepartmentList" resultMap="groupResultMap" parameterType="java.util.Map">
 		select 
 			   group_code		
 			  ,code	
-			  ,code_name	
+			  ,code_name
+			  ,upper_code	
 		  from tb_group
 		 where status 		= 'Y'
 		   and group_code = #{code}
+		   <if test="upperCode != null">
+		   and upper_code = #{upperCode}
+		   </if>
 		 order by code
 	</select>
 	
@@ -45,5 +49,9 @@
 	</select>
 	
 	<!-- ========================== "가림" 영역 ========================== -->
+	
+	<!-- ========================== "기웅" 영역 ========================== -->	
+	
+	<!-- ========================== "기웅" 영역 ========================== -->
 	
 </mapper>

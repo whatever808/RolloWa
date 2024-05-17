@@ -22,6 +22,7 @@
 	<result column="SALARY" property="salary"/>
 	<result column="TEAM_CODE" property="teamCode"/>
 	<result column="POSITION_CODE" property="positionCode"/>
+	<result column="POSITION" property="position"/>
 </resultMap>
 
   <!--  회원 로그인  -->
@@ -97,6 +98,25 @@
 		where
 			user_no = #{ userNo }
 	</update>
+	<!-- 전체 회원 조회 -->
+	<select id="selectAllMember" resultMap="memberResult">
+		select
+		    USER_NO , USER_NAME , PROFILE_URL , TEAM_CODE , POSITION_CODE
+		    , (
+		        select code_name
+		        from tb_group
+		        where group_code = 'POSI01'
+		        and position_code = code
+		    ) as "position"
+		from
+		    member
+		where
+		    status = 'Y'
+		order by
+    		position_code desc
+	</select>
+	
+	
  <!-- ================== 이예찬 ========================== -->
  <!-- 이예찬 : Member 캘린더 위의 동료 선택 창에 필요한 데이터 조회 쿼리 -->
 	<select id="selectTeamPeer"
