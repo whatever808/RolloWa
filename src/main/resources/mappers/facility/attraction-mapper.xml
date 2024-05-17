@@ -4,23 +4,53 @@
 <mapper namespace="attractionMapper">
 	
 	<!-- 총 어트랙션 갯수 -->
-	<select id="selectTotalAttractionCount" resultType="_int">
+	<select id="selectTotalAttractionCount" resultType="_int" parameterType="hashmap">
 		select count(attraction_no) "totalAttractions"
 		  from tb_attraction
+		<if test="location != null and !location.equals('')">
+			<where>
+				and location = #{location}
+			</where>
+		</if>
+		<if test="status != null and !status.equals('')">
+			<where>
+				and status = #{status}
+			</where>
+		</if>
+		<if test="keyword != null and !keyword.equals('')">
+			<where>
+				and attraction_name like '%' || #{keyword} || '%'
+			</where>
+		</if>
 	</select>
 	
 	<!-- 어트랙션 목록조회 -->
-	<select id="selectAttractionList" resultType="hashmap">
+	<select id="selectAttractionList" resultType="hashmap" parameterType="hashmap">
 		select 
-					 attraction_no "attractionNo"
-					,location_no "locationNo"
-					,location_name "locationName"
-					,attraction_name "attractionName"
-					,nvl2(age_limit, age_limit || '세 ' || age_limit_range, '') "ageLimit"
-					,nvl2(height_limit, height_limit || 'cm ' || height_limit_range, '') "heightLimit"
-					,tb_attraction.status "status"
+			  attraction_no "attractionNo"
+			 ,location_name "locationName"
+			 ,customer_limit || '명' "customerLimit"
+			 ,attraction_name "attractionName"
+			 ,nvl2(age_limit, age_limit || '세 ' || age_limit_range, '') "ageLimit"
+			 ,nvl2(height_limit, height_limit || 'cm ' || height_limit_range, '') "heightLimit"
+			 ,tb_attraction.status "status"
 		 from tb_attraction
 		 join tb_location on (location = location_no)
+		 <if test="location != null and !location.equals('')">
+			<where>
+				and location = #{location}
+			</where>
+		</if>
+		<if test="status != null and !status.equals('')">
+			<where>
+				and tb_attraction.status = #{status}
+			</where>
+		</if>
+		<if test="keyword != null and !keyword.equals('')">
+			<where>
+				and attraction_name like '%' || #{keyword} || '%'
+			</where>
+		</if>
 	</select>
 	
 	<!-- 어트랙션 상세조회 -->

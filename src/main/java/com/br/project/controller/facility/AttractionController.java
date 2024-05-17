@@ -3,14 +3,15 @@ package com.br.project.controller.facility;
 import static com.br.project.controller.common.CommonController.getParameterMap;
 
 import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.facility.AttractionService;
 import com.br.project.service.location.LocationService;
@@ -37,6 +38,12 @@ public class AttractionController {
 	@RequestMapping("/list.do")
 	public String selectAttractionList(HttpServletRequest request) {
 		try {
+			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(attractionService.selectTotalAttractionCount(getParameterMap(request))
+														    ,Integer.parseInt(request.getParameter("page") == null ? "1" : request.getParameter("page"))
+														    ,5, 10);
+			request.setAttribute("pageInfo", pageInfo);
+			request.setAttribute("attractionList", attractionService.selectAttractionList(getParameterMap(request), pageInfo));
+			request.setAttribute("locationList", locationService.selectLocationList());
 			return "facility/attraction/list";
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -49,10 +56,20 @@ public class AttractionController {
 	/**
 	 * @method : 어트랙션 목록조회 (AJAX)
 	 */
-	@RequestMapping("/list.ajax")
+	@RequestMapping(value="/list.ajax", produces="application/json; charset=utf-8")
 	@ResponseBody
-	public List<HashMap<String, String>> ajaxSelectAttractionList(HttpServletRequest request){
-		return null;
+	public HashMap<String, Object> ajaxSelectAttractionList(HttpServletRequest request){
+		HashMap<String, Object> resultMap = new HashMap<>();
+		try {
+			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(attractionService.selectTotalAttractionCount(getParameterMap(request))
+														    ,Integer.parseInt(request.getParameter("page") == null ? "1" : request.getParameter("page"))
+														    ,5, 10);
+			resultMap.put("pageInfo", pageInfo);
+			resultMap.put("attractionList", attractionService.selectAttractionList(getParameterMap(request), pageInfo));
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return resultMap;
 	}
 	
 	/**
@@ -61,13 +78,20 @@ public class AttractionController {
 	@RequestMapping("/detail.do")
 	public String selectAttraction(HttpServletRequest request) {
 		try {
-			request.setAttribute("attraction", getParameterMap(request));
-			return "facility/attraction/detail";
+			HashMap<String, String> attraction = attractionService.selectAttraction(getParameterMap(request));
+			if(attraction != null) {
+				request.setAttribute("attraction", attraction);				
+				return "facility/attraction/detail";
+			}else {
+				request.getSession().setAttribute("alertMsg", "존재하지 않는 어트랙션입니다.");
+				return "redirect:" + request.getHeader("Referer");
+			}
 		}catch(Exception e){
 			e.printStackTrace();
-			request.getSession().setAttribute("alertTitle", "어트랙션 조회서비스");
 			request.getSession().setAttribute("alertMsg", "어트랙션 상세조회에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
+		}finally {
+			request.getSession().setAttribute("alertTitle", "어트랙션 조회서비스");
 		}
 	}
 	
@@ -91,7 +115,7 @@ public class AttractionController {
 	 * @method : 어트랙션 등록
 	 */
 	@RequestMapping("/regist.do")
-	public void insertAttraction(HttpServletRequest request) {
+	public String insertAttraction(HttpServletRequest request) {
 		try {
 			HashMap<String, Object> params = getParameterMap(request);
 			MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
@@ -100,14 +124,15 @@ public class AttractionController {
 			params.put("manageEmp", loginMember.getUserNo());
 			
 			if(attractionService.insertAttraction(params) > 0) {
-				log.debug("등록성공");
-				// 리스트 페이지 리다이렉트
+				return "redirect:/attraction/list.do";
 			}else {
-				// 이전페이지 이동
-				
+				return "redirect:" + request.getHeader("Referer");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
+			request.getSession().setAttribute("alertTitle", "어트랙션 등록서비스");
+			request.getSession().setAttribute("alertMsg", "어트랙션 등록에 실패했습니다.");
+			return "redirect:" + request.getHeader("Referer");
 		}
 	}
 	
@@ -122,6 +147,32 @@ public class AttractionController {
 			return "facility/attraction/modify";
 		}catch(Exception e) {
 			e.printStackTrace();
+			request.getSession().setAttribute("alertTitle", "어트랙션 수정서비스");
+			request.getSession().setAttribute("alertMsg", "어트랙션 수정요청에 실패했습니다.");
+			return "redirect:" + request.getHeader("Referer");
+		}
+	}
+	
+	/**
+	 * @method : 어트랙션 정보수정
+	 */
+	@RequestMapping("/modify.do")
+	public String modifyAttraction(HttpServletRequest request
+								  ,RedirectAttributes redirectAttributes) {
+		try {
+			HashMap<String, Object> params = getParameterMap(request);
+			MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
+			params.put("modifyEmp", loginMember.getUserNo());
+			
+			redirectAttributes.addAttribute("alertTitle", "어트랙션 정보수정서비스");
+			if(attractionService.updateAttraction(params) > 0) {
+				redirectAttributes.addAttribute("alertMsg", "어트랙션 정보가 수정되었습니다.");
+				return "redirect:/attraction/detail.do?no=" + params.get("no");
+			}else {
+				redirectAttributes.addAttribute("alertMsg", "어트랙션 정보수정에 실패했습니다.");
+				return "redirect:" + request.getHeader("Referer");
+			}
+		}catch(Exception e) {
 			e.printStackTrace();
 			request.getSession().setAttribute("alertTitle", "어트랙션 수정서비스");
 			request.getSession().setAttribute("alertMsg", "어트랙션 수정요청에 실패했습니다.");

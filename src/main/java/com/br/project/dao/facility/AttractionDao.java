@@ -20,16 +20,16 @@ public class AttractionDao {
 	/**
 	 * @return : 총 어트랙션 갯수
 	 */
-	public int selectTotalAttractionCount() {
-		return sqlSessionTemplate.selectOne("attractionMapper.selectTotalAttractionCount");
+	public int selectTotalAttractionCount(HashMap<String, Object> params) {
+		return sqlSessionTemplate.selectOne("attractionMapper.selectTotalAttractionCount", params);
 	}
 	
 	/**
-	 * @param params : {"pageInfo" : {페이징정보}, ""}
+	 * @param params : 필터링값
+	 * @param pageInfo : 페이징바
 	 * @return : 조회된 어트랙션 리스트
 	 */
-	public List<HashMap<String, String>> selectAttractionList(HashMap<String, Object> params){
-		PageInfoDto pageInfo = (PageInfoDto)params.get("pageInfo");
+	public List<HashMap<String, String>> selectAttractionList(HashMap<String, Object> params, PageInfoDto pageInfo){
 		RowBounds rowBounds = new RowBounds((pageInfo.getCurrentPage() - 1) * pageInfo.getListLimit()
 											,pageInfo.getListLimit());
 		return sqlSessionTemplate.selectList("attractionMapper.selectAttractionList", params, rowBounds);

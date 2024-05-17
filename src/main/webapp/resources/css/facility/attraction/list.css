@@ -6,27 +6,33 @@
 }
 
 /* ------------- attraction status select box ------------- */
-.attraction-status{
-    width: 300px;
-}
 
 /* ------------- search form ------------- */
-#search-form{
-    float: right;
+#filter-search{
+	float: right;
+	margin-bottom: 100px;
 }
-.search-condition, .search-keyword{
+#keyword, #condition, #search-btn, #reset-search{
+	height: 50px;
+}
+#condition{
     display: inline-block;
+    width: 200px;
 }
-.search-condition{
-    display: inline-block;
-    width: 100px;
+#keyword{
+	border: 1px solid lightgray;
+	width: 400px;
 }
-#search-keyword{
-    display: inline-block;
-    width: 350px;
+
+/* ------------- reset search value ------------- */
+#reset-search{
+	display: inline-block;
+	color: #2985DB;
+	width: 160px;
+	align-content: center;
 }
-#search-form button{
-    margin-top: -5px;
+#reset-search:hover{
+	cursor: pointer;
 }
 
 /*------------- attraction list -------------*/
@@ -36,15 +42,28 @@ thead tr{
     text-align: center;
 }
 
-.attraction-name-td{
+.attraction-list{
     text-align: center;
 }
-.attraction-name{
-    display: inline-block;
-    width: 200px;
+.attraction-name-td:hover{
+	cursor:pointer;
+}
+.attraction-name-td{
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
     margin-bottom: 0;
     text-align: center;
+}
+
+/* ------------- pagination ------------- */
+.attraction-list-pagination{
+    margin-top: 90px;
+    display: flex;
+    justify-content: center;
+    align-itmes: center;
+    
+}
+.attraction-list-pagination>.pagination span:hover{
+		cursor: pointer;
 }
