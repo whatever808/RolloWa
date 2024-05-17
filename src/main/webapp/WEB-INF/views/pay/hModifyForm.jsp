@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+<c:set var="contextPath" value="${ pageContext.request.contextPath }" />
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<!-- 사인관련 스크립트 -->
+ 
+ 		<!-- 사인관련 스크립트 -->
 		<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
 		<!-- ------------ -->
@@ -19,14 +20,10 @@
 
     <!-- 결재신청서 공통스타일 -->
     <link href="${contextPath}/resources/css/pay/writer.css" rel="stylesheet">
-    
-    
-    <!-- TinyMCE 에디터 CDN 연결 -->
-	   <script src="https://cdn.tiny.cloud/1/kv8msifnng66ha7xgul5sc6cehyxcp480zm27swyti7b7u38/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-	   <!-- TinyMCE 관련 스크립트 -->
-	   <script src="${ contextPath }/resources/js/board/editor.js"></script>
- <style>
-       .b-example-divider {
+   	
+<style>
+		
+    .b-example-divider {
         width: 100%;
         height: 3rem;
         background-color: rgba(0, 0, 0, .1);
@@ -153,44 +150,42 @@
 	    BACKGROUND: WHITE;
 	    BORDER: 1PX SOLID WHITE;
     }
-    </style>
+		
+</style>
 
 </head>
 <body>
-	<!-- <script src="${contextPath}/resources/js/pay/paymodal.js"></script> -->
-	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
-	 <!-- content 추가 -->
+
+
+		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
+		
+       <!-- content 추가 -->
         <div class="content p-4">
             <!-- 프로필 영역 -->
             <div class="informations">
                 <!-- informations left area start -->
                 <div class="left_con">
-                    <div><h3>지출결의서</h3></div>
-	                    	<form action="${contextPath}/pay/jReportUpdate.do" method="post" enctype="multipart/form-data">
+                    <div><h3>휴직신청서</h3></div>
+	                      <form action="${contextPath}/pay/hReportUpdate.do" method="post" id="myForm">
+	                    	
                         <div id="sign_top">
                             <div id="sign_div_left">
                                 <table border="1" id="sign_left">
                                     <tr>
                                         <th>부 서</th>
                                         <td>${member.get(0).teamName}</td>                   
-                                        <input type="hidden" name="deptName" value="${member.get(0).teamName}">
-                                        <input type="hidden" name="draftNo" value="${list.get(0).DRAFT_NO}">
-                                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
-                                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
-                                        <input type="hidden" name="documentNo" value="${list.get(0).DOCUMENT_NUMBER}">
-                                        <input type="hidden" name="writerName" value="${member.get(0).userName}">
-                                        <input type="hidden" name="writerName" value="${member.get(0).userNo}">
-                                                                      
+                                        <input type="hidden" name="writerNo" value="${ list.get(0).PAYMENT_WRITER_NO}">                                                                                                              
+                                        <input type="hidden" name="retireNo" value="${ list.get(0).RETIRE_NO}">                                                                                                              
+                                        <input type="hidden" name="approvalNo" value="${ list.get(0).APPROVAL_NO}">                                                                                                              
                                     </tr>
                                     <tr>
                                         <th>기안일</th>
-                                        <td><input type="date" name="writerDate" required></td>
+                                        <td><input type="date" name="writerDate" required value="${list.get(0).REGIST_DATE}"></td>
                                     </tr>
                                     <tr>
                                         <th>기안자</th>
                                         <td>${member.get(0).userName}</td>
-                                        <input type="hidden" name="payWriter" value="${list.get(0).PAYMENT_WRITER}">
-                                        <input type="hidden" name="payWriterNo" value="${list.get(0).PAYMENT_WRITER_NO}">
+                                        <input type="hidden" name="writerName" value="${member.get(0).userName}">
                                     </tr>
                                     <tr>
                                         <th>상태</th>
@@ -203,9 +198,11 @@
                                     </tr>
                                 </table>
                             </div>
+                           
+
                             <div>
                                 <table id="sign_table">
-                                		<div style="margin: -12px">
+                                		<div style="margin: 10px">
                                         <button data-izimodal-open="#modal" id="modal_btn"><h4>결&nbsp;&nbsp;재&nbsp;&nbsp;승&nbsp;&nbsp;인</h4></button>
                                 		</div>
 		                                <div id="modal">
@@ -275,18 +272,9 @@
                                             </div>
                                    	<tr id="tr_name">
                                         <th rowspan="3">승 <br> 인</th>
-                                        <c:choose>
-	                                        <c:when test="${ empty list }">
-		                                        <td id="f_name">최초승인자</td>
-		                                        <td id="m_name">중간승인자</td>
-		                                        <td id="l_name">최종승인자</td>
-		                                      </c:when>
-	                                        <c:otherwise>
-	                                        	<td id="f_name">${ list.get(0).FIRST_APPROVAL }</td>
-		                                        <td id="m_name">${ list.get(0).MIDDLE_APPROVAL }</td>
-		                                        <td id="l_name">${ list.get(0).FINAL_APPROVAL }</td>
-	                                        </c:otherwise>
-                                        </c:choose>
+                                        	<td id="f_name">${ list.get(0).FIRST_APPROVAL }</td>
+	                                        <td id="m_name">${ list.get(0).MIDDLE_APPROVAL }</td>
+	                                        <td id="l_name">${ list.get(0).FINAL_APPROVAL }</td>
                                     </tr>
                                     <tr>
                                         <td class="sing_name"></td>
@@ -296,72 +284,43 @@
                                 </table>
                             </div>
                         </div>
-                        
-                        <div id="mid_btn">
-                            <button id="plus_btn" type="button">추가</button>
-                            <button id="del_btn" type="button">삭제</button>
-                        </div>
-                       
-                         <div class="table_middle">
-		                         <input type="hidden" name="firstApproval" id="first_name" class="namecheck" value="${ list.get(0).FIRST_APPROVAL }">
-		                         <input type="hidden" name="middleApproval" id="middle_name" class="namecheck" value="${ list.get(0).MIDDLE_APPROVAL }">
-		                         <input type="hidden" name="finalApproval" id="last_name" class="namecheck" value="${ list.get(0).FINAL_APPROVAL }"> 
-                            <table border="1" id="tr_table">
+
+                        <div class="table_middle">
+                        	 <input type="hidden" name="firstApproval" id="first_name" class="namecheck" value="${ list.get(0).FIRST_APPROVAL }">
+	                         <input type="hidden" name="middleApproval" id="middle_name" class="namecheck" value="${ list.get(0).MIDDLE_APPROVAL }">
+	                         <input type="hidden" name="finalApproval" id="last_name" class="namecheck" value="${ list.get(0).FINAL_APPROVAL }"> 
+                            <table id="tr_table" border="1">
                                 <tr>
-                                    <th>거래처</th>
-                                    <th>사용내역 및 용도</th>
-                                    <th>금액</th>
-                                </tr>
-	                               	<c:forEach var="i" begin="0" end="${ list.size() - 1 }">
-		                               	<tr>
-		                                   	<td><input type="text" name="account${i}" value="${ list.get(i).ACCOUNT }"></td>
-		                                    <td><input type="text" name="usage${i}" value="${ list.get(i).CONTENT }"></td>
-		                                    <td class="num"><input type="text" name="price${i}"  value="${ list.get(i).AMOUNT }"></td>
-		                                </tr>
-		                              </c:forEach>
-                           </table>
-                           <table>
-                                <tr>
-                                    <th colspan="2">합계</th>
-                                    <td><input type="text" name="totalPrice" value="${ list.get(0).SUM }"></td>
+                                    <th>제목</th>
+                                    <td><input type="text" name="title" value="${ list.get(0).RETIRE_TITLE }" required></td>
                                 </tr>
                                 <tr>
-                                    <th colspan="2">부가가치세</th>
-                                    <td><input type="text" name="vat" value="${ list.get(0).VAT }"></td>
+                                    <th>성명</th>
+                                    <td><input type="text" value="${ list.get(0).PAYMENT_WRITER}" readonly></td>
+                                    
                                 </tr>
                                 <tr>
-                                    <th colspan="2">총 지출 합계</th>
-                                    <td><input type="text" name="totalExpendPrice"  value="${ list.get(0).TOTAL_SUM }"></td>
+                                    <th>소속</th>
+                                    <td><input type="text" value="${ list.get(0).DEPARTMENT}" readonly></td>
                                 </tr>
                                 <tr>
-                                    <th>파일첨부</th>
-                                    <td colspan="2">
-                                    	<input type="file"  name="uploadFiles" multiple>
+                                    <th>기간</th>
+                                    <td id="date_td"><input type="date" value="${list.get(0).START_PERIOD}" name="startDate" required> ─ 
+                                    <input type="date" value="${list.get(0).LAST_PERIOD}" name="endDate" required></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <th>사유</th>
+                                    <td>
+                                        <textarea id="" cols="30" rows="10" name="content" required>${ list.get(0).RETIRE_CONTENT}</textarea>
                                     </td>
                                 </tr>
-                               <c:if test="${ not empty list }">
-                                <tr id="trFile">
-                                  <th>기존첨부파일</th> 
-                                  <td colspan="2">
-                                   <!-- 기존의 첨부파일 목록들 -->
-		                            		<c:forEach var="at" items="${ fileList }">
-		                            			<div class="attach">
-		                            				<a href="${contextPath}${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${at.ORIGIN_NAME}">${at.ORIGIN_NAME}</a>
-		                            				<span class="origin_del" data-fileno="${ at.FILE_NO }">x</span>
-		                            			</div>
-		                            		</c:forEach>
-                                  </td>
-                                </tr>
-                               </c:if>
                             </table>
-                               <input type="hidden" name="fileLength" value="${ fileList.size() }">
                         </div>
                         <!--버튼 영역-->
                         <div id="btn_div">
-
-                            <button type="submit" class="btn btn-primary" id="submit_btn">제출</button>
- 
-                            <button type="button" class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
+                        		<button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
+                            <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
                             <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
                         </div>
                         <!------------>
@@ -370,117 +329,36 @@
             </div>
         </div>
         
-        <script>
-        $(document).ready(function(){
-        	$(document).on("click", ".origin_del", function(){
-        		
-        		let inputEl = document.createElement("input");
-        		inputEl.value = $(this).data("fileno");
-        		inputEl.name = "delFileNo";
-        		inputEl.type = "hidden";
-        		
-        		$("#sign_top").append(inputEl);
-        		
-        		$(this).closest(".attach").remove();
-        		
-        		
-        	})
-        })
-        
-        </script>
-        
-        
-        <script>
-        	$(document).ready(function(){
-        		let atlength = $(".attach").length;
-        		$("#fileLength").val(atlength);
-        		console.log($("#fileLength").val(atlength));
-        	  
-        		if($(".attach").length == 0){
-        			$("#trFile").remove();
-        		}
-        		
-        		/*
-        		if($("#trFile").children(".attach").length == 0){
-        			
-        		}
-        		*/
-        	})
-        </script>
-        
-       <script>
-       $(document).ready(function(){
-    	   let arr = [];
-          	$(document).on("click", ".origin_del", function(){
-          			
-          			arr.push($(this).data("fileno"));
-          			
-          			
-          			$("#fileDelete").val(arr);
-          			
-          			$(this).parent().remove();
-          			
-          	})
-    	   
-       })
-       
-       
-       </script>
-       
-       <script>
-	    	function submitbtn(){
-   					let itemArr = [];
-   					let countArr = [];
-   					let salesArr = [];
-   					//금액
-	    		$(".item").each(function(){
-					 		if($(this).val().trim() != ""){
-					 			itemArr.push($(this).val());
-							}
-	        })
-	        
-	        $("#items").val(itemArr);
-	     					
-	    					//수량
-	   			$(".count").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			countArr.push($(this).val());
-						}
-	         })
-	         $("#counts").val(countArr);
-	    					
-	   					// 매출금액
-	    		$(".sales_amount").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			salesArr.push($(this).val());
-						}
-	          })
-	         $("#sales_amounts").val(salesArr);	
-	
-	         if(confirm('정말로 제출하시겠습니까?') == true){}
-	                
-	       }
-   	</script>
+    <c:if test="${ not empty list }">
+    <script>
+    	$(document).ready(function(){
+    			$("#status").val("${list.get(0).PAYMENT_STATUS}");
+    			$("#sales").val("${list.get(0).SALES_DIVISION}")
+    	})
+    </script>
+    </c:if>
+     
+    <script>
+    	
+    	$(document).ready(function(){
+    	
+    		$("#insertBtn").on("click", function(){
+	    		$(".namecheck").each(function(){
+		    		if($(this).val() == ""){
+		    			alert("승인자를 선택해주세요.");
+		    			return false;
+		    		}
+	    		})	    	
+    		})
+    	})
+    	
+    </script>
+   
+ 
+    
     
     <script>
     $(document).ready(function(){
-    	
-    	let i = 10;
-    	$(document).on("click", "#plus_btn", function () {
-    		
-    		let result = "<tr>";
-    		result += "<td><input type='text' name='account" + (i) + "'></td>";
-    		result += "<td><input type='text' name='usage" + (i) + "'></td>";
-    		result += "<td class='num'><input type='text' name='price" + (i) + "'></td>";
-    		result += "</tr>";
-    		i++;
-    		
-       $("#tr_table").children().last().after(result);
-       
-       
-    	});
-    	
-    	
     	$(document).on("click", "#del_btn", function () {
     	    //$("#tr_table tr:last-child").remove();
     	    $("#tr_table").children("tr").last().remove();
@@ -646,9 +524,11 @@
             $('#modal2').iziModal('open');
         });
     </script>
-	
-	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
-	
-
+        
+        
+        
+   <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
+   
+    
 </body>
 </html>

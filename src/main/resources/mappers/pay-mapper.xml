@@ -1583,6 +1583,62 @@
 		
 		</select>
 		
+		<update id="updateHreport">
+			update RETIRE_REPORT
+				 SET START_PERIOD = #{startDate}
+					 , LAST_PERIOD = #{endDate}
+					 , RETIRE_CONTENT = #{content}
+					 , RETIRE_TITLE = #{title}
+			 WHERE STATUS = 'H'
+			   AND RETIRE_NO = #{retireNo}
+		</update>
+		
+		
+		
+		<update id="updateBReport">
+			update FIXTURES_REPORT
+				 set 
+							DEPT_NAME = #{deptName}
+						,	WRITER_NAME = #{writerName}
+						,	FIX_TITLE = #{title}
+						,	TOTAL_SUM = #{totalSum}
+						,	ETC_CONTENT = #{etcList}
+			  where FIX_NO = #{fixNo}
+		</update>
+		
+		<delete id="deleteBItem">
+			delete from ITEM
+			 where REPORT_NO = #{reportNo}
+			   and REPORT_TYPE = #{reportType}
+		</delete>
+		
+		<insert id="updateInsertItemsB">
+				insert 
+				  into
+				    ITEM
+				    (
+				      REPORT_NO
+				    , REPORT_TYPE
+				    , PRODUCT_NAME
+				    , PRODUCT_SIZE
+				    , QUANTITY
+				    , UNIT_PRICE
+				    , PRICE
+				    , NOTE
+				    )
+				    values
+				    (
+				      #{reportNo}
+				    , #{reportType}
+				    , #{pName}
+				    , #{size}
+				    , #{amount}
+				    , #{unitPrice}
+				    , #{price}
+				    , #{etc}
+				     )
+		</insert>
+		
 		
 		
 	  

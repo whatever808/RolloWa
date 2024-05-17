@@ -318,13 +318,13 @@ public class PayService {
 	public int jReportUpdate(Map<String, Object> map, List<Map<String, Object>> list 
 							,List<Map<String, Object>> fileList, String[] delFileNo) {
 		
-		//1.매출보고서테이블 등록
+		//1.매출보고서테이블 업데이트
 		int result1 = payDao.updateJReport(map);
 		
-		//2_1.아이템품목 등록하기전에 삭제하기..
+		//2_1.아이템품목 업데이트하기전 삭제
 		int result2 = payDao.deleteJItem(map);
 		
-		//2_2.품목공동테이블 등록
+		//2_2.품목공동테이블 업데이트
 		int result3 = 1;
 		if(!list.isEmpty()) {
 			result3 = 0;
@@ -332,13 +332,14 @@ public class PayService {
 				result3 += payDao.updateInsertItemsJ(item); // insert재사용
 			}				
 		}
-		//3.결재이력공동테이블 등록
+		//3.결재이력공동테이블 업데이트
 	    int result4 = payDao.updateApproval(map);
 	    
-	    //4_1. 파일 등록하기전에 기존파일삭제하는데 기존파일이 넘어올경우..
+	    //4_1. 파일 등록하기전에 기존파일삭제하는데 기존파일이 넘어올경우 먼저 삭제하고
 	    if(delFileNo != null) {
 	    	int result5 = payDao.deleteAttachment(delFileNo);
 	    }
+	    
 	    //4_2. 파일 새로추가한거 등록하기
 	    int result6 = 1;
 	    for(Map<String, Object> uploadFile : fileList) {
@@ -374,5 +375,45 @@ public class PayService {
 		return payDao.delayDateSearchList(userMap, pi);
 	}
 	
+	
+	public List<Map<String, Object>> retireModify(Map<String, Object> map){
+		return payDao.retireModify(map);
+	}
+	
+	
+	public int hReportUpdate(Map<String, Object> map){
+		
+		//1.휴가보고서테이블 업데이트
+		int result1 = payDao.updateHreport(map);
+		
+		//2.공동테이블 업데이트
+		int result2 = payDao.updateApproval(map);
+		
+		return result1 + result2;
+	}
+	
+	public int bReportUpdate(Map<String, Object> map, List<Map<String, Object>> itemList) {
+		
+		//1.비품신청서 업데이트
+		int result1 = payDao.updateBReport(map);
+		
+		int result2 = 1;
+		//2.아이템등록하기전 삭제
+		if(!itemList.isEmpty() && itemList != null) {
+			result2 = payDao.deleteBItem(map);
+		}
+		//3.아이템업데이트
+		int result3 = 1;
+		for(Map<String, Object> item : itemList) {
+			if( item != null && !item.isEmpty()) {
+				result3 = 0;
+				result3 = payDao. updateInsertItemsB(item);								
+			}
+		}
+		//4.결재공동테이블 업데이트 approval
+		int result4 = payDao.updateApproval(map);
+		
+		return result1 * result2 * result3 * result4;
+	}
 	
 }

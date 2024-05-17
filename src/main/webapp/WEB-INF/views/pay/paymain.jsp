@@ -258,7 +258,7 @@
                                 </div>
                                 <div id="cen_bottom_search_center">
                                 			<c:choose>
-                                				<c:when test="${ not empty userAllList or not empty userSearchList or not empty userSearchList}">
+                                				<c:when test="${ not empty userAllList or not empty userAllListSelect or not empty userSearchList}">
                                 					 <form action="${contextPath}/pay/userSearch.do" method="get">
                                 				</c:when>
                                 				<c:when test="${ not empty delayDate or not empty delayDateSelect or not empty delayDateSearch}">
@@ -278,7 +278,7 @@
                                         <input type="text" name="keyword" value="${ search.keyword }"  id="search_input" class="form-control" placeholder="검색어를 입력하세요" style="width: 400px;">
                                        
                                         <c:choose>
-                                        	<c:when test="${ not empty userAllList or not empty userSearchList or not empty userSearchList}">
+                                        	<c:when test="${ not empty userAllList or not empty userAllListSelect or not empty userSearchList}">
                                         	 <div class="input-group-append">
                                         		<button type="submit" id="user_mybutton">
                                            	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
@@ -448,19 +448,8 @@
 													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSelectList.do?page=${pi.currentPage+1}&conditions=${map.conditions}&status=${map.status}">Next</a></li>
 													             </ul>
                                    	</c:when>
-                                   		<c:when test="${not empty delayDateSearch }">
-                                			<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">Previous</a></li>
-													                
-													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${p}&condition=${map.condition}&keyword=${map.keyword}">${ p }</a></li>
-													                </c:forEach>
-													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">Next</a></li>
-													             </ul>
-                                   	</c:when>
-                                   	<c:otherwise>
-                                   		<ul class="pagination">
+                                   	<c:when test="${not empty delayDateSearch }">
+													             <ul class="pagination">
 		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">Previous</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
@@ -468,6 +457,17 @@
 													                </c:forEach>
 													                
 													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">Next</a></li>
+													             </ul>
+                                   	</c:when>
+                                   	<c:otherwise>
+                                   		<ul class="pagination">
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">Previous</a></li>
+													                
+													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${p}&condition=${map.condition}&keyword=${map.keyword}">${ p }</a></li>
+													                </c:forEach>
+													                
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">Next</a></li>
 													             </ul>
                                    	</c:otherwise>
                                    </c:choose>
@@ -506,12 +506,6 @@
         });
     });
 	</script>
-	
-	<!-- search가 비워져있지않을때 실행되는 스크립트구문 -->
-	
-	
-	<!-- clistCount 값이 있을때 실행되는 스크립트 구문 -->
-
 	
 	<c:choose>
 		<c:when test="${ not empty params }">
@@ -557,14 +551,6 @@
 			
 			</script>
 		</c:when>
-		
-		
-		
-		
-		
-		
-		
-		
 		<c:when test="${not empty userAllListSelect}">
 				<script>
 					$(document).ready(function(){

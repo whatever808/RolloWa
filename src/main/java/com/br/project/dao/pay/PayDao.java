@@ -328,4 +328,29 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.delayDateSelectList", userMap, rowBounds);
 	}
 	
+	public List<Map<String, Object>> retireModify(Map<String, Object> map){
+		return sqlSessionTemplate.selectList("payMapper.retireDetail", map);
+	}
+	
+	public int hReportUpdate(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.hReportUpdate", map);
+	}
+	
+	public int updateHreport(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.updateHreport", map);
+	}
+	
+	public int updateBReport(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.updateBReport", map);
+	}
+	
+	public int deleteBItem(Map<String, Object> map) {
+		return sqlSessionTemplate.delete("payMapper.deleteBItem", map);
+	}
+	
+	public int updateInsertItemsB(Map<String, Object> item) {
+		return sqlSessionTemplate.insert("payMapper.updateInsertItemsB", item);
+	}
+	
+	
 }

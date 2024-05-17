@@ -393,6 +393,28 @@
                         </ul>
                     </div>
                 </li>
+                <!-- 전자결재 -->
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#approval-collapse" aria-expanded="false">
+                        전자결재
+                    </button>
+                    <div class="collapse" id="approval-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="${contextPath}/pay/paymain.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재Home</a></li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재함</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재작성하기</a>
+                            </li>
+                            <li><a href="#"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">내문서함</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 <li class="border-top my-3"></li>
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
