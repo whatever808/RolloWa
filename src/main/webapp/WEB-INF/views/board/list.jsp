@@ -163,7 +163,9 @@
 	
 	 </div>
 	 <!-- content 끝 -->
-	
+	<div>
+		<button type="button" onclick="sendMsg();">메세지 보내기</button>
+	</div>
 	<!-- chat floating -->
 	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />
 
@@ -173,6 +175,11 @@
 <script>
 	//페이지 로드 즉시 실행되어야할 functions ===========================================================================
 	$(document).ready(function(){
+		
+		/* ===== 기웅 추가 ===== */
+				console.log("ready 실행");
+		/* ===== 기웅 추가 ===== */
+		
 		// 노출 URL값 변경
 		if((location.href).endsWith('${ contextPath }/board/list.do')){
 			history.pushState(null, null, "${ contextPath }/board/list.do?page=1&category=&department=&condition=&keyword=")
@@ -206,7 +213,23 @@
 			// 2) "검색 취소" 버튼 활성화
 			$("#reset-search").removeClass("d-none");
 		}	
-	})	
+	})
+	/*
+	$(window).on("load",function() {
+		console.log("load 실행");
+		if(${flag == 'Y'}) {
+			// [기웅] 부서 공지사항 등록 시 부서원들에게 알림 전송
+			alram.send(JSON.stringify({ teamCode : '${loginMember.teamCode}', boardNo : '${boardNo}' }));
+		}
+	})
+	*/
+	
+	function sendMsg() {
+		if(${flag == 'Y'}) {
+			// [기웅] 부서 공지사항 등록 시 부서원들에게 알림 전송
+			alram.send(JSON.stringify({ teamCode : '${loginMember.teamCode}', boardNo : '${boardNo}' }));
+		}
+	}
 	
 	// 게시글 카테고리값 변경(== 카테고리별 게시글 조회요청) ==============================================================================
 	function categoryChange(option){

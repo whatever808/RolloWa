@@ -562,14 +562,13 @@
 								
         <div class="b-example-divider b-example-vr"></div>
 				<script>
-					let alram;
-					let chatting;
+					var alram;
+					var chatting;
 					var stompClient;
 					
 					$(document).ready(function() {
 						// 알람용 웹소켓 연결
 						alram = new SockJS("${contextPath}/alram");
-						
 						// 알람 수신 시 alert 발생
 						alram.onmessage = function(evt) {
 							const obj = JSON.parse(evt.data);
@@ -578,7 +577,6 @@
 								alertify.success('공지사항 페이지로 이동'); }
 			                , function(){ alertify.error('Cancel')}).set('labels', {ok:'이동하기', cancel:'취소'});;
 						}
-						
 					})
 					
 				</script>

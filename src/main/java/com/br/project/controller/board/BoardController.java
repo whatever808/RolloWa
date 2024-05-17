@@ -65,6 +65,13 @@ public class BoardController {
 			//model.addAttribute("departmentList", departmentService.selectDepartmentList("DEPT01"));		// 부서 목록
 			model.addAttribute("filter", filter);
 			
+			/* ===== 기웅 추가 ===== */
+			if(filter.get("flag") != null) {
+				model.addAttribute("flag", filter.get("flag"));
+				model.addAttribute("boardNo", filter.get("boardNo"));
+			}
+			/* ===== 기웅 추가 ===== */
+			
 			return "/board/list";
 			
 		}catch(Exception e) {
@@ -301,9 +308,7 @@ public class BoardController {
 			board.setRegistEmp(writerNo);
 			board.setModifyEmp(writerNo);
 			board.setAttachmentList(attachmentList);
-			if(board.getCategory().equals("")) {
-				log.debug("board : {}", board);
-			}
+			
 			int result = boardService.insertBoard(board);
 			
 			String status = board.getStatus().equals("Y") ? "등록" : "저장";
@@ -319,7 +324,17 @@ public class BoardController {
 			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);	
 			
 			/* ===== 기웅 추가 ===== */
-						
+			String flag = null;
+			
+			// 부서 공지사항일 경우
+			if(!board.getCategory().equals("")) {
+				flag = "Y";
+				
+				// 공지사항 글 번호 조회
+				int boardNo = boardService.selectLatestBno(board.getCategory());
+				redirectAttributes.addFlashAttribute("flag", flag);
+				redirectAttributes.addFlashAttribute("boardNo", String.valueOf(boardNo));
+			}			
 			/* ===== 기웅 추가 =====*/
 		}catch(Exception e) {
 			e.printStackTrace();

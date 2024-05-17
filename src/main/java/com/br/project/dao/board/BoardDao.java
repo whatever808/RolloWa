@@ -89,6 +89,12 @@ public class BoardDao {
 	public int updateBoardStatus(HashMap<String, Object> params) {
 		return sqlSessionTemplate.update("boardMapper.updateBoardStatus", params);
 	}
+
+	// 기웅 추가
+	// 부서의 최신 공지사항 글 번호 조회
+	public int selectLatestBno(String teamCode) {
+		return sqlSessionTemplate.selectOne("boardMapper.selectLatestBno", teamCode);
+	}
 	
 	
 	

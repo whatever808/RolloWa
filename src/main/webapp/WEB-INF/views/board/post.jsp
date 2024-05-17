@@ -119,13 +119,6 @@
 		}else{
 			console.log("내용 작성");
 		}
-		
-		// [기웅] 부서 공지사항 등록 시 부서원들에게 알림 전송
-		if($("input[name=status]").val() == 'Y') {
-			if($("select[name=category]").val() != "") {
-				alram.send(JSON.stringify({ teamCode : '${loginMember.teamCode}' }));
-			}
-		}
 	}
 	
 </script>
