@@ -11,7 +11,10 @@
     <!-- 모달 관련 -->
     <script src="${contextPath}/resources/js/iziModal.min.js"></script>
     <link rel="stylesheet" href="${contextPath}/resources/css/iziModal.min.css">
-
+    
+    <!-- 싸인 관련 -->
+		<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
 <style>
     #table_y{ width: 800px; display: flex; flex-direction: column;  margin: auto; text-align: center;}
     #table_y tbody{width: 800px;}
@@ -54,11 +57,38 @@
      }
  
     #btn_div button{margin: 10px; margin-top: 50px;}
-
+    
+    
+		#signature { border:1px solid #000; }
+		#save, #clear { padding:5px 20px; border:0; color:#fff; background:#000; margin-top:5px; }
 </style>
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
+
+<script>
+	var canvas = $("#signature")[0];
+	var signature = new SignaturePad(canvas, {
+		minWidth : 2,
+		maxWidth : 2,
+		penColor : "rgb(0, 0, 0)"
+	});
+	
+	$("#clear").on("click", function() {
+		signature.clear();
+	});
+	
+	$("#save").on("click", function() {
+		if(signature.isEmpty()) {
+			alert("내용이 없습니다.");
+		} else {
+			var data = signature.toDataURL("image/png");
+			window.open(data, "test", "width=600, height=200, scrollbars=no");
+		}
+	});
+</script>
+
+
 
         <!-- content 추가 -->
         <div class="content p-4">
@@ -79,7 +109,7 @@
 								                    <th style="width: 120px;">${list.get(0).FINAL_APPROVAL}</th>
 								                </tr>
 								                <tr>
-								                    <td style="height: 80px;"></td>
+								                    <td style="height: 80px;"><button class="btn btn-danger" data-izimodal-open="#modal2">싸인</button></td>
 								                    <td></td>
 								                    <td></td>
 								                </tr>
@@ -169,7 +199,17 @@
             </div>
         </div>
         
+        <div id="modal2">
+		        <div class="m_content_style">
+		        <canvas id="signature" width="600" height="200"></canvas>
+                <div>
+									<button id="save">Save</button>
+									<button id="clear">Clear</button>
+								</div>      
+		        </div>
+		    </div>
         
+   
        
     		 <div id="modal">
 		        <div class="m_content_style">
@@ -197,6 +237,23 @@
        $("#modal-test").on('click', function () {
 
            $('#modal').iziModal('open'); // 모달을 출현
+
+       });
+    </script>	
+    <script>
+       $('#modal2').iziModal({
+           title: '싸인',
+           headerColor: '#FEEFAD', // 헤더 색깔
+           theme: '', //Theme of the modal, can be empty or "light".
+           padding: '15px', // content안의 padding
+           radius: 10, // 모달 외각의 선 둥글기
+          
+       });
+       
+       // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
+       $("#modal-test").on('click', function () {
+
+           $('#modal2').iziModal('open'); // 모달을 출현
 
        });
     </script>	
