@@ -9,7 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 
-public class loginCheckInterceptor implements HandlerInterceptor{
+public class LoginCheckInterceptor implements HandlerInterceptor{
 
 	/**
 	 *@method : 컨트롤러에 서비스요청전, 클라이언트의 로그인여부 체크

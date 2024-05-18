@@ -158,7 +158,7 @@
 		<if test="userNo != null and !userNo.equals('')">
 			and (tb_board.regist_emp = #{userNo} or tb_board.modify_emp = #{userNo})
 		</if>
-     order by to_number(board_no) desc
+     order by tb_board.modify_date desc
 	</select>
 	
 	<!-- 공지사항 조회수 증가 -->
@@ -239,16 +239,17 @@
 	</insert>	
 	
 	<!-- 공지사항 수정 -->
-	<update id="updateBoard" parameterType="BoardDto">
+	<update id="updateBoard" parameterType="hashmap">
 		update tb_board
 		   set 
 		   	    title = #{title}
-		   	   ,content = REPLACE(REPLACE(#{content}, CHR(13), ''), CHR(10), '')
+		   	   ,content = #{content}
 		   	   ,category = #{category}
 		   	   ,status = #{status}
 		   	   ,modify_date = sysdate
+		   	   ,modify_emp = #{modifyEmp}
 		 where board_no = #{boardNo}
-	</update>
+	</update>	<!--  REPLACE(REPLACE(#{content}, CHR(13), ''), CHR(10), '') -->
 	
 	<!-- 공지사항 상태 수정 or 공지사항 삭제 -->
 	<update id="updateBoardStatus" parameterType="string">

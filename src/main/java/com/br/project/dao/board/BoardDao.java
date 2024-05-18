@@ -73,16 +73,16 @@ public class BoardDao {
 	 * @param board : 등록할 공지사항 정보가 담긴 공지사항 객체
 	 * @return : 공지사항 등록 갯수
 	 */
-	public int insertBoard(HashMap<String, Object> board) {
-		return sqlSessionTemplate.insert("boardMapper.insertBoard", board);
+	public int insertBoard(HashMap<String, Object> params) {
+		return sqlSessionTemplate.insert("boardMapper.insertBoard", params);
 	}
 	
 	/**
 	 * @param board : 수정할 공지사항 정보가 담긴 공지사항 객체
 	 * @return : 공지사항 수정 갯수
 	 */
-	public int updateBoard(BoardDto board) {
-		return sqlSessionTemplate.update("boardMapper.updateBoard", board);
+	public int updateBoard(HashMap<String, Object> params) {
+		return sqlSessionTemplate.update("boardMapper.updateBoard", params);
 	}
 	
 	/**

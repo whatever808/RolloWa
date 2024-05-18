@@ -9,7 +9,7 @@
 	<title>공지사항 상세</title>
 	
 	<!-- 게시글상세페이지 스타일 -->
-   <link href="${ contextPath }/resources/css/board/detail.css" rel="stylesheet"> 
+  <link href="${ contextPath }/resources/css/board/detail.css" rel="stylesheet"> 
 </head>
 <body>
 	
@@ -72,10 +72,10 @@
 		        <div class="board-attachment-list">
 		
 		            <div class="attachment-list-info">
-		                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi show-hide show d-none" viewBox="0 0 16 16">
+		                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi show-hide show border-danger" viewBox="0 0 16 16">
 		                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 		                </svg>
-		                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi show-hide hide" viewBox="0 0 16 16">
+		                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi show-hide hide d-none border-primary" viewBox="0 0 16 16">
 		                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 		                </svg>
 		
@@ -87,7 +87,7 @@
 		                <ul class="list">
 		                    <c:forEach var="attachment" items="${ board.attachmentList }">
 			                    <li>
-			                        <a href="${ contextPath }${ attachment.attachPath }/${ attachment.modifyName }" class="file-link">
+			                        <a download="${ attachment.originName }" href="${ contextPath }${ attachment.attachPath }/${ attachment.modifyName }" class="file-link">
 			                            <span class="file-name">${ attachment.originName }</span>
 			                        </a>
 			                    </li>
@@ -101,7 +101,7 @@
 	        <!-- board content area start -->
 	        <div class="board-content-area">
 	            <div class="board-content" id="board-content">
-	                <!--<c:out value="${ board.content }" escapeXml="false" />-->
+	                <c:out value="${ board.content }" escapeXml="false" />
 	            </div>
 	        </div>
 	        <!-- board content area end -->
@@ -141,13 +141,10 @@
 
 <script>
 	$(document).ready(function(){
-		var data = '${ board.content }';
-		
-		$("#board-content").html(data);
-		
 	    // attachment list show or hide function start ------------------------------------------------------------------------
 	    $(".show-hide").on("click", function(){
 	        if($(this).hasClass("show")){       // 리스트 노출요청
+	        	console.log("나와라 참깨");
 	            // 첨부파일 리스트 보여주기
 	            $(".attachment-list").removeClass("d-none");
 	
@@ -158,6 +155,7 @@
 	            $(this).siblings(".hide").removeClass("d-none");
 	
 	        }else if($(this).hasClass("hide")){ // 리스트 숨김요청
+	        	console.log("숨어라 참깨");
 	            // 첨부파일 리스트 숨김처리
 	            $(".attachment-list").addClass("d-none");
 	

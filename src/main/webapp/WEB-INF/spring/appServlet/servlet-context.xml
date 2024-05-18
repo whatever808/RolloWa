@@ -40,10 +40,21 @@
 	
 	<!-- Interceptors -->
 	<interceptors>
+		<!-- 로그인 체크 인터셉터 -->
 		<interceptor>
 			<mapping path="/board/*" />
-			<beans:bean class="com.br.project.interceptor.loginCheckInterceptor" id="loginCheckInterceptor" />
+			<beans:bean class="com.br.project.interceptor.LoginCheckInterceptor" id="loginCheckInterceptor" />
 		</interceptor>
+		
+		<!-- 게시글 관리권한 체크 인터셉터 -->
+		<interceptor>
+			<mapping path="/board/publisher/*" />
+			<mapping path="/board/temp/*" />
+			<mapping path="/board/modify.*" />
+			<mapping path="/board/*/modify.*" />
+			<beans:bean class="com.br.project.interceptor.board.BoardAuthorizationCheckInterceptor" id="boardAuthorizationCheckInterceptor" />
+		</interceptor>
+		
 	</interceptors>
 	
 

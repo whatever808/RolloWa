@@ -279,7 +279,7 @@
 					// 생성할 페이징바 태그 문자열
 					pagination += "<li id='ajax' class='page-item " + (pageInfo.currentPage == 1 ? 'disabled ' : ' ' ) + "'" +
 												"onclick='" + (pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '') + "'>";
-					pagination +=	   "<span class='page-link' data-pageno='" + (pageInfo.getCurrentPage - 1) + "'>Previous</span>";
+					pagination +=	   "<span class='page-link' data-pageno='" + (pageInfo.currentPage - 1) + "'>Previous</span>";
 					pagination += "</li>";
 					
 					for(let page=pageInfo.startPage ; page<=pageInfo.endPage ; page++){

@@ -30,12 +30,12 @@
 	        <h1 class="page-title">공지사항 수정</h1>
 	
 	        <!-- board modify form start -->
-	        <form action="${ contextPath }/board/publisher/modify.do" method="post" id="modify-form" enctype="multipart/form-data">
+	        <form action="${ contextPath }/board/modify.do" method="post" id="modify-form" enctype="multipart/form-data">
 				
-				<!-- board no -->
-				<input type="hidden" name="boardNo" value="${ board.boardNo }">
-				
-				<!-- board category -->
+							<!-- board no -->
+							<input type="hidden" name="boardNo" value="${ board.boardNo }">
+							
+							<!-- board category -->
 	            <div class="field-group">
 	                <label for="board-category" class="field-title">게시판</label><br>
 	                <!-- board category -->
@@ -48,7 +48,7 @@
 	            <!-- board title -->
                 <div class="field-group">
                     <label for="board-title" class="field-title">글제목</label><br>
-                    <input type="text" id="board-title" placeholder="제목을 입력하세요." name="title" required value="${ board.title }">
+                    <input type="text" id="board-title" placeholder="제목을 입력하세요." name="title" value="${ board.title }">
                 </div>
 	
 	            <!-- board attachment -->
@@ -162,23 +162,30 @@
 	// 공지사항 저장형태값 지정 ========================================================================
 	function setBoardStatus(status){
 		$("input[name=status]").val(status);
-		formSubmit();
+		$(event.target).attr("type", "submit");
 	}
 	
-	// 공지사항 수정 요청 ====================================================================================================
-	function formSubmit(){
-		// 에디터에 작성된 내용을 [name=content]로 함께 전달
-		$("textarea#editor").val(tinymce.activeEditor.getContent("editor"));
-		$("#modify-form").submit();
+	// 공지사항 수정요청 =====================================================================================================
+	$("#modify-form").on("submit", function(){
+		let contentVal = $.trim(tinyMCE.get("editor").getContent({format: 'text'}));	// 내용값(앞뒤 공백제거)
+		let titleVal = $("input[name=title]").val().trim();	// 제목값(앞뒤 공백제거)		
 		
-		if($("#editor").val().trim().length == 0 || $("#editor").val().trim() == ''){
-			console.log("내용 미작성");
+		// 필수입력 항목 유효성 검사
+		if(contentVal.length != 0 && titleVal.length != 0){
+			// 등록할 공지사항 내용값 파라미터 추가
+			$("textarea[name=content]").val(tinymce.activeEditor.getContent("editor"));
+			return true;
 		}else{
-			console.log("내용 작성");
+			if(titleVal.length == 0){
+				alert("공지사항 제목을 입력해주세요.");
+				$("input[name=title]").select();
+			}else if(contentVal.length == 0){
+				alert("공지사항 내용을 입력해주세요.");
+				tinymce.activeEditor.focus();
+			}
+			
+			return false;
 		}
-	}
-	
-	
-	
+	})
 </script>
 </html>

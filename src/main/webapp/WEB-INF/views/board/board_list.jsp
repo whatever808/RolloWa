@@ -9,7 +9,7 @@
 	<title>공지사항</title>
 	
 	<!-- 게시글 목록페이지 스타일 -->
-	<link href="${ contextPath }/resources/css/board/publisher/list.css" rel="stylesheet" />
+	<link href="${ contextPath }/resources/css/board/list.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -19,16 +19,25 @@
 	 <!-- content 추가 -->
 	 <div class="content p-5">
 	
-	     <h1 class="page-title">등록공지보관함</h1>
+	     <h1 class="page-title">공지사항</h1>
 	
 		 <!-- about category start  -->
 	     <div id="filter-category">
 	     	 <!-- board category start -->
-		     <select id="category" name="category" class="board-category form-select" onchange="ajaxBoardList();" style="width:200px;">
+		     <select id="category" name="category" class="board-category form-select" onchange="categoryChange(this);" style="width:200px;">
+		         <option value="">전체공지사항</option>
 		         <option value="normal">일반공지사항</option>
-		         <option value="department" data-department="${ filter.department }">부서공지사항</option>
+		         <option value="department">부서공지사항</option>
 		     </select>
 		     <!-- board category end -->
+		     
+		     <!-- show when department board category was selected -->
+		     <select id="department" name="department" class="department-category form-select d-none" onchange="ajaxBoardList();">
+		     	<option value="">전체</option>
+		     	<c:forEach var="department" items="${ departmentList }">
+		     		<option value="${ department.code }">${ department.codeName }</option>
+		     	</c:forEach>
+		     </select>
 	     </div>
 		 <!-- about category end -->
 		 
@@ -60,7 +69,7 @@
 			    <!-- reset search value start -->
 			    <span id="reset-search" class="d-none">
 			     	<span>
-			   		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+			   			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
 							<path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
 							<path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
 						</svg>
@@ -126,11 +135,11 @@
 	         <div class="board-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
 	             <ul class="pagination">
 	             
-	             	<!-- Previous -->
-				      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
-						    onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '' }">
-				      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
-				      </li>
+            <!-- Previous -->
+			      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
+					    onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '' }">
+			      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
+			      </li>
 				    
 				    <!-- Page -->
 				    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
@@ -164,11 +173,23 @@
 <script>
 	//페이지 로드 즉시 실행되어야할 functions ===========================================================================
 	$(document).ready(function(){
-		console.log();
+		// 노출 URL값 변경
+		if((location.href).endsWith('${ contextPath }/board/list.do')){
+			history.pushState(null, null, "${ contextPath }/board/list.do?page=1&category=&department=&condition=&keyword=")
+		}
+		
 		// "카테고리별" 게시글 목록조회 요청했을 경우, 카테고리 선택값 지정
 		$("#category").children("option").each(function(){
 			$(this).val() == "${ filter.category }" && $(this).attr("selected", true);
 		})
+		
+		// "부서게시글" 목록조회 요청했을 경우, 부서 select 박스 선택값 지정 
+		if($("#category").val() == 'department'){
+			$("#department").removeClass("d-none");
+			$("#department").children("option").each(function(){
+				$(this).val() == "${ filter.department }" && $(this).attr("selected", true);
+			})	
+		}	
 		
 		// "키워드검색" 게시글 목록조회 요청했을 경우, 검색값 지정
 		if("${ filter.condition }".length != 0 && "${ filter.keyword != ''}".length != 0){
@@ -186,6 +207,16 @@
 			$("#reset-search").removeClass("d-none");
 		}	
 	})	
+	
+	// 게시글 카테고리값 변경(== 카테고리별 게시글 조회요청) ==============================================================================
+	function categoryChange(option){
+		// 1) 부서 선택 <select> 요소 숨김여부 처리
+		$(option).val() == 'department' ? $("#department").removeClass("d-none")
+												  : $("#department").addClass("d-none")
+														  				  .children("[value=all]").select();
+		// 2) 게시글 목록조회 요청
+		ajaxBoardList();
+	}
 	
 	// 키워드값 입력후 "Enter"를 눌렀을 경우 =========================================================================================
 	$("#keyword").on("keyup", function(){
@@ -212,6 +243,8 @@
 	$("#reset-search").on("click", function(){
 		// 1) 선택값 모두 초기화
 		$("#category").children().eq(0).prop("selected", "true");
+		$("#department").addClass("d-none")
+						.children().eq(0).prop("selected", "true");
 		$("#condition").children().eq(0).val("").prop("selected", "true");
 		$("#keyword").val("");
 		
@@ -237,12 +270,12 @@
 		
 		// 2) 게시글 목록조회 AJAX
 		$.ajax({
-			url:"${ contextPath }/board/publisher/list.ajax",
+			url:"${ contextPath }/board/list.ajax",
 			method:"get",
 			data:{
 				page:page,
 				category:$("#category").val(),
-				department:$("#category").children("[value=department]").data("department"),
+				department:$("#department").val(),
 				condition:$("#condition").val(),
 				keyword:$("#keyword").val()
 			},
@@ -268,18 +301,19 @@
 						list += 	"<td class='board-title' onclick='showDetail(" + boardList[i].boardNo + ", " + boardList[i].modifyEmp + ")'>" + boardList[i].title + "</td>";
 						list += 	"<td>";
 						list += 		"<img src='" + (boardList[i].profileURL == null ? "${ contextPath }/resources/images/defaultProfile.png"
-																					 					: boardList[i].profileURL) + "' alt ='profile image' class='board-writer-profile'>" 
+																					 	: boardList[i].profileURL) + "' alt ='profile image' class='board-writer-profile'>" 
 						list += 		"<span>" + boardList[i].writerName + "</span>";
 						list += 	"</td>";
 						list += 	"<td>" + boardList[i].modifyDate + "</td>";
 						list += 	"<td>" + boardList[i].readCount + "</td>";
 						list += 	"<td>" + (boardList[i].attachmentYN != 0 ? "🗂️" : "") + "</td>";
+						list += "</tr>";
 					}
 					
 					// 생성할 페이징바 태그 문자열
 					pagination += "<li id='ajax' class='page-item " + (pageInfo.currentPage == 1 ? 'disabled ' : ' ' ) + "'" +
 												"onclick='" + (pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '') + "'>";
-					pagination +=	   "<span class='page-link' data-pageno='" + (pageInfo.getCurrentPage - 1) + "'>Previous</span>";
+					pagination +=	   "<span class='page-link' data-pageno='" + (pageInfo.currentPage - 1) + "'>Previous</span>";
 					pagination += "</li>";
 					
 					for(let page=pageInfo.startPage ; page<=pageInfo.endPage ; page++){
@@ -300,11 +334,11 @@
 				
 				
 				// 2) URL 주소값 변경
-				history.pushState(null, null, "${ contextPath }/board/publisher/list.do?page=" + page +
-																											 "&category=" + $("#category").val() +
-																											 "&department=" + $("#category").children("[value=department]").data("department") +
-																											 "&condition=" + $("#condition").val() +
-																											 "&keyword=" + $("#keyword").val());
+				history.pushState(null, null, "${ contextPath }/board/list.do?page=" + page +
+																			"&category=" + $("#category").val() +
+																			"&department=" + $("#department").val() +
+																			"&condition=" + $("#condition").val() +
+																			"&keyword=" + $("#keyword").val());
 			},
 			error:function(){
 				console.log("SELECT BOARD LIST AJAX ERROR");
@@ -316,13 +350,18 @@
 	// 게시글 상세페이지 이동 ============================================================================================================
 	function showDetail(boardNo, writerNo){
 		let params = "category=" + $("#category").val() + "&"
-				     + "department=" +$("#category").children("[value=department]").data("department") +"&"
-				     + "condition=" + $("#condition").val() + "&"
-				     + "keyword=" + $("#keyword").val() + "&"
-				     + "no=" + boardNo;
+				   + "department=" + $("#department").val() +"&"
+				   + "condition=" + $("#condition").val() + "&"
+				   + "keyword=" + $("#keyword").val() + "&"
+				   + "no=" + boardNo;
 		
-		location.href = "${ contextPath }/board/publisher/detail.do?" + params;
-		
+		if(${ loginMember.userNo } == writerNo){
+			// 로그인한 사용자가 게시글 작성자일 경우(상세조회페이지)
+			location.href = "${ contextPath }/board/detail.do?" + params;
+		}else{
+			// 로그인한 사용자가 게시글 작성자가 아닐 경우(조회수증가 ==> 상세조회)
+			location.href = "${ contextPath }/board/reader/detail.do?" + params;
+		}
 	}
 
 </script>

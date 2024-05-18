@@ -73,12 +73,12 @@ public class BoardService {
 	 * @param board : 등록할 공지사항 정보
 	 * @method : 공지사항 등록 결과 (0 | 1)
 	 */
-	public int insertBoard(HashMap<String, Object> board){
+	public int insertBoard(HashMap<String, Object> params){
 		// 1) 게시글 등록
-		int result = boardDao.insertBoard(board);
+		int result = boardDao.insertBoard(params);
 		
 		// 2) 첨부파일이 있을경우, 첨부파일 등록
-		List<AttachmentDto> attachmentList = (List<AttachmentDto>)board.get("attachmentList");
+		List<AttachmentDto> attachmentList = (List<AttachmentDto>)params.get("attachmentList");
 		if(result > 0) {
 			if(attachmentList != null && !attachmentList.isEmpty()) {
 				for(AttachmentDto attachment : attachmentList) {
@@ -91,18 +91,15 @@ public class BoardService {
 	}
 	
 	/**
-	 * @param params : {"delFileNoArr" : {삭제할첨부파일 번호 배열객체}, 
-	 *                  "board" : {등록할 공지사항 정보가 담긴 공지사항 객체}}
+	 * @param params : 수정할 공지사항 정보, 등록할 첨부파일 정보, 삭제할 파일번호 배열
 	 * @method : 공지사항 수정 결과 (0 | 1)
 	 */
 	public int updateBoard(HashMap<String, Object> params) {
-		// 공지사항 수정에 사용할 파라미터
 		String[] delFileNoArr = (String[])params.get("delFileNoArr");
-		BoardDto board = (BoardDto)params.get("board");
-		List<AttachmentDto> uploadAttachmentList = board.getAttachmentList();
+		List<AttachmentDto> uploadFileList = (List<AttachmentDto>)params.get("uploadFileList");
 		
 		// 공지사항 수정
-		int result = boardDao.updateBoard(board);
+		int result = boardDao.updateBoard(params);
 		
 		// 공지사항 수정 성공시
 		if(result > 0) {
@@ -114,8 +111,8 @@ public class BoardService {
 			}
 			
 			// 등록할 첨부파일이 있을경우, 첨부파일 등록
-			if(uploadAttachmentList != null && !uploadAttachmentList.isEmpty()) {
-				for(AttachmentDto attachment : uploadAttachmentList) {
+			if(uploadFileList != null && !uploadFileList.isEmpty()) {
+				for(AttachmentDto attachment : uploadFileList) {
 					result = attachmentDao.insertBoardAttachment(attachment);
 				}
 			}
@@ -129,10 +126,10 @@ public class BoardService {
 	 *                  "fyn" : {첨부파일 유무('Y'|'N'}, 
 	 *                  "refType" : {BD}, 
 	 *                  "status" : {수정할 상태값('T'|'N')}}
-	 * @method : 공지사항 임시저장으로 변경 or 공지사항 삭제요청 처리용 메소드
+	 * @method : 공지사항 
 	 * @return :
 	 * 	  ㄴ case 01) 공지사항 임시저장으로 변경요청 : 상태값이 변경된 공지사항 갯수 (0 | 1)
-	 * 	  ㄴ case 02) 공지사항 삭제요청         : 삭제된(상태값이 변경된) 공지사항 갯수 (0 | 1)
+	 * 	  ㄴ case 02) 공지사항 삭제요청           : 삭제된(상태값이 변경된) 공지사항 갯수 (0 | 1)
 	 */
 	public int updateBoardStatus(HashMap<String, Object> params) {
 		// 공지사항 상태값 수정
@@ -140,7 +137,7 @@ public class BoardService {
 		
 		String attachmentYN = (String)params.get("fyn");
 		// 해당 공지사항 첨부파일이 있을경우, 첨부파일 상태값 수정
-		if(result > 0 && attachmentYN.equals("Y")) {
+		if(result > 0 && (attachmentYN !=null && attachmentYN.equals("Y"))) {
 			result = attachmentDao.updateBoardAttachmentStatus(params);
 		}
 		
