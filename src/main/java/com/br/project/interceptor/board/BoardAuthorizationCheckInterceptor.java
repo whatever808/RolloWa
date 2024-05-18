@@ -16,11 +16,11 @@ public class BoardAuthorizationCheckInterceptor implements HandlerInterceptor{
 	 * @interceptor : 게시글 등록 or 관리 관련 서비스 요청시 작성자 권한 유무체크
 	 */
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
-	
+			throws Exception {	
+		
 		MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
 		
-		if(loginMember.getPosition().equals("E") || loginMember.getPosition().equals("F")) {
+		if(loginMember.getPositionCode().equals("E") || loginMember.getPositionCode().equals("F")) {
 			return true;
 		}else {
 			FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);
@@ -31,7 +31,7 @@ public class BoardAuthorizationCheckInterceptor implements HandlerInterceptor{
 			
 			flashMapManager.saveOutputFlashMap(flashMap, request, response);
 			
-			response.sendRedirect(request.getHeader("Referer"));
+			response.sendRedirect(request.getContextPath());
 			
 			return false;
 		}
