@@ -195,14 +195,20 @@
 		  from tb_board
 		  join member on (user_no = modify_emp)
 		  left outer join attachment on (ref_type  = 'BD'
-		  									  and ref_no    = #{no}
-		  									  and attachment.status = #{status})
+					  									  and ref_no    = #{no}
+					  									  and attachment.status = #{status})
 		 where board_no = #{no}
 		   and tb_board.status   = #{status}
 	</select>
 	
+	<!-- 공지사항 번호조회 -->
+	<select id="selectPostedBoardNo" resultType="_int">
+		select seq_bdno.currval "boardNo"
+			from dual
+	</select>
+	
 	<!-- 공지사항 등록 -->
-	<insert id="insertBoard" parameterType="BoardDto">
+	<insert id="insertBoard" parameterType="hashmap">
 		insert
 			into tb_board
 				 (
@@ -220,16 +226,17 @@
 				 ,#{registEmp}
 				 ,#{modifyEmp}
 				 ,#{title}
-				 ,REPLACE(REPLACE(#{content}, CHR(13), ''), CHR(10), '')
+				 <!-- REPLACE(REPLACE(#{content}, CHR(13), ''), CHR(10), '') -->
+				 ,#{content}
 				 ,(
 				 	select upper_code
 				 	  from tb_group
-				 	 where group_code = 'TEAM01'
-				 	 	and code = #{category}
+				 	 where group_code like 'TEAM%'
+				 	 	 and code = #{category}
 				  )
 				 ,#{status}
 				)
-	</insert>
+	</insert>	
 	
 	<!-- 공지사항 수정 -->
 	<update id="updateBoard" parameterType="BoardDto">

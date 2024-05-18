@@ -30,9 +30,9 @@
           <h1 class="page-title">공지사항 등록</h1>
 
           <!-- board post form start -->
-          <form action="${ contextPath }/board/post.do" method="post" encType="multipart/form-data" id="post-form" >
+          <form id="post-form" method="post" enctype="multipart/form-data">
 							
-			  <!-- board category -->
+			  	<!-- board category -->
               <div class="field-group">
                   <label for="board-category" class="field-title">게시판</label><br>              
                   <select name="category" class="board-category form-select" id="board-category">
@@ -63,12 +63,13 @@
               <div class="button-group">
               	  <input type="hidden" name="status">
                   <button type="reset" class="btn btn-outline-warning">초기화</button>
-                  <button type="button" class="btn btn-outline-primary" onclick="setBoardStatus('Y');">등록하기</button>
-                  <button type="button" class="btn btn-outline-secondary" onclick="setBoardStatus('T');">임시저장</button>
+                  <button type="button" class="btn btn-outline-primary" id="post-board" onclick="ajaxFormSubmit('Y');">등록하기</button>
+                  <button type="button" class="btn btn-outline-secondary" id="temp-board" onclick="ajaxFormSubmit('T');">임시저장</button>
               </div>
 
           </form>
           <!-- board post form end-->
+          
 
       </div>
       <!-- post form end -->
@@ -102,15 +103,55 @@
 		}
 	})
 	
-	// 공지사항 저장형태값 지정 =================================================================================================
-	function setBoardStatus(status){
-		$("input[name=status]").val(status);
-		formSubmit();
+	// 공지사항 제출요청 =====================================================================================================
+	function ajaxFormSubmit(status){
+		let contentVal = $.trim(tinyMCE.get("editor").getContent({format: 'text'}));	// 내용값(앞뒤 공백제거)
+		let titleVal = $("input[name=title]").val().trim();	// 제목값(앞뒤 공백제거)
+		
+		// 필수입력 항목 유효성 검사
+		if(contentVal.length != 0 && titleVal.length != 0){
+			// 등록할 공지사항 내용값 파라미터 추가
+			$("textarea[name=content]").val(tinymce.activeEditor.getContent("editor"));
+			// 등록할 공지사항 상태값 파라미터 추가
+			$("input[name=status]").val(status);
+			
+			// 공지사항 등록 or 저장 요청
+			$.ajax({
+				url:"${ contextPath }/board/post.do",
+				method:"post",
+				data:new FormData($("#post-form")[0]),
+				contentType:false,
+				processData:false,
+				success:function(result){
+					if(result.result == 'SUCCESS'){
+						alert("공지사항이 " + (status == 'Y' ? '등록' : '저장') + " 되었습니다.");
+						if(status == 'Y'){
+							location.href = "${ contextPath }/board/publisher/detail.do?no=" + result.boardNo;						
+						}else if(status == 'T'){
+							location.href = "${ contextPath }/board/temp/detail.do?no=" + result.boardNo;						
+						}
+					}else{
+						alert("공지사항 " + (status == 'Y' ? '등록' : '저장') + "이 실패되었습니다.");
+					}
+				},error:function(){
+					alert("공지사항 " + (status == 'Y' ? '등록' : '저장') + "요청에 실패했습니다.");
+				}
+			})
+		}else{
+			if(titleVal.length == 0){
+				alert("공지사항 제목을 입력해주세요.");
+				$("input[name=title]").select();
+			}else if(contentVal.length == 0){
+				alert("공지사항 내용을 입력해주세요.");
+				tinymce.activeEditor.focus();
+			}
+		}
 	}
 	
-	// 공지사항 수정 요청 ====================================================================================================
-	function formSubmit(){
-				// 에디터에 작성된 내용을 [name=content]로 함께 전달
+	// 공지사항 제출요청(origin) ====================================================================================================
+	/*
+		function formSubmit(){
+		// 에디터에 작성된 내용을 [name=content]로 함께 전달
 		$("textarea#editor").val(tinymce.activeEditor.getContent("editor"));
 		$("#post-form").submit();
 		
@@ -127,7 +168,7 @@
 			}
 		}
 	}
-	
+	*/
 </script>
 
 </html>

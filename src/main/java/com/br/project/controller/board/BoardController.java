@@ -12,10 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dto.board.BoardDto;
@@ -241,24 +243,22 @@ public class BoardController {
 			// 조회할 공지사항 상태값
 			params.put("status", request.getRequestURL().indexOf("temp") != -1 ? "T" : "Y");
 			
+			// String content = board.getContent().replaceAll("\"", "&quot;").replaceAll("/\\n/g", "");
+			// log.info(board.getContent().replaceAll("\"", "&quot;").replaceAll("/\\n/g", ""));
 			BoardDto board = boardService.selectBoard(params);
-			String content = board.getContent().replaceAll("\"", "&quot;").replaceAll("/\\n/g", "");
-			log.info(board.getContent().replaceAll("\"", "&quot;").replaceAll("/\\n/g", ""));
-			
-			
 			if(board != null) {
 				// 조회된 공지사항이 있을경우(유효한 공지사항)
 				model.addAttribute("board", board);
-				model.addAttribute("content", content);
+				// model.addAttribute("content", content);
 				if(request.getRequestURL().indexOf("publisher") != -1) {
 					// 등록공지보관함에서 공지사항 상세요청시(작성자)
-					return "board/publisher/detail";
+					return "board/publisher/publisher_board_detail";
 				}else if(request.getRequestURL().indexOf("temp") != -1) {
 					// 임시공지보관함에서 공지시항 상세요청시(작성자)
-					return "board/temp/detail";
+					return "board/temp/temp_board_detail";
 				}else {
 					// 공지목록페이지에서 공지사항 상세요청시(전체사용자)
-					return "board/detail";
+					return "board/board_detail";
 				}
 				
 			}else {
@@ -280,56 +280,47 @@ public class BoardController {
 	 */
 	@RequestMapping(value="/post.page")
 	public String showBoardPostForm() {
-		return "board/post";
+		return "board/board_post";
 	}
 	
 	/**
-	 * @method : 공지사항 등록
+	 * @method : 공지사항 등록 (AJAX)
 	*/ 
-	@RequestMapping(value="/post.do")
-	public String postBoard(BoardDto board
-						   ,List<MultipartFile> uploadFiles
-						   ,HttpServletRequest request
-						   ,RedirectAttributes redirectAttributes) {
-		try {
-			// 등록할 첨부파일 리스트
-			HashMap<String, Object> fileInfo = new HashMap<>();
-			fileInfo.put("category", "board");
-			fileInfo.put("refType", "BD");
-			fileInfo.put("refNo", board.getBoardNo());
-			fileInfo.put("status", board.getStatus());
-			List<AttachmentDto> attachmentList = fileUtil.getAttachmentList(uploadFiles, fileInfo);
-
-			// 공지사항 등록
-			String writerNo = String.valueOf(((MemberDto)(request.getSession().getAttribute("loginMember"))).getUserNo());
-			board.setRegistEmp(writerNo);
-			board.setModifyEmp(writerNo);
-			board.setAttachmentList(attachmentList);
-			if(board.getCategory().equals("")) {
-				log.debug("board : {}", board);
-			}
-			int result = boardService.insertBoard(board);
+	@RequestMapping(value="/post.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public Map<String, Object> ajaxPostBoard(MultipartHttpServletRequest request) {
+		// 첨부파일 업로드
+		HashMap<String, Object> fileInfo = new HashMap<>();
+		fileInfo.put("category", "board");
+		fileInfo.put("refType", "BD");
+		fileInfo.put("status", request.getAttribute("status"));
+		List<AttachmentDto> uploadFileList = fileUtil.getAttachmentList(request.getFiles("uploadFiles"), fileInfo);
+		
+		// 공지사항 등록 & 첨부파일 등록
+		HashMap<String, Object> params = getParameterMap(request);
+		String writerNo = String.valueOf(((MemberDto)(request.getSession().getAttribute("loginMember"))).getUserNo());
+		params.put("registEmp", writerNo);
+		params.put("modifyEmp", writerNo);
+		params.put("attachmentList", uploadFileList);
+		
+		// 처리결과에 따른 반환값 설정
+		Map<String, Object> response = new HashMap<>(); 
+		if(boardService.insertBoard(params) > 0) {
+			// 공지사항 등록 성공했을 경우
+			response.put("result", "SUCCESS");
+			response.put("boardNo", boardService.selectPostedBoardNo());
+		}else {
+			// 공지사항 등록 실패했을 경우
+			response.put("result", "FAIL");
 			
-			String status = board.getStatus().equals("Y") ? "등록" : "저장";
-			String alertMsg = "";
-			if(result > 0) {
-				// 공지사항 등록 성공
-				alertMsg = "공지사항이 " + status + " 되었습니다.";
-			}else {
-				// 공지사항 등록 실패
-				alertMsg = "공지사항 " + status + " 이 정상적으로 처리되지 않았습니다.";
+			if(!uploadFileList.isEmpty()) {
+				for(AttachmentDto delFile : uploadFileList) {
+					new File(delFile.getAttachPath(), delFile.getModifyName()).delete();
+				}
 			}
-			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 등록서비스");
-			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);	
-			
-			/* ===== 기웅 추가 ===== */
-						
-			/* ===== 기웅 추가 =====*/
-		}catch(Exception e) {
-			e.printStackTrace();
-			return "redirect:" + request.getDateHeader("Referer");
 		}
-		return "redirect:/board/list.do";
+		
+		return response;
 	}
 	
 	/**

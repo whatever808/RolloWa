@@ -62,12 +62,18 @@ public class BoardDao {
 		return sqlSessionTemplate.selectOne("boardMapper.selectBoard", params);
 	}
 	
+	/**
+	 * @return : 공지사항 등록성공시, 등록된 공지사항 번호
+	 */
+	public int selectPostedBoardNo() {
+		return sqlSessionTemplate.selectOne("boardMapper.selectPostedBoardNo");
+	}
 	
 	/**
 	 * @param board : 등록할 공지사항 정보가 담긴 공지사항 객체
 	 * @return : 공지사항 등록 갯수
 	 */
-	public int insertBoard(BoardDto board) {
+	public int insertBoard(HashMap<String, Object> board) {
 		return sqlSessionTemplate.insert("boardMapper.insertBoard", board);
 	}
 	

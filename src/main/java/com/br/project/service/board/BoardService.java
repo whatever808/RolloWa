@@ -63,15 +63,22 @@ public class BoardService {
 	}
 	
 	/**
-	 * @param board : 등록할 공지사항 정보가 담긴 공지사항 객체
+	 * @return : 공지사항 등록 성공시, 등록된 공지사항 번호
+	 */
+	public int selectPostedBoardNo() {
+		return boardDao.selectPostedBoardNo();
+	}
+	
+	/**
+	 * @param board : 등록할 공지사항 정보
 	 * @method : 공지사항 등록 결과 (0 | 1)
 	 */
-	public int insertBoard(BoardDto board){
+	public int insertBoard(HashMap<String, Object> board){
 		// 1) 게시글 등록
 		int result = boardDao.insertBoard(board);
 		
 		// 2) 첨부파일이 있을경우, 첨부파일 등록
-		List<AttachmentDto> attachmentList = board.getAttachmentList();
+		List<AttachmentDto> attachmentList = (List<AttachmentDto>)board.get("attachmentList");
 		if(result > 0) {
 			if(attachmentList != null && !attachmentList.isEmpty()) {
 				for(AttachmentDto attachment : attachmentList) {
