@@ -13,30 +13,6 @@
     font-family: "Jua";
 }
 
-/*-------------  input, textarea common -------------*/
-input, textarea {
-    font-size: 15px;
-    color: #222222;
-    width: fit-content;
-    border: none;
-    border-bottom: solid rgb(170, 170, 170) 1px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    position: relative;
-    background: none;
-    z-index: 5;
-}
-input:focus, textarea:focus { 
-    outline: none;
-    border-bottom: 2px solid rgb(0, 0, 0);  
-}
-.myfile{
-    display: flex;
-}
-.myfile>div{
-    border-bottom: 1px solid rgb(170, 170, 170); 
-}
-
 /* ------------- regist form ------------- */
 .field-group{
     margin-bottom: 50px;
@@ -48,26 +24,31 @@ input:focus, textarea:focus {
     margin-bottom: 10px;
 }
 
-#shop-name, #shop-manage-emp, #shop-intro{
+#shop-name, #shop-manage-emp, #shop-intro, #store-manager, #store-phone, input[name=statusReason]{
     width: 700px;
 }
 
-#shop-category, #shop-location, #capacity-limit{
+input[name=statusReason]{
+		margin-top: 30px;
+}
+
+#shop-category, #shop-location, #capacity-limit, #store-status, #manager{
     display: inline-block;
     width: 200px;
     margin-right: 60px;
 }
-input#work-hour{
+input#work-hour, input#contract-start{
     display: inline-block;
     margin-right: 50px;
 }
-input#work-hour-end{
+input#work-hour-end, input#contract-end{
     display: inline-block;
     margin-left: 50px;
 }
 
 .holiday-div{
-    display: inline-block;
+		display: flex;
+		display: inline-block;
     margin-left: 100px;
 }
 .holiday-cycle, .day-of-week{
@@ -80,9 +61,14 @@ input#work-hour-end{
     resize: none;
 }
 .button-group{
-    margin-left: 350px;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 200px;
 }
-#regist-form button{
-    margin-left: 20px;
+.button-group>button{
+	 width: 30%;
+    padding: 15px 0 15px 0;
+    font-size: 18px;
+    border-radius: 10px;
 }
 

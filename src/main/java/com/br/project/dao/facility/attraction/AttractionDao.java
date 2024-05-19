@@ -1,4 +1,4 @@
-package com.br.project.dao.facility;
+package com.br.project.dao.facility.attraction;
 
 import java.util.HashMap;
 import java.util.List;

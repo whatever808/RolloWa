@@ -1,4 +1,4 @@
-package com.br.project.controller.facility;
+package com.br.project.controller.facility.attraction;
 
 import static com.br.project.controller.common.CommonController.getParameterMap;
 
@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
-import com.br.project.service.facility.AttractionService;
+import com.br.project.service.facility.attraction.AttractionService;
 import com.br.project.service.location.LocationService;
 import com.br.project.util.FileUtil;
 import com.br.project.util.PagingUtil;
@@ -86,7 +86,7 @@ public class AttractionController {
 	public String showRegistPage(HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		try {
 			request.setAttribute("locationList", locationService.selectLocationList());
-			return "facility/attraction/regist";
+			return "facility/attraction/attraction_regist";
 		}catch(Exception e) {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("alertTitle", "어트랙션 등록서비스");

@@ -8,8 +8,8 @@
 	<meta charset="UTF-8">
 	<title>어트랙션 등록</title>
 	
-	<!-- 어트랙션 상세페이지 스타일 -->
-  <link href="${ contextPath }/resources/css/facility/attraction/attraction_detail.css" rel="stylesheet">
+	<!-- 어트랙션 등록페이지 스타일 -->
+  <link href="${ contextPath }/resources/css/facility/attraction/attraction_regist.css" rel="stylesheet">
 </head>
 <body>
 
@@ -72,7 +72,7 @@
 	
 	                <!-- if age-limit-y checked start -->
 	                <div class="age-limit d-none">
-	                    <input type="text" class="form-input" id="age-limit" name="ageLimit" placeholder="나이를 입력하세요.(숫자만)">
+	                    <input type="text" class="form-input text-center" id="age-limit" name="ageLimit" placeholder="나이를 입력하세요.(숫자만)">
 	                    <select class="form-select" name="ageLimitRange">
 	                        <option>이상</option>
 	                        <option>이하</option>
@@ -96,7 +96,7 @@
 	
 	                <!-- if height-limit-y checked start -->
 	                <div class="height-limit d-none">
-	                    <input type="text" class="form-input" id="height-limit" name="heightLimit" placeholder="키를 입력하세요.(숫자만)">
+	                    <input type="text" class="form-input text-center" id="height-limit" name="heightLimit" placeholder="키를 입력하세요.(cm단위, 숫자만)">
 	                    <select class="form-select" name="heightLimitRange">
 	                        <option>이상</option>
 	                        <option>이하</option>

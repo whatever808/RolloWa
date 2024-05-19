@@ -42,12 +42,6 @@
 	                </select>
 	            </div>
 	            
-	            <script>
-	            	$(".attraction-location").children("option").each(function(){
-	            		$(this).val() == "${ attraction.locationNo}" && $(this).attr("selected", true);
-	            	})
-	            </script>
-	            
 	            <div class="field-group">
 	                <label for="attraction-status" class="field-title">운영상태</label><br>
 	                <select class="attraction-status form-select" id="attraction-status" name="status">
@@ -57,12 +51,6 @@
 	                    <option value="CLOSED" class="show-reason">운영종료</option>
 	                </select>
 	            </div>
-	            
-	            <script>
-	            	$(".attraction-status").children("option").each(function(){
-	            		$(this).val() == "${ attraction.status }" && $(this).attr("selected", true);
-	            	})
-	            </script>
 	
 	            <div class="field-group">
 	                <label for="capacity-limit" class="field-title">수용가능 인원</label><br>
@@ -72,12 +60,6 @@
 	                    </c:forEach>
 	                </select>
 	            </div>
-	            
-	            <script>
-	            	$(".capacity-limit").children("option").each(function(){
-	            		$(this).val() == "${ attraction.customerLimit}" && $(this).attr("selected", true);
-	            	})
-	            </script>
 	
 	            <div class="field-group">
 	                <label class="field-title">연령제한</label><br>
@@ -102,19 +84,6 @@
 	                </div>
 	                <!-- if age-limit-y checked end -->
 	            </div>
-	            
-	            <script>
-	            	if(${ not empty attraction.ageLimit }){
-	            		$("#age-limit-y").attr("checked", true);
-	            		$(".age-limit").removeClass("d-none");
-	            		$("#age-limit").val("${ attraction.ageLimit }");
-	            		$("select[name=ageLimitRange]").children("option").each(function(){
-	            			$(this).val() == '${ attraction.ageLimitRange }' && $(this).attr("selected", true);
-	            		})
-	            	}else{
-	            		$("#age-limit-n").attr("checked", true);
-	            	}
-	            </script>
 	
 	            <div class="field-group">
 	                <label class="field-title">키제한</label><br>
@@ -139,19 +108,6 @@
 	                </div>
 	                <!-- if height-limit-y checked end -->
 	            </div>
-	            
-	            <script>
-	            	if(${ not empty attraction.heightLimit }){
-	            		$("#height-limit-y").attr("checked", true);
-	            		$(".height-limit").removeClass("d-none");
-	            		$("#height-limit").val("${ attraction.heightLimit }");
-	            		$("select[name=heightLimitRange]").children("option").each(function(){
-	            			$(this).val() == '${ attraction.heightLimitRange }' && $(this).attr("selected", true);
-	            		})
-	            	}else{
-	            		$("#height-limit-n").attr("checked", true);
-	            	}
-	            </script>
 	
 	            <div class="button-group">
 	                <button type="reset" class="btn btn-outline-warning">초기화</button>
@@ -222,6 +178,41 @@
 	    	
 	    	return true;
 	    })
+	    
+	    // 등록된 선택값 & 입력값 지정 ===========================================================================================
+	    if(${ not empty attraction.heightLimit }){
+    		$("#height-limit-y").attr("checked", true);
+    		$(".height-limit").removeClass("d-none");
+    		$("#height-limit").val("${ attraction.heightLimit }");
+    		$("select[name=heightLimitRange]").children("option").each(function(){
+    			$(this).val() == '${ attraction.heightLimitRange }' && $(this).attr("selected", true);
+    		})
+    	}else{
+    		$("#height-limit-n").attr("checked", true);
+    	}
+		
+			if(${ not empty attraction.ageLimit }){
+    		$("#age-limit-y").attr("checked", true);
+    		$(".age-limit").removeClass("d-none");
+    		$("#age-limit").val("${ attraction.ageLimit }");
+    		$("select[name=ageLimitRange]").children("option").each(function(){
+    			$(this).val() == '${ attraction.ageLimitRange }' && $(this).attr("selected", true);
+    		})
+    	}else{
+    		$("#age-limit-n").attr("checked", true);
+    	}
+			
+			$(".capacity-limit").children("option").each(function(){
+     		$(this).val() == "${ attraction.customerLimit}" && $(this).attr("selected", true);
+     	})
+     	
+     	$(".attraction-location").children("option").each(function(){
+     		$(this).val() == "${ attraction.locationNo}" && $(this).attr("selected", true);
+     	})
+     	
+     	$(".attraction-status").children("option").each(function(){
+     		$(this).val() == "${ attraction.status }" && $(this).attr("selected", true);
+     	})
 	
 	})
 </script>

@@ -55,6 +55,14 @@
 			<beans:bean class="com.br.project.interceptor.board.BoardAuthorizationCheckInterceptor" id="boardAuthorizationCheckInterceptor" />
 		</interceptor>
 		
+		<!-- 어트랙션 관리권한 체크 인터셉터 -->
+		<interceptor>
+			<mapping path="/attraction/manage/*" />
+			<mapping path="/attraction/regist.*" />
+			<mapping path="/attraction/modify.*" />			
+			<beans:bean class="com.br.project.interceptor.facility.attraction.AttractionManageAuthorizationCheckInterceptor" id="attractionManageAuthorizationCheckInterceptor" />
+		</interceptor>
+		
 	</interceptors>
 	
 

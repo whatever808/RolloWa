@@ -1,11 +1,11 @@
-package com.br.project.service.facility;
+package com.br.project.service.facility.attraction;
 
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.br.project.dao.facility.AttractionDao;
+import com.br.project.dao.facility.attraction.AttractionDao;
 import com.br.project.dto.common.PageInfoDto;
 
 import lombok.RequiredArgsConstructor;
