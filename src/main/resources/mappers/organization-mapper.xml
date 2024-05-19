@@ -142,8 +142,6 @@
  	</select>
 
 
-	
-
 
 	<!-- 1. 부서 조회 -->
 	<select id="selectDepartment" resultMap="memberResult">
