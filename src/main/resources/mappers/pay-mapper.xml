@@ -1639,8 +1639,27 @@
 				     )
 		</insert>
 		
+		<update id="ajaxSign">
+			update approval
+			   set 
+			 where approval_no = #{no}
+		</update>
 		
 		
+		<select id="teamNameList" resultType="map">
+		   select 
+			       DISTINCT  TEAM_CODE
+			       ,  (SELECT CODE_NAME 
+			           FROM TB_GROUP G
+			           WHERE CODE = TEAM_CODE
+			            AND GROUP_CODE = 'TEAM01' 
+			         ) AS "TEAM_NAME"
+			       , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE = 'DEPT01' AND CODE = G.UPPER_CODE) AS "DEPT_NAME" 
+	        FROM
+	            MEMBER M
+	        JOIN TB_GROUP G ON M.TEAM_CODE = G.CODE AND G.GROUP_CODE = 'TEAM01'
+	        WHERE  G.UPPER_CODE IN ('A', 'B', 'C', 'D', 'E', 'F')
+		</select>
 	  
 	  
    

@@ -150,12 +150,140 @@
 	    BACKGROUND: WHITE;
 	    BORDER: 1PX SOLID WHITE;
     }
+    
+    .m_content_style{height: 800px; border: 1px black solid; display: flex; flex-wrap: wrap}
+		.deptNameModal{width: 30%; height: 80%; border: 1px solid black;}
+		#textForm {width:70%; }
+		
+		.team-container {
+    margin-bottom: 20px;
+		}
+		
+		.teams {
+		    position: relative;
+		    height: 200px; /* 적절한 높이로 설정 */
+		}
+		
+		.team {
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    visibility: hidden;
+		}
+		
+		.user-management {
+		    display: flex;
+		    gap: 20px;
+		    padding: 20px;
+		    font-family: Arial, sans-serif;
+		}
+		
+		.sidebar {
+		    flex: 1;
+		    border-right: 1px solid #ddd;
+		}
+		
+		.sidebar ul {
+		    list-style: none;
+		    padding: 0;
+		}
+		
+		.sidebar ul ul {
+		    margin-left: 20px;
+		}
+		
+		.sidebar li {
+		    margin: 5px 0;
+		}
+		
+		.sidebar li.selected {
+		    font-weight: bold;
+		}
+		
+		.user-list, .selected-users {
+		    flex: 2;
+		}
+		
+		.user-list table, .selected-users table {
+		    width: 100%;
+		    border-collapse: collapse;
+		    margin-bottom: 20px;
+		}
+		
+		.user-list th, .user-list td, .selected-users th, .selected-users td {
+		    border: 1px solid #ddd;
+		    padding: 8px;
+		    text-align: center;
+		}
+		
+		.user-list th, .selected-users th {
+		    background-color: #f4f4f4;
+		}
+		
+		.selected-users button {
+		    background-color: #4CAF50;
+		    color: white;
+		    border: none;
+		    padding: 5px 10px;
+		    cursor: pointer;
+		}
+		
+		.actions {
+		    display: flex;
+		    justify-content: flex-end;
+		    gap: 10px;
+		}
+		
+		.actions button {
+		    padding: 10px 20px;
+		    cursor: pointer;
+		}
+		
+		.actions button:first-child {
+		    background-color: #4CAF50;
+		    color: white;
+		    border: none;
+		}
+		
+		.actions button:last-child {
+		    background-color: #f44336;
+		    color: white;
+		    border: none;
+		}
+		
+		
 		
 </style>
 
 </head>
 <body>
-
+<script>
+	$(document).ready(function(){
+	    $(".deptDiv").click(function(){
+	
+	    const $p = $(this).next();
+	    console.log($p);
+	
+	    if($p.css("display") == "none"){
+	
+	        $(this).siblings("ul").slideUp();
+	
+	        $p.slideDown();
+	    }else{
+	        $p.slideUp();
+	    } 
+	    })
+	    
+	    
+	    
+	    
+	    
+	})
+	
+			
+</script>
 
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 		
@@ -211,75 +339,21 @@
                             <div>
                                 <table id="sign_table">
                                 		<div style="margin: 10px">
-                                        <button data-izimodal-open="#modal" id="modal_btn"><h4>결&nbsp;&nbsp;재&nbsp;&nbsp;승&nbsp;&nbsp;인</h4></button>
                                 		</div>
 		                                <div id="modal">
-		                                    <!-- Modal content -->
-		                                    <!-- 스타일에 한해서는 이런식으로 class명을 주시기 바랍니다. -->
 		                                    <div class="m_content_style">
-		                                        <div id="m_co_top">
-		                                            <div id="m_co1">
-		                                                    <button class="atag">총무부</button>
-		                                                    <ul>
-		                                                    	 <c:forEach var="l" items="${maDeptList}">
-																												 <button class="btn_result">${l.teamName}(${l.positionName}) ▶${l.userName}</button><br>
-																									 </c:forEach>
-		                                                    </ul>
-		                                                    
-		                                                    <button class="atag">운영부</button>
-		                                                    <ul>
-		                                                    	<c:forEach var="l" items="${operatDeptList}">
-		                                                        <button class="btn_result">${l.teamName}(${l.positionName}) ▶${l.userName}</button><br>
-		                                                    	</c:forEach>
-		                                                    </ul>
-		                                                    <button class="atag">마케팅부</button>
-		                                                    <ul>
-		                                                    	<c:forEach var="l" items="${marketDeptList}">
-		                                                        <button class="btn_result">${l.teamName}(${l.positionName}) ▶${l.userName}</button><br>
-		                                                    	</c:forEach>
-		                                                    </ul>
-		                                                    <button class="atag">FB</button>
-		                                                    <ul>
-		                                                      <c:forEach var="l" items="${fbDeptList}">
-		                                                        <button class="btn_result">${l.teamName}(${l.positionName}) ▶${l.userName}</button><br>
-		                                                    	</c:forEach>
-		                                                    </ul>
-		                                                    <button class="atag">인사부</button>
-		                                                    <ul>
-		                                                        <c:forEach var="l" items="${hrDeptList}">
-		                                                       		<button class="btn_result">${l.teamName}(${l.positionName}) ▶${l.userName}</button><br>
-		                                                    		</c:forEach>
-		                                                    </ul>
-		                                                    <button class="atag">서비스부</button>
-		                                                    <ul>
-		                                                        <c:forEach var="l" items="${serviceDeptList}">
-		                                                       		<button class="btn_result">${l.teamName}(${l.positionName}) ▶${l.userName}</button><br>
-		                                                    		</c:forEach>
-		                                                    </ul>
-		                                            </div>
-		                                            <div>
-		                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16" style="margin: 20px;">
-		                                                    <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708"/>
-		                                                    <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708"/>
-		                                                </svg>
-		                                            </div>
-		                                            <div id="m_co2"></div>
-		                                            <div id="reset_div">
-		                                                <div>
-		                                                    
-		                                                </div>
-		                                                <div>
-		                                                    <button id="reset_button">
-		                                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-dash-circle-fill" viewBox="0 0 16 16">
-		                                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1z"/>
-		                                                        </svg>
-		                                                    </button>
-		                                                </div>
-		                                            </div>
-                                                </div>
-                                            </div>
+		                                       
+                                        </div>
+                                    </div>
                                    	<tr id="tr_name">
-                                        <th rowspan="3">승 <br> 인</th>
+                                        <th rowspan="3">승 <br> 인
+                                        <button data-izimodal-open="#modal" id="modal_btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+																				  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+																				  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+																				</svg>
+                                        </button>
+                                        </th>
                                         <c:choose>
 	                                        <c:when test="${ empty list }">
 		                                        <td id="f_name">최초승인자</td>
@@ -303,7 +377,12 @@
                         </div>
                                   
                         <div>
-                        
+                        <table>
+                        	<tr>
+                        		<th>수신참조인</th>
+                        	</tr>
+                        	
+                        </table>
 										    </div>
                         <div id="mid_btn">
                             <button id="plus_btn" type="button">추가</button>
@@ -485,26 +564,6 @@
 	              return false;
 	          }
 	      })
-	
-	      $(document).ready(function(){
-	          $(".atag").click(function(){
-	
-	          const $p = $(this).next();
-	          console.log($p);
-	
-	          if($p.css("display") == "none"){
-	
-	              $(this).siblings("ul").slideUp();
-	
-	              $p.slideDown();
-	          }else{
-	              $p.slideUp();
-	          } 
-	          })
-	          
-	         
-	
-	      })
 	      
 	       $("#modal_btn").on("click", function(){
 		    	   	$("#f_name").text("");
@@ -562,22 +621,6 @@
 	              $("#middleb").val($(this).parent().prev().text());
 	              $("#m_co2").children().eq(1).prepend("<b>2차</b><br>[" + $(this).parent().prev().text() + "]<br>");
 	
-	
-	              /*
-	              let duplicateFound = false;
-	              for (let i = 0; i < childrenTextArray.length; i++) {
-	                  if ($(".btn_result").children().text() === childrenTextArray[i]) {
-	                      duplicateFound = true;
-	                      alert("중복된 승인자가 존재합니다.");
-	                      break; // 중복이 발견되면 루프를 중단합니다.
-	                  }
-	              }
-	              if (!duplicateFound) {
-	                  alert("2차 승인자로 선택하였습니다.");
-	                  $("#f_name").append(childrenTextArray[0]);
-	              }
-	              */
-	             
 	          }else if($("#m_co2").children().length == 3){
 	              alert("3차 승인자로 선택하였습니다.");
 	              $("#l_name").append(childrenTextArray[2].substring($(this).text().indexOf("▶") + 1));
@@ -602,17 +645,17 @@
             theme: '', //Theme of the modal, can be empty or "light".
             padding: '15px', // content안의 padding
             //radius: 10, // 모달 외각의 선 둥글기
-            width: '1000px',
+            width: '900px',
            
         });
-
+				/*
         // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
         $("#modal-test").on('click', function () {
             //event.preventDefault(); //위의 클릭 이벤트가 일어나는 동안 다른 이벤트가 발생하지 않도록해주는 명령어
 
-            $('#modal').iziModal('open');
+           // $('#modal').iziModal('open');
         });
-        
+        */
         
     </script>                            
                

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -319,8 +320,8 @@ public class PayController {
 		mapUserMember.put("userNo", userNo);
 		List<MemberDeptDto> member = payService.selectloginUserDept(mapUserMember);
 		
-		List<MemberDeptDto> teamList = payService.selectDepartment();
 		
+		List<MemberDeptDto> teamList = payService.selectDepartment();
 		List<Map<String, Object>> maDeptList = new ArrayList<>();
 		List<Map<String, Object>> operatDeptList = new ArrayList<>();
 		List<Map<String, Object>> marketDeptList = new ArrayList<>();
@@ -329,6 +330,9 @@ public class PayController {
 		List<Map<String, Object>> serviceDeptList = new ArrayList<>();
 		
 		
+		
+		//팀명
+		List<Map<String, Object>> teamNames = payService.teamNameList();
 		
 		// 총무부의 이름, 팀이름, 직급(부장,과장,차장)
 		
@@ -437,6 +441,8 @@ public class PayController {
 			model.addAttribute("member", member);
 			model.addAttribute("userName", userName);
 			model.addAttribute("userNo", userNo);
+			model.addAttribute("teamNames", teamNames);
+			
 			return "pay/mWriterForm";
 			
 		}else if(writer.equals("b")) {
@@ -1249,7 +1255,6 @@ public class PayController {
 	@PostMapping("/bReportUpdate.do")
 	public String bReportUpdate(@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes) {
 		
-			
 		List<Map<String, Object>> itemList = new ArrayList<>();
 		String reportNo = (String)map.get("reportNo");
 		String reportType = (String)map.get("reportType");
@@ -1276,6 +1281,14 @@ public class PayController {
 		}
 		
 		return "redirect:/pay/paymain.page";
+		
+	}
+	
+	@ResponseBody
+	@PostMapping("/ajaxSign.do")
+	public int ajaxSign(@RequestParam Map<String, Object> map) {
+		
+		return payService.ajaxSign(map);
 		
 	}
 

@@ -17,7 +17,7 @@
 <style>
     #table_y{ width: 800px; display: flex; flex-direction: column;  margin: auto; text-align: center;}
     #table_y tbody{width: 800px;}
-    #table_y th{ border: 1px solid gray; background-color: #f8f7f7;}
+    #table_y th{ border: 1px solid gray;}
     #table_y td{ border: 1px solid gray;}
     #tr_style th{width: 95px; text-align: center;}
     #tr_style td{width: 160px;}
@@ -83,11 +83,49 @@ $(document).ready(function(){
 	    if (signature.isEmpty()) {
 	        alert("내용이 없습니다.");
 	    } else {
-	        var data = signature.toDataURL("image/png");
-	        window.open(data, "test", "width=600, height=200, scrollbars=no");
+	    		
+	        var data = signature.toDataURL("image/jpeg");
+	        const image = canvas.toDataURL();
+	        
+	        console.log(data);
+	        console.log(image);
+	        /*
+	        const link = document.createElement("a");
+	        link.href = image;
+	        link.download = "PaintJS[🎨]";
+	        link.click();
+	        */
+	        var approvalName = "${list.get(0).FIRST_APPROVAL == userName ? 1 : list.get(0).MIDDLE_APPROVAL == userName ? 2 : list.get(0).FINAL_APPROVAL == userName ? 3 : 0}" 
+	        
+	        $.ajax({
+	        	url:"${contextPath}/pay/ajaxSign.do",
+	        	type:"post",
+	        	data:{
+	        		dataUrl:data,
+	        		signName:"${userName}",
+	        		no:"${list.get(0).APPROVAL_NO}",
+	        		approvalSignNo:approvalName
+	        	},
+	        	success:function(result){
+	        		if(result == "SUCCESS"){
+	        			alert("승인이 완료되었습니다.");
+	        		}
+	        	},
+	        	error:function(){
+	        		
+	        	}
+	        	
+	       
+	        	
+	        })
+	        
+	        
+	        //window.open(data, "test", "width=600, height=200, scrollbars=no");
 	    }
 	});
 });
+
+
 	
 	
 </script>
@@ -113,10 +151,7 @@ $(document).ready(function(){
 								                    <th style="width: 120px;">${list.get(0).FINAL_APPROVAL}</th>
 								                </tr>
 								                <tr>
-								                    <td style="height: 80px;">
-									                    	<button class="btn btn-danger" data-izimodal-open="#modal2">싸인</button>
-									                    
-								                    </td>
+								                    <td style="height: 80px;"></td>
 								                    <td>
 									                    <c:if test="${list.get(0).FIRST_APPROVAL eq userName}">
 									                    	<button class="btn btn-danger" data-izimodal-open="#modal2">싸인</button>
@@ -201,10 +236,14 @@ $(document).ready(function(){
 	                            <button class="btn btn-warning" id="end_button" onclick="successbtn();">최종승인</button>
 	                        </div>                        	
                         </c:if>
-                        	
+                        <div>
                         		<c:if test="${ list.get(0).PAYMENT_WRITER_NO eq userNo}">
-                         		<button class="btn btn-warning" id="modifyWriter" type="submit">수정</button>
+                         			<button class="btn btn-warning" id="modifyWriter" type="submit">수정</button>
                    					</c:if>
+                      	</div>
+                      	<div>
+                      			<button class="btn btn-danger" data-izimodal-open="#modal2">승인</button>
+                      	</div>
                         <!------------>
 								
 								     </div>

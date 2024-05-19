@@ -416,4 +416,15 @@ public class PayService {
 		return result1 * result2 * result3 * result4;
 	}
 	
+	
+	public int ajaxSign(Map<String, Object> map) {
+		return payDao.ajaxSign(map);
+	}
+	
+	public List<Map<String, Object>> teamNameList(){
+		return payDao.teamNameList();
+	}
+	
+	
+	
 }

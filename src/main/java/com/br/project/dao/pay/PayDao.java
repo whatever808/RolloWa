@@ -352,5 +352,14 @@ public class PayDao {
 		return sqlSessionTemplate.insert("payMapper.updateInsertItemsB", item);
 	}
 	
+	public int ajaxSign(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.ajaxSign", map);
+	}
+	
+	public List<Map<String, Object>> teamNameList(){
+		return sqlSessionTemplate.selectList("payMapper.teamNameList");
+	}
+	
+	
 	
 }
