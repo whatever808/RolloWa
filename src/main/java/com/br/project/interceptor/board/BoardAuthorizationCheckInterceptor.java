@@ -20,7 +20,7 @@ public class BoardAuthorizationCheckInterceptor implements HandlerInterceptor{
 		
 		MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
 		
-		if(loginMember.getPositionCode().equals("E") || loginMember.getPositionCode().equals("F")) {
+		if(loginMember != null && (loginMember.getPositionCode().equals("E") || loginMember.getPositionCode().equals("F"))) {
 			return true;
 		}else {
 			FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);

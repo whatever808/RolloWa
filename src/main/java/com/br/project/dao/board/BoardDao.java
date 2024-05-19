@@ -20,30 +20,30 @@ public class BoardDao {
 	private final SqlSessionTemplate sqlSessionTemplate;
 	
 	/**
-	 * @param filter : [카테고리], [부서코드], [검색조건], [검색키워드], [공지사항 상태값]
+	 * @param params : [카테고리], [부서코드], [검색조건], [검색키워드], [공지사항 상태값]
 	 * @return : 총 공지사항 갯수조회 (STATUS = "Y")
 	 */
-	public int selectTotalBoardCount(HashMap<String, Object> filter) {
-		return sqlSessionTemplate.selectOne("boardMapper.selectTotalBoardCount", filter);
+	public int selectTotalBoardCount(HashMap<String, Object> params) {
+		return sqlSessionTemplate.selectOne("boardMapper.selectTotalBoardCount", params);
 	}
 	
 	/**
-	 * @param filter   : [카테고리], [부서코드], [검색조건], [검색키워드], [공지사항/첨부파일 상태값]
+	 * @param params   : [카테고리], [부서코드], [검색조건], [검색키워드], [공지사항/첨부파일 상태값]
 	 * @param pageInfo : 페이징바 객체
 	 * @return : 공지사항 목록조회(페이지별)
 	 */
-	public List<BoardDto> selectBoardList(PageInfoDto pageInfo, HashMap<String, Object> filter){
+	public List<BoardDto> selectBoardList(PageInfoDto pageInfo, HashMap<String, Object> params){
 		RowBounds rowBounds = new RowBounds(pageInfo.getListLimit() * (pageInfo.getCurrentPage() - 1)
 										   ,pageInfo.getListLimit());
-		return sqlSessionTemplate.selectList("boardMapper.selectBoardList", filter, rowBounds);
+		return sqlSessionTemplate.selectList("boardMapper.selectBoardList", params, rowBounds);
 	}
 	
 	/**
-	 * @param filter : [부서코드], [카테고리], [검색조건], [검색키워드], [공지사항 상태값] ([글번호])
+	 * @param params : [부서코드], [카테고리], [검색조건], [검색키워드], [공지사항 상태값] ([글번호])
 	 * @return : 공지사항 목록조회(전체)
 	 */
-	public List<BoardDto> selectBoardList(HashMap<String, Object> filter){
-		return sqlSessionTemplate.selectList("boardMapper.selectBoardList", filter);
+	public List<BoardDto> selectBoardList(HashMap<String, Object> params){
+		return sqlSessionTemplate.selectList("boardMapper.selectBoardList", params);
 	}
 	
 	/**
@@ -70,7 +70,7 @@ public class BoardDao {
 	}
 	
 	/**
-	 * @param board : 등록할 공지사항 정보가 담긴 공지사항 객체
+	 * @param params : 등록할 공지사항 정보
 	 * @return : 공지사항 등록 갯수
 	 */
 	public int insertBoard(HashMap<String, Object> params) {
@@ -78,7 +78,7 @@ public class BoardDao {
 	}
 	
 	/**
-	 * @param board : 수정할 공지사항 정보가 담긴 공지사항 객체
+	 * @param params : 수정할 공지사항 정보가 담긴 공지사항 객체
 	 * @return : 공지사항 수정 갯수
 	 */
 	public int updateBoard(HashMap<String, Object> params) {
@@ -86,7 +86,7 @@ public class BoardDao {
 	}
 	
 	/**
-	 * @param params : {"no" : {수정/삭제할 공지사항번호}, "status" : {변경할 상태값('T'|'N')}}
+	 * @param params : 공지사항 상태 수정에 필요한 정보
 	 * @method : 공지사항 임시저장으로 변경 or 공지사항 삭제요청시 실행
 	 * @return :
 	 * 	  ㄴ case 01) 공지사항 임시저장으로 변경요청 : 상태값이 변경된 공지사항 갯수

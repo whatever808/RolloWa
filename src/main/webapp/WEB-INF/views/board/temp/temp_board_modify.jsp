@@ -33,7 +33,7 @@
 	        <form action="${ contextPath }/board/temp/modify.do" method="post" id="modify-form" enctype="multipart/form-data">
 				
 				<!-- board no -->
-				<input type="hidden" name="boardNo" value="${ board.boardNo }">
+				<input type="hidden" name="no" value="${ board.boardNo }">
 				
 				<!-- board category -->
 	            <div class="field-group">

@@ -228,6 +228,10 @@
 		$("#reset-search").removeClass("d-none");
 	}
 	
+	// 검색조건 값이 바뀌었을 경우
+	$("#condition").on("change", function(){
+		$("#keyword").val().trim().length != 0 && ajaxBoardList();
+	})
 	
 	// 게시글 목록조회 (비동기식) ================================================================================================
 	function ajaxBoardList(){

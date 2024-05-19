@@ -9,10 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -50,6 +48,7 @@ public class BoardController {
 	 */
 	@RequestMapping(value={"/list.do", "/publisher/list.do", "/temp/list.do"})
 	public String selectBoardList(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		
 		try {
 			StringBuffer requestURL = request.getRequestURL();
 			HashMap<String, Object> params = getParameterMap(request);
@@ -118,10 +117,12 @@ public class BoardController {
 						   "/detail/list.ajax", "/publisher/detail/list.ajax", "/temp/detail/list.ajax"})
 	@ResponseBody
 	public Object ajaxSelectBoardList(HttpServletRequest request){
+		
 		StringBuffer requestURL = request.getRequestURL();
 		
 		// 조회할 공지사항 상태값 지정
 		HashMap<String, Object> params = getParameterMap(request);
+		params.get("page");
 		if(requestURL.indexOf("temp") != -1) {
 			params.put("status", "T");
 		}else {
@@ -157,6 +158,7 @@ public class BoardController {
 	 */
 	@RequestMapping(value="/reader/detail.do")
 	public String increaseReadCount(HttpServletRequest request ,RedirectAttributes redirectAttributes) {
+		
 		try {
 			// 파라미터값
 			HashMap<String, Object> params = getParameterMap(request);
@@ -188,6 +190,7 @@ public class BoardController {
 	 */
 	@RequestMapping(value={"/detail.do", "/publisher/detail.do", "/temp/detail.do"})
 	public String showBoardDetail(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		
 		try {
 			HashMap<String, Object> params = getParameterMap(request);
 			params.put("status", request.getRequestURL().indexOf("temp") != -1 ? "T" : "Y");	// 등록상태
@@ -232,6 +235,7 @@ public class BoardController {
 	@RequestMapping(value="/post.do", produces="application/json; charset=utf-8")
 	@ResponseBody
 	public Map<String, Object> ajaxPostBoard(MultipartHttpServletRequest multiRequest) {
+		
 		// 첨부파일 업로드
 		HashMap<String, Object> fileInfo = new HashMap<>();
 		fileInfo.put("category", "board");
@@ -271,6 +275,7 @@ public class BoardController {
 	 */
 	@RequestMapping(value={"/modify.page", "/publisher/modify.page", "/temp/modify.page"})
 	public String showBoardModifyPage(HttpServletRequest request) {
+		
 		try {
 			// 수정자 소속부서 조회
 			String teamCode = ((MemberDto)request.getSession().getAttribute("loginMember")).getTeamCode();
@@ -305,6 +310,7 @@ public class BoardController {
 	 */
 	@RequestMapping(value={"/modify.do", "/publisher/modify.do", "/temp/modify.do"})
 	public String modifyBoard(MultipartHttpServletRequest multiRequest,  RedirectAttributes redirectAttributes) {
+		
 		redirectAttributes.addFlashAttribute("alertTitle", "공지사항 수정서비스");
 		try {
 			HashMap<String, Object> params = getParameterMap(multiRequest);
@@ -314,7 +320,7 @@ public class BoardController {
 			String[] delFileNoArr = (String[])params.get("delFileNoArr");
 			if(delFileNoArr != null && delFileNoArr.length != 0) {
 				params.put("delFileNoArr", delFileNoArr);
-				delAttachmentList = boardAttachmentService.selectAttachmentList(delFileNoArr);
+				delAttachmentList = boardAttachmentService.selectAttachmentList(params);
 			}
 			
 			// 첨부파일 업로드
@@ -408,6 +414,16 @@ public class BoardController {
 			// 공지사항 & 첨부파일 상태값 수정
 			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상태변경서비스");
 			if(boardService.updateBoardStatus(params) > 0) {
+				// 공지사항 삭제요청일 경우, 로컬저장소에 업로드된 파일 삭제
+				String attachmentYN = (String)params.get("fyn");
+				if(requestURL.indexOf("delete") != -1 && (attachmentYN != null && attachmentYN.equals("Y"))) {
+					params.put("refNo", params.get("boardNo"));
+					for(AttachmentDto attachment : boardAttachmentService.selectAttachmentList(params)) {
+						new File(attachment.getAttachPath(), attachment.getModifyName()).delete();
+					}
+				}
+				
+				// 재요청페이지 URL 지정
 				if(requestURL.indexOf("publisher") != -1) {
 					pageURL = "/board/publisher/list.do";
 				}else if(requestURL.indexOf("temp") != -1) {
@@ -428,6 +444,35 @@ public class BoardController {
 			return "redirect:" + request.getHeader("Referer");
 		}
 	
+	}
+	
+	/**
+	 * @method : 공지사항 일괄삭제(AJAX)
+	 */
+	@RequestMapping(value={"/publisher/delete.ajax", "/temp/delete.ajax"}, produces="text/html; charset=utf-8")
+	@ResponseBody
+	public String ajaxDeleteBoard(HttpServletRequest request) {
+		HashMap<String, Object> params = getParameterMap(request);
+		params.put("status", "N");
+		params.put("refType", "BD");
+		params.put("delBoardNoArr", params.get("delBoardNoArr[]"));
+		params.remove("delBoardNoArr[]");
+		List<AttachmentDto> delFileList = boardAttachmentService.selectAttachmentList(params);
+		params.put("fyn", !delFileList.isEmpty() ? "Y" : "N");
+		
+		// 공지사항 & 첨부파일 삭제
+		if(boardService.updateBoardStatus(params) > 0) {
+			// 업로드된 로컬저장소 파일삭제
+			if(!delFileList.isEmpty()) {
+				for(AttachmentDto delFile : delFileList) {
+					new File(delFile.getAttachPath(), delFile.getModifyName()).delete();
+				}
+			}
+			return "SUCCESS";
+		}else {
+			return "FAIL";
+		}
+		
 	}
 	
 	

@@ -39,7 +39,7 @@
 	
 	<!-- ======================================= "가림" 구역 start ======================================= -->
 	<!-- 첨부파일 조회 -->
-	<select id="selectBoardAttachmentList" resultMap="attachmentResultMap">
+	<select id="selectBoardAttachmentList" resultMap="attachmentResultMap" parameterType="hashmap">
 		select 
 			   file_no
 			  ,origin_name
@@ -47,11 +47,20 @@
 			  ,attach_path
 		  from attachment
 		<where>
-			<foreach item="fileNo" collection="array" open="file_no in(" separator="," close=")">
-				#{fileNo}
-			</foreach>
-		</where>  
+			<if test="delFileNoArr != null">
+				<foreach item="fileNo" collection="delFileArr" open="file_no in(" separator="," close=")">
+					#{fileNo}
+				</foreach>
+			</if>
+			<if test="delBoardNoArr != null">
+				and ref_type = #{refType}
+				<foreach item="refNo" collection="delBoardNoArr" open="and ref_no in (" separator="," close=")">
+				  #{refNo}			
+				</foreach>
+			</if>
+		</where>
 	</select>
+	
 	
 	<!-- 공지사항 첨부파일 등록 -->
 	<insert id="insertBoardAttachment" parameterType="AttachmentDto">
@@ -97,7 +106,14 @@
 		update attachment
 		   set status   = #{status}
 		 where ref_type = #{refType}
-		   and ref_no   = #{no}
+		 <if test="no != null and !no.equals('')">
+		   and ref_no = #{no}		 
+		 </if>
+		 <if test="delBoardNoArr != null">
+		 	 <foreach item="no" collection="delBoardNoArr" open="and ref_no in (" separator="," close=")">
+		 	 		#{no}
+		 	 </foreach>
+		 </if>
 	</update>
 	
 	<!-- ======================================= "가림" 구역 end ======================================= -->

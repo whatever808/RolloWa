@@ -80,6 +80,9 @@
 	         <table class="table table-hover">
 	             <thead class="table-light">
 	                 <tr>
+	                 		 <th>
+	                 		 		<input type="checkbox" id="del-all-boards">
+	                 		 </th>
 	                     <th>부서</th>
 	                     <th>제목</th>
 	                     <th>작성자</th>
@@ -92,12 +95,15 @@
 	                <c:choose>
 	                	<c:when test="${ empty boardList }">
 	                		<tr>
-	                			<td colspan="6">조회된 게시글이 없습니다.</td>
+	                			<td colspan="7">조회된 게시글이 없습니다.</td>
 	                		</tr>
 	                	</c:when>
 	                	<c:otherwise>
 	                		<c:forEach var="board" items="${ boardList }">
 	                 		<tr>
+	                 			<td>
+	                 				<input type="checkbox" name="delBoardNoArr" value="${ board.boardNo }">
+	                 			</td>
 	                      <td>${ board.category eq null ? "일반" : board.category }</td>
 	                      <td class="board-title" onclick="showDetail('${ board.boardNo }', '${ board.modifyEmp }');">${ board.title }</td>
 	                      <td>
@@ -113,12 +119,22 @@
 	                      </td>
 	                      <td>${ board.modifyDate }</td>
 	                      <td>${ board.readCount }</td>
-	                      <td>${ board.attachmentYN != 0 ? "🗂️" : "" }</td>
+	                      <td class="attachment-yn">${ board.attachmentYN != 0 ? "🗂️" : "" }</td>
 	                  	</tr>
 	                		</c:forEach>
 	                	</c:otherwise>
 	                </c:choose>
 	             </tbody>
+	             <tfoot>
+	             		<tr class="border-white">
+	             			<td class="trashcan-icon">
+	             				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="trash-icon" viewBox="0 0 16 16">
+											  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+											  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+											</svg>
+	             			</td>
+	             		</tr>
+	             </tfoot>
 	         </table>
 	         <!-- board list table end -->
 	
@@ -164,7 +180,6 @@
 <script>
 	//페이지 로드 즉시 실행되어야할 functions ===========================================================================
 	$(document).ready(function(){
-		console.log();
 		// "카테고리별" 게시글 목록조회 요청했을 경우, 카테고리 선택값 지정
 		$("#category").children("option").each(function(){
 			$(this).val() == "${ filter.category }" && $(this).attr("selected", true);
@@ -228,12 +243,15 @@
 		$("#reset-search").removeClass("d-none");
 	}
 	
+	// 검색조건 값이 바뀌었을 경우
+	$("#condition").on("change", function(){
+		$("#keyword").val().trim().length != 0 && ajaxBoardList();
+	})
 	
 	// 게시글 목록조회 (비동기식) ================================================================================================
 	function ajaxBoardList(){
 		// 1) 요청 페이지값 설정
-		let page = event.target.dataset.pageno == undefined ? 1
-																			 :event.target.dataset.pageno;
+		let page = $(event.target).data("pageno") == undefined ? 1 : $(event.target).data("pageno");
 		
 		// 2) 게시글 목록조회 AJAX
 		$.ajax({
@@ -256,7 +274,7 @@
 				// 조회된 게시글이 없을 경우
 				if(boardList.length == 0){
 					list += "<tr>";
-					list += 	"<td colspan='6'>조회된 게시글이 없습니다.</td>";
+					list += 	"<td colspan='7'>조회된 게시글이 없습니다.</td>";
 					list += "</tr>";
 				}
 				// 조회된 게시글이 있을 경우
@@ -264,6 +282,9 @@
 					// 생성할 리스트 태그 문자열
 					for(let i=0 ; i<boardList.length ; i++){
 						list += "<tr>";
+						list += 	"<td>";
+						list += 		"<input type='checkbox' name='delBoardNoArr' value='" + boardList[i].boardNo + "'>";
+						list += 	"</td>";
 						list += 	"<td>" + (boardList[i].category == null ? "일반" : boardList[i].category) + "</td>";
 						list += 	"<td class='board-title' onclick='showDetail(" + boardList[i].boardNo + ", " + boardList[i].modifyEmp + ")'>" + boardList[i].title + "</td>";
 						list += 	"<td>";
@@ -273,7 +294,7 @@
 						list += 	"</td>";
 						list += 	"<td>" + boardList[i].modifyDate + "</td>";
 						list += 	"<td>" + boardList[i].readCount + "</td>";
-						list += 	"<td>" + (boardList[i].attachmentYN != 0 ? "🗂️" : "") + "</td>";
+						list += 	"<td class='attachment-yn'>" + (boardList[i].attachmentYN != 0 ? "🗂️" : "") + "</td>";
 					}
 					
 					// 생성할 페이징바 태그 문자열
@@ -324,6 +345,58 @@
 		location.href = "${ contextPath }/board/publisher/detail.do?" + params;
 		
 	}
+	
+	// 체크박스를 이용한 다수 공지사항 일괄 삭제요청 ==============================================================================================
+	$("#del-all-boards").on("change", function(){	// 전체 공지사항 선택 | 해제
+		if($(this).prop("checked")){
+			$("#boardList").find("input[name=delBoardNoArr]").prop("checked", true);			
+		}else{
+			$("#boardList").find("input[name=delBoardNoArr]").prop("checked", false);
+		}	
+	})
+	
+	$(".trashcan-icon").on("click", function(){	// 
+		if($("#boardList").find(":checked").length == 0){
+			alert("선택된 공지사항이 없습니다.");
+		}else{
+			if(confirm("선택된 공지사항을 정말삭제하시겠습니까?")){
+				// 삭제할 공지사항 번호 배열추가
+				let delBoardNoArr = [];
+				$("#boardList").find("input[name=delBoardNoArr]").each(function(){
+					$(this).prop("checked") && delBoardNoArr.push($(this).val());
+				})
+				
+				// 공지사항 일괄삭제 요청
+				$.ajax({
+					url:"${ contextPath }/board/publisher/delete.ajax",
+					method:"get",
+					data:{delBoardNoArr: delBoardNoArr},
+					success:function(result){
+						if(result == 'SUCCESS'){
+							alert("공지사항이 삭제되었습니다.");
+							$(".page-item").each(function(){
+								console.log($(this));
+								$(this).hasClass("active") && console.log($(this));
+							})
+						}else if(result == 'FAIL'){
+							alert("공지사항 삭제에 실패했습니다.");
+						}
+						ajaxBoardList();
+					},error:function(){
+						alert("공지사항 삭제요청에 실패했습니다.");
+						console.log("DELETE BOARDS AJAX FAILED");
+					}
+				})
+			}
+		}
+	
+
+		
+		
+		
+		
+		
+	})
 
 </script>
 

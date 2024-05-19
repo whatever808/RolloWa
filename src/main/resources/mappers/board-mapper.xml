@@ -31,7 +31,7 @@
 
 
 	<!-- 총 공지사항 갯수조회 -->
-	<select id="selectTotalBoardCount" parameterType="map" resultType="_int">
+	<select id="selectTotalBoardCount" parameterType="hashmap" resultType="_int">
 		select count(*) totalBoards
 		  from tb_board
 		  left outer join member on (user_no = tb_board.modify_emp)
@@ -86,7 +86,7 @@
 	</select>
 
 	<!-- 공지사항 목록조회 -->
-	<select id="selectBoardList" parameterType="map" resultMap="boardResultMap">
+	<select id="selectBoardList" parameterType="hashmap" resultMap="boardResultMap">
 		select
 					 board_no
 					,title
@@ -252,11 +252,22 @@
 	</update>	<!--  REPLACE(REPLACE(#{content}, CHR(13), ''), CHR(10), '') -->
 	
 	<!-- 공지사항 상태 수정 or 공지사항 삭제 -->
-	<update id="updateBoardStatus" parameterType="string">
+	<update id="updateBoardStatus" parameterType="hashmap">
 		update tb_board
 		   set status   = #{status}
-		   	,modify_date = sysdate
-		 where board_no = #{boardNo}
+		   		,modify_date = sysdate
+		<if test="no != null and !no.equals('')">
+			<where>
+				board_no = #{no}
+			</where>
+		</if>
+		<if test="delBoardNoArr != null">
+			<where>
+				<foreach item="no" collection="delBoardNoArr" open="board_no in (" separator="," close=")">
+					#{no}
+				</foreach>
+			</where>
+		</if> 
 	</update>
   
 </mapper>

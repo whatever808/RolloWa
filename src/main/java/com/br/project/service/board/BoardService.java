@@ -22,28 +22,28 @@ public class BoardService {
 	private final AttachmentDao attachmentDao;
 	
 	/**
-	 * @param filter : [카테고리], [부서코드], [검색조건], [검색키워드], [공지사항 상태값]
+	 * @param params : [카테고리], [부서코드], [검색조건], [검색키워드], [공지사항 상태값]
 	 * @return : 총 공지사항 갯수(STATUS = 'Y')
 	 */
-	public int selectTotalBoardCount(HashMap<String, Object> filter) {
-		return boardDao.selectTotalBoardCount(filter);
+	public int selectTotalBoardCount(HashMap<String, Object> params) {
+		return boardDao.selectTotalBoardCount(params);
 	}
 	
 	/**
-	 * @param filter   : [카테고리], [부서코드], [검색조건], [검색키워드], [공지사항/첨부파일 상태값]
+	 * @param params   : [카테고리], [부서코드], [검색조건], [검색키워드], [공지사항/첨부파일 상태값]
 	 * @param pageInfo : 페이징바 객체
 	 * @return : 공지사항 목록(페이지별)
 	 */
-	public List<BoardDto> selectBoardList(PageInfoDto pageInfo, HashMap<String, Object> filter){
-		return boardDao.selectBoardList(pageInfo, filter);
+	public List<BoardDto> selectBoardList(PageInfoDto pageInfo, HashMap<String, Object> params){
+		return boardDao.selectBoardList(pageInfo, params);
 	}
 	
 	/**
-	 * @param filter : [부서코드], [카테고리], [검색조건], [검색키워드], [공지사항/첨부파일 상태값], ([글번호])
+	 * @param params : [부서코드], [카테고리], [검색조건], [검색키워드], [공지사항/첨부파일 상태값], ([글번호])
 	 * @return : 공지사항 목록(전체)
 	 */
-	public List<BoardDto> selectBoardList(HashMap<String, Object> filter){
-		return boardDao.selectBoardList(filter);
+	public List<BoardDto> selectBoardList(HashMap<String, Object> params){
+		return boardDao.selectBoardList(params);
 	}
 	
 	/**
@@ -56,7 +56,7 @@ public class BoardService {
 	
 	/**
 	 * @param params : [글번호], [부서코드], [공지사항/첨부파일 상태값], ([카테고리], [검색조건], [검색키워드])
-	 * @return : 공지사항 상세정보가 담긴 공지사항 객체
+	 * @return : 조회된 공지사항 상세정보
 	 */
 	public BoardDto selectBoard(HashMap<String, Object> params) {
 		return boardDao.selectBoard(params);
@@ -70,7 +70,7 @@ public class BoardService {
 	}
 	
 	/**
-	 * @param board : 등록할 공지사항 정보
+	 * @param params : 등록할 공지사항 정보
 	 * @method : 공지사항 등록 결과 (0 | 1)
 	 */
 	public int insertBoard(HashMap<String, Object> params){
@@ -126,10 +126,9 @@ public class BoardService {
 	 *                  "fyn" : {첨부파일 유무('Y'|'N'}, 
 	 *                  "refType" : {BD}, 
 	 *                  "status" : {수정할 상태값('T'|'N')}}
-	 * @method : 공지사항 
 	 * @return :
 	 * 	  ㄴ case 01) 공지사항 임시저장으로 변경요청 : 상태값이 변경된 공지사항 갯수 (0 | 1)
-	 * 	  ㄴ case 02) 공지사항 삭제요청           : 삭제된(상태값이 변경된) 공지사항 갯수 (0 | 1)
+	 * 	  ㄴ case 02) 공지사항 삭제요청         : 삭제된(상태값이 변경된) 공지사항 갯수 (0 | 1)
 	 */
 	public int updateBoardStatus(HashMap<String, Object> params) {
 		// 공지사항 상태값 수정
