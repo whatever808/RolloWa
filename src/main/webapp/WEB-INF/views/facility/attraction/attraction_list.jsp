@@ -9,7 +9,7 @@
 	<title>어트랙션 조회</title>
 	
 	<!-- 놀이기구목록페이지 스타일 -->
-   <link href="${ contextPath }/resources/css/facility/attraction/list.css" rel="stylesheet">
+  <link href="${ contextPath }/resources/css/facility/attraction/attraction_list.css" rel="stylesheet">
 </head>
 <body>
 
@@ -22,32 +22,32 @@
        <h1 class="page-title">어트랙션 조회</h1>
 
 	   <!-- location options start -->
-       <select class="attraction-location form-select d-inline-block me-5" style="width: 200px;">
-           <option value="">전체</option>
-           <c:forEach var="location" items="${ locationList }">
-	           <option value="${ location.locationNo }">${ location.locationName }</option>
-           </c:forEach>
-       </select>
-       <!-- location options end -->
+     <select class="attraction-location form-select d-inline-block me-5" style="width: 200px;">
+         <option value="">전체</option>
+         <c:forEach var="location" items="${ locationList }">
+          <option value="${ location.locationNo }">${ location.locationName }</option>
+         </c:forEach>
+     </select>
+     <!-- location options end -->
        
-       <!-- attraction status start -->
-       <select class="attraction-status form-select d-inline-block" style="width: 200px;">
-           <option value="">전체</option>
-           <option value="PENDING">운영예정</option>
-           <option value="OPERATING">운영중</option>
-           <option value="STOP">운영중지</option>
-           <option value="CLOSED">운영종료</option>
-       </select>
-       <!-- attraction status end -->
+     <!-- attraction status start -->
+     <select class="attraction-status form-select d-inline-block" style="width: 200px;">
+         <option value="">전체</option>
+         <option value="PENDING">운영예정</option>
+         <option value="OPERATING">운영중</option>
+         <option value="STOP">운영중지</option>
+         <option value="CLOSED">운영종료</option>
+     </select>
+     <!-- attraction status end -->
 	   <br>
-       <!-- about search start -->
+     <!-- about search start -->
 	   <div id="filter-search">
 	     	 <!-- search form start-->
 		     <div id="search-form" class="input-group">
 		       	
-		        <!-- search keyword start -->
+		      <!-- search keyword start -->
 			    <span class="form-outline" data-mdb-input-init>
-			        <input type="search" id="keyword" class="form-control" placeholder="어트랙션명 검색" aria-label="게시글 검색"/>
+			        <input type="search" id="keyword" class="form-control"placeholder="어트랙션명 검색" aria-label="게시글 검색"/>
 			    </span>
 			    <!-- search keyword end -->
 			    
@@ -78,7 +78,7 @@
        <div class="attraction-list">
            <!-- attraction list table start-->
            <table class="table table-hover bg-white">
-               <thead class="bg-light">
+               <thead class="bg-secondary">
                  <tr>
                    <th>기구명</th>
                    <th>위치</th>
@@ -131,7 +131,7 @@
              </table>
            <!-- attraction list table end -->
 		   
-		   <!-- pagination start -->
+		   	 <!-- pagination start -->
 	       <div class="attraction-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
 	             <ul class="pagination">
 	             
@@ -194,8 +194,8 @@
 	})
 	
 	// 어트랙션 상세조회 function =====================================================================
-	function showDetail(){
-		console.log($(event.target).data("pageno") == undefined);
+	function showDetail(attractionNo){
+		location.href = "${ contextPath }/attraction/detail.do?no=" + attractionNo;
 	}
 	
 	// 어트랙션 리스트조회 ============================================================================

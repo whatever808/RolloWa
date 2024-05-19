@@ -415,7 +415,7 @@
                                  class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
                           </li>
 
-                          <li><a href=""
+                          <li><a href="${ contextPath }/attraction/manage.do"
                                  class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
                           </li>
 

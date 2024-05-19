@@ -1,5 +1,5 @@
 /* ------------- regist form content div ------------- */
-.detail{
+.modifyForm{
     padding: 30px;
     padding-bottom: 100px;
     box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
@@ -49,40 +49,46 @@ input:focus, textarea:focus {
 }
 
 #attraction-name, #attraction-manage-emp, #attraction-intro{
-    width: 700px;
+    width: 1000px;
 }
 
-#attraction-location, #capacity-limit{
+#attraction-location, #capacity-limit, #attraction-status{
     display: inline-block;
     width: 200px;
+    margin-right: 60px;
 }
 
-.age-limit{
+input[name=statusReason]{
+	display: block;
+	width: 1000px;
+	margin-top: 20px;
+}
+
+.age-limit, .height-limit{
     display: inline-block;
 }
-#age-limit{
+#age-limit, #height-limit{
     margin-left: 30px;
-    width: 50px;
+    width: 250px;
 }
-.age-limit>select{
+.age-limit>select, .height-limit>select{
     display: inline-block;
     margin-left: 20px;
     width: 100px;
-}
-#status-n-reason{
-    margin-top: 20px;
-    width: 700px;
-    word-wrap: break-word;
-    resize: none;
 }
 
 #attraction-intro{
     resize: none;
 }
 .button-group{
-    margin-left: 350px;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 200px;
 }
-#detail-form button{
-    margin-left: 20px;
+.button-group>button{
+	 width: 30%;
+    padding: 15px 0 15px 0;
+    font-size: 18px;
+    border-radius: 10px;
 }
 

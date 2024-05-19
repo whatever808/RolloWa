@@ -21,7 +21,7 @@
 }
 #keyword{
 	border: 1px solid lightgray;
-	width: 400px;
+	width: 500px;
 }
 
 /* ------------- reset search value ------------- */
@@ -45,9 +45,7 @@ thead tr{
 .attraction-list{
     text-align: center;
 }
-.attraction-name-td:hover{
-	cursor:pointer;
-}
+
 .attraction-name-td{
     text-overflow: ellipsis;
     overflow: hidden;

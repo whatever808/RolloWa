@@ -110,19 +110,15 @@
 	        <div class="change-board">
 	
 	            <!-- move to previous board -->
-	            <a id="prev-board" class="list list-group list-group-item-action list-group-item-light">
-	            	<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-					  <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
-					</svg>
-					<span id="prev-board-title"></span>
+	            <a id="prev-board" class="list list-group list-group-item-action list-group-item-light d-inline-block text-truncate">
+								<span id="prev-board-title"></span>
 	            </a>
 	            
 	            <!-- move to board list page -->
 	            <a id="list-board" class="list list-group list-group-item-action list-group-item-warning">목록</a>
 	
 	            <!-- move to next board -->
-
-				<a id="next-board" class="list list-group list-group-item-action list-group-item-light">다음 게시글 제목</a>
+							<a id="next-board" class="list list-group list-group-item-action list-group-item-light d-inline-block text-truncate">다음 게시글 제목</a>
 
 	
 	        </div>

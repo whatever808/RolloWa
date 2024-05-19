@@ -8,8 +8,8 @@
 	<meta charset="UTF-8">
 	<title>어트랙션 등록</title>
 	
-	<!-- 놀이기구등록페이지 스타일 -->
-    <link href="${ contextPath }/resources/css/facility/attraction/regist.css" rel="stylesheet">
+	<!-- 어트랙션 상세페이지 스타일 -->
+  <link href="${ contextPath }/resources/css/facility/attraction/attraction_detail.css" rel="stylesheet">
 </head>
 <body>
 
@@ -107,11 +107,6 @@
 	                <!-- if height-limit-y checked end -->
 	            </div>
 	
-	            <div class="field-group">
-	                <label for="attraction-intro" class="field-title">기구소개</label><br>
-	                <textarea name="attractionIntro" id="attraction-intro" cols="30" rows="10" placeholder="기구를 소개해주세요."></textarea>
-	            </div>
-	
 	            <div class="button-group">
 	                <button type="reset" class="btn btn-outline-warning">초기화</button>
 	                <button type="submit" class="btn btn-outline-primary">등록하기</button>
@@ -127,7 +122,7 @@
 	<!-- content 끝 -->
 	
 	<!-- chat floating -->
-  	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />
+  <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />
 
 </body>
 
