@@ -14,6 +14,7 @@
 	min-height: 800px;
 	width: 100%;
 	box-sizing: border-box;
+	display: flex;
 }
 
 .clander-add-area {
@@ -111,7 +112,7 @@
 					<div class="Category">
 						<c:forEach var="g" items="${group}">
 							<div class="pretty p-default p-curve">
-								<input type="radio" name="groupCode" value="${g.code}">
+								<input type="radio" name="groupCode" value="${g.code}" required>
 								<div class="state p-success-o">
 									<label>${g.codeName}</label>
 								</div>
@@ -127,7 +128,7 @@
 					<br> 
 					<label class="font-size25 jua-regular" for="title">Title</label>
 					<div class="Title">
-						<input class="font-size20" type="text" id="title" name="calTitle">
+						<input class="font-size20" type="text" id="title" name="calTitle" required>
 					</div>
 					<br>
 					<div
@@ -147,24 +148,24 @@
 						<div style="width: 40%;">
 							<div>
 								<input class="date-area jua-regular" type="date"
-									id="currentDate1" name="date">
+									id="currentDate1" name="date" required>
 							</div>
 							<br>
 							<div>
 								<input class="time-area jua-regular" type="time"
-									id="currentTime1" name="time">
+									id="currentTime1" name="time" required>
 							</div>
 						</div>
 						<div style="place-self: center; font-size: xx-large;">~</div>
-						<div style="width: 40%;">
+						<div style="width: 40%;" required>
 							<div>
 								<input class="date-area jua-regular" type="date"
-									id="currentDate2" name="date">
+									id="currentDate2" name="date" required>
 							</div>
 							<br>
 							<div>
 								<input class="time-area jua-regular" type="time"
-									id="currentTime2" name="time">
+									id="currentTime2" name="time" required>
 							</div>
 						</div>
 					</div>
@@ -201,7 +202,7 @@
 					if (checkDate && checkTime) {
 						return true;
 					} else {
-						 alertify.alert('일정 등록','날짜 및 시간을 확인 해 주세요.');
+						redAlert('일정 수정','날짜 및 시간을 확인 해 주세요.');
 						return false;
 					}
 				};

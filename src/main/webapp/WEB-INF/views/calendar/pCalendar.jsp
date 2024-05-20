@@ -195,7 +195,6 @@
 	       if(checkDate && checkTime){
 	    	   updateCal();
 	       }else {
-	    	   /* alertify.alert('일정 수정','날짜 및 시간을 확인 해 주세요.'); */
 	    	   redAlert('일정 수정','날짜 및 시간을 확인 해 주세요.');
 	       }  
 	   	}; 
@@ -254,7 +253,7 @@
 				  contentType: 'application/json',
 					data:JSON.stringify({ userNO: num }),
 					success:function(map){
-						console.log(map);
+						//console.log(map);
 						removeAll();
 						
 						/* 해당 사원에 해당하는 일정이 존재하지 않을 경우 실행 */
@@ -383,10 +382,10 @@
 	<!-- 상세보기 일정 모달 -->
 	<div id="cal_modal">
 	<form id="updateForm">
-		<input type="hidden" name="calNO">
+		<input type="hidden" name="calNO" required>
 		<div>
 			<div class="jua-regular">Title</div>
-			<div><input type="text" name="calTitle" style="width: 80%"></div>
+			<div><input type="text" name="calTitle" style="width: 80%" required></div>
 		</div>
 		<br>
 		<div style="display: flex; justify-content: space-between; align-items: center">
@@ -436,21 +435,21 @@
 		<div class="date-time-area">
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular" type="date" id="currentDate1" name="date">
+					<input class="date-area jua-regular" type="date" id="currentDate1" name="date" required>
 				</div>
 				<br>
 				<div>
-					<input class="time-area jua-regular" type="time" id="currentTime1" name="time">
+					<input class="time-area jua-regular" type="time" id="currentTime1" name="time" required>
 				</div>
 			</div>
 			<div style="place-self: center; font-size: xx-large;">~</div>
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular" type="date" id="currentDate2" name="date">
+					<input class="date-area jua-regular" type="date" id="currentDate2" name="date" required>
 				</div>
 				<br>
 				<div>
-					<input class="time-area jua-regular" type="time" id="currentTime2" name="time">
+					<input class="time-area jua-regular" type="time" id="currentTime2" name="time" required>
 				</div>
 			</div>
 		</div>
