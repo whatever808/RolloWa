@@ -399,7 +399,7 @@
 		        $("#f_name").text(selectedNames[0]);
 		        $("#m_name").text(selectedNames[1]);
 		        $("#l_name").text(selectedNames[2]);
-		        if($("#f_name").text() == "" && $("#m_name").text() == "" && $("#l_name").text() == ""){
+		        if($(".selected-users tbody tr").length > 3){
 		        	alert("승인자를 3차까지 선택해주세요.");
 		        }else{
 		        	$("#modal").iziModal('close');
