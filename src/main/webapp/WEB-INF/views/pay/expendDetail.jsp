@@ -11,11 +11,13 @@
     <!-- 모달 관련 -->
     <script src="${contextPath}/resources/js/iziModal.min.js"></script>
     <link rel="stylesheet" href="${contextPath}/resources/css/iziModal.min.css">
-
+    
+    <!-- 싸인 관련 -->
+		<!-- <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> -->
 <style>
     #table_y{ width: 800px; display: flex; flex-direction: column;  margin: auto; text-align: center;}
     #table_y tbody{width: 800px;}
-    #table_y th{ border: 1px solid gray; background-color: #f8f7f7;}
+    #table_y th{ border: 1px solid gray;}
     #table_y td{ border: 1px solid gray;}
     #tr_style th{width: 95px; text-align: center;}
     #tr_style td{width: 160px;}
@@ -54,11 +56,81 @@
      }
  
     #btn_div button{margin: 10px; margin-top: 50px;}
-
+    
+    
+		#signature { border:1px solid #000; }
+		#save, #clear { padding:5px 20px; border:0; color:#fff; background:#000; margin-top:5px; }
 </style>
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+
+<script>
+$(document).ready(function(){
+	var canvas = $("#signature")[0];
+	var signature = new SignaturePad(canvas, {
+	    minWidth: 2,
+	    maxWidth: 2,
+	    penColor: "rgb(0, 0, 0)"
+	});
+	
+	$("#clear").on("click", function() {
+	    signature.clear();
+	});
+	
+	$("#save").on("click", function() {
+	    if (signature.isEmpty()) {
+	        alert("내용이 없습니다.");
+	    } else {
+	    		
+	        var data = signature.toDataURL("image/jpeg");
+	        const image = canvas.toDataURL();
+	        
+	        console.log(data);
+	        console.log(image);
+	        /*
+	        const link = document.createElement("a");
+	        link.href = image;
+	        link.download = "PaintJS[🎨]";
+	        link.click();
+	        */
+	        var approvalName = "${list.get(0).FIRST_APPROVAL == userName ? 1 : list.get(0).MIDDLE_APPROVAL == userName ? 2 : list.get(0).FINAL_APPROVAL == userName ? 3 : 0}" 
+	        
+	        $.ajax({
+	        	url:"${contextPath}/pay/ajaxSign.do",
+	        	type:"post",
+	        	data:{
+	        		dataUrl:data,
+	        		signName:"${userName}",
+	        		no:"${list.get(0).APPROVAL_NO}",
+	        		approvalSignNo:approvalName
+	        	},
+	        	success:function(result){
+	        		if(result == "SUCCESS"){
+	        			alert("승인이 완료되었습니다.");
+	        		}
+	        	},
+	        	error:function(){
+	        		
+	        	}
+	        	
+	       
+	        	
+	        })
+	        
+	        
+	        //window.open(data, "test", "width=600, height=200, scrollbars=no");
+	    }
+	});
+});
+
+
+	
+	
+</script>
+
+
 
         <!-- content 추가 -->
         <div class="content p-4">
@@ -80,8 +152,16 @@
 								                </tr>
 								                <tr>
 								                    <td style="height: 80px;"></td>
-								                    <td></td>
-								                    <td></td>
+								                    <td>
+									                    <c:if test="${list.get(0).FIRST_APPROVAL eq userName}">
+									                    	<button class="btn btn-danger" data-izimodal-open="#modal2">싸인</button>
+									                    </c:if>
+								                    </td>
+								                    <td>
+									                    <c:if test="${list.get(0).FIRST_APPROVAL eq userName}">
+									                    	<button class="btn btn-danger" data-izimodal-open="#modal2">싸인</button>
+									                    </c:if>
+								                    </td>
 								                </tr>
 								                <tr>
 								                    <td>${list.get(0).FIRST_APPROVAL_DATE}</td>
@@ -156,10 +236,14 @@
 	                            <button class="btn btn-warning" id="end_button" onclick="successbtn();">최종승인</button>
 	                        </div>                        	
                         </c:if>
-                        
-                        
-                         		<button class="btn btn-warning" id="modifyWriter" type="submit">수정</button>
-                   
+                        <div>
+                        		<c:if test="${ list.get(0).PAYMENT_WRITER_NO eq userNo}">
+                         			<button class="btn btn-warning" id="modifyWriter" type="submit">수정</button>
+                   					</c:if>
+                      	</div>
+                      	<div>
+                      			<button class="btn btn-danger" data-izimodal-open="#modal2">승인</button>
+                      	</div>
                         <!------------>
 								
 								     </div>
@@ -169,7 +253,17 @@
             </div>
         </div>
         
+        <div id="modal2">
+		        <div class="m_content_style"  >
+		        <canvas id="signature" width="600" height="200"></canvas>
+                <div>
+									<button id="save">Save</button>
+									<button id="clear">Clear</button>
+								</div>      
+		        </div>
+		    </div>
         
+   
        
     		 <div id="modal">
 		        <div class="m_content_style">
@@ -197,6 +291,23 @@
        $("#modal-test").on('click', function () {
 
            $('#modal').iziModal('open'); // 모달을 출현
+
+       });
+    </script>	
+    <script>
+       $('#modal2').iziModal({
+           title: '싸인',
+           headerColor: '#FEEFAD', // 헤더 색깔
+           theme: '', //Theme of the modal, can be empty or "light".
+           padding: '15px', // content안의 padding
+           radius: 10, // 모달 외각의 선 둥글기
+          
+       });
+       
+       // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
+       $("#modal-test").on('click', function () {
+
+           $('#modal2').iziModal('open'); // 모달을 출현
 
        });
     </script>	

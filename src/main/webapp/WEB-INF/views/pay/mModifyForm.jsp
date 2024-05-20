@@ -147,8 +147,8 @@
     /*----------------------------*/
 	 #modal_btn{
 	    PADDING: 10PX;
-	    BACKGROUND: #fffbea;
-	    BORDER: 1PX SOLID #fffbea;
+	    BACKGROUND: WHITE;
+	    BORDER: 1PX SOLID WHITE;
     }
     
     .m_content_style{height: 800px; display: flex; flex-wrap: wrap; justify-content: space-between;}
@@ -398,11 +398,7 @@
 		        $("#f_name").text(selectedNames[0]);
 		        $("#m_name").text(selectedNames[1]);
 		        $("#l_name").text(selectedNames[2]);
-		        if($("#f_name").text() == "" && $("#m_name").text() == "" && $("#l_name").text() == ""){
-		        	alert("승인자를 3차까지 선택해주세요.");
-		        }else{
-		        	$("#modal").iziModal('close');
-		        }
+		        $("#modal").iziModal('close');
 		    });
 			});
 		
