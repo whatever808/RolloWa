@@ -78,6 +78,13 @@ public class AttendanceDao {
 		return sqlSessionTemplate.selectList("attendanceMapper.selectDayOffMemberList");
 	}
 	
+	/**
+	 * 사용자가 요청한 년 & 월의 사용자 근태현황 조회
+	 */
+	public Map<String, Object> selectMemberAttend(HashMap<String, Object> params){
+		return sqlSessionTemplate.selectOne("attendanceMapper.selectMemberAttend", params);
+	}
+	
 	
 	/* ======================================= "가림" 구역 ======================================= */
 

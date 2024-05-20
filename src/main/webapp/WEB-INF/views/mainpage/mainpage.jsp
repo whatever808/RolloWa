@@ -47,7 +47,7 @@
                     <div class="profile-img-div">
                         <img src="${ contextPath }/resources/images/defaultProfile.png" alt="user profile">
 
-                        <h6 class="mt-3 fw-bold">${ loginMember.userName } / 팀장 / 판다월드</h6>
+                        <h6 class="mt-3 fw-bold">${ loginMember.userName } / ${ loginMember.positionName } / ${ loginMember.teamName }</h6>
                     </div>
 					
 					<script>
@@ -93,7 +93,7 @@
                 <div class="my-attend h-3">
 
                     <h4>근태관리</h4>
-
+										
                     <div class="my-attend-content">
                         <!-- my attend select (left) -->
                         <div class="my-attend-select-div">
@@ -128,41 +128,43 @@
                         <!-- my attend info (right) -->
                         <div class="my-attend-info-div">
                             <div class="attend-info-div">
-                                <div class="attend-info">17</div>
+                                <div class="attend-info total-vacation-count">${ loginMemberAttend.vacationCount }</div>
                                 <div class="attend-title text-center mt-2 fw-bold">총 연차</div>
                             </div>
 
                             <div class="attend-info-div">
-                                <div class="attend-info">17</div>
+                                <div class="attend-info used-vacation-count">${ loginMemberAttend.usedVacationCount }</div>
                                 <div class="attend-title text-center mt-2 fw-bold">사용 연차</div>
                             </div>
 
                             <div class="attend-info-div">
-                                <div class="attend-info">17</div>
+                                <div class="attend-info left-vacation-count">${ loginMemberAttend.vacationCount - loginMemberAttend.usedVacationCount }</div>
                                 <div class="attend-title text-center mt-2 fw-bold">잔여 연차</div>
                             </div>
 
                             <div class="attend-info-div">
-                                <div class="attend-info">17</div>
-                                <div class="attend-title text-center mt-2 fw-bold">지작계</div>
-                            </div>
-
-                            <div class="attend-info-div">
-                                <div class="attend-info">17</div>
+                                <div class="attend-info leave-early-count">${ loginMemberAttend.leaveEarlyCount }</div>
                                 <div class="attend-title text-center mt-2 fw-bold">조퇴계</div>
                             </div>
 
                             <div class="attend-info-div">
-                                <div class="attend-info">17</div>
+                                <div class="attend-info day-off-count">${ loginMemberAttend.dayOffCount }</div>
                                 <div class="attend-title text-center mt-2 fw-bold">결근계</div>
                             </div>
 
                         </div>
                         <!-- my attend info (right) -->
+                        
                     </div>
                     
                 </div>
                 <!-- my attendance (main-right-top) -->
+                
+                <script>
+                	$(document).ready(function(){
+                		
+                	})
+                </script>
 
                 <!-- alert list start (main-right-middle) -->
                 <div class="alert-list-div">
