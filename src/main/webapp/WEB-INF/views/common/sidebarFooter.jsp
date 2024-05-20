@@ -508,6 +508,10 @@
     function createChatRoom() {
     	$(".list-group-item").each(function(index, el) {
     		if($(el).children().children().is(':checked')) {
+    			// 1. 채팅방 데이터 생성 => Chatting Room 데이터 추가, Chatting Participation 데이터 추가
+    			
+    			// 2. 채팅방 참여 인원이 동일한 주소 구독
+    			   			
         	console.log($(el).children().children().val());
     		}
     		// 채팅용 웹소켓 연결
@@ -524,6 +528,7 @@
     	})
     }
     
+    // 현재 접속한 채팅방 구독 주소로 메세지 발송
 		function sendMsg() {
 			stompClient.send("/app/user", {}, JSON.stringify({name : '${loginMember.userId}'}));
 		}
