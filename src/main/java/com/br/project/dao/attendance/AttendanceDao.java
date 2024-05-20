@@ -2,6 +2,7 @@ package com.br.project.dao.attendance;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -54,6 +55,31 @@ public class AttendanceDao {
 	public List<GroupDto> selectStatus() {
 		return sqlSessionTemplate.selectList("attendanceMapper.selectStatus");
 	}
+	
+	/* ======================================= "가림" 구역 ======================================= */
+	/**
+	 * 당일 휴가인 사원 리스트조회
+	 */
+	public List<Map<String, Object>> selectVacationMemberList(){
+		return sqlSessionTemplate.selectList("attendanceMapper.selectVacationMemberList");
+	}
+	
+	/**
+	 * 당일 휴가 or 결근 사원 근태등록
+	 */
+	public int insertVacationOrDayOffMemberAttend(Map<String, Object> params) {
+		return sqlSessionTemplate.insert("attendanceMapper.insertVacationOrDayOffMemberAttend", params);
+	}
+	
+	/**
+	 * 당일 결근한 사원 리스트조회
+	 */
+	public List<Map<String, Object>> selectDayOffMemberList(){
+		return sqlSessionTemplate.selectList("attendanceMapper.selectDayOffMemberList");
+	}
+	
+	
+	/* ======================================= "가림" 구역 ======================================= */
 
 	
 }

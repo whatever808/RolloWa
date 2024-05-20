@@ -161,7 +161,50 @@
          WHERE TRUNC(CLOCK_IN) = TRUNC(SYSDATE-7)
 	</select>
 	
+	<!-- ======================================= "가림" 구역 ======================================= -->
+	<!-- 당일 휴가인 사원조회 -->
+	<select id="selectVacationMemberList" resultType="map">
+			select regist_emp "userNo"
+			  from vacation
+			 where apporval_status = 'Y'
+			   and status = 'Y'
+			   and to_char(sysdate, 'YYYYMMDD') 
+			       between to_char(vacation_strat, 'YYYYMMDD') and to_char(vacation_end, 'YYYYMMDD')
+	</select>
 	
+	<!-- 당일 휴가사원 or 결근사원 근태등록 -->
+	<insert id="insertVacationOrDayOffMemberAttend" parameterType="map">
+			insert
+				into attendance
+						 (
+						  attendance_no
+						 ,user_no
+						 ,request_detail
+						 )
+			 values 
+			 				(
+			 				 seq_atteno.nextval
+			 				,#{userNo}
+			 				,#{requestDetail}
+			 				)
+	</insert>
+	
+	<!-- 당일 결근 사원조회 -->
+	<select id="selectDayOffMemberList" resultType="map">
+			select user_no "userNo"
+			  from member
+			 where status = 'Y'
+			
+			minus
+			
+			select user_no "userNo"
+			  from attendance
+			 where to_char(clock_in, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
+	</select>
 
+	
+	
+	<!-- ======================================= "가림" 구역 ======================================= -->
+	
 </mapper>
 

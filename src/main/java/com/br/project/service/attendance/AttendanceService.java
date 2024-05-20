@@ -2,6 +2,7 @@ package com.br.project.service.attendance;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -44,8 +45,31 @@ public class AttendanceService {
 	public List<GroupDto> selectStatus() {
 		return attendanceDao.selectStatus();
 	}
+	
+	/* ======================================= "가림" 구역 ======================================= */
+	/**
+	 * 해당날짜 휴가인 사원 리스트조회
+	 */
+	public List<Map<String, Object>> selectVacationMemberList(){
+		return attendanceDao.selectVacationMemberList();
+	}
+	
+	/**
+	 * 해당날짜 휴가인 사원 근태관리 테이블에 휴가등록
+	 */
+	public int insertVacationOrDayOffMemberAttend(Map<String, Object> params) {
+		return attendanceDao.insertVacationOrDayOffMemberAttend(params);
+	}
+	
+	/**
+	 * 당일 결근한 사원 리스트조회
+	 */
+	public List<Map<String, Object>> selectDayOffMemberList(){
+		return attendanceDao.selectDayOffMemberList();
+	}
+	
+	
+	/* ======================================= "가림" 구역 ======================================= */
 
-	
-	
 	
 }
