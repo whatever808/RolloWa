@@ -13,6 +13,7 @@
 	min-height: 800px;
 	width: 100%;
 	box-sizing: border-box;
+	display: flex;
 }
 
 .search-date {

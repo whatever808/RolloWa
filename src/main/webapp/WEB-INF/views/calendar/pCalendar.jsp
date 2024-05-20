@@ -18,6 +18,7 @@
 		min-height: 800px;
 		width: 100%;
 		box-sizing: border-box;
+		display: flex;
 	}	
 	.member-search-area {
 		height: 15%;
@@ -200,7 +201,7 @@
 	   	
 		  /* 캘린더 이벤트를 믈릭시 실행되는  */
 			function modalOn(info){
-			  console.log(info.event.extendedProps.status);
+			  //console.log(info.event.extendedProps.status);
 			  if(info.event.extendedProps.status != 'Y'){
 					$(document).on('opening', '#cal_modal', function (e) {
 							const event = info.event;
@@ -253,8 +254,13 @@
 					data:JSON.stringify({ userNO: num }),
 					success:function(map){
 						console.log(map);
-						
 						removeAll();
+						
+						/* 해당 사원에 해당하는 일정이 존재하지 않을 경우 실행 */
+						if(map.noSearch == 'Y'){
+							alertify.alert('일정 조회','해당 사원의 일정을 조회 할 수 없습니다.');
+						}
+						
 						map.list.forEach((e) => {
 							 calendar.addEventSource(
 							 [{
@@ -329,8 +335,7 @@
 			$(document).ready(function(){
 				addEvent(null);
 
-				$('.memebrdiv-area div').click(function(){
-					//console.log($(this).next().val());
+				$('.member-search-area .line-cirecle').click(function(){
 					addEvent($(this).next().val());
 				})
 			})
@@ -344,7 +349,7 @@
 				<!-- other :  같은 팀의 다른 사람들-->	
 				<c:forEach var="t" items="${teams}">
 					<c:choose>
-						<c:when test="${'1055' eq t.userNo}">
+						<c:when test="${loginMember.userNo eq t.userNo}">
 							<div class="mydiv-area display-item-center">
 								<div class="line-cirecle display-item-center line-shadow">
 									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >

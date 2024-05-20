@@ -286,15 +286,21 @@
         /* 채팅방 스타일 끝 */
     </style>
 <style>
-#main_logo span {
-  color: #black;
+#main_logo span:hover {
   position: relative;
   top: 3px;
   display: inline-block;
   -webkit-font-smoothing: antialiased;
   animation: bounce 0.3s ease infinite alternate;
 }
-#main_logo span:{animation-delay: 0.1s;}
+#main_logo span:{
+	animation-delay: 0.1s;
+}
+#main_logo span{
+	background: linear-gradient(to left, #f6eec9, #dfc853 70%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 @keyframes bounce {
   100% {top: -3px;}
 }

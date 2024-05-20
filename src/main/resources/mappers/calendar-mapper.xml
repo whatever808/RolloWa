@@ -49,7 +49,7 @@ and
 and 
 	Months_between(end_DATE				, sysdate) >= -6
 ]]>
-<if test="calNoList != null">
+<if test="calNoList != null and !calNoList.isEmpty()">
     <foreach item="num" collection="calNoList"
        open="and cal_no in (" separator="," close=")" >
         #{num}

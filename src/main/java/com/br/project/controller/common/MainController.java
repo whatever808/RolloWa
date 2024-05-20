@@ -47,8 +47,7 @@ public class MainController {
 	public Map<String, Object> ajaxMainCalendar(HttpSession session){
 		MemberDto member = (MemberDto)session.getAttribute("loginMember");
 		HashMap<String, Object> map = new HashMap<>();
-		//map.put("team", member.getTeamCode());
-		map.put("teamCode", "A");
+		map.put("team", member.getTeamCode());
 		
 		return calService.ajaxMainCalendar(map);
 	}

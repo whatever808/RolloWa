@@ -82,7 +82,13 @@ public class CalendarController {
 		Map<String, Object> map = new HashMap<>();
 		
 		map.put("list", calService.ajaxSelectPCalendar(request));
-		map.put("vacaList", vService.ajaxSelectVacation(request.get("userNO")));
+		map.put("vacaList", vService.ajaxSelectVacation(request));
+		
+		if(request.get("calNoList") instanceof List<?>) {
+			if(((List<?>)request.get("calNoList")).isEmpty()) {
+				map.put("noSearch", "Y");
+			}
+		}
 		
 		return map;
 	}
