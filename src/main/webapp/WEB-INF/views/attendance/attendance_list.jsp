@@ -56,7 +56,7 @@
     	white-space: nowrap;
     	font-size: 25px;
     }
-    .mouse_pointer{
+    .arrow{
     	cursor: pointer;	
    	}
     h3{
@@ -92,8 +92,6 @@
     .search_menu {
         flex: 1 1 auto;
         margin-right: 10px; /* 필요에 따라 조정 */
-    }
-    .employee_count{
     }
     .td_search{
     	display: flex;
@@ -168,10 +166,9 @@
         <!--날짜, 오늘 선택-->
         <div class="select_date">
             <table class="table_2">
-                <tr class="mouse_pointer">
+                <tr>
                     <td><h3><div class="arrow" onclick="changeDate(-1);">◀</div></h3></td>
                     <td><input type="date" id="currentDate"></td>
-                    
                     <td><h3><div class="arrow" onclick="changeDate(1);">▶</div></h3></td>
                 </tr>
             </table>
@@ -180,84 +177,85 @@
              -->
         </div>
         
+        <!-- 날짜 관련 js -->
         <script>
-	        let currentDateElement = document.getElementById('currentDate');
-	        let today = new Date();
+        let currentDateElement = document.getElementById('currentDate');
+        let today = new Date();
 
-	        const koreanTimezoneOffset = 540; // GMT+09
+        const koreanTimezoneOffset = 540; // GMT+09
 
-			today.setMinutes(today.getMinutes() + koreanTimezoneOffset);
+		today.setMinutes(today.getMinutes() + koreanTimezoneOffset);
 
-			window.onload = function(){
-				showDailyData();
-			}
-			
-		    // 날짜 변경 함수
-		    function changeDate(direction) {
-			    let dateString = currentDateElement.value;
-			    let currentDate = new Date(dateString);
-			
-			    if (currentDateElement.type == 'month') {
-					currentDate.setMonth(currentDate.getMonth() + direction);
-					currentDateElement.valueAsDate = currentDate;
-			    } else {
-			        currentDate.setDate(currentDate.getDate() + direction);
-		        	currentDateElement.value = currentDate.toISOString().split('T')[0];
-			    }
-		    	console.log(currentDateElement.value);
-		    	
-		    	let formData = new FormData();
-		        formData.append('selectedDate', currentDateElement.value);
-		    	
-		    	$.ajax({
-		    		type: "GET",
-		    		url: "${ contextPath }/attendance/search.do",
-    				data: { selectedDate: currentDateElement.value },
-    				success: function(response) {
-    		            // 성공적으로 데이터를 받았을 때 실행할 코드를 작성합니다.
-    		            //console.log("서버 응답:", response);
-    		        },
-    		        error: function(xhr, status, error) {
-    		            // 에러가 발생했을 때 실행할 코드를 작성합니다.
-    		            console.error("에러:", error);
-    		        }
-		    	})
-			}
+		window.onload = function(){
+			showDailyData();
+		}
+		
+	    // 날짜 변경 함수
+	    function changeDate(direction) {
+		    let dateString = currentDateElement.value;
+		    let currentDate = new Date(dateString);
+		
+		    if (currentDateElement.type == 'month') {
+				currentDate.setMonth(currentDate.getMonth() + direction);
+				currentDateElement.valueAsDate = currentDate;
+		    } else {
+		        currentDate.setDate(currentDate.getDate() + direction);
+	        	currentDateElement.value = currentDate.toISOString().split('T')[0];
+		    }
+	    	console.log(currentDateElement.value);
+	    	
+	    	let formData = new FormData();
+	        formData.append('selectedDate', currentDateElement.value);
+	    	
+	    	$.ajax({
+	    		type: "GET",
+	    		url: "${ contextPath }/attendance/search.do",
+   				data: { selectedDate: currentDateElement.value },
+   				success: function(response) {
+   		            // 성공적으로 데이터를 받았을 때 실행할 코드를 작성합니다.
+   		            //console.log("서버 응답:", response);
+   		        },
+   		        error: function(xhr, status, error) {
+   		            // 에러가 발생했을 때 실행할 코드를 작성합니다.
+   		            console.error("에러:", error);
+   		        }
+	    	})
+		}
+	    
+	    // 사용자가 선택한 날짜 값
+	    currentDateElement.addEventListener('change', function() {
+	        console.log("변경한 날짜:",currentDateElement.value);
+	        document.getElementById("selectedDate").value = currentDateElement.value;
+	        changeDate();
+	    });
+		
+		// 일별 조회 함수
+        function showDailyData() {
+            // 일별 조회 버튼에 활성화 클래스 추가
+            document.querySelector('.btn_daily').classList.add('btn-primary');
+            document.querySelector('.btn_daily').classList.remove('btn-secondary');
+            document.querySelector('.btn_monthly').classList.add('btn-secondary');
+
+            document.getElementById('currentDate').type = 'date';
+            currentDateElement.value = today.toISOString().split('T')[0];
+            console.log(currentDate.value);
+            
+            document.querySelector('.daily_data').style.display = 'block';
+            document.querySelector('.monthly_data').style.display = 'none';
+        }
+        // 월별 조회 함수
+        function showMonthlyData() {
+		    document.querySelector('.btn_monthly').classList.add('btn-primary');
+		    document.querySelector('.btn_monthly').classList.remove('btn-secondary');
+		    document.querySelector('.btn_daily').classList.add('btn-secondary');
+		
+		    document.getElementById('currentDate').type = 'month';
+		    currentDateElement.value = today.toISOString().split('-').slice(0, 2).join('-');
+		    console.log(currentDate.value);
 		    
-		    // 사용자가 선택한 날짜 값
-		    currentDateElement.addEventListener('change', function() {
-		        console.log("변경한 날짜:",currentDateElement.value);
-		        document.getElementById("selectedDate").value = currentDateElement.value;
-		        changeDate();
-		    });
-			
-			// 일별 조회 함수
-	        function showDailyData() {
-	            // 일별 조회 버튼에 활성화 클래스 추가
-	            document.querySelector('.btn_daily').classList.add('btn-primary');
-	            document.querySelector('.btn_daily').classList.remove('btn-secondary');
-	            document.querySelector('.btn_monthly').classList.add('btn-secondary');
-
-	            document.getElementById('currentDate').type = 'date';
-	            currentDateElement.value = today.toISOString().split('T')[0];
-	            console.log(currentDate.value);
-	            
-	            document.querySelector('.daily_data').style.display = 'block';
-	            document.querySelector('.monthly_data').style.display = 'none';
-	        }
-	        // 월별 조회 함수
-	        function showMonthlyData() {
-			    document.querySelector('.btn_monthly').classList.add('btn-primary');
-			    document.querySelector('.btn_monthly').classList.remove('btn-secondary');
-			    document.querySelector('.btn_daily').classList.add('btn-secondary');
-			
-			    document.getElementById('currentDate').type = 'month';
-			    currentDateElement.value = today.toISOString().split('-').slice(0, 2).join('-');
-			    console.log(currentDate.value);
-			    
-			    document.querySelector('.monthly_data').style.display = 'block';
-			    document.querySelector('.daily_data').style.display = 'none';
-			}
+		    document.querySelector('.monthly_data').style.display = 'block';
+		    document.querySelector('.daily_data').style.display = 'none';
+		}
 		</script>
         
         <!-- 일별 화면 -->
@@ -280,8 +278,6 @@
 			        <td class="table-info">${ attendanceCount[0].e }</td>
 			    </tr>
 			</table>
-	
-			
 	
 			<!-- 직원 출결 데이터 start -->
 			<form id="search_Form" action="${ contextPath }/attendance/search.do" method="GET">
@@ -562,21 +558,20 @@
 			    -->
 		    	<!--페이징 처리 end-->
 		    	<div class="container">
-    <ul class="pagination justify-content-center">
-        <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
-            <a class="page-link" href="${ contextPath }/attendance/search.do?page=${pi.currentPage-1}">Previous</a>
-        </li>
-        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-            <li class="page-item ${ pi.currentPage == p ? 'active' : '' }">
-                <a class="page-link" href="${ contextPath }/attendance/search.do?page=${p}">${ p }</a>
-            </li>
-        </c:forEach>
-        <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }">
-            <a class="page-link" href="${ contextPath }/attendance/search.do?page=${pi.currentPage+1}">Next</a>
-        </li> 
-    </ul>
-</div>
-		    	
+				    <ul class="pagination justify-content-center">
+				        <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
+				            <a class="page-link" href="${ contextPath }/attendance/search.do?page=${pi.currentPage-1}">Previous</a>
+				        </li>
+				        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+				            <li class="page-item ${ pi.currentPage == p ? 'active' : '' }">
+				                <a class="page-link" href="${ contextPath }/attendance/search.do?page=${p}">${ p }</a>
+				            </li>
+				        </c:forEach>
+				        <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }">
+				            <a class="page-link" href="${ contextPath }/attendance/search.do?page=${pi.currentPage+1}">Next</a>
+				        </li> 
+				    </ul>
+				</div>
 		    	
     	</div>
     	

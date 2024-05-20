@@ -127,25 +127,27 @@
 	
 	<!-- 회원 가입 : 사번,이름,아이디,비밀번호,생성한관리자번호,관리자권한여부,팀코드,직급-->
 	<insert id="insertMember">
-		insert
-		  into member
+		INSERT
+		  INTO MEMBER
 		  	 (
-		  	   user_no
-		  	 , user_name
-		  	 , user_id
-		  	 , user_pwd
-		  	 , enroll_user_no
-		  	 , auth_level
-             , team_code
-		  	 , position_code
+		  	   USER_NO
+		  	 , USER_NAME
+		  	 , USER_ID
+		  	 , USER_PWD
+		  	 , ENROLL_USER_NO
+		  	 , VACATION_COUNT
+		  	 , AUTH_LEVEL
+             , TEAM_CODE
+		  	 , POSITION_CODE
 		  	 )
-		  	   values
+		  	   VALUES
 		  	 (
 			   SEQ_MNO.NEXTVAL
 			 , #{userName}
 			 , #{userId}
 			 , #{userPwd}
 			 , 1
+			 , 10
 			 , #{authLevel}
              , (SELECT CODE FROM TB_GROUP WHERE CODE_NAME = #{teamCode} )
              , (SELECT CODE FROM TB_GROUP WHERE CODE_NAME = #{positionCode} )

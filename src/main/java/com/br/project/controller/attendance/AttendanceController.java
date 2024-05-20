@@ -88,11 +88,76 @@ public class AttendanceController {
 
 		return mv;
 	}
+	
+	// 2.2 급여 조회(기본 페이지) --------------------------------------------------------------------------------------------
+	@GetMapping("/accountList.do")
+	public ModelAndView list(@RequestParam(value="page", defaultValue="1") int currentPage
+			, ModelAndView mv) {
+		
+		int listCount = organizationService.selectOrganizationListCount();
+		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
+		List<MemberDto> list = organizationService.selectAccountList(pi);
+		
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .addObject("listCount", listCount)
+		  .setViewName("attendance/account_list");
+		
+		return mv;
+	}
+	
+	// 2.2 급여 조회(검색 페이지) --------------------------------------------------------------------------------------------
+	@GetMapping("/accountSearch.do")
+	public ModelAndView accountSearch(@RequestParam(value="page", defaultValue="1") int currentPage, 
+			@RequestParam(value = "selectedDate", required = false) String selectedDate, ModelAndView mv) {
+		
+		int listCount = organizationService.selectOrganizationListCount();
+		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
+		List<MemberDto> list = organizationService.selectAccountList(pi);
+		
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .addObject("listCount", listCount)
+		  .setViewName("attendance/account_list");
+		
+		return mv;
+	}
+	
+	
+	/* 작성해야함
+	@GetMapping("/accountSearch.do")
+	public ModelAndView search(@RequestParam(value = "page", defaultValue = "1") int currentPage,
+			@RequestParam(value = "selectedDate", required = false) String selectedDate, ModelAndView mv) {
+		
+		String formattedDate = selectedDate.replace("-","");
+		log.debug("가져온 날짜 변환: {}" , formattedDate);
 
-	// 2.4 구성원 추가 --------------------------------------------------------
+		int listCount = attendanceService.selectAttendanceListCount();
+		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
+		List<HashMap<String, String>> list = attendanceService.selectAttendanceList(pi, formattedDate);
+
+		List<AttendanceDto> attendanceCount = attendanceService.SelectAttendanceCount();
+
+		
+		mv.addObject("pi", pi)
+		  .addObject("listCount", listCount)
+		  .addObject("list", list)
+		  .addObject("attendanceCount", attendanceCount)
+		  .setViewName("attendance/attendance_list");
+
+		return mv;
+	}
+	*/
+	
+	
+	
+	
+	
+	
+	// 2.4 구성원 추가  ------------ 비밀번호 ajax 수정필요 --------------------------------------------------------------------
 	@GetMapping("/signup.page")
 	public String signupPage() {
-		return "attendance/signup";
+		return "attendance/attendance_signup";
 	}
 
 	@ResponseBody
@@ -121,7 +186,7 @@ public class AttendanceController {
 	
 	
 	
-	// select box 컨트롤러
+	// select box 컨트롤러 ------------------------------------------------------------------------------------
 	// 1. 부서 조회
 	@ResponseBody
 	@GetMapping("/department.do")
