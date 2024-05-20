@@ -52,8 +52,18 @@
 	<div class="content p-5">
 
         <!-- weather-clock (top) -->
-        <div class="weather-div h-2">
+        <div class="weather-clock-div h-2">
             
+            <!-- date & time-->
+            <div class="date-time-div">
+                <div class="date text-center"></div>
+                <div class="time text-center"></div>
+            </div>
+
+            <!-- weather -->
+            <div class="weather-div">
+            </div>
+
         </div>
         <!-- weather-clock (top) -->
 
@@ -69,7 +79,7 @@
                     <div class="profile-img-div">
                         <img src="../../../resources/images/defaultProfile.png" alt="user profile">
 
-                        <div class="mt-2">유가림/판다월드</div>
+                        <h6 class="mt-3 fw-bold">유가림 / 팀장 / 판다월드</h6>
                     </div>
 
                     <div class="profile-attend pe-4">
@@ -92,11 +102,11 @@
                 <!-- profile & attend (main-left-top)-->
 
                 <!-- today's schedule (main-left-bottom)-->
-                <div class="today-schedule h-3">
+                <div class="today-schedule">
                     <h5 class="fw-bold text-end mb-3">오늘의 일정</h5>
-                    <div>맛점하기</div>
-                    <div>부서미팅</div>
-                    <div>퇴근하기</div>
+                    <div class="mb-2">맛점하기</div>
+                    <div class="mb-2">부서미팅</div>
+                    <div class="mb-2">퇴근하기</div>
                 </div>
                 <!-- today's schedule (main-left-bottom)-->
             </div>
@@ -107,92 +117,141 @@
 
                 <!-- my attendance (main-right-top) -->
                 <div class="my-attend h-3">
+
+                    <h4>근태관리</h4>
+
+                    <div class="my-attend-content">
+                        <!-- my attend select (left) -->
+                        <div class="my-attend-select-div">
+                            <select class="year form-select text-center">
+                                <option>2000</option>
+                                <option>2001</option>
+                                <option>2001</option>
+                                <option>2001</option>
+                                <option>2001</option>
+                                <option>2001</option>
+                                <option>2001</option>
+                                <option>2001</option>
+                            </select>
+        
+                            <select class="month form-select text-center">
+                                <option>1월</option>
+                                <option>2</option>
+                                <option>2</option>
+                                <option>2</option>
+                                <option>2</option>
+                                <option>2</option>
+                                <option>2</option>
+                                <option>2</option>
+                                <option>2</option>
+                                <option>2</option>
+                                <option>2</option>
+                                <option>2</option>
+                            </select>
+                        </div>
+                        <!-- my attend select (left) -->
+
+                        <!-- my attend info (right) -->
+                        <div class="my-attend-info-div">
+                            <div class="attend-info-div">
+                                <div class="attend-info">17</div>
+                                <div class="attend-title text-center mt-2 fw-bold">총 연차</div>
+                            </div>
+
+                            <div class="attend-info-div">
+                                <div class="attend-info">17</div>
+                                <div class="attend-title text-center mt-2 fw-bold">사용 연차</div>
+                            </div>
+
+                            <div class="attend-info-div">
+                                <div class="attend-info">17</div>
+                                <div class="attend-title text-center mt-2 fw-bold">잔여 연차</div>
+                            </div>
+
+                            <div class="attend-info-div">
+                                <div class="attend-info">17</div>
+                                <div class="attend-title text-center mt-2 fw-bold">지작계</div>
+                            </div>
+
+                            <div class="attend-info-div">
+                                <div class="attend-info">17</div>
+                                <div class="attend-title text-center mt-2 fw-bold">조퇴계</div>
+                            </div>
+
+                            <div class="attend-info-div">
+                                <div class="attend-info">17</div>
+                                <div class="attend-title text-center mt-2 fw-bold">결근계</div>
+                            </div>
+
+                        </div>
+                        <!-- my attend info (right) -->
+                    </div>
                     
-                    <!-- my attend select (left) -->
-                    <div class="my-attend-select-div">
-                        <select class="year form-select text-center">
-                            <option>2000</option>
-                            <option>2001</option>
-                            <option>2001</option>
-                            <option>2001</option>
-                            <option>2001</option>
-                            <option>2001</option>
-                            <option>2001</option>
-                            <option>2001</option>
-                        </select>
-    
-                        <select class="month form-select text-center">
-                            <option>1월</option>
-                            <option>2</option>
-                            <option>2</option>
-                            <option>2</option>
-                            <option>2</option>
-                            <option>2</option>
-                            <option>2</option>
-                            <option>2</option>
-                            <option>2</option>
-                            <option>2</option>
-                            <option>2</option>
-                            <option>2</option>
-                        </select>
-                    </div>
-                    <!-- my attend select (left) -->
-
-                    <!-- my attend info (right) -->
-                    <div class="my-attend-info-div">
-                        <div class="attend-info-div">
-                            <div class="attend-info">17</div>
-                            <div class="attend-title text-center mt-2 fw-bold">총 연차</div>
-                        </div>
-
-                        <div class="attend-info-div">
-                            <div class="attend-info">17</div>
-                            <div class="attend-title text-center mt-2 fw-bold">사용 연차</div>
-                        </div>
-
-                        <div class="attend-info-div">
-                            <div class="attend-info">17</div>
-                            <div class="attend-title text-center mt-2 fw-bold">잔여 연차</div>
-                        </div>
-
-                        <div class="attend-info-div">
-                            <div class="attend-info">17</div>
-                            <div class="attend-title text-center mt-2 fw-bold">지작계</div>
-                        </div>
-
-                        <div class="attend-info-div">
-                            <div class="attend-info">17</div>
-                            <div class="attend-title text-center mt-2 fw-bold">조퇴계</div>
-                        </div>
-
-                        <div class="attend-info-div">
-                            <div class="attend-info">17</div>
-                            <div class="attend-title text-center mt-2 fw-bold">결근계</div>
-                        </div>
-
-                    </div>
-                    <!-- my attend info (right) -->
                 </div>
                 <!-- my attendance (main-right-top) -->
 
                 <!-- alert list start (main-right-middle) -->
                 <div class="alert-list-div">
-                    <h4>알림함</h4>
+                    <h4>알림</h4>
                     <table class="table">
                         <tr>
-                            <td class="list">유재석 총무부 부장발령</td>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
                             <td class="list-date">2024-05-20</td>
                         </tr>
                     </table>
-
-
                 </div>
                 <!-- alert list end (main-right-middle) -->
 
 
                 <!-- notice list start (main-right-bottom) -->
                 <div class="notice-list-div">
+                    <h4>공지사항</h4>
+                    <table class="table">
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
 
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+                    </table>
                 </div>
                 <!-- notice list end (main-right-bottom) -->
             </div>
@@ -204,9 +263,35 @@
 
 <script>
     $(document).ready(function(){
-        console.log(new Date());
-        $(".profile-div-clock").val("gkdl");
+        getToday(); // 오늘날짜 출력
+        
+        getClock(); // 실시간 시간
+        setInterval(getClock, 1000); 
+        
     })
+
+    // 실시간 시간
+    function getClock() {
+        const date = new Date();
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = String(date.getSeconds()).padStart(2, "0");
+
+        $(".time").text(`${hours}:${minutes}:${seconds}`);
+    }
+
+    // 오늘 날짜
+    function getToday() {
+        const todaydate = new Date();
+        const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '긑요일', '토요일'];
+        const days_num = todaydate.getDay();
+        const year = todaydate.getFullYear();
+        const month = todaydate.getMonth() + 1;
+        const date = todaydate.getDate();
+        const day = days[days_num];
+
+        $(".date").text(`${year}년 ${month}월 ${date}일 ${day}`); 
+    }
 
 </script>
 

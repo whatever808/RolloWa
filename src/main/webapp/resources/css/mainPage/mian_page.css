@@ -6,6 +6,7 @@
     display: flex;
     flex-direction: column;
     align-content: space-between;
+    padding: 30px;
 }
 .main-content{
     display: flex;
@@ -14,7 +15,7 @@
 .main-content-left{
     display: flex;
     flex-direction: column;
-    width: 20%;
+    width: 23%;
 }
 .main-content-right{
     display: flex;
@@ -22,7 +23,7 @@
     width: 75%;
 }
 
-.profile-attend-div, .weather-div{
+.profile-attend-div, .weather-clock-div{
     background-color: whitesmoke;
     border-radius: 9px;
     padding: 15px;
@@ -35,8 +36,42 @@ h4, h5{
     font-family: "Jua";
 }
 
+/* ------------- 시간 & 날씨 ------------- */
+.weather-clock-div{
+    background-color: whitesmoke;
+    border-radius: 9px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.date-time-div{
+    width: 25%;
+    min-height: 30px;
+    font-family: 'Roboto';
+    font-size: 25px;
+    font-weight: bold;
+    border: 1px solid  rgb(255, 213, 0);
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.weather-div{
+    width: 70%;
+    min-height: 30px;
+}
 
 /* ------------- 프로필 & 출퇴근 영역 ------------- */
+.profile-attend-div{
+    background-color: whitesmoke;
+    border-radius: 9px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
 .profile-attend-div{
     width: 100%;
     display: flex;
@@ -72,6 +107,7 @@ h4, h5{
     border-radius: 9px;
     padding: 15px;
     margin-bottom: 30px;
+    min-height: 340px;
 }
 
 /* ------------- 근태현황 ------------- */
@@ -81,6 +117,11 @@ h4, h5{
     padding: 15px;
     margin-bottom: 30px;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.my-attend-content{
     display: flex;
 }
 .my-attend-select-div{
@@ -121,3 +162,18 @@ h4, h5{
 }
 
 /* ------------- 공지목록 ------------- */
+.notice-list-div{
+    display: flex;
+    flex-direction: column;
+    background-color: whitesmoke;
+    border-radius: 9px;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+.list-title{
+    width: 80%;
+}
+.list-date{
+    width: 20%;
+}
