@@ -195,7 +195,8 @@
 	       if(checkDate && checkTime){
 	    	   updateCal();
 	       }else {
-	    	   alertify.alert('일정 수정','날짜 및 시간을 확인 해 주세요.');
+	    	   /* alertify.alert('일정 수정','날짜 및 시간을 확인 해 주세요.'); */
+	    	   redAlert('일정 수정','날짜 및 시간을 확인 해 주세요.');
 	       }  
 	   	}; 
 	   	
@@ -258,7 +259,8 @@
 						
 						/* 해당 사원에 해당하는 일정이 존재하지 않을 경우 실행 */
 						if(map.noSearch == 'Y'){
-							alertify.alert('일정 조회','해당 사원의 일정을 조회 할 수 없습니다.');
+						/* 	alertify.alert('일정 조회','해당 사원의 일정을 조회 할 수 없습니다.'); */
+							yellowAlert('일정 조회','해당 사원의 일정을 조회 할 수 없습니다.');
 						}
 						
 						map.list.forEach((e) => {
@@ -310,9 +312,11 @@
 				  data: $('#updateForm').serialize(),
 				  success:function(result){
 						if(result > 0){
-							 alertify.alert('일정 수정','성공적으로 갱신 되었습니다.');
+							 //alertify.alert('일정 수정','성공적으로 갱신 되었습니다.');
+							 greenAlert('일정 수정','성공적으로 갱신 되었습니다.');
 						} else {
-							 alertify.alert('일정 수정','관리자를 호출해 주세요.');
+							 //alertify.alert('일정 수정','관리자를 호출해 주세요.');
+							redAlert('일정 수정','관리자를 호출해 주세요.');
 						}
 					  
 						removeAll();
