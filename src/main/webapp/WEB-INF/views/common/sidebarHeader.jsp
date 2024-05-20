@@ -286,15 +286,21 @@
         /* 채팅방 스타일 끝 */
     </style>
 <style>
-#main_logo span {
-  color: #black;
+#main_logo span:hover {
   position: relative;
   top: 3px;
   display: inline-block;
   -webkit-font-smoothing: antialiased;
   animation: bounce 0.3s ease infinite alternate;
 }
-#main_logo span:{animation-delay: 0.1s;}
+#main_logo span:{
+	animation-delay: 0.1s;
+}
+#main_logo span{
+	background: linear-gradient(to left, #f6eec9, #dfc853 70%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 @keyframes bounce {
   100% {top: -3px;}
 }
@@ -304,13 +310,70 @@
 </style>
 </head>
 <body class="allposition">
+
+
 <c:if test="${ alertMsg != null }" >
-<script>
-	alertify.alert('${alertTitle}','${alertMsg}');
-</script>
+<c:choose>
+	<c:when test="${modalColor eq 'G'}" >
+		redAlert('${ alertTitle }', '${ alertMsg }');
+	</c:when>
+	<c:when test="${modalColor eq 'R'}">
+		greenAlert('${ alertTitle }', '${ alertMsg }');
+	</c:when>
+	<c:when test="${modalColor eq 'Y'}">
+		yellowAlert('${ alertTitle }', '${ alertMsg }');
+	</c:when>
+</c:choose>
+
+<!-- <script>alertify.alert('${alertTitle}','${alertMsg}'); </script> -->
 </c:if>
 
 <main class="d-flex flex-nowrap"></main>
+	<!-- 알림창 div -->
+    <div id="redModal"></div>
+    <div id="greenModal"></div>
+    <div id="yellowModal"></div>  
+    <script>
+	    $('#redModal').iziModal({
+	        headerColor: '#dc3545',
+	        timeout: 3000,
+          zindex: 9999,
+	        timeoutProgressbar: true
+	    });
+	
+	    $('#greenModal').iziModal({
+	        headerColor: '#28a745',
+	        timeout: 3000,
+	        zindex: 9999,
+	        timeoutProgressbar: true
+	    });
+	    
+      $('#yellowModal').iziModal({
+          headerColor: '#ffc107', 
+          timeout: 3000,
+          zindex: 9999,
+          timeoutProgressbar: true,
+      });
+	    
+      function redAlert(title, content){
+          $('#redModal').iziModal('setTitle', title);
+          $('#redModal').iziModal('setSubtitle', content);
+          $('#redModal').iziModal('open');
+      };
+
+      function greenAlert(title, content){
+          $('#greenModal').iziModal('setTitle', title);
+          $('#greenModal').iziModal('setSubtitle', content);
+          $('#greenModal').iziModal('open');
+      };
+      
+      function yellowAlert(title, content){
+          $('#yellowModal').iziModal('setTitle', title);
+          $('#yellowModal').iziModal('setSubtitle', content);
+          $('#yellowModal').iziModal('open');
+      };
+    </script>
+	
         <div class="flex-shrink-0 p-3" style="width: 280px;">
             <a href="${contextPath}/"
                 class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">

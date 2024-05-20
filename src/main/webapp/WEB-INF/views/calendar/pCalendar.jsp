@@ -18,6 +18,7 @@
 		min-height: 800px;
 		width: 100%;
 		box-sizing: border-box;
+		display: flex;
 	}	
 	.member-search-area {
 		height: 15%;
@@ -194,13 +195,14 @@
 	       if(checkDate && checkTime){
 	    	   updateCal();
 	       }else {
-	    	   alertify.alert('일정 수정','날짜 및 시간을 확인 해 주세요.');
+	    	   /* alertify.alert('일정 수정','날짜 및 시간을 확인 해 주세요.'); */
+	    	   redAlert('일정 수정','날짜 및 시간을 확인 해 주세요.');
 	       }  
 	   	}; 
 	   	
 		  /* 캘린더 이벤트를 믈릭시 실행되는  */
 			function modalOn(info){
-			  console.log(info.event.extendedProps.status);
+			  //console.log(info.event.extendedProps.status);
 			  if(info.event.extendedProps.status != 'Y'){
 					$(document).on('opening', '#cal_modal', function (e) {
 							const event = info.event;
@@ -253,8 +255,14 @@
 					data:JSON.stringify({ userNO: num }),
 					success:function(map){
 						console.log(map);
-						
 						removeAll();
+						
+						/* 해당 사원에 해당하는 일정이 존재하지 않을 경우 실행 */
+						if(map.noSearch == 'Y'){
+						/* 	alertify.alert('일정 조회','해당 사원의 일정을 조회 할 수 없습니다.'); */
+							yellowAlert('일정 조회','해당 사원의 일정을 조회 할 수 없습니다.');
+						}
+						
 						map.list.forEach((e) => {
 							 calendar.addEventSource(
 							 [{
@@ -304,9 +312,11 @@
 				  data: $('#updateForm').serialize(),
 				  success:function(result){
 						if(result > 0){
-							 alertify.alert('일정 수정','성공적으로 갱신 되었습니다.');
+							 //alertify.alert('일정 수정','성공적으로 갱신 되었습니다.');
+							 greenAlert('일정 수정','성공적으로 갱신 되었습니다.');
 						} else {
-							 alertify.alert('일정 수정','관리자를 호출해 주세요.');
+							 //alertify.alert('일정 수정','관리자를 호출해 주세요.');
+							redAlert('일정 수정','관리자를 호출해 주세요.');
 						}
 					  
 						removeAll();
@@ -329,8 +339,7 @@
 			$(document).ready(function(){
 				addEvent(null);
 
-				$('.memebrdiv-area div').click(function(){
-					//console.log($(this).next().val());
+				$('.member-search-area .line-cirecle').click(function(){
 					addEvent($(this).next().val());
 				})
 			})
@@ -344,7 +353,7 @@
 				<!-- other :  같은 팀의 다른 사람들-->	
 				<c:forEach var="t" items="${teams}">
 					<c:choose>
-						<c:when test="${'1055' eq t.userNo}">
+						<c:when test="${loginMember.userNo eq t.userNo}">
 							<div class="mydiv-area display-item-center">
 								<div class="line-cirecle display-item-center line-shadow">
 									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >

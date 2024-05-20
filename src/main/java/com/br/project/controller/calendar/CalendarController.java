@@ -82,7 +82,13 @@ public class CalendarController {
 		Map<String, Object> map = new HashMap<>();
 		
 		map.put("list", calService.ajaxSelectPCalendar(request));
-		map.put("vacaList", vService.ajaxSelectVacation(request.get("userNO")));
+		map.put("vacaList", vService.ajaxSelectVacation(request));
+		
+		if(request.get("calNoList") instanceof List) {
+			if(((List<?>)request.get("calNoList")).isEmpty()) {
+				map.put("noSearch", "Y");
+			}
+		}
 		
 		return map;
 	}
@@ -144,9 +150,13 @@ public class CalendarController {
 		int result = calService.insertCal(calendar);
 		
 		if(result > 0 ) {
-			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("redirect:pCalendar.page");
+			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.")
+			  .addObject("modalColor", "G")
+			  .setViewName("redirect:pCalendar.page");
 		}else {
-			mv.addObject("alertMsg", "다시 시도해 주세요.").setViewName("redirect:calEnroll.page");
+			mv.addObject("alertMsg", "다시 시도해 주세요.")
+			  .addObject("modalColor", "R")
+			  .setViewName("redirect:calEnroll.page");
 		}
 		return mv;
 	}
@@ -215,9 +225,13 @@ public class CalendarController {
 		int result = calService.insertCompany(calendar);
 		
 		if(result > 0 ) {
-			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.").setViewName("redirect:companyCalendar.page");
+			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.")
+			  .addObject("modalColor", "G")
+			  .setViewName("redirect:companyCalendar.page");
 		}else {
-			mv.addObject("alertMsg", "다시 시도해 주세요.").setViewName("redirect:companyCalEnroll.page");
+			mv.addObject("alertMsg", "다시 시도해 주세요.")
+			  .addObject("modalColor", "G")
+			  .setViewName("redirect:companyCalEnroll.page");
 		}
 		
 		return mv;

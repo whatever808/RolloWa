@@ -14,6 +14,7 @@
 		min-height: 800px;
 		width: 100%;
 		box-sizing: border-box;
+		display: flex;
 	}	
 	.member-search-area {
 		height: 15%;
@@ -280,7 +281,7 @@
 		   		/* document 후 실행 될 함수 */
 					$(document).ready(function(){
 						addEvent();
-						condole.log('${loginMember}');
+						//console.log('${loginMember}');
 					})
 				</script>
         <!-- 컨텐츠 영역 -->

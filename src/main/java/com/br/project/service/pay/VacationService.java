@@ -19,8 +19,8 @@ public class VacationService {
 	 * @author dpcks
 	 * @return
 	 */
-	public List<VacationDto> ajaxSelectVacation(Object userNO) {
-		return vacationDao.ajaxSelectVacation(userNO);
+	public List<VacationDto> ajaxSelectVacation(Object request) {
+		return vacationDao.ajaxSelectVacation(request);
 	}
 	
 	

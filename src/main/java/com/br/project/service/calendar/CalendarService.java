@@ -29,7 +29,7 @@ public class CalendarService {
 		Object userNO = request.get("userNO");
 		if(userNO != null) {
 			List<String> calNoList = calDao.selectCalNO(userNO);
-			request.put("calNoList", calNoList);
+			request.put("calNoList", calNoList);				
 		}
 		
 		return calDao.ajaxSelectPCalendar(request);
