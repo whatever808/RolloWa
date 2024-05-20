@@ -70,6 +70,13 @@
 		<result column="DEPT_NAME" property="deptName"/>
 	</resultMap>
 	
+	<resultMap id="SignResult" type="SignDto">
+		<id column="FIRST_SIGN" property="approvalNo"/>
+		<result column="FIRST_SIGN" property="firstSign"/>
+		<result column="MIDDLE_SIGN" property="middleSign"/>
+		<result column="FINAL_SIGN" property="finalSign"/>
+	</resultMap>
+	
 	<!-- 회원정보 조회용 -->
 	<select id="loginUserMember" resultType="string">
 		select USER_NAME
@@ -1701,6 +1708,33 @@
 				  and  USER_NAME like '%' || #{name} || '%'
 		</select>
 	  
+	  <update id="ajaxSignUpdate">
+	  	update APPROVAL
+	  	   set 
+	  	   <choose>
+						<when test="approvalSignNo == 1">
+							FIRST_SIGN = #{fileName}
+						</when>
+						<when test="approvalSignNo == 2">
+							MIDDLE_SIGN = #{fileName}
+						</when>
+						<otherwise>
+							FINAL_SIGN = #{fileName}
+						</otherwise>	   
+	  	   </choose>
+	  	 where status = 'Y'
+	  	   and APPROVAL_NO = #{no}
+	  </update>
 	  
-   
+	  
+	  <select id="ajaxSignSelect" resultMap="SignResult">
+	  	select
+	  				APPROVAL_NO
+					, FIRST_SIGN
+					, MIDDLE_SIGN
+					, FINAL_SIGN
+			  from APPROVAL
+			 where APPROVAL_NO = #{no}
+	  </select>
+	  
 </mapper>

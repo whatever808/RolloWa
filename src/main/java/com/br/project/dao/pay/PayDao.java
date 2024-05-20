@@ -368,5 +368,14 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.ajaxSearchName", name);
 	}
 	
+	public int ajaxSignUpdate(Map<String, Object> map){
+		return sqlSessionTemplate.update("payMapper.ajaxSignUpdate", map);
+	}
+	
+	public List<Map<String, Object>> ajaxSignSelect(Map<String, Object> map) {
+		return sqlSessionTemplate.selectList("payMapper.ajaxSignSelect", map);
+	}
+	
+	
 	
 }

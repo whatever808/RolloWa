@@ -4,7 +4,10 @@ package com.br.project.controller.pay;
 
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -447,9 +450,12 @@ public class PayController {
 	//---------매출 보고서 ----------------------
 	@PostMapping("/mReportInsert.do")
 	public String mReportInsert(@RequestParam Map<String, Object> map
-							  , HttpSession session, RedirectAttributes redirectAttributes) {
+							  , HttpSession session, RedirectAttributes redirectAttributes
+							  , String[] approvalName) {
 		//map =>최초/중간/최종 승인자의 이름, 매출구분, 담당자, 총매출 금액이 담겨있음
 		log.debug("{}", map.get("items"));
+		
+		
 		
 		// 품목, 수량, 매출금액이 담긴 리스트
 		List<Map<String, Object>> list = new ArrayList<>();
@@ -1236,15 +1242,52 @@ public class PayController {
 		
 	}
 	
-	/*
+	// 승인 싸인 저장하기 ajax
 	@ResponseBody
 	@PostMapping("/ajaxSign.do")
-	public int ajaxSign(@RequestParam Map<String, Object> map) {
+	public List<Map<String, Object>> ajaxSign(@RequestParam Map<String, Object> map
+											, HttpServletRequest request) {
+		log.debug("map : {}", map);
+		String dataUrl = (String)map.get("dataUrl");
 		
-		return payService.ajaxSign(map);
+		String base64Image = dataUrl.split(",")[1];
+		log.debug("base64Image : {}", base64Image);
+		/*
+	    byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+	    String fileName = "sign_" + System.currentTimeMillis() + ".png";
+	
+	    String realPath = request.getServletContext().getRealPath("/resources/images/");
+	    File dir = new File(realPath);
+	    if (!dir.exists()) {
+	        dir.mkdirs(); // Create directories if they do not exist
+	    }
+	    
+
+        String filePath = realPath + fileName;
+        
+        try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
+            fos.write(imageBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null; // 에러 처리 필요
+        }
+		 */
+        	
+        map.put("fileName", base64Image);
+		
+		int result =  payService.ajaxSignUpdate(map);
+		log.debug("result : {}", result);
+		
+		List<Map<String, Object>> sign = new ArrayList<>();
+		if(result > 0) {
+			sign = payService.ajaxSignSelect(map);
+		}
+		log.debug("sign : {}", sign);
+		
+		return sign;
 		
 	}
-	*/
+	
 	
 	// 결재승인자 선택 ajax
 	@ResponseBody

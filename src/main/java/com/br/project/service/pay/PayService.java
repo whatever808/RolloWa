@@ -434,4 +434,13 @@ public class PayService {
 	}
 	
 	
+	public int ajaxSignUpdate(Map<String, Object> map){
+		return payDao.ajaxSignUpdate(map);
+	}
+	
+	public List<Map<String, Object>> ajaxSignSelect(Map<String, Object> map) {
+		return payDao.ajaxSignSelect(map);
+	}
+	
+	
 }

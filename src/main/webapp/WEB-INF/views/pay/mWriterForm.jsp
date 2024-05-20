@@ -267,9 +267,12 @@
 		.user_modal{width: 100%; height: 80%;}
 		.deptDiv{cursor: pointer;}
 		.deptDiv li{cursor: pointer;}
+		
+		.deptDiv ul{display: none;}
+		
 		.deptDiv ul{display: none;}
 		.teamN, .nameClick  {cursor: pointer;}
-	
+		
 
 </style>
 
@@ -387,11 +390,9 @@
 		            selectedNames.push(name); // 배열에 사용자 이름 추가
 		        });
 		        
-		        var joinSelect = selectedNames.join(",");
-		        
-		        console.log(this);
-		        
-		        $("input[type='hidden'][name='approvalName']").val(joinSelect);
+		        $("input[type='hidden'][name='firstApproval']").val(selectedNames[0]);
+		        $("input[type='hidden'][name='middleApproval']").val(selectedNames[1]);
+		        $("input[type='hidden'][name='finalApproval']").val(selectedNames[2]);
 		        $("#f_name").text("");
 		        $("#m_name").text("");
 		        $("#l_name").text("");
@@ -505,7 +506,9 @@
                             
                             
                             <!-- 결재승인자 모달 start -->
-                            <input type="hidden" name="approvalName">
+                            <input type="hidden" name="firstApproval">
+                            <input type="hidden" name="middleApproval">
+                            <input type="hidden" name="finalApproval">
                              <div id="modal">
                                  <div class="m_content_style">
                                  <div class="user_modal">
@@ -513,9 +516,8 @@
                                   	
 																    <div class="sidebar">
 																        <ul>
-																            <li>
-																            <span class="deptDiv">인사부</span>
-																                <ul>
+																            <li><span class="deptDiv">인사부</span>
+																             		<ul>
 																                   <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
 																                    	<c:if test="${ teamNames.get(i).DEPT_NAME eq '인사부' }">
 													                            	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>

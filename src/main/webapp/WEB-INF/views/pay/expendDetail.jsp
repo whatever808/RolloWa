@@ -83,18 +83,12 @@ $(document).ready(function(){
 	    if (signature.isEmpty()) {
 	        alert("내용이 없습니다.");
 	    } else {
-	    		
-	        var data = signature.toDataURL("image/jpeg");
+	    		alert("정말로 승인을 하시겠습니까?");
+	        var data = signature.toDataURL("image/png");
 	        const image = canvas.toDataURL();
 	        
-	        console.log(data);
-	        console.log(image);
-	        /*
-	        const link = document.createElement("a");
-	        link.href = image;
-	        link.download = "PaintJS[🎨]";
-	        link.click();
-	        */
+	        
+	        
 	        var approvalName = "${list.get(0).FIRST_APPROVAL == userName ? 1 : list.get(0).MIDDLE_APPROVAL == userName ? 2 : list.get(0).FINAL_APPROVAL == userName ? 3 : 0}" 
 	        
 	        $.ajax({
@@ -106,10 +100,13 @@ $(document).ready(function(){
 	        		no:"${list.get(0).APPROVAL_NO}",
 	        		approvalSignNo:approvalName
 	        	},
-	        	success:function(result){
-	        		if(result == "SUCCESS"){
-	        			alert("승인이 완료되었습니다.");
+	        	success:function(response){
+	        		console.log(response);
+	        		if(response != ""){
+	        			alert("성공적으로 승인이 완료되었습니다.");
+	               $('#imageContainer').html('<img src="' + response + '" alt="Saved Drawing"/>');
 	        		}
+	        		
 	        	},
 	        	error:function(){
 	        		
