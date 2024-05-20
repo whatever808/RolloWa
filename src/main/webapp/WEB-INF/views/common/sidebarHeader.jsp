@@ -502,13 +502,13 @@
                     <div class="collapse" id="org-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li>
-                            	<a href="${ contextPath }/orginfo/orgChart.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
+                            	<a href="${ contextPath }/organization/chart.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/orginfo/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
+                            	<a href="${ contextPath }/organization/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/orginfo/orgManager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
+                            	<a href="${ contextPath }/organization/manager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
                             </li>
                         </ul>
                     </div>

@@ -2,6 +2,13 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<%
+	String department = (request.getAttribute("department") != null) ? request.getAttribute("department").toString() : "";
+	String team = (request.getAttribute("team") != null) ? request.getAttribute("team").toString() : "";
+	
+    System.out.println("부서명: " + department);
+    System.out.println("팀명: " + team);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -110,7 +117,7 @@
 	    <hr>
 	    
 	    <!-- ------------ -->
-	    <form id="search_Form" action="${ contextPath }/orginfo/search.do" method="GET">
+	    <form id="search_Form" action="${ contextPath }/organization/search.do" method="GET">
 	    	<input type="hidden" name="page" value="1">
 			
 	        <table class="table table_search">
@@ -138,7 +145,7 @@
 	                <!-- 검색 메뉴 4 : 이름 -->
 	                <th>이름</th>
 	                <td>
-	                    <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하세요.">
+	                    <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하세요.(한글만 입력)">
 	                </td>
 	            </tr>
 	            <tr>
@@ -165,6 +172,11 @@
 				
 				// 팀 조회 이동
 				selectTeamList();
+				if(""!="${department}" &&""!="${team}"){
+					let selectedDepartment = "${department}";
+					selectTeamList(selectedDepartment);
+				}
+				
 				
 	 		})
 	 		
@@ -177,9 +189,9 @@
 				}));
 				
 				$.ajax({
-			 		url:"${contextPath}/orginfo/department.do",
+			 		url:"${contextPath}/organization/department.do",
 			 		type:"GET",
-			 		async:"false",
+			 		/* async:"false", */
 			 		success: function(data){
 			 			
 			 			$.each(data, function(index, organizationDto) {
@@ -214,9 +226,9 @@
 		 	    }));
 	 			
 		 	    $.ajax({
-		 	        url:"${contextPath}/orginfo/team.do?selectedDepartment=" + departmentSelect.val(),
+		 	        url:"${contextPath}/organization/team.do?selectedDepartment=" + departmentSelect.val(),
 		 	        type:"GET",
-		 	        async:"false",
+		 	        /* async:"false", */
 		 	        success: function(data){
 		 	        	
 		 	            $.each(data, function(index, organizationDto) {
@@ -267,7 +279,7 @@
 		 	    let name = $("#name").val();
 		 	 
 	 			$.ajax({
-	 				url:"${contextPath}/orginfo/search.do",
+	 				url:"${contextPath}/organization/search.do",
 	 				type: "GET",
 	 				data: {
 	 		            department: department,
@@ -324,10 +336,10 @@
 				            <td>
 					            <c:choose>
 					            	<c:when test="${ not empty m.profileUrl }">
-						                <img src="${ m.profileUrl }" class="profile_img">
+						                <img src="${ m.profileUrl }" class="profile_img" onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
 					            	</c:when>
 					            	<c:otherwise>
-						                <img src="${ contextPath }/resources/images/defaultProfile.png">
+						                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">
 					            	</c:otherwise>
 					            </c:choose>
 				            </td>
@@ -354,13 +366,13 @@
 	    <!--페이징 처리 start-->
 		<div id="pagingArea" class="container">
 	        <ul class="pagination justify-content-center">
-	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/list.do?page=${pi.currentPage-1}">Previous</a></li>
+	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${pi.currentPage-1}">Previous</a></li>
 				
 				<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/list.do?page=${p}">${ p }</a></li>
+					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${p}">${ p }</a></li>
 				</c:forEach>
 				
-				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/list.do?page=${pi.currentPage+1}">Next</a></li> 
+				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${pi.currentPage+1}">Next</a></li> 
 	        </ul>
 	    </div>
 	    

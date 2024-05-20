@@ -64,22 +64,23 @@
 
 	<!-- 출결 상태 조회 -->
 	<select id="selectAttendanceList" resultType="hashmap">
-		SELECT M.USER_NO
+		SELECT DISTINCT
+		       M.USER_NO
 		     , PROFILE_URL AS "profileURL"
-		     , USER_NAME AS "userName"
+		     , M.USER_NAME AS "userName"
 		     , D1.CODE_NAME AS "dept"
-       		 , D2.CODE_NAME AS "team"
-      		 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = M.POSITION_CODE) AS "posi"
-		     , (SELECT CLOCK_IN FROM ATTENDANCE WHERE USER_NO = M.USER_NO AND TRUNC(CLOCK_IN) = TRUNC(SYSDATE-7)) AS "todayIn"
-		     , (SELECT CLOCK_OUT FROM ATTENDANCE WHERE USER_NO = M.USER_NO AND TRUNC(CLOCK_OUT) = TRUNC(SYSDATE-7)) AS "todayOut"
-		     , A.REQUEST_DETAIL AS "requestDetail"
-		  FROM MEMBER M
-		  JOIN TB_GROUP D2 ON M.TEAM_CODE = D2.CODE
-     LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
-          JOIN ATTENDANCE A ON M.USER_NO = A.USER_NO
-           WHERE D1.STATUS = 'Y'
-             AND D2.STATUS = 'Y'
-		 ORDER BY USER_NO ASC
+		     , D2.CODE_NAME AS "team"
+		     , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = M.POSITION_CODE) AS "posi"
+		     , (SELECT CLOCK_IN FROM ATTENDANCE WHERE USER_NO = M.USER_NO AND TO_CHAR(CLOCK_IN, 'yyyymmdd') = #{formattedDate} ) AS "todayIn"
+		     , (SELECT CLOCK_OUT FROM ATTENDANCE WHERE USER_NO = M.USER_NO AND TO_CHAR(CLOCK_OUT, 'yyyymmdd') = #{formattedDate} ) AS "todayOut"
+		     , (SELECT REQUEST_DETAIL FROM ATTENDANCE WHERE USER_NO = M.USER_NO AND TO_CHAR(CLOCK_IN, 'yyyymmdd') = #{formattedDate} ) AS "requestDetail"
+		FROM MEMBER M
+		JOIN TB_GROUP D2 ON M.TEAM_CODE = D2.CODE
+		LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
+		JOIN ATTENDANCE A ON M.USER_NO = A.USER_NO
+		WHERE D1.STATUS = 'Y'
+		  AND D2.STATUS = 'Y'
+		ORDER BY M.USER_NO ASC
 	</select>
 	
 	<!-- 출결 상태 조회 
@@ -106,12 +107,12 @@
 	<select id="SelectAttendanceCount" resultMap="attendanceList">
 		SELECT
 			    SUM(CASE WHEN REQUEST_DETAIL = '출근' THEN 1 ELSE 0 END) AS "a"
-			  , SUM(CASE WHEN REQUEST_DETAIL = '결근' THEN 1 ELSE 0 END) AS "b"
+			  , SUM(CASE WHEN REQUEST_DETAIL = '' THEN 1 ELSE 0 END) AS "b"
 			  , SUM(CASE WHEN REQUEST_DETAIL = '퇴근' THEN 1 ELSE 0 END) AS "c"
 			  , SUM(CASE WHEN REQUEST_DETAIL = '조퇴' THEN 1 ELSE 0 END) AS "d"
 			  , SUM(CASE WHEN REQUEST_DETAIL = '휴가' THEN 1 ELSE 0 END) AS "e"
 		   FROM ATTENDANCE
-		  WHERE TRUNC(CLOCK_IN) = TRUNC(SYSDATE-7)
+		  WHERE CLOCK_IN = #{nowDate}
 			    OR CLOCK_IN IS NULL
 	</select>
 	
@@ -126,28 +127,30 @@
 	
 	<!-- 회원 가입 : 사번,이름,아이디,비밀번호,생성한관리자번호,관리자권한여부,팀코드,직급-->
 	<insert id="insertMember">
-		insert
-		  into member
+		INSERT
+		  INTO MEMBER
 		  	 (
-		  	   user_no
-		  	 , user_name
-		  	 , user_id
-		  	 , user_pwd
-		  	 , enroll_user_no
-		  	 , auth_level
-		  	 , team_code
-		  	 , position_code
+		  	   USER_NO
+		  	 , USER_NAME
+		  	 , USER_ID
+		  	 , USER_PWD
+		  	 , ENROLL_USER_NO
+		  	 , VACATION_COUNT
+		  	 , AUTH_LEVEL
+             , TEAM_CODE
+		  	 , POSITION_CODE
 		  	 )
-		  	   values
+		  	   VALUES
 		  	 (
-			   seq_uno.nextval
+			   SEQ_MNO.NEXTVAL
 			 , #{userName}
 			 , #{userId}
 			 , #{userPwd}
-			 , #{userName}
+			 , 1
+			 , 10
 			 , #{authLevel}
-			 , #{teamCode}
-			 , #{positionCode}
+             , (SELECT CODE FROM TB_GROUP WHERE CODE_NAME = #{teamCode} )
+             , (SELECT CODE FROM TB_GROUP WHERE CODE_NAME = #{positionCode} )
 		  	 )
 	</insert>
 		

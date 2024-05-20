@@ -7,103 +7,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1.1 조직도</title>
-
-    <!-- 조직도 참고 사이트
-       https://www.cssscript.com/clean-tree-diagram/
-    -->
-
-    <!-- animate -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
-    <!-- bootstrap -->
-    <link href="${contextPath}/resources/css/common/bootstrap.min.css" rel="stylesheet">
-
-    <!-- fontawesome -->
-    <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
-
-    <!-- Google Fonts Roboto -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
-
-    <!-- Google Fonts Jua -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-
-    <!-- jQuery -->
-    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <title>1.3 조직 관리</title>
 
     <!-- css -->
-    <link href="${contextPath}/resources/css/common/sidebars.css" rel="stylesheet">
-    <link rel="stylesheet" href="${contextPath}/resources/css/common.css">
-    <link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
-
-    <!-- sidebar -->
-    <script src="${contextPath}/resources/js/common/sidebars.js"></script>
-    
-    <!-- 조직도 css : 기존 조직도에서 가져옴 -->
     <link rel="stylesheet" href="${contextPath}/resources/css/organization/organization.css">
-    
-    <style>
-    .main_content{
-    	width: 1200px !important;
-        padding: 20px;
-    }
-    .level2:hover{
-		background-color: rgb(0, 183, 165);
-	}
-	.level3:hover {
-		background-color: gainsboro;
-	}
-	.level2, .level3 {
-		cursor: default;
-	}
-	.add_department{
-		position: absolute;
-    	z-index: 1;
-    	top: 20px;
-    	right: 400px;
-    	white-space: nowrap;
-    	outline: none;
-	}
-    .add_team{
-    	position: absolute;
-    	z-index: 1;
-    	top: 50px;
-    	left: 200px;
-    	white-space: nowrap;
-    }
-    .delete_department{
-		position: absolute;
-    	z-index: 1;
-    	top: 10px;
-    	left: 40px;
-    	white-space: nowrap;
-    }
-    .delete_team{
-    	position: absolute;
-    	z-index: 1;
-    	top: 15px;
-    	left: 200px;
-    	white-space: nowrap;
-    }
-    input[type="text"]{
-    	width: 150px;
-    }
-    .div_btn{
-		display: flex;
-		justify-content: center;
-    }
-    .div_btn button{
-    	margin: 30px 0;
-		font-size: 20px;
-		width: 200px;
-		height: 50px;
-    }
-    
-    
-    </style>
+
 </head>
 <body>
 
@@ -144,7 +52,7 @@
 			                                    <ul>
 			                                        <li>
 			                                            <a href="#"><span class="level3"><input type="text" value="${team.team}"></span></a>
-			                                            <button class="btn btn-danger delete_team" onclick="deleteTeam();">팀 삭제</button>
+			                                            <button class="btn btn-danger delete_team" onclick="deleteTeam(this);">팀 삭제</button>
 			                                        </li>
 			                                    </ul>
 			                                </c:if>
@@ -179,7 +87,7 @@
 	            	<ul>
 		                <li>
 		                    <a href="#"><span class="level3"><input type="text" value="새로운 팀"></span></a>
-		                    <button class="btn btn-danger delete_team" onclick="deleteTeam();">팀 삭제</button>
+		                    <button class="btn btn-danger delete_team" onclick="deleteTeam(this);">팀 삭제</button>
 		                </li>
 	                </ul>
 	            </ul>
@@ -213,19 +121,7 @@
             alert("팀이 추가되었습니다.");
         }
 
-		/*
 		// 팀 삭제
-		function deleteTeam(button) {
-		    let teamItem = button.parentNode;
-		    teamItem.parentNode.removeChild(teamItem);
-		    alert("팀이 삭제되었습니다.");
-		}
-		function deleteTeam(button) {
-		    // 팀 요소의 부모 요소(li)를 찾아서 삭제
-		    let teamItem = button.closest('li');
-		    teamItem.parentNode.removeChild(teamItem);
-		    alert("팀이 삭제되었습니다.");
-		}*/
 		function deleteTeam(button) {
 		    // 팀 요소의 부모 요소(li)를 찾아서 삭제
 		    let teamItem = button.parentElement;
@@ -235,12 +131,41 @@
 		
 		// 폼 되돌리기
 		function resetForm() {
-
+			// 새로고침으로 되돌리기
+			location.reload();
 		}
+		
 		// 폼 저장
 		function saveForm() {
 			// 추가 작성
-			alert("폼 데이터가 저장되었습니다.");
+			
+			let newDepartments = document.querySelectorAll('.tree > li > ul > li');
+			let departmentData = [];
+			
+			newDepartments.forEach(function(department) {
+		        let departmentName = department.querySelector('input[type="text"]').value;
+		        let newTeams = department.querySelectorAll('ul > li');
+		        let teamsData = [];
+		        newTeams.forEach(function(team) {
+		            let teamName = team.querySelector('input[type="text"]').value;
+		            teamsData.push(teamName);
+		        });
+		        departmentData.push({departmentName: departmentName, teams: teamsData});
+		    });
+			
+		        $.ajax({
+		            type: "POST",
+			        url:"${ contextPath }/organization/addDepartment.do",
+		            contentType: "application/json",
+		            data: JSON.stringify(departmentData),
+		            success: function(response) {
+		                alert("폼 데이터가 저장되었습니다.");
+		            },
+		            error: function(xhr, status, error) {
+		                alert("오류가 발생했습니다.");
+		            }
+		        });
+			
 		}
 		</script>
 		

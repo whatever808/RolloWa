@@ -1,4 +1,10 @@
-/* 조직도 관련 css */
+/* 모든 페이지 공통 */
+.main_content{
+	width: 1200px !important;
+	padding: 20px;
+}
+
+/* 1. 조직도 관련 css */
 /* 대표이사 위치 */
 .tree{
   width: 77.5em;
@@ -114,14 +120,118 @@ a:hover{
 	color: white !important;
 	bottom: -2em;
 }
-.level2:hover{
-	background-color: rgb(22, 86, 80);
-}
 .level3 {
 	background-color: gainsboro;
 	color: black !important;
 	margin: -0.45em 0 !important;
 }
-.level3:hover {
-	background-color: gray;
-}
+
+
+/* 2. 직원 검색 관련 css */
+.search_menu{
+	    justify-content: center;
+	    width: 100%;
+	}
+	.tr_search th{
+	    background-color: rgb(203, 237, 255) !important;
+	    text-align: center;
+	    width: 20%;
+	    vertical-align: middle !important;
+	    font-size: 30px;
+	}
+	.tr_search td{
+	    width: 200px;
+	    text-align: center;
+	}
+	.tr_search input {
+	    width: 100% !important;
+	}
+	.btn_center{
+	    text-align: center;
+	    padding-top: 30px !important;
+	}
+	.btn_center button {
+	    width: 140px;
+	    height: 50px;
+	    font-size: 20px;
+	}
+	.employee_count {
+	    margin-left: 10px;
+	}
+	table{
+		table-layout: fixed;
+	}
+	.table_empinfo {
+	    text-align: center;
+	    table-layout: fixed !important;
+	}
+	.table_empinfo th{
+	    background-color: rgb(255,247,208) !important;
+	    font-size: 19px;
+	}
+	.table_empinfo td{
+	    vertical-align: middle !important;
+	}
+	.table_empinfo td img{
+	    border: 1px solid gainsboro;
+	    border-radius: 100%;
+	    width: 50px;
+	    height: 50px;
+		object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
+	    margin: -10px;
+ 	}
+
+/* 3. */
+.level2:hover{
+		background-color: rgb(0, 183, 165);
+	}
+	.level3:hover {
+		background-color: gainsboro;
+	}
+	.level2, .level3 {
+		cursor: default;
+	}
+	.add_department{
+		position: absolute;
+    	z-index: 1;
+    	top: 20px;
+    	right: 400px;
+    	white-space: nowrap;
+    	outline: none;
+	}
+    .add_team{
+    	position: absolute;
+    	z-index: 1;
+    	top: 50px;
+    	left: 200px;
+    	white-space: nowrap;
+    }
+    .delete_department{
+		position: absolute;
+    	z-index: 1;
+    	top: 10px;
+    	left: 40px;
+    	white-space: nowrap;
+    }
+    .delete_team{
+    	position: absolute;
+    	z-index: 1;
+    	top: 15px;
+    	left: 200px;
+    	white-space: nowrap;
+    }
+    input[type="text"]{
+    	width: 150px;
+    }
+    .div_btn{
+		display: flex;
+		justify-content: center;
+    }
+    .div_btn button{
+    	margin: 30px 0;
+		font-size: 20px;
+		width: 200px;
+		height: 50px;
+    }
+
+

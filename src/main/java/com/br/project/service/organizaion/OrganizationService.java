@@ -55,6 +55,11 @@ public class OrganizationService {
 		return organizationDao.selectSearchList(search, pi);
 	}
 
+	// 급여 조회
+	public List<MemberDto> selectAccountList(PageInfoDto pi) {
+		return organizationDao.selectAccountList(pi);
+	}
+
 	
 
 }
