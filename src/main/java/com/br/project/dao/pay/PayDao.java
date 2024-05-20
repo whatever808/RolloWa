@@ -360,6 +360,13 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.teamNameList");
 	}
 	
+	public List<Map<String, Object>> ajaxTeamSearch(String name){
+		return sqlSessionTemplate.selectList("payMapper.ajaxTeamSearch", name);
+	}
+	
+	public List<Map<String, Object>> ajaxSearchName(String name){
+		return sqlSessionTemplate.selectList("payMapper.ajaxSearchName", name);
+	}
 	
 	
 }

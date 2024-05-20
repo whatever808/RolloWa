@@ -425,6 +425,13 @@ public class PayService {
 		return payDao.teamNameList();
 	}
 	
+	public List<Map<String, Object>> ajaxTeamSearch(String name){
+		return payDao.ajaxTeamSearch(name);
+	}
+	
+	public List<Map<String, Object>> ajaxSearchName(String name){
+		return payDao.ajaxSearchName(name);
+	}
 	
 	
 }

@@ -235,29 +235,7 @@ public class PayController {
 		
 		return "";
 		
-		/*
-		}else if(documentType.equals("지출결의서")){
-			PayDto payDto = payServiceImpl.jdetail(pDto);
-			model.addAttribute("payDto", payDto);
-			return "pay/jdetail";
-		}else if(documentType.equals("기안서")){
-			PayDto payDto = payServiceImpl.gdetail(pDto);
-			model.addAttribute("payDto", payDto);
-			return "pay/gdetail";
-		}else if(documentType.equals("휴가신청서")){
-			PayDto payDto = payServiceImpl.vdetail(pDto);
-			model.addAttribute("payDto", payDto);
-			return "pay/vdetail";
-		}else if(documentType.equals("휴직신청서")){
-			PayDto payDto = payServiceImpl.hdetail(pDto);
-			model.addAttribute("payDto", payDto);
-			return "pay/hdetail";
-		}else{ //출장보고서
-			PayDto payDto = payServiceImpl.cdetail(pDto);
-			model.addAttribute("payDto", payDto);
-			return "pay/cdetail";
-		}
-		*/
+		
 		
 	}
 	
@@ -333,7 +311,7 @@ public class PayController {
 		
 		//팀명
 		List<Map<String, Object>> teamNames = payService.teamNameList();
-		
+		log.debug("teamNames : {}", teamNames);
 		// 총무부의 이름, 팀이름, 직급(부장,과장,차장)
 		
 		for(int i=0; i<teamList.size(); i++) {
@@ -420,24 +398,13 @@ public class PayController {
 		}
 		
 		if(writer.equals("g")) {
-			model.addAttribute("maDeptList", maDeptList);
-			model.addAttribute("operatDeptList", operatDeptList);
-			model.addAttribute("marketDeptList", marketDeptList);
-			model.addAttribute("fbDeptList", fbDeptList);
-			model.addAttribute("hrDeptList", hrDeptList);
-			model.addAttribute("serviceDeptList", serviceDeptList);
 			model.addAttribute("member", member);
 			model.addAttribute("userName", userName);
 			model.addAttribute("userNo", userNo);
+			model.addAttribute("teamNames", teamNames);
 			return "pay/gWriterForm";
 			
 		}else if(writer.equals("m")) {
-			model.addAttribute("maDeptList", maDeptList);
-			model.addAttribute("operatDeptList", operatDeptList);
-			model.addAttribute("marketDeptList", marketDeptList);
-			model.addAttribute("fbDeptList", fbDeptList);
-			model.addAttribute("hrDeptList", hrDeptList);
-			model.addAttribute("serviceDeptList", serviceDeptList);
 			model.addAttribute("member", member);
 			model.addAttribute("userName", userName);
 			model.addAttribute("userNo", userNo);
@@ -446,41 +413,26 @@ public class PayController {
 			return "pay/mWriterForm";
 			
 		}else if(writer.equals("b")) {
-			model.addAttribute("maDeptList", maDeptList);
-			model.addAttribute("operatDeptList", operatDeptList);
-			model.addAttribute("marketDeptList", marketDeptList);
-			model.addAttribute("fbDeptList", fbDeptList);
-			model.addAttribute("hrDeptList", hrDeptList);
-			model.addAttribute("serviceDeptList", serviceDeptList);
 			model.addAttribute("member", member);
 			model.addAttribute("userName", userName);
 			model.addAttribute("userNo", userNo);
+			model.addAttribute("teamNames", teamNames);
 			
 			return "pay/bWriterForm";
 			
 		}else if(writer.equals("j")) {
-			model.addAttribute("maDeptList", maDeptList);
-			model.addAttribute("operatDeptList", operatDeptList);
-			model.addAttribute("marketDeptList", marketDeptList);
-			model.addAttribute("fbDeptList", fbDeptList);
-			model.addAttribute("hrDeptList", hrDeptList);
-			model.addAttribute("serviceDeptList", serviceDeptList);
 			model.addAttribute("member", member);
 			model.addAttribute("userName", userName);
 			model.addAttribute("userNo", userNo);
+			model.addAttribute("teamNames", teamNames);
 			
 			return "pay/jWriterForm";
 			
 		}else if(writer.equals("h")) {
-			model.addAttribute("maDeptList", maDeptList);
-			model.addAttribute("operatDeptList", operatDeptList);
-			model.addAttribute("marketDeptList", marketDeptList);
-			model.addAttribute("fbDeptList", fbDeptList);
-			model.addAttribute("hrDeptList", hrDeptList);
-			model.addAttribute("serviceDeptList", serviceDeptList);
 			model.addAttribute("member", member);
 			model.addAttribute("userName", userName);
 			model.addAttribute("userNo", userNo);
+			model.addAttribute("teamNames", teamNames);
 			
 			return "pay/hWriterForm";
 		}
@@ -1284,6 +1236,7 @@ public class PayController {
 		
 	}
 	
+	/*
 	@ResponseBody
 	@PostMapping("/ajaxSign.do")
 	public int ajaxSign(@RequestParam Map<String, Object> map) {
@@ -1291,7 +1244,29 @@ public class PayController {
 		return payService.ajaxSign(map);
 		
 	}
-
+	*/
+	
+	// 결재승인자 선택 ajax
+	@ResponseBody
+	@GetMapping("/ajaxTeamSearch.do")
+	public List<Map<String, Object>> ajaxSearch(String name){
+		
+		List<Map<String, Object>> list = payService.ajaxTeamSearch(name);
+		
+		return list;
+		
+	}
+	
+	//결재승인자 검색 ajax
+	@ResponseBody
+	@GetMapping("/ajaxSearchName.do")
+	public List<Map<String, Object>> ajaxSearchName(String name){
+		
+		List<Map<String, Object>> list = payService.ajaxSearchName(name);
+		
+		return list;
+	}
+	
 	
 	
 
