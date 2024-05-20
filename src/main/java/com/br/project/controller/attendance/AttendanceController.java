@@ -1,6 +1,7 @@
 package com.br.project.controller.attendance;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -93,10 +94,24 @@ public class AttendanceController {
 	@GetMapping("/accountList.do")
 	public ModelAndView list(@RequestParam(value="page", defaultValue="1") int currentPage
 			, ModelAndView mv) {
+
+		// 오늘 날짜를 가져오기
+		Calendar cal = Calendar.getInstance();
+		int currentYear = cal.get(Calendar.YEAR);
+		int currentMonth = cal.get(Calendar.MONTH) + 1; // 월은 0부터 시작하므로 +1 해줍니다.
+
+		// year와 month 설정 (오늘 날짜를 기준으로 설정)
+		String year = String.valueOf(currentYear);
+		String month = String.format("%02d", currentMonth);
 		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("year", year);
+	    paramMap.put("month", month);
+		    
 		int listCount = organizationService.selectOrganizationListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
-		List<MemberDto> list = organizationService.selectAccountList(pi);
+		paramMap.put("pi", pi);
+		List<MemberDto> list = organizationService.selectAccountList(paramMap);
 		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
@@ -111,9 +126,26 @@ public class AttendanceController {
 	public ModelAndView accountSearch(@RequestParam(value="page", defaultValue="1") int currentPage, 
 			@RequestParam(value = "selectedDate", required = false) String selectedDate, ModelAndView mv) {
 		
+		String year = null;
+	    String month = null;
+
+	    if (selectedDate != null && !selectedDate.isEmpty()) {
+	        year = selectedDate.split("-")[0];
+	        month = selectedDate.split("-")[1];
+	    }
+	    Map<String, Object> paramMap = new HashMap<>();
+	    paramMap.put("year", year);
+	    paramMap.put("month", month);
+	    
+		log.debug("year : {}", year);
+		log.debug("month : {}", month);
+		
 		int listCount = organizationService.selectOrganizationListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
-		List<MemberDto> list = organizationService.selectAccountList(pi);
+		paramMap.put("pi", pi);
+		List<MemberDto> list = organizationService.selectAccountList(paramMap);
+		
+		log.debug("사용자가 선택한 날짜 : {}", selectedDate);
 		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)

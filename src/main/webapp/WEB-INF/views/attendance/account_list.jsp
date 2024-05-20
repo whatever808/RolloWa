@@ -36,109 +36,13 @@
 	<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
 	<link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
   
+    <!-- 급여 조회 css -->
+	<link href="${ contextPath }/WEB-INF/views/attendance/account.css" rel="stylesheet">
+	
 	<style>
     .main_content{
     	width: 1200px !important;
         padding: 20px;
-    }
-    
-    /* css */
-    /* 화살표 */
-    .arrow{
-        margin: 0 60px;
-    }
-
-    /* 출력상태 조회 css */
-    .select_date{
-        margin-top: 20px;
-        text-align: center;
-    }
-    .table_2{
-        font-size: 25px;
-        margin: auto;   
-        width: 350px;
-    }
-    #currentDate{
-    	white-space: nowrap;
-    	font-size: 25px;
-    }
-	.arrow{
-    	cursor: pointer;	
-   	}
-    h3{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .table{
-        white-space: nowrap;
-    }
-    .td_1{
-        text-align: right;
-    }
-    .td_1 button {
-        width: 90px;
-    }
-    /* 조회 메뉴 css */
-    .table_search{
-    	/* display: flex;
-    	flex: wrap; */
-    	justify-content: space-between;
-    	align-items: center;
-    	width: 100% !important;
-    }
-    .search_menu {
-        flex: 1 1 auto;
-        margin-right: 10px; /* 필요에 따라 조정 */
-    }
-    .td_search{
-    	display: flex;
-    	align-items: center;
-    	white-space: nowrap;
-    }
-    .td_search input{
-    	width: 250px;
-    	margin: 0 50px;
-    }
-    .td_search button{
-    	margin: 0 10px;
-    	width: 100px;
-    }
-    .input_name{
-    	width: 100px;
-    }
-    .search_menu select{
-        width: 150px;
-    }
-
-    /* 직원 정보 테이블 */
-    .employee_count {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-left: 10px;
-    }
-    .employee_info {
-        text-align: center;
-    }
-    .employee_info th{
-        background-color: lightgray !important;
-    }
-    .employee_info td{
-        vertical-align: middle !important;
-    }
-    .employee_info td img{
-	    border: 1px solid gainsboro;
-	    border-radius: 100%;
-	    width: 50px;
-	    height: 50px;
-		object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
-	    margin: -10px;
- 	}
-    
-    .tr_1:hover td{
-        cursor: pointer;
-        background-color: gainsboro;
     }
     
 
@@ -178,19 +82,40 @@
         // 날짜를 페이지 로드시 바로 출력합니다.
 		window.onload = function(){
 			showMonthlyData();
+			sendTodayDateToController();
 		}
         
         // 날짜 값 형식을 2024-05 같은 형식으로 설정 : input타입 month 형식이라서
 		function showMonthlyData() {
 		    document.getElementById('currentDate').type = 'month';
 		    currentDateElement.value = today.toISOString().split('-').slice(0, 2).join('-');
-		    console.log(currentDate.value);
 		}
+		
+		// 페이지 로드시 오늘 날짜를 보냄
+		function sendTodayDateToController() {
+	        let formData = new FormData();
+	        formData.append('selectedDate', currentDateElement.value);
+
+	        $.ajax({
+	            type:"GET",
+	            url:"${contextPath}/attendance/accountSearch.do?selectedDate" + today,
+	            data:{ selectedDate: currentDateElement.value },
+	            success: function(response) {
+	                // 성공적으로 데이터를 받았을 때 실행할 코드를 작성합니다.
+	                //console.log("오늘 날짜를 컨트롤러로 보냈습니다.");
+	            },
+	            error: function(xhr, status, error) {
+	                // 에러가 발생했을 때 실행할 코드를 작성합니다.
+	                console.error("에러:", error);
+	            }
+	        });
+	    }
         
 		// 날짜 변경 함수
 		function changeDate(direction) {
 		    let dateString = currentDateElement.value;
 		    let currentDate = new Date(dateString);
+		    let selectedDate = currentDateElement.value;
 
 		    if (currentDateElement.type === 'month') {
 		        currentDate.setMonth(currentDate.getMonth() + direction);
@@ -201,22 +126,23 @@
 		    }
 
 		    let formData = new FormData();
-		    formData.append('selectedDate', currentDateElement.value);
+		    formData.append('selectedDate', selectedDate);
 
 		    $.ajax({
 		        type:"GET",
-		        url:"${contextPath}/attendance/search.do",
-		        data:{ selectedDate: currentDateElement.value },
+		        url:"${contextPath}/attendance/accountSearch.do",
+		        data:{ selectedDate: selectedDate },
 		        success: function(response) {
 		            // 성공적으로 데이터를 받았을 때 실행할 코드를 작성합니다.
-		            //console.log("서버 응답:", response);
-			    	console.log("사용자가 선택한 날짜 : ",currentDateElement.value);
+			    	console.log("날짜 : ", selectedDate);
+		            
 		        },
 		        error: function(xhr, status, error) {
 		            // 에러가 발생했을 때 실행할 코드를 작성합니다.
 		            console.error("에러:", error);
 		        }
 		    });
+		    
 		}
 
 		// 사용자가 선택한 날짜 값
@@ -226,12 +152,12 @@
 		    changeDate(0);
 		});
 		</script>
-        
 
 		<!-- 직원 출결 데이터 start -->
-		<form id="search_Form" action="${ contextPath }/attendance/search.do" method="GET">
-			<input type="hidden" name="page" value="1">
-			<input type="hidden" name="selectedDate" id="selectedDate" value="${ selectedDate }">
+		<form id="search_Form" action="${ contextPath }/attendance/accountSearch.do" method="GET">
+			<!-- <input type="hidden" name="page" value="1"> -->
+			<input type="hidden" name="selectedDate" id="selectedDate" value="">
+
 			<table class="table table_search">
 				<tr class="search_menu">
 					<!-- 전체 인원수 -->
@@ -239,22 +165,23 @@
 						<h5 class="employee_count">전체 ${ listCount }명</h5>
 					</td>
 					
-	          		<!-- 부서 -->
+					<!-- 
+	          		
 					<td>
 						<select name="department" id="department" class="form-select"></select>
 					</td>
 					
-					<!-- 팀 -->
 					<td>
 						<select name="team" id="team" class="form-select"></select>
 					</td>
 					
-					<!-- 이름 -->
+					-->
 					<td class="td_search">
 					    <input type="text" id="name" placeholder="이름 입력(한글만)" class="form-control input_name">
 					    <button class="btn btn-primary">검색</button>
 					    <button type="reset" class="btn btn-outline-primary">초기화</button>
 					</td>
+					
 				</tr>
 			</table>
 		</form>
@@ -374,14 +301,17 @@
 	 	    let name = $("#name").val();
 	 	 
  			$.ajax({
- 				url:"${contextPath}/attendance/accountSearch.do",
+ 				url:"${contextPath}/attendance/accountSearch.do?selectedDate="+selectedDate,
  				type: "GET",
  				data: {
- 		            department: department,
+ 					selectedDate : selectedDate
+ 		            /*
+ 					department: department,
  		            phone: phone,
  		            team: team,
  		            status: status,
  		            name: name
+ 					*/
  		        },
 				success: function(response) {
  		            console.log("검색 결과:", response);
@@ -391,6 +321,11 @@
  		        }
  			})
  		}
+ 		
+ 		function updateSelectedDate() {
+ 	        document.getElementById("selectedDate").value = document.getElementById("currentDate").value;
+ 	    }
+ 		
 	    </script>
 	    
 	    <script>

@@ -98,23 +98,23 @@
 	           (SELECT SUM(ROUND((CAST(A.CLOCK_OUT AS DATE) - CAST(A.CLOCK_IN AS DATE)) * 24, 1))
 	            FROM ATTENDANCE A 
 	            WHERE M.USER_NO = A.USER_NO 
-	              AND EXTRACT(YEAR FROM A.CLOCK_IN) = 2024
-	              AND EXTRACT(MONTH FROM A.CLOCK_IN) = 5
+	              AND EXTRACT(YEAR FROM A.CLOCK_IN) = #{year}
+	              AND EXTRACT(MONTH FROM A.CLOCK_IN) = #{month}
 	           ), 0) AS "ALLTIME"
 			 , SALARY
 			 , COALESCE(
 	           (SELECT SUM(ROUND((CAST(A.CLOCK_OUT AS DATE) - CAST(A.CLOCK_IN AS DATE)) * 24, 1)) * M.SALARY
 	            FROM ATTENDANCE A 
 	            WHERE M.USER_NO = A.USER_NO 
-	              AND EXTRACT(YEAR FROM A.CLOCK_IN) = 2024
-	              AND EXTRACT(MONTH FROM A.CLOCK_IN) = 5
+	              AND EXTRACT(YEAR FROM A.CLOCK_IN) = #{year}
+	              AND EXTRACT(MONTH FROM A.CLOCK_IN) = #{month}
 	           ), 0) AS "TOTALSALARY"
 			 , COALESCE(
 	           (SELECT SUM(ROUND((CAST(A.CLOCK_OUT AS DATE) - CAST(A.CLOCK_IN AS DATE)) * 24, 1)) * M.SALARY * 0.9
 	            FROM ATTENDANCE A 
 	            WHERE M.USER_NO = A.USER_NO 
-	              AND EXTRACT(YEAR FROM A.CLOCK_IN) = 2024
-	              AND EXTRACT(MONTH FROM A.CLOCK_IN) = 5
+	              AND EXTRACT(YEAR FROM A.CLOCK_IN) = #{year}
+	              AND EXTRACT(MONTH FROM A.CLOCK_IN) = #{month}
 	           ), 0) AS "PAYMENT"
 			 , BANK
 			 , BANK_ACCOUNT
