@@ -1,0 +1,123 @@
+*{
+    box-sizing: border-box;
+}
+.content{
+    background-color:#e0dada;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+}
+.main-content{
+    display: flex;
+    justify-content: space-between;
+}
+.main-content-left{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+}
+.main-content-right{
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+}
+
+.profile-attend-div, .weather-div{
+    background-color: whitesmoke;
+    border-radius: 9px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+h4, h5{
+    font-weight: bold;
+    font-family: "Jua";
+}
+
+
+/* ------------- 프로필 & 출퇴근 영역 ------------- */
+.profile-attend-div{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.profile-img-div{
+    border-bottom: 1px solid lightgray;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+}
+.profile-img-div>img{
+    display: block;
+    width: 70%;
+    height: 70%;
+    border-radius: 100px;
+}
+
+.profile-attend{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+/* ------------- 일정 ------------- */
+.today-schedule{
+    background-color: whitesmoke;
+    border-radius: 9px;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+/* ------------- 근태현황 ------------- */
+.my-attend{
+    background-color: whitesmoke;
+    border-radius: 9px;
+    padding: 15px;
+    margin-bottom: 30px;
+    width: 100%;
+    display: flex;
+}
+.my-attend-select-div{
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+.my-attend-info-div{
+    width: 80%;
+    display: flex;
+    justify-content: space-evenly;
+}
+.my-attend-select-div>select{
+    width: 150px;
+}
+.attend-info{
+    width: 80px;
+    height: 80px;
+    background-color: rgb(236, 228, 189);
+    border-radius: 50px;;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+/* ------------- 알림목록 ------------- */
+.alert-list-div{
+    display: flex;
+    flex-direction: column;
+    background-color: whitesmoke;
+    border-radius: 9px;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+/* ------------- 공지목록 ------------- */
