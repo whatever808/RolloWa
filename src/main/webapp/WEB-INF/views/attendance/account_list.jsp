@@ -10,34 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2.2 급여 조회</title>
 
-    <!-- animate -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
-	<!-- bootstrap -->
-	<link href="${contextPath}/resources/css/common/bootstrap.min.css" rel="stylesheet">
-	
-	<!-- fontawesome -->
-	<script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
-	
-	<!-- Google Fonts Roboto -->
-	<link rel="stylesheet"
-	    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
-	
-	<!-- Google Fonts Jua -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-	
-	<!-- jQuery -->
-	<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
-	
-	<!-- css -->
-	<link href="${contextPath}/resources/css/common/sidebars.css" rel="stylesheet">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
-  
-    <!-- 급여 조회 css -->
-	<link href="${ contextPath }/WEB-INF/views/attendance/account.css" rel="stylesheet">
+    <!-- css -->
+	<link rel="stylesheet" href="${contextPath}/resources/css/attendance/account.css">
 	
 	<style>
     .main_content{
@@ -81,24 +55,31 @@
 
         // 날짜를 페이지 로드시 바로 출력합니다.
 		window.onload = function(){
+			loadSelectedDate();
 			showMonthlyData();
 			sendTodayDateToController();
 		}
+		function loadSelectedDate() {
+            let savedDate = localStorage.getItem('selectedDate');
+            if (savedDate) {
+                currentDateElement.value = savedDate;
+            } else {
+                currentDateElement.value = today.toISOString().split('-').slice(0, 2).join('-');
+            }
+        }
         
         // 날짜 값 형식을 2024-05 같은 형식으로 설정 : input타입 month 형식이라서
 		function showMonthlyData() {
-		    document.getElementById('currentDate').type = 'month';
-		    currentDateElement.value = today.toISOString().split('-').slice(0, 2).join('-');
+			currentDateElement.type = 'month';
 		}
 		
 		// 페이지 로드시 오늘 날짜를 보냄
 		function sendTodayDateToController() {
-	        let formData = new FormData();
-	        formData.append('selectedDate', currentDateElement.value);
-
+	        //let formData = new FormData();
+	        //formData.append('selectedDate', currentDateElement.value);
 	        $.ajax({
 	            type:"GET",
-	            url:"${contextPath}/attendance/accountSearch.do?selectedDate" + today,
+	            url:"${contextPath}/attendance/accountSearch.do",
 	            data:{ selectedDate: currentDateElement.value },
 	            success: function(response) {
 	                // 성공적으로 데이터를 받았을 때 실행할 코드를 작성합니다.
@@ -115,16 +96,16 @@
 		function changeDate(direction) {
 		    let dateString = currentDateElement.value;
 		    let currentDate = new Date(dateString);
-		    let selectedDate = currentDateElement.value;
+		    //let selectedDate = currentDateElement.value;
 
-		    if (currentDateElement.type === 'month') {
+		    if (currentDateElement.type == 'month') {
 		        currentDate.setMonth(currentDate.getMonth() + direction);
 		        currentDateElement.valueAsDate = currentDate;
 		    } else {
 		        currentDate.setDate(currentDate.getDate() + direction);
 		        currentDateElement.value = currentDate.toISOString().split('T')[0];
 		    }
-
+			/*
 		    let formData = new FormData();
 		    formData.append('selectedDate', selectedDate);
 
@@ -142,15 +123,46 @@
 		            console.error("에러:", error);
 		        }
 		    });
-		    
+		    */
+		    updateSelectedDate();
+		    sendSelectedDateToController();
 		}
 
+		/*
 		// 사용자가 선택한 날짜 값
 		currentDateElement.addEventListener('change', function() {
 		    document.getElementById("selectedDate").value = currentDateElement.value;
 		    // 인자를 전달하지 않고 changeDate를 호출하여 날짜를 갱신
 		    changeDate(0);
 		});
+		*/
+		function updateSelectedDate() {
+			//document.getElementById("selectedDate").value = document.getElementById("currentDate").value;
+			document.getElementById("selectedDate").value = currentDateElement.value;
+ 	    }
+		function sendSelectedDateToController() {
+		    let selectedDate = document.getElementById("selectedDate").value;
+
+		    $.ajax({
+		        type: "GET",
+		        url: "${contextPath}/attendance/accountSearch.do",
+		        data: { selectedDate: selectedDate },
+		        success: function(response) {
+		            // 성공적으로 데이터를 받았을 때 실행할 코드를 작성합니다.
+		            console.log("날짜 :", selectedDate);
+		        },
+		        error: function(xhr, status, error) {
+		            // 에러가 발생했을 때 실행할 코드를 작성합니다.
+		            console.error("에러:", error);
+		        }
+		    });
+		}
+		// 사용자가 선택한 날짜 값
+		currentDateElement.addEventListener('change', function() {
+		    updateSelectedDate();
+		    sendSelectedDateToController();
+		});
+		
 		</script>
 
 		<!-- 직원 출결 데이터 start -->
@@ -301,7 +313,7 @@
 	 	    let name = $("#name").val();
 	 	 
  			$.ajax({
- 				url:"${contextPath}/attendance/accountSearch.do?selectedDate="+selectedDate,
+ 				url:"${contextPath}/attendance/accountSearch.do",
  				type: "GET",
  				data: {
  					selectedDate : selectedDate
@@ -322,9 +334,7 @@
  			})
  		}
  		
- 		function updateSelectedDate() {
- 	        document.getElementById("selectedDate").value = document.getElementById("currentDate").value;
- 	    }
+ 		
  		
 	    </script>
 	    
