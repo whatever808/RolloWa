@@ -42,7 +42,14 @@
 	<interceptors>
 		<interceptor>
 			<mapping path="/board/*" />
+			<mapping path="/calendar/*" />
 			<beans:bean class="com.br.project.interceptor.loginCheckInterceptor" id="loginCheckInterceptor" />
+		</interceptor>
+		
+		<interceptor>
+			<mapping path="/calendar/companyCalEnroll.page" />
+			<mapping path="/calendar/calendarList.page" />
+			<beans:bean class="com.br.project.interceptor.LevelCheckInterceptor" id="LevelCheckInterceptor" />
 		</interceptor>
 	</interceptors>
 	
