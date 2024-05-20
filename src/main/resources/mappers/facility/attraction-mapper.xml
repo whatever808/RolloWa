@@ -7,21 +7,17 @@
 	<select id="selectTotalAttractionCount" resultType="_int" parameterType="hashmap">
 		select count(attraction_no) "totalAttractions"
 		  from tb_attraction
-		<if test="location != null and !location.equals('')">
-			<where>
+		<where>
+			<if test="location != null and !location.equals('')">
 				and location = #{location}
-			</where>
-		</if>
-		<if test="status != null and !status.equals('')">
-			<where>
-				and status = #{status}
-			</where>
-		</if>
-		<if test="keyword != null and !keyword.equals('')">
-			<where>
+			</if>
+			<if test="status != null and !status.equals('')">
+				and tb_attraction.status = #{status}
+			</if>
+			<if test="keyword != null and !keyword.equals('')">
 				and attraction_name like '%' || #{keyword} || '%'
-			</where>
-		</if>
+			</if>
+		</where>
 	</select>
 	
 	<!-- 어트랙션 목록조회 -->
@@ -29,40 +25,49 @@
 		select 
 			  attraction_no "attractionNo"
 			 ,location_name "locationName"
-			 ,customer_limit || '명' "customerLimit"
 			 ,attraction_name "attractionName"
+			 ,customer_limit || '명' "customerLimit"
 			 ,nvl2(age_limit, age_limit || '세 ' || age_limit_range, '') "ageLimit"
 			 ,nvl2(height_limit, height_limit || 'cm ' || height_limit_range, '') "heightLimit"
 			 ,tb_attraction.status "status"
+			 ,(
+			 	 select user_name
+			 		 from member
+			 		where user_no = tb_attraction.regist_emp
+			  ) "registEmp"
+			 ,(
+			 		select user_name
+			 		  from member
+			 		 where user_no = tb_attraction.modify_emp
+			 	 ) "modifyEmp"
 		 from tb_attraction
 		 join tb_location on (location = location_no)
-		 <if test="location != null and !location.equals('')">
-			<where>
+		 <where>
+			<if test="location != null and !location.equals('')">
 				and location = #{location}
-			</where>
-		</if>
-		<if test="status != null and !status.equals('')">
-			<where>
+			</if>
+			<if test="status != null and !status.equals('')">
 				and tb_attraction.status = #{status}
-			</where>
-		</if>
-		<if test="keyword != null and !keyword.equals('')">
-			<where>
+			</if>
+			<if test="keyword != null and !keyword.equals('')">
 				and attraction_name like '%' || #{keyword} || '%'
-			</where>
-		</if>
+			</if>
+		</where>
 	</select>
 	
 	<!-- 어트랙션 상세조회 -->
 	<select id="selectAttraction" resultType="hashmap" parameterType="hashmap">
 		select 
 					 attraction_no "attractionNo"
+					,location "locationNo"
 					,location_name "locationName"
 					,attraction_name "attractionName"
 					,attraction_intro "attractionIntro"
 					,customer_limit "customerLimit"
-					,nvl2(age_limit, age_limit || '세 ' || age_limit_range, '') "ageLimit"
-					,nvl2(height_limit, height_limit || 'cm ' || height_limit_range, '') "heightLimit"
+					,nvl2(age_limit, age_limit, '') "ageLimit"
+					,nvl2(age_limit, age_limit_range, '') "ageLimitRange"
+					,nvl2(height_limit, height_limit, '') "heightLimit"
+					,nvl2(height_limit_range, height_limit_range, '') "heightLimitRange"
 					,tb_attraction.status "status"
 					,status_reason "statusReason"
 		 from tb_attraction

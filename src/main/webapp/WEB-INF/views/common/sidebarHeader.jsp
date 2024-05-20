@@ -441,25 +441,6 @@
                         </ul>
                     </div>
                 </li>
-              
-               <script>
-                $(document).ready(function(){
-                  // 로그인 회원 정보조회
-                  $.ajax({
-                      url:"${ contextPath }/member/memInfo.do",
-                      method:"get",
-                      data:"userId=${ loginMember.userNo }",
-                      success:function(memInfo){
-                        // 부장 or 사장일 경우, 공지사항 작성메뉴 노출
-                        if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
-                          $(".board-publisher").removeClass("d-none");
-                        }
-                      },error:function(){
-                        console.log("로그인 회원 정보조회 AJAX 실패");
-                      }
-                    })
-                })
-              </script>
              <!-- ======================================= 게시판 관련 end ======================================= -->
              <!-- ======================================= 어트랙션 관련 start ======================================= -->
               <li class="mb-1">
@@ -475,11 +456,11 @@
                            </li> 
 
                           <li><a href="${ contextPath }/attraction/regist.page"
-                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
+                                 class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
                           </li>
 
-                          <li><a href=""
-                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
+                          <li><a href="${ contextPath }/attraction/manage.do"
+                                 class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
                           </li>
 
 
@@ -487,6 +468,29 @@
                   </div>
               </li>
               <!-- ======================================= 어트랙션 관련 end ======================================= -->
+              <script>
+                $(document).ready(function(){
+                  // 로그인 회원 정보조회
+                  $.ajax({
+                      url:"${ contextPath }/member/memInfo.do",
+                      method:"get",
+                      data:"userId=${ loginMember.userNo }",
+                      success:function(memInfo){
+                        // 직급이 부장 or 사장일 경우에만 공지사항 관리자 메뉴 노출
+                        if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
+                          $(".board-publisher").removeClass("d-none");
+                        }
+                        
+                        // 어트랙션 운영팀 소속 팀원들에게만 어트랙션 관리자 메뉴 노출
+                        if(memInfo.teamCode == 'B'){
+                        	$(".attraction-manager").removeClass("d-none");
+                        }
+                      },error:function(){
+                        console.log("로그인 회원 정보조회 AJAX 실패");
+                      }
+                    })
+                })
+              </script>
               <!-- ======================================= "가림" 구역 end ======================================= -->
 
                 <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->

@@ -40,15 +40,29 @@
 	
 	<!-- Interceptors -->
 	<interceptors>
+		<!-- 로그인 체크 인터셉터 -->
 		<interceptor>
 			<mapping path="/board/*" />
-			<mapping path="/calendar/*" />
-			<beans:bean class="com.br.project.interceptor.loginCheckInterceptor" id="loginCheckInterceptor" />
+      <mapping path="/calendar/*" />
+			<beans:bean class="com.br.project.interceptor.LoginCheckInterceptor" id="loginCheckInterceptor" />
 		</interceptor>
 		
+		<!-- 어트랙션 관리권한 체크 인터셉터 -->
+		<interceptor>
+			<mapping path="/attraction/manage/*" />
+			<mapping path="/attraction/regist.*" />
+			<mapping path="/attraction/modify.*" />			
+			<beans:bean class="com.br.project.interceptor.facility.attraction.AttractionManageAuthorizationCheckInterceptor" id="attractionManageAuthorizationCheckInterceptor" />
+		</interceptor>
+
+    <!-- 사장 부장 권한 체크 인터셉터	 -->
 		<interceptor>
 			<mapping path="/calendar/companyCalEnroll.page" />
 			<mapping path="/calendar/calendarList.page" />
+      <mapping path="/board/publisher/*" />
+			<mapping path="/board/temp/*" />
+			<mapping path="/board/modify.*" />
+			<mapping path="/board/*/modify.*" />
 			<beans:bean class="com.br.project.interceptor.LevelCheckInterceptor" id="LevelCheckInterceptor" />
 		</interceptor>
 	</interceptors>

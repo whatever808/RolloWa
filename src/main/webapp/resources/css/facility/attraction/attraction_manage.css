@@ -1,36 +1,27 @@
+/*------------- page title -------------*/
 .page-title{
     margin-bottom: 50px;
     font-weight: bold;
     font-family: "Jua";
 }
 
-/* ------------- board category ------------- */
-#filter-category{
-	
-}
-#category{
-	display: inline-block;
-    width: 200px;
-}
-#department{
-	display: inline-block;
-	margin-left: 50px;
-	width: 200px;
-}
+/* ------------- attraction status select box ------------- */
 
 /* ------------- search form ------------- */
 #filter-search{
 	float: right;
+	margin-bottom: 100px;
 }
 #keyword, #condition, #search-btn, #reset-search{
-	height: 40px;
+	height: 50px;
 }
 #condition{
     display: inline-block;
-    width: 150px;
+    width: 200px;
 }
 #keyword{
 	border: 1px solid lightgray;
+	width: 500px;
 }
 
 /* ------------- reset search value ------------- */
@@ -44,35 +35,33 @@
 	cursor: pointer;
 }
 
-/* ------------- board list ------------- */
-.board-list{
-    margin-top: 150px;
+/*------------- attraction list -------------*/
+thead tr{
+    font-size: 16px;
+    font-weight: 400;
     text-align: center;
 }
-.board-list tbody>tr>.board-title{
-    cursor: pointer;
-}
-.bi-star:hover{ 
-    cursor: pointer; 
-}
-.board-writer-profile{
-    width: 25px;
-    height: 25px;
-    margin-right: 5px;
+
+.attraction-list{
+    text-align: center;
 }
 
-.trashcan-icon:hover{
-		cursor: pointer;
+.attraction-name-td{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: 0;
+    text-align: center;
 }
 
 /* ------------- pagination ------------- */
-.board-list-pagination{
+.attraction-list-pagination{
     margin-top: 90px;
     display: flex;
     justify-content: center;
     align-itmes: center;
     
 }
-.board-list-pagination>.pagination span:hover{
+.attraction-list-pagination>.pagination span:hover{
 		cursor: pointer;
 }

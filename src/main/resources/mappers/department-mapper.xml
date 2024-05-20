@@ -15,7 +15,7 @@
 		<result 	column="upper_code"			property="upperCode" />
 	</resultMap>
 
-  	<!-- 부서 목록조회 -->
+  <!-- 부서 목록조회 -->
 	<select id="selectDepartmentList" resultMap="groupResultMap" parameterType="java.util.Map">
 		select 
 			   group_code		
@@ -41,11 +41,11 @@
 		  from tb_group
 		 where group_code like #{upperGroupCode}
 		   and code = (
-		   				select upper_code
-		   				  from tb_group
-		   				 where group_code like #{groupCode}
-		   				   and code = #{code}
-		   			   )
+					   				select upper_code
+					   				  from tb_group
+					   				 where group_code like #{groupCode}
+					   				   and code = #{code}
+		   			   		)
 	</select>
 	
 	<!-- ========================== "가림" 영역 ========================== -->
