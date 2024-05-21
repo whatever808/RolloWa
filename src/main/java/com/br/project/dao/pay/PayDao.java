@@ -325,7 +325,7 @@ public class PayDao {
 	
 	public List<PayDto> delayDateSearchList(Map<String, Object> userMap, PageInfoDto pi){
 		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
-		return sqlSessionTemplate.selectList("payMapper.delayDateSelectList", userMap, rowBounds);
+		return sqlSessionTemplate.selectList("payMapper.delayDateSearchList", userMap, rowBounds);
 	}
 	
 	public List<Map<String, Object>> retireModify(Map<String, Object> map){
@@ -350,6 +350,22 @@ public class PayDao {
 	
 	public int updateInsertItemsB(Map<String, Object> item) {
 		return sqlSessionTemplate.insert("payMapper.updateInsertItemsB", item);
+	}
+	
+	public int ajaxSign(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.ajaxSign", map);
+	}
+	
+	public List<Map<String, Object>> teamNameList(){
+		return sqlSessionTemplate.selectList("payMapper.teamNameList");
+	}
+	
+	public List<Map<String, Object>> ajaxTeamSearch(String name){
+		return sqlSessionTemplate.selectList("payMapper.ajaxTeamSearch", name);
+	}
+	
+	public List<Map<String, Object>> ajaxSearchName(String name){
+		return sqlSessionTemplate.selectList("payMapper.ajaxSearchName", name);
 	}
 	
 	

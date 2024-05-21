@@ -21,8 +21,8 @@
     <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <!-- 모달 관련 -->
-    <script src="/src/main/webapp/resources/js/iziModal.min.js"></script>
-    <link rel="stylesheet" href="/src/main/webapp/resources/css/iziModal.min.css">
+    <script src="/RolloWa/src/main/webapp/resources/js/iziModal.min.js"></script>
+    <link rel="stylesheet" href="/RolloWa/src/main/webapp/resources/css/iziModal.min.css">
 
 
 
@@ -47,10 +47,6 @@
         </div>
     </div>
 
-    <div id="modal-iframe">
-        <div></div>
-    </div>
-
 
     <br>
     <!-- Trigger to open Modal -->
@@ -58,8 +54,6 @@
     <br>
     <button data-izimodal-open="#modal">Modal</button>
     <br>
-
-    <button data-izimodal-open="#modal-iframe">iframe</button>
 
     <script>
         // 1. 해당 아이디의 모달 등록이 필요함
@@ -92,11 +86,6 @@
             //comingOut, bounceOutDown, bounceOutUp, fadeOutDown, fadeOutUp, , fadeOutLeft, fadeOutRight, flipOutX
         });
 
-        $('#modal-iframe').iziModal({
-            iframe: true,
-            iframeURL: 'https://www.youtube.com/watch?v=tPDGlPqhzIc'
-        })
-
         // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
         $("#modal-test").on('click', function () {
             // event.preventDefault(); //위의 클릭 이벤트가 일어나는 동안 다른 이벤트가 발생하지 않도록해주는 명령어
@@ -109,8 +98,57 @@
             // 이전 다음은 그룹으로 모달을 지정 해야만 함
             // data-izimodal-group="grupo1"
         });
+    </script>
 
 
+    <!-- 알람 모달 창 -->
+    <div id="redModal"></div>
+    <div id="greenModal"></div>
+    <div id="yellowModal"></div>
+
+    <button onclick="redAlert('주의!', '에러 발생');">red</button>
+    <button onclick="greenAlert('알림', '성공');">green</button>
+    <button onclick="yellowAlert('경고', 'hostoryback');">yellow</button>
+
+    <script>
+        $('#redModal').iziModal({
+            headerColor: '#dc3545',
+            timeout: 3000,
+            timeoutProgressbar: true
+        });
+
+        $('#greenModal').iziModal({
+            headerColor: '#28a745',
+            timeout: 3000,
+            timeoutProgressbar: true
+        });
+
+        $('#yellowModal').iziModal({
+            headerColor: '#ffc107', 
+            timeout: 3000,
+            timeoutProgressbar: true,
+            onClosing: function(){
+                history.back();
+            },
+        });
+
+        function redAlert(title, content){
+            $('#redModal').iziModal('setTitle', title);
+            $('#redModal').iziModal('setSubtitle', content);
+            $('#redModal').iziModal('open');
+        }
+
+        function greenAlert(title, content){
+            $('#greenModal').iziModal('setTitle', title);
+            $('#greenModal').iziModal('setSubtitle', content);
+            $('#greenModal').iziModal('open');
+        }   
+
+        function yellowAlert(title, content){
+            $('#yellowModal').iziModal('setTitle', title);
+            $('#yellowModal').iziModal('setSubtitle', content);
+            $('#yellowModal').iziModal('open');
+        }   
     </script>
 
 

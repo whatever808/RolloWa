@@ -285,22 +285,104 @@
 
         /* 채팅방 스타일 끝 */
     </style>
+<style>
+#main_logo span:hover {
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  animation: bounce 0.3s ease infinite alternate;
+}
+#main_logo span:{
+	animation-delay: 0.1s;
+}
+#main_logo span{
+	background: linear-gradient(to left, #f6eec9, #dfc853 70%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@keyframes bounce {
+  100% {top: -3px;}
+}
+.allposition{
+	display: flex;
+}
+</style>
 </head>
-<body>
+<body class="allposition">
+
+
 <c:if test="${ alertMsg != null }" >
-<script>
-	alertify.alert('${alertTitle}','${alertMsg}');
-</script>
+<c:choose>
+	<c:when test="${modalColor eq 'G'}" >
+		redAlert('${ alertTitle }', '${ alertMsg }');
+	</c:when>
+	<c:when test="${modalColor eq 'R'}">
+		greenAlert('${ alertTitle }', '${ alertMsg }');
+	</c:when>
+	<c:when test="${modalColor eq 'Y'}">
+		yellowAlert('${ alertTitle }', '${ alertMsg }');
+	</c:when>
+</c:choose>
+
+<!-- <script>alertify.alert('${alertTitle}','${alertMsg}'); </script> -->
 </c:if>
 
-<main class="d-flex flex-nowrap">
+<main class="d-flex flex-nowrap"></main>
+	<!-- 알림창 div -->
+    <div id="redModal"></div>
+    <div id="greenModal"></div>
+    <div id="yellowModal"></div>  
+    <script>
+	    $('#redModal').iziModal({
+	        headerColor: '#dc3545',
+	        timeout: 3000,
+          zindex: 9999,
+	        timeoutProgressbar: true
+	    });
+	
+	    $('#greenModal').iziModal({
+	        headerColor: '#28a745',
+	        timeout: 3000,
+	        zindex: 9999,
+	        timeoutProgressbar: true
+	    });
+	    
+      $('#yellowModal').iziModal({
+          headerColor: '#ffc107', 
+          timeout: 3000,
+          zindex: 9999,
+          timeoutProgressbar: true,
+      });
+	    
+      function redAlert(title, content){
+          $('#redModal').iziModal('setTitle', title);
+          $('#redModal').iziModal('setSubtitle', content);
+          $('#redModal').iziModal('open');
+      };
+
+      function greenAlert(title, content){
+          $('#greenModal').iziModal('setTitle', title);
+          $('#greenModal').iziModal('setSubtitle', content);
+          $('#greenModal').iziModal('open');
+      };
+      
+      function yellowAlert(title, content){
+          $('#yellowModal').iziModal('setTitle', title);
+          $('#yellowModal').iziModal('setSubtitle', content);
+          $('#yellowModal').iziModal('open');
+      };
+    </script>
+	
         <div class="flex-shrink-0 p-3" style="width: 280px;">
-            <a href="/"
+            <a href="${contextPath}/"
                 class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
                 <svg class="bi pe-none me-2" width="30" height="24">
                     <use xlink:href="#bootstrap" />
                 </svg>
-                <span class="fs-5 fw-semibold">회사로고</span>
+                <span id="main_logo" class="fs-5 fw-semibold font-size25 jua-regular">
+	                <span>RoLLoWa</span>
+                </span>
             </a>
             <ul class="list-unstyled ps-0">
                 <li class="mb-1">
@@ -359,25 +441,6 @@
                         </ul>
                     </div>
                 </li>
-              
-               <script>
-                $(document).ready(function(){
-                  // 로그인 회원 정보조회
-                  $.ajax({
-                      url:"${ contextPath }/member/memInfo.do",
-                      method:"get",
-                      data:"userId=${ loginMember.userNo }",
-                      success:function(memInfo){
-                        // 부장 or 사장일 경우, 공지사항 작성메뉴 노출
-                        if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
-                          $(".board-publisher").removeClass("d-none");
-                        }
-                      },error:function(){
-                        console.log("로그인 회원 정보조회 AJAX 실패");
-                      }
-                    })
-                })
-              </script>
              <!-- ======================================= 게시판 관련 end ======================================= -->
              <!-- ======================================= 어트랙션 관련 start ======================================= -->
               <li class="mb-1">
@@ -388,16 +451,16 @@
                   <div class="collapse" id="attraction-collapse">
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 
-                          <li><a href=""
+                          <li><a href="${ contextPath }/attraction/list.do"
                                  class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 조회</a>
-                          </li>
+                           </li> 
 
                           <li><a href="${ contextPath }/attraction/regist.page"
-                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
+                                 class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
                           </li>
 
-                          <li><a href=""
-                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
+                          <li><a href="${ contextPath }/attraction/manage.do"
+                                 class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
                           </li>
 
 
@@ -405,6 +468,29 @@
                   </div>
               </li>
               <!-- ======================================= 어트랙션 관련 end ======================================= -->
+              <script>
+                $(document).ready(function(){
+                  // 로그인 회원 정보조회
+                  $.ajax({
+                      url:"${ contextPath }/member/memInfo.do",
+                      method:"get",
+                      data:"userId=${ loginMember.userNo }",
+                      success:function(memInfo){
+                        // 직급이 부장 or 사장일 경우에만 공지사항 관리자 메뉴 노출
+                        if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
+                          $(".board-publisher").removeClass("d-none");
+                        }
+                        
+                        // 어트랙션 운영팀 소속 팀원들에게만 어트랙션 관리자 메뉴 노출
+                        if(memInfo.teamCode == 'B'){
+                        	$(".attraction-manager").removeClass("d-none");
+                        }
+                      },error:function(){
+                        console.log("로그인 회원 정보조회 AJAX 실패");
+                      }
+                    })
+                })
+              </script>
               <!-- ======================================= "가림" 구역 end ======================================= -->
 
                 <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
@@ -416,13 +502,13 @@
                     <div class="collapse" id="org-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li>
-                            	<a href="${ contextPath }/orginfo/orgChart.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
+                            	<a href="${ contextPath }/organization/chart.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/orginfo/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
+                            	<a href="${ contextPath }/organization/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/orginfo/orgManager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
+                            	<a href="${ contextPath }/organization/manager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
                             </li>
                         </ul>
                     </div>

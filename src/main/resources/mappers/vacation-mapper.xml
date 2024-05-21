@@ -42,6 +42,8 @@ where
     vacation.STATUS = 'Y'
 and 
     APPORVAL_STATUS = 'Y'
+and 
+    member.team_code = #{teamCode}
 <![CDATA[
 and 
 	Months_between(VACATION_STRAT   , sysdate) <= 6

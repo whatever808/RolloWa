@@ -23,8 +23,8 @@ public class AttendanceService {
 		return attendanceDao.selectAttendanceListCount();
 	}
 
-	public List<HashMap<String, String>> selectAttendanceList(PageInfoDto pi) {
-		return attendanceDao.selectAttendanceList(pi);
+	public List<HashMap<String, String>> selectAttendanceList(PageInfoDto pi, String nowDate) {
+		return attendanceDao.selectAttendanceList(pi,nowDate);
 	}
 
 	public List<AttendanceDto> SelectAttendanceCount() {

@@ -2,6 +2,7 @@ package com.br.project.dao.attendance;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -25,14 +26,18 @@ public class AttendanceDao {
 	}
 
 
-	public List<HashMap<String, String>> selectAttendanceList(PageInfoDto pi) {
+	public List<HashMap<String, String>> selectAttendanceList(PageInfoDto pi, String nowDate) {
 		
 		int limit = pi.getListLimit();
 		int offset = (pi.getCurrentPage()-1) * limit;
 		
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return sqlSessionTemplate.selectList("attendanceMapper.selectAttendanceList", null, rowBounds);
+		Map<String, Object> prams = new HashMap<String, Object>();
+		prams.put("nowDate", nowDate);
+		prams.put("rowBounds", rowBounds);
+
+		return sqlSessionTemplate.selectList("attendanceMapper.selectAttendanceList", prams, rowBounds);
 		
 	}
 
