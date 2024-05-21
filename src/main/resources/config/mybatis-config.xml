@@ -22,8 +22,7 @@
     <typeAlias type="com.br.project.dto.attendance.AttendanceDto"			    alias="AttendanceDto"/>
     <typeAlias type="com.br.project.dto.pay.MemberDeptDto"                alias="MemberDeptDto"/>
     <typeAlias type="com.br.project.dto.location.LocationDto"             alias="LocationDto" />
-    <typeAlias type="com.br.project.dto.facility.AttractionDto"           alias="AttractionDto" />
-    <typeAlias type="com.br.project.dto.pay.VacationDto"         				alias="VacationDto" />
+    <typeAlias type="com.br.project.dto.pay.VacationDto"           				alias="VacationDto" />
     <typeAlias type="com.br.project.dto.chat.ChatRoomDto"         				alias="ChatRoomDto" />
 	</typeAliases>
 	
@@ -42,6 +41,7 @@
 		<mapper resource="mappers/location-mapper.xml" />
 		<mapper resource="mappers/vacation-mapper.xml" />
 		<mapper resource="mappers/chat-mapper.xml" />
+		<mapper resource="mappers/facility/store-mapper.xml" />
 	</mappers>
 
 </configuration>
