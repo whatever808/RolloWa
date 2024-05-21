@@ -65,7 +65,7 @@ h4, h5{
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    background-color: #b8d9ff;
+    background-color: #c5d0de;
     border-radius: 20px;
 }
 .weather-div>*{
