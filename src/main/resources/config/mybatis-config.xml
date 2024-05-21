@@ -24,7 +24,7 @@
     <typeAlias type="com.br.project.dto.location.LocationDto"             alias="LocationDto" />
     <typeAlias type="com.br.project.dto.facility.AttractionDto"           alias="AttractionDto" />
     <typeAlias type="com.br.project.dto.pay.VacationDto"         				alias="VacationDto" />
-    <typeAlias type="com.br.project.dto.chat.ChatRoomDto"         				alias="VacationDto" />
+    <typeAlias type="com.br.project.dto.chat.ChatRoomDto"         				alias="ChatRoomDto" />
 	</typeAliases>
 	
 	

@@ -85,4 +85,24 @@
    dual
   </select>
   
+  <!-- 채팅방 목록 조회 -->
+  <select id="selectChatRoom" resultMap="chatRoomResult">
+  select
+    	cr.cr_no
+	from
+	    chatting_participation cp
+	join
+	    chatting_room cr
+	on
+	    cp.cr_no = cr.cr_no
+	where
+	    chat_user_no = '1051'
+	and
+	    cr.status = 'Y'
+	and
+	    cp.status = 'Y'
+	order by
+	    chat_in_date desc
+  </select>
+  
 </mapper>
