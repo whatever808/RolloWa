@@ -31,15 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RoomController {
 	private final ChatService chatService;
-	
-	// 채팅방 목록 조회
-	@GetMapping("/rooms")
-	public String rooms(Model model) {
-		//model.addAttribute("list", chatDao.findAllRooms());
 		
-		return "chat/rooms";
-	}
-	
 	// 채팅방 생성
 	@PostMapping("/room")
 	@ResponseBody
@@ -96,11 +88,12 @@ public class RoomController {
 	}
 	
 	// 로그인한 회원의 채팅방 목록 조회
-	@GetMapping("/room")
+	@GetMapping(value="/rooms", produces="application/json; charset=utf-8")
 	@ResponseBody
-	public void getRoom(HttpSession session) {
+	public List<ChatRoomDto> getRoom(HttpSession session) {
 		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
 		
-		List<ChatRoomDto> charRoomList = chatService.selectChatRoom(loginMember.getUserNo());
+		List<ChatRoomDto> chatRoomList = chatService.selectChatRoom(loginMember.getUserNo());
+		return chatRoomList;
 	}
 }

@@ -504,10 +504,11 @@
        		}
        	})
        })
+       
+       
     })
 
     // 채팅하기 버튼 클릭 시 체크된 회원들과 채팅방 생성
-  
     function createChatRoom() {
     	// 1. 채팅방 데이터 생성 => Chatting Room 데이터 추가, Chatting Participation 데이터 추가
     	var roomNo;
@@ -530,8 +531,6 @@
  			    				, success: function(result) {
  			    					if(result == "SUCCESS") {
  			    						// 1-2-2. 채팅방 구독
-	 		 			    			chatting = new SockJS("${contextPath}/chatting");
-	 		 			    			stompClient = Stomp.over(chatting);
 	 		 			    			stompClient.connect({}, function(frame) {
 	 		 			    				stompClient.subscribe("/topic/room/" + roomNo, function(msg) {
 	 		 			    					console.log(msg);
@@ -567,6 +566,26 @@
    			}
     	})
     }
+    
+    // 구독 중인 채팅방 목록 조회
+    $.ajax({
+    	url: "${contextPath}/chat/rooms"
+    	, method: "get"
+    	, success: function(result) {
+    		console.log(result)
+    		// 참여중인 채팅방 구독
+    		for(var i = 0; i < result.length; i++) {
+    			stompClient.connect({}, function(frame) {
+	    			stompClient.subscribe("/topic/chat/room/" + result[i].chatRoomNo, function(msg) {
+	    				console.log(msg);
+	    			})
+	    		})
+    		}
+    	}
+    	, error: function() {
+    		console.log("채팅방 목록 조회 ajax 통신 실패");
+    	}
+    })
     
     // 현재 접속한 채팅방 구독 주소로 메세지 발송
 		function sendMsg() {
