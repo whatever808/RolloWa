@@ -11,11 +11,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dto.board.BoardDto;
@@ -45,171 +44,121 @@ public class BoardController {
 	private final FileUtil fileUtil;
 	
 	/**
-	 * @method : 공지사항 목록조회(페이지별)
+	 * @method : 공지사항 목록조회
 	 */
-	@RequestMapping(value="/list.do")
-	public String selectBoardList(@RequestParam(value="page", defaultValue="1") int currentPage
-								 ,@RequestParam HashMap<String, Object> filter
-								 ,Model model
-								 ,HttpServletRequest request
-								 ,RedirectAttributes redirectAttributes) {
+	@RequestMapping(value={"/list.do", "/publisher/list.do", "/temp/list.do"})
+	public String selectBoardList(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		
 		try {
-			filter.put("status", "Y");	// 조회할 공지사항의 상태값
-			
-			// 게시글 페이징바 생성
-			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(boardService.selectTotalBoardCount(filter), currentPage, 5, 10);
-			
-			// 응답페이지 지정 및 응답데이터 반환
-			model.addAttribute("boardList", boardService.selectBoardList(pageInfo, filter));				// 게시글 목록
-			model.addAttribute("pageInfo", pageInfo);
-			//model.addAttribute("departmentList", departmentService.selectDepartmentList("DEPT01"));		// 부서 목록
-			model.addAttribute("filter", filter);
-			
-			/* ===== 기웅 추가 ===== */
-			if(filter.get("flag") != null) {
-				model.addAttribute("flag", filter.get("flag"));
-				model.addAttribute("boardNo", filter.get("boardNo"));
+			StringBuffer requestURL = request.getRequestURL();
+			HashMap<String, Object> params = getParameterMap(request);
+			if(params.get("page") == null || ((String)params.get("page")).equals("")) {
+				params.put("page", "1");
 			}
-			/* ===== 기웅 추가 ===== */
 			
-			return "/board/list";
+			// 내가 작성한 공지사항 or 임시저장 공지사항 목록조회 요청일 경우 =============================================================
+			if(requestURL.indexOf("publisher") != -1 || requestURL.indexOf("temp") != -1) {
+				
+				MemberDto loginMember = (MemberDto)(request.getSession().getAttribute("loginMember"));
+				
+				// 회원 소속 부서조회
+				HashMap<String, Object> deptParams = new HashMap<>();
+				deptParams.put("upperGroupCode", "DEPT%");
+				deptParams.put("groupCode", "TEAM%");
+				deptParams.put("code", loginMember.getTeamCode());
+				GroupDto loginMemberDepartment = departmentService.selectUppderCode(deptParams);
+
+				
+				if(params.get("category") == null) {
+					params.put("category", "normal");
+				}
+				params.put("userNo", loginMember.getUserNo());
+				params.put("department", loginMemberDepartment.getCode());
+			}
+			// 내가 작성한 공지사항 or 임시저장 공지사항 목록조회 요청일 경우 =============================================================
 			
+			// 조회할 공지사항 상태값 지정
+			params.put("status", requestURL.indexOf("temp") != -1 ? "T" : "Y");
+
+			// 게시글 페이징바 생성
+			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(boardService.selectTotalBoardCount(params), 
+															 Integer.parseInt(params.get("page").toString()), 5, 10);
+			
+			// 반환데이터
+			if(requestURL.indexOf("publisher") == -1 || requestURL.indexOf("temp") == -1) {
+				Map<String, String> map = new HashMap<>();
+				map.put("code", "DEPT01");
+				request.setAttribute("departmentList", departmentService.selectDepartmentList(map));	// 부서 목록조회
+			}
+			request.setAttribute("boardList", boardService.selectBoardList(pageInfo, params));
+			request.setAttribute("pageInfo", pageInfo);
+			request.setAttribute("filter", params);
+			
+			// 반환페이지
+			if(requestURL.indexOf("temp") != -1) {
+				return "board/temp/temp_board_list";				
+			}else if(requestURL.indexOf("publisher") != -1){
+				return "board/publisher/publisher_board_list";
+			}else {
+				return "board/board_list";
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 목록서비스");
 			redirectAttributes.addFlashAttribute("alertMsg", "공지사항 목록조회 요청에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
 		}
-		
 	}
 	
 	/**
-	 * @method : 공지사항 목록조회(페이지별) (AJAX)
+	 * @method : 공지사항 목록조회 (AJAX)
 	 */
-	@RequestMapping(value={"/list.ajax", "/publisher/list.ajax", "/temp/list.ajax"})
+	@RequestMapping(value={"/list.ajax", "/publisher/list.ajax", "/temp/list.ajax",
+						   "/detail/list.ajax", "/publisher/detail/list.ajax", "/temp/detail/list.ajax"})
 	@ResponseBody
-	public Map<String, Object> ajaxSelectBoardList(@RequestParam HashMap<String, Object> filter
-											      ,HttpServletRequest request){
+	public Object ajaxSelectBoardList(HttpServletRequest request){
 		
 		StringBuffer requestURL = request.getRequestURL();
 		
-		if(requestURL.indexOf("temp") != -1) {
-			// 임시저장 공지 목록조회 요청일 경우 조회할 공지사항 상태값
-			filter.put("status", "T");
-		}else {
-			// 전체공지 or 내가 쓴 공지 목록조회 요청일 경우 조회할 공지사항 상태값
-			filter.put("status", "Y");
-		}
-		
-		// 내가 쓴 공지 or 임시저장 공지 목록조회 요청일 경우
-		if(requestURL.indexOf("publisher") != -1 || requestURL.indexOf("temp") != -1) {
-			MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
-			filter.put("userNo", loginMember.getUserNo());
-		}
-		
-		// 게시글 페이징바 생성
-		PageInfoDto pageInfo = pagingUtil.getPageInfoDto(boardService.selectTotalBoardCount(filter), 
-														 Integer.parseInt(filter.get("page").toString()), 5, 10);
-		
-		// 응답데이터 반환 (게시글목록)
-		Map<String, Object> response = new HashMap<>();
-
-		response.put("boardList", boardService.selectBoardList(pageInfo, filter));
-		response.put("pageInfo", pageInfo);
-		
-		return response;
-	}
-	
-	/**
-	 * @method : 공지사항 목록조회(전체)(AJAX)
-	 */
-	@RequestMapping(value={"/detail/list.ajax", "/publisher/detail/list.ajax", "/temp/detail/list.ajax"})
-	@ResponseBody
-	public List<BoardDto> ajaxSelectBoardList(HttpServletRequest request){
-		
+		// 조회할 공지사항 상태값 지정
 		HashMap<String, Object> params = getParameterMap(request);
-		
-		if(request.getRequestURL().indexOf("temp") != -1) {
-			// 임시보관 공지사항 목록조회시 조회할 공지사항 상태값
-			params.put("status", "T");	
+		params.get("page");
+		if(requestURL.indexOf("temp") != -1) {
+			params.put("status", "T");
 		}else {
-			// 내가 쓴 글 or 단순 목록조회시 조회할 공지사항 상태값
 			params.put("status", "Y");
 		}
-		// 내가 쓴 공지 or 임시저장 공지 목록조회 요청시
-		if(request.getRequestURL().indexOf("publisher") != -1 || request.getRequestURL().indexOf("temp") != -1) {
+		
+		// 내가 작성한 공지사항(등록 | 임시저장) 목록조회 요청했을 경우
+		if(requestURL.indexOf("publisher") != -1 || requestURL.indexOf("temp") != -1) {
 			MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
 			params.put("userNo", loginMember.getUserNo());
 		}
 		
-		return boardService.selectBoardList(params);
-	}
-	
-	/**
-	 * @method : 내가 쓴 공지 or 임시공지 목록조회
-	 */
-	@RequestMapping(value={"/publisher/list.do", "/temp/list.do"})
-	public String showBoardList(@RequestParam(value="page", defaultValue="1") int currentPage
-							   ,HttpServletRequest request
-							   ,Model model
-							   ,RedirectAttributes redirectAttributes) {
-		try {
-			MemberDto loginMember = (MemberDto)(request.getSession().getAttribute("loginMember"));
-
-			// 회원 소속 부서조회
-			HashMap<String, Object> deptParams = new HashMap<>();
-			deptParams.put("upperGroupCode", "DEPT%");
-			deptParams.put("groupCode", "TEAM%");
-			deptParams.put("code", loginMember.getTeamCode());
-			GroupDto loginMemberDepartment = departmentService.selectUppderCode(deptParams);
+		// 리스트 페이징처리 유무
+		if(requestURL.indexOf("detail") == -1) {
+			// 게시글 페이징바 생성
+			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(boardService.selectTotalBoardCount(params), 
+															 Integer.parseInt(params.get("page").toString()), 5, 10);
 			
-			// 파라미터
-			HashMap<String, Object> params = getParameterMap(request);
-			if(params.get("category") == null) {
-				params.put("category", "normal");
-			}
-			params.put("userNo", loginMember.getUserNo());
-			params.put("department", loginMemberDepartment.getCode());
-			if(request.getRequestURL().indexOf("temp") != -1) {
-				// 임시저장 공지사항 목록조회 요청일 경우
-				params.put("status", "T");
-			}else if(request.getRequestURL().indexOf("publisher") != -1) {
-				// 내가 쓴 공지사항 목록조회 요청일 경우
-				params.put("status", "Y");
-			}
+			// 공지사항 리스트 및 페이징바 반환
+			Map<String, Object> response = new HashMap<>();
+			response.put("boardList", boardService.selectBoardList(pageInfo, params));
+			response.put("pageInfo", pageInfo);
 			
-			// 페이징바
-			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(boardService.selectTotalBoardCount(params), currentPage, 5, 10);
-			
-			// 응답페이지 지정 및 응답데이터 반환
-			model.addAttribute("boardList", boardService.selectBoardList(pageInfo, params));				// 게시글 목록
-			model.addAttribute("pageInfo", pageInfo);
-			model.addAttribute("filter", params);
-			
-			if(request.getRequestURL().indexOf("temp") != -1) {
-				// 임시저장 공지사항 목록조회 요청일 경우
-				return "board/temp/list";				
-			}else {
-				// 내가 쓴 공지사항 목록조회 요청일 경우
-				return "board/publisher/list";
-			}
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 목록서비스");
-			redirectAttributes.addFlashAttribute("alertMsg", "공지사항 목록조회 요청에 실패했습니다.");
-			return "redirect:" + request.getHeader("Referer");
+			return response;
+		}else {
+			// 공지사항 전체 리스트 반환
+			return boardService.selectBoardList(params);
 		}
-
 	}
 	
 	/**
 	 * @method : 공지사항 조회수 증가 (로그인사용자 != 작성자)
 	 */
 	@RequestMapping(value="/reader/detail.do")
-	public String increaseReadCount(HttpServletRequest request
-								   ,RedirectAttributes redirectAttributes) {
-
+	public String increaseReadCount(HttpServletRequest request ,RedirectAttributes redirectAttributes) {
+		
 		try {
 			// 파라미터값
 			HashMap<String, Object> params = getParameterMap(request);
@@ -240,32 +189,25 @@ public class BoardController {
 	 * @method : 공지사항 상세조회
 	 */
 	@RequestMapping(value={"/detail.do", "/publisher/detail.do", "/temp/detail.do"})
-	public String showBoardDetail(HttpServletRequest request
-								 ,Model model
-								 ,RedirectAttributes redirectAttributes) {
+	public String showBoardDetail(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		
 		try {
 			HashMap<String, Object> params = getParameterMap(request);
-			// 조회할 공지사항 상태값
-			params.put("status", request.getRequestURL().indexOf("temp") != -1 ? "T" : "Y");
+			params.put("status", request.getRequestURL().indexOf("temp") != -1 ? "T" : "Y");	// 등록상태
 			
+			// 공지사항 상세조회
 			BoardDto board = boardService.selectBoard(params);
-			
 			if(board != null) {
-				// 조회된 공지사항이 있을경우(유효한 공지사항)
-				model.addAttribute("board", board);
-				if(request.getRequestURL().indexOf("publisher") != -1) {
-					// 등록공지보관함에서 공지사항 상세요청시(작성자)
-					return "board/publisher/detail";
-				}else if(request.getRequestURL().indexOf("temp") != -1) {
-					// 임시공지보관함에서 공지시항 상세요청시(작성자)
-					return "board/temp/detail";
-				}else {
-					// 공지목록페이지에서 공지사항 상세요청시(전체사용자)
-					return "board/detail";
-				}
+				request.setAttribute("board", board);
 				
+				if(request.getRequestURL().indexOf("publisher") != -1) {
+					return "board/publisher/publisher_board_detail";
+				}else if(request.getRequestURL().indexOf("temp") != -1) {
+					return "board/temp/temp_board_detail";
+				}else {
+					return "board/board_detail";
+				}
 			}else {
-				// 조회된 공지사항이 없을경우
 				redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상세조회");
 				redirectAttributes.addFlashAttribute("alertMsg", "유효하지 않은 공지사항입니다.");
 				return "redirect:" + request.getHeader("Referer");
@@ -273,9 +215,10 @@ public class BoardController {
 			
 		}catch(Exception e){
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상세조회");
+			redirectAttributes.addFlashAttribute("alertMsg", "유효하지 않은 공지사항입니다.");
 			return "redirect:" + request.getDateHeader("Referer");
 		}
-
 	}
 	
 	/**
@@ -283,91 +226,76 @@ public class BoardController {
 	 */
 	@RequestMapping(value="/post.page")
 	public String showBoardPostForm() {
-		return "board/post";
+		return "board/board_post";
 	}
 	
 	/**
-	 * @method : 공지사항 등록
+	 * @method : 공지사항 등록 (AJAX)
 	*/ 
-	@RequestMapping(value="/post.do")
-	public String postBoard(BoardDto board
-						   ,List<MultipartFile> uploadFiles
-						   ,HttpServletRequest request
-						   ,RedirectAttributes redirectAttributes) {
-		try {
-			// 등록할 첨부파일 리스트
-			HashMap<String, Object> fileInfo = new HashMap<>();
-			fileInfo.put("category", "board");
-			fileInfo.put("refType", "BD");
-			fileInfo.put("refNo", board.getBoardNo());
-			fileInfo.put("status", board.getStatus());
-			List<AttachmentDto> attachmentList = fileUtil.getAttachmentList(uploadFiles, fileInfo);
-
-			// 공지사항 등록
-			String writerNo = String.valueOf(((MemberDto)(request.getSession().getAttribute("loginMember"))).getUserNo());
-			board.setRegistEmp(writerNo);
-			board.setModifyEmp(writerNo);
-			board.setAttachmentList(attachmentList);
-			
-			int result = boardService.insertBoard(board);
-			
-			String status = board.getStatus().equals("Y") ? "등록" : "저장";
-			String alertMsg = "";
-			if(result > 0) {
-				// 공지사항 등록 성공
-				alertMsg = "공지사항이 " + status + " 되었습니다.";
-			}else {
-				// 공지사항 등록 실패
-				alertMsg = "공지사항 " + status + " 이 정상적으로 처리되지 않았습니다.";
+	@RequestMapping(value="/post.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public Map<String, Object> ajaxPostBoard(MultipartHttpServletRequest multiRequest) {
+		
+		// 첨부파일 업로드
+		HashMap<String, Object> fileInfo = new HashMap<>();
+		fileInfo.put("category", "board");
+		fileInfo.put("refType", "BD");
+		fileInfo.put("status", multiRequest.getParameter("status"));
+		List<AttachmentDto> uploadFileList = fileUtil.getAttachmentList(multiRequest.getFiles("uploadFiles"), fileInfo);
+		
+		// 공지사항 등록 & 첨부파일 등록
+		HashMap<String, Object> params = getParameterMap(multiRequest);
+		String writerNo = String.valueOf(((MemberDto)(multiRequest.getSession().getAttribute("loginMember"))).getUserNo());
+		params.put("registEmp", writerNo);
+		params.put("modifyEmp", writerNo);
+		params.put("attachmentList", uploadFileList);
+		
+		// 처리결과에 따른 반환값 설정
+		Map<String, Object> response = new HashMap<>(); 
+		if(boardService.insertBoard(params) > 0) {
+			// 공지사항 등록 성공했을 경우
+			response.put("result", "SUCCESS");
+			response.put("boardNo", boardService.selectPostedBoardNo());
+		}else {
+			// 공지사항 등록 실패했을 경우
+			response.put("result", "FAIL");
+	
+			if(!uploadFileList.isEmpty()) {
+				for(AttachmentDto delFile : uploadFileList) {
+					new File(delFile.getAttachPath(), delFile.getModifyName()).delete();
+				}
 			}
-			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 등록서비스");
-			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);	
-			
-			/* ===== 기웅 추가 ===== */
-			String flag = null;
-			
-			// 부서 공지사항일 경우
-			if(!board.getCategory().equals("")) {
-				flag = "Y";
-				
-				// 공지사항 글 번호 조회
-				int boardNo = boardService.selectLatestBno(board.getCategory());
-				redirectAttributes.addFlashAttribute("flag", flag);
-				redirectAttributes.addFlashAttribute("boardNo", String.valueOf(boardNo));
-			}			
-			/* ===== 기웅 추가 =====*/
-		}catch(Exception e) {
-			e.printStackTrace();
-			return "redirect:" + request.getDateHeader("Referer");
-		}
-		return "redirect:/board/list.do";
+    }
+		return response;
 	}
 	
 	/**
 	 * @method : 공지사항 수정페이지 이동
 	 */
 	@RequestMapping(value={"/modify.page", "/publisher/modify.page", "/temp/modify.page"})
-	public String showBoardModifyPage(HttpServletRequest request
-									 ,Model model) {
+	public String showBoardModifyPage(HttpServletRequest request) {
+		
 		try {
+			// 수정자 소속부서 조회
 			String teamCode = ((MemberDto)request.getSession().getAttribute("loginMember")).getTeamCode();
-			
 			HashMap<String, Object> params = new HashMap<>();
-			params.put("upperGroupCode", "DEPT01");
-			params.put("groupCode", "TEAM01");
 			params.put("code", teamCode);
-			model.addAttribute("department", departmentService.selectUppderCode(params));
+			params.put("groupCode", "TEAM01");
+			params.put("upperGroupCode", "DEPT01");
+			request.setAttribute("department", departmentService.selectUppderCode(params));
 			
+			// 공지사항 수정
 			HashMap<String, Object> parameterMap = getParameterMap(request);
 			parameterMap.put("status", request.getRequestURL().indexOf("temp") != -1 ? "T" : "Y");;
-			model.addAttribute("board", boardService.selectBoard(parameterMap));
+			request.setAttribute("board", boardService.selectBoard(parameterMap));
 			
+			// 응답페이지 반환
 			if(request.getRequestURL().indexOf("publisher") != -1) {
-				return "board/publisher/modify";
+				return "board/publisher/publisher_board_modify";
 			}else if(request.getRequestURL().indexOf("temp") != -1) {
-				return "board/temp/modify";
+				return "board/temp/temp_board_modify";
 			}else {
-				return "board/modify";				
+				return "board/board_modify";				
 			}
 			
 		}catch(Exception e) {
@@ -380,40 +308,38 @@ public class BoardController {
 	 * @method : 공지사항 수정
 	 */
 	@RequestMapping(value={"/modify.do", "/publisher/modify.do", "/temp/modify.do"})
-	public String modifyBoard(BoardDto board
-						     ,List<MultipartFile> uploadFiles
-						     ,String[] delFileNoArr
-						     ,HttpServletRequest request
-						     ,RedirectAttributes redirectAttributes) {
+	public String modifyBoard(MultipartHttpServletRequest multiRequest,  RedirectAttributes redirectAttributes) {
 		
-		String alertMsg = "";
-		
+		redirectAttributes.addFlashAttribute("alertTitle", "공지사항 수정서비스");
 		try {
-			HashMap<String, Object> params = new HashMap<>();
-			
-			// 삭제할 첨부파일 정보
+			HashMap<String, Object> params = getParameterMap(multiRequest);
+				
+			// 삭제할 첨부파일 정보조회
 			List<AttachmentDto> delAttachmentList = new ArrayList<>();
-			if(delFileNoArr != null) {
+			String[] delFileNoArr = (String[])params.get("delFileNoArr");
+			if(delFileNoArr != null && delFileNoArr.length != 0) {
 				params.put("delFileNoArr", delFileNoArr);
-				delAttachmentList = boardAttachmentService.selectAttachmentList(delFileNoArr);
+				delAttachmentList = boardAttachmentService.selectAttachmentList(params);
 			}
 			
-			// 등록할 공지사항 정보
+			// 첨부파일 업로드
 			HashMap<String, Object> fileInfo = new HashMap<>();
 			fileInfo.put("category", "board");
 			fileInfo.put("refType", "BD");
-			fileInfo.put("refNo", board.getBoardNo());
-			fileInfo.put("status", board.getStatus());
-			board.setAttachmentList(fileUtil.getAttachmentList(uploadFiles, fileInfo));
-			params.put("board", board);
+			fileInfo.put("refNo", multiRequest.getParameter("boardNo"));
+			fileInfo.put("status", multiRequest.getParameter("status"));
 			
-			// 공지사항 수정요청
-			int result = boardService.updateBoard(params);
+			List<AttachmentDto> uploadFileList = fileUtil.getAttachmentList(multiRequest.getFiles("uploadFiles"), fileInfo);
+			params.put("uploadFileList", uploadFileList);
 			
-			// 처리결과에 따른 응답페이지
-			String status = board.getStatus() == "Y" ? "등록" : "저장";
-			if(result > 0) {
-				alertMsg = "공지사항 수정이 완료되었습니다.";
+			// 공지사항 수정자 설정
+			MemberDto loginMember = (MemberDto)multiRequest.getSession().getAttribute("loginMember");
+			params.put("modifyEmp", loginMember.getUserNo());
+			
+			
+			// 공지사항 수정
+			if(boardService.updateBoard(params) > 0) {
+				redirectAttributes.addFlashAttribute("alertMsg", "공지사항이 수정되었습니다.");
 				
 				// 삭제할 첨부파일이 있었을 경우, 로컬저장소에서 업로드된 파일삭제
 				if(!delAttachmentList.isEmpty()) {
@@ -422,32 +348,36 @@ public class BoardController {
 					}
 				}
 			}else {
-				alertMsg = "공지사항 수정이 정상적으로 처리되지 않았습니다.";
+				redirectAttributes.addFlashAttribute("alertMsg", "공지사항 수정에 실패했습니다.");
 				
 				// 업로드한 첨부파일이 있었을 경우, 로컬저장소에서 등록실패한 파일삭제
-				if(!board.getAttachmentList().isEmpty()) {
-					for(AttachmentDto attachment : board.getAttachmentList()) {
+				if(!uploadFileList.isEmpty()) {
+					for(AttachmentDto attachment : uploadFileList) {
 						new File(attachment.getAttachPath(), attachment.getModifyName()).delete();
 					}
 				}
 			}
+			
+			// 반환페이지 설정
+			String boardNo = multiRequest.getParameter("boardNo");
+			
+			if(multiRequest.getRequestURL().indexOf("publisher") != -1) {
+				return "redirect:/board/publisher/detail.do?no=" + boardNo;
+			}else if(multiRequest.getRequestURL().indexOf("temp") != -1) {
+				if(multiRequest.getParameter("status").equals("T")) {
+					return "redirect:/board/temp/detail.do?no=" + boardNo;					
+				}else {
+					return "redirect:/board/publisher/detail.do?no=" + boardNo;
+				}
+			}else {
+				return "redirect:/board/detail.do?no=" + boardNo;
+			}
+			
 		}catch(Exception e) {
 			e.printStackTrace();
-			alertMsg = "공지사항 수정서비스 요청에 실패했습니다.";
-			return "redirect:" + request.getHeader("Referer");
-		}finally {
-			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 수정서비스");
-			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);
+			redirectAttributes.addFlashAttribute("alertMsg", "공지사항 수정서비스 요청에 실패했습니다.");
+			return "redirect:" + multiRequest.getHeader("Referer");
 		}
-		
-		if(request.getRequestURL().indexOf("publisher") != -1) {
-			return "redirect:/board/publisher/list.do";
-		}else if(request.getRequestURL().indexOf("temp") != -1) {
-			return "redirect:/board/temp/list.do";
-		}else {
-			return "redirect:/board/list.do";
-		}
-		
 	}
 	
 	/**
@@ -456,48 +386,43 @@ public class BoardController {
 	 *    ㄴ case 02) 게시된 공지사항 삭제
 	 *    ㄴ case 03) 임시저장 공지사항 등록
 	 */
-	@RequestMapping(value={"/status/modify.do", 
-						   "/delete.do", 
-						   "/publisher/status/modify.do", 
-						   "/publisher/delete.do",
-						   "/temp/post.do",
-						   "/temp/delete.do"})
-	public String modifyBoardStatus(HttpServletRequest request
-								   ,RedirectAttributes redirectAttributes) {
-		
-		StringBuffer requestURL = request.getRequestURL();
-		String status = "";
-		if(requestURL.indexOf("delete") != -1) {
-			// 공지사항 삭제요청시 상태값
-			status = "N";
-		}else if(requestURL.indexOf("post") != -1) {
-			// 임시공지 등록요청시 상태값
-			status = "Y";
-		}else {
-			// 임시저장 공지사항으로 변경요청시 상태값
-			status = "T";
-		}
-		
-		String statusMsg = "";
-		if(status.equals("N")) {
-			statusMsg = "삭제";
-		}else if (status.equals("Y")) {
-			statusMsg = "등록";
-		}else {
-			statusMsg = "수정";
-		}
-		String alertMsg = "";
-		String pageURL = "";
+	@RequestMapping(value={"/status/modify.do", "/delete.do",
+						   "/publisher/status/modify.do", "/publisher/delete.do", 
+						   "/temp/post.do", "/temp/delete.do"})
+	public String modifyBoardStatus(HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		
 		try {
-			// 파라미터 : {"boardNo" : "공지사항번호", "fyn" : "첨부파일유무(Y|N)"}
-			HashMap<String, Object> params = getParameterMap(request);
-			params.put("refType", "BD");	// 해당첨부파일에 첨부파일이 있을경우, 첨부파일 첨조유형
-			params.put("status", status);	// 변경할 상태값
+			StringBuffer requestURL = request.getRequestURL();
+			String pageURL = "";
+			String alertMsg = "";
 			
-			// 공지사항 및 공지사항 첨부파일 상태값 수정
+			// 파라미터
+			HashMap<String, Object> params = getParameterMap(request);
+			params.put("refType", "BD");	// 첨부파일 참조유형
+			if(requestURL.indexOf("delete") != -1) {
+				params.put("status", "N");
+				alertMsg = "공지사항이 삭제 되었습니다.";
+			}else if(requestURL.indexOf("post") != -1) {
+				params.put("status", "Y");
+				alertMsg = "공지사항이 등록 되었습니다.";
+			}else {
+				params.put("status", "T");
+				alertMsg = "공지사항이 임시저장함으로 이동되었습니다.";
+			}
+	
+			// 공지사항 & 첨부파일 상태값 수정
+			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상태변경서비스");
 			if(boardService.updateBoardStatus(params) > 0) {
-				alertMsg = "공지사항이 " + statusMsg + "되었습니다.";
+				// 공지사항 삭제요청일 경우, 로컬저장소에 업로드된 파일 삭제
+				String attachmentYN = (String)params.get("fyn");
+				if(requestURL.indexOf("delete") != -1 && (attachmentYN != null && attachmentYN.equals("Y"))) {
+					params.put("refNo", params.get("boardNo"));
+					for(AttachmentDto attachment : boardAttachmentService.selectAttachmentList(params)) {
+						new File(attachment.getAttachPath(), attachment.getModifyName()).delete();
+					}
+				}
+				
+				// 재요청페이지 URL 지정
 				if(requestURL.indexOf("publisher") != -1) {
 					pageURL = "/board/publisher/list.do";
 				}else if(requestURL.indexOf("temp") != -1) {
@@ -505,23 +430,48 @@ public class BoardController {
 				}else {
 					pageURL = "/board/list.do";
 				}
-				
-				redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상태변경서비스");
 				redirectAttributes.addFlashAttribute("alertMsg", alertMsg);
 				return "redirect:" + pageURL;
-				
 			}else {
-				alertMsg = "공지사항 " + statusMsg + "이(가) 정상적으로 처리되지 않았습니다.";
+				redirectAttributes.addFlashAttribute("alertMsg", "공지사항 상태변경에 실패했습니다.");
 				return "redirect:" + request.getHeader("Referer");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
-			alertMsg = "공지사항 " + statusMsg + "요청이 실패되었습니다.";
 			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상태변경서비스");
-			redirectAttributes.addFlashAttribute("alertMsg", alertMsg);
+			redirectAttributes.addFlashAttribute("alertMsg", "공지사항 상태변경 요청이 실패되었습니다.");
 			return "redirect:" + request.getHeader("Referer");
 		}
 	
+	}
+	
+	/**
+	 * @method : 공지사항 일괄삭제(AJAX)
+	 */
+	@RequestMapping(value={"/publisher/delete.ajax", "/temp/delete.ajax"}, produces="text/html; charset=utf-8")
+	@ResponseBody
+	public String ajaxDeleteBoard(HttpServletRequest request) {
+		HashMap<String, Object> params = getParameterMap(request);
+		params.put("status", "N");
+		params.put("refType", "BD");
+		params.put("delBoardNoArr", params.get("delBoardNoArr[]"));
+		params.remove("delBoardNoArr[]");
+		List<AttachmentDto> delFileList = boardAttachmentService.selectAttachmentList(params);
+		params.put("fyn", !delFileList.isEmpty() ? "Y" : "N");
+		
+		// 공지사항 & 첨부파일 삭제
+		if(boardService.updateBoardStatus(params) > 0) {
+			// 업로드된 로컬저장소 파일삭제
+			if(!delFileList.isEmpty()) {
+				for(AttachmentDto delFile : delFileList) {
+					new File(delFile.getAttachPath(), delFile.getModifyName()).delete();
+				}
+			}
+			return "SUCCESS";
+		}else {
+			return "FAIL";
+		}
+		
 	}
 	
 	

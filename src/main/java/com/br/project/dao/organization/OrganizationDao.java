@@ -39,7 +39,7 @@ public class OrganizationDao {
 
 	
 	
-	/* 부서, 팀, 직급, 상태 조회 DAO */
+	// 부서, 팀, 직급, 상태 조회 dao
 	public List<GroupDto> selectDepartment() {
 		return sqlSessionTemplate.selectList("organizationMapper.selectDepartment");
 	}
@@ -56,13 +56,18 @@ public class OrganizationDao {
 		return sqlSessionTemplate.selectList("organizationMapper.selectStatus");
 	}
 
-	/* 직원 검색 dao */
+	// 직원 검색 dao
 	public int selectSearchListCount(Map<String, String> search) {
 		return sqlSessionTemplate.selectOne("organizationMapper.selectSearchListCount", search);
 	}
 	public List<MemberDto> selectSearchList(Map<String, String> search, PageInfoDto pi) {
 		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1) * pi.getListLimit(), pi.getListLimit());
 		return sqlSessionTemplate.selectList("organizationMapper.selectSearchList", search, rowBounds);
+	}
+
+	// 급여 조회 dao
+	public List<MemberDto> selectAccountList(PageInfoDto pi) {
+		return sqlSessionTemplate.selectList("organizationMapper.selectAccountList", pi);
 	}
 
 

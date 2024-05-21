@@ -14,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 public class VacationDao {
 	private final SqlSessionTemplate sqlSession;
 
-	public List<VacationDto> ajaxSelectVacation(Object userNO) {
-		return sqlSession.selectList("vacationMapper.ajaxSelectVacation",userNO);
+	public List<VacationDto> ajaxSelectVacation(Object request) {
+		return sqlSession.selectList("vacationMapper.ajaxSelectVacation",request);
 	}
 	
 	

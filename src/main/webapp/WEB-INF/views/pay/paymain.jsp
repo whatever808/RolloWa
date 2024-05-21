@@ -277,36 +277,14 @@
                                         </select>
                                         <input type="text" name="keyword" value="${ search.keyword }"  id="search_input" class="form-control" placeholder="검색어를 입력하세요" style="width: 400px;">
                                        
-                                        <c:choose>
-                                        	<c:when test="${ not empty userAllList or not empty userAllListSelect or not empty userSearchList}">
-                                        	 <div class="input-group-append">
-                                        		<button type="submit" id="user_mybutton">
-                                           	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
-                                           	<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                           	</svg>
-                                         		</button>
-                                         		</div>
-                                        	</c:when>
-                                        	<c:when test="${ not empty delayDate or not empty delayDateSelect or not empty delayDateSearch}">
-                                        	 <div class="input-group-append">
-                                        		<button type="submit" id="user_mybutton">
-                                           	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
-                                           	<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                           	</svg>
-                                         		</button>
-                                         		</div>
-                                        	</c:when>
-                                       		<c:otherwise>
-                                       		 <div class="input-group-append">
-                                       			<button type="submit" id="my_button">
-                                           	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
-                                           	<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                           	</svg>
-                                         		</button>
-                                         		</div>
-                                        	</c:otherwise>
-                                        </c:choose>
-                                        
+                                   
+                                     	 <div class="input-group-append">
+                                     		<button type="submit" id="user_mybutton">
+                                       	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
+                                       	<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                       	</svg>
+                                     		</button>
+                                     		</div>
                                      </form>
                                         
                                     </div>

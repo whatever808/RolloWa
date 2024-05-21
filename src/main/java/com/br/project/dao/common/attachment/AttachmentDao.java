@@ -31,11 +31,13 @@ public class AttachmentDao {
 	}
 	
 	/**
-	 * @param delFileList : 삭제할 첨부파일 번호가 담긴 배열객체
+	 * @param : 
+	 * 	  ㄴ case 01) 첨부파일 번호로 첨부파일 조회시 : key값 : delFileNoArr(삭제할 파일번호)
+	 * 	  ㄴ case 02) 참조컬럼 번호로 첨부파일 조회시 : key값 : delBoardNoArr(삭제할 공지사항번호)
 	 * @return : 조회된 첨부파일 정보가 담긴 파일객체 리스트
 	 */
-	public List<AttachmentDto> selectBoardAttachmentList(String[] delFileNoArr){
-		return sqlSessionTemplate.selectList("attachmentMapper.selectBoardAttachmentList", delFileNoArr);
+	public List<AttachmentDto> selectBoardAttachmentList(HashMap<String, Object> params){
+		return sqlSessionTemplate.selectList("attachmentMapper.selectBoardAttachmentList", params);
 	}
 	
 	/**
