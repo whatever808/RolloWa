@@ -1,15 +1,13 @@
 package com.br.project.controller.attendance;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.text.ParseException;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +40,7 @@ public class AttendanceController {
 	private final PagingUtil pagingUtil;
 	private final BCryptPasswordEncoder bcryptPwdEncoder;
 	
-	// 2.1 출결 상태 조회
+	// 2.1 출결 상태 조회 -----------------------------------------------------------
 	@GetMapping("/list.do")
 	public ModelAndView list(@RequestParam(value = "page", defaultValue = "1") int currentPage,
 			@RequestParam(value = "nowDate", required = false) String nowDate, ModelAndView mv) {
@@ -65,21 +63,22 @@ public class AttendanceController {
 		return mv;
 	}
 	
-	// 2.2 출결 검색
+	// 2.2 출결 검색 ------------------------------------------------------
 	@GetMapping("/search.do")
 	public ModelAndView search(@RequestParam(value = "page", defaultValue = "1") int currentPage,
-			@RequestParam(value = "selectedDate", required = false) String selectedDate, ModelAndView mv) {
+			@RequestParam(value = "selectedDate") String selectedDate, ModelAndView mv) {
 		
 		String formattedDate = selectedDate.replace("-","");
 		log.debug("가져온 날짜 변환: {}" , formattedDate);
 
 		int listCount = attendanceService.selectAttendanceListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
+		
+		// 해당 selectSearchList에 날짜값(year,month) 넣어서 전달
 		List<HashMap<String, String>> list = attendanceService.selectAttendanceList(pi, formattedDate);
 
 		List<AttendanceDto> attendanceCount = attendanceService.SelectAttendanceCount();
 
-		
 		mv.addObject("pi", pi)
 		  .addObject("listCount", listCount)
 		  .addObject("list", list)
@@ -93,10 +92,24 @@ public class AttendanceController {
 	@GetMapping("/accountList.do")
 	public ModelAndView list(@RequestParam(value="page", defaultValue="1") int currentPage
 			, ModelAndView mv) {
+
+		// 오늘 날짜를 가져오기
+		Calendar cal = Calendar.getInstance();
+		int currentYear = cal.get(Calendar.YEAR);
+		int currentMonth = cal.get(Calendar.MONTH) + 1; // 월은 0부터 시작하므로 +1 해줍니다.
+
+		// year와 month 설정 (오늘 날짜를 기준으로 설정)
+		String year = String.valueOf(currentYear);
+		String month = String.format("%02d", currentMonth);
 		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("year", year);
+	    paramMap.put("month", month);
+		    
 		int listCount = organizationService.selectOrganizationListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
-		List<MemberDto> list = organizationService.selectAccountList(pi);
+		paramMap.put("pi", pi);
+		List<MemberDto> list = organizationService.selectAccountList(paramMap);
 		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
@@ -109,11 +122,28 @@ public class AttendanceController {
 	// 2.2 급여 조회(검색 페이지) --------------------------------------------------------------------------------------------
 	@GetMapping("/accountSearch.do")
 	public ModelAndView accountSearch(@RequestParam(value="page", defaultValue="1") int currentPage, 
-			@RequestParam(value = "selectedDate", required = false) String selectedDate, ModelAndView mv) {
+			@RequestParam(value = "selectedDate") String selectedDate, ModelAndView mv) {
+		
+		String year = null;
+	    String month = null;
+
+	    if (selectedDate != null && !selectedDate.isEmpty()) {
+	        year = selectedDate.split("-")[0];
+	        month = selectedDate.split("-")[1];
+	    }
+	    Map<String, Object> paramMap = new HashMap<>();
+	    paramMap.put("year", year);
+	    paramMap.put("month", month);
+	    
+		//log.debug("검색 year : {}", year);
+		//log.debug("검색 month : {}", month);
 		
 		int listCount = organizationService.selectOrganizationListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
-		List<MemberDto> list = organizationService.selectAccountList(pi);
+		paramMap.put("pi", pi);
+		List<MemberDto> list = organizationService.selectAccountList(paramMap);
+		
+		log.debug("사용자가 선택한 날짜 : {}", selectedDate);
 		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
@@ -123,32 +153,16 @@ public class AttendanceController {
 		return mv;
 	}
 	
-	
-	/* 작성해야함
-	@GetMapping("/accountSearch.do")
-	public ModelAndView search(@RequestParam(value = "page", defaultValue = "1") int currentPage,
-			@RequestParam(value = "selectedDate", required = false) String selectedDate, ModelAndView mv) {
+	// 2.2 급여 상세 조회 페이지
+	@GetMapping("/accountDetail.do")
+	public String accountDetail(@RequestParam("userNo") int userNo, Model model) {
 		
-		String formattedDate = selectedDate.replace("-","");
-		log.debug("가져온 날짜 변환: {}" , formattedDate);
-
-		int listCount = attendanceService.selectAttendanceListCount();
-		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
-		List<HashMap<String, String>> list = attendanceService.selectAttendanceList(pi, formattedDate);
-
-		List<AttendanceDto> attendanceCount = attendanceService.SelectAttendanceCount();
-
+		List<MemberDto> list = organizationService.selectAccountDetail(userNo);
 		
-		mv.addObject("pi", pi)
-		  .addObject("listCount", listCount)
-		  .addObject("list", list)
-		  .addObject("attendanceCount", attendanceCount)
-		  .setViewName("attendance/attendance_list");
-
-		return mv;
+		model.addAttribute("list", list);
+		
+		return "attendance/account_detail";
 	}
-	*/
-	
 	
 	
 	

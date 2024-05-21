@@ -10,135 +10,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2.2 급여 조회</title>
 
-    <!-- animate -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
-	<!-- bootstrap -->
-	<link href="${contextPath}/resources/css/common/bootstrap.min.css" rel="stylesheet">
+    <!-- css -->
+	<link rel="stylesheet" href="${contextPath}/resources/css/attendance/account.css">
 	
-	<!-- fontawesome -->
-	<script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
-	
-	<!-- Google Fonts Roboto -->
-	<link rel="stylesheet"
-	    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
-	
-	<!-- Google Fonts Jua -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-	
-	<!-- jQuery -->
-	<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
-	
-	<!-- css -->
-	<link href="${contextPath}/resources/css/common/sidebars.css" rel="stylesheet">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
-  
 	<style>
     .main_content{
     	width: 1200px !important;
         padding: 20px;
-    }
-    
-    /* css */
-    /* 화살표 */
-    .arrow{
-        margin: 0 60px;
-    }
-
-    /* 출력상태 조회 css */
-    .select_date{
-        margin-top: 20px;
-        text-align: center;
-    }
-    .table_2{
-        font-size: 25px;
-        margin: auto;   
-        width: 350px;
-    }
-    #currentDate{
-    	white-space: nowrap;
-    	font-size: 25px;
-    }
-	.arrow{
-    	cursor: pointer;	
-   	}
-    h3{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .table{
-        white-space: nowrap;
-    }
-    .td_1{
-        text-align: right;
-    }
-    .td_1 button {
-        width: 90px;
-    }
-    /* 조회 메뉴 css */
-    .table_search{
-    	/* display: flex;
-    	flex: wrap; */
-    	justify-content: space-between;
-    	align-items: center;
-    	width: 100% !important;
-    }
-    .search_menu {
-        flex: 1 1 auto;
-        margin-right: 10px; /* 필요에 따라 조정 */
-    }
-    .td_search{
-    	display: flex;
-    	align-items: center;
-    	white-space: nowrap;
-    }
-    .td_search input{
-    	width: 250px;
-    	margin: 0 50px;
-    }
-    .td_search button{
-    	margin: 0 10px;
-    	width: 100px;
-    }
-    .input_name{
-    	width: 100px;
-    }
-    .search_menu select{
-        width: 150px;
-    }
-
-    /* 직원 정보 테이블 */
-    .employee_count {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-left: 10px;
-    }
-    .employee_info {
-        text-align: center;
-    }
-    .employee_info th{
-        background-color: lightgray !important;
-    }
-    .employee_info td{
-        vertical-align: middle !important;
-    }
-    .employee_info td img{
-	    border: 1px solid gainsboro;
-	    border-radius: 100%;
-	    width: 50px;
-	    height: 50px;
-		object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
-	    margin: -10px;
- 	}
-    
-    .tr_1:hover td{
-        cursor: pointer;
-        background-color: gainsboro;
     }
     
 
@@ -160,7 +38,7 @@
             <table class="table_2">
                 <tr>
                     <td><h3><div class="arrow" onclick="changeDate(-1);">◀</div></h3></td>
-                    <td><input type="month" id="currentDate"></td>
+                    <td><input type="month" id="currentDate" onchange="changeDate(0);"></td>
                     <td><h3><div class="arrow" onclick="changeDate(1);">▶</div></h3></td>
                 </tr>
             </table>
@@ -168,70 +46,56 @@
         
         <!-- 날짜 관련 js -->
         <script>
-        let currentDateElement = document.getElementById('currentDate');
-        let today = new Date();
-
-        const koreanTimezoneOffset = 540; // GMT+09
-
-		today.setMinutes(today.getMinutes() + koreanTimezoneOffset);
-
-        // 날짜를 페이지 로드시 바로 출력합니다.
-		window.onload = function(){
-			showMonthlyData();
-		}
+        // 페이지 로드시 오늘 날짜 표시하기 
+        window.onload = function() {
+        	todayDate();
+        }
         
-        // 날짜 값 형식을 2024-05 같은 형식으로 설정 : input타입 month 형식이라서
-		function showMonthlyData() {
-		    document.getElementById('currentDate').type = 'month';
-		    currentDateElement.value = today.toISOString().split('-').slice(0, 2).join('-');
-		    console.log(currentDate.value);
-		}
+       	let currentDate = new Date(); // Tue May 21 2024 13:16:45 GMT+0900 (한국 표준시)
         
-		// 날짜 변경 함수
-		function changeDate(direction) {
-		    let dateString = currentDateElement.value;
-		    let currentDate = new Date(dateString);
-
-		    if (currentDateElement.type === 'month') {
-		        currentDate.setMonth(currentDate.getMonth() + direction);
-		        currentDateElement.valueAsDate = currentDate;
-		    } else {
-		        currentDate.setDate(currentDate.getDate() + direction);
-		        currentDateElement.value = currentDate.toISOString().split('T')[0];
-		    }
-
-		    let formData = new FormData();
-		    formData.append('selectedDate', currentDateElement.value);
-
-		    $.ajax({
-		        type:"GET",
-		        url:"${contextPath}/attendance/search.do",
-		        data:{ selectedDate: currentDateElement.value },
-		        success: function(response) {
-		            // 성공적으로 데이터를 받았을 때 실행할 코드를 작성합니다.
-		            //console.log("서버 응답:", response);
-			    	console.log("사용자가 선택한 날짜 : ",currentDateElement.value);
-		        },
-		        error: function(xhr, status, error) {
-		            // 에러가 발생했을 때 실행할 코드를 작성합니다.
-		            console.error("에러:", error);
-		        }
-		    });
+		// 오늘 날짜로 설정하기
+        function todayDate(){
+			let currentYear = currentDate.getFullYear(); // 2024
+			let currentMonth = currentDate.getMonth() + 1; // 5
+			// 날짜 형식 2024-05로 설정
+			let currentMonthString = currentYear + '-' + (currentMonth < 10 ? '0' : '') + currentMonth;
+	         
+			document.getElementById('currentDate').value = currentMonthString;
+        }
+        
+     	// 날짜 변경 함수
+		function changeDate(number) {
+			let currentDateInput = document.getElementById('currentDate').value;
+			let currentDate = new Date(currentDateInput + '-01'); // 현재 입력된 날짜 가져오기 (일자는 항상 01로 고정)
+			let newDate = new Date(currentDate); // 현재 날짜 가져오기
+			
+			newDate.setMonth(newDate.getMonth() + number);
+			let newYear = newDate.getFullYear();
+			let newMonth = newDate.getMonth() + 1;
+			let selectedDate = newYear + '-' + (newMonth < 10 ? '0' : '') + newMonth;
+			document.getElementById('currentDate').value = selectedDate;
+			
+			console.log("현재 날짜 : ", selectedDate);
+			
+			$.ajax({
+				url:"${ contextPath }/attendance/accountSearch.do",
+				type:"GET",
+				data:{ selectedDate: selectedDate},
+				success: function(data){
+					//console.log("통신 성공");
+				}, error: function(){
+					//console.log("통신 실패");
+				}
+			})
 		}
-
-		// 사용자가 선택한 날짜 값
-		currentDateElement.addEventListener('change', function() {
-		    document.getElementById("selectedDate").value = currentDateElement.value;
-		    // 인자를 전달하지 않고 changeDate를 호출하여 날짜를 갱신
-		    changeDate(0);
-		});
 		</script>
-        
+		
 
 		<!-- 직원 출결 데이터 start -->
-		<form id="search_Form" action="${ contextPath }/attendance/search.do" method="GET">
-			<input type="hidden" name="page" value="1">
+		<form id="search_Form" action="${ contextPath }/attendance/accountSearch.do" method="GET">
+			<!-- <input type="hidden" name="page" value="1"> -->
 			<input type="hidden" name="selectedDate" id="selectedDate" value="${ selectedDate }">
+
 			<table class="table table_search">
 				<tr class="search_menu">
 					<!-- 전체 인원수 -->
@@ -239,22 +103,23 @@
 						<h5 class="employee_count">전체 ${ listCount }명</h5>
 					</td>
 					
-	          		<!-- 부서 -->
+					<!-- 부서, 팀 잠시 주석처리
+	          		
 					<td>
 						<select name="department" id="department" class="form-select"></select>
 					</td>
 					
-					<!-- 팀 -->
 					<td>
 						<select name="team" id="team" class="form-select"></select>
 					</td>
 					
-					<!-- 이름 -->
+					-->
 					<td class="td_search">
 					    <input type="text" id="name" placeholder="이름 입력(한글만)" class="form-control input_name">
 					    <button class="btn btn-primary">검색</button>
 					    <button type="reset" class="btn btn-outline-primary">초기화</button>
 					</td>
+					
 				</tr>
 			</table>
 		</form>
@@ -351,7 +216,7 @@
 			selectTeamList(selectedDepartment);
  		});
  		
- 		// 검색 이후 초기화 작동하도록 하기
+ 		// 검색 이후 초기화 작동하도록 하기 (지금 없어도 잘됨)
  		/*
  		$(document).ready(function(){
  		    $("#search_Form button[type=reset]").click(function() {
@@ -377,11 +242,14 @@
  				url:"${contextPath}/attendance/accountSearch.do",
  				type: "GET",
  				data: {
- 		            department: department,
+ 					selectedDate : selectedDate
+ 		            /*
+ 					department: department,
  		            phone: phone,
  		            team: team,
  		            status: status,
  		            name: name
+ 					*/
  		        },
 				success: function(response) {
  		            console.log("검색 결과:", response);
@@ -391,6 +259,9 @@
  		        }
  			})
  		}
+ 		
+ 		
+ 		
 	    </script>
 	    
 	    <script>
@@ -454,7 +325,6 @@
 		        	</tr>
 		        </c:otherwise>
 	        </c:choose>
-
            </table>
 
            <!--페이징 처리 start-->

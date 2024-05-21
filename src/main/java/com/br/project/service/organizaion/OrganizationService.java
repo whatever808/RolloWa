@@ -56,8 +56,12 @@ public class OrganizationService {
 	}
 
 	// 급여 조회
-	public List<MemberDto> selectAccountList(PageInfoDto pi) {
-		return organizationDao.selectAccountList(pi);
+	public List<MemberDto> selectAccountList(Map<String, Object> paramMap) {
+		return organizationDao.selectAccountList(paramMap);
+	}
+
+	public List<MemberDto> selectAccountDetail(int userNo) {
+		return organizationDao.selectAccountDetail(userNo);
 	}
 
 	
