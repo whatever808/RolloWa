@@ -25,6 +25,9 @@
     <typeAlias type="com.br.project.dto.facility.AttractionDto"           alias="AttractionDto" />
     <typeAlias type="com.br.project.dto.pay.VacationDto"           				alias="VacationDto" />
     <typeAlias type="com.br.project.dto.pay.SignDto"           						alias="SignDto" />
+    <typeAlias type="com.br.project.dto.pay.RetireDto"           					alias="RetireDto" />
+    <typeAlias type="com.br.project.dto.pay.BusinessDto"           				alias="BusinessDto" />
+    <typeAlias type="com.br.project.dto.pay.DraftDto"           					alias="DraftDto" />
 	</typeAliases>
 	
 	

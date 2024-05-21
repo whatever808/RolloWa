@@ -15,7 +15,8 @@ import lombok.ToString;
 @Builder
 public class ExpenditureDto {
 	
-	private int salesNo;
+	private int expendNo;
+	private String title;
 	private String salesDivision;
 	private String manager;
 	private String totalSales;

@@ -20,282 +20,22 @@
 
     <!-- 결재신청서 공통스타일 -->
     <link href="${contextPath}/resources/css/pay/writer.css" rel="stylesheet">
+    <link href="${contextPath}/resources/css/pay/writer2.css" rel="stylesheet">
    	
 <style>
-		
-    .b-example-divider {
-        width: 100%;
-        height: 3rem;
-        background-color: rgba(0, 0, 0, .1);
-        border: solid rgba(0, 0, 0, .15);
-        border-width: 1px 0;
-        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-    }
-
-    .bi {
-        vertical-align: -.125em;
-        fill: currentColor;
-    }
-
-    .nav-scroller {
-        position: relative;
-        z-index: 2;
-        height: 2.75rem;
-        overflow-y: hidden;
-    }
-
-    .nav-scroller .nav {
-        display: flex;
-        flex-wrap: nowrap;
-        padding-bottom: 1rem;
-        margin-top: -1px;
-        overflow-x: auto;
-        text-align: center;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .active .bi {
-        display: block !important;
-    }
-
-    /* content의 height와 height 값을 동일하게 */
-    .b-example-vr {
-        flex-shrink: 0;
-        width: 1.5rem;
-        height: 1200px;
-    }
-
-    .content {
-        height: 1200px;
-        width: 1500px;
-    }
-
-
-     /*----- 결재공통 스타일------------*/
-     
-
-    /*--------------------------------------*/
-
-    .table_middle{
-       margin: auto;
-       width: 1130px;
-       text-align: center;
-       height: auto;
-    }
-    .table_middle>table{width: 100%; font-size: 20px;}
-    .table_middle tr{height: 40px;}
-    .table_middle input{height: 40px; width: 100%;}
-    .table_middle textarea{width: 100%; height: 100%; resize: none;}
-    .table_middle select{display: flex; justify-content: left;}
-
-    #date_td>input{width: 200px;}
-
-    #plus_btn {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        text-align: center;
-        text-decoration: none;
-        border: none;
-        border-radius: 5px;
-        background-color: #000000;
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    #plus_btn:hover {
-        background-color: #696969b4;
-    }
-    #del_btn {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        text-align: center;
-        text-decoration: none;
-        border: none;
-        border-radius: 5px;
-        background-color: #000000;
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    #del_btn:hover {
-        background-color: #696969b4;
-    }
-    #mid_btn{ width: 1100px; display: flex; align-items: center; justify-content: right;}
-    #mid_btn button{margin-left: 20px; margin: 10px;}
-
-    /*-----------------*/
-    /*--------버튼 스타일----------*/
-    
-    #btn_div{
-        padding-top: 40px;
-        margin: auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    #btn_div button{
-        margin: 30px;
-    }
-    
-    /*----------------------------*/
-	 #modal_btn{
-	    PADDING: 10PX;
-	    BACKGROUND: #fffbea;
-	    BORDER: 1PX SOLID #fffbea;
-    }
-    
-    .m_content_style{height: 800px; display: flex; flex-wrap: wrap; justify-content: space-between;}
-		.deptNameModal{width: 30%; height: 80%; border: 1px solid black;}
-		#textForm {width:70%; }
-		
-		.team-container {
-    margin-bottom: 20px;
-		}
-		
-		.teams {
-		    position: relative;
-		    height: 200px; /* 적절한 높이로 설정 */
-		}
-		
-		.team {
-		    position: absolute;
-		    top: 0;
-		    left: 0;
-		    width: 100%;
-		    height: 100%;
-		    visibility: hidden;
-		}
-		
-		.user-management {
-		    display: flex;
-		    gap: 20px;
-		    padding: 20px;
-		    font-family: Arial, sans-serif;
-		    width: 100%;
-		    height: 100%;
-		    flex-wrap: wrap;
-		    flex-direction: row;
-		    align-items: center;
-		    justify-content: flex-start;
-		}
-		.user-list, .sidebar{height: 100%;}
-		.selected-users{height: 100%; margin-top: 93px;} 
-		.sidebar {
-		    flex: 1;
-		    border-right: 1px solid #ddd;
-		}
-		
-		.sidebar ul {
-		    list-style: none;
-		    padding: 0;
-		}
-		
-		.sidebar ul ul {
-		    margin-left: 20px;
-		}
-		
-		.sidebar li {
-		    margin: 5px 0;
-		}
-		
-		.sidebar li.selected {
-		    font-weight: bold;
-		}
-		
-		.user-list, .selected-users {
-		    flex: 2;
-		}
-		
-		.user-list table, .selected-users table {
-		    width: 100%;
-		    border-collapse: collapse;
-		    margin-bottom: 20px;
-		}
-		
-		.user-list th, .user-list td, .selected-users th, .selected-users td {
-		    border: 1px solid #ddd;
-		    padding: 8px;
-		    text-align: center;
-		}
-		
-		.user-list th, .selected-users th {
-		    background-color: #f4f4f4;
-		}
-		
-		.selected-users button {
-		    background-color: #4CAF50;
-		    color: white;
-		    border: none;
-		    padding: 5px 10px;
-		    cursor: pointer;
-		}
-		
-		.actions {
-		   display: flex;
-		    gap: 10px;
-		    justify-content: center;
-		    flex-direction: row;
-		    flex-wrap: wrap;
-		    align-items: baseline;
-		    align-content: flex-end;
-		}
-		
-		.actions button {
-		    padding: 10px 20px;
-		    cursor: pointer;
-		}
-		
-		.actions button:first-child {
-		    background-color: #4CAF50;
-		    color: white;
-		    border: none;
-		}
-		
-		.actions button:last-child {
-		    background-color: #f44336;
-		    color: white;
-		    border: none;
-		}
-		
-		.user_modal{width: 100%; height: 80%;}
-		.deptDiv{cursor: pointer;}
-		.deptDiv li{cursor: pointer;}
-		
-		.deptDiv ul{display: none;}
-		
-		.deptDiv ul{display: none;}
-		.teamN, .nameClick  {cursor: pointer;}
-		
-
 </style>
 
 </head>
 <body>
+		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 <script>
-	$(document).ready(function(){
-	    $(".deptDiv").click(function(){
-	
-	    const $p = $(this).next();
-	    console.log($p);
-	
-		    if($p.css("display") == "none"){
-		
-		        $(this).siblings("ul").slideUp();
-		
-		        $p.slideDown();
-		    }else{
-		        $p.slideUp();
-		    } 
-	    })
-	   
-	})
+$(document).ready(function(){
+    $(".deptDiv").click(function(){
+    	
+      $(this).siblings("ul").find(".teamN").slideToggle();
+      
+    });
+  });
 	
 	
 	$(document).on("click", ".teamN", function(){
@@ -306,12 +46,13 @@
             name:$(this).text()
         },
         success:function(result){
-        		var htmlthead = "<tr><th>No.</th><th>이름</th><th>직위</th></tr>";
+        		var htmlthead = "<tr><th>No.</th><th>이름</th><th>직위</th><th>부서</th></tr>";
             var htmlString = "";
             for (let i = 0; i < result.length; i++) {
                 htmlString += '<tr class="nameClick" data-name="' + result[i].USER_NAME + '"><td>' + (i + 1) + '</td>' +
                               '<td>' + result[i].USER_NAME + '</td>' +
-                              '<td>' + result[i].POSITION_NAME + '</td></tr>';
+                              '<td>' + result[i].POSITION_NAME + '</td>' + 
+                              '<td>' + result[i].TEAM_NAME + '</td></tr>';
             }
             $(".user-list thead").html(htmlthead);
             $(".user-list tbody").html(htmlString);
@@ -399,9 +140,10 @@
 		        $("#f_name").text(selectedNames[0]);
 		        $("#m_name").text(selectedNames[1]);
 		        $("#l_name").text(selectedNames[2]);
-		        if($(".selected-users tbody tr").length > 3){
+		        
+		        if($(".selected-users tbody tr").length != 3){
 		        	alert("승인자를 3차까지 선택해주세요.");
-		        }else{
+		        }else if($(".selected-users tbody tr").length == 3){
 		        	$("#modal").iziModal('close');
 		        }
 		    });
@@ -453,7 +195,6 @@
 		
 </script>
 
-		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 		
        <!-- content 추가 -->
         <div class="content p-4">
@@ -462,16 +203,10 @@
                 <!-- informations left area start -->
                 <div class="left_con">
                     <div><h3>매출 보고서</h3></div>
-                    	<c:choose>
-                    	<c:when test="${ not empty list }">
-	                      <form action="${contextPath}/pay/mReportUpdate.do" method="post" id="myForm">
-	                    	</c:when>
-                    	<c:otherwise>
-		                    <form action="${contextPath}/pay/mReportInsert.do" method="post" id="myForm">
-		                   	</c:otherwise>
-                    	</c:choose>
+                    	
+		                   <form action="${contextPath}/pay/mReportInsert.do" method="post" id="myForm">
+		                  
                         <div id="sign_top">
-                        		
                             <div id="sign_div_left">
                                 <table border="1" id="sign_left">
                                     <tr>
@@ -479,9 +214,8 @@
                                         <td>${member.get(0).teamName}</td>                   
                                         <input type="hidden" name="deptName" value="${member.get(0).teamName}">
                                         <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
-                                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
-                                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
-                                        <input type="hidden" name="writerNo" value="${userNo}"> 
+                                        <input type="hidden" name="expendNo" value="${list.get(0).EXPEND_NO}">
+                                        <input type="hidden" name="writerNo" value="${userNo}">                                                                           
                                     </tr>
                                     <tr>
                                         <th>기안일</th>
@@ -503,9 +237,7 @@
                                     </tr>
                                 </table>
                             </div>
-                            
-                            
-                            <!-- 결재승인자 모달 start -->
+                           <!-- 결재승인자 모달 start -->
                             <input type="hidden" name="firstApproval">
                             <input type="hidden" name="middleApproval">
                             <input type="hidden" name="finalApproval">
@@ -649,16 +381,18 @@
                                 </table>
                             </div>
                         </div>
-                                  
-                        <div>
-                        
-										    </div>
+                         
+										    
                         <div id="mid_btn">
                             <button id="plus_btn" type="button">추가</button>
                             <button id="del_btn" type="button">삭제</button>
                         </div>
                         <div class="table_middle">
 	                         <table border="1" id="tr_table">
+	                         			<tr>
+                                    <th style="width: 300px;">제목</th>
+                                    <td colspan="2"><input type="text" name="title" required></td>
+                                </tr>
                                 <tr>
                                     <th>매출구분</th>
                                     <td colspan="2">
@@ -792,7 +526,11 @@
 	          })
 	         $("#sales_amounts").val(salesArr);	
 	
-	         if(confirm('정말로 제출하시겠습니까?') == true){}
+	         if(confirm('정말로 제출하시겠습니까?')){
+	        	 if($(".sing_name").text() == ""){
+	        		 alert("승인자를 3차까지 선택해주세요.");
+	        	 }
+	         }
 	                
 	       }
    	</script>

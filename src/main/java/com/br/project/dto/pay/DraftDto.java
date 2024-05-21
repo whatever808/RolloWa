@@ -1,5 +1,8 @@
 package com.br.project.dto.pay;
 
+import java.sql.Date;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,21 +12,20 @@ import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @ToString
 @Getter
 @Setter
-@Builder
-public class FixturesDto {
+public class DraftDto {
 	
-	private int fixNo;
+	private int draftNo;
 	private String title;
+	private String sum;
+	private String vat;
 	private String totalSum;
-	private String productName;
-	private int productSize;
-	private int quantity;
-	private String unitPrice;
-	private String price;
-	private String note;
-	
+	private String status;
+	private String account;
+	private String content;
+	private int amount;
 
 }

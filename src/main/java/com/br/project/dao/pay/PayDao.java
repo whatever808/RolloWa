@@ -8,9 +8,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.br.project.dto.common.PageInfoDto;
-import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.MemberDeptDto;
 import com.br.project.dto.pay.PayDto;
+import com.br.project.dto.pay.SignDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -372,7 +372,7 @@ public class PayDao {
 		return sqlSessionTemplate.update("payMapper.ajaxSignUpdate", map);
 	}
 	
-	public List<Map<String, Object>> ajaxSignSelect(Map<String, Object> map) {
+	public List<SignDto> ajaxSignSelect(Map<String, Object> map) {
 		return sqlSessionTemplate.selectList("payMapper.ajaxSignSelect", map);
 	}
 	

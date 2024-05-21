@@ -4,10 +4,7 @@ package com.br.project.controller.pay;
 
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +28,7 @@ import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.MemberDeptDto;
 import com.br.project.dto.pay.PayDto;
+import com.br.project.dto.pay.SignDto;
 import com.br.project.service.pay.PayService;
 import com.br.project.util.FileUtil;
 import com.br.project.util.PagingUtil;
@@ -202,37 +200,49 @@ public class PayController {
 		log.debug("map : {}", map);
 		if(map != null && !map.isEmpty() && map.get("documentType").equals("매출보고서")) {
 			List<Map<String, Object>> list = payService.expendDetail(map);
+			List<SignDto> sign = payService.ajaxSignSelect(map);
+			
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", String.valueOf(userName));
+			model.addAttribute("sign", sign);
+			
 			return "pay/expendDetail";
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("기안서")){
 			map.put("refType", "PG");
 			List<Map<String, Object>> list = payService.salesDetail(map);
+			List<SignDto> sign = payService.ajaxSignSelect(map);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
+			model.addAttribute("sign", sign);
 			return "pay/salesDetail";
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("비품신청서")) {
 			List<Map<String, Object>> list = payService.fixDetail(map);
+			List<SignDto> sign = payService.ajaxSignSelect(map);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
+			model.addAttribute("sign", sign);
 			return "pay/fixDetail";
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("휴직신청서")) {
 			List<Map<String, Object>> list = payService.retireDetail(map);
+			List<SignDto> sign = payService.ajaxSignSelect(map);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
+			model.addAttribute("sign", sign);
 			return "pay/retireDetail";
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("지출결의서")) {
 			List<Map<String, Object>> list = payService.draftDetail(map);
 			map.put("refType", "PJ");
 			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
+			List<SignDto> sign = payService.ajaxSignSelect(map);
 			model.addAttribute("list", list);
 			model.addAttribute("fileList", fileList);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
+			model.addAttribute("sign", sign);
 			return "pay/draftDetail";
 		}
 		
@@ -930,6 +940,7 @@ public class PayController {
 		}
 		
 		int result = payService.bReportInsert(map, list);
+		
 		redirectAttributes.addFlashAttribute("alertTitle", "비품신청서");
 		if(result == list.size()) {
 			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
@@ -1245,46 +1256,27 @@ public class PayController {
 	// 승인 싸인 저장하기 ajax
 	@ResponseBody
 	@PostMapping("/ajaxSign.do")
-	public List<Map<String, Object>> ajaxSign(@RequestParam Map<String, Object> map
+	public Map<String, Object> ajaxSign(@RequestParam Map<String, Object> map
 											, HttpServletRequest request) {
 		log.debug("map : {}", map);
 		String dataUrl = (String)map.get("dataUrl");
 		
-		String base64Image = dataUrl.split(",")[1];
-		log.debug("base64Image : {}", base64Image);
-		/*
-	    byte[] imageBytes = Base64.getDecoder().decode(base64Image);
-	    String fileName = "sign_" + System.currentTimeMillis() + ".png";
-	
-	    String realPath = request.getServletContext().getRealPath("/resources/images/");
-	    File dir = new File(realPath);
-	    if (!dir.exists()) {
-	        dir.mkdirs(); // Create directories if they do not exist
-	    }
-	    
-
-        String filePath = realPath + fileName;
-        
-        try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
-            fos.write(imageBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null; // 에러 처리 필요
-        }
-		 */
-        	
-        map.put("fileName", base64Image);
+        map.put("fileName", dataUrl);
 		
 		int result =  payService.ajaxSignUpdate(map);
 		log.debug("result : {}", result);
 		
-		List<Map<String, Object>> sign = new ArrayList<>();
+		List<SignDto> sign = new ArrayList<>();
 		if(result > 0) {
 			sign = payService.ajaxSignSelect(map);
 		}
 		log.debug("sign : {}", sign);
 		
-		return sign;
+		Map<String, Object> maps = new HashMap<>();
+		maps.put("sign", sign);
+		maps.put("approvalSignNo", map.get("approvalSignNo"));
+		
+		return maps;
 		
 	}
 	

@@ -43,6 +43,10 @@ public class PayDto {
 	private int draftStatus; // 지출결의서 파일여부(Y | N)
 	private int businessStatus; // 출장보고서 파일여부(Y | N)
 	private int moreDate; // 등록날짜로부터 일주일 지난 수신참조(진행중인상태)
+	private String firstSign; // 1차 승인싸인
+	private String middleSign; // 2차 승인싸인
+	private String finalSign; // 3차 승인싸인
+	
 	
 	private List<ExpenditureDto> expenditureList;
 	

@@ -7,10 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.br.project.dao.pay.PayDao;
 import com.br.project.dto.common.PageInfoDto;
-import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.MemberDeptDto;
 import com.br.project.dto.pay.PayDto;
-
+import com.br.project.dto.pay.SignDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -438,7 +437,7 @@ public class PayService {
 		return payDao.ajaxSignUpdate(map);
 	}
 	
-	public List<Map<String, Object>> ajaxSignSelect(Map<String, Object> map) {
+	public List<SignDto> ajaxSignSelect(Map<String, Object> map) {
 		return payDao.ajaxSignSelect(map);
 	}
 	

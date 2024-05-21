@@ -17,6 +17,8 @@ public class SignDto {
 	private String firstSign;
 	private String middleSign;
 	private String finalSign;
+	private String firstApDt;
+	private String middleApDt;
+	private String finalApDt;
 	
-
 }
