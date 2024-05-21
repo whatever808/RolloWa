@@ -73,7 +73,7 @@ public class AlramEchoHandler extends TextWebSocketHandler {
 		// 공지사항 팀번호
 		String teamCode = map.get("teamCode");
 		// 공지사항 글번호
-		int boardNo = notificationService.selectLatestBno(teamCode);
+		String boardNo = map.get("boardNo");
 		
 		log.debug("boardNo : {}", boardNo);
 		
@@ -87,7 +87,7 @@ public class AlramEchoHandler extends TextWebSocketHandler {
 				if(member.getTeamCode().equals(teamCode)) {
 					Map<String, String> textMap = new HashMap<>();
 					textMap.put("teamCode", teamCode);
-					textMap.put("boardNo", String.valueOf(boardNo));
+					textMap.put("boardNo", boardNo);
 					textMap.put("message", "부서 공지사항이 등록 되었습니다.");
 					
 					webSession.sendMessage(new TextMessage(mapToJson(textMap)));

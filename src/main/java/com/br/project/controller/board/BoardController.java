@@ -259,14 +259,13 @@ public class BoardController {
 		}else {
 			// 공지사항 등록 실패했을 경우
 			response.put("result", "FAIL");
-			
+	
 			if(!uploadFileList.isEmpty()) {
 				for(AttachmentDto delFile : uploadFileList) {
 					new File(delFile.getAttachPath(), delFile.getModifyName()).delete();
 				}
 			}
-		}
-		
+    }
 		return response;
 	}
 	

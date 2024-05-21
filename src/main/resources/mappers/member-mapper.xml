@@ -28,7 +28,7 @@
   <!--  회원 로그인  -->
   <select id="memberLogin" resultMap="memberResult">
   	select
-  		user_no, user_id, user_pwd, team_code, POSITION_CODE
+  		user_no, user_name, user_id, user_pwd, team_code, POSITION_CODE
   	from
   		member
   	where

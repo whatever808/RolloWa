@@ -142,6 +142,12 @@ public class BoardService {
 		
 		return result;
 	}
+
+	// 기웅 추가
+	// 부서의 최신 공지사항 글 번호 조회
+	public int selectLatestBno(String teamCode) {
+		return boardDao.selectLatestBno(teamCode);
+	}
 	
 	
 	
