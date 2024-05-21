@@ -22,6 +22,6 @@ public class VacationService {
 	public List<VacationDto> ajaxSelectVacation(Object request) {
 		return vacationDao.ajaxSelectVacation(request);
 	}
-	
+
 	
 }
