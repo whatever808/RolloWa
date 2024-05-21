@@ -53,7 +53,7 @@
         
        	let currentDate = new Date(); // 다음값 : Tue May 21 2024 13:16:45 GMT+0900 (한국 표준시)
         
-		// 오늘 날짜로 설정하기(오늘날짜 가공해서)
+		// 오늘 날짜로 설정하기 (2024-05 형식)
         function todayDate(){
 			let currentYear = currentDate.getFullYear(); // 2024
 			let currentMonth = currentDate.getMonth() + 1; // 5
@@ -81,10 +81,6 @@
 			let department = $("#department").val();
 			let team = $("#team").val();
 			let name = $("#name").val();
-			
-			let table = document.getElementById("employee_info");
-			let rowCount = table.getElementsByTagName("tr").length;
-			console.log("테이블의 행 수: " + rowCount);
 			
 			$.ajax({
 				url:"${ contextPath }/attendance/accountSearch.do",
@@ -137,18 +133,8 @@
 					<td class="td_search">
 					    <input type="text" id="name" placeholder="이름 입력" class="form-control input_name" onsubmit="return false">
 					    <!-- <button class="btn btn-primary">검색</button> -->
-					    <button type="reset" class="btn btn-outline-primary">초기화</button>
+					    <button type="button" class="btn btn-outline-primary" onclick="resetForm();">초기화</button>
 					</td>
-					
-					<!-- input text에서 엔터눌러도 페이지 안바뀌게 -->
-					<script>
-						document.addEventListener('keydown', function(event) {
-						  if (event.keyCode === 13) {
-						    event.preventDefault();
-						  };
-						}, true);
-					</script>
-					
 				</tr>
 			</table>
 		</form>
@@ -248,12 +234,25 @@
  		teamSelect.on("change", function() {
 			changeDate(0);
  		});
-	 	// 이름을 작성할때 마다 실행될 function
- 		nameSelect.on("input", function() {
+	 	// 이름을 작성할때 마다 실행될 function( 3개를 써야 정상적으로 검색이되고 깜빡임이 있음)
+ 		nameSelect.on("input change blur", function() {
 			changeDate(0);
  		});
- 		
-
+	 	
+ 		<!-- input text에서 엔터눌러도 페이지 안바뀌게 -->
+		document.addEventListener('keydown', function(event) {
+		  if (event.keyCode === 13) {
+		    event.preventDefault();
+		  };
+		}, true);
+		
+		<!-- 초기화 버튼 함수 -->
+ 		function resetForm() {
+            document.getElementById('department').selectedIndex = 0;
+            document.getElementById('team').selectedIndex = 0;
+            document.getElementById('name').value = '';
+            changeDate(0);
+ 		}
  		
 	    </script>
 	    
@@ -268,7 +267,7 @@
 		
 
            <!-- 직원 정보 -->
-           <table class="table table-bordered employee_info">
+           <table class="table table-bordered line-shadow employee_info">
                <tr>
                    <th>프로필사진</th>
                    <th>이름</th>

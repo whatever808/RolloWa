@@ -20,18 +20,25 @@ public class AttendanceService {
 
 	private final AttendanceDao attendanceDao;
 
-	public int selectAttendanceListCount() {
-		return attendanceDao.selectAttendanceListCount();
-	}
-
+	/*
 	public List<HashMap<String, String>> selectAttendanceList(PageInfoDto pi, String nowDate) {
 		return attendanceDao.selectAttendanceList(pi,nowDate);
 	}
+	*/
 
+	// 출결 조회
+	public int selectAttendanceListCount() {
+		return attendanceDao.selectAttendanceListCount();
+	}
+	public List<MemberDto> selectAttendanceList(Map<String, Object> paramMap) {
+		return attendanceDao.selectAttendanceList(paramMap);
+	}
+	
+	/*
 	public List<AttendanceDto> SelectAttendanceCount() {
 		return attendanceDao.SelectAttendanceCount();
 	}
-
+	*/
 	
 	public int selectUserIdCount(String checkId) {
 		return attendanceDao.selectUserIdCount(checkId);
@@ -41,10 +48,9 @@ public class AttendanceService {
 		return attendanceDao.insertMember(member);
 	}
 
-	// 출결 상태 조회
-	public List<GroupDto> selectStatus() {
-		return attendanceDao.selectStatus();
-	}
+	
+
+	
 
 	
 }

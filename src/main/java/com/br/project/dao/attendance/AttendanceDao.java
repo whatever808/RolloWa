@@ -25,7 +25,7 @@ public class AttendanceDao {
 		return sqlSessionTemplate.selectOne("attendanceMapper.selectAttendanceListCount");
 	}
 
-
+	/*
 	public List<HashMap<String, String>> selectAttendanceList(PageInfoDto pi, String nowDate) {
 		
 		int limit = pi.getListLimit();
@@ -38,12 +38,17 @@ public class AttendanceDao {
 		prams.put("rowBounds", rowBounds);
 
 		return sqlSessionTemplate.selectList("attendanceMapper.selectAttendanceList", prams, rowBounds);
-		
+	}*/
+	
+	// 출결 조회 dao
+	public List<MemberDto> selectAttendanceList(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.selectList("attendanceMapper.selectAttendanceList", paramMap);
 	}
-
+	/*
 	public List<AttendanceDto> SelectAttendanceCount() {
 		return sqlSessionTemplate.selectList("attendanceMapper.SelectAttendanceCount");
 	}
+	*/
 
 	// 아이디 중복체크
 	public int selectUserIdCount(String checkId) {
@@ -55,10 +60,13 @@ public class AttendanceDao {
 		return sqlSessionTemplate.insert("attendanceMapper.insertMember", member);
 	}
 
+	
+
 	// 출결 상태 조회
+	/* 삭제 예정
 	public List<GroupDto> selectStatus() {
 		return sqlSessionTemplate.selectList("attendanceMapper.selectStatus");
 	}
-
+	 */
 	
 }

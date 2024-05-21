@@ -61,10 +61,10 @@ flex: wrap; */
 	width: 100px;
 }
 .input_name{
-	width: 100px;
+	width: 50px;
 }
 .search_menu select{
-    width: 150px;
+    width: 200px;
 }
 
 /* 직원 정보 테이블 */

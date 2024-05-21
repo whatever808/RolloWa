@@ -42,22 +42,36 @@ public class AttendanceController {
 	
 	// 2.1 출결 상태 조회 -----------------------------------------------------------
 	@GetMapping("/list.do")
-	public ModelAndView list(@RequestParam(value = "page", defaultValue = "1") int currentPage,
-			@RequestParam(value = "nowDate", required = false) String nowDate, ModelAndView mv) {
+	public ModelAndView attendanceList(@RequestParam(value = "page", defaultValue = "1") int currentPage
+			,ModelAndView mv) {
+		
+		// 오늘 날짜를 가져오기
+		Calendar cal = Calendar.getInstance();
+		int currentYear = cal.get(Calendar.YEAR);
+		int currentMonth = cal.get(Calendar.MONTH) + 1; // 월은 0부터 시작하므로 +1 해줍니다.
+		int currentDay = cal.get(Calendar.DAY_OF_MONTH);
+
+		// year와 month 설정 (오늘 날짜를 기준으로 설정)
+		String year = String.valueOf(currentYear);
+		String month = String.format("%02d", currentMonth);
+		String day = String.format("%02d", currentDay);
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("year", year);
+	    paramMap.put("month", month);
+	    paramMap.put("day", day);
 		
 		int listCount = attendanceService.selectAttendanceListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
-		List<HashMap<String, String>> list = attendanceService.selectAttendanceList(pi, nowDate);
+		paramMap.put("pi", pi);
+		List<MemberDto> list = attendanceService.selectAttendanceList(paramMap);
 
-		List<AttendanceDto> attendanceCount = attendanceService.SelectAttendanceCount();
+		//List<AttendanceDto> attendanceCount = attendanceService.SelectAttendanceCount();
 
-		// 로그에 출력
-		log.debug("리스트 오늘날짜 : {}", nowDate);
-		
 		mv.addObject("pi", pi)
 		  .addObject("listCount", listCount)
 		  .addObject("list", list)
-		  .addObject("attendanceCount", attendanceCount)
+		  //.addObject("attendanceCount", attendanceCount)
 		  .setViewName("attendance/attendance_list");
 
 		return mv;
@@ -66,11 +80,75 @@ public class AttendanceController {
 	// 2.2 출결 검색 ------------------------------------------------------
 	@GetMapping("/search.do")
 	public ModelAndView search(@RequestParam(value = "page", defaultValue = "1") int currentPage,
-			@RequestParam(value = "selectedDate") String selectedDate, ModelAndView mv) {
+			@RequestParam(value = "selectedDate") String selectedDate,
+			@RequestParam(value = "department") String department,
+			@RequestParam(value = "team") String team,
+			@RequestParam(value = "attendanceStatus") String attendanceStatus,
+			@RequestParam(value = "name") String name,
+			ModelAndView mv) {
 		
-		String formattedDate = selectedDate.replace("-","");
-		log.debug("가져온 날짜 변환: {}" , formattedDate);
+		String year = null;
+	    String month = null;
+	    String day = null;
+	    
+	    if (selectedDate != null && !selectedDate.isEmpty()) {
+	        String[] dateParts = selectedDate.split("-");
+	        if (dateParts.length == 2) { // month 형식인 경우 (예: 2024-05)
+	            year = dateParts[0];
+	            month = dateParts[1];
+	        } else if (dateParts.length == 3) { // date 형식인 경우 (예: 2024-05-21)
+	            year = dateParts[0];
+	            month = dateParts[1];
+	            day = dateParts[2];
+	        }
+	    }
 
+	    if(department.equals("전체 부서")) {
+	    	department = "";
+	    }
+	    if(team.equals("전체 팀")) {
+	    	team = "";
+	    }
+	    if(attendanceStatus.equals("전체 상태")) {
+	    	attendanceStatus = "";
+	    }
+
+	    Map<String, Object> paramMap = new HashMap<>();
+	    paramMap.put("year", year);
+	    paramMap.put("month", month);
+        paramMap.put("day", day);
+	    paramMap.put("department", department);
+	    paramMap.put("team", team);
+	    paramMap.put("attendanceStatus", attendanceStatus);
+	    paramMap.put("name", name);
+	    
+	    log.debug("검색 year : {}", year);
+		log.debug("검색 month : {}", month);
+		log.debug("검색 day : {}", day);
+		log.debug("검색 department : {}", department);
+		log.debug("검색 team : {}", team);
+		log.debug("검색 attendanceStatus : {}", attendanceStatus);
+		log.debug("검색 name : {}", name);
+	    
+		int listCount = attendanceService.selectAttendanceListCount();
+		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
+		paramMap.put("pi", pi);
+		List<MemberDto> list = attendanceService.selectAttendanceList(paramMap);
+		
+		log.debug("사용자가 선택한 날짜 : {}", selectedDate);
+		
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .addObject("listCount", listCount)
+		  .setViewName("attendance/account_list");
+		
+		return mv;
+	}
+		
+		
+		
+		
+/*
 		int listCount = attendanceService.selectAttendanceListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
 		
@@ -87,10 +165,11 @@ public class AttendanceController {
 
 		return mv;
 	}
+ */
 	
 	// 2.2 급여 조회(기본 페이지) --------------------------------------------------------------------------------------------
 	@GetMapping("/accountList.do")
-	public ModelAndView list(@RequestParam(value="page", defaultValue="1") int currentPage
+	public ModelAndView accountList(@RequestParam(value="page", defaultValue="1") int currentPage
 			, ModelAndView mv) {
 
 		// 오늘 날짜를 가져오기
@@ -150,11 +229,13 @@ public class AttendanceController {
 	    paramMap.put("team", team);
 	    paramMap.put("name", name);
 	    
-		log.debug("검색 year : {}", year);
-		log.debug("검색 month : {}", month);
-		log.debug("검색 department : {}", department);
-		log.debug("검색 team : {}", team);
-		log.debug("검색 name : {}", name);
+	    
+		//log.debug("검색 year : {}", year);
+		//log.debug("검색 month : {}", month);
+		//log.debug("검색 department : {}", department);
+		//log.debug("검색 team : {}", team);
+		//log.debug("검색 name : {}", name);
+		
 		
 		int listCount = organizationService.selectOrganizationListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
@@ -254,6 +335,8 @@ public class AttendanceController {
 		log.debug("직급 조회 실행");
 	    return organizationService.selectPosition();
 	}
+	
+	/* 삭제 예정
 	// 4. 상태 조회
 	@ResponseBody
 	@GetMapping("/status.do")
@@ -261,7 +344,7 @@ public class AttendanceController {
 		log.debug("상태 조회 실행");
 	    return attendanceService.selectStatus();
 	}
-	
+	*/
 	
 	/*
 	@ResponseBody
