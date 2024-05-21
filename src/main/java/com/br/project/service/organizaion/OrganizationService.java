@@ -60,6 +60,10 @@ public class OrganizationService {
 		return organizationDao.selectAccountList(paramMap);
 	}
 
+	public List<MemberDto> selectAccountDetail(int userNo) {
+		return organizationDao.selectAccountDetail(userNo);
+	}
+
 	
 
 }

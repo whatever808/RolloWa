@@ -96,4 +96,79 @@ object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
     cursor: pointer;
     background-color: gainsboro;
 }
+
+
+/* 급여 상세 조회 페이지 css */
+
+    /* css */
+    /* 화살표 */
+    .arrow{
+        margin: 0 60px;
+    }
+
+    /* 출력상태 조회 css */
+    .select_date{
+        margin-top: 20px;
+        text-align: center;
+    }
+    .today_btn{
+        position: relative;
+        top: -40px;
+        left: 230px;
+    }
+    h3{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .td_1 {
+        text-align: right;
+    }
+    .td_2 * {
+        margin-left: 90px;
+    }
+
+    /* 직원 정보 테이블 */
+    .employee_count {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 10px;
+    }
+    .employee_info {
+        text-align: center;
+    }
+    .employee_info th{
+        background-color: lightgray !important;
+    }
+    .employee_info td{
+        vertical-align: middle !important;
+    }
+    .table{
+        text-align: center;
+    }
+    .table_img{
+        border: 1px solid gainsboro;
+        border-radius: 100%;
+        width: 300px;
+        margin: -5px;
+    }
+    .form-control{
+        width: 200px !important;
+    }
+
+    .btn_center{
+        display: flex;
+        justify-content: center;
+        margin: 50px;
+    }
+    /* 맨밑 여백 주기 */
+    .btn_center button{
+        width: 130px;
+        margin: 10px;
+        margin-bottom: 100px;
+    }
+
+
+
   

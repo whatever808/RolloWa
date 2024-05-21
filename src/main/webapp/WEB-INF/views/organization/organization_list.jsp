@@ -14,96 +14,15 @@
 <head>
 	<meta charset="UTF-8">
 	<title>1.2 직원 검색</title>
-
-	<!-- animate -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
-	<!-- bootstrap -->
-	<link href="${ contextPath }/resources/css/common/bootstrap.min.css" rel="stylesheet">
-	
-	<!-- fontawesome -->
-	<script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
-	
-	<!-- Google Fonts Roboto -->
-	<link rel="stylesheet"
-	    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
-	
-	<!-- Google Fonts Jua -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-	
-	<!-- jQuery -->
-	<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
-	
-	<!-- 모달 관련 -->
-    <script src="${ contextPath }/resources/js/iziModal.min.js"></script>
-    <link rel="stylesheet" href="${ contextPath }/resources/css/iziModal.min.css">
 	
 	<!-- css -->
-	<link href="${ contextPath }/resources/css/common/sidebars.css" rel="stylesheet">
-	<link rel="stylesheet" href="${ contextPath }/resources/css/common.css">
-	<link rel="stylesheet" href="${ contextPath }/resources/css/common/mdb.min.css" />
-  
+	<link rel="stylesheet" href="${contextPath}/resources/css/organization/organization.css">
+
 	<style>
 	.main_content{
 	    width: 1200px !important;
 	    padding: 20px;
 	}
-	
-	.search_menu{
-	    justify-content: center;
-	    width: 100%;
-	}
-	.tr_search th{
-	    background-color: rgb(203, 237, 255) !important;
-	    text-align: center;
-	    width: 20%;
-	    vertical-align: middle !important;
-	    font-size: 30px;
-	}
-	.tr_search td{
-	    width: 200px;
-	    text-align: center;
-	}
-	.tr_search input {
-	    width: 100% !important;
-	}
-	.btn_center{
-	    text-align: center;
-	    padding-top: 30px !important;
-	}
-	.btn_center button {
-	    width: 140px;
-	    height: 50px;
-	    font-size: 20px;
-	}
-	.employee_count {
-	    margin-left: 10px;
-	}
-	table{
-		table-layout: fixed;
-	}
-	.table_empinfo {
-	    text-align: center;
-	    table-layout: fixed !important;
-	}
-	.table_empinfo th{
-	    background-color: rgb(255,247,208) !important;
-	    font-size: 19px;
-	}
-	.table_empinfo td{
-	    vertical-align: middle !important;
-	}
-	.table_empinfo td img{
-	    border: 1px solid gainsboro;
-	    border-radius: 100%;
-	    width: 50px;
-	    height: 50px;
-		object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
-	    margin: -10px;
- 	}
- 	
 	</style>
 </head>
 <body>
@@ -176,6 +95,11 @@
 					let selectedDepartment = "${department}";
 					selectTeamList(selectedDepartment);
 				}
+				
+				// 자동 검색 실행
+                if ("${department}" !== "" || "${team}" !== "" || "${request.getParameter('phone')}" !== "" || "${request.getParameter('name')}" !== "") {
+                    search();
+                }
 				
 				
 	 		})

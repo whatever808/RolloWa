@@ -38,7 +38,7 @@
             <table class="table_2">
                 <tr>
                     <td><h3><div class="arrow" onclick="changeDate(-1);">◀</div></h3></td>
-                    <td><input type="month" id="currentDate"></td>
+                    <td><input type="month" id="currentDate" onchange="changeDate(0);"></td>
                     <td><h3><div class="arrow" onclick="changeDate(1);">▶</div></h3></td>
                 </tr>
             </table>
@@ -46,129 +46,55 @@
         
         <!-- 날짜 관련 js -->
         <script>
-        let currentDateElement = document.getElementById('currentDate');
-        let today = new Date();
-
-        const koreanTimezoneOffset = 540; // GMT+09
-
-		today.setMinutes(today.getMinutes() + koreanTimezoneOffset);
-
-        // 날짜를 페이지 로드시 바로 출력합니다.
-		window.onload = function(){
-			loadSelectedDate();
-			showMonthlyData();
-			sendTodayDateToController();
-		}
-		function loadSelectedDate() {
-            let savedDate = localStorage.getItem('selectedDate');
-            if (savedDate) {
-                currentDateElement.value = savedDate;
-            } else {
-                currentDateElement.value = today.toISOString().split('-').slice(0, 2).join('-');
-            }
+        // 페이지 로드시 오늘 날짜 표시하기 
+        window.onload = function() {
+        	todayDate();
         }
         
-        // 날짜 값 형식을 2024-05 같은 형식으로 설정 : input타입 month 형식이라서
-		function showMonthlyData() {
-			currentDateElement.type = 'month';
-		}
-		
-		// 페이지 로드시 오늘 날짜를 보냄
-		function sendTodayDateToController() {
-	        //let formData = new FormData();
-	        //formData.append('selectedDate', currentDateElement.value);
-	        $.ajax({
-	            type:"GET",
-	            url:"${contextPath}/attendance/accountSearch.do",
-	            data:{ selectedDate: currentDateElement.value },
-	            success: function(response) {
-	                // 성공적으로 데이터를 받았을 때 실행할 코드를 작성합니다.
-	                //console.log("오늘 날짜를 컨트롤러로 보냈습니다.");
-	            },
-	            error: function(xhr, status, error) {
-	                // 에러가 발생했을 때 실행할 코드를 작성합니다.
-	                console.error("에러:", error);
-	            }
-	        });
-	    }
+       	let currentDate = new Date(); // Tue May 21 2024 13:16:45 GMT+0900 (한국 표준시)
         
-		// 날짜 변경 함수
-		function changeDate(direction) {
-		    let dateString = currentDateElement.value;
-		    let currentDate = new Date(dateString);
-		    //let selectedDate = currentDateElement.value;
-
-		    if (currentDateElement.type == 'month') {
-		        currentDate.setMonth(currentDate.getMonth() + direction);
-		        currentDateElement.valueAsDate = currentDate;
-		    } else {
-		        currentDate.setDate(currentDate.getDate() + direction);
-		        currentDateElement.value = currentDate.toISOString().split('T')[0];
-		    }
-			/*
-		    let formData = new FormData();
-		    formData.append('selectedDate', selectedDate);
-
-		    $.ajax({
-		        type:"GET",
-		        url:"${contextPath}/attendance/accountSearch.do",
-		        data:{ selectedDate: selectedDate },
-		        success: function(response) {
-		            // 성공적으로 데이터를 받았을 때 실행할 코드를 작성합니다.
-			    	console.log("날짜 : ", selectedDate);
-		            
-		        },
-		        error: function(xhr, status, error) {
-		            // 에러가 발생했을 때 실행할 코드를 작성합니다.
-		            console.error("에러:", error);
-		        }
-		    });
-		    */
-		    updateSelectedDate();
-		    sendSelectedDateToController();
+		// 오늘 날짜로 설정하기
+        function todayDate(){
+			let currentYear = currentDate.getFullYear(); // 2024
+			let currentMonth = currentDate.getMonth() + 1; // 5
+			// 날짜 형식 2024-05로 설정
+			let currentMonthString = currentYear + '-' + (currentMonth < 10 ? '0' : '') + currentMonth;
+	         
+			document.getElementById('currentDate').value = currentMonthString;
+        }
+        
+     	// 날짜 변경 함수
+		function changeDate(number) {
+			let currentDateInput = document.getElementById('currentDate').value;
+			let currentDate = new Date(currentDateInput + '-01'); // 현재 입력된 날짜 가져오기 (일자는 항상 01로 고정)
+			let newDate = new Date(currentDate); // 현재 날짜 가져오기
+			
+			newDate.setMonth(newDate.getMonth() + number);
+			let newYear = newDate.getFullYear();
+			let newMonth = newDate.getMonth() + 1;
+			let selectedDate = newYear + '-' + (newMonth < 10 ? '0' : '') + newMonth;
+			document.getElementById('currentDate').value = selectedDate;
+			
+			console.log("현재 날짜 : ", selectedDate);
+			
+			$.ajax({
+				url:"${ contextPath }/attendance/accountSearch.do",
+				type:"GET",
+				data:{ selectedDate: selectedDate},
+				success: function(data){
+					//console.log("통신 성공");
+				}, error: function(){
+					//console.log("통신 실패");
+				}
+			})
 		}
-
-		/*
-		// 사용자가 선택한 날짜 값
-		currentDateElement.addEventListener('change', function() {
-		    document.getElementById("selectedDate").value = currentDateElement.value;
-		    // 인자를 전달하지 않고 changeDate를 호출하여 날짜를 갱신
-		    changeDate(0);
-		});
-		*/
-		function updateSelectedDate() {
-			//document.getElementById("selectedDate").value = document.getElementById("currentDate").value;
-			document.getElementById("selectedDate").value = currentDateElement.value;
- 	    }
-		function sendSelectedDateToController() {
-		    let selectedDate = document.getElementById("selectedDate").value;
-
-		    $.ajax({
-		        type: "GET",
-		        url: "${contextPath}/attendance/accountSearch.do",
-		        data: { selectedDate: selectedDate },
-		        success: function(response) {
-		            // 성공적으로 데이터를 받았을 때 실행할 코드를 작성합니다.
-		            console.log("날짜 :", selectedDate);
-		        },
-		        error: function(xhr, status, error) {
-		            // 에러가 발생했을 때 실행할 코드를 작성합니다.
-		            console.error("에러:", error);
-		        }
-		    });
-		}
-		// 사용자가 선택한 날짜 값
-		currentDateElement.addEventListener('change', function() {
-		    updateSelectedDate();
-		    sendSelectedDateToController();
-		});
-		
 		</script>
+		
 
 		<!-- 직원 출결 데이터 start -->
 		<form id="search_Form" action="${ contextPath }/attendance/accountSearch.do" method="GET">
 			<!-- <input type="hidden" name="page" value="1"> -->
-			<input type="hidden" name="selectedDate" id="selectedDate" value="">
+			<input type="hidden" name="selectedDate" id="selectedDate" value="${ selectedDate }">
 
 			<table class="table table_search">
 				<tr class="search_menu">
@@ -177,7 +103,7 @@
 						<h5 class="employee_count">전체 ${ listCount }명</h5>
 					</td>
 					
-					<!-- 
+					<!-- 부서, 팀 잠시 주석처리
 	          		
 					<td>
 						<select name="department" id="department" class="form-select"></select>
@@ -290,7 +216,7 @@
 			selectTeamList(selectedDepartment);
  		});
  		
- 		// 검색 이후 초기화 작동하도록 하기
+ 		// 검색 이후 초기화 작동하도록 하기 (지금 없어도 잘됨)
  		/*
  		$(document).ready(function(){
  		    $("#search_Form button[type=reset]").click(function() {
@@ -399,7 +325,6 @@
 		        	</tr>
 		        </c:otherwise>
 	        </c:choose>
-
            </table>
 
            <!--페이징 처리 start-->

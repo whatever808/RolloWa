@@ -127,61 +127,66 @@ a:hover{
 }
 
 
+
+
 /* 2. 직원 검색 관련 css */
 .search_menu{
-	    justify-content: center;
-	    width: 100%;
-	}
-	.tr_search th{
-	    background-color: rgb(203, 237, 255) !important;
-	    text-align: center;
-	    width: 20%;
-	    vertical-align: middle !important;
-	    font-size: 30px;
-	}
-	.tr_search td{
-	    width: 200px;
-	    text-align: center;
-	}
-	.tr_search input {
-	    width: 100% !important;
-	}
-	.btn_center{
-	    text-align: center;
-	    padding-top: 30px !important;
-	}
-	.btn_center button {
-	    width: 140px;
-	    height: 50px;
-	    font-size: 20px;
-	}
-	.employee_count {
-	    margin-left: 10px;
-	}
-	table{
-		table-layout: fixed;
-	}
-	.table_empinfo {
-	    text-align: center;
-	    table-layout: fixed !important;
-	}
-	.table_empinfo th{
-	    background-color: rgb(255,247,208) !important;
-	    font-size: 19px;
-	}
-	.table_empinfo td{
-	    vertical-align: middle !important;
-	}
-	.table_empinfo td img{
-	    border: 1px solid gainsboro;
-	    border-radius: 100%;
-	    width: 50px;
-	    height: 50px;
-		object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
-	    margin: -10px;
- 	}
+    justify-content: center;
+    width: 100%;
+}
+.tr_search th{
+    background-color: rgb(203, 237, 255) !important;
+    text-align: center;
+    width: 20%;
+    vertical-align: middle !important;
+    font-size: 30px;
+}
+.tr_search td{
+    width: 200px;
+    text-align: center;
+}
+.tr_search input {
+    width: 100% !important;
+}
+.btn_center{
+    text-align: center;
+    padding-top: 30px !important;
+}
+.btn_center button {
+    width: 140px;
+    height: 50px;
+    font-size: 20px;
+}
+.employee_count {
+    margin-left: 10px;
+}
+table{
+	table-layout: fixed;
+}
+.table_empinfo {
+    text-align: center;
+    table-layout: fixed !important;
+}
+.table_empinfo th{
+    background-color: rgb(255,247,208) !important;
+    font-size: 19px;
+}
+.table_empinfo td{
+    vertical-align: middle !important;
+}
+.table_empinfo td img{
+    border: 1px solid gainsboro;
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+	object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
+   margin: -10px;
+}
 
-/* 3. */
+
+
+
+/* 3. 부서 관리 (추가삭제) */
 .level2:hover{
 		background-color: rgb(0, 183, 165);
 	}

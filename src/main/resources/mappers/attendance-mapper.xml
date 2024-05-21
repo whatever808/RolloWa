@@ -163,8 +163,12 @@
           FROM ATTENDANCE
          WHERE TRUNC(CLOCK_IN) = TRUNC(SYSDATE-7)
 	</select>
-	
-	
+
+	<!-- 급여 상세 조회 -->
+	<select id="selectAccountDetail" resultMap="attendanceList">
+		SELECT 
+	</select>
+
 
 </mapper>
 
