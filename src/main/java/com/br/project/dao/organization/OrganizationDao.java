@@ -71,8 +71,8 @@ public class OrganizationDao {
 	// 급여 조회 dao
 	public List<MemberDto> selectAccountList(Map<String, Object> paramMap) {
 		
-		// 해당 값에 month, year 값, 페이지처리 들어있음
-		//log.debug("paramMap : {}",paramMap);
+		// 해당 값에 month, year 값 등이 들어있음
+		log.debug("paramMap : {}",paramMap);
 	    return sqlSessionTemplate.selectList("organizationMapper.selectAccountList", paramMap);
 	}
 

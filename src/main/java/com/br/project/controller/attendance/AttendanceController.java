@@ -122,7 +122,11 @@ public class AttendanceController {
 	// 2.2 급여 조회(검색 페이지) --------------------------------------------------------------------------------------------
 	@GetMapping("/accountSearch.do")
 	public ModelAndView accountSearch(@RequestParam(value="page", defaultValue="1") int currentPage, 
-			@RequestParam(value = "selectedDate") String selectedDate, ModelAndView mv) {
+			@RequestParam(value = "selectedDate") String selectedDate,
+			@RequestParam(value = "department") String department,
+			@RequestParam(value = "team") String team,
+			@RequestParam(value = "name") String name,
+			ModelAndView mv) {
 		
 		String year = null;
 	    String month = null;
@@ -131,12 +135,26 @@ public class AttendanceController {
 	        year = selectedDate.split("-")[0];
 	        month = selectedDate.split("-")[1];
 	    }
+	    
+	    if(department.equals("전체 부서")) {
+	    	department = "";
+	    }
+	    if(team.equals("전체 팀")) {
+	    	team = "";
+	    }
+	    
 	    Map<String, Object> paramMap = new HashMap<>();
 	    paramMap.put("year", year);
 	    paramMap.put("month", month);
+	    paramMap.put("department", department);
+	    paramMap.put("team", team);
+	    paramMap.put("name", name);
 	    
-		//log.debug("검색 year : {}", year);
-		//log.debug("검색 month : {}", month);
+		log.debug("검색 year : {}", year);
+		log.debug("검색 month : {}", month);
+		log.debug("검색 department : {}", department);
+		log.debug("검색 team : {}", team);
+		log.debug("검색 name : {}", name);
 		
 		int listCount = organizationService.selectOrganizationListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);

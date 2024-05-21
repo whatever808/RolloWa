@@ -51,9 +51,9 @@
         	todayDate();
         }
         
-       	let currentDate = new Date(); // Tue May 21 2024 13:16:45 GMT+0900 (한국 표준시)
+       	let currentDate = new Date(); // 다음값 : Tue May 21 2024 13:16:45 GMT+0900 (한국 표준시)
         
-		// 오늘 날짜로 설정하기
+		// 오늘 날짜로 설정하기(오늘날짜 가공해서)
         function todayDate(){
 			let currentYear = currentDate.getFullYear(); // 2024
 			let currentMonth = currentDate.getMonth() + 1; // 5
@@ -70,6 +70,7 @@
 			let newDate = new Date(currentDate); // 현재 날짜 가져오기
 			
 			newDate.setMonth(newDate.getMonth() + number);
+			
 			let newYear = newDate.getFullYear();
 			let newMonth = newDate.getMonth() + 1;
 			let selectedDate = newYear + '-' + (newMonth < 10 ? '0' : '') + newMonth;
@@ -77,12 +78,31 @@
 			
 			console.log("현재 날짜 : ", selectedDate);
 			
+			let department = $("#department").val();
+			let team = $("#team").val();
+			let name = $("#name").val();
+			
+			let table = document.getElementById("employee_info");
+			let rowCount = table.getElementsByTagName("tr").length;
+			console.log("테이블의 행 수: " + rowCount);
+			
 			$.ajax({
 				url:"${ contextPath }/attendance/accountSearch.do",
 				type:"GET",
-				data:{ selectedDate: selectedDate},
-				success: function(data){
+				data:{ 
+					selectedDate: selectedDate,
+					department: department,
+					team: team,
+					name: name
+				},
+				success: function(data){	
 					//console.log("통신 성공");
+
+					// 검색한 사용자 수
+					let rowCount = $(data).find(".employee_info tbody tr").length;
+					
+					// 통신 성공 시 값 바꿔주기
+					$(".employee_info tbody").html($(data).find(".employee_info tbody").html());
 				}, error: function(){
 					//console.log("통신 실패");
 				}
@@ -100,11 +120,12 @@
 				<tr class="search_menu">
 					<!-- 전체 인원수 -->
 					<td>
-						<h5 class="employee_count">전체 ${ listCount }명</h5>
+						<h5 class="employee_count">총 00명</h5>
+					</td>
+					<td>
+					    <h5 class="employee_count">총 ${searchResultCount}명</h5>
 					</td>
 					
-					<!-- 부서, 팀 잠시 주석처리
-	          		
 					<td>
 						<select name="department" id="department" class="form-select"></select>
 					</td>
@@ -113,12 +134,20 @@
 						<select name="team" id="team" class="form-select"></select>
 					</td>
 					
-					-->
 					<td class="td_search">
-					    <input type="text" id="name" placeholder="이름 입력(한글만)" class="form-control input_name">
-					    <button class="btn btn-primary">검색</button>
+					    <input type="text" id="name" placeholder="이름 입력" class="form-control input_name" onsubmit="return false">
+					    <!-- <button class="btn btn-primary">검색</button> -->
 					    <button type="reset" class="btn btn-outline-primary">초기화</button>
 					</td>
+					
+					<!-- input text에서 엔터눌러도 페이지 안바뀌게 -->
+					<script>
+						document.addEventListener('keydown', function(event) {
+						  if (event.keyCode === 13) {
+						    event.preventDefault();
+						  };
+						}, true);
+					</script>
 					
 				</tr>
 			</table>
@@ -128,15 +157,14 @@
 	    <script>
 		let departmentSelect = $("#department");
 		let teamSelect = $("#team");
+		let nameSelect = $("#name");
  		
 		$(document).ready(function(){
-
 			// 부서 조회 이동
 			selectDepartmentList();
 			
 			// 팀 조회 이동
 			selectTeamList();
-			
  		})
 	 		
  		// 부서조회
@@ -214,53 +242,18 @@
  		departmentSelect.on("change", function() {
  			let selectedDepartment = $(this).val();
 			selectTeamList(selectedDepartment);
+			changeDate(0);
+ 		});
+ 		// 팀를 선택했을 경우 실행될 function
+ 		teamSelect.on("change", function() {
+			changeDate(0);
+ 		});
+	 	// 이름을 작성할때 마다 실행될 function
+ 		nameSelect.on("input", function() {
+			changeDate(0);
  		});
  		
- 		// 검색 이후 초기화 작동하도록 하기 (지금 없어도 잘됨)
- 		/*
- 		$(document).ready(function(){
- 		    $("#search_Form button[type=reset]").click(function() {
- 		        $("#search_Form")[0].reset();
- 		        
- 		        $("#search_Form #department").val("전체 부서");
- 		        $("#search_Form #team").val("전체 팀");
 
- 		        return false;
- 		    });
- 		});
- 		*/
- 		
- 		// 검색 버튼
- 		function search(){
-	 		let department = $("#department").val();
-	 		let phone =  $("#phone").val();
-	 		let team = $("#team").val();
-	 		let status = $("#status").val();
-	 	    let name = $("#name").val();
-	 	 
- 			$.ajax({
- 				url:"${contextPath}/attendance/accountSearch.do",
- 				type: "GET",
- 				data: {
- 					selectedDate : selectedDate
- 		            /*
- 					department: department,
- 		            phone: phone,
- 		            team: team,
- 		            status: status,
- 		            name: name
- 					*/
- 		        },
-				success: function(response) {
- 		            console.log("검색 결과:", response);
- 		        },
- 		        error: function() {
- 		            console.log("검색 요청 실패");
- 		        }
- 			})
- 		}
- 		
- 		
  		
 	    </script>
 	    
@@ -328,17 +321,10 @@
            </table>
 
            <!--페이징 처리 start-->
-           <div class="container">
-               <ul class="pagination justify-content-center">
-                   <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
-                   <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
-                   <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                   <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
-                   <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
-                   <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
-               </ul>
-           </div>
+           <!-- 일단 보류 -->
            <!--페이징 처리 end-->
+           
+           
 
 
 	<!-- ------------ -->
