@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.br.project.dto.chat.ChatMessageDto;
 import com.br.project.dto.chat.ChatRoomDto;
 
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,10 @@ public class ChatDao {
 	// 로그인한 회원의 채팅방 목록 조회
 	public List<ChatRoomDto> selectChatRoom(int userNo) {
 		return sqlSessionTemplate.selectList("chatMapper.selectChatRoom", userNo);
+	}
+
+	public int insertChatMsg(ChatMessageDto chatMsg) {
+		return sqlSessionTemplate.insert("chatMapper.insertChatMsg", chatMsg);
 	}
 	
 }

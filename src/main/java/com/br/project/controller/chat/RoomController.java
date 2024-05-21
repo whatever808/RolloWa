@@ -56,7 +56,7 @@ public class RoomController {
 	}
 	
 	// 채팅방 참여인원 생성
-	@PostMapping("/parti")
+	@PostMapping("/participants")
 	@ResponseBody
 	public String insertChatParticipation(@RequestParam(value="partUserNo") String partUserNo,
 			HttpSession session
@@ -90,10 +90,25 @@ public class RoomController {
 	// 로그인한 회원의 채팅방 목록 조회
 	@GetMapping(value="/rooms", produces="application/json; charset=utf-8")
 	@ResponseBody
-	public List<ChatRoomDto> getRoom(HttpSession session) {
+	public List<ChatRoomDto> selectChatRoom(HttpSession session) {
 		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
 		
 		List<ChatRoomDto> chatRoomList = chatService.selectChatRoom(loginMember.getUserNo());
 		return chatRoomList;
 	}
+	
+	// 채팅방의 참여인원 조회
+	@GetMapping(value="/participants", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public List<MemberDto> selectParticipants(String roomNo) {
+		List<MemberDto> memberList = new ArrayList<>();
+		log.debug("{}", roomNo);
+		if(roomNo != null) {
+			memberList = chatService.selectParticipants(roomNo);
+		}
+		
+		return memberList;
+	}
+	
+	// 채팅방의 채팅 메세지 조회
 }

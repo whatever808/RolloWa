@@ -105,4 +105,23 @@
 	    chat_in_date desc
   </select>
   
+  <!-- 채팅방 메세지 기록 -->
+  <insert id="insertChatMsg">
+  insert into 
+  	chatting_message
+	  (
+	      msg_no
+	      , msg_content
+	      , user_no
+	      , cr_no
+	  )
+  values
+	  (
+	      seq_cmno.nextval
+	      , #{ msgContent }
+	      , #{ userNo }
+	      , #{ chatRoomNo }
+	  )
+  </insert>
+  
 </mapper>
