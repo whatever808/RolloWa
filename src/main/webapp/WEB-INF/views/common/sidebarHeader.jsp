@@ -653,6 +653,9 @@
 					var stompClient;
 					
 					$(document).ready(function() {
+						// 채팅용 웹소켓 연결
+						chatting = new SockJS("${contextPath}/chatting");
+						stompClient = Stomp.over(chatting);
 						// 알람용 웹소켓 연결
 						alram = new SockJS("${contextPath}/alram");
 						// 알람 수신 시 alert 발생

@@ -44,6 +44,6 @@ public class ChatService {
 
 	// 로그인한 회원의 채팅방 목록 조회
 	public List<ChatRoomDto> selectChatRoom(int userNo) {
-		return chatDao.selectChatRoom;
+		return chatDao.selectChatRoom(userNo);
 	}
 }
