@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="contextPath" value="${ pageContext.request.contextPath }" />
 <!DOCTYPE html>
 <html>
@@ -30,10 +31,57 @@
 
             <!-- weather -->
             <div class="weather-div">
+            	<span class="weather-place"></span>
+            	<span class="weather-temp"></span>
+            	<span class="weather-description"></span>
+            	<img class="weather-icon" src="">
             </div>
 
         </div>
         <!-- weather-clock (top) -->
+        
+        <script>
+        	$(document).ready(function(){
+        		navigator.geolocation.getCurrentPosition(success);
+        	})
+        	const API_KEY = "6a6c38789cdffc510c99641864cf9f76";
+        	
+        	// 사용자가 현재 위치 추적을 허용하지 않은 경우
+        	const fail = () => {
+        		console.log("좌표를 받아올 수 없습니다.");
+        	}
+        	
+        	// 사용자가 현재 위치 추적을 허용했을 경우
+        	const success = (position) => {
+        		const latitude = position.coords.latitude;
+        		const longitude = position.coords.longitude;
+        		
+        		getWeather(latitude, longitude);
+        	}
+        	
+        	const getWeather = (lat, lon) => {
+        		fetch(
+        			"https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY + "&units=metric&lang=kr"
+        		).then((response) => {
+        			return response.json();
+        		}).then((json) => {
+        			const place = json.name;
+        			const temperature = json.main.temp;
+        			const description = json.weather[0].description;
+        			const icon = json.weather[0].icon;
+        			const iconURL = 'http://openweathermap.org/img/wn/' + icon + '@2x.png';
+        			
+        			$(".weather-place").text(place);
+        			$(".weather-temp").text(temperature);
+        			$(".weather-description").text(description);
+        			$(".weather-icon").attr("src", iconURL);
+        		}).catch((error) => {
+        			console.log("WEATHER ERROR");
+        		})
+        	}
+        	
+
+        </script>
 
         <!-- main contents start (bottom) -->
         <div class="main-content">
@@ -50,26 +98,20 @@
                         <h6 class="mt-3 fw-bold">${ loginMember.userName } / ${ loginMember.positionName } / ${ loginMember.teamName }</h6>
                     </div>
 					
-					<script>
-						$(document).ready(function(){
-							console.log(${ loginMember });
-						})
-					</script>
-					
                     <div class="profile-attend pe-4">
                         <div class="attend-button d-flex my-2">
-                            <button class="btn btn-outline-primary px-4 me-auto">출근</button>
-                            <label class="attend-time">10:00:00</label>
+                            <button class="work-on btn btn-outline-primary px-4 me-auto" data-attendno="">출근</button>
+                            <label class="work-on-time attend-time"></label>
                         </div>
 
                         <div class="attend-button d-flex my-2">
-                            <button class="btn btn-outline-danger px-4 me-auto">퇴근</button>
-                            <label class="attend-time">10:00:00</label>
+                            <button class="work-off btn btn-outline-danger px-4 me-auto disabled">퇴근</button>
+                            <label class="work-off-time attend-time"></label>
                         </div>
 
                         <div class="attend-button d-flex my-2">
-                            <button class="btn btn-outline-warning px-4 me-auto">조퇴</button>
-                            <label class="attend-time">10:00:00</label>
+                            <button class="leave-early btn btn-outline-warning px-4 me-auto disabled">조퇴</button>
+                            <label class="leave-early-time attend-time"></label>
                         </div>
                     </div>
                 </div>
@@ -93,34 +135,22 @@
                 <div class="my-attend h-3">
 
                     <h4>근태관리</h4>
-										
+                    
+					<c:set var="today" value="<%=new java.util.Date()%>" />
+					<c:set var="sysYear"><fmt:formatDate value="${ today }" pattern="yyyy" /></c:set> 
                     <div class="my-attend-content">
                         <!-- my attend select (left) -->
                         <div class="my-attend-select-div">
-                            <select class="year form-select text-center">
-                                <option>2000</option>
-                                <option>2001</option>
-                                <option>2001</option>
-                                <option>2001</option>
-                                <option>2001</option>
-                                <option>2001</option>
-                                <option>2001</option>
-                                <option>2001</option>
+                            <select class="year form-select text-center" name="year">
+                            	<c:forEach var="year" begin="2000" end="${ sysYear }">                            	
+                                	<option value="${ year }">${ year }년</option>
+                            	</c:forEach>
                             </select>
         
-                            <select class="month form-select text-center">
-                                <option>1월</option>
-                                <option>2</option>
-                                <option>2</option>
-                                <option>2</option>
-                                <option>2</option>
-                                <option>2</option>
-                                <option>2</option>
-                                <option>2</option>
-                                <option>2</option>
-                                <option>2</option>
-                                <option>2</option>
-                                <option>2</option>
+                            <select class="month form-select text-center" name="month">
+                            	<c:forEach var="month" begin="1" end="12">
+	                                <option value="${ month }">${ month }월</option>
+                            	</c:forEach>
                             </select>
                         </div>
                         <!-- my attend select (left) -->
@@ -160,12 +190,6 @@
                 </div>
                 <!-- my attendance (main-right-top) -->
                 
-                <script>
-                	$(document).ready(function(){
-                		
-                	})
-                </script>
-
                 <!-- alert list start (main-right-middle) -->
                 <div class="alert-list-div">
                     <h4>알림</h4>
@@ -244,36 +268,168 @@
 </body>
 
 <script>
+	// 출근/퇴근/조퇴 등록 관련 ===================================================================================
+	$(document).ready(function(){
+		// 사용자 출석체크 여부확인 & 값출력 --------------------------------------------------------------------------
+		if(${ not empty loginMemberTodayAttend}){
+			const clockIn = "${ loginMemberTodayAttend.clockIn }";
+			const clockOut = "${ loginMemberTodayAttend.clockOut }";
+			const requestDetail = "${ loginMemberTodayAttend.requestDetail }";
+			
+			// 출근시간 출력 & 출근버튼 비활성화
+			$(".work-on-time").text(clockIn);
+			$(".work-on").attr("data-attendanceno", "${ loginMemberTodayAttend.attendanceNo }")
+						 .addClass("disabled");
+			
+			// 조퇴/퇴근시간 출력 & 버튼 비활성화
+			if(clockOut != null && clockOut != ''){
+				requestDetail == '퇴근' ? $(".work-off-time").text(clockOut) 
+									   : $(".leave-early-time").text(clockOut);
+				
+				$(".work-off").addClass("disabled");
+				$(".leave-early").addClass("disabled");
+			}else{
+				$(".work-off").removeClass("disabled");
+				$(".leave-early").removeClass("disabled");
+			}
+		}
+	
+		// 출근체크
+		$(".work-on").on("click", function(){
+			ajaxAttendCheck("출근");
+		})
+		// 퇴근체크
+		$(".work-off").on("click", function(){
+			ajaxAttendCheck("퇴근");
+		})
+		// 조퇴체크
+		$(".leave-early").on("click", function(){
+			ajaxAttendCheck("조퇴");
+		})
+		
+		// 출근/퇴근/조퇴 등록 AJAX
+		function ajaxAttendCheck(requestDetail){
+			const requestURL = "${ contextPath }/attendance";
+			$.ajax({
+				url: requestURL + (requestDetail == '출근' ? "/insert.ajax" : "/update.ajax"),
+				method:"get",
+				data:{
+					userNo: ${ loginMember.userNo },
+					requestDetail: requestDetail,
+					attendanceNo: $(".work-on").attr("data-attendno")
+				},
+				success:function(attendCheckData){
+					let result = attendCheckData.result;
+					if(result == 'SUCCESS'){
+						switch (requestDetail){
+							case '출근' :
+								$(".work-on-time").text(attendCheckData.attendTime.clockIn);
+								$(".work-on").attr("data-attendno", attendCheckData.attendTime.attendanceNo)
+											 .addClass("disabled");
+								$(".work-off").removeClass("disabled");
+								$(".leave-early").removeClass("disabled");
+								break;
+							case '퇴근' :
+								$(".work-off-time").text(attendCheckData.attendTime.clockOut);
+								$(".work-off").addClass("disabled");
+								$(".leave-early").addClass("disabled");
+								break;
+							case '조퇴' :
+								$(".leave-early-time").text(attendCheckData.attendTime.clockOut);
+								$(".leave-early").addClass("disabled");
+								$(".work-off").addClass("disabled");
+								break;
+						}
+					}else{
+						redAlert(requestDetail + "체크 서비스", requestDetail + " 등록에 실패했습니다.");
+					}
+				},error:function(){
+					console.log("INSERT ATTENDANCE AJAX FAILED");
+				}
+			})
+		}
+	})
+	
+	// 근태조회 관련 ===================================================================================
+	$(document).ready(function(){
+		const todayDate = new Date();
+		// 오늘날짜의 년도설정
+		$("select[name=year]").children("option").each(function(){
+			$(this).val() == todayDate.getFullYear() && $(this).attr("selected", true);
+		})
+		// 오늘날짜의 월설정
+		$("select[name=month]").children("option").each(function(){
+			$(this).val() == todayDate.getMonth() + 1 && $(this).attr("selected", true);
+		})
+		// 년도별 나의 근태조회
+		$("select[name=year]").on("change", function(){
+			ajaxSelectMyAttend();
+		})
+		// 월별 나의 근태조회
+		$("select[name=month]").on("change", function(){
+			ajaxSelectMyAttend();
+		})
+		
+		// 년도 & 월 별 나의 근태현황 조회
+		function ajaxSelectMyAttend(){
+			$.ajax({
+				url:"${ contextPath }/attendance/myAttend.do",
+				method:"get",
+				data:{
+					userNo:${ loginMember.userNo },
+					year:$("select[name=year]").val(),
+					month:$("select[name=month]").val()
+				},
+				success:function(responseData){
+					let result = responseData.result;
+					if(result == 'SUCCESS'){
+						$(".total-vacation-count").text(responseData.attendInfo.vacationCount);
+						$(".used-vacation-count").text(responseData.attendInfo.usedVactionCount);
+						$(".left-vacation-count").text(responseData.attendInfo.vacationCount - responseData.attendInfo.usedVacationCount);
+						$(".leave-early-count").text(responseData.attendInfo.leaveEarlyCount);
+						$(".day-off-count").text(responseData.attendInfo.dayOffCount);
+					}else{
+						redAlert("근태조회 서비스", "근태조회에 실패했습니다.");
+					}
+				},error:function(){
+					console.log("SELECT MEMBER ATTENDANCE FAILED");
+				}
+			})
+		}
+	})
+	
+	// 실시간 시간 관련 ==============================================================================================
     $(document).ready(function(){
         getToday(); // 오늘날짜 출력
         
         getClock(); // 실시간 시간
         setInterval(getClock, 1000); 
         
+	     // 실시간 시간
+	     function getClock() {
+	         const date = new Date();
+	         const hours = String(date.getHours()).padStart(2, "0");
+	         const minutes = String(date.getMinutes()).padStart(2, "0");
+	         const seconds = String(date.getSeconds()).padStart(2, "0");
+	
+	         $(".time").text(hours + ' : ' + minutes + ' : ' + seconds);
+	     }
+	
+	     // 오늘 날짜
+	     function getToday() {
+	         const todaydate = new Date();
+	         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '긑요일', '토요일'];
+	         const days_num = todaydate.getDay();
+	         const year = todaydate.getFullYear();
+	         const month = todaydate.getMonth() + 1;
+	         const date = todaydate.getDate();
+	         const day = days[days_num];
+	
+	         $(".date").text(year + "년 " + month + "월 " + date+ "일 " + day); 
+	     }
     })
 
-    // 실시간 시간
-    function getClock() {
-        const date = new Date();
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
-        const seconds = String(date.getSeconds()).padStart(2, "0");
-
-        $(".time").text(hours + ' : ' + minutes + ' : ' + seconds);
-    }
-
-    // 오늘 날짜
-    function getToday() {
-        const todaydate = new Date();
-        const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '긑요일', '토요일'];
-        const days_num = todaydate.getDay();
-        const year = todaydate.getFullYear();
-        const month = todaydate.getMonth() + 1;
-        const date = todaydate.getDate();
-        const day = days[days_num];
-
-        $(".date").text(year + "년 " + month + "월 " + date+ "일 " + day); 
-    }
+    
 </script>
 
 </html>

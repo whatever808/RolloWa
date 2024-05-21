@@ -44,6 +44,7 @@ public class MainController {
 			
 			request.setAttribute("loginMember", memberService.selectMemberForMainPage(loginMember));
 			request.setAttribute("loginMemberAttend", attendanceService.selectMemberAttend(params));
+			request.setAttribute("loginMemberTodayAttend", attendanceService.selectAttendTime(params));
 			/* --------------------------------------- "가림" --------------------------------------- */
 			return "mainpage/mainpage";
 		}

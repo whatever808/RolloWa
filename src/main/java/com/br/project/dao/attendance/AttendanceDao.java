@@ -79,10 +79,31 @@ public class AttendanceDao {
 	}
 	
 	/**
-	 * 사용자가 요청한 년 & 월의 사용자 근태현황 조회
+	 * 사용자가 요청한 년도 & 월의 사용자 근태현황 조회
 	 */
 	public Map<String, Object> selectMemberAttend(HashMap<String, Object> params){
 		return sqlSessionTemplate.selectOne("attendanceMapper.selectMemberAttend", params);
+	}
+	
+	/**
+	 * 출근 등록
+	 */
+	public int insertMemberAttend(HashMap<String, Object> params) {
+		return sqlSessionTemplate.insert("attendanceMapper.insertMemberAttend", params);
+	}
+	
+	/**
+	 * 퇴근/조퇴 등록(수정)
+	 */
+	public int updateMemberAttend(HashMap<String, Object> params) {
+		return sqlSessionTemplate.update("attendanceMapper.updateMemberAttend", params);
+	}
+	
+	/**
+	 * 출근/퇴근/조퇴 시간조회
+	 */
+	public Map<String, Object> selectAttendTime(HashMap<String, Object> params){
+		return sqlSessionTemplate.selectOne("attendanceMapper.selectAttendTime", params);
 	}
 	
 	

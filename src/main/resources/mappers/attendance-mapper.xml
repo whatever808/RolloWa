@@ -236,6 +236,47 @@
 			 where user_no = #{userNo}
 	</select>
 	
+	<!-- 출근 등록 -->
+	<insert id="insertMemberAttend" parameterType="hashmap">
+		insert
+		  into attendance
+		  	  (
+		  		attendance_no
+		  	   ,user_no
+		  	   ,clock_in
+		  	   ,request_detail
+		  	  )
+		values
+			   (
+			    seq_atteno.nextval
+			   ,#{userNo}
+			   ,sysdate
+			   ,#{requestDetail}
+			   )
+	</insert>
+	
+	<!-- 퇴근/조퇴 등록(수정) -->
+	<update id="updateMemberAttend" parameterType="hashmap">
+		update attendance
+		   set request_detail = #{requestDetail}
+		   	  ,clock_out = sysdate
+		 where user_no = #{userNo}
+		   and attendance_no = #{attendanceNo}
+	</update>
+	
+	<!-- 출근/퇴근/조퇴 시간조회 -->
+	<select id="selectAttendTime" parameterType="hashmap" resultType="map">
+		select 
+		       attendance_no "attendanceNo"
+		      ,to_char(clock_in, 'HH24:MI:SS') "clockIn"
+		      ,to_char(clock_out, 'HH24:MI:SS') "clockOut"
+		      ,request_detail "requestDetail"
+		  from attendance
+		 where user_no = #{userNo}
+		   and to_char(clock_in, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
+		    or to_char(clock_out, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
+	</select>
+	
 	<!-- ======================================= "가림" 구역 ======================================= -->
 	
 </mapper>

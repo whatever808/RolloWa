@@ -138,4 +138,15 @@ public class CalendarService {
 	public int insertCompany(CalendarDto calendar) {
 		return calDao.insertCompany(calendar);
 	}
+	
+	/* ======================================= "가림" 구역 ======================================= */
+	/**
+	 * 로그인한 사용자의 오늘일정 조회
+	 */
+	public List<Map<String, Object>> selectTodaySchedule(Map<String, Object> params){
+		return calDao.selectTodaySchedule(params);
+	}
+	
+	
+	/* ======================================= "가림" 구역 ======================================= */
 }

@@ -75,6 +75,26 @@ public class AttendanceService {
 		return attendanceDao.selectMemberAttend(params);
 	}
 	
+	/**
+	 * 출근 등록
+	 */
+	public int insertMemberAttend(HashMap<String, Object> params) {
+		return attendanceDao.insertMemberAttend(params);
+	}
+	
+	/**
+	 * 퇴근/조퇴 등록(수정)
+	 */
+	public int updateMemberAttend(HashMap<String, Object> params) {
+		return attendanceDao.updateMemberAttend(params);
+	}
+	
+	/**
+	 * 출근/퇴근/조퇴 시간조회
+	 */
+	public Map<String, Object> selectAttendTime(HashMap<String, Object> params){
+		return attendanceDao.selectAttendTime(params);
+	}
 	/* ======================================= "가림" 구역 ======================================= */
 
 	

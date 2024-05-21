@@ -243,4 +243,24 @@ set
 where
     cal_no = #{calNO}
 </update>
+
+<!-- ======================================= "가림" 구역 ======================================= -->
+<select id="selectTodaySchedule" resultType="map" parameterType="hashmap">
+	select 
+	         cal_no "calNo"
+	        ,cal_sort "calSort"
+	        ,(
+	          case when cal_sort = 'P' then '개인'
+	               when cal_sort = 'D' then '부서'
+	               when cal_sort = 'C' then '회사'
+	           end
+	          ) "calSortName"
+	        ,cal_title "calTitle"
+	        ,cal_color "calColor"
+	  from calender
+	where status = 'Y'
+	   and to_char(sysdate, 'YYYYMMDD') between to_char(start_date, 'YYYYMMDD') and to_char(end_date, 'YYYYMMDD')
+	   and regist_emp = #{userNo}
+</select>
+<!-- ======================================= "가림" 구역 ======================================= -->
 </mapper>

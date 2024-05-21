@@ -2,7 +2,7 @@
     box-sizing: border-box;
 }
 .content{
-    background-color:#e0dada;
+    background-color: lightgray;
     display: flex;
     flex-direction: column;
     align-content: space-between;
@@ -53,16 +53,26 @@ h4, h5{
     font-family: 'Roboto';
     font-size: 25px;
     font-weight: bold;
-    border: 1px solid  rgb(255, 213, 0);
     border-radius: 20px;
     padding: 10px;
 }
 
 .weather-div{
-    width: 70%;
+    width: 50%;
     min-height: 30px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: #82a8d5;
+    border-radius: 20px;
 }
-
+.weather-div>*{
+	margin-right: 25px;
+	font-size: 18px;
+	font-family: 'Roboto';
+	font-weight: bold;
+	color: white;
+}
 /* ------------- 프로필 & 출퇴근 영역 ------------- */
 .profile-attend-div{
     background-color: whitesmoke;
