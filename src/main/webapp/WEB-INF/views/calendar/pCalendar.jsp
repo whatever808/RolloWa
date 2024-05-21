@@ -333,6 +333,34 @@
 				  e.remove();
 			  })
 	   	}
+	   	
+			function allDate(e){
+				console.log($(e).children('input').is(':checked'));
+				
+				const offset = new Date().getTimezoneOffset() * 60000;
+				const today = new Date(Date.now() - offset);
+				let dateData = today.toISOString().slice(0, 10);
+				let timeData = today.toISOString().slice(11, 16);
+				
+				if($(e).children('input').is(':checked')){
+			    $('#currentDate1').val(dateData);
+			    $('#currentTime1').val('00:00:00');
+			    $('#currentDate2').val(dateData);
+			    $('#currentTime2').val('23:59:00');
+		
+				}else {
+					document.getElementById('currentDate1').value = dateData;
+					document.getElementById('currentTime1').value = timeData;
+	
+					today.setDate(today.getDate() + 1);
+					today.setTime(today.getTime() + 12 * 1000 * 60 * 60);
+	
+					dateData = today.toISOString().slice(0, 10);
+					timeData = today.toISOString().slice(11, 16);
+					document.getElementById('currentDate2').value = dateData;
+					document.getElementById('currentTime2').value = timeData;
+				}
+			}
 		  
    		/* document 후 실행 될 함수 */
 			$(document).ready(function(){
@@ -341,6 +369,10 @@
 				$('.member-search-area .line-cirecle').click(function(){
 					addEvent($(this).next().val());
 				})
+				
+				$('#allDate').on('click', function(){
+					allDate(this);
+				});
 			})
 		</script>
 		<!-- 컨텐츠 영역 content-area -->
@@ -423,7 +455,7 @@
 		<div style="display: flex; justify-content: space-between;">
 			<div class="jua-regular">All Day</div>
 
-		<div class="pretty p-switch all_day">
+		<div class="pretty p-switch all_day" id="allDate">
 				<input type="checkbox">
 				<div class="state p-success">
 					<label>종일</label>

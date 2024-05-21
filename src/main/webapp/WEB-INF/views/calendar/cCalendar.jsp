@@ -189,7 +189,7 @@
 			       if(checkDate && checkTime){
 			       	updateCal();
 			       }else {
-			    	   alertify.alert('일정 수정','날짜 및 시간을 확인 해 주세요.');
+			    	   redAlert('일정 수정','날짜 및 시간을 확인 해 주세요.');
 			       }
 			   	};
 			   	/* 일정 update ajax */
@@ -275,19 +275,33 @@
 				  }
 				  
 					function allDate(e){
-						const $input = $(e).children('input');
-						console.log($input);
+						console.log($(e).children('input').is(':checked'));
+						
 						const offset = new Date().getTimezoneOffset() * 60000;
 						const today = new Date(Date.now() - offset);
 						let dateData = today.toISOString().slice(0, 10);
 						let timeData = today.toISOString().slice(11, 16);
 						
-				    $('#currentDate1').val(dateData);
-				    $('#currentTime1').val('00:00:00');
-				    $('#currentDate2').val(dateData);
-				    $('#currentTime2').val('23:59:59');
-				    
+						if($(e).children('input').is(':checked')){
+					    $('#currentDate1').val(dateData);
+					    $('#currentTime1').val('00:00:00');
+					    $('#currentDate2').val(dateData);
+					    $('#currentTime2').val('23:59:00');
+				
+						}else {
+							document.getElementById('currentDate1').value = dateData;
+							document.getElementById('currentTime1').value = timeData;
+
+							today.setDate(today.getDate() + 1);
+							today.setTime(today.getTime() + 12 * 1000 * 60 * 60);
+
+							dateData = today.toISOString().slice(0, 10);
+							timeData = today.toISOString().slice(11, 16);
+							document.getElementById('currentDate2').value = dateData;
+							document.getElementById('currentTime2').value = timeData;
+						}
 					}
+					
 		   		/* document 후 실행 될 함수 */
 					$(document).ready(function(){
 						addEvent();
