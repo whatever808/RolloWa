@@ -54,7 +54,7 @@
                             height: 750px;">
                                 <div class="card-body">
 
-                                    <ul class="list-unstyled mb-0">
+                                    <ul class="list-unstyled mb-0 chat_room_list">
                                         <li class="p-2 border-bottom chat_room">
                                             <a href="#!" class="d-flex justify-content-between">
                                                 <div class="d-flex flex-row">
@@ -388,11 +388,57 @@
         for (let i = 0; i < $(".chat_room").length; i++) {
             chatRoomArr[i] = 0;
         }
-
+        
+        const $chatRoomUl = $(".chat_room_list");
+	
+        // 채팅방 열기 버튼
         $(".msg_open_btn").on("click", function () {
-            $(".msg_close_btn").css("display", "block");
-            $(".msg_open_btn").css("display", "none");
-            $(".msgbox").css("display", "flex");
+        	// 스타일 조정
+          $(".msg_close_btn").css("display", "block");
+          $(".msg_open_btn").css("display", "none");
+          $(".msgbox").css("display", "flex");
+          
+          // 채팅방 목록 조회
+          for(var i = 0; i < chatRoomList.length; i++) {
+        	  // 채팅방 참여인원 조회
+        	  $.ajax({
+        		  url: "${contextPath}/chat/participants"
+        			, method: "get"
+        		  , data: {roomNo : chatRoomList[i].chatRoomNo}
+        		  , succecc: function(participantsList) {
+        			  console.log(participantsList);
+        			  if (participantsList.length > 0) {
+        				  var chatRoomVal = "<li class='p-2 border-bottom chat_room'>";
+			        	  chatRoomVal += "<a href='#!' class='d-flex justify-content-between'>";
+			        	  chatRoomVal += "<div class='d-flex flex-row'>";
+			        	  chatRoomVal += "<img src='${contextPath}/" + participantsList[0].profileURL + "'";
+			        	  chatRoomVal += "class='rounded-circle d-flex align-self-center me-3 shadow-1-strong'";
+			        	  chatRoomVal += "width='60'>";
+			        	  chatRoomVal += "<div class='pt-1'>";
+			        	  chatRoomVal += "<p class='fw-bold mb-0'>";
+			        	  for(var j = 0; j < (participantsList.length > 3 ? 3 : participantsList.length ); j++) {
+			        		  chatRoomVal += participantsList[j].userName + (j != 2 ? "," : "");
+			        	  }
+			        	  chatRoomVal += "</p>";
+			        	  chatRoomVal += "<p class='small text-muted'>Hello, Are you there?</p>";
+			        	  chatRoomVal += "</div>";
+			        	  chatRoomVal += "</div>";
+			        	  chatRoomVal += "<div class='pt-1'>";
+			        	  chatRoomVal += "<p class='small text-muted mb-1'>Just now</p>";
+			        	  chatRoomVal += "</div>";
+			        	  chatRoomVal += "</a>";
+			        	  chatRoomVal += "</li>";
+			        	  console.log(chatRoomVal);
+			        	  $chatRoomUl.append(chatRoomVal);
+        			  }
+        		  }
+        		  , error: function() {
+        			  console.log("채팅방 참여인원 조회 ajax 통신 실패");
+        		  }
+        	  })
+        	  
+        	  
+          }
         })
 
         $(".msg_close_btn").on("click", function () {
@@ -504,10 +550,14 @@
        		}
        	})
        })
-       
-       
     })
-
+	
+    // 채팅방 참여
+    function subscribe(roomNo) {
+			stompClient.subscribe("/topic/chat/room/" + roomNo, function(msg) {
+				console.log(msg);
+			})
+    }
     // 채팅하기 버튼 클릭 시 체크된 회원들과 채팅방 생성
     function createChatRoom() {
     	// 1. 채팅방 데이터 생성 => Chatting Room 데이터 추가, Chatting Participation 데이터 추가
@@ -524,7 +574,7 @@
  			    		if($(el).children().children().is(':checked')) {    			
  			    			// 1-2-1. 체크된 회원 채팅방 참여
  			    			$.ajax({
- 			    				url: "${contextPath}/chat/parti"
+ 			    				url: "${contextPath}/chat/participants"
  			    				, method: "post"
  			    				, data: {partUserNo: $(el).children().children().val()
  			    									, chatRoomNo: roomNo}
@@ -567,30 +617,10 @@
     	})
     }
     
-    // 구독 중인 채팅방 목록 조회
-    $.ajax({
-    	url: "${contextPath}/chat/rooms"
-    	, method: "get"
-    	, success: function(result) {
-    		console.log(result)
-    		// 참여중인 채팅방 구독
-    		for(var i = 0; i < result.length; i++) {
-    			stompClient.connect({}, function(frame) {
-	    			stompClient.subscribe("/topic/chat/room/" + result[i].chatRoomNo, function(msg) {
-	    				console.log(msg);
-	    			})
-	    		})
-    		}
-    	}
-    	, error: function() {
-    		console.log("채팅방 목록 조회 ajax 통신 실패");
-    	}
-    })
-    
     // 현재 접속한 채팅방 구독 주소로 메세지 발송
 		function sendMsg() {
-			//stompClient.send("/app/user", {}, JSON.stringify({name: '${loginMember.userId}'
-			//																									, roomNo: roomNo}));
+			//stompClient.send(/*"/app/user"*/ "/app/chat/enter/1038", {}, JSON.stringify({name: '${loginMember.userId}'
+			//																									, roomNo: "1038"}));
 		}
 </script>
 </html>

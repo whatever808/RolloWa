@@ -48,4 +48,9 @@ public class MemberDao {
 	public List<MemberDto> selectAllMember() {
 		return sqlSessionTemplate.selectList("memberMapper.selectAllMember");
 	}
+
+	// 채팅방 참여인원 조회
+	public List<MemberDto> selectParticipants(String roomNo) {
+		return sqlSessionTemplate.selectList("memberMapper.selectParticipants", roomNo);
+	}
 }

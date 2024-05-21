@@ -116,6 +116,18 @@
     		position_code desc
 	</select>
 	
+	<!-- 채팅방 참여인원 조회 -->
+	<select id="selectParticipants" resultMap="memberResult">
+	  select
+        user_no, user_name, profile_url
+    from
+        chatting_participation cp, member
+    where
+        chat_user_no = user_no
+    and
+        cr_no = #{ roomNo }
+	</select>
+	
 	
  <!-- ================== 이예찬 ========================== -->
  <!-- 이예찬 : Member 캘린더 위의 동료 선택 창에 필요한 데이터 조회 쿼리 -->

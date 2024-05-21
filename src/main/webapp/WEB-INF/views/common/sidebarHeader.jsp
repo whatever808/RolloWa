@@ -651,11 +651,34 @@
 					var alram;
 					var chatting;
 					var stompClient;
+					var chatRoomList;
 					
 					$(document).ready(function() {
 						// 채팅용 웹소켓 연결
 						chatting = new SockJS("${contextPath}/chatting");
 						stompClient = Stomp.over(chatting);
+			    	stompClient.connect({}, function(frame) {
+							// 구독 중인 채팅방 목록 조회
+					    $.ajax({
+					    	url: "${contextPath}/chat/rooms"
+					    	, method: "get"
+					    	, success: function(result) {
+					    		chatRoomList = result;
+					    		
+					    		// 참여중인 채팅방 구독
+					    		for(var i = 0; i < result.length; i++) {
+					    			//subscribe(result[i].chatRoomNo)
+					    			stompClient.subscribe("/topic/chat/room/" + result[i].chatRoomNo, function(msg) {
+											console.log(msg);
+										})
+					    		}
+					    	}
+					    	, error: function() {
+					    		console.log("채팅방 목록 조회 ajax 통신 실패");
+					    	}
+					    })
+					    
+						})
 						// 알람용 웹소켓 연결
 						alram = new SockJS("${contextPath}/alram");
 						// 알람 수신 시 alert 발생
