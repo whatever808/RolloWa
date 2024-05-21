@@ -39,49 +39,6 @@
 
         </div>
         <!-- weather-clock (top) -->
-        
-        <script>
-        	$(document).ready(function(){
-        		navigator.geolocation.getCurrentPosition(success);
-        	})
-        	const API_KEY = "6a6c38789cdffc510c99641864cf9f76";
-        	
-        	// 사용자가 현재 위치 추적을 허용하지 않은 경우
-        	const fail = () => {
-        		console.log("좌표를 받아올 수 없습니다.");
-        	}
-        	
-        	// 사용자가 현재 위치 추적을 허용했을 경우
-        	const success = (position) => {
-        		const latitude = position.coords.latitude;
-        		const longitude = position.coords.longitude;
-        		
-        		getWeather(latitude, longitude);
-        	}
-        	
-        	const getWeather = (lat, lon) => {
-        		fetch(
-        			"https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY + "&units=metric&lang=kr"
-        		).then((response) => {
-        			return response.json();
-        		}).then((json) => {
-        			const place = json.name;
-        			const temperature = json.main.temp;
-        			const description = json.weather[0].description;
-        			const icon = json.weather[0].icon;
-        			const iconURL = 'http://openweathermap.org/img/wn/' + icon + '@2x.png';
-        			
-        			$(".weather-place").text(place);
-        			$(".weather-temp").text(temperature);
-        			$(".weather-description").text(description);
-        			$(".weather-icon").attr("src", iconURL);
-        		}).catch((error) => {
-        			console.log("WEATHER ERROR");
-        		})
-        	}
-        	
-
-        </script>
 
         <!-- main contents start (bottom) -->
         <div class="main-content">
@@ -119,14 +76,14 @@
 
                 <!-- today's schedule (main-left-bottom)-->
                 <div class="today-schedule">
-                    <h5 class="fw-bold text-end mb-3">오늘의 일정</h5>
-                    <div class="mb-2">맛점하기</div>
-                    <div class="mb-2">부서미팅</div>
-                    <div class="mb-2">퇴근하기</div>
+                    <h5 class="fw-bold text-end mb-4">오늘의 일정</h5>
+                    <div class="today-schedule-list">
+	                    <!-- 부서 일정 목록영역 -->
+                    </div>
                 </div>
                 <!-- today's schedule (main-left-bottom)-->
             </div>
-            <!-- amin-left-end -->
+            <!-- main-left-end -->
 
             <!-- main-right start-->
             <div class="main-content-right">
@@ -136,8 +93,8 @@
 
                     <h4>근태관리</h4>
                     
-					<c:set var="today" value="<%=new java.util.Date()%>" />
-					<c:set var="sysYear"><fmt:formatDate value="${ today }" pattern="yyyy" /></c:set> 
+										<c:set var="today" value="<%=new java.util.Date()%>" />
+										<c:set var="sysYear"><fmt:formatDate value="${ today }" pattern="yyyy" /></c:set> 
                     <div class="my-attend-content">
                         <!-- my attend select (left) -->
                         <div class="my-attend-select-div">
@@ -193,7 +150,7 @@
                 <!-- alert list start (main-right-middle) -->
                 <div class="alert-list-div">
                     <h4>알림</h4>
-                    <table class="table table-hover">
+                    <table class="alert-table table table-hover table-responsive">
                         <tr>
                             <td class="list-title">유재석 총무부 부장발령</td>
                             <td class="list-date">2024-05-20</td>
@@ -226,29 +183,55 @@
                 <!-- notice list start (main-right-bottom) -->
                 <div class="notice-list-div">
                     <h4>공지사항</h4>
-                    <table class="table table-hover">
+                    
+                    <div class="notice-category">
+										  <span class="bg-light normal">일반공지</span>
+										  <span class="department">부서공지</span>
+										</div>
+                    
+                    <table class="notice-table table table-hover table-responsive">
                         <tr>
                             <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-writer">
+                            	<img src="${ contextPath }/resources/images/defaultProfile.png" alt="" class="writer-profile">
+                            	<span class="writer-name">유재석</span>
+                            </td>
                             <td class="list-date">2024-05-20</td>
                         </tr>
 
                         <tr>
                             <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-writer">
+                            	<img src="${ contextPath }/resources/images/defaultProfile.png" alt="" class="writer-profile">
+                            	<span class="writer-name">유재석</span>
+                            </td>
                             <td class="list-date">2024-05-20</td>
                         </tr>
 
                         <tr>
                             <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-writer">
+                            	<img src="${ contextPath }/resources/images/defaultProfile.png" alt="" class="writer-profile">
+                            	<span class="writer-name">유재석</span>
+                            </td>
                             <td class="list-date">2024-05-20</td>
                         </tr>
 
                         <tr>
                             <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-writer">
+                            	<img src="${ contextPath }/resources/images/defaultProfile.png" alt="" class="writer-profile">
+                            	<span class="writer-name">유재석</span>
+                            </td>
                             <td class="list-date">2024-05-20</td>
                         </tr>
 
                         <tr>
                             <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-writer">
+                            	<img src="${ contextPath }/resources/images/defaultProfile.png" alt="" class="writer-profile">
+                            	<span class="writer-name">유재석</span>
+                            </td>
                             <td class="list-date">2024-05-20</td>
                         </tr>
                     </table>
@@ -259,6 +242,26 @@
         </div>
         <!-- main contents end (bottom) -->
         
+        <script>
+        	$(document).ready(function(){
+        		$(".notice-category").on("click", "span", function(){
+        			console.log(loginMemInfo);
+        			/*
+	        			$.ajax({
+	            			url:"${ contextPath }/board/",
+	            			method:"get",
+	            			data:{
+	            				status:"Y",
+	            				category:$(this).hasClass('department') ? 'department' : 'normal',
+	            				$(this).hasClass('department') ? && department: ${ loginMember}
+	            			}
+	            	})
+        			*/
+        		})
+        		
+        	})
+        </script>
+        
     </div>
     <!-- content end -->
 	
@@ -268,6 +271,46 @@
 </body>
 
 <script>
+	// 날씨 관련 =============================================================================================================================
+	$(document).ready(function(){
+		navigator.geolocation.getCurrentPosition(success);
+	})
+	const API_KEY = "6a6c38789cdffc510c99641864cf9f76";
+	
+	// 사용자가 현재 위치 추적을 허용하지 않은 경우
+	const fail = () => {
+		console.log("좌표를 받아올 수 없습니다.");
+	}
+	
+	// 사용자가 현재 위치 추적을 허용했을 경우
+	const success = (position) => {
+		const latitude = position.coords.latitude;
+		const longitude = position.coords.longitude;
+		
+		getWeather(latitude, longitude);
+	}
+	
+	const getWeather = (lat, lon) => {
+		fetch(
+			"https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY + "&units=metric&lang=kr"
+		).then((response) => {
+			return response.json();
+		}).then((json) => {
+			const place = json.name;
+			const temperature = json.main.temp;
+			const description = json.weather[0].description;
+			const icon = json.weather[0].icon;
+			const iconURL = 'http://openweathermap.org/img/wn/' + icon + '@2x.png';
+			
+			$(".weather-place").text(place);
+			$(".weather-temp").text(temperature);
+			$(".weather-description").text(description);
+			$(".weather-icon").attr("src", iconURL);
+		}).catch((error) => {
+			console.log("WEATHER ERROR");
+		})
+	}
+	
 	// 출근/퇴근/조퇴 등록 관련 ===================================================================================
 	$(document).ready(function(){
 		// 사용자 출석체크 여부확인 & 값출력 --------------------------------------------------------------------------
@@ -428,6 +471,34 @@
 	         $(".date").text(year + "년 " + month + "월 " + date+ "일 " + day); 
 	     }
     })
+    
+    // 오늘일정 관련 =====================================================================================================
+   	$(document).ready(function(){
+   		$.ajax({
+   			url:"${ contextPath }/calendar/todaySchedule.ajax",
+   			method:"get",
+   			data: {
+   				userNo:${ loginMember.userNo }
+   			},
+   			success:function(todayScheduleList){
+ 					if(todayScheduleList.length == 0){
+ 						$(".today-schedule-list").text("조회된 일정이 없습니다.")
+ 																		 .addClass('d-flex justify-content-center align-items-center text-secondary');
+ 					}else{
+ 						list = "";
+ 						for(let i=0 ; i<todayScheduleList.length ; i++){
+ 							list += "<div class='schedule mb-2'>";
+							list += 	"<span class='schedule-color me-3' style='background-color: " + todayScheduleList[i].calColor + "'></span>";
+							list += 	"<span class='schedule-title'><b>[" + todayScheduleList[i].calSortName + "]</b>&nbsp;&nbsp;" + todayScheduleList[i].calTitle + "</span>";
+							list += "</div>";
+ 						}
+ 						$(".today-schedule-list").html(list);
+ 					}
+   			},error:function(){
+   				console.log("SELECT TODAY'S SCHEDULE AJAX FAILED");
+   			}
+   		})
+   	})
 
     
 </script>

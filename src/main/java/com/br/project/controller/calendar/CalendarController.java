@@ -378,24 +378,14 @@ public class CalendarController {
 	 */
 	@RequestMapping(value="/todaySchedule.ajax")
 	@ResponseBody
-	public Map<String, Object> selectTodaySchedule(HttpServletRequest request){
+	public List<Map<String, Object>> selectTodaySchedule(HttpServletRequest request){
 		
 		MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
 		
 		Map<String, Object> params = new HashMap<>();
 		params.put("userNo", loginMember.getUserNo());
 		
-		List<Map<String, Object>> todayScheduleList = calService.selectTodaySchedule(params);
-		
-		Map<String, Object> responseData = new HashMap<>();
-		if(todayScheduleList != null && !todayScheduleList.isEmpty()) {
-			responseData.put("result", "SUCCESS");
-			responseData.put("todayScheduleList", todayScheduleList);
-		}else {
-			responseData.put("result", "FAIL");
-		}
-		
-		return responseData;
+		return calService.selectTodaySchedule(params);
 	}
 	
 	
