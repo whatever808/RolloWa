@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dao.chat.ChatDao;
+import com.br.project.dto.chat.ChatMessageDto;
 import com.br.project.dto.chat.ChatRoomDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.chat.ChatService;
@@ -100,15 +101,34 @@ public class RoomController {
 	// 채팅방의 참여인원 조회
 	@GetMapping(value="/participants", produces="application/json; charset=utf-8")
 	@ResponseBody
-	public List<MemberDto> selectParticipants(String roomNo) {
+	public List<MemberDto> selectParticipants(String roomNo
+					, HttpSession session) {
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
 		List<MemberDto> memberList = new ArrayList<>();
-		log.debug("{}", roomNo);
+		
+		Map<String, Object> map = new HashMap<>();
+		// 채팅방 번호
+		map.put("roomNo", roomNo);
+		// 로그인한 회원 번호
+		map.put("userNo", loginMember.getUserNo());
+		
 		if(roomNo != null) {
-			memberList = chatService.selectParticipants(roomNo);
+			memberList = chatService.selectParticipants(map);
 		}
 		
 		return memberList;
 	}
 	
 	// 채팅방의 채팅 메세지 조회
+	@GetMapping(value="messages", produces="application/json; chartset=urf-8")
+	@ResponseBody
+	public List<ChatMessageDto> selectChatMsg(String roomNo) {
+		List<ChatMessageDto> msgList = new ArrayList<>();
+		
+		if(roomNo != null) {
+			msgList = chatService.selectChatMsg(roomNo);
+		}
+		
+		return msgList;
+	}
 }

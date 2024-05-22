@@ -10,6 +10,16 @@
 		<result column="CR_ENROLL_USER_NO" property="enrollUserNo"/>
 		<result column="CR_MODIFY_USER_NO" property="modifyUserNo"/>
 	</resultMap>
+	
+	<resultMap type="ChatMessageDto" id="chatMsgResult">
+		<id column="MSG_NO" property="msgNo"/>
+		<result column="MSG_CONTENT" property="msgContent"/>
+		<result column="SEND_DATE" property="sendDate"/>
+		<result column="STATUS" property="status"/>
+		<result column="USER_NO" property="userNo"/>
+		<result column="CR_NO" property="chatRoomNo"/>
+		<result column="USER_NAME" property="userName"/>
+	</resultMap>
 
 	<!-- 채팅방 생성 -->
   <insert id="insertChatRoom">
@@ -96,7 +106,7 @@
 	on
 	    cp.cr_no = cr.cr_no
 	where
-	    chat_user_no = '1051'
+	    chat_user_no = #{ userNo }
 	and
 	    cr.status = 'Y'
 	and
@@ -105,7 +115,7 @@
 	    chat_in_date desc
   </select>
   
-  <!-- 채팅방 메세지 기록 -->
+  <!-- 채팅방 메세지 저장 -->
   <insert id="insertChatMsg">
   insert into 
   	chatting_message
@@ -123,5 +133,26 @@
 	      , #{ chatRoomNo }
 	  )
   </insert>
-  
+  <!-- 채팅방 메세지 조회 -->
+  <select id="selectChatMsg" resultMap="chatMsgResult">
+		<![CDATA[
+		select
+		    msg_no, msg_content, send_date, user_name, cm.user_no
+		from
+		    (select
+		        msg_no, msg_content, send_date, user_name, cm.user_no, rownum
+		    from
+		        chatting_message cm, member m
+		    where
+		        cm.user_no = m.user_no
+		    and
+		        cm.status = 'Y'
+		    and
+		        cr_no = #{ roomNo }
+		    order by
+		        send_date)
+		where
+		    rownum <= 30
+		]]>
+  </select>
 </mapper>

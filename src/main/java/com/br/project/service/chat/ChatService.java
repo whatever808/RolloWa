@@ -57,7 +57,12 @@ public class ChatService {
 	}
 
 	// 채팅방 참여인원 조회
-	public List<MemberDto> selectParticipants(String roomNo) {
-		return memberDao.selectParticipants(roomNo);
+	public List<MemberDto> selectParticipants(Map<String, Object> map) {
+		return memberDao.selectParticipants(map);
+	}
+
+	// 채팅 메세지 조회
+	public List<ChatMessageDto> selectChatMsg(String roomNo) {
+		return chatDao.selectChatMsg(roomNo);
 	}
 }
