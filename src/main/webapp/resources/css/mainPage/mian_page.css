@@ -46,7 +46,7 @@ h4, h5{
     align-items: center;
     justify-content: space-between;
     margin-bottom: 30px;
-    background-color: #acc2e9;;
+    background-color: #b2d4ff;
 }
 
 .date-time-div{
@@ -69,7 +69,7 @@ h4, h5{
 }
 .weather-div>*{
 	margin-right: 25px;
-	font-size: 18px;
+	font-size: 23px;
 	font-family: 'Roboto';
 	font-weight: bold;
 	color: white;

@@ -12,8 +12,8 @@
 	<link href="${ contextPath }/resources/css/board/list.css" rel="stylesheet" />
 	<!-- jQuery UI -->
 	<link rel="stylesheet" href="${ contextPath }/resources/jquery-ui/jquery-ui.css">
-    <script src="${ contextPath }/resources/jquery-ui/external/jquery/jquery.js"></script>
-    <script src="${ contextPath }/resources/jquery-ui/jquery-ui.js"></script>
+  <script src="${ contextPath }/resources/jquery-ui/external/jquery/jquery.js"></script>
+  <script src="${ contextPath }/resources/jquery-ui/jquery-ui.js"></script>
 </head>
 <body>
 
@@ -65,6 +65,7 @@
 			    <!-- search keyword end -->
 			    
 			    <script>
+			    	/*
 			    	$(document).ready(function(){
 			    		 var searchSource = ['엽기떡볶이', '신전떡볶이', '걸작떡볶이', '신당동떡볶이'];
 			    		$("#keyword").autocomplete({
@@ -91,6 +92,7 @@
 			    			}
 			    		});
 			    	});
+			    	*/
 			    </script>
 			    
 			    <!-- search button start -->

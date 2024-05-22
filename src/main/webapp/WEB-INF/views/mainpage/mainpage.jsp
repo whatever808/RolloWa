@@ -242,7 +242,7 @@
 			const iconURL = 'http://openweathermap.org/img/wn/' + icon + '@2x.png';
 			
 			$(".weather-place").text(place);
-			$(".weather-temp").text(temperature);
+			$(".weather-temp").text(temperature +' ℃');
 			$(".weather-description").text(description);
 			$(".weather-icon").attr("src", iconURL);
 		}).catch((error) => {

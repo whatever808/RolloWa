@@ -163,11 +163,11 @@ public class BoardController {
 		try {
 			// 파라미터값
 			HashMap<String, Object> params = getParameterMap(request);
-			String category = params.get("category").toString();
-			String department = params.get("department").toString();
-			String condition = params.get("condition").toString();
-			String keyword = params.get("keyword").toString();
-			String no = params.get("no").toString();
+			String category = params.get("category") != null ? params.get("category").toString() : "";
+			String department = params.get("department") != null ? params.get("department").toString() : "";
+			String condition = params.get("condition") != null ? params.get("condition").toString() : "";
+			String keyword = params.get("keyword") != null ? params.get("keyword").toString() : "";
+			String no =params.get("no").toString();
 			
 			// 공지사항 조회수 증가
 			boardService.updateReadCount(no);

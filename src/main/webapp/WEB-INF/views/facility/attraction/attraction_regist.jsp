@@ -24,12 +24,42 @@
 	        <h1 class="page-title">어트랙션 등록</h1>
 	
 	        <!-- regist form start -->
-	        <form action="${ contextPath }/attraction/regist.do" method="post" id="regist-form">
+	        <form method="post" enctype="multipart/form-data" id="regist-form">
 	            
 	            <div class="field-group">
-	                <label for="attraction-thumbnail" class="field-title">썸네일</label><br>
-	                <input type="file" id="attraction-thumbnail" required name="thumbnailURL">
+	                <label for="attraction-thumbnail" class="field-title">대표이미지</label><br>
+	                <div class="thumbnail-div">
+		                <input type="file" id="attraction-thumbnail" class="d-none" name="thumbnailURL" accept="image/*">
+		                <img id="thumbnail-preview">
+		              </div>
 	            </div>
+	            
+	            <script>
+	            	$("#thumbnail-preview").on("click", function(){
+	            		$("#attraction-thumbnail").click();
+	            	})
+	            	
+	            	$("#attraction-thumbnail").on("change", function(){
+	            		var fileReg =  /(.*?)\.(jpg|jpeg|png|gif|bmp)$/i; // 이미지 정규식
+	            		const file = event.target.files[0];
+	            		const reader = new FileReader();
+	            		const $preview = $("#thumbnail-preview");
+	            		
+	            		if(fileReg.test(file.name)){
+	            			reader.onload = function(){
+		            			$preview.attr("src", reader.result);	
+		            		}
+		            		reader.readAsDataURL(file);	
+	            		}else{
+	            			yellowAlert("파일 업로드 서비스", "이미지 파일만 업로드가능합니다.");
+	            		}
+	            		
+	            	})
+	            	
+	            	$("#regist-form").on("submit", function(){
+	            		
+	            	})
+	            </script>
 	            
 	            <div class="field-group">
 	                <label for="attraction-name" class="field-title">어트랙션명</label><br>
@@ -110,6 +140,11 @@
 	                    </select>
 	                </div>
 	                <!-- if height-limit-y checked end -->
+	            </div>
+	            
+	            <div class="field-group">
+	                <label for="attraction-intro" class="field-title">어트랙션 소개</label><br>
+	                <textarea type="text" class="mh-5" id="attraction-intro" required name="attractionIntro"></textarea>
 	            </div>
 	
 	            <div class="button-group">

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dto.common.PageInfoDto;
@@ -101,7 +102,7 @@ public class AttractionController {
 	 * @method : 어트랙션 등록
 	 */
 	@RequestMapping("/regist.do")
-	public String insertAttraction(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+	public String insertAttraction(MultipartHttpServletRequest request, RedirectAttributes redirectAttributes) {
 		try {
 			HashMap<String, Object> params = getParameterMap(request);
 			MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
