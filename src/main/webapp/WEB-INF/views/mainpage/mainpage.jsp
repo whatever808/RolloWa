@@ -57,7 +57,7 @@
 					
                     <div class="profile-attend pe-4">
                         <div class="attend-button d-flex my-2">
-                            <button class="work-on btn btn-outline-primary px-4 me-auto" data-attendno="">출근</button>
+                            <button class="work-on btn btn-outline-primary px-4 me-auto" data-attendanceno="">출근</button>
                             <label class="work-on-time attend-time"></label>
                         </div>
 
@@ -292,43 +292,46 @@
 		// 출근/퇴근/조퇴 등록 AJAX
 		function ajaxAttendCheck(requestDetail){
 			const requestURL = "${ contextPath }/attendance";
-			$.ajax({
-				url: requestURL + (requestDetail == '출근' ? "/insert.ajax" : "/update.ajax"),
-				method:"get",
-				data:{
-					userNo: ${ loginMember.userNo },
-					requestDetail: requestDetail,
-					attendanceNo: $(".work-on").attr("data-attendno")
-				},
-				success:function(attendCheckData){
-					let result = attendCheckData.result;
-					if(result == 'SUCCESS'){
-						switch (requestDetail){
-							case '출근' :
-								$(".work-on-time").text(attendCheckData.attendTime.clockIn);
-								$(".work-on").attr("data-attendno", attendCheckData.attendTime.attendanceNo)
-											 .addClass("disabled");
-								$(".work-off").removeClass("disabled");
-								$(".leave-early").removeClass("disabled");
-								break;
-							case '퇴근' :
-								$(".work-off-time").text(attendCheckData.attendTime.clockOut);
-								$(".work-off").addClass("disabled");
-								$(".leave-early").addClass("disabled");
-								break;
-							case '조퇴' :
-								$(".leave-early-time").text(attendCheckData.attendTime.clockOut);
-								$(".leave-early").addClass("disabled");
-								$(".work-off").addClass("disabled");
-								break;
+			
+			if(confirm(requestDetail + '체크를 하시겠습니까?')){
+				$.ajax({
+					url: requestURL + (requestDetail == '출근' ? "/insert.ajax" : "/update.ajax"),
+					method:"get",
+					data:{
+						userNo: ${ loginMember.userNo },
+						requestDetail: requestDetail,
+						attendanceNo: $(".work-on").attr("data-attendanceno")
+					},
+					success:function(attendCheckData){
+						let result = attendCheckData.result;
+						if(result == 'SUCCESS'){
+							switch (requestDetail){
+								case '출근' :
+									$(".work-on-time").text(attendCheckData.attendTime.clockIn);
+									$(".work-on").attr("data-attendanceno", attendCheckData.attendTime.attendanceNo)
+												 .addClass("disabled");
+									$(".work-off").removeClass("disabled");
+									$(".leave-early").removeClass("disabled");
+									break;
+								case '퇴근' :
+									$(".work-off-time").text(attendCheckData.attendTime.clockOut);
+									$(".work-off").addClass("disabled");
+									$(".leave-early").addClass("disabled");
+									break;
+								case '조퇴' :
+									$(".leave-early-time").text(attendCheckData.attendTime.clockOut);
+									$(".leave-early").addClass("disabled");
+									$(".work-off").addClass("disabled");
+									break;
+							}
+						}else{
+							redAlert(requestDetail + "체크 서비스", requestDetail + " 등록에 실패했습니다.");
 						}
-					}else{
-						redAlert(requestDetail + "체크 서비스", requestDetail + " 등록에 실패했습니다.");
+					},error:function(){
+						console.log("INSERT ATTENDANCE AJAX FAILED");
 					}
-				},error:function(){
-					console.log("INSERT ATTENDANCE AJAX FAILED");
-				}
-			})
+				})
+			}
 		}
 	})
 	
@@ -454,7 +457,6 @@
        				department: $(this).hasClass('department') ? '${ loginMember.deptCode }' : ''
        			},
        			success:function(boardList){
-       				console.log(boardList);
        				list = "";
        				if(boardList.length == 0){
        					list += "<tr>";

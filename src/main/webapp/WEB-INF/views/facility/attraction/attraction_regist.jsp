@@ -27,6 +27,11 @@
 	        <form action="${ contextPath }/attraction/regist.do" method="post" id="regist-form">
 	            
 	            <div class="field-group">
+	                <label for="attraction-thumbnail" class="field-title">썸네일</label><br>
+	                <input type="file" id="attraction-thumbnail" required name="thumbnailURL">
+	            </div>
+	            
+	            <div class="field-group">
 	                <label for="attraction-name" class="field-title">어트랙션명</label><br>
 	                <input type="text" id="attraction-name" placeholder="어트랙션명을 입력하세요." required name="attractionName">
 	            </div>

@@ -54,6 +54,7 @@ public class AttractionController {
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("modalColor", "R");
 			redirectAttributes.addFlashAttribute("alertTitle", requestURL.indexOf("manage") != -1 ? "어트랙션 관리서비스" : "어트랙션 조회서비스");
 			redirectAttributes.addFlashAttribute("alertMsg", requestURL.indexOf("manage") != -1 ? "어트랙션 관리페이지 요청에 실패했습니다." : "어트랙션 목록조회에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
@@ -89,6 +90,7 @@ public class AttractionController {
 			return "facility/attraction/attraction_regist";
 		}catch(Exception e) {
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("modalColor", "R");
 			redirectAttributes.addFlashAttribute("alertTitle", "어트랙션 등록서비스");
 			redirectAttributes.addFlashAttribute("alertMsg", "어트랙션 등록요청에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
@@ -108,14 +110,17 @@ public class AttractionController {
 			params.put("manageEmp", loginMember.getUserNo());
 			
 			if(attractionService.insertAttraction(params) > 0) {
+				redirectAttributes.addFlashAttribute("modalColor", "G");
 				redirectAttributes.addFlashAttribute("alertMsg", "어트랙션이 등록되었습니다.");
 				return "redirect:/attraction/list.do";
 			}else {
+				redirectAttributes.addFlashAttribute("modalColor", "R");
 				redirectAttributes.addFlashAttribute("alertMsg", "어트랙션 등록에 실패했습니다.");
 				return "redirect:" + request.getHeader("Referer");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("modalColor", "R");
 			redirectAttributes.addFlashAttribute("alertMsg", "어트랙션 등록에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
 		}finally {
@@ -134,6 +139,7 @@ public class AttractionController {
 			return "facility/attraction/attraction_modify";
 		}catch(Exception e) {
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("modalColor", "R");
 			redirectAttributes.addFlashAttribute("alertTitle", "어트랙션 수정서비스");
 			redirectAttributes.addFlashAttribute("alertMsg", "어트랙션 수정요청에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
@@ -151,19 +157,21 @@ public class AttractionController {
 			params.put("modifyEmp", loginMember.getUserNo());
 			
 			if(attractionService.updateAttraction(params) > 0) {
+				redirectAttributes.addFlashAttribute("modalColor", "G");
 				redirectAttributes.addFlashAttribute("alertMsg", "어트랙션 정보가 수정되었습니다.");
 				return "redirect:/attraction/manage.do";
 			}else {
+				redirectAttributes.addFlashAttribute("modalColor", "R");
 				redirectAttributes.addFlashAttribute("alertMsg", "어트랙션 정보수정에 실패했습니다.");
 				return "redirect:" + request.getHeader("Referer");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("modalColor", "R");
 			redirectAttributes.addFlashAttribute("alertMsg", "어트랙션 수정요청에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
 		}finally {
 			redirectAttributes.addFlashAttribute("alertTitle", "어트랙션 수정서비스");
-			
 		}
 	}
 	
@@ -178,12 +186,14 @@ public class AttractionController {
 				request.setAttribute("attraction", attraction);				
 				return "facility/attraction/attraction_detail";
 			}else {
+				redirectAttributes.addFlashAttribute("modalColor", "Y");
 				redirectAttributes.addFlashAttribute("alertTitle", "어트랙션 조회서비스");
 				redirectAttributes.addFlashAttribute("alertMsg", "존재하지 않는 어트랙션입니다.");
 				return "redirect:" + request.getHeader("Referer");
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("modalColor", "R");
 			redirectAttributes.addFlashAttribute("alertTitle", "어트랙션 조회서비스");
 			redirectAttributes.addFlashAttribute("alertMsg", "어트랙션 상세조회에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
