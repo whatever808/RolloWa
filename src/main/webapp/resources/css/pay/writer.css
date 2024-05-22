@@ -10,7 +10,7 @@
 .left_con>div{margin: 20px; padding-bottom: 20px;}
 
 .sing_name{
-    height: 100px;
+    height: 74px;
     width: 130px;
     border: 1px solid black;
 }
@@ -45,10 +45,14 @@
 .left_td{height:30px;}
 #sign_left td{width: 130px;}
 #sign_left th{width: 130px;}
-table th{background-color: #feefad9e; border: 1px solid black;}
 table td{border: 1px solid black;}
-table input{border: 1px solid black;}
-table textarea{border: 1px solid black;}
+table input{border: 1px solid black; width: 100%;}
+table textarea {
+    border: none;
+    resize: none;
+    width: 100%;
+}
+}
 
 #signs_s{height:auto; width:auto;}
 

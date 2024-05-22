@@ -148,8 +148,8 @@ public class PayService {
 	}
 	
 	//반려하기------
-	public int updateReject(Map<String, Object> map) {
-		return payDao.updateReject(map);		
+	public int ajaxUpdateReject(Map<String, Object> map) {
+		return payDao.ajaxUpdateReject(map);		
 	}
 	
 	
@@ -439,6 +439,25 @@ public class PayService {
 	
 	public List<SignDto> ajaxSignSelect(Map<String, Object> map) {
 		return payDao.ajaxSignSelect(map);
+	}
+	
+	
+	public int approvalSearchCount(Map<String, Object> map){
+		return payDao.approvalSearchCount(map);
+	}
+	
+	
+	public List<PayDto> approvalSearchList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.approvalSearchList(map, pi);
+	}
+	
+	
+	public int approvalSelectCount(Map<String, Object> map){
+		return payDao.approvalSelectCount(map);
+	}
+	
+	public List<PayDto> approvalSelectList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.approvalSelectList(map, pi);
 	}
 	
 	

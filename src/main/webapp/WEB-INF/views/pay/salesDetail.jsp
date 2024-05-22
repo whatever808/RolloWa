@@ -14,154 +14,13 @@
     
     <!-- 싸인 관련 -->
 		<!-- <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> -->
+		
+		<!-- 기안서 공통 스타일 -->
+    <link rel="stylesheet" href="${contextPath}/resources/css/pay/detail.css">
+    
+    
 <style>
-    .approval-form {
-    width: 70%;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f7f7f7;
-    border-radius: 5px;
-    }
-
-    /* 제목 스타일 */
-    .form-title {
-        font-size: 30px;
-        font-weight: bold;
-        color: #333;
-    }
-
-    /* 항목 레이블 스타일 */
-    .form-label {
-        font-weight: bold;
-        margin-bottom: 5px;
-        color: #666;
-    }
-    
-    .m_content_style {
-            display: flex;
-            flex-direction: column;
-     }
- 
-    #btn_div button{margin: 10px; margin-top: 50px;}
-    
-    
-		#signature { border:1px solid #000; }
-		#save, #clear { padding:5px 20px; border:0; color:#fff; background:#000; margin-top:5px; }
-		
-		.sg>img{width: 100%; height: 100%;}
-		.sg{width: 179px; height: 133px;}
-		
-		/* 기본 스타일 리셋 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-    color: #333;
-    line-height: 1.6;
-    padding: 20px;
-}
-
-/* 문서 컨테이너 스타일 */
-.document-container {
-    max-width: 1095px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-/* 헤더 스타일 */
-.header {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.header h1 {
-    font-size: 2em;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.approval-info {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.approval-box {
-    width: 20%;
-    text-align: center;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    margin: 10px;
-}
-
-.approval-title {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.approval-name {
-    margin-bottom: 5px;
-}
-.approval-sign{
-		width: 100%;
-    height: 119px;
-} 
-
-.approval-date {
-    color: #777;
-    font-size: 0.9em;
-}
-
-/* 정보 테이블 스타일 */
-.info-table, .content-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-.info-table th, .info-table td, .content-table th, .content-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-}
-
-.info-table th {
-    background-color: #f9f9f9;
-    width: 15%;
-}
-
-.content-table th {
-    width: 10%;
-    background-color: #f9f9f9;
-}
-
-.content-table .content {
-    padding: 20px;
-    line-height: 1.8;
-}
-#btn_content{
-		display: flex;
-    flex-wrap: nowrap;
-    align-content: center;
-    flex-direction: row-reverse;
-}
-#btn_content button{
-	margin: 10px;
-}
-#modifybtn{    
-		display: flex;
-    justify-content: center;
- }
-		
+.apbtn{display: none;}
 </style>
 </head>
 <body>
@@ -199,7 +58,7 @@ $(document).ready(function(){
 	        	data:{
 	        		dataUrl:data,
 	        		signName:"${userName}",
-	        		no:"${list.get(0).APPROVAL_NO}",
+	        		approvalNo:"${list.get(0).APPROVAL_NO}",
 	        		approvalSignNo:approvalName
 	        	},
 	        	success:function(response){
@@ -233,7 +92,8 @@ $(document).ready(function(){
 	        		    	}
 	        		    }
 	        		}
-	              
+	        		
+	        		$("#modal2").iziModal('close');
 	        		
 	        	}
 	        })
@@ -319,7 +179,7 @@ $(document).ready(function(){
                 </tr>
                 <tr>
                     <th>기안자</th>
-                    <td>이유준</td>
+                    <td>${list.get(0).PAYMENT_WRITER}</td>
                     <th>상태</th>
                     <td>${list.get(0).PAYMENT_STATUS}</td>
                     <th>승인상태</th>
@@ -336,36 +196,34 @@ $(document).ready(function(){
             <table class="content-table">
                 <tr>
                     <th>제목</th>
-                    <td colspan="2">2017년 1차 3/4분기 다음 지침의 건</td>
+                    <td colspan="4">${ list.get(0).TITLE }</td>
                 </tr>
                  <tr>
 			             <th style="width: 200px;">시행일자</th>
-			             <td style="width: 180px;">${ list.get(0).EFFECTIVE_DATE }</td>
+			             <td style="width: 180px;" colspan="2">${ list.get(0).EFFECTIVE_DATE }</td>
 			             <th style="width: 200px;">협조부서</th>
-			             <td style="width: 180px;">${ list.get(0).COOPERATION_DEPARTMENT }</td>
+			             <td style="width: 180px;" colspan="2">${ list.get(0).COOPERATION_DEPARTMENT }</td>
 			           </tr>
-                  <tr>
-				              <th colspan="4">내용</th> 
-				          </tr>
 				          <tr>
+				          		<th>내용</th> 
 				              <td colspan="4">
 				                  <div><c:out value="${ list.get(0).content }" escapeXml="false" /></div>
 				              </td>
 				          </tr>
 				          <tr>
 				              <th style="width: 200px;">첨부파일</th>
-				              <td colspan="3">
-				              	<c:forEach var="at" items="${ list }">
-				              		<a href="${ contextPath }${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${ at.ORIGIN_NAME }">${at.ORIGIN_NAME}</a><br>
-				              	</c:forEach>
+				              <td colspan="4">
+				              	<c:forEach var="at" items="${ fileList }">
+												<a href="${contextPath}${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${at.ORIGIN_NAME}">${at.ORIGIN_NAME}</a><br>
+												</c:forEach>
 				              </td>
 				          </tr>
             </table>
 					        </div>
 					      			<div id="modifybtn">
 					           			<button class="btn btn-warning" id="modifyWriter" type="submit" style="display: none;">수정</button>
-					          			<button class="btn btn-primary" onclick="submitbtn();" class="apbtn" style="display: none;">완료</button>
-		               				<button class="btn btn-danger" data-izimodal-open="#modal" class="apbtn" style="display: none;">반려</button>
+					          			<button class="btn btn-primary" onclick="submitbtn();" class="apbtn">완료</button>
+		               				<button class="btn btn-danger" data-izimodal-open="#modal" class="apbtn">반려</button>
 					          	</div>
 					 				</div> 
                 </div>
@@ -375,10 +233,10 @@ $(document).ready(function(){
         <div id="modal2">
 		        <div class="m_content_style"  >
 		        <canvas id="signature" width="600" height="200"></canvas>
-                <div>
-									<button id="save">Save</button>
+                <div id="saveDiv">
+									<button id="save">승인</button>
 									<button id="clear">Clear</button>
-								</div>      
+								</div>    
 		        </div>
 		    </div>
         
@@ -395,15 +253,15 @@ $(document).ready(function(){
         
     <script>
     $(document).ready(function() {
-        if("${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}") {
+        if ("${list.get(0).PAYMENT_WRITER_NO}" === "${userNo}") {
             $("#modifyWriter").css("display", "block");
         }
         
-        if("${list.get(0).FIRST_APPROVAL}" == "${userName}" ||
-        		"${list.get(0).MIDDLE_APPROVAL}" == "${userName}" || 
-        		"${list.get(0).FINAL_APPROVAL}" == "${userName}"){
-        	 $(".apbtn").css("display", "block");
-        })
+        if ("${list.get(0).FIRST_APPROVAL}" === "${userName}" ||
+            "${list.get(0).MIDDLE_APPROVAL}" === "${userName}" || 
+            "${list.get(0).FINAL_APPROVAL}" === "${userName}") {
+            $(".apbtn").css("display", "block");
+        }
     });
     </script>
         
@@ -452,11 +310,11 @@ $(document).ready(function(){
     	if(writerNo == "true"){
 	    	 	if(confirm('수정하시겠습니까?')){
 						alert("작성페이지로 이동합니다.");
-							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).EXPEND_NO} 
+							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).SALES_NO} 
 																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
 																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
 																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
-																									 			+ "&report=m";
+																									 			+ "&report=g";
 	    		}
     	}else{
     		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");

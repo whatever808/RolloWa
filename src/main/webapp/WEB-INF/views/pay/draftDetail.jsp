@@ -14,154 +14,11 @@
     
     <!-- 싸인 관련 -->
 		<!-- <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> -->
+		
+		<!-- 기안서 공통 스타일 -->
+    <link rel="stylesheet" href="${contextPath}/resources/css/pay/detail.css">
 <style>
-    .approval-form {
-    width: 70%;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f7f7f7;
-    border-radius: 5px;
-    }
-
-    /* 제목 스타일 */
-    .form-title {
-        font-size: 30px;
-        font-weight: bold;
-        color: #333;
-    }
-
-    /* 항목 레이블 스타일 */
-    .form-label {
-        font-weight: bold;
-        margin-bottom: 5px;
-        color: #666;
-    }
-    
-    .m_content_style {
-            display: flex;
-            flex-direction: column;
-     }
- 
-    #btn_div button{margin: 10px; margin-top: 50px;}
-    
-    
-		#signature { border:1px solid #000; }
-		#save, #clear { padding:5px 20px; border:0; color:#fff; background:#000; margin-top:5px; }
-		
-		.sg>img{width: 100%; height: 100%;}
-		.sg{width: 179px; height: 133px;}
-		
-		/* 기본 스타일 리셋 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-    color: #333;
-    line-height: 1.6;
-    padding: 20px;
-}
-
-/* 문서 컨테이너 스타일 */
-.document-container {
-    max-width: 1095px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-/* 헤더 스타일 */
-.header {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.header h1 {
-    font-size: 2em;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.approval-info {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.approval-box {
-    width: 20%;
-    text-align: center;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    margin: 10px;
-}
-
-.approval-title {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.approval-name {
-    margin-bottom: 5px;
-}
-.approval-sign{
-		width: 100%;
-    height: 134px;
-} 
-
-.approval-date {
-    color: #777;
-    font-size: 0.9em;
-}
-
-/* 정보 테이블 스타일 */
-.info-table, .content-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-.info-table th, .info-table td, .content-table th, .content-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-}
-
-.info-table th {
-    background-color: #f9f9f9;
-    width: 15%;
-}
-
-.content-table th {
-    width: 10%;
-    background-color: #f9f9f9;
-}
-
-.content-table .content {
-    padding: 20px;
-    line-height: 1.8;
-}
-#btn_content{
-		display: flex;
-    flex-wrap: nowrap;
-    align-content: center;
-    flex-direction: row-reverse;
-}
-#btn_content button{
-	margin: 10px;
-}
-#modifybtn{    
-		display: flex;
-    justify-content: center;
- }
-		
+ .apbtn{display: none;} 
 </style>
 </head>
 <body>
@@ -234,7 +91,7 @@ $(document).ready(function(){
 	        		    }
 	        		}
 	              
-	        		
+	        		$("#modal2").iziModal('close');
 	        	}
 	        })
 	        
@@ -243,7 +100,64 @@ $(document).ready(function(){
 });
 
 
-	
+
+$(document).on("click", "#rejectBtn", function(){
+		
+	 	var approvalName = "${list.get(0).FIRST_APPROVAL == userName ? 1 : list.get(0).MIDDLE_APPROVAL == userName ? 2 : list.get(0).FINAL_APPROVAL == userName ? 3 : 0}" 
+  	  
+	  if(confirm("정말로 반려하시겠습니까?")){
+			$.ajax({
+			  url:"${contextPath}/pay/ajaxReject.do",
+			  type:"post",
+			  data:{
+				  approvalNo:"${list.get(0).APPROVAL_NO}",
+					content:$("#calcellation").val(),
+					approvalName:approvalName
+			  },
+			  success:function(response){
+				  
+				  console.log(response);
+				 	/*
+				  if(response.result == 1){
+					  alert("반려가 완료되었습니다.");
+					  if(response.userName == "${list.get(0).FIRST_APPROVAL}"){
+						  $("#firstSign").children().remove();
+						  $("#apDt1").children().remove();
+						  $("#firstSign").append().html('<h1 style="color: red;">반려</h1>');
+						  if($("#apDt1").text() == ""){
+		        		$("#apDt1").append(response.sign[0].middleApDt);	
+        		  }
+						  $("#modal").iziModal('close');
+					  }else if(response.userName == "${list.get(0).MIDDLE_APPROVAL_DATE}"){
+						  $("#middleSign").children().remove();
+						  $("#apDt2").children().remove();
+						  $("#middleSign").append().html('<h1 style="color: red;">반려</h1>');
+						  if($("#apDt2").text() == ""){
+		        		$("#apDt2").append(response.sign[0].middleApDt);	
+        		  }
+						  $("#modal").iziModal('close');
+					  }else{
+						  $("#finalSign").children().remove();
+						  $("#apDt3").children().remove();
+						  $("#finalSign").append().html('<h1 style="color: red;">반려</h1>');
+						  if($("#apDt3").text() == ""){
+		        		$("#apDt3").append(response.sign[0].middleApDt);	
+        		  }
+						  $("#modal").iziModal('close');
+					  }
+				  }
+				 	*/
+				  
+				  
+			  }
+			  
+		  })
+		  
+	  }
+	  
+	  
+})
+
 	
 </script>
 
@@ -269,6 +183,7 @@ $(document).ready(function(){
 		           </c:if>
 		          	<div>
 		          			<button class="btn btn-danger" data-izimodal-open="#modal2">승인</button>
+		          			<button class="btn btn-danger" data-izimodal-open="#modal" class="apbtn">반려</button>
 		          	</div>
 		         </div>
            <!------------>
@@ -279,9 +194,14 @@ $(document).ready(function(){
                     <div class="approval-title">1차승인자</div>
                     <div class="approval-name">${list.get(0).FIRST_APPROVAL}</div>
                     <div class="approval-sign sg" id="firstSign">
-                    <c:if test="${sign.get(0).firstSign != null}">
-                    <img src="${sign.get(0).firstSign}">
-                    </c:if>
+	                    <c:choose>
+	                    	<c:when test="${sign.get(0).firstSign != null && sign.get(0).firstSign == '반려'}">
+	                    		<h1 style="color: red;">반려</h1>
+	                    	</c:when>
+	                    	<c:when test="${sign.get(0).firstSign != null && sign.get(0).firstSign != '반려'}">
+	                    		<img src="${sign.get(0).finalSign}">
+	                    	</c:when>
+                    	</c:choose>
                     </div>
                     <div class="approval-date" id="apDt1">${list.get(0).FIRST_APPROVAL_DATE}</div>
                 </div>
@@ -289,9 +209,14 @@ $(document).ready(function(){
                     <div class="approval-title">2차승인자</div>
                     <div class="approval-name">${list.get(0).MIDDLE_APPROVAL}</div>
                     <div class="approval-sign sg" id="middleSign">
-                    <c:if test="${sign.get(0).middleSign != null}">
-                      <img src="${sign.get(0).middleSign}">
-                    </c:if>
+                    	<c:choose>
+	                    	<c:when test="${sign.get(0).middleSign != null && sign.get(0).middleSign == '반려'}">
+	                    		<h1 style="color: red;">반려</h1>
+	                    	</c:when>
+	                    	<c:when test="${sign.get(0).middleSign != null && sign.get(0).middleSign != '반려'}">
+	                    		<img src="${sign.get(0).finalSign}">
+	                    	</c:when>
+                    	</c:choose>
                     </div>
                     <div class="approval-date" id="apDt2">${list.get(0).MIDDLE_APPROVAL_DATE}</div>
                 </div>
@@ -299,9 +224,14 @@ $(document).ready(function(){
                     <div class="approval-title">3차승인자</div>
                     <div class="approval-name">${list.get(0).FINAL_APPROVAL}</div>
                     <div class="approval-sign sg" id="finalSign">
-                    <c:if test="${sign.get(0).finalSign != null}">
-                    	<img src="${sign.get(0).finalSign}">
-                    </c:if>
+                    	<c:choose>
+	                    	<c:when test="${sign.get(0).finalSign != null && sign.get(0).finalSign == '반려'}">
+	                    		<h1 style="color: red;">반려</h1>
+	                    	</c:when>
+	                    	<c:when test="${sign.get(0).finalSign != null && sign.get(0).finalSign != '반려'}">
+	                    		<img src="${sign.get(0).finalSign}">
+	                    	</c:when>
+                    	</c:choose>
                     </div>
                     <div class="approval-date" id="apDt3">${list.get(0).FINAL_APPROVAL_DATE}</div>
                 </div>
@@ -319,7 +249,7 @@ $(document).ready(function(){
                 </tr>
                 <tr>
                     <th>기안자</th>
-                    <td>이유준</td>
+                    <td>${list.get(0).PAYMENT_WRITER}</td>
                     <th>상태</th>
                     <td>${list.get(0).PAYMENT_STATUS}</td>
                     <th>승인상태</th>
@@ -365,18 +295,17 @@ $(document).ready(function(){
 		                </tr>
 		                <tr>
                     <th colspan="2">파일 첨부</th>
-                    <td colspan="4">
-                    	<c:forEach var="at" items="${ fileList }">
-											<a href="${contextPath}${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${at.ORIGIN_NAME}">${at.ORIGIN_NAME}</a><br>
-										</c:forEach>
-									</td>
-                </tr>
+                    	<td colspan="4">
+                    		<c:forEach var="at" items="${ fileList }">
+												<a href="${contextPath}${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${at.ORIGIN_NAME}">${at.ORIGIN_NAME}</a><br>
+												</c:forEach>
+										</td>
+                		</tr>
             </table>
 					        </div>
 					      			<div id="modifybtn">
 					           			<button class="btn btn-warning" id="modifyWriter" type="submit" style="display: none;">수정</button>
-					          			<button class="btn btn-primary" onclick="submitbtn();" class="apbtn" style="display: none;">완료</button>
-		               				<button class="btn btn-danger" data-izimodal-open="#modal" class="apbtn" style="display: none;">반려</button>
+					          			<button class="btn btn-primary" onclick="submitbtn();" class="apbtn">완료</button>
 					          	</div>
 					 				</div> 
                 </div>
@@ -386,8 +315,8 @@ $(document).ready(function(){
         <div id="modal2">
 		        <div class="m_content_style"  >
 		        <canvas id="signature" width="600" height="200"></canvas>
-                <div>
-									<button id="save">Save</button>
+                <div id="saveDiv">
+									<button id="save">승인</button>
 									<button id="clear">Clear</button>
 								</div>      
 		        </div>
@@ -397,24 +326,26 @@ $(document).ready(function(){
        
     		 <div id="modal">
 		        <div class="m_content_style">
-		            내용 : <textarea style="height: 300px;" required name="calcellation" id="calcellation"></textarea>
+		            내용 : <textarea style="height: 300px; resize: none;" required name="calcellation" id="calcellation" placeholder="자세하게 작성해주세요." ></textarea>
 				        <div style="display: flex; justify-content: end; align-items: end; margin: 10px;">
-				        	<button class="btn btn-danger" onclick="reject();">확인</button>
+				        	<button class="btn btn-danger" id="rejectBtn">확인</button>
 				        </div>
 		        </div>
 		    </div>
+		    
+		 
         
     <script>
     $(document).ready(function() {
-        if("${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}") {
+        if ("${list.get(0).PAYMENT_WRITER_NO}" === "${userNo}") {
             $("#modifyWriter").css("display", "block");
         }
         
-        if("${list.get(0).FIRST_APPROVAL}" == "${userName}" ||
-        		"${list.get(0).MIDDLE_APPROVAL}" == "${userName}" || 
-        		"${list.get(0).FINAL_APPROVAL}" == "${userName}"){
-        	 $(".apbtn").css("display", "block");
-        })
+        if ("${list.get(0).FIRST_APPROVAL}" === "${userName}" ||
+            "${list.get(0).MIDDLE_APPROVAL}" === "${userName}" || 
+            "${list.get(0).FINAL_APPROVAL}" === "${userName}") {
+            $(".apbtn").css("display", "block");
+        }
     });
     </script>
         
@@ -436,6 +367,7 @@ $(document).ready(function(){
 
        });
     </script>	
+    
     <script>
        $('#modal2').iziModal({
            title: '싸인',
@@ -463,11 +395,11 @@ $(document).ready(function(){
     	if(writerNo == "true"){
 	    	 	if(confirm('수정하시겠습니까?')){
 						alert("작성페이지로 이동합니다.");
-							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).EXPEND_NO} 
+							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).DRAFT_NO} 
 																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
 																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
 																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
-																									 			+ "&report=m";
+																									 			+ "&report=j";
 	    		}
     	}else{
     		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
@@ -476,29 +408,21 @@ $(document).ready(function(){
     })
     </script>
     
-    <script>
-      function reject(){
-    	  
-    	  if(confirm('반려를 완료하시겠습니까?')){
-    		   location.href='${contextPath}/pay/reject.do?no=' + ${list.get(0).APPROVAL_NO} + "&content=" + $("#calcellation").val();
-    	  }
-    	  
-      }
-    </script>
+    
 
     <script>
         function submitbtn(){
-            let sbtn = confirm('결재을 완료하시겠습니까?');
-            if(sbtn == true){
-                alert("결재가 완료되었습니다.");
+        	
+            if(confirm('결재을 완료하시겠습니까?')){
+               location.href="${contextPath}/pay/paymain.page"
             }
         }
         
         function successbtn(){
             if(confirm("결재를 최종승인 하시겠습니까?")){
                 alert("최종승인이 완료되었습니다.");
+                	
             }
-            
         }       	
        
     </script>

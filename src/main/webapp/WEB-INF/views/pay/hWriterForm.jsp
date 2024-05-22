@@ -21,15 +21,98 @@
     <!-- 결재신청서 공통스타일 -->
     <link href="${contextPath}/resources/css/pay/writer.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/pay/writer2.css" rel="stylesheet">
+    
+  
+   	
 <style>
-		
-		
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.document {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.title2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.header2, .content2, .details2 {
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td.label {
+    width: 16%;
+    background-color: #f2f2f2;
+    padding: 8px;
+    text-align: right;
+    font-weight: bold;
+}
+
+td.value {
+    padding: 8px;
+    text-align: left;
+}
+
+td.value.small {
+    width: 20%;
+}
+
+.details h2 {
+    margin-top: 0;
+}
+
+.details h3 {
+    text-align: center;
+}
+
+ol {
+    padding-left: 20px;
+}
+
+ol li {
+    margin-bottom: 10px;
+}
+
+ul {
+    padding-left: 20px;
+    list-style-type: disc;
+}
+.text_3{
+		font-size: 15px;
+    color: #222222;
+    height: fit-content;
+    border: none;
+    border-bottom: solid rgb(170, 170, 170) 1px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    position: relative;
+    background: none;
+    z-index: 5;
+}
+
+
 </style>
 
 </head>
 <body>
-	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
-	
+		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 <script>
 $(document).ready(function(){
     $(".deptDiv").click(function(){
@@ -193,235 +276,219 @@ $(document).ready(function(){
 				}
 				
 		})
-
+		
+		
 </script>
 
-		
-        <!-- content 추가 -->
+
+ <!-- 결재승인자 모달 start -->
+
+<div id="modal">
+<div class="m_content_style">
+<div class="user_modal">
+<div class="user-management">
+           	
+<div class="sidebar">
+    <ul>
+        <li><span class="deptDiv">인사부</span>
+         		<ul>
+               <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
+             	<c:if test="${ teamNames.get(i).DEPT_NAME eq '인사부' }">
+                  	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
+                  </c:if>
+         		</c:forEach> 															               
+         </ul>
+     </li>
+     <li><span class="deptDiv">총무부</span>
+         <ul>
+             <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
+             	<c:if test="${ teamNames.get(i).DEPT_NAME eq '총무부' }">
+                  	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
+                  </c:if>
+         		</c:forEach>  
+         </ul>
+     </li>
+     <li><span class="deptDiv">마케팅부</span>
+         <ul>
+            <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
+             	<c:if test="${ teamNames.get(i).DEPT_NAME eq '마케팅부' }">
+                  	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
+                  </c:if>
+         		</c:forEach> 															               
+         </ul>
+     </li>
+     <li><span class="deptDiv">FB</span>
+         <ul>
+            <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
+             	<c:if test="${ teamNames.get(i).DEPT_NAME eq 'FB' }">
+                  	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
+                  </c:if>
+         		</c:forEach> 															               
+         </ul>
+     </li>
+      <li><span class="deptDiv">인사부</span>
+         <ul>
+            <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
+             	<c:if test="${ teamNames.get(i).DEPT_NAME eq '인사부' }">
+                  	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
+                  </c:if>
+         		</c:forEach> 															               
+         </ul>
+     </li>
+      <li><span class="deptDiv">운영부</span>
+         <ul>
+            <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
+             	<c:if test="${ teamNames.get(i).DEPT_NAME eq '운영부' }">
+                  	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
+                  </c:if>
+         		</c:forEach> 															               
+         </ul>
+      </li>
+      <li><span class="deptDiv">서비스부</span>
+         <ul>
+            <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
+             	<c:if test="${ teamNames.get(i).DEPT_NAME eq '서비스부' }">
+                  	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
+                  </c:if>
+         		</c:forEach> 															               
+            </ul>
+         </li>
+    </ul>
+</div>
+<!-- 결재승인자 모달 end -->
+    
+    
+    <div class="user-list">
+    	 <div class="actions">
+    	 	<input type="text" id="userSearch" placeholder="이름을 입력하세요.">
+    	 </div>
+        <table>
+            	<thead>
+	            </thead>
+	            <tbody> 
+												</tbody>
+        </table>
+    </div>
+    <div class="selected-users">
+        <table>
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+		 </div>
+		    <div>
+			    <div class="actions">
+			        <button id="okay">확인</button>
+			        <button id="close">닫기</button>
+			    </div>
+		    </div>
+		</div>
+      </div>
+</div>			
+
+       <!-- content 추가 -->
         <div class="content p-4">
             <!-- 프로필 영역 -->
             <div class="informations">
                 <!-- informations left area start -->
                 <div class="left_con">
-                    <div><h3>휴직 신청서</h3></div>
-                    	
-		                   <form action="${contextPath}/pay/hReportInsert.do" method="post" id="myForm">
-		                  
-                        <div id="sign_top">
-                            <div id="sign_div_left">
-                                <table border="1" id="sign_left">
-                                    <tr>
-                                        <th>부 서</th>
-                                        <td>${member.get(0).teamName}</td>                   
-                                        <input type="hidden" name="deptName" value="${member.get(0).teamName}">
-                                        <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
-                                        <input type="hidden" name="expendNo" value="${list.get(0).EXPEND_NO}">
-                                        <input type="hidden" name="writerNo" value="${userNo}">                                                                           
-                                    </tr>
-                                    <tr>
-                                        <th>기안일</th>
-                                        <td><input type="date" name="writerDate" required value="${list.get(0).REGIST_DATE}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>기안자</th>
-                                        <td>${member.get(0).userName}</td>
-                                        <input type="hidden" name="writerName" value="${member.get(0).userName}">
-                                    </tr>
-                                    <tr>
-                                        <th>상태</th>
-                                        <td>
+		                <form action="${contextPath}/pay/hReportInsert.do" method="post" id="myForm">
+		                   <input type="hidden" name="deptName" value="${member.get(0).teamName}">
+                       <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
+                       <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
+                       <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
+                       <input type="hidden" name="writerNo" value="${userNo}">
+                       <input type="hidden" name="firstApproval">
+											 <input type="hidden" name="middleApproval">
+											 <input type="hidden" name="finalApproval">
+											 <input type="hidden" name="distinguish" value="H">
+		                   <div class="document">
+										        <h1 class="title2">휴직신청서</h1>
+										
+										        <div class="header2">
+										            <table>
+										                <tr>
+										                    <td class="label">부서</td>
+										                    <td class="value" colspan="3">${member.get(0).teamName}</td>
+										                </tr>
+										                <tr>
+										                    <td class="label">기안자</td>
+										                    <td class="value" colspan="4">${member.get(0).userName}</td>
+										                    <input type="hidden" name="writerName" value="${member.get(0).userName}">
+										                </tr>
+										                <tr>
+										                    <td class="label">기안일</td>
+										                    <td class="value" colspan="4">
+										                    <input type="date" name="writerDate" required>
+										                    </td>
+										                </tr>
+										                <tr>
+										                    <td class="label">
+											                    승인자
+											                    <button data-izimodal-open="#modal" id="modal_btn">
+	                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+																					  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+																					  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+																					</svg>
+	                                        </button>
+										                    </td>
+										                    <td class="value small sing_name" id="f_name"></td>
+										                    <td class="value small sing_name" id="m_name"></td>
+										                    <td class="value small sing_name" id="l_name"></td>
+										                </tr>
+										                <tr>
+                                        <td class="label">상태</td>
+                                        <td colspan="4">
                                             <select name="status" id="status">
                                                 <option value="보통">보통</option>
                                                 <option value="긴급">긴급</option>
                                             </select>
                                         </td>
                                     </tr>
-                                </table>
-                            </div>
-                           <!-- 결재승인자 모달 start -->
-                            <input type="hidden" name="firstApproval">
-                            <input type="hidden" name="middleApproval">
-                            <input type="hidden" name="finalApproval">
-                             <div id="modal">
-                                 <div class="m_content_style">
-                                 <div class="user_modal">
-                                  	<div class="user-management">
-                                  	
-																    <div class="sidebar">
-																        <ul>
-																            <li><span class="deptDiv">인사부</span>
-																             		<ul>
-																                   <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
-																                    	<c:if test="${ teamNames.get(i).DEPT_NAME eq '인사부' }">
-													                            	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
-													                            </c:if>
-																                		</c:forEach> 															               
-																                </ul>
-																            </li>
-																            <li><span class="deptDiv">총무부</span>
-																                <ul>
-																                    <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
-																                    	<c:if test="${ teamNames.get(i).DEPT_NAME eq '총무부' }">
-													                            	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
-													                            </c:if>
-																                		</c:forEach>  
-																                </ul>
-																            </li>
-																            <li><span class="deptDiv">마케팅부</span>
-																                <ul>
-																                   <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
-																                    	<c:if test="${ teamNames.get(i).DEPT_NAME eq '마케팅부' }">
-													                            	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
-													                            </c:if>
-																                		</c:forEach> 															               
-																                </ul>
-																            </li>
-																            <li><span class="deptDiv">FB</span>
-																                <ul>
-																                   <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
-																                    	<c:if test="${ teamNames.get(i).DEPT_NAME eq 'FB' }">
-													                            	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
-													                            </c:if>
-																                		</c:forEach> 															               
-																                </ul>
-																            </li>
-																             <li><span class="deptDiv">인사부</span>
-																                <ul>
-																                   <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
-																                    	<c:if test="${ teamNames.get(i).DEPT_NAME eq '인사부' }">
-													                            	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
-													                            </c:if>
-																                		</c:forEach> 															               
-																                </ul>
-																            </li>
-																             <li><span class="deptDiv">운영부</span>
-																                <ul>
-																                   <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
-																                    	<c:if test="${ teamNames.get(i).DEPT_NAME eq '운영부' }">
-													                            	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
-													                            </c:if>
-																                		</c:forEach> 															               
-																                </ul>
-																             </li>
-																             <li><span class="deptDiv">서비스부</span>
-																                <ul>
-																                   <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
-																                    	<c:if test="${ teamNames.get(i).DEPT_NAME eq '서비스부' }">
-													                            	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
-													                            </c:if>
-																                		</c:forEach> 															               
-																                </ul>
-																             </li>
-																        </ul>
-																    </div>
-																    <!-- 결재승인자 모달 end -->
-																    
-																    
-																    <div class="user-list">
-																    	 <div class="actions">
-																    	 	<input type="text" id="userSearch" placeholder="이름을 입력하세요.">
-																    	 </div>
-																        <table>
-																            	<thead>
-																	            </thead>
-																	            <tbody> 
-	          																	</tbody>
-																        </table>
-																    </div>
-																    <div class="selected-users">
-																        <table>
-																            <thead>
-																            </thead>
-																            <tbody>
-																            </tbody>
-																        </table>
-																    </div>
-																 </div>
-																    <div>
-																	    <div class="actions">
-																	        <button id="okay">확인</button>
-																	        <button id="close">닫기</button>
-																	    </div>
-																    </div>
-																</div>
-                               </div>
-                         </div>
-                            
-
-                            <div>
-                                <table id="sign_table">
-                                   	<tr id="tr_name">
-                                        <th rowspan="3">승 <br> 인
-                                        <button data-izimodal-open="#modal" id="modal_btn">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-																				  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-																				  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-																				</svg>
-                                        </button>
-                                        </th>
-                                        
-                                       
-                                        <c:choose>
-	                                        <c:when test="${ empty list }">
-		                                        <td>최초승인자</td>
-		                                        <td>중간승인자</td>
-		                                        <td>최종승인자</td>
-		                                      </c:when>
-	                                        <c:otherwise>
-	                                        	<td></td>
-		                                        <td></td>
-		                                        <td></td>
-	                                        </c:otherwise>
-                                        </c:choose>
-                                    </tr>
-                                    <tr>
-                                        <td  id="f_name" class="sing_name"></td>
-                                        <td id="m_name" class="sing_name"></td>
-                                        <td id="l_name" class="sing_name"></td>                                                      
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-
-
-                        <div class="table_middle">
-                        	 <input type="hidden" name="firstApproval" id="first_name" class="namecheck" value="${ list.get(0).FIRST_APPROVAL }">
-	                         <input type="hidden" name="middleApproval" id="middle_name" class="namecheck" value="${ list.get(0).MIDDLE_APPROVAL }">
-	                         <input type="hidden" name="finalApproval" id="last_name" class="namecheck" value="${ list.get(0).FINAL_APPROVAL }"> 
-                            <table id="tr_table" border="1">
-                                <tr>
-                                    <th>제목</th>
-                                    <td><input type="text" name="title" required></td>
-                                </tr>
-                                <tr>
-                                    <th>성명</th>
-                                    <td><input type="text" value="${userName}" readonly></td>
-                                </tr>
-                                <tr>
-                                    <th>소속</th>
-                                    <td><input type="text" value="${member.get(0).teamName}" readonly></td>
-                                </tr>
-                                <tr>
-                                    <th>기간</th>
-                                    <td id="date_td"><input type="date" value="" name="startDate" required> ─ 
-                                    <input type="date" value="" name="endDate" required></td>
-                                    
-                                </tr>
-                                <tr>
-                                    <th>사유</th>
-                                    <td>
-                                        <textarea id="" cols="30" rows="10" name="content" required></textarea>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <!--버튼 영역-->
-                        <div id="btn_div">
-                        		<button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
-                            <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
-                            <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
-                        </div>
-                        <!------------>
+										                <tr>
+										                    <td class="label">제목</td>
+										                    <td class="value" colspan="4"><input type="text" name="title" required></td>
+										                </tr>
+										            </table>
+										        </div>
+										        <div class="content2">
+										            <table id="tr_table">
+										               <tr>
+                                    		<td class="label">성명</td>
+                                    		<td class="value"><input type="text" value="${userName}" readonly></td>
+		                                </tr>
+		                                <tr>
+		                                    <td class="label">소속</td>
+		                                    <td class="value"><input type="text" value="${member.get(0).teamName}" readonly></td>
+		                                </tr>
+		                                <tr>
+		                                    <td class="label">기간</td>
+		                                    <td id="date_td" class="value">
+		                                    	<input type="date" value="" name="startDate" required> ─ 
+		                                    	<input type="date" value="" name="endDate" required>
+		                                    </td>
+		                                    
+		                                </tr>
+		                                <tr>
+		                                    <td class="label">사유</td>
+		                                    <td class="value">
+		                                        <textarea id="" cols="30" rows="10" name="content" required></textarea>
+		                                    </td>
+		                                </tr>
+										            </table>
+										        </div>
+										
+										        <div id="btn_div">
+										           <button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
+                            	 <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
+                            	 <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
+										        </div>
+										    </div>
+										                        
+                        
+                        
                     </form>
                 </div>
             </div>
@@ -452,134 +519,72 @@ $(document).ready(function(){
     	
     </script>
    
- 
-    
+    <script>
+	    	function submitbtn(){
+   					let itemArr = [];
+   					let countArr = [];
+   					let salesArr = [];
+   					//금액
+	    		$(".item").each(function(){
+					 		if($(this).val().trim() != ""){
+					 			itemArr.push($(this).val());
+							}
+	        })
+	        
+	        $("#items").val(itemArr);
+	     					
+	    					//수량
+	   			$(".count").each(function(){
+				 		if($(this).val().trim() != ""){
+				 			countArr.push($(this).val());
+						}
+	         })
+	         $("#counts").val(countArr);
+	    					
+	   					// 매출금액
+	    		$(".sales_amount").each(function(){
+				 		if($(this).val().trim() != ""){
+				 			salesArr.push($(this).val());
+						}
+	          })
+	         $("#sales_amounts").val(salesArr);	
+	
+	         if(confirm('정말로 제출하시겠습니까?')){
+	        	 if($(".sing_name").text() == ""){
+	        		 alert("승인자를 3차까지 선택해주세요.");
+	        	 }
+	         }
+	                
+	       }
+   	</script>
     
     <script>
     $(document).ready(function(){
+    		let i = 4;
+    	$(document).on("click", "#plus_btn", function () {
+    		var result = "<tr>";
+    		result += "<td><input type='text' class='text_1' name='pName" + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_2' name='size" + (i) +"'></td>";
+    		result += "<td><input type='number' min='1' class='text_3' name='amount"  + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_4' name='unitprice" + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_5' name='price" + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_6' name='etc" + (i) + "'></td>";
+    		result += "</tr>";
+    		i++;
+       $("#tr_table").children().last().after(result);
+       
+       
+    	});
+    	
+    	
     	$(document).on("click", "#del_btn", function () {
     	    //$("#tr_table tr:last-child").remove();
     	    $("#tr_table").children("tr").last().remove();
     	});
+    
+    	
     })
     </script>
-        
-	   <script>
-	      $("#reset_btn").click(function(){
-	          if(confirm("정말로 초기화 하시겠습니까?") == true){
-	              return;
-	          }else{
-	              return false;
-	          }
-	      })
-	
-	      $(document).ready(function(){
-	          $(".atag").click(function(){
-	
-	          const $p = $(this).next();
-	          console.log($p);
-	
-	          if($p.css("display") == "none"){
-	
-	              $(this).siblings("ul").slideUp();
-	
-	              $p.slideDown();
-	          }else{
-	              $p.slideUp();
-	          } 
-	          })
-	          
-	         
-	
-	      })
-	      
-	       $("#modal_btn").on("click", function(){
-		    	   	$("#f_name").text("");
-		          $("#m_name").text("");
-		          $("#l_name").text("");
-		          $("#m_co2").children().remove();
-	      })
-	      
-	      
-	       <!-- 모달 출력 스크립트 -->
-	      $(document).on("click", "#reset_button", function(){
-	
-	          if($("#m_co2").children().length >= 1){
-	              if(confirm("초기화 하시겠습니까?")){
-	                  $("#m_co2").children().remove();
-	                  $("#f_name").text("");
-	                  $("#m_name").text("");
-	                  $("#l_name").text("");
-	              }
-	          }else{
-	              alert("초기화할 승인자가 없습니다.");
-	          }
-	          
-	          
-	          
-	              
-	      })
-	      
-	      
-	
-	 	 	 $(document).on("click", ".btn_result", function(){
-	          
-	          let div = document.createElement("div");
-	          div.className = "success";
-	          $("#m_co2").append(div);
-	          div.append($(this).text());
-	          
-	          //map => 객체생성 클릭한 요소의 text값을 map안에 차곡차곡 return해서 담고 .get() 배열로 얻어낸다.
-	          const childrenTextArray = $("#m_co2").children().map(function() {
-	              return $(this).text();
-	          }).get();
-	          
-	          
-	          
-	          if($("#m_co2").children().length == 1){
-	              alert("1차 승인자로 선택하였습니다.");
-	              $("#f_name").append(childrenTextArray[0].substring($(this).text().indexOf("▶") + 1));
-	              $("#first_name").val($(this).text().substring($(this).text().indexOf("▶") + 1));
-	              $("#firstb").val($(this).parent().prev().text());
-	              $("#m_co2").children().eq(0).prepend("<b>1차</b><br>[" + $(this).parent().prev().text() + "]<br>");
-	          }else if($("#m_co2").children().length == 2){
-	              alert("2차 승인자로 선택하였습니다.");
-	              $("#m_name").append(childrenTextArray[1].substring($(this).text().indexOf("▶") + 1));
-	              $("#middle_name").val($(this).text().substring($(this).text().indexOf("▶") + 1));
-	              $("#middleb").val($(this).parent().prev().text());
-	              $("#m_co2").children().eq(1).prepend("<b>2차</b><br>[" + $(this).parent().prev().text() + "]<br>");
-	
-	
-	              /*
-	              let duplicateFound = false;
-	              for (let i = 0; i < childrenTextArray.length; i++) {
-	                  if ($(".btn_result").children().text() === childrenTextArray[i]) {
-	                      duplicateFound = true;
-	                      alert("중복된 승인자가 존재합니다.");
-	                      break; // 중복이 발견되면 루프를 중단합니다.
-	                  }
-	              }
-	              if (!duplicateFound) {
-	                  alert("2차 승인자로 선택하였습니다.");
-	                  $("#f_name").append(childrenTextArray[0]);
-	              }
-	              */
-	             
-	          }else if($("#m_co2").children().length == 3){
-	              alert("3차 승인자로 선택하였습니다.");
-	              $("#l_name").append(childrenTextArray[2].substring($(this).text().indexOf("▶") + 1));
-	              $("#last_name").val($(this).text().substring($(this).text().indexOf("▶") + 1));
-	              $("#lastb").val($(this).parent().prev().text());
-	              $("#m_co2").children().eq(2).prepend("<b>3차</b><br>[" + $(this).parent().prev().text() + "]<br>");
-	          }else if($("#m_co2").children().length >= 4){
-	              alert("더이상 승인자를 선택할 수 없습니다.");
-	              $("#m_co2").children().eq(3).remove();
-	            
-	          }
-	
-	           
-	    })
-   	</script>
         
      <script>
         $('#modal').iziModal({
@@ -587,19 +592,11 @@ $(document).ready(function(){
             //subtitle: '수정도 가능합니다.',
             headerColor: '#FEEFAD', // 헤더 색깔
             theme: '', //Theme of the modal, can be empty or "light".
-            padding: '15px', // content안의 padding
+            //padding: '15px', // content안의 padding
             //radius: 10, // 모달 외각의 선 둥글기
-            width: '1000px',
+            width: '1100px',
            
         });
-
-        // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
-        $("#modal-test").on('click', function () {
-            //event.preventDefault(); //위의 클릭 이벤트가 일어나는 동안 다른 이벤트가 발생하지 않도록해주는 명령어
-
-            $('#modal').iziModal('open');
-        });
-        
         
     </script>                            
                

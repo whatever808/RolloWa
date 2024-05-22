@@ -146,18 +146,12 @@
     
     /*----------------------------*/
 	 #modal_btn{
-	   	PADDING: 10PX;
-	    BACKGROUND: #fef5cc;
-	    BORDER: #fef5cc;
+	    PADDING: 10PX;
+	    BACKGROUND: WHITE;
+	    BORDER: 1PX SOLID WHITE;
     }
     
-    .m_content_style{   
-			height: 779px;
-	    display: flex;
-	    justify-content: space-around;
-	    flex-wrap: nowrap;
-	    flex-direction: column;
-    }
+    .m_content_style{height: 800px; display: flex; flex-wrap: wrap; justify-content: space-between;}
 		.deptNameModal{width: 30%; height: 80%; border: 1px solid black;}
 		#textForm {width:70%; }
 		
@@ -236,11 +230,11 @@
 		}
 		
 		.selected-users button {
-		    background-color: #feefad;
-		    color: black;
+		    background-color: #4CAF50;
+		    color: white;
 		    border: none;
 		    padding: 5px 10px;
-		    border-radius: 9px;	
+		    cursor: pointer;
 		}
 		
 		.actions {
@@ -259,44 +253,46 @@
 		}
 		
 		.actions button:first-child {
-		   background-color: #fdeeac;
-		   color: black;
-		   border: none;
-		   border-radius: 30px;
-		   width: 90px;
+		    background-color: #4CAF50;
+		    color: white;
+		    border: none;
 		}
 		
 		.actions button:last-child {
-		   background-color: #fdeeac;
-		   color: black;
-		   border: none;
-		   border-radius: 30px;
-		   width: 90px;
+		    background-color: #f44336;
+		    color: white;
+		    border: none;
 		}
 		
-		.user_modal{width: 100%; height: -webkit-fill-available;}
+		.user_modal{width: 100%; height: 80%;}
 		.deptDiv{cursor: pointer;}
 		.deptDiv li{cursor: pointer;}
-		
-		.deptDiv ul{display: none;}
-		
 		.deptDiv ul{display: none;}
 		.teamN, .nameClick  {cursor: pointer;}
-		.teamN{display: none;}
-		
+	
 
 </style>
 
 </head>
 <body>
 <script>
-$(document).ready(function(){
-    $(".deptDiv").click(function(){
-    	
-      $(this).siblings("ul").find(".teamN").slideToggle();
-      
-    });
-  });
+	$(document).ready(function(){
+	    $(".deptDiv").click(function(){
+	
+	    const $p = $(this).next();
+	    console.log($p);
+	
+		    if($p.css("display") == "none"){
+		
+		        $(this).siblings("ul").slideUp();
+		
+		        $p.slideDown();
+		    }else{
+		        $p.slideUp();
+		    } 
+	    })
+	   
+	})
 	
 	
 	$(document).on("click", ".teamN", function(){
@@ -307,13 +303,12 @@ $(document).ready(function(){
             name:$(this).text()
         },
         success:function(result){
-        		var htmlthead = "<tr><th>No.</th><th>이름</th><th>직위</th><th>부서</th></tr>";
+        		var htmlthead = "<tr><th>No.</th><th>이름</th><th>직위</th></tr>";
             var htmlString = "";
             for (let i = 0; i < result.length; i++) {
                 htmlString += '<tr class="nameClick" data-name="' + result[i].USER_NAME + '"><td>' + (i + 1) + '</td>' +
                               '<td>' + result[i].USER_NAME + '</td>' +
-                              '<td>' + result[i].POSITION_NAME + '</td>' + 
-                              '<td>' + result[i].TEAM_NAME + '</td></tr>';
+                              '<td>' + result[i].POSITION_NAME + '</td></tr>';
             }
             $(".user-list thead").html(htmlthead);
             $(".user-list tbody").html(htmlString);
@@ -392,21 +387,18 @@ $(document).ready(function(){
 		            selectedNames.push(name); // 배열에 사용자 이름 추가
 		        });
 		        
-		        $("input[type='hidden'][name='firstApproval']").val(selectedNames[0]);
-		        $("input[type='hidden'][name='middleApproval']").val(selectedNames[1]);
-		        $("input[type='hidden'][name='finalApproval']").val(selectedNames[2]);
+		        var joinSelect = selectedNames.join(",");
+		        
+		        console.log(this);
+		        
+		        $("input[type='hidden'][name='approvalName']").val(joinSelect);
 		        $("#f_name").text("");
 		        $("#m_name").text("");
 		        $("#l_name").text("");
 		        $("#f_name").text(selectedNames[0]);
 		        $("#m_name").text(selectedNames[1]);
 		        $("#l_name").text(selectedNames[2]);
-		        
-		        if($(".selected-users tbody tr").length != 3){
-		        	alert("승인자를 3차까지 선택해주세요.");
-		        }else if($(".selected-users tbody tr").length == 3){
-		        	$("#modal").iziModal('close');
-		        }
+		        $("#modal").iziModal('close');
 		    });
 			});
 		
@@ -509,9 +501,7 @@ $(document).ready(function(){
                             
                             
                             <!-- 결재승인자 모달 start -->
-                            <input type="hidden" name="firstApproval">
-                            <input type="hidden" name="middleApproval">
-                            <input type="hidden" name="finalApproval">
+                            <input type="hidden" name="approvalName">
                              <div id="modal">
                                  <div class="m_content_style">
                                  <div class="user_modal">
@@ -519,8 +509,9 @@ $(document).ready(function(){
                                   	
 																    <div class="sidebar">
 																        <ul>
-																            <li><span class="deptDiv">인사부</span>
-																             		<ul>
+																            <li>
+																            <span class="deptDiv">인사부</span>
+																                <ul>
 																                   <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
 																                    	<c:if test="${ teamNames.get(i).DEPT_NAME eq '인사부' }">
 													                            	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
@@ -662,12 +653,8 @@ $(document).ready(function(){
                         </div>
                         <div class="table_middle">
 	                         <table border="1" id="tr_table">
-	                         			<tr>
-                                    <th style="width: 300px;">제목</th>
-                                    <td colspan="2"><input type="text" name="title" required></td>
-                                </tr>
                                 <tr>
-                                    <th></th>
+                                    <th>매출구분</th>
                                     <td colspan="2">
                                         <select name="sales" id="sales" required>
                                             <option value="상품">상품</option>
@@ -731,8 +718,10 @@ $(document).ready(function(){
 	                            <input type="hidden" name="salesAmounts" id="sales_amounts">
                         </div>
                         <!--버튼 영역-->
-                        <div>
-                        		
+                        <div id="btn_div">
+                        		<button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
+                            <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
+                            <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
                         </div>
                         <!------------>
                         
@@ -797,11 +786,7 @@ $(document).ready(function(){
 	          })
 	         $("#sales_amounts").val(salesArr);	
 	
-	         if(confirm('정말로 제출하시겠습니까?')){
-	        	 if($(".sing_name").text() == ""){
-	        		 alert("승인자를 3차까지 선택해주세요.");
-	        	 }
-	         }
+	         if(confirm('정말로 제출하시겠습니까?') == true){}
 	                
 	       }
    	</script>

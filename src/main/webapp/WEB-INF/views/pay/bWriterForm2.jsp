@@ -20,275 +20,15 @@
 
     <!-- 결재신청서 공통스타일 -->
     <link href="${contextPath}/resources/css/pay/writer.css" rel="stylesheet">
-   	
-<style>
+    <link href="${contextPath}/resources/css/pay/writer2.css" rel="stylesheet">
 		
-    .b-example-divider {
-        width: 100%;
-        height: 3rem;
-        background-color: rgba(0, 0, 0, .1);
-        border: solid rgba(0, 0, 0, .15);
-        border-width: 1px 0;
-        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-    }
-
-    .bi {
-        vertical-align: -.125em;
-        fill: currentColor;
-    }
-
-    .nav-scroller {
-        position: relative;
-        z-index: 2;
-        height: 2.75rem;
-        overflow-y: hidden;
-    }
-
-    .nav-scroller .nav {
-        display: flex;
-        flex-wrap: nowrap;
-        padding-bottom: 1rem;
-        margin-top: -1px;
-        overflow-x: auto;
-        text-align: center;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .active .bi {
-        display: block !important;
-    }
-
-    /* content의 height와 height 값을 동일하게 */
-    .b-example-vr {
-        flex-shrink: 0;
-        width: 1.5rem;
-        height: 1200px;
-    }
-
-    .content {
-        height: 1200px;
-        width: 1500px;
-    }
-
-
-     /*----- 결재공통 스타일------------*/
-     
-
-    /*--------------------------------------*/
-
-    .table_middle{
-       margin: auto;
-       width: 1130px;
-       text-align: center;
-       height: auto;
-    }
-    .table_middle>table{width: 100%; font-size: 20px;}
-    .table_middle tr{height: 40px;}
-    .table_middle input{height: 40px; width: 100%;}
-    .table_middle textarea{width: 100%; height: 100%; resize: none;}
-    .table_middle select{display: flex; justify-content: left;}
-
-    #date_td>input{width: 200px;}
-
-    #plus_btn {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        text-align: center;
-        text-decoration: none;
-        border: none;
-        border-radius: 5px;
-        background-color: #000000;
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    #plus_btn:hover {
-        background-color: #696969b4;
-    }
-    #del_btn {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        text-align: center;
-        text-decoration: none;
-        border: none;
-        border-radius: 5px;
-        background-color: #000000;
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    #del_btn:hover {
-        background-color: #696969b4;
-    }
-    #mid_btn{ width: 1100px; display: flex; align-items: center; justify-content: right;}
-    #mid_btn button{margin-left: 20px; margin: 10px;}
-
-    /*-----------------*/
-    /*--------버튼 스타일----------*/
-    
-    #btn_div{
-        padding-top: 40px;
-        margin: auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    #btn_div button{
-        margin: 30px;
-    }
-    
-    /*----------------------------*/
-	 #modal_btn{
-	   	PADDING: 10PX;
-	    BACKGROUND: #fef5cc;
-	    BORDER: #fef5cc;
-    }
-    
-    .m_content_style{   
-			height: 779px;
-	    display: flex;
-	    justify-content: space-around;
-	    flex-wrap: nowrap;
-	    flex-direction: column;
-    }
-		.deptNameModal{width: 30%; height: 80%; border: 1px solid black;}
-		#textForm {width:70%; }
+	
 		
-		.team-container {
-    margin-bottom: 20px;
-		}
-		
-		.teams {
-		    position: relative;
-		    height: 200px; /* 적절한 높이로 설정 */
-		}
-		
-		.team {
-		    position: absolute;
-		    top: 0;
-		    left: 0;
-		    width: 100%;
-		    height: 100%;
-		    visibility: hidden;
-		}
-		
-		.user-management {
-		    display: flex;
-		    gap: 20px;
-		    padding: 20px;
-		    font-family: Arial, sans-serif;
-		    width: 100%;
-		    height: 100%;
-		    flex-wrap: wrap;
-		    flex-direction: row;
-		    align-items: center;
-		    justify-content: flex-start;
-		}
-		.user-list, .sidebar{height: 100%;}
-		.selected-users{height: 100%; margin-top: 93px;} 
-		.sidebar {
-		    flex: 1;
-		    border-right: 1px solid #ddd;
-		}
-		
-		.sidebar ul {
-		    list-style: none;
-		    padding: 0;
-		}
-		
-		.sidebar ul ul {
-		    margin-left: 20px;
-		}
-		
-		.sidebar li {
-		    margin: 5px 0;
-		}
-		
-		.sidebar li.selected {
-		    font-weight: bold;
-		}
-		
-		.user-list, .selected-users {
-		    flex: 2;
-		}
-		
-		.user-list table, .selected-users table {
-		    width: 100%;
-		    border-collapse: collapse;
-		    margin-bottom: 20px;
-		}
-		
-		.user-list th, .user-list td, .selected-users th, .selected-users td {
-		    border: 1px solid #ddd;
-		    padding: 8px;
-		    text-align: center;
-		}
-		
-		.user-list th, .selected-users th {
-		    background-color: #f4f4f4;
-		}
-		
-		.selected-users button {
-		    background-color: #feefad;
-		    color: black;
-		    border: none;
-		    padding: 5px 10px;
-		    border-radius: 9px;	
-		}
-		
-		.actions {
-		   display: flex;
-		    gap: 10px;
-		    justify-content: center;
-		    flex-direction: row;
-		    flex-wrap: wrap;
-		    align-items: baseline;
-		    align-content: flex-end;
-		}
-		
-		.actions button {
-		    padding: 10px 20px;
-		    cursor: pointer;
-		}
-		
-		.actions button:first-child {
-		   background-color: #fdeeac;
-		   color: black;
-		   border: none;
-		   border-radius: 30px;
-		   width: 90px;
-		}
-		
-		.actions button:last-child {
-		   background-color: #fdeeac;
-		   color: black;
-		   border: none;
-		   border-radius: 30px;
-		   width: 90px;
-		}
-		
-		.user_modal{width: 100%; height: -webkit-fill-available;}
-		.deptDiv{cursor: pointer;}
-		.deptDiv li{cursor: pointer;}
-		
-		.deptDiv ul{display: none;}
-		
-		.deptDiv ul{display: none;}
-		.teamN, .nameClick  {cursor: pointer;}
-		.teamN{display: none;}
-		
-
-</style>
 
 </head>
 <body>
+	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
+	
 <script>
 $(document).ready(function(){
     $(".deptDiv").click(function(){
@@ -452,29 +192,20 @@ $(document).ready(function(){
 				}
 				
 		})
-		
-		
+
 </script>
 
-		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
-		
        <!-- content 추가 -->
         <div class="content p-4">
             <!-- 프로필 영역 -->
             <div class="informations">
                 <!-- informations left area start -->
                 <div class="left_con">
-                    <div><h3>매출 보고서</h3></div>
-                    	<c:choose>
-                    	<c:when test="${ not empty list }">
-	                      <form action="${contextPath}/pay/mReportUpdate.do" method="post" id="myForm">
-	                    	</c:when>
-                    	<c:otherwise>
-		                    <form action="${contextPath}/pay/mReportInsert.do" method="post" id="myForm">
-		                   	</c:otherwise>
-                    	</c:choose>
+                    <div><h3>비품 신청서</h3></div>
+                    	
+		                   <form action="${contextPath}/pay/bReportInsert.do" method="post" id="myForm">
+		                  
                         <div id="sign_top">
-                        		
                             <div id="sign_div_left">
                                 <table border="1" id="sign_left">
                                     <tr>
@@ -482,9 +213,8 @@ $(document).ready(function(){
                                         <td>${member.get(0).teamName}</td>                   
                                         <input type="hidden" name="deptName" value="${member.get(0).teamName}">
                                         <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
-                                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
-                                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
-                                        <input type="hidden" name="writerNo" value="${userNo}"> 
+                                        <input type="hidden" name="expendNo" value="${list.get(0).EXPEND_NO}">
+                                        <input type="hidden" name="writerNo" value="${userNo}">                                                                           
                                     </tr>
                                     <tr>
                                         <th>기안일</th>
@@ -506,9 +236,7 @@ $(document).ready(function(){
                                     </tr>
                                 </table>
                             </div>
-                            
-                            
-                            <!-- 결재승인자 모달 start -->
+                           <!-- 결재승인자 모달 start -->
                             <input type="hidden" name="firstApproval">
                             <input type="hidden" name="middleApproval">
                             <input type="hidden" name="finalApproval">
@@ -652,91 +380,69 @@ $(document).ready(function(){
                                 </table>
                             </div>
                         </div>
-                                  
-                        <div>
-                        
-										    </div>
+
                         <div id="mid_btn">
-                            <button id="plus_btn" type="button">추가</button>
-                            <button id="del_btn" type="button">삭제</button>
+                            <button type="button" id="plus_btn">추가</button>
+                            <button type="button" id="del_btn">삭제</button>
                         </div>
+
                         <div class="table_middle">
-	                         <table border="1" id="tr_table">
-	                         			<tr>
-                                    <th style="width: 300px;">제목</th>
-                                    <td colspan="2"><input type="text" name="title" required></td>
+                            <table id="tr_table" border="1">
+                            		<tr>
+                                    <th>제목</th>
+                                    <td colspan="5"><input type="text" name="title" required></td>
                                 </tr>
                                 <tr>
-                                    <th></th>
-                                    <td colspan="2">
-                                        <select name="sales" id="sales" required>
-                                            <option value="상품">상품</option>
-                                            <option value="티켓">티켓</option>
-                                            <option value="음식점">음식점</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>담당자</th>
-                                    <td colspan="2"><input type="text" name="manager" value="${ list.get(0).MANAGER_NAME }" required></td>
-                                </tr>
-                                <tr>
-                                    <th>총매출금액(VAT별도)</th>
-                                    <td colspan="2"><input type="text" name="totalSales" value="${ list.get(0).TOTAL_SALES.toString().trim() }" required style="text-align: right;"></td>
-                                </tr>
-                                <tr>
-                                    <th colspan="3">매출정보</th>
-                                </tr>
-                                <tr>
-                                    <th>품목</th>
+                                    <th id="pname">품명</th>
+                                    <th>규격</th>
                                     <th style="width: 100px;">수량</th>
-                                    <th>매출금액</th>
-                                </tr>
-                                <c:choose>
-                                <c:when test="${ empty list }">
-                                <tr>
-                                    <td><input type="text" class="item" name="item1"></td>
-                                    <td><input type="number" class="count" min="1" name="count1"></td>
-                                    <td><input type="text" class="sales_amount" name="sales2"></td>
+                                    <th>단가</th>
+                                    <th>금액</th>
+                                    <th id="bgo">비고</th>
                                 </tr>
                                 <tr>
-                                    <td><input type="text" class="item" name="item2"></td>
-                                    <td><input type="number" class="count" min="1" name="count2"></td>
-                                    <td><input type="text" class="sales_amount" name="sales3"></td>
+                                    <td><input type="text" class="text_1" name="pName1"></td>
+                                    <td><input type="text" class="text_2" name="size1"></td>
+                                    <td><input type="number"  min="1" class="text_3" name="amount1"></td>
+                                    <td><input type="text" class="text_4" name="unitprice1"></td>
+                                    <td><input type="text" class="text_5" name="price1"></td>
+                                    <td><input type="text" class="text_6" name="etc1"></td>
                                 </tr>
                                 <tr>
-                                    <td><input type="text" class="item" name="item3"></td>
-                                    <td><input type="number" class="count" min="1" name="count3"></td>
-                                    <td><input type="text" class="sales_amount" name="sales4"></td>
+                                    <td><input type="text" class="text_1" name="pName1"></td>
+                                    <td><input type="text" class="text_2" name="size2"></td>
+                                    <td><input type="number"  min="1" class="text_3" name="amount2"></td>
+                                    <td><input type="text" class="text_4" name="unitprice2"></td>
+                                    <td><input type="text" class="text_5" name="price2"></td>
+                                    <td><input type="text" class="text_6" name="etc2"></td>
                                 </tr>
-                                <tr id="tr_input">
-                                    <td><input type="text" class="item" name="item4"></td>
-                                    <td><input type="number" class="count" min="1" name="count4"></td>
-                                    <td><input type="text" class="sales_amount" name="sales5"></td>
+                                <tr id="next_tr">
+                                   <td><input type="text" class="text_1" name="pName3"></td>
+                                    <td><input type="text" class="text_2" name="size3"></td>
+                                    <td><input type="number"  min="1" class="text_3" name="amount3"></td>
+                                    <td><input type="text" class="text_4" name="unitprice3"></td>
+                                    <td><input type="text" class="text_5" name="price3"></td>
+                                    <td><input type="text" class="text_6" name="etc3"></td>
                                 </tr>
-                                </c:when>
-                                <c:otherwise>
-	                                <c:forEach var="i" begin="0" end="${ list.size() - 1}">
-	                                	<tr id="tr_input">
-	                                    <td><input type="text" name="item${i}" value="${list.get(i).ITEM}"></td>
-	                                    <td><input type="number" name="count${i}" min="1" value="${list.get(i).VOLUMES}"></td>
-	                                    <td><input type="text" name="sales${i}" value="${list.get(i).SALES_AMOUNT.toString().trim()}"></td>
-	                                	</tr>
-	                                </c:forEach>
-                                </c:otherwise>
-                                </c:choose>
                             </table>
-	                            <input type="hidden" name="items" id="items">
-	                            <input type="hidden" name="counts" id="counts">
-	                            <input type="hidden" name="salesAmounts" id="sales_amounts">
+                            <table border="1">
+                                <tr>
+                                    <th style="width: 300px;" id="">합계</th>
+                                    <td colspan="5"><input type="text" name="totalSum" required></td>
+                                </tr>
+                                <tr>
+                                    <th>기타</th>
+                                    <td colspan="5"><textarea name="etcList" id="" cols="30" rows="10" name="etcList"></textarea></td>
+                                </tr>
+                            </table>
                         </div>
                         <!--버튼 영역-->
-                        <div>
-                        		
+                        <div id="btn_div">
+                        		<button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
+                            <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
+                            <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
                         </div>
                         <!------------>
-                        
-                        
                     </form>
                 </div>
             </div>
@@ -767,6 +473,8 @@ $(document).ready(function(){
     	
     </script>
    
+ 
+    
     <script>
 	    	function submitbtn(){
    					let itemArr = [];
@@ -797,27 +505,24 @@ $(document).ready(function(){
 	          })
 	         $("#sales_amounts").val(salesArr);	
 	
-	         if(confirm('정말로 제출하시겠습니까?')){
-	        	 if($(".sing_name").text() == ""){
-	        		 alert("승인자를 3차까지 선택해주세요.");
-	        	 }
-	         }
+	         if(confirm('정말로 제출하시겠습니까?') == true){}
 	                
 	       }
    	</script>
     
     <script>
     $(document).ready(function(){
-    
+    		let i = 4;
     	$(document).on("click", "#plus_btn", function () {
-    		
-    		
     		var result = "<tr>";
-    		result += "<td><input type='text' class='item'></td>";
-    		result += "<td><input type='number' class='count' min='1'></td>";
-    		result += "<td><input type='text' class='sales_amount'></td>";
+    		result += "<td><input type='text' class='text_1' name='pName" + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_2' name='size" + (i) +"'></td>";
+    		result += "<td><input type='number' min='1' class='text_3' name='amount"  + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_4' name='unitprice" + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_5' name='price" + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_6' name='etc" + (i) + "'></td>";
     		result += "</tr>";
-        
+    		i++;
        $("#tr_table").children().last().after(result);
        
        
@@ -828,8 +533,20 @@ $(document).ready(function(){
     	    //$("#tr_table tr:last-child").remove();
     	    $("#tr_table").children("tr").last().remove();
     	});
+    
+    	
     })
     </script>
+        
+	   <script>
+	      $("#reset_btn").click(function(){
+	          if(confirm("정말로 초기화 하시겠습니까?") == true){
+	              return;
+	          }else{
+	              return false;
+	          }
+	      })
+		</script>
         
      <script>
         $('#modal').iziModal({
@@ -837,11 +554,19 @@ $(document).ready(function(){
             //subtitle: '수정도 가능합니다.',
             headerColor: '#FEEFAD', // 헤더 색깔
             theme: '', //Theme of the modal, can be empty or "light".
-            //padding: '15px', // content안의 padding
+            padding: '15px', // content안의 padding
             //radius: 10, // 모달 외각의 선 둥글기
-            width: '1100px',
+            width: '1000px',
            
         });
+
+        // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
+        $("#modal-test").on('click', function () {
+            //event.preventDefault(); //위의 클릭 이벤트가 일어나는 동안 다른 이벤트가 발생하지 않도록해주는 명령어
+
+            $('#modal').iziModal('open');
+        });
+        
         
     </script>                            
                
