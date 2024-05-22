@@ -73,142 +73,6 @@
                                                 </div>
                                             </a>
                                         </li>
-                                        <li class="p-2 border-bottom chat_room">
-                                            <a href="#!" class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-1.webp"
-                                                        alt="avatar"
-                                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
-                                                        width="60">
-                                                    <div class="pt-1">
-                                                        <p class="fw-bold mb-0">Danny Smith</p>
-                                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="pt-1">
-                                                    <p class="small text-muted mb-1">5 mins ago</p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="p-2 border-bottom chat_room">
-                                            <a href="#!" class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-2.webp"
-                                                        alt="avatar"
-                                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
-                                                        width="60">
-                                                    <div class="pt-1">
-                                                        <p class="fw-bold mb-0">Alex Steward</p>
-                                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="pt-1">
-                                                    <p class="small text-muted mb-1">Yesterday</p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="p-2 border-bottom chat_room">
-                                            <a href="#!" class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-3.webp"
-                                                        alt="avatar"
-                                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
-                                                        width="60">
-                                                    <div class="pt-1">
-                                                        <p class="fw-bold mb-0">Ashley Olsen</p>
-                                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="pt-1">
-                                                    <p class="small text-muted mb-1">Yesterday</p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="p-2 border-bottom chat_room">
-                                            <a href="#!" class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-4.webp"
-                                                        alt="avatar"
-                                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
-                                                        width="60">
-                                                    <div class="pt-1">
-                                                        <p class="fw-bold mb-0">Kate Moss</p>
-                                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="pt-1">
-                                                    <p class="small text-muted mb-1">Yesterday</p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="p-2 border-bottom chat_room">
-                                            <a href="#!" class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp"
-                                                        alt="avatar"
-                                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
-                                                        width="60">
-                                                    <div class="pt-1">
-                                                        <p class="fw-bold mb-0">Lara Croft</p>
-                                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="pt-1">
-                                                    <p class="small text-muted mb-1">Yesterday</p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="p-2 border-bottom  chat_room">
-                                            <a href="#!" class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
-                                                        alt="avatar"
-                                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
-                                                        width="60">
-                                                    <div class="pt-1">
-                                                        <p class="fw-bold mb-0">Brad Pitt</p>
-                                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="pt-1">
-                                                    <p class="small text-muted mb-1">5 mins ago</p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="p-2 border-bottom  chat_room">
-                                            <a href="#!" class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
-                                                        alt="avatar"
-                                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
-                                                        width="60">
-                                                    <div class="pt-1">
-                                                        <p class="fw-bold mb-0">Brad Pitt</p>
-                                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="pt-1">
-                                                    <p class="small text-muted mb-1">5 mins ago</p>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="p-2 border-bottom  chat_room">
-                                            <a href="#!" class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
-                                                        alt="avatar"
-                                                        class="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
-                                                        width="60">
-                                                    <div class="pt-1">
-                                                        <p class="fw-bold mb-0">Brad Pitt</p>
-                                                        <p class="small text-muted">Lorem ipsum dolor sit.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="pt-1">
-                                                    <p class="small text-muted mb-1">5 mins ago</p>
-                                                </div>
-                                            </a>
-                                        </li>
                                     </ul>
 
                                 </div>
@@ -390,7 +254,10 @@
         }
         
         const $chatRoomUl = $(".chat_room_list");
-	
+        
+        // key : 채팅방 번호 value : 채팅 메세지 리스트 
+				var chatMsgMap = new Map();
+        
         // 채팅방 열기 버튼
         $(".msg_open_btn").on("click", function () {
         	// 스타일 조정
@@ -400,46 +267,76 @@
           
           // 채팅방 목록 조회
           for(var i = 0; i < chatRoomList.length; i++) {
+        	  var chatRoomNo = chatRoomList[i].chatRoomNo
         	  // 채팅방 참여인원 조회
-        	  $.ajax({
-        		  url: "${contextPath}/chat/participants"
-        			, method: "get"
-        		  , data: {roomNo : chatRoomList[i].chatRoomNo}
-        		  , succecc: function(participantsList) {
-        			  console.log(participantsList);
-        			  if (participantsList.length > 0) {
-        				  var chatRoomVal = "<li class='p-2 border-bottom chat_room'>";
-			        	  chatRoomVal += "<a href='#!' class='d-flex justify-content-between'>";
-			        	  chatRoomVal += "<div class='d-flex flex-row'>";
-			        	  chatRoomVal += "<img src='${contextPath}/" + participantsList[0].profileURL + "'";
-			        	  chatRoomVal += "class='rounded-circle d-flex align-self-center me-3 shadow-1-strong'";
-			        	  chatRoomVal += "width='60'>";
-			        	  chatRoomVal += "<div class='pt-1'>";
-			        	  chatRoomVal += "<p class='fw-bold mb-0'>";
-			        	  for(var j = 0; j < (participantsList.length > 3 ? 3 : participantsList.length ); j++) {
-			        		  chatRoomVal += participantsList[j].userName + (j != 2 ? "," : "");
-			        	  }
-			        	  chatRoomVal += "</p>";
-			        	  chatRoomVal += "<p class='small text-muted'>Hello, Are you there?</p>";
-			        	  chatRoomVal += "</div>";
-			        	  chatRoomVal += "</div>";
-			        	  chatRoomVal += "<div class='pt-1'>";
-			        	  chatRoomVal += "<p class='small text-muted mb-1'>Just now</p>";
-			        	  chatRoomVal += "</div>";
-			        	  chatRoomVal += "</a>";
-			        	  chatRoomVal += "</li>";
-			        	  console.log(chatRoomVal);
-			        	  $chatRoomUl.append(chatRoomVal);
-        			  }
-        		  }
-        		  , error: function() {
-        			  console.log("채팅방 참여인원 조회 ajax 통신 실패");
-        		  }
-        	  })
-        	  
-        	  
+	        	  $.ajax({
+	        		  url: "${contextPath}/chat/participants"
+	        			, method: "get"
+	        		  , data: {roomNo : chatRoomList[i].chatRoomNo}
+	        		  , success: function(participantsList) {
+	        			  if (participantsList.length > 0) {
+	        				  var chatRoomVal = "<li class='p-2 border-bottom chat_room'>";
+				        	  chatRoomVal += "<a href='#!' class='d-flex justify-content-between'>";
+				        	  chatRoomVal += "<div class='d-flex flex-row'>";
+				        	  chatRoomVal += "<img style='height: 70px;' src='" + participantsList[0].profileURL + "'";
+				        	  chatRoomVal += "class='rounded-circle d-flex align-self-center me-3 shadow-1-strong'";
+				        	  chatRoomVal += "width='60'>";
+				        	  chatRoomVal += "<div class='pt-1'>";
+				        	  chatRoomVal += "<p class='fw-bold mb-0'>";
+				        	  for(var j = 0; j < (participantsList.length > 2 ? 2 : participantsList.length ); j++) {
+				        		  chatRoomVal += participantsList[j].userName + (j == (participantsList.length - 1) ? "" : ",");
+				        	  }
+				        	  chatRoomVal += "</p>";
+				        	  chatRoomVal += "<p class='small text-muted lastest_msg'></p>";
+				        	  chatRoomVal += "</div>";
+				        	  chatRoomVal += "</div>";
+				        	  chatRoomVal += "<div class='pt-1'>";
+				        	  chatRoomVal += "<p class='small text-muted mb-1'>" + participantsList.length + "</p>";
+				        	  chatRoomVal += "</div>";
+				        	  chatRoomVal += "</a>";
+				        	  chatRoomVal += "</li>";
+				        	  $chatRoomUl.append(chatRoomVal);
+	        			  }
+	        		  }
+	        		  , error: function(xhr, status, error){
+	        			    console.log(status, error);
+	        		  }
+	        	  })
           }
+          selectChatMsg(1033);
         })
+        // 채팅방 메세지 이력 가져오기
+        function selectChatMsg(chatRoomNo) {
+        	var chatList;
+        	$.ajax({
+	        	url: "${contextPath}/chat/messages"
+	        	, method: "get"
+	        	, data: {roomNo : chatRoomNo}
+	        	, async: false
+	        	, success: function(chatList) {
+	        		
+	        		for(var i = 0; i < chatList.length; i++) {
+	        			if(${ loginMember.userNo != chatList[i].user_no }) {
+	        				// 메세지를 보낸 사람이 내가 아닌 경우
+	        				console.log(chatList[i].user_no);
+	        				
+	        			} else if (${ loginMember.userNo == chatList[i].user_no }) {
+	        				// 메세지를 보낸 사람이 나일 경우
+	        				console.log(chatList[i].user_no);
+	        				
+	        			}
+	        			
+	        		}
+	        	
+	        		
+	        		
+	        	}
+	        	, error: function() {
+	        		console.log("채팅방 메세지 이력 조회 ajax 통신 실패");
+	        	}
+	        })
+	        return chatList
+        }
 
         $(".msg_close_btn").on("click", function () {
             $(".msg_open_btn").css("display", "block");
