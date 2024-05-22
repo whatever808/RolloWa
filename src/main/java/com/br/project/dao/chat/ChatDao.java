@@ -46,5 +46,9 @@ public class ChatDao {
 	public int insertChatMsg(ChatMessageDto chatMsg) {
 		return sqlSessionTemplate.insert("chatMapper.insertChatMsg", chatMsg);
 	}
+
+	public List<ChatMessageDto> selectChatMsg(String roomNo) {
+		return sqlSessionTemplate.selectList("chatMapper.selectChatMsg", roomNo);
+	}
 	
 }
