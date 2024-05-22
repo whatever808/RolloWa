@@ -12,11 +12,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.br.project.dto.common.AttachmentDto;
 import com.br.project.dto.common.GroupDto;
+import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.VacationDto;
 import com.br.project.service.common.department.DepartmentService;
 import com.br.project.service.pay.VacationService;
+import com.br.project.util.FileUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class VacationController {
 	private final VacationService vactService;
 	private final DepartmentService departService;
+	private final FileUtil fileUtil;
 	
 	/**
 	 * 휴가 조회 및 신청을 할 수 있는 페이지
@@ -41,16 +46,30 @@ public class VacationController {
 	}
 	
 	/**
+	 * MultipartRequest multirequest
 	 * 
 	 */
 	@ResponseBody
-	@PostMapping("/insertVact.do")
-	public void insertVacation(VacationDto vacation, HttpSession session) {
+	@PostMapping(value="/insertVact.do", produces="text/html; charset=utf-8")
+	public int insertVacation(VacationDto vacation , List<MultipartFile> files, HttpSession session) {
 //		int emp = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
 		int emp = 1050;
+		vacation.setMember(MemberDto.builder().userNo(emp).build());
 		
+		HashMap<String, Object> fileInfo = new HashMap<>();
+		fileInfo.put("category", "vacation_" + vacation.getGroup().getCode());
+		fileInfo.put("refType", "VACT");
+		fileInfo.put("refNo", null);
+		fileInfo.put("status", "Y");
 		
+		Map<String, Object> map = new HashMap<>();
+		map.put("vacation", vacation);
 		
+		if(files != null && !files.isEmpty()) {			
+			List<AttachmentDto> uploadFile = fileUtil.getAttachmentList(files, fileInfo);
+			map.put("uploadFile", uploadFile);
+		}
+		return vactService.insertVacation(map);
 	}
 	
 }

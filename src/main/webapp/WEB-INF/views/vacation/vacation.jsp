@@ -240,19 +240,14 @@ a {
 					</div>
 				</div>
 				<br>
-<!-- 				연차	<i class="fa-solid fa-plane"></i>
-						반차 	<i class="fa-solid fa-bolt"></i>
-						병가 	<i class="fa-solid fa-pills"></i>
-						소집일	<i class="fa-solid fa-street-view"></i>
-						기타	<i class="fa-solid fa-earth-americas"></i> -->
 				<div class="font-size25 jua-regular">휴가 신청</div>
 				<br>
-				
+				<!--  data-izimodal-open="#vact_${va.code}" -->
 				<div class="vacation-request">
 					<c:forEach var="va" items="${vactList}">
 					<div class="line-border-square line-shadow">
-						<a href="#" data-izimodal-open="#vact_${va.code}">
-							<div data-code="${va.code}">
+						<a href="#" onclick="selectModal('${va.code}')">
+							<div class="vaCode" data-code="${va.code}">
 								${va.codeName}
 								<br><br>
 							</div>
@@ -308,23 +303,67 @@ a {
 	</div>
 	<!-- 아이콘 삽입  -->
 	<script>
-	
+		function insertIcon(){
+			
+			$('.vaCode').get().forEach((e) => {
+				let str = document.createElement('i');
+				let vaca_code = e.dataset.code;
+				
+				if(vaca_code == 'A'){ // 연차
+					str.className = 'fa-solid fa-plane';
+				}else if(vaca_code == 'B'){ // 반차
+					str.className = 'fa-solid fa-bolt';
+				}else if(vaca_code == 'C'){ // 병가
+					str.className = 'fa-solid fa-pills';
+				}else if(vaca_code == 'D'){ // 출산
+					str.className = 'fa-solid';
+				}else if(vaca_code == 'E'){ // 경조사
+					str.className = 'fa-solid';
+				}else if(vaca_code == 'F'){ // 생리
+					str.className = 'fa-solid';
+				}else if(vaca_code == 'G'){ // 소집일
+					str.className = 'fa-solid fa-street-view';
+				}else if(vaca_code == 'H'){ // 기타
+					str.className = 'fa-solid fa-earth-americas';
+				}
+				
+				e.appendChild(str);
+			})
+			
+		}
 	</script>
 	<!-- 등록 ajax -->
+	<!--				processData:false,
+				contentType:false,
+				enctype: 'multipart/form-data',  -->
 	<script>
-		function insertVact(e){
-			console.log($(e).parents('form').serialize());
-			console.log($(e).parents('form'));
-			//console.log($(e).parents('.iziModal-content').find('input.date-area'));
-			
-			let formData = new FormData();
+		function selectModal(c){
+			$(document).on('opening', '#vact_' + c , function (e) {
+			    $(this).find('.code').val(c)
+			});
+			$('#vact_' + c).iziModal('open');
+		}
+	
+		function insertVact(e){			
+			const file_input = $(e).parents('form').find('input[name=files]').get()[0];
 			
 			$.ajax({
 				url:'${path}/vacation/insertVact.do',
 				type:'post',
-				data:$(e).parents('form').serialize(),
-				success:function(r){},
-				error:function(){}
+				data: new FormData($(e).parents('form')[0]),
+				processData:false,
+				contentType:false,
+				enctype: 'multipart/form-data',
+				success:function(r){
+					if(r > 0){
+						greenAlert('휴가신청', '신청 되었습니다.');
+					}else {
+						redAlert('휴가신청', '정상적으로 처리 되지않습니다. 관리자를 호출 해 주세요.');
+					}
+				},
+				error:function(){
+					console.log('휴가신청 오류');
+				}
 			})		
 				
 		}
@@ -338,7 +377,7 @@ a {
 			<div class="jua-regular">Category</div>
 			<div class="line-cirecle-sm">
 				<i class="fa-solid fa-plane"></i>
-				<input type="hidden" name="code">
+				<input type="hidden" name="group.code" class="code">
 			</div>
 		</div>
 		<div class="jua-regular">
@@ -381,9 +420,6 @@ a {
 			zindex : 300,
 			focusInput : true,
 			restoreDefaultContent : false,
-			onOpening: function(e){
-				console.log(e);
-			}
 		});
 	</script>
 	<!-- 소집일 -->
@@ -392,23 +428,24 @@ a {
 			<div class="jua-regular">Category</div>
 			<div class="line-cirecle-sm">
 				<i class="fa-solid fa-street-view"></i>
+				<input type="hidden" name="group.code" class="code">
 			</div>
 		</div>
 		<div class="jua-regular">
-			Color <input type="color" id="color-style" name="">
+			Color <input type="color" id="color-style" name="vacaColor">
 		</div>
 		<br>
 		<div class="jua-regular">Date</div>
 		<div class="date-time-area">
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular currentDate1" type="date" name="date">
+					<input class="date-area jua-regular currentDate1" type="date" name="vacaStart">
 				</div>
 			</div>
 			<div style="place-self: center; font-size: xx-large;">~</div>
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular currentDate2" type="date" name="date">
+					<input class="date-area jua-regular currentDate2" type="date"  name="vacaEnd">
 				</div>
 			</div>
 		</div>
@@ -416,16 +453,16 @@ a {
 		<div class="jua-regular">Content</div>
 		<div>
 			<textarea class="content-text-area"
-				style="resize: none; height: 200px;"></textarea>
+				style="resize: none; height: 200px;" name="vacaComment"></textarea>
 		</div>
 		<br>
 		<div class="myfile">
 			<div class="jua-regular">Submit</div>
-			<input type="file" style="width: 71%;" name="file">
+			<input type="file" style="width: 71%;" name="files" accept="image/*" multiple>
 		</div>
 		<br>
 		<div align="end">
-			<button class="btn btn-outline-primary" onclick="insertVact(this);">신청</button>
+			<button class="btn btn-outline-primary" type="button" onclick="insertVact(this);">신청</button>
 		</div>
 	</form>
 	<script>
@@ -442,28 +479,29 @@ a {
 		});
 	</script>
 	<!-- 병가 -->
-	<div id="vact_C">
+	<form id="vact_C">
 		<div class="Category">
 			<div class="jua-regular">Category</div>
 			<div class="line-cirecle-sm">
 				<i class="fa-solid fa-pills"></i>
+				<input type="hidden" name="group.code" class="code">
 			</div>
 		</div>
 		<div class="jua-regular">
-			Color <input type="color" id="color-style">
+			Color <input type="color" id="color-style" name="vacaColor">
 		</div>
 		<br>
 		<div class="jua-regular">Date</div>
 		<div class="date-time-area">
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular currentDate1" type="date" name="date">
+					<input class="date-area jua-regular currentDate1" type="date" name="vacaStart">
 				</div>
 			</div>
 			<div style="place-self: center; font-size: xx-large;">~</div>
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular currentDate2" type="date" name="date">
+					<input class="date-area jua-regular currentDate2" type="date"  name="vacaEnd">
 				</div>
 			</div>
 		</div>
@@ -471,18 +509,18 @@ a {
 		<div class="jua-regular">Content</div>
 		<div>
 			<textarea class="content-text-area"
-				style="resize: none; height: 200px;"></textarea>
+				style="resize: none; height: 200px;" name="vacaComment"></textarea>
 		</div>
 		<br>
 		<div class="myfile">
 			<div class="jua-regular">Submit</div>
-			<input type="file" style="width: 71%;">
+			<input type="file" style="width: 71%;" name="files" accept="image/*" multiple>
 		</div>
 		<br>
 		<div align="end">
-			<button class="btn btn-outline-primary" onclick="insertVact(this);">신청</button>
+			<button class="btn btn-outline-primary" type="button" onclick="insertVact(this);">신청</button>
 		</div>
-	</div>
+	</form>
 	<script>
 		$('#vact_C').iziModal({
 			title : '휴가 신청',
@@ -497,41 +535,44 @@ a {
 		});
 	</script>
 	<!-- 반차 -->
-	<div id="vact_B">
+	<form id="vact_B">
 		<div class="Category">
 			<div class="jua-regular">Category</div>
 			<div class="line-cirecle-sm">
 				<i class="fa-solid fa-bolt"></i>
+				<input type="hidden" name="group.code" class="code">
 			</div>
 		</div>
 		<div class="jua-regular">
-			Color <input type="color" id="color-style">
+			Color <input type="color" id="color-style" name="vacaColor">
 		</div>
 		<br>
 		<div class="jua-regular jua-regular">Date</div>
 		<div>
 			<div style="text-align: -webkit-center;">
 				<div style="width: 85%;">
-					<input class="date-area jua-regular currentDate1" type="date">
+					<input class="date-area jua-regular currentDate1" type="date" name="vacaStart">
 				</div>
 			</div>
 			<br>
 			<div class="half_time">
 				<div class="half-line-border-square jua-regular">오전</div>
 				<div class="half-line-border-square jua-regular">오후</div>
+				<!-- 클릭요소에 따라서 12시 18시로 하면 될듯  -->
+				<input type="hidden"  name="vacaEnd">
 			</div>
 		</div>
 		<br> <br> <br>
 		<div class="jua-regular">Content</div>
 		<div>
 			<textarea class="content-text-area"
-				style="resize: none; height: 200px;"></textarea>
+				style="resize: none; height: 200px;" name="vacaComment"></textarea>
 		</div>
 		<br>
 		<div align="end">
-			<button class="btn btn-outline-primary" onclick="insertVact(this);">신청</button>
+			<button class="btn btn-outline-primary" type="button" onclick="insertVact(this);">신청</button>
 		</div>
-	</div>
+	</form>
 	
 	<script>
 		$('#vact_B').iziModal({
@@ -547,28 +588,29 @@ a {
 		});
 	</script>
 	<!-- 기타 -->
-	<div id="vact_H">
+	<form id="vact_H">
 		<div class="Category">
 			<div class="jua-regular">Category</div>
 			<div class="line-cirecle-sm">
 				<i class="fa-solid fa-earth-americas"></i>
+				<input type="hidden" name="group.code" class="code">
 			</div>
 		</div>
 		<div class="jua-regular">
-			Color <input type="color" id="color-style">
+			Color <input type="color" id="color-style" name="vacaColor">
 		</div>
 		<br>
 		<div class="jua-regular">Date</div>
 		<div class="date-time-area">
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular currentDate1" type="date">
+					<input class="date-area jua-regular currentDate1" type="date" name="vacaStart">
 				</div>
 			</div>
 			<div style="place-self: center; font-size: xx-large;">~</div>
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular currentDate2" type="date">
+					<input class="date-area jua-regular currentDate2" type="date"  name="vacaEnd">
 				</div>
 			</div>
 		</div>
@@ -576,18 +618,18 @@ a {
 		<div class="jua-regular">Content</div>
 		<div>
 			<textarea class="content-text-area"
-				style="resize: none; height: 200px;"></textarea>
+				style="resize: none; height: 200px;" name="vacaComment"></textarea>
 		</div>
 		<br>
 		<div class="myfile">
 			<div class="jua-regular">Submit</div>
-			<input type="file" style="width: 71%;">
+			<input type="file" style="width: 71%;" name="files" accept="image/*" multiple>
 		</div>
 		<br>
 		<div align="end">
-			<button class="btn btn-outline-primary" onclick="insertVact(this);">신청</button>
+			<button class="btn btn-outline-primary" type="button" onclick="insertVact(this);">신청</button>
 		</div>
-	</div>
+	</form>
 	<script>
 		$('#vact_H').iziModal({
 			title : '휴가 신청',
@@ -601,7 +643,7 @@ a {
 			restoreDefaultContent : false,
 		});
 	</script>
-
+	<!-- =================================================================== -->
 	<!-- 대기 -->
 	<div id="standby_request">
 		<div class="Category">
@@ -610,7 +652,7 @@ a {
 			<i class="fa-regular fa-star"></i>
 		</div>
 		<div class="jua-regular">
-			Color <input type="color" id="color-style">
+			Color <input type="color" id="color-style" >
 		</div>
 		<br>
 		<div class="jua-regular">Date</div>
@@ -636,7 +678,7 @@ a {
 		<br>
 		<div class="myfile">
 			<div class="jua-regular">Submit</div>
-			<input type="file" style="width: 71%;">
+			<input type="file" style="width: 71%;" name="files" accept="image/*" multiple>
 		</div>
 		<br>
 		<div align="end">
@@ -727,6 +769,9 @@ a {
 			for (let i = 0; i < dare0.length; i++) {
 				dare0[i].value = dateData0;
 			}
+			
+			insertIcon();
+			
 		})
 	</script>
 	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />

@@ -56,4 +56,27 @@ and
 </if>
 </select>
 
+<insert id="insertVacation">
+insert 
+into vacation (
+VACATION_NO
+,VACATION_STRAT
+,VACATION_END
+,VACATION_COMMNET
+,VACATION_COLOR
+,REGIST_EMP
+,MODIFY_EMP
+,GROUP_CODE
+)values (
+	SEQ_VANO.nextval
+	, to_date(#{vacaStart} , 'YYYY-MM-DD HH24:MI:SS')
+	, to_date(#{vacaEnd}   , 'YYYY-MM-DD HH24:MI:SS')
+	, #{vacaComment}
+	, #{vacaColor}
+	, #{member.userNo}
+	, #{member.userNo}
+	, #{group.code} 
+)
+</insert>
+
 </mapper>
