@@ -137,10 +137,10 @@
   <select id="selectChatMsg" resultMap="chatMsgResult">
 		<![CDATA[
 		select
-		    msg_no, msg_content, send_date, user_name, cm.user_no
+		    msg_no, msg_content, send_date, user_name, user_no, profile_url
 		from
 		    (select
-		        msg_no, msg_content, send_date, user_name, cm.user_no, rownum
+		        msg_no, msg_content, send_date, user_name, cm.user_no, profile_url, rownum
 		    from
 		        chatting_message cm, member m
 		    where
