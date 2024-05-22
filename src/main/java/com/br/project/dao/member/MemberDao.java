@@ -50,7 +50,7 @@ public class MemberDao {
 	}
 
 	// 채팅방 참여인원 조회
-	public List<MemberDto> selectParticipants(String roomNo) {
-		return sqlSessionTemplate.selectList("memberMapper.selectParticipants", roomNo);
+	public List<MemberDto> selectParticipants(Map<String, Object> map) {
+		return sqlSessionTemplate.selectList("memberMapper.selectParticipants", map);
 	}
 }
