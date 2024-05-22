@@ -55,6 +55,7 @@
                                 <div class="card-body">
 
                                     <ul class="list-unstyled mb-0 chat_room_list">
+                                    <!-- 채팅방 리스트 -->
                                         <li class="p-2 border-bottom chat_room">
                                             <a href="#!" class="d-flex justify-content-between">
                                                 <div class="d-flex flex-row">
@@ -83,7 +84,7 @@
                         <div class="col-md-6 col-lg-7 col-xl-8 chatting_box">
 
                             <div class="chatting_history">
-                                <ul class="list-unstyled">
+                                <ul class="list-unstyled chat_msg_list">
                                     <li class="d-flex justify-content-between mb-4">
                                         <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
                                             alt="avatar"
@@ -258,6 +259,9 @@
         // key : 채팅방 번호 value : 채팅 메세지 리스트 
 				var chatMsgMap = new Map();
         
+        // 채팅 메세지 구역
+        const $chatMsgUl = $(".chat_msg_list");
+        
         // 채팅방 열기 버튼
         $(".msg_open_btn").on("click", function () {
         	// 스타일 조정
@@ -305,6 +309,7 @@
           }
           selectChatMsg(1033);
         })
+        
         // 채팅방 메세지 이력 가져오기
         function selectChatMsg(chatRoomNo) {
         	var chatList;
@@ -314,22 +319,59 @@
 	        	, data: {roomNo : chatRoomNo}
 	        	, async: false
 	        	, success: function(chatList) {
-	        		
+	        		console.log(chatList);
 	        		for(var i = 0; i < chatList.length; i++) {
-	        			if(${ loginMember.userNo != chatList[i].user_no }) {
+	        			if(${ loginMember.userNo != chatList[i].userNo }) {
 	        				// 메세지를 보낸 사람이 내가 아닌 경우
-	        				console.log(chatList[i].user_no);
+	        				var chatTextOp = "<li class='d-flex justify-content-between mb-4'>";
+	        				chatTextOp += "<img src='" + chatList[i].profileURL + "'";
+	        				chatTextOp += "alt='profile image'";
+	        				chatTextOp += "class='rounded-circle d-flex align-self-start me-3 shadow-1-strong'";
+	        				chatTextOp += "width='60'>";
+	        				chatTextOp += "<div class='card'>";
+	        				chatTextOp += "<div class='card-header d-flex justify-content-between p-3'>";
+	        				chatTextOp += "<p class='fw-bold mb-0'>" + chatList[i].userName + "</p>";
+	        				chatTextOp += "<p class='text-muted small mb-0'><i class='far fa-clock'></i>" + chatList[i].sendDate + "</p>";
+	        				chatTextOp += "</div>";
+	        				chatTextOp += "<div class='card-body'>";
+	        				chatTextOp += "<p class='mb-0'>" + cjatList[i].msgContent + "</p>";
+	        				chatTextOp += "</div>";
+	        				chatTextOp += "</div>";
+	        				chatTextOp += "</li>";
 	        				
-	        			} else if (${ loginMember.userNo == chatList[i].user_no }) {
+	        				// 채팅 메세지 구역에 append
+	        				$chatMsgUl.append(chatTextOp);
+	        			} else if (${ loginMember.userNo == chatList[i].userNo }) {
 	        				// 메세지를 보낸 사람이 나일 경우
-	        				console.log(chatList[i].user_no);
+	        				var chatTextMe = "<li class='d-flex justify-content-between mb-4'>";
+	        				chatTextMe += "";
 	        				
 	        			}
-	        			
+                            
+                        
+                    
+                    
+                        <div class="card w-100">
+                            <div class="card-header d-flex justify-content-between p-3">
+                                <p class="fw-bold mb-0">Lara Croft</p>
+                                <p class="text-muted small mb-0"><i class="far fa-clock"></i> 13 mins
+                                    ago
+                                </p>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-0">
+                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                                    accusantium doloremque
+                                    laudantium.
+                                </p>
+                            </div>
+                        </div>
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp"
+                            alt="avatar"
+                            class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong"
+                            width="60">
+                    </li>
 	        		}
-	        	
-	        		
-	        		
 	        	}
 	        	, error: function() {
 	        		console.log("채팅방 메세지 이력 조회 ajax 통신 실패");

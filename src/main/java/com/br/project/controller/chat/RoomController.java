@@ -129,6 +129,10 @@ public class RoomController {
 			msgList = chatService.selectChatMsg(roomNo);
 		}
 		
+		for(int i = 0; i < msgList.size(); i++) {
+			log.debug("msgList : {}", msgList.get(i));
+		}
+
 		return msgList;
 	}
 }
