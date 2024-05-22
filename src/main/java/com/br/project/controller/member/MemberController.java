@@ -152,7 +152,8 @@ public class MemberController {
 	// 마이페이지 프로필 이미지 수정
 	@PostMapping("/modifyProfile.do")
 	@ResponseBody
-	public String ajaxUpdateProfile(MultipartFile uploadFile, HttpSession session) {
+	public String ajaxUpdateProfile(MultipartFile uploadFile, HttpSession session
+							, HttpServletRequest request) {
 		log.debug("{}", uploadFile);
 		MemberDto member = new MemberDto();
 		// 로그인한 회원 정보 확인
