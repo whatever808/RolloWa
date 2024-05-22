@@ -93,8 +93,8 @@
 
                     <h4>근태관리</h4>
                     
-										<c:set var="today" value="<%=new java.util.Date()%>" />
-										<c:set var="sysYear"><fmt:formatDate value="${ today }" pattern="yyyy" /></c:set> 
+					<c:set var="today" value="<%=new java.util.Date()%>" />
+					<c:set var="sysYear"><fmt:formatDate value="${ today }" pattern="yyyy" /></c:set> 
                     <div class="my-attend-content">
                         <!-- my attend select (left) -->
                         <div class="my-attend-select-div">
@@ -185,55 +185,14 @@
                     <h4>공지사항</h4>
                     
                     <div class="notice-category">
-										  <span class="bg-light normal">일반공지</span>
-										  <span class="department">부서공지</span>
-										</div>
+					  <span class="normal">일반공지</span>
+					  <span class="department">부서공지</span>
+					</div>
                     
                     <table class="notice-table table table-hover table-responsive">
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-writer">
-                            	<img src="${ contextPath }/resources/images/defaultProfile.png" alt="" class="writer-profile">
-                            	<span class="writer-name">유재석</span>
-                            </td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-writer">
-                            	<img src="${ contextPath }/resources/images/defaultProfile.png" alt="" class="writer-profile">
-                            	<span class="writer-name">유재석</span>
-                            </td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-writer">
-                            	<img src="${ contextPath }/resources/images/defaultProfile.png" alt="" class="writer-profile">
-                            	<span class="writer-name">유재석</span>
-                            </td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-writer">
-                            	<img src="${ contextPath }/resources/images/defaultProfile.png" alt="" class="writer-profile">
-                            	<span class="writer-name">유재석</span>
-                            </td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-writer">
-                            	<img src="${ contextPath }/resources/images/defaultProfile.png" alt="" class="writer-profile">
-                            	<span class="writer-name">유재석</span>
-                            </td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
+                    	<tbody class="notice-table-tbody">
+                    		<!-- 공지사항 리스트 영역 -->
+                    	</tbody>
                     </table>
                 </div>
                 <!-- notice list end (main-right-bottom) -->
@@ -241,26 +200,6 @@
             <!-- main-right end-->
         </div>
         <!-- main contents end (bottom) -->
-        
-        <script>
-        	$(document).ready(function(){
-        		$(".notice-category").on("click", "span", function(){
-        			console.log(loginMemInfo);
-        			/*
-	        			$.ajax({
-	            			url:"${ contextPath }/board/",
-	            			method:"get",
-	            			data:{
-	            				status:"Y",
-	            				category:$(this).hasClass('department') ? 'department' : 'normal',
-	            				$(this).hasClass('department') ? && department: ${ loginMember}
-	            			}
-	            	})
-        			*/
-        		})
-        		
-        	})
-        </script>
         
     </div>
     <!-- content end -->
@@ -499,8 +438,65 @@
    			}
    		})
    	})
-
-    
+	
+   	// 공지사항 목록조회 관련 ==========================================================================================================
+   	$(document).ready(function(){
+		// 카테고리별 공지사항 목록조회 AJAX
+		$(".notice-category").on("click", "span", function(){
+			$(this).addClass("bg-secondary text-white");
+			$(this).siblings().removeClass("bg-secondary text-white");
+			
+   			$.ajax({
+       			url:"${ contextPath }/board/main/list.ajax",
+       			method:"get",
+       			data:{
+       				category: $(this).hasClass('department') ? 'department' : 'normal',
+       				department: $(this).hasClass('department') ? '${ loginMember.deptCode }' : ''
+       			},
+       			success:function(boardList){
+       				console.log(boardList);
+       				list = "";
+       				if(boardList.length == 0){
+       					list += "<tr>";
+       					list += 	"<td cospan='3'>조회된 공지사항이 없습니다.</td>";
+       					list += "<tr>";
+       				}else{
+       					for(let i=0 ; i<5 ; i++){
+       						list += "<tr>";
+       						list += 	"<td class='list-title' data-boardno='" + boardList[i].boardNo + "'>" + boardList[i].title + "</td>";
+       						list += 	"<td class='list-writer'>";
+       						list += 		"<img src='" + boardList[i].profileURL + "' class='writer-profile'>";
+       						list += 		"<span class='writer-name' data-writerno='" + boardList[i].modifyEmp + "'>" + boardList[i].writerName + "</span>";
+       						list += 	"</td>";
+       						list += 	"<td class='list-date'>" + boardList[i].modifyDate + "</td>";
+       						list += "</tr>"
+       					}
+       				}
+       				
+       				$(".notice-table-tbody").html(list);
+       			},error:function(){
+       				console.log("SELECT NOTICE LIST AJAX FAILED");
+       			}
+       		})
+   		})
+   		
+   		// 페이지 로딩즉시(요소가 다 생성된 후)
+   		$("span.normal").click();
+   		
+   		// 공지사항 상세페이지 요청
+   		$(".notice-table-tbody").on("click", ".list-title", function(){
+   			const loginUserNo = "${ loginMember.userNo }";
+   			const boardWriterNo = $(this).siblings(".list-writer").children(".writer-name").data("writerno");
+   			const boardNo = $(this).data("boardno");
+   			
+   			if(loginUserNo == boardWriterNo){
+   				location.href = "${ contextPath }/board/detail.do?no=" + boardNo;
+   			}else{
+   				location.href = "${ contextPath }/board/reader/detail.do?no=" + boardNo;
+   			}
+   		})
+   	})
+  
 </script>
 
 </html>

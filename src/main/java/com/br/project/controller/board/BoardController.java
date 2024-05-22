@@ -113,7 +113,7 @@ public class BoardController {
 	/**
 	 * @method : 공지사항 목록조회 (AJAX)
 	 */
-	@RequestMapping(value={"/list.ajax", "/publisher/list.ajax", "/temp/list.ajax",
+	@RequestMapping(value={"/list.ajax", "/publisher/list.ajax", "/temp/list.ajax", "/main/list.ajax",
 						   "/detail/list.ajax", "/publisher/detail/list.ajax", "/temp/detail/list.ajax"})
 	@ResponseBody
 	public Object ajaxSelectBoardList(HttpServletRequest request){
@@ -122,7 +122,7 @@ public class BoardController {
 		
 		// 조회할 공지사항 상태값 지정
 		HashMap<String, Object> params = getParameterMap(request);
-		params.get("page");
+		
 		if(requestURL.indexOf("temp") != -1) {
 			params.put("status", "T");
 		}else {
@@ -136,7 +136,7 @@ public class BoardController {
 		}
 		
 		// 리스트 페이징처리 유무
-		if(requestURL.indexOf("detail") == -1) {
+		if(requestURL.indexOf("detail") == -1 && requestURL.indexOf("main") == -1) {
 			// 게시글 페이징바 생성
 			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(boardService.selectTotalBoardCount(params), 
 															 Integer.parseInt(params.get("page").toString()), 5, 10);
