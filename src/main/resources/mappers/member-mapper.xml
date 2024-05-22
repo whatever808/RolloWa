@@ -126,6 +126,8 @@
         chat_user_no = user_no
     and
         cr_no = #{ roomNo }
+    and
+    		chat_user_no != #{ userNo }
 	</select>
 	
 	
