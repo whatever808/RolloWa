@@ -149,11 +149,11 @@
 				},
 				success: function(data){
 					//console.log("통신 성공");
-
+					
 					// 검색한 사용자 수
+					$(".table_1 tbody").html($(data).find(".table_1 tbody").html());
 					
-					
-					// 통신 성공 시 값 바꿔주기
+					// 직원 테이블 업데이트
 					$(".employee_info tbody").html($(data).find(".employee_info tbody").html());
 				}, error: function(){
 					//console.log("통신 실패");
@@ -176,13 +176,11 @@
 			        <td class="table-info">휴가</td>
 			    </tr>
 			    <tr>
-			    	<!-- 수정해야함
 			        <td class="table-success">${ attendanceCount[0].a }</td>
 			        <td class="table-danger">${ attendanceCount[0].b }</td>
 			        <td class="table-secondary">${ attendanceCount[0].c }</td>
 			        <td class="table-warning">${ attendanceCount[0].d }</td>
 			        <td class="table-info">${ attendanceCount[0].e }</td>
-			         -->
 			    </tr>
 			</table>
 	
@@ -419,6 +417,11 @@
 				        </tr>
 			        </c:forEach>
 		        </c:when>
+		        <c:otherwise>
+		        	<tr>
+		        		<td colspan="8">조회된 직원이 없습니다.</td>
+		        	</tr>
+		        </c:otherwise>
         	</c:choose>
            </table>
            <!-- 직원 테이블 end -->
@@ -443,6 +446,7 @@
 		    </div>
 		    -->
 	    	<!--페이징 처리 end-->
+	    	<!-- 
 	    	<div class="container">
 			    <ul class="pagination justify-content-center">
 			        <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
@@ -458,6 +462,7 @@
 			        </li> 
 			    </ul>
 			</div>
+	    	 -->
 		    	
     	</div>
     	

@@ -42,6 +42,11 @@
     }
     
     /* 비품 예약 css */
+    .table_2{
+	    font-size: 25px;
+	    margin: auto;   
+	    width: 350px;
+	}
     .div_date{
         margin-top: 20px;
         text-align: center;
@@ -50,11 +55,6 @@
         font-size: 25px;
         margin: auto;   
         width: 350px;
-    }
-    .button_today{
-        position: relative;
-        top: -40px;
-        left: 250px;
     }
     .div_search table{
         display: flex;
@@ -210,20 +210,15 @@
 		<!-- ------------ -->
 	
 		<!--날짜, 오늘 선택 -->
-            <div class="div_date">
-                <table class="table_date">
-                    <tr>
-                        <td onclick="prevDate();" class="td_noSelect"><div>◀</div></td>
-                        <td>
-                            <h4>
-                                <input type="date" class="date" id="todayDate">
-                            </h4>
-                        </td>
-                        <td onclick="nextDate();" class="td_noSelect"><div>▶</div></td>
-                    </tr>
-                </table>
-                <button class="btn btn-outline-primary button_today" onclick="setToday();"><h6>오늘</h6></button>
-            </div>
+		<div class="select_date">
+		<table class="table_2">
+		    <tr>
+				<td><h3><div class="arrow" onclick="changeDate(-1);">◀</div></h3></td>
+				<td><input type="month" id="currentDate" onchange="changeDate(0);"></td>
+				<td><h3><div class="arrow" onclick="changeDate(1);">▶</div></h3></td>
+				</tr>
+		    </table>
+		</div>
 
             <!-- 비품명 검색 -->
             <div class="div_search">

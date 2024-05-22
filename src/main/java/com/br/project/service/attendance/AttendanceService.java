@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.br.project.dao.attendance.AttendanceDao;
 import com.br.project.dto.attendance.AttendanceDto;
-import com.br.project.dto.common.GroupDto;
-import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
@@ -35,8 +33,8 @@ public class AttendanceService {
 	public int insertMember(MemberDto member) {
 		return attendanceDao.insertMember(member);
 	}
-	public List<AttendanceDto> SelectAttendanceCount() {
-		return attendanceDao.SelectAttendanceCount();
+	public List<AttendanceDto> selectAttendanceCount(String selectedDate) {
+		return attendanceDao.selectAttendanceCount(selectedDate);
 	}
 
 	

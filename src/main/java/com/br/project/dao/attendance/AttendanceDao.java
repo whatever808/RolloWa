@@ -4,13 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.br.project.dto.attendance.AttendanceDto;
-import com.br.project.dto.common.GroupDto;
-import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
@@ -46,8 +43,8 @@ public class AttendanceDao {
 	public int insertMember(MemberDto member) {
 		return sqlSessionTemplate.insert("attendanceMapper.insertMember", member);
 	}
-	public List<AttendanceDto> SelectAttendanceCount() {
-		return sqlSessionTemplate.selectList("attendanceMapper.SelectAttendanceCount");
+	public List<AttendanceDto> selectAttendanceCount(String selectedDate) {
+		return sqlSessionTemplate.selectList("attendanceMapper.selectAttendanceCount", selectedDate);
 	}
 
 	

@@ -60,7 +60,7 @@ public class AttendanceController {
 		List<HashMap<String, Object>> list = attendanceService.selectAttendanceList(paramMap);
 
 		// 출결 카운트
-		List<AttendanceDto> attendanceCount = attendanceService.SelectAttendanceCount();
+		List<AttendanceDto> attendanceCount = attendanceService.selectAttendanceCount(selectedDate);
 
 		mv.addObject("pi", pi)
 		  .addObject("listCount", listCount)
@@ -113,12 +113,15 @@ public class AttendanceController {
 		paramMap.put("pi", pi);
 		List<HashMap<String, Object>> list = attendanceService.selectAttendanceList(paramMap);
 		
+		// 출결 카운트
+		List<AttendanceDto> attendanceCount = attendanceService.selectAttendanceCount(selectedDate);
 		
 		//log.debug("사용자가 선택한 날짜 : {}", selectedDate);
 		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .addObject("listCount", listCount)
+		  .addObject("attendanceCount", attendanceCount)
 		  .setViewName("attendance/attendance_list");
 		
 		return mv;

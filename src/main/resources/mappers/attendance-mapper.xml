@@ -132,22 +132,22 @@ ORDER BY
 	-->
 	
 	<!-- 출결 개수 조회(출근|결근|퇴근|조퇴|휴가)-->
-	<select id="SelectAttendanceCount" resultMap="attendanceList">
+	<select id="selectAttendanceCount" resultMap="attendanceList">
 		SELECT 
 			    SUM(CASE WHEN attendanceStatus = '출근' THEN 1 ELSE 0 END) AS a,
-			    SUM(CASE WHEN attendanceStatus = '휴가' THEN 1 ELSE 0 END) AS b,
-			    SUM(CASE WHEN attendanceStatus = '조퇴' THEN 1 ELSE 0 END) AS c,
-			    SUM(CASE WHEN attendanceStatus = '퇴근' THEN 1 ELSE 0 END) AS d,
-			    SUM(CASE WHEN attendanceStatus = '결근' THEN 1 ELSE 0 END) AS e
+			    SUM(CASE WHEN attendanceStatus = '결근' THEN 1 ELSE 0 END) AS b,
+			    SUM(CASE WHEN attendanceStatus = '퇴근' THEN 1 ELSE 0 END) AS c,
+			    SUM(CASE WHEN attendanceStatus = '조퇴' THEN 1 ELSE 0 END) AS d,
+			    SUM(CASE WHEN attendanceStatus = '휴가' THEN 1 ELSE 0 END) AS e
 			FROM (
 			    SELECT 
 			        CASE 
 			            WHEN A.CLOCK_IN IS NOT NULL THEN
 			                CASE 
 			                    WHEN A.REQUEST_DETAIL LIKE '%출근%' THEN '출근'
-			                    WHEN A.REQUEST_DETAIL LIKE '%휴가%' THEN '휴가'
-			                    WHEN A.REQUEST_DETAIL LIKE '%조퇴%' THEN '조퇴'
 			                    WHEN A.REQUEST_DETAIL LIKE '%퇴근%' THEN '퇴근'
+			                    WHEN A.REQUEST_DETAIL LIKE '%조퇴%' THEN '조퇴'
+			                    WHEN A.REQUEST_DETAIL LIKE '%휴가%' THEN '휴가'
 			                    ELSE '결근'
 			                END
 			            ELSE '결근'
@@ -160,14 +160,10 @@ ORDER BY
 			        TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
 			    LEFT JOIN 
 			        ATTENDANCE A ON M.USER_NO = A.USER_NO
-			        AND TO_CHAR(A.CLOCK_IN, 'yyyymmdd') = #{selectedDate}
+			        AND TO_CHAR(A.CLOCK_IN, 'yyyy-mm-dd') = #{ selectedDate }
 			    WHERE 
 			        D1.STATUS = 'Y'
-			        AND D2.STATUS = 'Y'
-			        AND D1.CODE_NAME LIKE '%' || #{department} || '%'
-			        AND D2.CODE_NAME LIKE '%' || #{team} || '%'
-			        AND M.USER_NAME LIKE '%' || #{name} || '%'
-					)
+			        AND D2.STATUS = 'Y')
 	</select>
 	
 	
