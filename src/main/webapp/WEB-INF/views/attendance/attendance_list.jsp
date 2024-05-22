@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
@@ -49,9 +49,6 @@
                     <td><h3><div class="arrow" onclick="changeDate(1);">▶</div></h3></td>
                 </tr>
             </table>
-            <!-- 
-            <button class="btn btn-outline-primary today_btn" onclick="goToToday();">오늘</button>
-             -->
         </div>
         
         <!-- 날짜 관련 js -->
@@ -113,7 +110,7 @@
         	let currentDateInput = document.getElementById('currentDate').value;
         	let currentDate, newDate, selectedDate;
 			
-			if (document.getElementById('currentDate').type === 'date') {
+			if (document.getElementById('currentDate').type == 'date') {
 		        // input 형식이 date인 경우
 		        currentDate = new Date(currentDateInput);
 		        newDate = new Date(currentDate);
@@ -122,7 +119,7 @@
 		        let newMonth = newDate.getMonth() + 1;
 		        let newDay = newDate.getDate();
 		        selectedDate = newYear + '-' + (newMonth < 10 ? '0' : '') + newMonth + '-' + (newDay < 10 ? '0' : '') + newDay;
-		    } else if (document.getElementById('currentDate').type === 'month') {
+		    } else if (document.getElementById('currentDate').type == 'month') {
 		        // input 형식이 month인 경우
 		        currentDate = new Date(currentDateInput + '-01'); // 현재 입력된 날짜 가져오기 (일자는 항상 01로 고정)
 		        newDate = new Date(currentDate);
@@ -143,21 +140,21 @@
 			$.ajax({
 				url:"${ contextPath }/attendance/search.do",
 				type:"GET",
-				data:{ 
+				data:{
 					selectedDate: selectedDate,
 					department: department,
 					team: team,
 					attendanceStatus: attendanceStatus, 
 					name: name
 				},
-				success: function(data){	
+				success: function(data){
 					//console.log("통신 성공");
 
 					// 검색한 사용자 수
-					//let rowCount = $(data).find(".employee_info tbody tr").length;
+					
 					
 					// 통신 성공 시 값 바꿔주기
-					//$(".employee_info tbody").html($(data).find(".employee_info tbody").html());
+					$(".employee_info tbody").html($(data).find(".employee_info tbody").html());
 				}, error: function(){
 					//console.log("통신 실패");
 				}
@@ -179,11 +176,13 @@
 			        <td class="table-info">휴가</td>
 			    </tr>
 			    <tr>
+			    	<!-- 수정해야함
 			        <td class="table-success">${ attendanceCount[0].a }</td>
 			        <td class="table-danger">${ attendanceCount[0].b }</td>
 			        <td class="table-secondary">${ attendanceCount[0].c }</td>
 			        <td class="table-warning">${ attendanceCount[0].d }</td>
 			        <td class="table-info">${ attendanceCount[0].e }</td>
+			         -->
 			    </tr>
 			</table>
 	
@@ -224,7 +223,7 @@
 						<td class="td_search">
 						    <input type="text" id="name" placeholder="이름 입력" class="form-control input_name">
 						    <!-- <button class="btn btn-primary">검색</button> -->
-						    <button type="reset" class="btn btn-outline-primary">초기화</button>
+						    <button type="reset" class="btn btn-outline-primary" onclick="resetForm();">초기화</button>
 						</td>
 					</tr>
 				</table>
@@ -260,7 +259,6 @@
 			 		type:"GET",
 			 		async:"false",
 			 		success: function(data){
-			 			
 			 			$.each(data, function(index, organizationDto) {
 			 			    $.each(organizationDto.groupList, function(index, groupDto) {
 			 			        departmentSelect.append($('<option>', {
@@ -337,49 +335,20 @@
 				changeDate(0);
 	 		});
 	 		
-	 		
-	 		// 검색 이후 초기화 작동하도록 하기
-	 		/*
-	 		$(document).ready(function(){
-	 		    $("#search_Form button[type=reset]").click(function() {
-	 		        $("#search_Form")[0].reset();
-	 		        
-	 		        $("#search_Form #department").val("전체 부서");
-	 		        $("#search_Form #team").val("전체 팀");
-	
-	 		        return false;
-	 		    });
-	 		});
-	 		*/
-	 		
-	 		// 검색 버튼
-	 		/*
-	 		function search(){
-		 		let department = $("#department").val();
-		 		let phone =  $("#phone").val();
-		 		let team = $("#team").val();
-		 		let status = $("#status").val();
-		 	    let name = $("#name").val();
-		 	 
-	 			$.ajax({
-	 				url:"${contextPath}/attendance/search.do",
-	 				type: "GET",
-	 				data: {
-	 		            department: department,
-	 		            phone: phone,
-	 		            team: team,
-	 		            status: status,
-	 		            name: name
-	 		        },
-					success: function(response) {
-	 		            console.log("검색 결과:", response);
-	 		        },
-	 		        error: function() {
-	 		            console.log("검색 요청 실패");
-	 		        }
-	 			})
+	 		// input text에서 엔터눌러도 페이지 안바뀌게
+			document.addEventListener('keydown', function(event) {
+			  if (event.keyCode === 13) {
+			    event.preventDefault();
+			  };
+			}, true);
+			
+			// 초기화 버튼 함수 
+	 		function resetForm() {
+	            document.getElementById('department').selectedIndex = 0;
+	            document.getElementById('team').selectedIndex = 0;
+	            document.getElementById('name').value = '';
+	            changeDate(0);
 	 		}
-	 		*/
 		    </script>
            <!-- 직원 정보 테이블 start-->
            <table class="table table-bordered line-shadow employee_info">
@@ -401,19 +370,19 @@
 				        <tr>
 				            <td>
 					            <c:choose>
-					            	<c:when test="${ not empty m.profileURL }">
-						                <img src="${ m.profileURL }" class="profile_img" onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
-					            	</c:when>
-					            	<c:otherwise>
-						                <img src="${ contextPath }/resources/images/defaultProfile.png">
-					            	</c:otherwise>
-					            </c:choose>
+						            <c:when test="${ not empty m.profileUrl }">
+						                <img src="${ m.profileUrl }" class="profile_img" onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
+						            </c:when>
+						            <c:otherwise>
+						                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">
+						            </c:otherwise>
+						        </c:choose>
 				            </td>
 				            <td>${ m.userName }</td>
 				            <td>${ m.dept }</td>
 				            <td>${ m.team }</td>
 				            <td>${ m.posi }</td>
-				            <td>
+		                	<td>
 				            	<c:choose>
 		                            <c:when test="${ m.requestDetail == '휴가' }">
 		                            </c:when>

@@ -32,17 +32,21 @@ public class AttendanceDto {
 	private String posi;
 	private Date todayIn;
 	private Date todayOut;
+	
+	private int userId;
+	private String profileUrl;
+	private String userName;
+	private int alltime;
+	private int salary;
+	private int totalSalary;
+	private int payment;
+	
+	private String a; // 출근
+	private String b; // 결근
+	private String c; // 퇴근
+	private String d; // 조퇴
+	private String e; // 휴가
 
 	private List<GroupDto> groupList;
 	private List<MemberDto> memberList;
-	
-	private String profileURL;
-	private String userName;
-	
-	private String a;
-	private String b;
-	private String c;
-	private String d;
-	private String e;
-
 }

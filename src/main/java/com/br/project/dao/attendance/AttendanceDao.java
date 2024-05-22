@@ -14,36 +14,23 @@ import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Repository
+@Slf4j
 public class AttendanceDao {
 
 	private final SqlSessionTemplate sqlSessionTemplate;
 	
+	// 출결 조회 dao
 	public int selectAttendanceListCount() {
 		return sqlSessionTemplate.selectOne("attendanceMapper.selectAttendanceListCount");
 	}
-
-	/*
-	public List<HashMap<String, String>> selectAttendanceList(PageInfoDto pi, String nowDate) {
-		
-		int limit = pi.getListLimit();
-		int offset = (pi.getCurrentPage()-1) * limit;
-		
-		RowBounds rowBounds = new RowBounds(offset, limit);
-		
-		Map<String, Object> prams = new HashMap<String, Object>();
-		prams.put("nowDate", nowDate);
-		prams.put("rowBounds", rowBounds);
-
-		return sqlSessionTemplate.selectList("attendanceMapper.selectAttendanceList", prams, rowBounds);
-	}*/
-	
-	// 출결 조회 dao
-	public List<MemberDto> selectAttendanceList(Map<String, Object> paramMap) {
+	public List<HashMap<String, Object>> selectAttendanceList(Map<String, Object> paramMap) {
 		return sqlSessionTemplate.selectList("attendanceMapper.selectAttendanceList", paramMap);
 	}
+	
 	/*
 	public List<AttendanceDto> SelectAttendanceCount() {
 		return sqlSessionTemplate.selectList("attendanceMapper.SelectAttendanceCount");
@@ -58,6 +45,9 @@ public class AttendanceDao {
 	// 회원가입
 	public int insertMember(MemberDto member) {
 		return sqlSessionTemplate.insert("attendanceMapper.insertMember", member);
+	}
+	public List<AttendanceDto> SelectAttendanceCount() {
+		return sqlSessionTemplate.selectList("attendanceMapper.SelectAttendanceCount");
 	}
 
 	

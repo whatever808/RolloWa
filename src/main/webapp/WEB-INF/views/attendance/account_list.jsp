@@ -18,7 +18,6 @@
     	width: 1200px !important;
         padding: 20px;
     }
-    
 
     </style>
 </head>
@@ -94,8 +93,8 @@
 				success: function(data){	
 					//console.log("통신 성공");
 
-					// 검색한 사용자 수
-					let rowCount = $(data).find(".employee_info tbody tr").length;
+					// 검색한 사용자 수(수정필요)
+					//let rowCount = $(data).find(".employee_info tbody tr").length;
 					
 					// 통신 성공 시 값 바꿔주기
 					$(".employee_info tbody").html($(data).find(".employee_info tbody").html());
@@ -107,7 +106,7 @@
 		</script>
 		
 
-		<!-- 직원 출결 데이터 start -->
+		<!-- 직원 급여 데이터 start -->
 		<form id="search_Form" action="${ contextPath }/attendance/accountSearch.do" method="GET">
 			<!-- <input type="hidden" name="page" value="1"> -->
 			<input type="hidden" name="selectedDate" id="selectedDate" value="${ selectedDate }">
@@ -286,7 +285,7 @@
 			<c:choose>
 		        <c:when test="${ not empty list }">
 		        	<c:forEach var="m" items="${ list }">
-		                <tr class="tr_1" onclick="window.location.href='${contextPath}/attendance/accountDetail.do';">
+		                <tr class="tr_1" onclick="#">
 		                    <td>	
 					            <c:choose>
 					            	<c:when test="${ not empty m.profileUrl }">
