@@ -51,4 +51,9 @@ public class ChatDao {
 		return sqlSessionTemplate.selectList("chatMapper.selectChatMsg", roomNo);
 	}
 	
+	// 채팅방 접속 날짜 수정
+	public int updateChatInDate(Map<String, String> map) {
+		return sqlSessionTemplate.update("chatMapper.updateChatInDate", map);
+	}
+	
 }

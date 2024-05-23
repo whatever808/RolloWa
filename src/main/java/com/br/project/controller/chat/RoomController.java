@@ -73,11 +73,9 @@ public class RoomController {
 			
 			// 채팅방 번호
 			map.put("chatRoomNo", chatRoomNo);
-			log.debug("chatRoomNO : {}", chatRoomNo);
 			
 			// 채팅방 참여 회원번호
 			map.put("partUserNo", partUserNo);
-			log.debug("partUserNo : {}", partUserNo);
 			
 			int result = chatService.insertChatParticipation(map);
 			
@@ -120,7 +118,7 @@ public class RoomController {
 	}
 	
 	// 채팅방의 채팅 메세지 조회
-	@GetMapping(value="messages", produces="application/json; chartset=urf-8")
+	@GetMapping(value="/messages", produces="application/json; chartset=urf-8")
 	@ResponseBody
 	public List<ChatMessageDto> selectChatMsg(String roomNo) {
 		List<ChatMessageDto> msgList = new ArrayList<>();
@@ -128,11 +126,24 @@ public class RoomController {
 		if(roomNo != null) {
 			msgList = chatService.selectChatMsg(roomNo);
 		}
-		
-		for(int i = 0; i < msgList.size(); i++) {
-			log.debug("msgList : {}", msgList.get(i));
-		}
-
 		return msgList;
 	}
+	
+	// 채팅방 접속 시간 update
+	@PostMapping(value="/inDate")
+	@ResponseBody
+	public String updateChatInDate(Map<String, String> map) {
+		int result = 0;
+		
+		if(map.get("roomNo") != null) {
+			result = chatService.updateChatInDate(map);
+		}
+		
+		if(result > 0) {
+			return "SUCCESS";
+		}
+		
+		return "FAIL";
+	}
+
 }

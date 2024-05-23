@@ -65,4 +65,9 @@ public class ChatService {
 	public List<ChatMessageDto> selectChatMsg(String roomNo) {
 		return chatDao.selectChatMsg(roomNo);
 	}
+
+	// 채팅방 접속 날짜 수정
+	public int updateChatInDate(Map<String, String> map) {
+		return chatDao.updateChatInDate(map);
+	}
 }
