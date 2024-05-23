@@ -1,5 +1,6 @@
 package com.br.project.dao.organization;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,9 +13,11 @@ import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class OrganizationDao {
 	
 	private final SqlSessionTemplate sqlSessionTemplate;
@@ -66,12 +69,17 @@ public class OrganizationDao {
 	}
 
 	// 급여 조회 dao
-	public List<MemberDto> selectAccountList(PageInfoDto pi) {
-		return sqlSessionTemplate.selectList("organizationMapper.selectAccountList", pi);
+	public List<MemberDto> selectAccountList(Map<String, Object> paramMap) {
+		
+		// 해당 값에 month, year 값, 페이지처리 들어있음
+		//log.debug("paramMap : {}",paramMap);
+	    return sqlSessionTemplate.selectList("organizationMapper.selectAccountList", paramMap);
 	}
 
-
-	
+	// 급여 상세조회 dao
+	public List<MemberDto> selectAccountDetail(int userNo) {
+		return sqlSessionTemplate.selectList("organizationMapper.selectAccountDetail", userNo);
+	}
 
 	
 	

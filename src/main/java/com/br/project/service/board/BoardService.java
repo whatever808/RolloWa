@@ -149,9 +149,6 @@ public class BoardService {
 		return boardDao.selectLatestBno(teamCode);
 	}
 	
-	
-	
-	
 }
 
 

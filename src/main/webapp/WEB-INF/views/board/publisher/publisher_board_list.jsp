@@ -80,9 +80,9 @@
 	         <table class="table table-hover">
 	             <thead class="table-light">
 	                 <tr>
-	                 		 <th>
-	                 		 		<input type="checkbox" id="del-all-boards">
-	                 		 </th>
+                 		 <th>
+               		 		<input type="checkbox" id="del-all-boards">
+                 		 </th>
 	                     <th>부서</th>
 	                     <th>제목</th>
 	                     <th>작성자</th>
@@ -100,40 +100,40 @@
 	                	</c:when>
 	                	<c:otherwise>
 	                		<c:forEach var="board" items="${ boardList }">
-	                 		<tr>
-	                 			<td>
-	                 				<input type="checkbox" name="delBoardNoArr" value="${ board.boardNo }">
-	                 			</td>
-	                      <td>${ board.category eq null ? "일반" : board.category }</td>
-	                      <td class="board-title" onclick="showDetail('${ board.boardNo }', '${ board.modifyEmp }');">${ board.title }</td>
-	                      <td>
-	                     		<c:choose>
-	                     			<c:when test="${ not empty board.profileURL }">
-	                     				<img src="${ board.profileURL }" alt="profile image" class="board-writer-profile">
-	                     			</c:when>
-	                     			<c:otherwise>
-	                     				<img src="${ contextPath }/resources/images/defaultProfile.png" alt="profile image" class="board-writer-profile">
-	                     			</c:otherwise>
-	                     		</c:choose>
-	                        <span>${ board.writerName }</span>
-	                      </td>
-	                      <td>${ board.modifyDate }</td>
-	                      <td>${ board.readCount }</td>
-	                      <td class="attachment-yn">${ board.attachmentYN != 0 ? "🗂️" : "" }</td>
-	                  	</tr>
+		                 		<tr>
+		                 		  <td>
+		                 			<input type="checkbox" name="delBoardNoArr" value="${ board.boardNo }">
+		                 		  </td>
+			                      <td>${ board.category eq null ? "일반" : board.category }</td>
+			                      <td class="board-title" onclick="showDetail('${ board.boardNo }', '${ board.modifyEmp }');">${ board.title }</td>
+			                      <td>
+			                     		<c:choose>
+			                     			<c:when test="${ not empty board.profileURL }">
+			                     				<img src="${ board.profileURL }" alt="profile image" class="board-writer-profile">
+			                     			</c:when>
+			                     			<c:otherwise>
+			                     				<img src="${ contextPath }/resources/images/defaultProfile.png" alt="profile image" class="board-writer-profile">
+			                     			</c:otherwise>
+			                     		</c:choose>
+			                        <span>${ board.writerName }</span>
+			                      </td>
+			                      <td>${ board.modifyDate }</td>
+			                      <td>${ board.readCount }</td>
+			                      <td class="attachment-yn">${ board.attachmentYN != 0 ? "🗂️" : "" }</td>
+		                  		</tr>
 	                		</c:forEach>
 	                	</c:otherwise>
 	                </c:choose>
 	             </tbody>
 	             <tfoot>
-	             		<tr class="border-white">
-	             			<td class="trashcan-icon">
-	             				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="trash-icon" viewBox="0 0 16 16">
-											  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-											  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-											</svg>
-	             			</td>
-	             		</tr>
+             		<tr class="border-white">
+             			<td class="trashcan-icon">
+             				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="trash-icon" viewBox="0 0 16 16">
+							  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+							  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+							</svg>
+             			</td>
+             		</tr>
 	             </tfoot>
 	         </table>
 	         <!-- board list table end -->
@@ -209,7 +209,7 @@
 	// 키워드검색 게시글 목록조회 요청시 입력값 유효성 체크 
 	function searchValidation(){
 		if($("#keyword").val().trim().length == 0){
-			alertify.alert("게시글 목록조회 서비스", "검색어를 입력해주세요.", $("#keyword").select());
+			yellowAlert("게시글 목록조회 서비스", "검색어를 입력해주세요.");
 		}else{
 			// 1) 키워드 검색요청시 "전체" 검색 value값 변경설정
 			$("#condition").children().each(function(){
@@ -295,6 +295,7 @@
 						list += 	"<td>" + boardList[i].modifyDate + "</td>";
 						list += 	"<td>" + boardList[i].readCount + "</td>";
 						list += 	"<td class='attachment-yn'>" + (boardList[i].attachmentYN != 0 ? "🗂️" : "") + "</td>";
+						list += "</tr>";
 					}
 					
 					// 생성할 페이징바 태그 문자열
@@ -357,7 +358,7 @@
 	
 	$(".trashcan-icon").on("click", function(){	// 
 		if($("#boardList").find(":checked").length == 0){
-			alert("선택된 공지사항이 없습니다.");
+			yellowAlert("공지사항 삭제서비스", "선택된 공지사항이 없습니다.");
 		}else{
 			if(confirm("선택된 공지사항을 정말삭제하시겠습니까?")){
 				// 삭제할 공지사항 번호 배열추가
@@ -373,29 +374,22 @@
 					data:{delBoardNoArr: delBoardNoArr},
 					success:function(result){
 						if(result == 'SUCCESS'){
-							alert("공지사항이 삭제되었습니다.");
+							greenAlert("공지사항 삭제서비스", "공지사항이 삭제되었습니다.");
 							$(".page-item").each(function(){
 								console.log($(this));
 								$(this).hasClass("active") && console.log($(this));
 							})
 						}else if(result == 'FAIL'){
-							alert("공지사항 삭제에 실패했습니다.");
+							redAlert("공지사항 삭제서비스", "공지사항 삭제에 실패했습니다.");
 						}
 						ajaxBoardList();
 					},error:function(){
-						alert("공지사항 삭제요청에 실패했습니다.");
+						redAlert("공지사항 삭제서비스", "공지사항 삭제요청에 실패했습니다.");
 						console.log("DELETE BOARDS AJAX FAILED");
 					}
 				})
 			}
 		}
-	
-
-		
-		
-		
-		
-		
 	})
 
 </script>

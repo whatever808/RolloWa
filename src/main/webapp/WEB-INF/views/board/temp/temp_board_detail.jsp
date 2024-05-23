@@ -110,13 +110,13 @@
 	        <div class="change-board">
 	
 	            <!-- move to previous board -->
-	            <a id="prev-board" class="list list-group list-group-item-action list-group-item-light d-inline-block text-truncate">이전 게시글 제목</a>
+	            <a id="prev-board" class="list list-group list-group-item-action list-group-item-light d-inline-block text-truncate text-center">이전 게시글 제목</a>
 	            
 	            <!-- move to board list page -->
 	            <a id="list-board" class="list list-group list-group-item-action list-group-item-warning">목록</a>
 	
 	            <!-- move to next board -->
-				<a id="next-board" class="list list-group list-group-item-action list-group-item-light d-inline-block text-truncate">다음 게시글 제목</a>
+				<a id="next-board" class="list list-group list-group-item-action list-group-item-light d-inline-block text-truncate text-center">다음 게시글 제목</a>
 	
 	        </div>
 	        <!-- board change button area end -->

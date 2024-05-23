@@ -9,108 +9,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2.2 급여 조회 상세페이지</title>
 
-    <!-- animate -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
-	<!-- bootstrap -->
-	<link href="${contextPath}/resources/css/common/bootstrap.min.css" rel="stylesheet">
-	
-	<!-- fontawesome -->
-	<script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
-	
-	<!-- Google Fonts Roboto -->
-	<link rel="stylesheet"
-	    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
-	
-	<!-- Google Fonts Jua -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-	
-	<!-- jQuery -->
-	<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
-	
 	<!-- css -->
-	<link href="${contextPath}/resources/css/common/sidebars.css" rel="stylesheet">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
-  
+	<link rel="stylesheet" href="${contextPath}/resources/css/attendance/account.css">
+
 	<style>
     .main_content{
     	width: 1200px !important;
         padding: 20px;
     }
     
-    /* css */
-    /* 화살표 */
-    .arrow{
-        margin: 0 60px;
-    }
-
-    /* 출력상태 조회 css */
-    .select_date{
-        margin-top: 20px;
-        text-align: center;
-    }
-    .today_btn{
-        position: relative;
-        top: -40px;
-        left: 230px;
-    }
-    h3{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .td_1 {
-        text-align: right;
-    }
-    .td_2 * {
-        margin-left: 90px;
-    }
-
-    /* 직원 정보 테이블 */
-    .employee_count {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-left: 10px;
-    }
-    .employee_info {
-        text-align: center;
-    }
-    .employee_info th{
-        background-color: lightgray !important;
-    }
-    .employee_info td{
-        vertical-align: middle !important;
-    }
-    .table{
-        text-align: center;
-    }
-    .table_img{
-        border: 1px solid gainsboro;
-        border-radius: 100%;
-        width: 300px;
-        margin: -5px;
-    }
-    .form-control{
-        width: 200px !important;
-    }
-
-    .btn_center{
-        display: flex;
-        justify-content: center;
-        margin: 50px;
-    }
-    /* 맨밑 여백 주기 */
-    .btn_center button{
-        width: 130px;
-        margin: 10px;
-        margin-bottom: 100px;
-    }
-    
-
     </style>
 </head>
 <body>
@@ -139,18 +46,25 @@
             <table class="table table-responsive">
                 <tr>
                     <th colspan="4">
-                        <img src="../../../resources/images/defaultProfile.png" class="table_img">
+                        <c:choose>
+			            	<c:when test="${ not empty m.profileUrl }">
+				                <img src="${ m.profileUrl }" class="profile_img" onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
+			            	</c:when>
+			            	<c:otherwise>
+				                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">
+			            	</c:otherwise>
+			            </c:choose>
                     </th>
                 </tr>
 
                 <tr>
                     <td><h3>이름</h3></td>
                     <td>
-                        <input type="text" value="황지수">
+                        <input type="text" value="${ user.name }">
                     </td>
                     <td><h3>아이디</h3></td>
                     <td>
-                        <input type="text" value="hwangjisu">
+                        <input type="text" value="${ user.userId }">
                     </td>
                     
                 </tr>

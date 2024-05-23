@@ -1,5 +1,7 @@
 package com.br.project.interceptor.facility.attraction;
 
+import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,22 +19,37 @@ public class AttractionManageAuthorizationCheckInterceptor implements HandlerInt
 	 */
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		
+		response.setCharacterEncoding("UTF-8");
 		MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
 		
 		if(loginMember != null && loginMember.getTeamCode().equals("B")) {
 			return true;
 		}else {
-			FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);
+			PrintWriter out = response.getWriter();
+			out.print("<html><head><meta charset='UTF-8'>");
+			out.print("<script src='http://code.jquery.com/jquery-3.7.1.min.js'></script>");
+			out.print("<script src='"+request.getContextPath()+"/resources/js/iziModal.min.js'></script>");
+			out.print("<link  href='"+request.getContextPath()+"/resources/css/iziModal.min.css' rel='stylesheet'>");
+			out.print("</head><body>");
 			
-			FlashMap flashMap = new FlashMap();
-			flashMap.put("alertTitle", "비정상적인 접근시도");
-			flashMap.put("alertMsg", "어트랙션 관리자 권한이 없는 사용자입니다.");
 			
-			flashMapManager.saveOutputFlashMap(flashMap, request, response);
+			out.print("<div id=\"redModal\"></div>");
 			
-			response.sendRedirect(request.getContextPath());
+			out.print("<script>$('#redModal').iziModal({"
+					+ "headerColor: '#dc3545',"
+					+ "timeout: 3000,"
+					+ "timeoutProgressbar: true,"
+					+ "onClosing: function(){history.back();}"
+					+ "});");
 			
+			out.print("function redAlert(title, content){"
+					+ "$('#redModal').iziModal('setTitle', title);"
+					+ "$('#redModal').iziModal('setSubtitle', content);"
+					+ "$('#redModal').iziModal('open');"
+					+ "}");
+			
+			out.print("redAlert('권한 체크', '해당 계정으로 사용할 수 없습니다.');</script>");			
+			out.print("</body></html>");
 			return false;
 		}
 		

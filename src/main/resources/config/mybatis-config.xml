@@ -38,7 +38,7 @@
 		<mapper resource="mappers/organization-mapper.xml" />
 		<mapper resource="mappers/notification-mapper.xml" />
 		<mapper resource="mappers/attendance-mapper.xml" />
-    <mapper resource="mappers/facility/attraction-mapper.xml" />
+    	<mapper resource="mappers/facility/attraction-mapper.xml" />
 		<mapper resource="mappers/location-mapper.xml" />
 		<mapper resource="mappers/vacation-mapper.xml" />
 		<mapper resource="mappers/chat-mapper.xml" />

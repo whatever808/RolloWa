@@ -49,8 +49,19 @@ public class MemberDao {
 		return sqlSessionTemplate.selectList("memberMapper.selectAllMember");
 	}
 
+
 	// 채팅방 참여인원 조회
 	public List<MemberDto> selectParticipants(Map<String, Object> map) {
 		return sqlSessionTemplate.selectList("memberMapper.selectParticipants", map);
 	}
+	
+	/* ======================================= "가림" 구역 ======================================= */
+	/**
+	 * 메인페이지용 회원 정보 조회
+	 */
+	public Map<String, Object> selectMemberForMainPage(MemberDto member){
+		return sqlSessionTemplate.selectOne("memberMapper.selectMemberForMainPage", member);
+	}
+	
+	/* ======================================= "가림" 구역 ======================================= */
 }

@@ -53,4 +53,14 @@ public class MemberService {
 	public List<MemberDto> selectAllMember() {
 		return memberDao.selectAllMember();
 	}
+	
+	/* ======================================= "가림" 구역 ======================================= */
+	/**
+	 * 메인페이지용 회원 정보 조회
+	 */
+	public Map<String, Object> selectMemberForMainPage(MemberDto member){
+		return memberDao.selectMemberForMainPage(member);
+	}
+	
+	/* ======================================= "가림" 구역 ======================================= */
 }

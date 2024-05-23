@@ -1,68 +1,504 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${ pageContext.servletContext.contextPath }"/>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:set var="contextPath" value="${ pageContext.request.contextPath }" />
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
 	<title>롤러와</title>
 	
-	<!-- 메인페이지 스타일시트 -->
-	<link href="${ contextPath }/resources/css/mainPage/mainPage.css" rel="stylesheet">
-	
-	<!-- fullcalendar -->
-	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+	<!-- 메인페이지 스타일 -->
+	<link href="${ contextPath }/resources/css/mainPage/mian_page.css" rel="stylesheet">
 </head>
 <body>
-	
+
 	<!-- side bar -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
+	
 	<!-- content 추가 -->
-	<div class="content p-5">
-		
-		<!-- nav bar start -->
-		<div class="home-nav box">
-			
-			<div class="menu">
-				<div class="icon">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
-					  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
-					  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
-					</svg>
-				</div>
-				<label class="icon-name mt-2">게시판</label>
-			</div>
-		
-		</div>
-		<!-- nav bar end -->
-		
-		<!-- main content area start -->
-		<div class="content-wrap">
-		
-			<!-- profile start -->
-			<div class="profile box">
-				
-			</div>
-			<!-- profile end -->
-			
-			<!-- calendar start -->
-			<div class="calendar box">
-				<!-- main calendar -->
-				<jsp:include page="/WEB-INF/views/common/mainCal.jsp" />
-				<div id="calendar"></div>
-			</div>
-			<!-- calendar end -->
-			
-		</div>
-		<!-- main content area end -->
-		
-		
-	</div>
-	<!-- content 끝 -->
+	<div class="content">
+
+        <!-- weather-clock (top) -->
+        <div class="weather-clock-div h-2">
+            
+            <!-- date & time-->
+            <div class="date-time-div">
+                <div class="date text-center"></div>
+                <div class="time text-center"></div>
+            </div>
+
+            <!-- weather -->
+            <div class="weather-div">
+            	<span class="weather-place"></span>
+            	<span class="weather-temp"></span>
+            	<span class="weather-description"></span>
+            	<img class="weather-icon" src="">
+            </div>
+
+        </div>
+        <!-- weather-clock (top) -->
+
+        <!-- main contents start (bottom) -->
+        <div class="main-content">
+            
+            <!-- main-left start -->
+            <div class="mian-content-left">
+
+                <!-- profile & attend (main-left-top)-->
+                <div class="profile-attend-div">
+
+                    <div class="profile-img-div">
+                        <img src="${ contextPath }/resources/images/defaultProfile.png" alt="user profile">
+
+                        <h6 class="mt-3 fw-bold">${ loginMember.userName } / ${ loginMember.positionName } / ${ loginMember.teamName }</h6>
+                    </div>
+					
+                    <div class="profile-attend pe-4">
+                        <div class="attend-button d-flex my-2">
+                            <button class="work-on btn btn-outline-primary px-4 me-auto" data-attendanceno="">출근</button>
+                            <label class="work-on-time attend-time"></label>
+                        </div>
+
+                        <div class="attend-button d-flex my-2">
+                            <button class="work-off btn btn-outline-danger px-4 me-auto disabled">퇴근</button>
+                            <label class="work-off-time attend-time"></label>
+                        </div>
+
+                        <div class="attend-button d-flex my-2">
+                            <button class="leave-early btn btn-outline-warning px-4 me-auto disabled">조퇴</button>
+                            <label class="leave-early-time attend-time"></label>
+                        </div>
+                    </div>
+                </div>
+                <!-- profile & attend (main-left-top)-->
+
+                <!-- today's schedule (main-left-bottom)-->
+                <div class="today-schedule">
+                    <h5 class="fw-bold text-end mb-4">오늘의 일정</h5>
+                    <div class="today-schedule-list">
+	                    <!-- 부서 일정 목록영역 -->
+                    </div>
+                </div>
+                <!-- today's schedule (main-left-bottom)-->
+            </div>
+            <!-- main-left-end -->
+
+            <!-- main-right start-->
+            <div class="main-content-right">
+
+                <!-- my attendance (main-right-top) -->
+                <div class="my-attend h-3">
+
+                    <h4>근태관리</h4>
+                    
+					<c:set var="today" value="<%=new java.util.Date()%>" />
+					<c:set var="sysYear"><fmt:formatDate value="${ today }" pattern="yyyy" /></c:set> 
+                    <div class="my-attend-content">
+                        <!-- my attend select (left) -->
+                        <div class="my-attend-select-div">
+                            <select class="year form-select text-center" name="year">
+                            	<c:forEach var="year" begin="2000" end="${ sysYear }">                            	
+                                	<option value="${ year }">${ year }년</option>
+                            	</c:forEach>
+                            </select>
+        
+                            <select class="month form-select text-center" name="month">
+                            	<c:forEach var="month" begin="1" end="12">
+	                                <option value="${ month }">${ month }월</option>
+                            	</c:forEach>
+                            </select>
+                        </div>
+                        <!-- my attend select (left) -->
+
+                        <!-- my attend info (right) -->
+                        <div class="my-attend-info-div">
+                            <div class="attend-info-div">
+                                <div class="attend-info total-vacation-count">${ loginMemberAttend.vacationCount }</div>
+                                <div class="attend-title text-center mt-2 fw-bold">총 연차</div>
+                            </div>
+
+                            <div class="attend-info-div">
+                                <div class="attend-info used-vacation-count">${ loginMemberAttend.usedVacationCount }</div>
+                                <div class="attend-title text-center mt-2 fw-bold">사용 연차</div>
+                            </div>
+
+                            <div class="attend-info-div">
+                                <div class="attend-info left-vacation-count">${ loginMemberAttend.vacationCount - loginMemberAttend.usedVacationCount }</div>
+                                <div class="attend-title text-center mt-2 fw-bold">잔여 연차</div>
+                            </div>
+
+                            <div class="attend-info-div">
+                                <div class="attend-info leave-early-count">${ loginMemberAttend.leaveEarlyCount }</div>
+                                <div class="attend-title text-center mt-2 fw-bold">조퇴계</div>
+                            </div>
+
+                            <div class="attend-info-div">
+                                <div class="attend-info day-off-count">${ loginMemberAttend.dayOffCount }</div>
+                                <div class="attend-title text-center mt-2 fw-bold">결근계</div>
+                            </div>
+
+                        </div>
+                        <!-- my attend info (right) -->
+                        
+                    </div>
+                    
+                </div>
+                <!-- my attendance (main-right-top) -->
+                
+                <!-- alert list start (main-right-middle) -->
+                <div class="alert-list-div">
+                    <h4>알림</h4>
+                    <table class="alert-table table table-hover table-responsive">
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+
+                        <tr>
+                            <td class="list-title">유재석 총무부 부장발령</td>
+                            <td class="list-date">2024-05-20</td>
+                        </tr>
+                    </table>
+                </div>
+                <!-- alert list end (main-right-middle) -->
+
+
+                <!-- notice list start (main-right-bottom) -->
+                <div class="notice-list-div">
+                    <h4>공지사항</h4>
+                    
+                    <div class="notice-category">
+					  <span class="normal">일반공지</span>
+					  <span class="department">부서공지</span>
+					</div>
+                    
+                    <table class="notice-table table table-hover table-responsive">
+                    	<tbody class="notice-table-tbody">
+                    		<!-- 공지사항 리스트 영역 -->
+                    	</tbody>
+                    </table>
+                </div>
+                <!-- notice list end (main-right-bottom) -->
+            </div>
+            <!-- main-right end-->
+        </div>
+        <!-- main contents end (bottom) -->
+        
+    </div>
+    <!-- content end -->
 	
 	<!-- chat floating -->
-	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />
-	
+  	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />
+
 </body>
+
+<script>
+	// 날씨 관련 =============================================================================================================================
+	$(document).ready(function(){
+		navigator.geolocation.getCurrentPosition(success);
+	})
+	const API_KEY = "6a6c38789cdffc510c99641864cf9f76";
+	
+	// 사용자가 현재 위치 추적을 허용하지 않은 경우
+	const fail = () => {
+		console.log("좌표를 받아올 수 없습니다.");
+	}
+	
+	// 사용자가 현재 위치 추적을 허용했을 경우
+	const success = (position) => {
+		const latitude = position.coords.latitude;
+		const longitude = position.coords.longitude;
+		
+		getWeather(latitude, longitude);
+	}
+	
+	const getWeather = (lat, lon) => {
+		fetch(
+			"https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY + "&units=metric&lang=kr"
+		).then((response) => {
+			return response.json();
+		}).then((json) => {
+			const place = json.name;
+			const temperature = json.main.temp;
+			const description = json.weather[0].description;
+			const icon = json.weather[0].icon;
+			const iconURL = 'http://openweathermap.org/img/wn/' + icon + '@2x.png';
+			
+			$(".weather-place").text(place);
+			$(".weather-temp").text(temperature +' ℃');
+			$(".weather-description").text(description);
+			$(".weather-icon").attr("src", iconURL);
+		}).catch((error) => {
+			console.log("WEATHER ERROR");
+		})
+	}
+	
+	// 출근/퇴근/조퇴 등록 관련 ===================================================================================
+	$(document).ready(function(){
+		// 사용자 출석체크 여부확인 & 값출력 --------------------------------------------------------------------------
+		if(${ not empty loginMemberTodayAttend}){
+			const clockIn = "${ loginMemberTodayAttend.clockIn }";
+			const clockOut = "${ loginMemberTodayAttend.clockOut }";
+			const requestDetail = "${ loginMemberTodayAttend.requestDetail }";
+			
+			// 출근시간 출력 & 출근버튼 비활성화
+			$(".work-on-time").text(clockIn);
+			$(".work-on").attr("data-attendanceno", "${ loginMemberTodayAttend.attendanceNo }")
+						 .addClass("disabled");
+			
+			// 조퇴/퇴근시간 출력 & 버튼 비활성화
+			if(clockOut != null && clockOut != ''){
+				requestDetail == '퇴근' ? $(".work-off-time").text(clockOut) 
+									   : $(".leave-early-time").text(clockOut);
+				
+				$(".work-off").addClass("disabled");
+				$(".leave-early").addClass("disabled");
+			}else{
+				$(".work-off").removeClass("disabled");
+				$(".leave-early").removeClass("disabled");
+			}
+		}
+	
+		// 출근체크
+		$(".work-on").on("click", function(){
+			ajaxAttendCheck("출근");
+		})
+		// 퇴근체크
+		$(".work-off").on("click", function(){
+			ajaxAttendCheck("퇴근");
+		})
+		// 조퇴체크
+		$(".leave-early").on("click", function(){
+			ajaxAttendCheck("조퇴");
+		})
+		
+		// 출근/퇴근/조퇴 등록 AJAX
+		function ajaxAttendCheck(requestDetail){
+			const requestURL = "${ contextPath }/attendance";
+			
+			if(confirm(requestDetail + '체크를 하시겠습니까?')){
+				$.ajax({
+					url: requestURL + (requestDetail == '출근' ? "/insert.ajax" : "/update.ajax"),
+					method:"get",
+					data:{
+						userNo: ${ loginMember.userNo },
+						requestDetail: requestDetail,
+						attendanceNo: $(".work-on").attr("data-attendanceno")
+					},
+					success:function(attendCheckData){
+						let result = attendCheckData.result;
+						if(result == 'SUCCESS'){
+							switch (requestDetail){
+								case '출근' :
+									$(".work-on-time").text(attendCheckData.attendTime.clockIn);
+									$(".work-on").attr("data-attendanceno", attendCheckData.attendTime.attendanceNo)
+												 .addClass("disabled");
+									$(".work-off").removeClass("disabled");
+									$(".leave-early").removeClass("disabled");
+									break;
+								case '퇴근' :
+									$(".work-off-time").text(attendCheckData.attendTime.clockOut);
+									$(".work-off").addClass("disabled");
+									$(".leave-early").addClass("disabled");
+									break;
+								case '조퇴' :
+									$(".leave-early-time").text(attendCheckData.attendTime.clockOut);
+									$(".leave-early").addClass("disabled");
+									$(".work-off").addClass("disabled");
+									break;
+							}
+						}else{
+							redAlert(requestDetail + "체크 서비스", requestDetail + " 등록에 실패했습니다.");
+						}
+					},error:function(){
+						console.log("INSERT ATTENDANCE AJAX FAILED");
+					}
+				})
+			}
+		}
+	})
+	
+	// 근태조회 관련 ===================================================================================
+	$(document).ready(function(){
+		const todayDate = new Date();
+		// 오늘날짜의 년도설정
+		$("select[name=year]").children("option").each(function(){
+			$(this).val() == todayDate.getFullYear() && $(this).attr("selected", true);
+		})
+		// 오늘날짜의 월설정
+		$("select[name=month]").children("option").each(function(){
+			$(this).val() == todayDate.getMonth() + 1 && $(this).attr("selected", true);
+		})
+		// 년도별 나의 근태조회
+		$("select[name=year]").on("change", function(){
+			ajaxSelectMyAttend();
+		})
+		// 월별 나의 근태조회
+		$("select[name=month]").on("change", function(){
+			ajaxSelectMyAttend();
+		})
+		
+		// 년도 & 월 별 나의 근태현황 조회
+		function ajaxSelectMyAttend(){
+			$.ajax({
+				url:"${ contextPath }/attendance/myAttend.do",
+				method:"get",
+				data:{
+					userNo:${ loginMember.userNo },
+					year:$("select[name=year]").val(),
+					month:$("select[name=month]").val()
+				},
+				success:function(responseData){
+					let result = responseData.result;
+					if(result == 'SUCCESS'){
+						$(".total-vacation-count").text(responseData.attendInfo.vacationCount);
+						$(".used-vacation-count").text(responseData.attendInfo.usedVactionCount);
+						$(".left-vacation-count").text(responseData.attendInfo.vacationCount - responseData.attendInfo.usedVacationCount);
+						$(".leave-early-count").text(responseData.attendInfo.leaveEarlyCount);
+						$(".day-off-count").text(responseData.attendInfo.dayOffCount);
+					}else{
+						redAlert("근태조회 서비스", "근태조회에 실패했습니다.");
+					}
+				},error:function(){
+					console.log("SELECT MEMBER ATTENDANCE FAILED");
+				}
+			})
+		}
+	})
+	
+	// 실시간 시간 관련 ==============================================================================================
+    $(document).ready(function(){
+        getToday(); // 오늘날짜 출력
+        
+        getClock(); // 실시간 시간
+        setInterval(getClock, 1000); 
+        
+	     // 실시간 시간
+	     function getClock() {
+	         const date = new Date();
+	         const hours = String(date.getHours()).padStart(2, "0");
+	         const minutes = String(date.getMinutes()).padStart(2, "0");
+	         const seconds = String(date.getSeconds()).padStart(2, "0");
+	
+	         $(".time").text(hours + ' : ' + minutes + ' : ' + seconds);
+	     }
+	
+	     // 오늘 날짜
+	     function getToday() {
+	         const todaydate = new Date();
+	         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '긑요일', '토요일'];
+	         const days_num = todaydate.getDay();
+	         const year = todaydate.getFullYear();
+	         const month = todaydate.getMonth() + 1;
+	         const date = todaydate.getDate();
+	         const day = days[days_num];
+	
+	         $(".date").text(year + "년 " + month + "월 " + date+ "일 " + day); 
+	     }
+    })
+    
+    // 오늘일정 관련 =====================================================================================================
+   	$(document).ready(function(){
+   		$.ajax({
+   			url:"${ contextPath }/calendar/todaySchedule.ajax",
+   			method:"get",
+   			data: {
+   				userNo:${ loginMember.userNo }
+   			},
+   			success:function(todayScheduleList){
+ 					if(todayScheduleList.length == 0){
+ 						$(".today-schedule-list").text("조회된 일정이 없습니다.")
+ 																		 .addClass('d-flex justify-content-center align-items-center text-secondary');
+ 					}else{
+ 						list = "";
+ 						for(let i=0 ; i<todayScheduleList.length ; i++){
+ 							list += "<div class='schedule mb-2'>";
+							list += 	"<span class='schedule-color me-3' style='background-color: " + todayScheduleList[i].calColor + "'></span>";
+							list += 	"<span class='schedule-title'><b>[" + todayScheduleList[i].calSortName + "]</b>&nbsp;&nbsp;" + todayScheduleList[i].calTitle + "</span>";
+							list += "</div>";
+ 						}
+ 						$(".today-schedule-list").html(list);
+ 					}
+   			},error:function(){
+   				console.log("SELECT TODAY'S SCHEDULE AJAX FAILED");
+   			}
+   		})
+   	})
+	
+   	// 공지사항 목록조회 관련 ==========================================================================================================
+   	$(document).ready(function(){
+		// 카테고리별 공지사항 목록조회 AJAX
+		$(".notice-category").on("click", "span", function(){
+			$(this).addClass("bg-secondary text-white");
+			$(this).siblings().removeClass("bg-secondary text-white");
+			
+   			$.ajax({
+       			url:"${ contextPath }/board/main/list.ajax",
+       			method:"get",
+       			data:{
+       				category: $(this).hasClass('department') ? 'department' : 'normal',
+       				department: $(this).hasClass('department') ? '${ loginMember.deptCode }' : ''
+       			},
+       			success:function(boardList){
+       				list = "";
+       				if(boardList.length == 0){
+       					list += "<tr>";
+       					list += 	"<td cospan='3'>조회된 공지사항이 없습니다.</td>";
+       					list += "<tr>";
+       				}else{
+       					for(let i=0 ; i<5 ; i++){
+       						list += "<tr>";
+       						list += 	"<td class='list-title' data-boardno='" + boardList[i].boardNo + "'>" + boardList[i].title + "</td>";
+       						list += 	"<td class='list-writer'>";
+       						list += 		"<img src='" + boardList[i].profileURL + "' class='writer-profile'>";
+       						list += 		"<span class='writer-name' data-writerno='" + boardList[i].modifyEmp + "'>" + boardList[i].writerName + "</span>";
+       						list += 	"</td>";
+       						list += 	"<td class='list-date'>" + boardList[i].modifyDate + "</td>";
+       						list += "</tr>"
+       					}
+       				}
+       				
+       				$(".notice-table-tbody").html(list);
+       			},error:function(){
+       				console.log("SELECT NOTICE LIST AJAX FAILED");
+       			}
+       		})
+   		})
+   		
+   		// 페이지 로딩즉시(요소가 다 생성된 후)
+   		$("span.normal").click();
+   		
+   		// 공지사항 상세페이지 요청
+   		$(".notice-table-tbody").on("click", ".list-title", function(){
+   			const loginUserNo = "${ loginMember.userNo }";
+   			const boardWriterNo = $(this).siblings(".list-writer").children(".writer-name").data("writerno");
+   			const boardNo = $(this).data("boardno");
+   			
+   			if(loginUserNo == boardWriterNo){
+   				location.href = "${ contextPath }/board/detail.do?no=" + boardNo;
+   			}else{
+   				location.href = "${ contextPath }/board/reader/detail.do?no=" + boardNo;
+   			}
+   		})
+   	})
+  
+</script>
+
 </html>

@@ -2,10 +2,10 @@
     box-sizing: border-box;
 }
 .content{
-    background-color:#e0dada;
     display: flex;
     flex-direction: column;
     align-content: space-between;
+    padding: 30px;
 }
 .main-content{
     display: flex;
@@ -14,7 +14,7 @@
 .main-content-left{
     display: flex;
     flex-direction: column;
-    width: 20%;
+    width: 23%;
 }
 .main-content-right{
     display: flex;
@@ -22,8 +22,7 @@
     width: 75%;
 }
 
-.profile-attend-div, .weather-div{
-    background-color: whitesmoke;
+.profile-attend-div, .weather-clock-div{
     border-radius: 9px;
     padding: 15px;
     display: flex;
@@ -35,8 +34,55 @@ h4, h5{
     font-family: "Jua";
 }
 
+.table>:not(caption)>*>*{
+	background-color: yellow;
+}
 
+/* ------------- 시간 & 날씨 ------------- */
+.weather-clock-div{
+    border-radius: 9px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    background-color: #b2d4ff;
+}
+
+.date-time-div{
+    width: 25%;
+    min-height: 30px;
+    font-family: 'Roboto';
+    font-size: 25px;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.weather-div{
+    width: 50%;
+    min-height: 30px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-radius: 20px;
+}
+.weather-div>*{
+	margin-right: 25px;
+	font-size: 23px;
+	font-family: 'Roboto';
+	font-weight: bold;
+	color: white;
+}
 /* ------------- 프로필 & 출퇴근 영역 ------------- */
+.profile-attend-div{
+    background-color: #fff8e3;
+    border-radius: 9px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
 .profile-attend-div{
     width: 100%;
     display: flex;
@@ -68,19 +114,39 @@ h4, h5{
 
 /* ------------- 일정 ------------- */
 .today-schedule{
-    background-color: whitesmoke;
+    background-color: #fff8e3;
     border-radius: 9px;
     padding: 15px;
     margin-bottom: 30px;
+    height: 500px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+.schedule:hover{
+		cursor: pointer;
+}
+.schedule-color{
+		display: inline-block;
+		width: 15px;
+		height: 15px;
+		border-radius: 100px;
+}
+.schedule-title{
+		font-size: 17px;
 }
 
 /* ------------- 근태현황 ------------- */
 .my-attend{
-    background-color: whitesmoke;
+    background-color: #fff8e3;
     border-radius: 9px;
     padding: 15px;
     margin-bottom: 30px;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.my-attend-content{
     display: flex;
 }
 .my-attend-select-div{
@@ -101,7 +167,7 @@ h4, h5{
 .attend-info{
     width: 80px;
     height: 80px;
-    background-color: rgb(236, 228, 189);
+    background-color: rgb(238 238 238);
     border-radius: 50px;;
     display: flex;
     justify-content: center;
@@ -114,10 +180,52 @@ h4, h5{
 .alert-list-div{
     display: flex;
     flex-direction: column;
-    background-color: whitesmoke;
+    background-color: #fff8e3;
     border-radius: 9px;
     padding: 15px;
     margin-bottom: 30px;
 }
 
 /* ------------- 공지목록 ------------- */
+.notice-list-div{
+    display: flex;
+    flex-direction: column;
+    background-color: #fff8e3;
+    border-radius: 9px;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+.notice-category{
+		display: flex;
+		justify-content: flex-end;
+}
+.notice-category>span{
+		padding: 5px 20px 5px 20px;
+		background-color: white;
+		box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  	transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.notice-category>span:hover{
+		box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+		cursor: pointer;
+}
+
+.list-title:hover{
+		cursor: pointer;
+}
+.list-title{
+    width: 60%;
+}
+.list-writer{
+		width: 20%;
+}
+.list-date{
+    width: 20%;
+}
+
+.writer-profile{
+		width: 20px;
+		height: 20px;
+		border-radius: 100px;
+}
+		

@@ -58,6 +58,7 @@
                <div class="field-group">
                   <label class="field-title" for="editor">글내용</label>
                   <textarea class="form-control" name="content" id="editor"></textarea>
+              	  <input type="hidden" name="textContent">
               </div>
 							
               <div class="button-group">
@@ -114,6 +115,8 @@
 			$("textarea[name=content]").val(tinymce.activeEditor.getContent("editor"));
 			// 등록할 공지사항 상태값 파라미터 추가
 			$("input[name=status]").val(status);
+			// HTML 태그가 없는 순수 내용값
+			$("input[name=textContent]").val(contentVal);
 			
 			// 공지사항 등록 or 저장 요청
 			$.ajax({
@@ -146,6 +149,7 @@
 				tinymce.activeEditor.focus();
 			}
 		}
+		
 	}
 	
 	// 공지사항 제출요청(origin) ====================================================================================================

@@ -98,6 +98,60 @@
 	           (SELECT SUM(ROUND((CAST(A.CLOCK_OUT AS DATE) - CAST(A.CLOCK_IN AS DATE)) * 24, 1))
 	            FROM ATTENDANCE A 
 	            WHERE M.USER_NO = A.USER_NO 
+	              AND EXTRACT(YEAR FROM A.CLOCK_IN) = #{year}
+	              AND EXTRACT(MONTH FROM A.CLOCK_IN) = #{month}
+	           ), 0) AS "ALLTIME"
+			 , SALARY
+			 , COALESCE(
+	           (SELECT SUM(ROUND((CAST(A.CLOCK_OUT AS DATE) - CAST(A.CLOCK_IN AS DATE)) * 24, 1)) * M.SALARY
+	            FROM ATTENDANCE A 
+	            WHERE M.USER_NO = A.USER_NO 
+	              AND EXTRACT(YEAR FROM A.CLOCK_IN) = #{year}
+	              AND EXTRACT(MONTH FROM A.CLOCK_IN) = #{month}
+	           ), 0) AS "TOTALSALARY"
+			 , COALESCE(
+	           (SELECT SUM(ROUND((CAST(A.CLOCK_OUT AS DATE) - CAST(A.CLOCK_IN AS DATE)) * 24, 1)) * M.SALARY * 0.9
+	            FROM ATTENDANCE A 
+	            WHERE M.USER_NO = A.USER_NO 
+	              AND EXTRACT(YEAR FROM A.CLOCK_IN) = #{year}
+	              AND EXTRACT(MONTH FROM A.CLOCK_IN) = #{month}
+	           ), 0) AS "PAYMENT"
+			 , BANK
+			 , BANK_ACCOUNT
+	  	  FROM MEMBER M
+	  	  JOIN TB_GROUP D2 ON M.TEAM_CODE = D2.CODE
+	 LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
+	 LEFT JOIN ATTENDANCE A ON M.USER_NO = A.USER_NO
+	 	 WHERE D1.STATUS = 'Y'
+	 	   AND D2.STATUS = 'Y'
+	 	 GROUP BY
+	 	 	   M.USER_NO
+	 	 	 , M.PROFILE_URL
+	 	 	 , M.USER_NAME
+	 	 	 , M.USER_ID
+	 	 	 , D1.CODE_NAME
+	 	 	 , D2.CODE_NAME
+	 	 	 , M.POSITION_CODE
+	 	 	 , M.SALARY
+	 	 	 , BANK
+	 	 	 , BANK_ACCOUNT
+	 	 ORDER BY
+	 	 	   M.USER_NO ASC
+	</select>
+	
+	<!-- 급여 상세 페이지 -->
+	<select id="selectAccountDetail" resultMap="memberResult">
+		SELECT M.USER_NO
+		     , M.PROFILE_URL
+			 , M.USER_NAME
+			 , M.USER_ID
+			 , D1.CODE_NAME AS "DEPT"
+			 , D2.CODE_NAME AS "TEAM"
+			 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = M.POSITION_CODE) AS "POSI"
+			 , COALESCE(
+	           (SELECT SUM(ROUND((CAST(A.CLOCK_OUT AS DATE) - CAST(A.CLOCK_IN AS DATE)) * 24, 1))
+	            FROM ATTENDANCE A 
+	            WHERE M.USER_NO = A.USER_NO 
 	              AND EXTRACT(YEAR FROM A.CLOCK_IN) = 2024
 	              AND EXTRACT(MONTH FROM A.CLOCK_IN) = 5
 	           ), 0) AS "ALLTIME"
@@ -124,6 +178,7 @@
 	 LEFT JOIN ATTENDANCE A ON M.USER_NO = A.USER_NO
 	 	 WHERE D1.STATUS = 'Y'
 	 	   AND D2.STATUS = 'Y'
+           AND M.USER_NO = 1051
 	 	 GROUP BY
 	 	 	   M.USER_NO
 	 	 	 , M.PROFILE_URL
@@ -135,8 +190,6 @@
 	 	 	 , M.SALARY
 	 	 	 , BANK
 	 	 	 , BANK_ACCOUNT
-	 	 ORDER BY
-	 	 	   M.USER_NO ASC
 	</select>
 	
 	

@@ -104,6 +104,7 @@ public class BoardController {
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("modalColor", "R");
 			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 목록서비스");
 			redirectAttributes.addFlashAttribute("alertMsg", "공지사항 목록조회 요청에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
@@ -113,7 +114,7 @@ public class BoardController {
 	/**
 	 * @method : 공지사항 목록조회 (AJAX)
 	 */
-	@RequestMapping(value={"/list.ajax", "/publisher/list.ajax", "/temp/list.ajax",
+	@RequestMapping(value={"/list.ajax", "/publisher/list.ajax", "/temp/list.ajax", "/main/list.ajax",
 						   "/detail/list.ajax", "/publisher/detail/list.ajax", "/temp/detail/list.ajax"})
 	@ResponseBody
 	public Object ajaxSelectBoardList(HttpServletRequest request){
@@ -122,7 +123,7 @@ public class BoardController {
 		
 		// 조회할 공지사항 상태값 지정
 		HashMap<String, Object> params = getParameterMap(request);
-		params.get("page");
+		
 		if(requestURL.indexOf("temp") != -1) {
 			params.put("status", "T");
 		}else {
@@ -136,7 +137,7 @@ public class BoardController {
 		}
 		
 		// 리스트 페이징처리 유무
-		if(requestURL.indexOf("detail") == -1) {
+		if(requestURL.indexOf("detail") == -1 && requestURL.indexOf("main") == -1) {
 			// 게시글 페이징바 생성
 			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(boardService.selectTotalBoardCount(params), 
 															 Integer.parseInt(params.get("page").toString()), 5, 10);
@@ -162,11 +163,11 @@ public class BoardController {
 		try {
 			// 파라미터값
 			HashMap<String, Object> params = getParameterMap(request);
-			String category = params.get("category").toString();
-			String department = params.get("department").toString();
-			String condition = params.get("condition").toString();
-			String keyword = params.get("keyword").toString();
-			String no = params.get("no").toString();
+			String category = params.get("category") != null ? params.get("category").toString() : "";
+			String department = params.get("department") != null ? params.get("department").toString() : "";
+			String condition = params.get("condition") != null ? params.get("condition").toString() : "";
+			String keyword = params.get("keyword") != null ? params.get("keyword").toString() : "";
+			String no =params.get("no").toString();
 			
 			// 공지사항 조회수 증가
 			boardService.updateReadCount(no);
@@ -178,6 +179,7 @@ public class BoardController {
 												+ "no=" + no;
 		}catch(Exception e) {
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("modalColor", "R");
 			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상세서비스");
 			redirectAttributes.addFlashAttribute("alertMsg", "공지사항 상세페이지 요청에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
@@ -208,6 +210,7 @@ public class BoardController {
 					return "board/board_detail";
 				}
 			}else {
+				redirectAttributes.addFlashAttribute("modalColor", "Y");
 				redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상세조회");
 				redirectAttributes.addFlashAttribute("alertMsg", "유효하지 않은 공지사항입니다.");
 				return "redirect:" + request.getHeader("Referer");
@@ -215,6 +218,7 @@ public class BoardController {
 			
 		}catch(Exception e){
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("modalColor", "Y");
 			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상세조회");
 			redirectAttributes.addFlashAttribute("alertMsg", "유효하지 않은 공지사항입니다.");
 			return "redirect:" + request.getDateHeader("Referer");
@@ -339,6 +343,7 @@ public class BoardController {
 			
 			// 공지사항 수정
 			if(boardService.updateBoard(params) > 0) {
+				redirectAttributes.addFlashAttribute("modalColor", "G");
 				redirectAttributes.addFlashAttribute("alertMsg", "공지사항이 수정되었습니다.");
 				
 				// 삭제할 첨부파일이 있었을 경우, 로컬저장소에서 업로드된 파일삭제
@@ -348,6 +353,7 @@ public class BoardController {
 					}
 				}
 			}else {
+				redirectAttributes.addFlashAttribute("modalColor", "R");
 				redirectAttributes.addFlashAttribute("alertMsg", "공지사항 수정에 실패했습니다.");
 				
 				// 업로드한 첨부파일이 있었을 경우, 로컬저장소에서 등록실패한 파일삭제
@@ -375,6 +381,7 @@ public class BoardController {
 			
 		}catch(Exception e) {
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("modalColor", "R");
 			redirectAttributes.addFlashAttribute("alertMsg", "공지사항 수정서비스 요청에 실패했습니다.");
 			return "redirect:" + multiRequest.getHeader("Referer");
 		}
@@ -430,14 +437,17 @@ public class BoardController {
 				}else {
 					pageURL = "/board/list.do";
 				}
+				redirectAttributes.addFlashAttribute("modalColor", "G");
 				redirectAttributes.addFlashAttribute("alertMsg", alertMsg);
 				return "redirect:" + pageURL;
 			}else {
+				redirectAttributes.addFlashAttribute("modalColor", "R");
 				redirectAttributes.addFlashAttribute("alertMsg", "공지사항 상태변경에 실패했습니다.");
 				return "redirect:" + request.getHeader("Referer");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("modalColor", "R");
 			redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상태변경서비스");
 			redirectAttributes.addFlashAttribute("alertMsg", "공지사항 상태변경 요청이 실패되었습니다.");
 			return "redirect:" + request.getHeader("Referer");
@@ -450,11 +460,11 @@ public class BoardController {
 	 */
 	@RequestMapping(value={"/publisher/delete.ajax", "/temp/delete.ajax"}, produces="text/html; charset=utf-8")
 	@ResponseBody
-	public String ajaxDeleteBoard(HttpServletRequest request) {
+	public String ajaxDeleteBoard(HttpServletRequest request, @RequestParam(value="delBoardNoArr[]", defaultValue="") String[] delBoardNoArr) {
 		HashMap<String, Object> params = getParameterMap(request);
 		params.put("status", "N");
 		params.put("refType", "BD");
-		params.put("delBoardNoArr", params.get("delBoardNoArr[]"));
+		params.put("delBoardNoArr", delBoardNoArr);
 		params.remove("delBoardNoArr[]");
 		List<AttachmentDto> delFileList = boardAttachmentService.selectAttachmentList(params);
 		params.put("fyn", !delFileList.isEmpty() ? "Y" : "N");

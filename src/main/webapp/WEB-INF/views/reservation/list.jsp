@@ -283,6 +283,7 @@
                             <td><h5>업무미팅룸 208호</h5></td>
                         </tr>
 
+						<!-- 수량제거 예정
                         <tr>
                             <th><h5>수량</h5></th>
                             <td>
@@ -295,7 +296,8 @@
                                 </div>
                             </td>
                         </tr>
-
+ 						-->
+ 						
                         <script>
                             // 마이너스 버튼 클릭 시
                             document.querySelector('.i_minus').addEventListener('click', function() {

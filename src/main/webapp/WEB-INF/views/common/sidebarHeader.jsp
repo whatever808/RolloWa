@@ -319,22 +319,26 @@
 </head>
 <body class="allposition">
 
+<!--  -->
 
-<c:if test="${ alertMsg != null }" >
-<c:choose>
-	<c:when test="${modalColor eq 'G'}" >
-		redAlert('${ alertTitle }', '${ alertMsg }');
-	</c:when>
-	<c:when test="${modalColor eq 'R'}">
-		greenAlert('${ alertTitle }', '${ alertMsg }');
-	</c:when>
-	<c:when test="${modalColor eq 'Y'}">
-		yellowAlert('${ alertTitle }', '${ alertMsg }');
-	</c:when>
-</c:choose>
 
-<!-- <script>alertify.alert('${alertTitle}','${alertMsg}'); </script> -->
-</c:if>
+<script>
+$(document).ready(function(){
+	if(${ alertMsg != null }){
+		switch ('${ modalColor }'){
+			case 'R' :
+				redAlert('${ alertTitle }', '${ alertMsg }');
+				break;
+			case 'G' :
+				greenAlert('${ alertTitle }', '${ alertMsg }');
+				break;
+			case 'Y' :
+				yellowAlert('${ alertTitle }', '${ alertMsg }');
+				break;
+		}
+	}
+	})
+</script>
 
 <main class="d-flex flex-nowrap"></main>
 	<!-- 알림창 div -->
@@ -533,7 +537,7 @@
                             	<a href="${ contextPath }/attendance/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">출결 조회</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/attendance/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</a>
+                            	<a href="${ contextPath }/attendance/accountList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</a>
                             </li>
                             <li>
                             	<a href="${ contextPath }/attendance" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 상세 조회</a>
@@ -584,32 +588,17 @@
                             <li><a href="${contextPath}/calendar/calendarList.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정 관리</a>
                             </li>
+                            <li><a href="${contextPath}/vacation/vacation.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">휴가</a>
+                            </li>
+                            <li><a href="${contextPath}/vacation/complete.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">지난 휴가</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
                 <!-- ======================================= calendar page ========================================= -->
-             
-                 <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#-collapse" aria-expanded="false">
-                        Orders
-                    </button>
-                    <div class="collapse" id="-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+  
                 <!-- 전자결재 -->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
