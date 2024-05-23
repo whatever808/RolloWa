@@ -738,11 +738,11 @@
 			   set document_status = 'N'
 			      , CANCELLATION_CONTENT = #{content}
 			     <choose>
-				     	<when test="approvalName == 1">
+				     	<when test="approvalSignNo == 1">
 				     	, FIRST_APPROVAL_DATE = SYSDATE
 				     	, FIRST_SIGN = '반려'
 				     	</when>
-				     	<when test="approvalName == 2">
+				     	<when test="approvalSignNo == 2">
 				     	, MIDDLE_APPROVAL_DATE = SYSDATE
 				     	, MIDDLE_SIGN = '반려'
 				     	</when>
@@ -1338,6 +1338,7 @@
 						, FIRST_APPROVAL
 						, MIDDLE_APPROVAL
 						, FINAL_APPROVAL
+						, CANCELLATION_CONTENT
 						, to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
 			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
 			      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
@@ -1794,6 +1795,7 @@
 					, TO_CHAR(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
 					, TO_CHAR(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
 					, TO_CHAR(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+					, DOCUMENT_STATUS
 			  from APPROVAL
 			 where APPROVAL_NO = #{approvalNo}
 	  </select>

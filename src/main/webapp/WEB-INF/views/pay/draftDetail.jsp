@@ -18,7 +18,35 @@
 		<!-- 기안서 공통 스타일 -->
     <link rel="stylesheet" href="${contextPath}/resources/css/pay/detail.css">
 <style>
- .apbtn{display: none;} 
+ .suBtn{
+	 display: none;
+	 margin: 10px;
+	 width: 99px;
+   height: 44px;
+   background-color: #3f51b5;
+   color: white;
+   border-radius: 25px;
+   border: none;
+   font-size: 17px;
+ }
+ .suBtn:hover{
+	 display: none;
+	 margin: 10px;
+	 width: 99px;
+   height: 44px;
+   background-color: #3f51b5ba;
+   color: white;
+   border-radius: 25px;
+   border: none;
+   font-size: 17px;
+ }
+ 
+ #rejectContentBtn{display: none;}
+ #rej{    
+	 	display: flex;
+	  justify-content: flex-end;
+	  margin: 20px;
+  }
 </style>
 </head>
 <body>
@@ -112,43 +140,42 @@ $(document).on("click", "#rejectBtn", function(){
 			  data:{
 				  approvalNo:"${list.get(0).APPROVAL_NO}",
 					content:$("#calcellation").val(),
-					approvalName:approvalName
+					approvalSignNo:approvalName
 			  },
-			  success:function(response){
+			  success:function(list){
 				  
-				  console.log(response);
-				 	/*
-				  if(response.result == 1){
+				  console.log(list);
+				  if(list[1].approvalSignNo == "1"){
 					  alert("반려가 완료되었습니다.");
-					  if(response.userName == "${list.get(0).FIRST_APPROVAL}"){
-						  $("#firstSign").children().remove();
-						  $("#apDt1").children().remove();
-						  $("#firstSign").append().html('<h1 style="color: red;">반려</h1>');
+					  $("#firstSign").children().remove();
+					  $("#apDt1").children().remove();
+					  $("#firstSign").append().html('<h1 style="color: red;" class="rejects">반려</h1>');
 						  if($("#apDt1").text() == ""){
-		        		$("#apDt1").append(response.sign[0].middleApDt);	
-        		  }
+				        	$("#apDt1").append(list[0].firstApDt);	
+		        	}
 						  $("#modal").iziModal('close');
-					  }else if(response.userName == "${list.get(0).MIDDLE_APPROVAL_DATE}"){
-						  $("#middleSign").children().remove();
-						  $("#apDt2").children().remove();
-						  $("#middleSign").append().html('<h1 style="color: red;">반려</h1>');
+				  }else if(list[1].approvalSignNo == "2"){
+					  alert("반려가 완료되었습니다.");
+					  $("#middleSign").children().remove();
+					  $("#apDt2").children().remove();
+					  $("#middleSign").append().html('<h1 style="color: red;" class="rejects">반려</h1>');
 						  if($("#apDt2").text() == ""){
-		        		$("#apDt2").append(response.sign[0].middleApDt);	
-        		  }
-						  $("#modal").iziModal('close');
-					  }else{
-						  $("#finalSign").children().remove();
-						  $("#apDt3").children().remove();
-						  $("#finalSign").append().html('<h1 style="color: red;">반려</h1>');
+		        		$("#apDt2").append(list[0].middleApDt);	
+	    		  	}
+					  $("#modal").iziModal('close');
+					  
+				  }else{
+					  alert("반려가 완료되었습니다.");
+					  $("#finalSign").children().remove();
+					  $("#apDt3").children().remove();
+					  $("#finalSign").append().html('<h1 style="color: red;" class="rejects">반려</h1>');
 						  if($("#apDt3").text() == ""){
-		        		$("#apDt3").append(response.sign[0].middleApDt);	
-        		  }
-						  $("#modal").iziModal('close');
-					  }
+		        		$("#apDt3").append(list[0].finalApDt);	
+	    		  	}
+					  $("#modal").iziModal('close');
+					  
 				  }
-				 	*/
-				  
-				  
+				
 			  }
 			  
 		  })
@@ -171,23 +198,23 @@ $(document).on("click", "#rejectBtn", function(){
                 <div class="left_con">
                 
                    
-	                   <div class="document-container">
-        <div class="header">
-            <h1>지출결의서</h1>
-            <!--버튼 영역-->
-            <div id="btn_content">
-			        <c:if test="${ not empty list and list.get(0).FINAL_APPROVAL == userName }  ">
-		             <div id="btn_div">
-		                 <button class="btn btn-warning" id="end_button" onclick="successbtn();">최종승인</button>
-		             </div>                        	
-		           </c:if>
-		          	<div>
-		          			<button class="btn btn-danger" data-izimodal-open="#modal2">승인</button>
-		          			<button class="btn btn-danger" data-izimodal-open="#modal" class="apbtn">반려</button>
-		          	</div>
-		         </div>
-           <!------------>
-           
+	                 <div class="document-container">
+								      <div class="header">
+								          <h1>지출결의서</h1>
+								          <!--버튼 영역-->
+								          <div id="btn_content">
+									        <c:if test="${ not empty list and list.get(0).FINAL_APPROVAL == userName }  ">
+								             <div id="btn_div">
+								                 <button class="btn btn-warning" id="end_button" onclick="successbtn();">최종승인</button>
+								             </div>                        	
+								           </c:if>
+								          	<div style="display: flex;">
+								          			<button class="suBtn" data-izimodal-open="#modal2">승인</button>
+								          			<button class="suBtn" data-izimodal-open="#modal">반려</button>
+								          	</div>
+								         </div>
+								         <!------------>
+								         
            
             <div class="approval-info">
                 <div class="approval-box">
@@ -196,10 +223,10 @@ $(document).on("click", "#rejectBtn", function(){
                     <div class="approval-sign sg" id="firstSign">
 	                    <c:choose>
 	                    	<c:when test="${sign.get(0).firstSign != null && sign.get(0).firstSign == '반려'}">
-	                    		<h1 style="color: red;">반려</h1>
+	                    		<h1 style="color: red;" class="rejects">반려</h1>
 	                    	</c:when>
 	                    	<c:when test="${sign.get(0).firstSign != null && sign.get(0).firstSign != '반려'}">
-	                    		<img src="${sign.get(0).finalSign}">
+	                    		<img src="${sign.get(0).firstSign}" id="img1">
 	                    	</c:when>
                     	</c:choose>
                     </div>
@@ -211,10 +238,10 @@ $(document).on("click", "#rejectBtn", function(){
                     <div class="approval-sign sg" id="middleSign">
                     	<c:choose>
 	                    	<c:when test="${sign.get(0).middleSign != null && sign.get(0).middleSign == '반려'}">
-	                    		<h1 style="color: red;">반려</h1>
+	                    		<h1 style="color: red;" class="rejects">반려</h1>
 	                    	</c:when>
 	                    	<c:when test="${sign.get(0).middleSign != null && sign.get(0).middleSign != '반려'}">
-	                    		<img src="${sign.get(0).finalSign}">
+	                    		<img src="${sign.get(0).middleSign}" id="img2">
 	                    	</c:when>
                     	</c:choose>
                     </div>
@@ -226,10 +253,10 @@ $(document).on("click", "#rejectBtn", function(){
                     <div class="approval-sign sg" id="finalSign">
                     	<c:choose>
 	                    	<c:when test="${sign.get(0).finalSign != null && sign.get(0).finalSign == '반려'}">
-	                    		<h1 style="color: red;">반려</h1>
+	                    		<h1 style="color: red;" class="rejects">반려</h1>
 	                    	</c:when>
 	                    	<c:when test="${sign.get(0).finalSign != null && sign.get(0).finalSign != '반려'}">
-	                    		<img src="${sign.get(0).finalSign}">
+	                    		<img src="${sign.get(0).finalSign}" id="img3">
 	                    	</c:when>
                     	</c:choose>
                     </div>
@@ -253,16 +280,14 @@ $(document).on("click", "#rejectBtn", function(){
                     <th>상태</th>
                     <td>${list.get(0).PAYMENT_STATUS}</td>
                     <th>승인상태</th>
-                    <td>${list.get(0).DOCUMENT_STATUS == 'I' ? '진행중' : '완료'}
-                    
-                    <c:if test="${ not empty list and list.get(0).CANCELLATION_CONTENT != null }">
-			         				<button class="btn btn-danger" data-izimodal-open="#modal">반려사유 확인하기</button>
-			        			</c:if>
-                    
+                    <td>${list.get(0).DOCUMENT_STATUS == 'I' ? '진행중' : list.get(0).DOCUMENT_STATUS == 'N' ? '반려' : '완료' }
                     </td>
                     
                 </tr>
             </table>
+            	<div id="rej">
+            		<button class="btn btn-danger" data-izimodal-open="#modal3" id="rejectContentBtn">사유 확인</button>
+            	</div>
             <table class="content-table">
                 
                 <tr>
@@ -305,13 +330,15 @@ $(document).on("click", "#rejectBtn", function(){
 					        </div>
 					      			<div id="modifybtn">
 					           			<button class="btn btn-warning" id="modifyWriter" type="submit" style="display: none;">수정</button>
-					          			<button class="btn btn-primary" onclick="submitbtn();" class="apbtn">완료</button>
+					          			<button class="btn btn-primary" onclick="submitbtn();" style="display: none;" id="aproS">완료</button>
 					          	</div>
 					 				</div> 
                 </div>
             </div>
         </div>
         
+        
+        <!-------------- 승인싸인 모달창 ------------->
         <div id="modal2">
 		        <div class="m_content_style"  >
 		        <canvas id="signature" width="600" height="200"></canvas>
@@ -321,35 +348,107 @@ $(document).on("click", "#rejectBtn", function(){
 								</div>      
 		        </div>
 		    </div>
-        
-   
-       
-    		 <div id="modal">
+		    <!---------------------------------------->
+		    
+		    
+		    <!-------------- 기인자 반려 사유 확인 모달창 ------------->
+		   	<div id="modal3">
 		        <div class="m_content_style">
-		            내용 : <textarea style="height: 300px; resize: none;" required name="calcellation" id="calcellation" placeholder="자세하게 작성해주세요." ></textarea>
+		        	<div style="height: 300px"> ${list.get(0).CANCELLATION_CONTENT}</div>
+		        </div>
+		    </div>
+		    <!-------------------------------------------->
+		    
+		    
+		    <!-------------- 승인자 반려 사유 작성 모달 ------------->
+    		<div id="modal">
+		        <div class="m_content_style">
+		            내용 : <textarea style="height: 300px; resize: none;" name="calcellation" id="calcellation" placeholder="자세하게 작성해주세요." required></textarea>
 				        <div style="display: flex; justify-content: end; align-items: end; margin: 10px;">
 				        	<button class="btn btn-danger" id="rejectBtn">확인</button>
 				        </div>
 		        </div>
 		    </div>
+		    <!---------------------------------------------->
 		    
-		 
+		
+		    
+		<script>
+				function submitbtn() {
+				    if (confirm('결재을 완료하시겠습니까?')) {
+				        $(".rejects").each(function () {
+				            if ($(this).text() == '반려') {
+				                $(".suBtn").css("display", "none");
+				            }
+				        });
+				        location.href = "${contextPath}/pay/paymain.page";
+				        alert("결재가 완료되었습니다.");
+				    }
+				}
+		
+				function successbtn() {
+				    if (confirm("결재를 최종승인 하시겠습니까?")) {
+				        alert("최종승인이 완료되었습니다.");
+				    }
+				}
+    </script>
+		    
+	
         
     <script>
     $(document).ready(function() {
-        if ("${list.get(0).PAYMENT_WRITER_NO}" === "${userNo}") {
+    
+        if ("${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}") {
             $("#modifyWriter").css("display", "block");
         }
+        var srcValue1 = $("#img1").attr("src");
         
-        if ("${list.get(0).FIRST_APPROVAL}" === "${userName}" ||
-            "${list.get(0).MIDDLE_APPROVAL}" === "${userName}" || 
-            "${list.get(0).FINAL_APPROVAL}" === "${userName}") {
-            $(".apbtn").css("display", "block");
+        if("${list.get(0).FIRST_APPROVAL}" == "${userName}"){
+        	$(".suBtn").css("display", "block");
         }
+        if($("#img1").length &&"${list.get(0).MIDDLE_APPROVAL}" == "${userName}" && srcValue1 != ""){
+        	$(".suBtn").css("display", "block");
+        }
+        var srcValue2 = $("#img2").attr("src");
+        
+        if($("#img2").length && "${list.get(0).FINAL_APPROVAL}" == "${userName}" &&  srcValue2 != ""){
+        	$(".suBtn").css("display", "block");
+        }
+        
+        if("${list.get(0).FIRST_APPROVAL}" == "${userName}" ||
+         	 "${list.get(0).MIDDLE_APPROVAL}" == "${userName}" ||
+         	 "${list.get(0).FINAL_APPROVAL}" == "${userName}" ){
+         	$("#aproS").css("display", "block");
+     	  }	
+        
+        var content = "${list.get(0).CANCELLATION_CONTENT.trim()}";
+        if( content != "" && "${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}"){
+					$("#rejectContentBtn").css("display", "block");
+		    }	
+        	
+        
     });
     </script>
         
-        
+    <script>
+       $('#modal3').iziModal({
+           title: '반려(철회)된 사유.',
+           headerColor: '#FEEFAD', // 헤더 색깔
+           theme: '', //Theme of the modal, can be empty or "light".
+           padding: '15px', // content안의 padding
+           radius: 10, // 모달 외각의 선 둥글기
+          
+       });
+       
+       // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
+       $("#modal-test").on('click', function () {
+
+           $('#modal3').iziModal('open'); // 모달을 출현
+
+       });
+    </script>	    
+		
+		
 		<script>
        $('#modal').iziModal({
            title: '반려사유를 작성해주세요.',
@@ -410,22 +509,7 @@ $(document).on("click", "#rejectBtn", function(){
     
     
 
-    <script>
-        function submitbtn(){
-        	
-            if(confirm('결재을 완료하시겠습니까?')){
-               location.href="${contextPath}/pay/paymain.page"
-            }
-        }
-        
-        function successbtn(){
-            if(confirm("결재를 최종승인 하시겠습니까?")){
-                alert("최종승인이 완료되었습니다.");
-                	
-            }
-        }       	
-       
-    </script>
+  
         
         
         

@@ -20,5 +20,6 @@ public class SignDto {
 	private String firstApDt;
 	private String middleApDt;
 	private String finalApDt;
+	private String approvalSignNo;
 	
 }

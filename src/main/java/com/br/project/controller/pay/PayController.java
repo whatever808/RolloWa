@@ -506,9 +506,18 @@ public class PayController {
 		int result = payService.ajaxUpdateReject(map);
 		
 		List<SignDto> list = new ArrayList<>();
-		if(result > 0) {
-			payService.ajaxSignSelect(map);
+		if(result == 1) {
+			list = payService.ajaxSignSelect(map);
 		}
+		
+	    String approvalSignNo = (String)map.get("approvalSignNo");
+	    
+	    if(approvalSignNo != null) {
+	        SignDto signDto = new SignDto();
+	        signDto.setApprovalSignNo(approvalSignNo);
+	        list.add(signDto);
+	    }
+		
 		
 		return list;
 		
