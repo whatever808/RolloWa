@@ -11,16 +11,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.br.project.dto.common.AttachmentDto;
 import com.br.project.dto.common.GroupDto;
+import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.VacationDto;
 import com.br.project.service.common.department.DepartmentService;
 import com.br.project.service.pay.VacationService;
 import com.br.project.util.FileUtil;
+import com.br.project.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -95,4 +98,19 @@ public class VacationController {
 		model.addAttribute("vactList", vactList);
 	}
 	
+	@ResponseBody
+	@PostMapping(value="/searchOld.ajax")
+	public Map<String, Object> searchOld(@RequestParam(defaultValue = "1") int page
+										, HttpSession session
+										, VacationDto vacation){
+		//int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		vacation.setMember(MemberDto.builder().userNo(1050).build());
+		Map<String, Object> map = new HashMap<>();
+		//int listCount = vactService.selectVacarionCount(vacation);
+		//PageInfoDto paging = new PagingUtil().getPageInfoDto(listCount, page, 5, 5);
+		//List<VacationDto> list = vactService.searchOld(vacation);
+		//map.put("list", list);
+		//map.put("paging", paging);
+		return map;
+	}
 }
