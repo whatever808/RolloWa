@@ -48,5 +48,14 @@ public class VacationService {
 		return result;
 	}
 
+	/**
+	 * @author dpcks
+	 * @param userNo
+	 * @return
+	 */
+	public List<VacationDto> selectRequest(int userNo) {
+		return vacationDao.selectRequest(userNo);
+	}
+
 	
 }

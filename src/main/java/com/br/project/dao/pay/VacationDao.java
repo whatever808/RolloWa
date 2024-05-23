@@ -21,6 +21,10 @@ public class VacationDao {
 	public int insertVacation(VacationDto vacation) {
 		return sqlSession.insert("vacationMapper.insertVacation", vacation);
 	}
+
+	public List<VacationDto> selectRequest(int userNo) {
+		return sqlSession.selectList("vacationMapper.selectRequest", userNo);
+	}
 	
 	
 	

@@ -2,23 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="vacationMapper">
 <resultMap type="VacationDto" 					id="vacaResultMap">
-	<id 		column="VACATION_NO" 					property="vacaNO"/>
-	<result column="VACATION_STRAT" 			property="vacaStart"/>
-	<result column="VACATION_END" 				property="vacaEnd"/>
-	<result column="VACATION_COMMNET" 		property="vacaComment"/>
-	<result column="VACATION_APPORVAL" 		property="vacaApporvalDate"/>
-	<result column="VACATION_COLOR" 			property="vacaColor"/>
-	<result column="RETRACT_COMMNET" 			property="vacaRetractC"/>
-	<result column="R_REQUEST_COMMENT" 		property="vacationRRetractC"/>
-	<result column="APPORVAL_STATUS" 			property="vacationApprorvalStatus"/>
-	<result column="GROUP_CODE" 					property="vacationGroupCode"/>
-	<collection ofType="GroupDto" 				property="group" >
-		<result column="CODE_NAME" 					property="codeName" />
-		<result column="UPPER_CODE" 				property="upperCode" />
+	<id 			column="VACATION_NO" 					property="vacaNO"/>
+	<result 	column="VACATION_STRAT" 			property="vacaStart"/>
+	<result 	column="VACATION_END" 				property="vacaEnd"/>
+	<result 	column="VACATION_COMMNET" 		property="vacaComment"/>
+	<result 	column="VACATION_APPORVAL" 		property="vacaApporvalDate"/>
+	<result 	column="VACATION_COLOR" 			property="vacaColor"/>
+	<result 	column="RETRACT_COMMNET" 			property="RetractComent"/>
+	<result 	column="R_REQUEST_COMMENT" 		property="RRequestComent"/>
+	<result 	column="APPORVAL_STATUS" 			property="approrvalStatus"/>
+	<result 	column="GROUP_CODE" 					property="vacaGroupCode"/>
+	<collection ofType="GroupDto" 					property="group" >
+		<result column="CODE_NAME" 						property="codeName" />
+		<result column="UPPER_CODE" 					property="upperCode" />
 	</collection>
-	<collection ofType="MemberDto" 				property="member">
-		<result column="USER_NAME" 					property="userName"/>
+	<collection ofType="MemberDto" 					property="member">
+		<result column="USER_NAME" 						property="userName"/>
 	</collection>	
+	<collection ofType="AttachmentDto" 			property="attach">
+		<result column="ORIGIN_NAME" 					property="originName" />
+		<result column="MODIFY_NAME" 					property="modifyName" />
+		<result column="ATTACH_PATH" 					property="attachPath" />
+	</collection>
 </resultMap>
 
 <select id="ajaxSelectVacation"
@@ -78,5 +83,27 @@ VACATION_NO
 	, #{group.code} 
 )
 </insert>
+
+<select id="selectRequest" 
+resultMap="vacaResultMap">
+select 
+    VACATION_NO
+    , VACATION_STRAT
+    , VACATION_END
+    , VACATION_COMMNET
+    , VACATION_COLOR
+    , RETRACT_COMMNET
+    , GROUP_CODE
+    , APPORVAL_STATUS
+    , ORIGIN_NAME 
+    , MODIFY_NAME
+    , ATTACH_PATH 
+from vacation v
+left join  attachment a on (VACATION_NO = REF_NO and REF_TYPE = 'VACT')
+where REGIST_EMP = #{userNo}
+and v.STATUS = 'Y'
+and APPORVAL_STATUS in ('I', 'N')
+order by VACATION_NO desc 
+</select>
 
 </mapper>

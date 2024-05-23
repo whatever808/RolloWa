@@ -576,32 +576,17 @@
                             <li><a href="${contextPath}/calendar/calendarList.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정 관리</a>
                             </li>
+                            <li><a href="${contextPath}/vacation/vacation.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">휴가</a>
+                            </li>
+                            <li><a href="${contextPath}/vacation/complete.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">지난 휴가</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
                 <!-- ======================================= calendar page ========================================= -->
-             
-                 <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#-collapse" aria-expanded="false">
-                        Orders
-                    </button>
-                    <div class="collapse" id="-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+  
                 <!-- 전자결재 -->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"

@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>휴가 조회</title>
 <style>
 .out-line {
 	min-height: 800px;
@@ -205,6 +205,9 @@ a {
 	color: rgb(2, 2, 2)!important;
 	text-decoration: unset;
 }
+.info{
+	display: none;
+}
 </style>
 </head>
 <body>
@@ -259,44 +262,10 @@ a {
 				<br>
 				<div class="font-size25 jua-regular">결재 대기</div>
 				<div class="standby">
-					<a href="#" data-izimodal-open="#standby_request">
-						<div class="s-wrap radious10">
-							<div class="s-category line-border-square-sm">연차</div>
-							<div class="s-situation line-border-square-sm gContext">대기</div>
-							<div class="s-date line-border-square-sm">2024-04-24 ~
-								2024-05-25</div>
-						</div>
-					</a>
-					<div class="s-wrap radious10">
-						<div class="s-category line-border-square-sm">연차</div>
-						<div class="s-situation line-border-square-sm gContext">대기</div>
-						<div class="s-date line-border-square-sm">2024-04-24 ~
-							2024-05-25</div>
-					</div>
 				</div>
 
 				<div class="font-size25 jua-regular">철회</div>
 				<div class="retract">
-					<a href="#" data-izimodal-open="#retract_request">
-						<div class="s-wrap radious10">
-							<div class="s-category line-border-square-sm">연차</div>
-							<div class="r-situation line-border-square-sm RedContext">철회</div>
-							<div class="s-date line-border-square-sm">2024-04-24 ~
-								2024-05-25</div>
-						</div>
-					</a>
-					<div class="s-wrap radious10">
-						<div class="s-category line-border-square-sm">연차</div>
-						<div class="r-situation line-border-square-sm RedContext">철회</div>
-						<div class="s-date line-border-square-sm">2024-04-24 ~
-							2024-05-25</div>
-					</div>
-					<div class="s-wrap radious10">
-						<div class="s-category line-border-square-sm">연차</div>
-						<div class="r-situation line-border-square-sm RedContext">철회</div>
-						<div class="s-date line-border-square-sm">2024-04-24 ~
-							2024-05-25</div>
-					</div>
 				</div>
 			</fieldset>
 		</div>
@@ -333,9 +302,6 @@ a {
 		}
 	</script>
 	<!-- 등록 ajax -->
-	<!--				processData:false,
-				contentType:false,
-				enctype: 'multipart/form-data',  -->
 	<script>
 		function selectModal(c){
 			$(document).on('opening', '#vact_' + c , function (e) {
@@ -745,24 +711,85 @@ a {
 			focusInput : true,
 			restoreDefaultContent : false,
 		});
-	</script>
 
-	<script>
-		const offset = new Date().getTimezoneOffset() * 60000;
-		const today = new Date(Date.now() - offset);
-		let dateData = today.toISOString().slice(0, 10);
+		function addWating(e){
+			let element = '';
+			
+			element +='<div class="s-wrap radious10" onclick="onpening(1, this);">'
+							+ '<div class="info" data-start="'+e.vacaStart+'" data-end="'+e.vacaEnd+'" data-coment="'+e.retractComent+'"'
+							+ '></div>'
+							+ '<div class="s-category line-border-square-sm">'+codeName(e.vacaGroupCode)+'</div>'
+							+ '<div class="s-situation line-border-square-sm gContext">대기</div>';
+			if(e.vacaGroupCode != 'B'){
+				element += '<div class="s-date line-border-square-sm">'
+								+  e.vacaStart.slice(0,10) + ' ~ ' + e.vacaEnd.slice(0,10)
+								+  '</div>'
+			}else {
+				element += '<div class="s-date line-border-square-sm">'+ e.vacaEnd +'</div>'
+			}
+			element += '</div>';							
+			$('.standby').append(element);
+		}
+		
+		function addReject(e){
+		let element = '';
+		element	+='<div class="s-wrap radious10" onclick="onpening(0, this);">'
+						+ '<div class="info" data-start="'+e.vacaStart+'" data-end="'+e.vacaEnd+'" data-coment="'+e.retractComent+'"></div>'
+						+ '<div class="s-category line-border-square-sm">'+codeName(e.vacaGroupCode)+'</div>'
+						+ '<div class="s-situation line-border-square-sm RedContext">철회</div>'
+		if(e.vacaGroupCode != 'B'){
+			element	+= '<div class="s-date line-border-square-sm">'
+							+		e.vacaStart.slice(0,10) + ' ~ ' + e.vacaEnd.slice(0,10)
+							+		'</div>'
+		}else {
+			element	+= '<div class="s-date line-border-square-sm">'+ e.vacaEnd +'</div>'
+		}
+		element	+= '</div>';	
+		$('.retract').append(element);
+		}
+		function codeName(code){
+			let string = '';
+			switch (code){
+				case 'A': string = '연차'; break;
+				case 'B': string = '반차'; break;
+				case 'C': string = '병가'; break;
+				case 'G': string = '소집일'; break;
+				default : String = '기타'			
+			}
+			return string;
+		}
+		function selectRequest(){
+			$.ajax({
+				url:'${path}/vacation/request.ajax',
+				type:'post',
+				contentType : 'application/json',
+				success:function(list){
+					console.log(list);
+					list.forEach((e) => {
+						if(e.approrvalStatus == 'N'){
+							addReject(e);
+						}else {
+							addWating(e);
+						}
+					})
+				},
+				error:function(){
+					console.log('ajax request fail');
+				}
+			});
+		}
+		function currentTime(){
+			const offset = new Date().getTimezoneOffset() * 60000;
+			const today = new Date(Date.now() - offset);
+			let dateData = today.toISOString().slice(0, 10);
 
-		today.setDate(today.getDate() + 1);
-		today.setTime(today.getTime() + 12 * 1000 * 60 * 60);
+			today.setDate(today.getDate() + 1);
+			today.setTime(today.getTime() + 12 * 1000 * 60 * 60);
 
-		let dateData0 = today.toISOString().slice(0, 10);
-	</script>
-
-	<script>
-		$(document).ready(function() {
+			let dateData0 = today.toISOString().slice(0, 10);
+			
 			let date = document.getElementsByClassName("currentDate1");
 			let dare0 = document.getElementsByClassName("currentDate2");
-
 			for (let i = 0; i < date.length; i++) {
 				date[i].value = dateData;
 			}
@@ -770,8 +797,41 @@ a {
 				dare0[i].value = dateData0;
 			}
 			
+		}
+		
+		function onpening(num, event){
+			if(num == 0){
+				$(document).on('opening', '#retract_request', function (e) {
+					
+					let arr = $(this).eq(0).find('input.date-area').get();
+					arr[0].value = event.children[0].dataset.start.slice(0,10);
+					arr[1].value = event.children[0].dataset.end.slice(0,10);
+					let coment = event.children[0].dataset.coment;
+					let str = (coment == 'null') ? '내용이 없습니다.':coment;
+					$(this).eq(0).find('textarea').val(str);
+				});
+
+			$('#retract_request').iziModal('open');
+			}else {
+				$(document).on('opening', '#standby_request', function (e) {
+					
+					let arr = $(this).eq(0).find('input.date-area').get();
+					arr[0].value = event.children[0].dataset.start.slice(0,10);
+					arr[1].value = event.children[0].dataset.end.slice(0,10);
+					let coment = event.children[0].dataset.coment;
+					let str = (coment == 'null') ? '내용이 없습니다.':coment;
+					$(this).eq(0).find('textarea').val(str);
+				});
+				
+				
+			$('#standby_request').iziModal('open');		
+			}
+		}
+
+		$(document).ready(function() {
+			currentTime();
 			insertIcon();
-			
+			selectRequest();
 		})
 	</script>
 	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />

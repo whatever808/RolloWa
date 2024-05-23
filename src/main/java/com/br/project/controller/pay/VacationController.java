@@ -45,9 +45,13 @@ public class VacationController {
 		model.addAttribute("vactList", vactList);
 	}
 	
+
 	/**
-	 * MultipartRequest multirequest
-	 * 
+	 * @author dpcks
+	 * @param vacation
+	 * @param files
+	 * @param session
+	 * @return
 	 */
 	@ResponseBody
 	@PostMapping(value="/insertVact.do", produces="text/html; charset=utf-8")
@@ -70,6 +74,25 @@ public class VacationController {
 			map.put("uploadFile", uploadFile);
 		}
 		return vactService.insertVacation(map);
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/request.ajax")
+	public List<VacationDto> selectRequest(HttpSession session){
+		//int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		int userNo = 1050;
+		
+		return vactService.selectRequest(userNo);
+	}
+	
+	/*수정*/
+	
+	@GetMapping("/complete.page")
+	public void moveComplete(Model model) {
+		Map<String, String> map = new HashMap<>();
+		map.put("code", "VACT01");
+		List<GroupDto> vactList = departService.selectDepartmentList(map);
+		model.addAttribute("vactList", vactList);
 	}
 	
 }
