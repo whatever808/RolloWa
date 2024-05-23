@@ -93,6 +93,14 @@
             color: #FEEFAD;
             z-index: 10;
         }
+        
+        .chat_alram {
+        	position: fixed;
+       		bottom: 90px;
+    			right: 20px;
+    			cursor: pointer;
+    			z-index: 10;
+        }
 
         .msg_open_btn:hover,
         .msg_close_btn:hover {
@@ -651,7 +659,15 @@
 					var alram;
 					var chatting;
 					var stompClient;
-					var chatRoomList;
+					
+					// 내가 현재 열어놓은 채팅방 번호
+					// 채팅방을 열지 않았다면 0
+					var subRoomNo = 0;
+					
+					// 수신한 메세지 개수
+					var msgCount = 0;
+					
+					
 					
 					$(document).ready(function() {
 						// 채팅용 웹소켓 연결
@@ -662,16 +678,16 @@
 					    $.ajax({
 					    	url: "${contextPath}/chat/rooms"
 					    	, method: "get"
-					    	, success: function(result) {
-					    		chatRoomList = result;
-					    		
+					    	, async: false
+					    	, success: function(result) {					    		
 					    		// 참여중인 채팅방 구독
 					    		for(var i = 0; i < result.length; i++) {
-					    			//subscribe(result[i].chatRoomNo)
 					    			stompClient.subscribe("/topic/chat/room/" + result[i].chatRoomNo, function(msg) {
-											console.log(msg);
-										})
+					    				// 메세지 수신 처리
+					    				receiveMsg(msg);
+					    			})
 					    		}
+					    		selectChatRoom();
 					    	}
 					    	, error: function() {
 					    		console.log("채팅방 목록 조회 ajax 통신 실패");

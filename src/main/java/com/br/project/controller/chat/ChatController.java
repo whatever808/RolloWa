@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import com.br.project.dto.chat.ChatMessageDto;
 import com.br.project.service.chat.ChatService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -33,26 +34,33 @@ public class ChatController {
 	    
 	    return objectMapper.readValue(json, typeReference);
 	}
+	
+	//Map을 json으로 변환
+	public String mapToJson(Map<String, String> map) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = null;
+		try {
+			json = objectMapper.writeValueAsString(map);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		
+		return json;
+	}
 		
 	// 채팅방 입장
 	@MessageMapping(value = "/chat/enter/{roomNo}")
     public void enter(String json){
-		log.debug("json : {}", json);
 		try {
 			Map<String, String> map = jsonToMap(json);
-			String msgContent = map.get("name") + "님이 채팅방에 입장하셨습니다.";
-			ChatMessageDto chatMsg = ChatMessageDto.builder()
-										.msgContent(msgContent)
-										.chatRoomNo(Integer.parseInt(map.get("roomNo")))
-										.userNo(Integer.parseInt(map.get("userNo")))
-										.build();
+			map.put("msgContent", map.get("name") + "님이 채팅방에 입장하셨습니다.");
+			int result = insertChatMsg(map);
 			
-			int result = chatService.insertChatMsg(chatMsg);
-			
-			if(result <= 0) {
-				msgContent = "오류 발생";
+			if (result > 0) {
+				template.convertAndSend("/topic/chat/room/" + map.get("roomNo"), map.get("msgContent"));
+			} else {
+				log.debug("채팅 메세지 저장 중 오류 발생");
 			}
-			template.convertAndSend("/topic/chat/room/" + map.get("rommNo"), msgContent);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}         
@@ -63,21 +71,28 @@ public class ChatController {
     public void message(String json){
 		try {
 			Map<String, String> map = jsonToMap(json);
-			String msgContent = map.get("name") + "님이 채팅방에 입장하셨습니다.";
-			ChatMessageDto chatMsg = ChatMessageDto.builder()
-										.msgContent(msgContent)
-										.chatRoomNo(Integer.parseInt(map.get("roomNo")))
-										.userNo(Integer.parseInt(map.get("userNo")))
-										.build();
+			int result = insertChatMsg(map);
 			
-			int result = chatService.insertChatMsg(chatMsg);
-			
-			if(result <= 0) {
-				msgContent = "오류 발생";
+			if (result > 0) {
+				template.convertAndSend("/topic/chat/room/" + map.get("roomNo"), json);
+			} else {
+				log.debug("채팅 메세지 저장 중 오류 발생");
 			}
-			template.convertAndSend("/topic/chat/room/" + map.get("rommNo"), msgContent);
-		} catch (Exception e) {
+			
+		} catch (Exception e) { 
 			e.printStackTrace();
 		}   
     }
+    
+    // 채팅 메세지 데이터베이스에 저장
+    public int insertChatMsg(Map<String, String> map) {
+    	ChatMessageDto chatMsg = ChatMessageDto.builder()
+				.msgContent(map.get("msgContent"))
+				.chatRoomNo(Integer.parseInt(map.get("roomNo")))
+				.userNo(Integer.parseInt(map.get("userNo")))
+				.build();
+
+    	return chatService.insertChatMsg(chatMsg);
+    }
 }
+
