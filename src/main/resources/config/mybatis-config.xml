@@ -21,7 +21,7 @@
     <typeAlias type="com.br.project.dto.notification.NotificationDto"     alias="NotificationDto"/>
     <typeAlias type="com.br.project.dto.attendance.AttendanceDto"			    alias="AttendanceDto"/>
     <typeAlias type="com.br.project.dto.pay.MemberDeptDto"                alias="MemberDeptDto"/>
-    <!-- <typeAlias type="com.br.project.dto.location.LocationDto"             alias="LocationDto" /> -->
+    <typeAlias type="com.br.project.dto.location.LocationDto"             alias="LocationDto" />
     <typeAlias type="com.br.project.dto.pay.VacationDto"           				alias="VacationDto" />
     <typeAlias type="com.br.project.dto.reservation.ReservationDto"       alias="ReservationDto" />
     <typeAlias type="com.br.project.dto.chat.ChatRoomDto"         				alias="ChatRoomDto" />
