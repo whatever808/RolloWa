@@ -46,7 +46,7 @@ public class AttractionController {
 		try {
 			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(attractionService.selectTotalAttractionCount(getParameterMap(request))
 														    ,Integer.parseInt(request.getParameter("page") == null ? "1" : request.getParameter("page"))
-														    ,5, 10);
+														    ,5, 5);
 			request.setAttribute("pageInfo", pageInfo);
 			request.setAttribute("attractionList", attractionService.selectAttractionList(getParameterMap(request), pageInfo));
 			request.setAttribute("locationList", locationService.selectLocationList());
@@ -74,7 +74,7 @@ public class AttractionController {
 		try {
 			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(attractionService.selectTotalAttractionCount(getParameterMap(request))
 														    ,Integer.parseInt(request.getParameter("page") == null ? "1" : request.getParameter("page"))
-														    ,5, 10);
+														    ,5, 5);
 			resultMap.put("pageInfo", pageInfo);
 			resultMap.put("attractionList", attractionService.selectAttractionList(getParameterMap(request), pageInfo));
 		}catch(Exception e) {
@@ -111,19 +111,7 @@ public class AttractionController {
 			params.put("registEmp", loginMember.getUserNo());
 			params.put("modifyEmp", loginMember.getUserNo());
 			params.put("manageEmp", loginMember.getUserNo());
-			
-			// 대표이미지 파일저장
-			// String filePath = request.getSession().getServletContext().getRealPath("/resources/images/attraction/");
-			String filePath = "/resources/images/attraction/";
-			File fileDir = new File("/resources/images/attraction/");
-			if(!fileDir.exists()) {
-				fileDir.mkdir();
-			}
-			String originalName = request.getFile("thumbnail").getOriginalFilename();
-			String ext = originalName.endsWith(".tar.gz") ? ".tar.gz" : originalName.substring(originalName.lastIndexOf("."));
-			String filesystemName = UUID.randomUUID().toString().replace("-", "") + ext;
-			request.getFile("thumbnail").transferTo(new File(fileDir, filesystemName));
-			params.put("thumbnailURL", filePath + filesystemName);
+			params.put("thumbnailURL", fileUtil.getFileUrl(request.getFile("thumbnail"), "attraction"));
 			
 			if(attractionService.insertAttraction(params) > 0) {
 				redirectAttributes.addFlashAttribute("modalColor", "G");

@@ -30,6 +30,7 @@
 			 ,nvl2(age_limit, age_limit || '세 ' || age_limit_range, '') "ageLimit"
 			 ,nvl2(height_limit, height_limit || 'cm ' || height_limit_range, '') "heightLimit"
 			 ,tb_attraction.status "status"
+			 ,thumbnail_url "thumbnailURL"
 			 ,(
 			 	 select user_name
 			 		 from member
@@ -53,6 +54,12 @@
 				and attraction_name like '%' || #{keyword} || '%'
 			</if>
 		</where>
+		  order by decode(tb_attraction.status, 'OPERATING', 1),
+	          decode(tb_attraction.status, 'PENDING', 2),
+	          decode(tb_attraction.status, 'STOP', 3),
+	          decode(tb_attraction.status, 'CLOSED', 4),
+	          tb_attraction.regist_date desc,
+	          tb_attraction.modify_date desc
 	</select>
 	
 	<!-- 어트랙션 상세조회 -->
@@ -88,13 +95,13 @@
 		  	   ,attraction_name
 		  	   ,attraction_intro
 		  	   ,customer_limit
-		  	   <if test="ageLimit.equals('Y')">
+		  	   <if test="ageLimitYN.equals('Y')">
 		  	     ,age_limit
 		  	     ,age_limit_range
 		  	   </if>
-		  	   <if test="heightLimit.equals('Y')">
-			  	 ,height_limit
-			  	 ,height_limit_range
+		  	   <if test="heightLimitYN.equals('Y')">
+				  	 ,height_limit
+				  	 ,height_limit_range
 		  	   </if>
 		  	   ,status
 		  	   ,status_reason
@@ -110,11 +117,11 @@
 		 		,#{attractionName}
 		 		,#{attractionIntro}
 		 		,#{customerLimit}
-		 		<if test="ageLimit.equals('Y')">
+		 		<if test="ageLimitYN.equals('Y')">
 		 		  ,#{ageLimit}
 		 		  ,#{ageLimitRange}
 		 		</if>
-		 		<if test="heightLimit.equals('Y')">
+		 		<if test="heightLimitYN.equals('Y')">
 		 		  ,#{heightLimit}
 		 		  ,#{heightLimitRange}
 		 		</if>

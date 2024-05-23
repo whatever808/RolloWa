@@ -17,31 +17,12 @@
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
 	<!-- content 추가 -->
-    <div class="content m-5">
+  <div class="content m-5">
 
-       <h1 class="page-title">어트랙션 조회</h1>
-
-	   <!-- location options start -->
-     <select class="attraction-location form-select d-inline-block me-5" style="width: 200px;">
-         <option value="">전체</option>
-         <c:forEach var="location" items="${ locationList }">
-          <option value="${ location.locationNo }">${ location.locationName }</option>
-         </c:forEach>
-     </select>
-     <!-- location options end -->
-       
-     <!-- attraction status start -->
-     <select class="attraction-status form-select d-inline-block" style="width: 200px;">
-         <option value="">전체</option>
-         <option value="PENDING">운영예정</option>
-         <option value="OPERATING">운영중</option>
-         <option value="STOP">운영중지</option>
-         <option value="CLOSED">운영종료</option>
-     </select>
-     <!-- attraction status end -->
-	   <br>
+     <h1 class="page-title">어트랙션 조회</h1>
+     
      <!-- about search start -->
-	   <div id="filter-search">
+	   <div id="filter-search" style="border: 1px solid tomato;">
 	     	 <!-- search form start-->
 		     <div id="search-form" class="input-group">
 		       	
@@ -73,91 +54,150 @@
 		     <!-- search form end -->
 	     </div>
 	     <!-- about search end -->
+	     
+	     <!-- about location filtering start -->
+	     <span>조회할 어트랙션 위치를 지도에서 선택하세요.</span>
+	     <div id="map"></div>
+	     <input type="hidden" class="attraction-location">
+	     <!-- about location filtering end -->
 
-       <!-- attraction list start -->
-       <div class="attraction-list">
-           <!-- attraction list table start-->
-           <table class="table table-hover bg-white">
-               <thead class="bg-secondary">
-                 <tr>
-                   <th>기구명</th>
-                   <th>위치</th>
-                   <th>최대수용인원</th>
-                   <th>연령제한</th>
-                   <th>키제한</th>
-                   <th>운영상태</th>
-                 </tr>
-               </thead>
-               <tbody id="attraction-list">
-                 <c:choose>
-                 	<c:when test="${ empty attractionList }">
-                 		<tr>
-                 			<td colspan="5">조회된 어트랙션이 없습니다.</td>
-                 		</tr>
-                 	</c:when>
-                 	<c:otherwise>
-                 		<c:forEach var="attraction" items="${ attractionList }">
-                 			<tr>
-			                   <td class="attraction-name-td">${ attraction.attractionName }</td>
-			                   <td>${ attraction.locationName }</td>
-			                   <td>${ attraction.customerLimit }</td>
-			                   <td>
-			                     <c:out value="${ attraction.ageLimit }" />
-			                   </td>
-			                   <td>
-			                     <c:out value="${ attraction.heightLimit }" />
-			                   </td>
-			                   <td>
-			                   	 <c:choose>
-			                   	 	<c:when test="${ attraction.status.equals('PENDING') }">
-				                      <span class="badge badge-secondary rounded-pill d-inline">운영예정</span>
-			                   	 	</c:when>
-			                   	 	<c:when test="${ attraction.status.equals('OPERATING') }">
-				                      <span class="badge badge-success rounded-pill d-inline">운영중</span>
-			                   	 	</c:when>
-			                   	 	<c:when test="${ attraction.status.equals('STOP') }">
-				                      <span class="badge badge-warning rounded-pill d-inline">운영중지</span>
-			                   	 	</c:when>
-			                   	 	<c:when test="${ attraction.status.equals('CLOSED') }">
-				                      <span class="badge badge-danger rounded-pill d-inline">운영종료</span>
-			                   	 	</c:when>
-			                   	 </c:choose>
-			                   </td>
-			                 </tr>
-                 		</c:forEach>
-                 	</c:otherwise>
-                 </c:choose>
-               </tbody>
-             </table>
-           <!-- attraction list table end -->
-		   
-		   <!-- pagination start -->
-	       <div class="attraction-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
-             <ul class="pagination">
-             
-             	<!-- Previous -->
-			      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
-					  onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '' }">
-			      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
-			      </li>
-			    
-			    <!-- Page -->
-			    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
-				    <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
-				    	onclick="${ pageInfo.currentPage != page ? 'ajaxAttractionList();' : '' }">
-				    	<span class="page-link" data-pageno="${ page }">${ page }</span>
-				    </li>
-			    </c:forEach>
-			    
-			    <!-- Next -->
-			    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
-			    	onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : ''}">
-			      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
-			    </li>
-			    
-			  </ul>
-         </div>
-         <!-- pagination end -->
+	     <!-- attraction list start -->
+	     <div class="attraction-list">
+	         <!-- attraction list table start-->
+	         <table class="table table-hover bg-white">
+	             <thead>
+	               <tr class="bg-secondary fw-bold">
+	               	 <th></th>
+	                 <th>어트랙션</th>
+	                 <th>위치</th>
+	                 <th>최대수용인원</th>
+	                 <th>연령제한</th>
+	                 <th>키제한</th>
+	                 <th>
+	                 		<!-- attraction status start -->
+								      <select class="attraction-status form-select d-inline-block" style="width: 150px;">
+								         <option value="">전체</option>
+								         <option value="PENDING">운영예정</option>
+								         <option value="OPERATING">운영중</option>
+								         <option value="STOP">운영중지</option>
+								         <option value="CLOSED">운영종료</option>
+								      </select>
+								      <!-- attraction status end -->
+	                 </th>
+	               </tr>
+	             </thead>
+	             <tbody id="attraction-list">
+	               <c:choose>
+	               	<c:when test="${ empty attractionList }">
+	               		<tr>
+	               			<td colspan="7">조회된 어트랙션이 없습니다.</td>
+	               		</tr>
+	               	</c:when>
+	               	<c:otherwise>
+	               		<c:forEach var="attraction" items="${ attractionList }">
+	               			<tr>
+	               				 <td class="thumbnail">
+	               				 		<img src="${ contextPath }/${ attraction.thumbnailURL }" alt="">
+	               				 </td>
+		                   <td class="attraction-name-td">${ attraction.attractionName }</td>
+		                   <td>${ attraction.locationName }</td>
+		                   <td>${ attraction.customerLimit }</td>
+		                   <td>
+		                     <c:out value="${ attraction.ageLimit }" />
+		                   </td>
+		                   <td>
+		                     <c:out value="${ attraction.heightLimit }" />
+		                   </td>
+		                   <td>
+		                   	 <c:choose>
+		                   	 	<c:when test="${ attraction.status.equals('PENDING') }">
+			                      <span class="badge badge-secondary rounded-pill d-inline">운영예정</span>
+		                   	 	</c:when>
+		                   	 	<c:when test="${ attraction.status.equals('OPERATING') }">
+			                      <span class="badge badge-success rounded-pill d-inline">운영중</span>
+		                   	 	</c:when>
+		                   	 	<c:when test="${ attraction.status.equals('STOP') }">
+			                      <span class="badge badge-warning rounded-pill d-inline">운영중지</span>
+		                   	 	</c:when>
+		                   	 	<c:when test="${ attraction.status.equals('CLOSED') }">
+			                      <span class="badge badge-danger rounded-pill d-inline">운영종료</span>
+		                   	 	</c:when>
+		                   	 </c:choose>
+		                   </td>
+		                 </tr>
+	               		</c:forEach>
+	               	</c:otherwise>
+	               </c:choose>
+	             </tbody>
+	           </table>
+	           <!-- attraction list table end -->
+	           
+				   	 <!-- pagination start -->
+			       <div class="pagination-div">
+			       		<div class="attraction-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
+		             <ul class="pagination">
+				            <!-- Previous -->
+							      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
+									  onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '' }">
+							      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
+							      </li>
+								    
+								    <!-- Page -->
+								    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
+									    <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
+									    	onclick="${ pageInfo.currentPage != page ? 'ajaxAttractionList();' : '' }">
+									    	<span class="page-link" data-pageno="${ page }">${ page }</span>
+									    </li>
+								    </c:forEach>
+					    
+								    <!-- Next -->
+								    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
+								    	onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : ''}">
+								      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
+								    </li>
+						  		</ul>
+				        </div>
+			       </div>
+		         <!-- pagination end -->
+		         
+		         <!-- attraction detail modal start -->
+		         <div class="attraction-detail-div">
+							  <div class="thumbnail-div">
+							    <img src="">
+							  </div>
+							
+							  <div class="attraction-info">
+								    <h3>바오 하우스</h3>
+								    
+								    <div class="attraction-intro">
+								      바오 하우스에는 실제 판다가 살고 있는 않습니다. 판다월드에서 만나보세요. 바오 하우스에서는 푸바오의 이야기를 만날 수 있어요. 태어난 순간부터의 성장일기, 푸덕이들이 보내준 멋진 팬아트와 푸바오를 돌보는 사육사들의 하루까지 
+								    </div>
+								    
+								    <hr>
+								    
+								    <div class="info-div">
+								       <span class="info-title">수용인원</span>
+								       <span class="info-content">10명</span>
+								    </div>
+								    
+								    <div class="info-div">
+								       <span class="info-title">연령제한</span>
+								       <span class="info-content">12세 이상</span>
+								    </div>
+								    
+								    <div class="info-div">
+								       <span class="info-title">신장제한</span>
+								       <span class="info-content">10명</span>
+								    </div>
+								    
+								    <div class="info-div">
+								       <span class="info-title">운영상태</span>
+								       <span class="info-content">운영중지(사고발생하여 당분간 운영을 중지함)</span>
+								    </div>
+								    
+							  </div>
+						 </div>
+		         <!-- attraction detail modal end -->
 	         
     </div>
     <!-- content 끝 -->
@@ -168,34 +208,36 @@
 </body>
 
 <!-- 어트랙션 조회 스크립트 -->
+<!-- Googel Map 스크립트 -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfeL19x8FxIk3SsSNFLKuL9N_1w9pAs24&callback=initMap"></script>
 <script>
 	// URL 페이지 요청시, 파라미터에 지정된 값이 있을경우, 해당값으로 선택값 및 입력값 지정
 	$(document).ready(function(){
-		const urlParams = new URLSearchParams(location.search);
-		
-		// "위치"값이 지정되었을 경우
-		if(urlParams.get("location") != null && urlParams.get("location") != '') {
-			$(".attraction-location").children().each(function(){
-				$(this).val() == urlParams.get("location") && $(this).prop("selected", "true");
-			});
-		}
-		
-		// "상태"값이 지정되었을 경우
-		if(urlParams.get("status") != null && urlParams.get("status") != '') {
-			$(".attraction-status").children().each(function(){
-				$(this).val() == urlParams.get("status") && $(this).prop("selected", "true");
-			});
-		}
-		
-		// "키워드"값이 지정되었을 경우
-		if(urlParams.get("keyword") != null && urlParams.get("keyword") != '') {
-			$("#keyword").val(urlParams.get("keyword"));
-		}
+			const urlParams = new URLSearchParams(location.search);
+			
+			// "위치"값이 지정되었을 경우
+			if(urlParams.get("location") != null && urlParams.get("location") != '') {
+				$(".attraction-location").children().each(function(){
+					$(this).val() == urlParams.get("location") && $(this).prop("selected", "true");
+				});
+			}
+			
+			// "상태"값이 지정되었을 경우
+			if(urlParams.get("status") != null && urlParams.get("status") != '') {
+				$(".attraction-status").children().each(function(){
+					$(this).val() == urlParams.get("status") && $(this).prop("selected", "true");
+				});
+			}
+			
+			// "키워드"값이 지정되었을 경우
+			if(urlParams.get("keyword") != null && urlParams.get("keyword") != '') {
+				$("#keyword").val(urlParams.get("keyword"));
+			}
 	})
 	
 	// 어트랙션 상세조회 function =====================================================================
 	function showDetail(attractionNo){
-		location.href = "${ contextPath }/attraction/detail.do?no=" + attractionNo;
+			location.href = "${ contextPath }/attraction/detail.do?no=" + attractionNo;
 	}
 	
 	// 어트랙션 리스트조회 ============================================================================
@@ -265,7 +307,7 @@
 				// 조회된 어트랙션이 없을 경우
 				if(attractionList.length == 0){
 					list += "<tr>";
-					list += 	"<td colspan='6'>조회된 어트랙션이 없습니다.</td>";
+					list += 	"<td colspan='7'>조회된 어트랙션이 없습니다.</td>";
 					list += "</tr>";
 				}
 				// 조회된 어트랙션이 있을 경우
@@ -273,6 +315,9 @@
 					// 생성할 리스트 태그 문자열
 					for(let i=0 ; i<attractionList.length ; i++){
 						list += "<tr>";
+						list += 	"<td class='thumbnail'>";
+						list += 		"<img src='${ contextPath }/" + attractionList[i].thumbnailURL + "' alt=''>";
+						list += 	"</td>";
 						list += 	"<td class='attraction-name-td' onclick='showDetail(" + attractionList[i].attractionNo + ");'>" + attractionList[i].attractionName + "</td>";
 						list += 	"<td>" + attractionList[i].locationName + "</td>";
 						list += 	"<td>" + attractionList[i].customerLimit + "</td>";
@@ -331,6 +376,62 @@
 		})
 		
 	}
+	
+	// 구글맵 관련 ============================================================================================================
+ 	function initMap (){
+ 		// 지도생성 및 설정
+ 		const map = new google.maps.Map(document.getElementById("map"), {
+ 			center: {lat: 35.636033359, lng: 139.878632426 },	// 초기값의 위도, 경도 설정
+ 			zoom: 12,	// 지도 가까운 정도
+ 		});
+ 		
+ 		// 어트랙션 위치 리스트조회
+ 		$.ajax({
+ 			url:"${ contextPath }/attraction/location/list.ajax",
+ 			method:"get",
+ 			async:false,
+ 			success:function(locationList){
+ 				locations = locationList;	// 놀이공원 위치목록
+ 			},error:function(){
+ 				console.log("SELECT LOCATION LIST AJAX FAILED");
+ 			}
+ 		});
+ 		
+ 		const bounds = new google.maps.LatLngBounds();		// 마커 위치표시를 위한 객체
+ 		const infoWindow = new google.maps.InfoWindow();	// 마커 클릭시 보여질 정보창 객체
+ 		
+ 		locations.forEach(function(location){
+ 			let locationNo = location.locationNo;
+ 			let locationName = location.locationName;
+ 			let latitude = parseFloat(location.latitude);
+ 			let longitude = parseFloat(location.longitude);
+ 			let mapMark = location.mapMark;
+ 			
+ 			// 마커생성 및 설정
+ 			const marker = new google.maps.Marker({
+ 				position: { lat: latitude, lng: longitude },
+ 				label: mapMark,
+ 				map: map,
+ 			});
+ 			bounds.extend(marker.position);	// 마커의 위치 정보를 넘겨줌
+ 		
+ 			// 마커클릭시, 보여질 정보성 메세지
+ 			marker.addListener("click", function(){
+ 				map.panTo(marker.position);				// 마커를 클릭했을 때, 마커가 있는 위치로 지도의 중심이 이동
+ 				infoWindow.setContent(locationName);	// 마커를 클릭했을때, 보여질 내용
+ 				infoWindow.open({
+ 					anchor: marker,
+ 					map: map,
+ 				});
+ 				
+ 				// 조회요청시 전달될 위치값 설정
+ 				$(".attraction-location").val(locationNo);
+ 				ajaxAttractionList();
+ 			
+ 			});
+ 		});
+ 		map.fitBounds(bounds);	// 지도 경계객체를 넘겨주면서 지도 경계조정하기
+ 	}
 
 </script>
 
