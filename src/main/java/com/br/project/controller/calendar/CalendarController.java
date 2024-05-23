@@ -370,5 +370,25 @@ public class CalendarController {
 		 String[] values = request.getParameterValues("check");
 		 return calService.ajaxDeletedCal(values);
 	}
+	
+	
+	/* ======================================= "가림" 구역 ======================================= */
+	/**
+	 * 로그인한 사용자의 오늘일정 조회
+	 */
+	@RequestMapping(value="/todaySchedule.ajax")
+	@ResponseBody
+	public List<Map<String, Object>> selectTodaySchedule(HttpServletRequest request){
+		
+		MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("userNo", loginMember.getUserNo());
+		
+		return calService.selectTodaySchedule(params);
+	}
+	
+	
+	/* ======================================= "가림" 구역 ======================================= */
 
 }

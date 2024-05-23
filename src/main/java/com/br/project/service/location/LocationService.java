@@ -1,11 +1,11 @@
 package com.br.project.service.location;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 import com.br.project.dao.location.LocationDao;
-import com.br.project.dto.location.LocationDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +18,7 @@ public class LocationService {
 	/**
 	 * @return : 등록된 위치객체 리스트
 	 */
-	public List<LocationDto> selectLocationList(){
+	public List<Map<String, Object>> selectLocationList(){
 		return locationDao.selectLocationList();
 	}
 	

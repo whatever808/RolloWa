@@ -59,6 +59,59 @@ public class AttendanceDao {
 	public List<GroupDto> selectStatus() {
 		return sqlSessionTemplate.selectList("attendanceMapper.selectStatus");
 	}
+	
+	/* ======================================= "가림" 구역 ======================================= */
+	/**
+	 * 당일 휴가인 사원 리스트조회
+	 */
+	public List<Map<String, Object>> selectVacationMemberList(){
+		return sqlSessionTemplate.selectList("attendanceMapper.selectVacationMemberList");
+	}
+	
+	/**
+	 * 당일 휴가 or 결근 사원 근태등록
+	 */
+	public int insertVacationOrDayOffMemberAttend(Map<String, Object> params) {
+		return sqlSessionTemplate.insert("attendanceMapper.insertVacationOrDayOffMemberAttend", params);
+	}
+	
+	/**
+	 * 당일 결근한 사원 리스트조회
+	 */
+	public List<Map<String, Object>> selectDayOffMemberList(){
+		return sqlSessionTemplate.selectList("attendanceMapper.selectDayOffMemberList");
+	}
+	
+	/**
+	 * 사용자가 요청한 년도 & 월의 사용자 근태현황 조회
+	 */
+	public Map<String, Object> selectMemberAttend(HashMap<String, Object> params){
+		return sqlSessionTemplate.selectOne("attendanceMapper.selectMemberAttend", params);
+	}
+	
+	/**
+	 * 출근 등록
+	 */
+	public int insertMemberAttend(HashMap<String, Object> params) {
+		return sqlSessionTemplate.insert("attendanceMapper.insertMemberAttend", params);
+	}
+	
+	/**
+	 * 퇴근/조퇴 등록(수정)
+	 */
+	public int updateMemberAttend(HashMap<String, Object> params) {
+		return sqlSessionTemplate.update("attendanceMapper.updateMemberAttend", params);
+	}
+	
+	/**
+	 * 출근/퇴근/조퇴 시간조회
+	 */
+	public Map<String, Object> selectAttendTime(HashMap<String, Object> params){
+		return sqlSessionTemplate.selectOne("attendanceMapper.selectAttendTime", params);
+	}
+	
+	
+	/* ======================================= "가림" 구역 ======================================= */
 
 	
 }

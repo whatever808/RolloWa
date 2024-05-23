@@ -58,18 +58,18 @@
 	<!-- 어트랙션 상세조회 -->
 	<select id="selectAttraction" resultType="hashmap" parameterType="hashmap">
 		select 
-					 attraction_no "attractionNo"
-					,location "locationNo"
-					,location_name "locationName"
-					,attraction_name "attractionName"
-					,attraction_intro "attractionIntro"
-					,customer_limit "customerLimit"
-					,nvl2(age_limit, age_limit, '') "ageLimit"
-					,nvl2(age_limit, age_limit_range, '') "ageLimitRange"
-					,nvl2(height_limit, height_limit, '') "heightLimit"
-					,nvl2(height_limit_range, height_limit_range, '') "heightLimitRange"
-					,tb_attraction.status "status"
-					,status_reason "statusReason"
+			  attraction_no "attractionNo"
+			 ,location "locationNo"
+			 ,location_name "locationName"
+			 ,attraction_name "attractionName"
+			 ,attraction_intro "attractionIntro"
+			 ,customer_limit "customerLimit"
+			 ,nvl2(age_limit, age_limit, '') "ageLimit"
+			 ,nvl2(age_limit, age_limit_range, '') "ageLimitRange"
+			 ,nvl2(height_limit, height_limit, '') "heightLimit"
+			 ,nvl2(height_limit_range, height_limit_range, '') "heightLimitRange"
+			 ,tb_attraction.status "status"
+			 ,status_reason "statusReason"
 		 from tb_attraction
 		 join tb_location on (location_no = location)
 		where attraction_no = #{no}
@@ -88,30 +88,40 @@
 		  	   ,attraction_name
 		  	   ,attraction_intro
 		  	   ,customer_limit
-		  	   ,age_limit
-		  	   ,age_limit_range
-		  	   ,height_limit
-		  	   ,height_limit_range
+		  	   <if test="ageLimit.equals('Y')">
+		  	     ,age_limit
+		  	     ,age_limit_range
+		  	   </if>
+		  	   <if test="heightLimit.equals('Y')">
+			  	 ,height_limit
+			  	 ,height_limit_range
+		  	   </if>
 		  	   ,status
 		  	   ,status_reason
+		  	   ,thumbnail_url
 		  	   )
 		 values 
-			 		(
-			 		 seq_atrtno.nextval
-			 		,#{location}
-			 		,#{manageEmp}
-			 		,#{registEmp}
-			 		,#{modifyEmp}
-			 		,#{attractionName}
-			 		,#{attractionIntro}
-			 		,#{customerLimit}
-			 		,#{ageLimit}
-			 		,#{ageLimitRange}
-			 		,#{heightLimit}
-			 		,#{heightLimitRange}
-			 		,#{status}
-			 		,#{statusReason}
-			 		)
+		 	   (
+		 		 seq_atrtno.nextval
+		 		,#{location}
+		 		,#{manageEmp}
+		 		,#{registEmp}
+		 		,#{modifyEmp}
+		 		,#{attractionName}
+		 		,#{attractionIntro}
+		 		,#{customerLimit}
+		 		<if test="ageLimit.equals('Y')">
+		 		  ,#{ageLimit}
+		 		  ,#{ageLimitRange}
+		 		</if>
+		 		<if test="heightLimit.equals('Y')">
+		 		  ,#{heightLimit}
+		 		  ,#{heightLimitRange}
+		 		</if>
+		 		,#{status}
+		 		,#{statusReason}
+		 		,#{thumbnailURL}
+		 	   )
 	</insert>
 	
 	<!-- 어트랙션 수정 -->

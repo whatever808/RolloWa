@@ -98,7 +98,7 @@
                  	<c:otherwise>
                  		<c:forEach var="attraction" items="${ attractionList }">
                  			<tr>
-			                   <td class="attraction-name-td" onclick="showDetail(${ attraction.attractionNo });">${ attraction.attractionName }</td>
+			                   <td class="attraction-name-td">${ attraction.attractionName }</td>
 			                   <td>${ attraction.locationName }</td>
 			                   <td>${ attraction.customerLimit }</td>
 			                   <td>
@@ -131,34 +131,34 @@
              </table>
            <!-- attraction list table end -->
 		   
-		   	 <!-- pagination start -->
+		   <!-- pagination start -->
 	       <div class="attraction-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
-	             <ul class="pagination">
-	             
-	             	<!-- Previous -->
-				      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
-						  onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '' }">
-				      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
-				      </li>
-				    
-				    <!-- Page -->
-				    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
-					    <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
-					    	onclick="${ pageInfo.currentPage != page ? 'ajaxAttractionList();' : '' }">
-					    	<span class="page-link" data-pageno="${ page }">${ page }</span>
-					    </li>
-				    </c:forEach>
-				    
-				    <!-- Next -->
-				    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
-				    	onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : ''}">
-				      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
+             <ul class="pagination">
+             
+             	<!-- Previous -->
+			      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
+					  onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '' }">
+			      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
+			      </li>
+			    
+			    <!-- Page -->
+			    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
+				    <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
+				    	onclick="${ pageInfo.currentPage != page ? 'ajaxAttractionList();' : '' }">
+				    	<span class="page-link" data-pageno="${ page }">${ page }</span>
 				    </li>
-				    
-				  </ul>
-	         </div>
-	         <!-- pagination end -->
-
+			    </c:forEach>
+			    
+			    <!-- Next -->
+			    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
+			    	onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : ''}">
+			      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
+			    </li>
+			    
+			  </ul>
+         </div>
+         <!-- pagination end -->
+	         
     </div>
     <!-- content 끝 -->
 	

@@ -311,22 +311,26 @@
 </head>
 <body class="allposition">
 
+<!--  -->
 
-<c:if test="${ alertMsg != null }" >
-<c:choose>
-	<c:when test="${modalColor eq 'G'}" >
-		redAlert('${ alertTitle }', '${ alertMsg }');
-	</c:when>
-	<c:when test="${modalColor eq 'R'}">
-		greenAlert('${ alertTitle }', '${ alertMsg }');
-	</c:when>
-	<c:when test="${modalColor eq 'Y'}">
-		yellowAlert('${ alertTitle }', '${ alertMsg }');
-	</c:when>
-</c:choose>
 
-<!-- <script>alertify.alert('${alertTitle}','${alertMsg}'); </script> -->
-</c:if>
+<script>
+$(document).ready(function(){
+	if(${ alertMsg != null }){
+		switch ('${ modalColor }'){
+			case 'R' :
+				redAlert('${ alertTitle }', '${ alertMsg }');
+				break;
+			case 'G' :
+				greenAlert('${ alertTitle }', '${ alertMsg }');
+				break;
+			case 'Y' :
+				yellowAlert('${ alertTitle }', '${ alertMsg }');
+				break;
+		}
+	}
+	})
+</script>
 
 <main class="d-flex flex-nowrap"></main>
 	<!-- 알림창 div -->

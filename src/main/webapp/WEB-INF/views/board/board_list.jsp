@@ -10,6 +10,10 @@
 	
 	<!-- 게시글 목록페이지 스타일 -->
 	<link href="${ contextPath }/resources/css/board/list.css" rel="stylesheet" />
+	<!-- jQuery UI -->
+	<link rel="stylesheet" href="${ contextPath }/resources/jquery-ui/jquery-ui.css">
+  <script src="${ contextPath }/resources/jquery-ui/external/jquery/jquery.js"></script>
+  <script src="${ contextPath }/resources/jquery-ui/jquery-ui.js"></script>
 </head>
 <body>
 
@@ -55,10 +59,41 @@
 		       	<!-- search condition end -->
 		       	
 		        <!-- search keyword start -->
-			    <span class="form-outline" data-mdb-input-init>
+			    <span class="form-outline" data-mdb-input-init> 
 			        <input type="search" id="keyword" class="form-control" placeholder="게시글 검색" aria-label="게시글 검색"/>
 			    </span>
 			    <!-- search keyword end -->
+			    
+			    <script>
+			    	/*
+			    	$(document).ready(function(){
+			    		 var searchSource = ['엽기떡볶이', '신전떡볶이', '걸작떡볶이', '신당동떡볶이'];
+			    		$("#keyword").autocomplete({
+			    			source: searchSource,	// 자동완성 대상
+			    			select: function(evenet, ui){	// select 이벤트 발생시
+			    				console.log(ui.item);
+			    			},
+			    			focus: function(event, ui){	// focus 이벤트 발생시
+			    				return false;
+			    			},
+			    			minLength: 1,	// 최소 글자 수
+			    			autoFocus: true,	// true : 메뉴에서 첫번째 항목에 자동초점
+			    			class: {	// 윗젯요소에 추가할 클래스
+			    				'ui-autocomplete' : 'highlight'
+			    			},
+			    			delay: 100, // 키워드가 입력되기 시작해서 autocomplete 이벤트 발싱시까지 지연시간(ms)
+			    			disable: false,	// true : 자동완성 기능 꺼짐
+			    			position: {	// 제안메뉴 위치식별
+			    				my : 'right top',
+			    				at : 'right bottom'
+			    			},
+			    			close: function(event){
+			    				console.log(event);
+			    			}
+			    		});
+			    	});
+			    	*/
+			    </script>
 			    
 			    <!-- search button start -->
 			    <button id="search-btn" type="button" class="btn btn-secondary" onclick="searchValidation();" data-mdb-ripple-init>
