@@ -17,7 +17,16 @@
 .field-group{
     margin-bottom: 50px;
 }
-
+#map{
+	width: 1200px;
+	height: 400px;
+	border-radius: 20px;
+}
+input.map{
+	width: 250px;
+	border-radius: 20px;
+	border: 1px solid lightgray;
+}
 .field-title{
     font-weight: bold;
     font-size: large;
@@ -25,17 +34,17 @@
 }
 
 .thumbnail-div{
-		display: flex;
-		justify-content: center;
+	display: flex;
+	justify-content: center;
 }
 #thumbnail-preview:hover{
-		cursor: pointer;
+	cursor: pointer;
 }
 #thumbnail-preview{
-		border: 1px solid lightgray;
-		height: 400px;
-		width: 700px;
-		border-radius: 20px;
+	border: 1px solid lightgray;
+	height: 400px;
+	width: 1200px;
+	border-radius: 20px;
 }
 
 #attraction-name, #attraction-manage-emp, #attraction-intro{

@@ -2,7 +2,9 @@ package com.br.project.controller.facility.attraction;
 
 import static com.br.project.controller.common.CommonController.getParameterMap;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -109,6 +111,19 @@ public class AttractionController {
 			params.put("registEmp", loginMember.getUserNo());
 			params.put("modifyEmp", loginMember.getUserNo());
 			params.put("manageEmp", loginMember.getUserNo());
+			
+			// 대표이미지 파일저장
+			// String filePath = request.getSession().getServletContext().getRealPath("/resources/images/attraction/");
+			String filePath = "/resources/images/attraction/";
+			File fileDir = new File("/resources/images/attraction/");
+			if(!fileDir.exists()) {
+				fileDir.mkdir();
+			}
+			String originalName = request.getFile("thumbnail").getOriginalFilename();
+			String ext = originalName.endsWith(".tar.gz") ? ".tar.gz" : originalName.substring(originalName.lastIndexOf("."));
+			String filesystemName = UUID.randomUUID().toString().replace("-", "") + ext;
+			request.getFile("thumbnail").transferTo(new File(fileDir, filesystemName));
+			params.put("thumbnailURL", filePath + filesystemName);
 			
 			if(attractionService.insertAttraction(params) > 0) {
 				redirectAttributes.addFlashAttribute("modalColor", "G");
