@@ -169,4 +169,24 @@
 		and
 		    cr_no = #{roomNo}
   </update>
+  
+  <!-- 읽지 않은 메세지 갯수 조회 -->
+  <select id="selectUnreadMsg" resultType="_int">
+  	select
+		    count(*)
+		from
+		    chatting_message cm
+		join
+		    chatting_participation cp
+		on
+		    cp.chat_user_no = cm.user_no
+		where
+		    cm.user_no = #{ userNo }
+		and
+		    cm.cr_no = #{ roomNo }
+		and
+		    cp.cr_no = #{ roomNo }
+		and
+		    cm.send_date > cp.chat_in_date
+  </select>
 </mapper>

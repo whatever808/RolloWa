@@ -248,6 +248,21 @@
     	})
     }
     
+    // 채팅방의 읽지 않은 메세지 갯수 조회
+    function selectUnreadMsg(roomNo) {
+    	$.ajax({
+    		url: "${contextPath}/chat/messages/unread";
+    		, method: "get"
+    		, data: {roomNo: roomNo, user:No: ${loginMember.userNo}}
+    		, success: function(unreadMsgCount) {
+    			return unreadMsgCount;
+    		}
+    		, error: function() {
+    			console.log("읽지 않은 메세지 조회 ajax 실패");
+    		}
+    	})
+    } 
+    
     // 채팅방 목록 가져오기
 		function selectChatRoom() {
 		$chatRoomUl.empty();
@@ -476,7 +491,7 @@
 				// 메신저 아이콘에 알림 표시 추가
 				$(".chat_alram").append("<span class='badge bg-danger float-end'>New</span>");
 			}
-
+			
 			// 현재 내가 메세지가 수신된 채팅방을 열어 놓은지 확인
 			if(subRoomNo == chatBody.roomNo) {
 				// 메세지 보낸 사람이 자신이 아닐 때만 실행
