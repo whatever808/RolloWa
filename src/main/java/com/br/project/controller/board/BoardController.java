@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -263,14 +262,13 @@ public class BoardController {
 		}else {
 			// 공지사항 등록 실패했을 경우
 			response.put("result", "FAIL");
-			
+	
 			if(!uploadFileList.isEmpty()) {
 				for(AttachmentDto delFile : uploadFileList) {
 					new File(delFile.getAttachPath(), delFile.getModifyName()).delete();
 				}
 			}
-		}
-		
+    }
 		return response;
 	}
 	

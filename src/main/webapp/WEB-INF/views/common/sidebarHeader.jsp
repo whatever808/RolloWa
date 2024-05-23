@@ -506,13 +506,13 @@ $(document).ready(function(){
                     <div class="collapse" id="org-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li>
-                            	<a href="${ contextPath }/orginfo/orgChart.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
+                            	<a href="${ contextPath }/organization/chart.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/orginfo/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
+                            	<a href="${ contextPath }/organization/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/orginfo/orgManager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
+                            	<a href="${ contextPath }/organization/manager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
                             </li>
                         </ul>
                     </div>
@@ -529,7 +529,7 @@ $(document).ready(function(){
                             	<a href="${ contextPath }/attendance/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">출결 조회</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/attendance/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</a>
+                            	<a href="${ contextPath }/attendance/accountList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</a>
                             </li>
                             <li>
                             	<a href="${ contextPath }/attendance" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 상세 조회</a>
@@ -580,32 +580,17 @@ $(document).ready(function(){
                             <li><a href="${contextPath}/calendar/calendarList.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정 관리</a>
                             </li>
+                            <li><a href="${contextPath}/vacation/vacation.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">휴가</a>
+                            </li>
+                            <li><a href="${contextPath}/vacation/complete.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">지난 휴가</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
                 <!-- ======================================= calendar page ========================================= -->
-             
-                 <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#-collapse" aria-expanded="false">
-                        Orders
-                    </button>
-                    <div class="collapse" id="-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+  
                 <!-- 전자결재 -->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
@@ -652,14 +637,16 @@ $(document).ready(function(){
 								
         <div class="b-example-divider b-example-vr"></div>
 				<script>
-					let alram;
-					let chatting;
+					var alram;
+					var chatting;
 					var stompClient;
 					
 					$(document).ready(function() {
+						// 채팅용 웹소켓 연결
+						chatting = new SockJS("${contextPath}/chatting");
+						stompClient = Stomp.over(chatting);
 						// 알람용 웹소켓 연결
 						alram = new SockJS("${contextPath}/alram");
-						
 						// 알람 수신 시 alert 발생
 						alram.onmessage = function(evt) {
 							const obj = JSON.parse(evt.data);
@@ -668,7 +655,6 @@ $(document).ready(function(){
 								alertify.success('공지사항 페이지로 이동'); }
 			                , function(){ alertify.error('Cancel')}).set('labels', {ok:'이동하기', cancel:'취소'});;
 						}
-						
 					})
 					
 				</script>

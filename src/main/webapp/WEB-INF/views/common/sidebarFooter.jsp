@@ -374,7 +374,9 @@
                 </div>
             </section>
         </div>
-
+		<div>
+			<button type="button" onclick="sendMsg();">메세지 보내기</button>
+		</div>
     </main>
     <script src="${ contextPath }/resources/js/common/bootstrap.bundle.min.js"></script>
     <script src="${ contextPath }/resources/js/common/sidebars.js"></script>
@@ -502,30 +504,93 @@
        		}
        	})
        })
+       
+       
     })
 
     // 채팅하기 버튼 클릭 시 체크된 회원들과 채팅방 생성
     function createChatRoom() {
-    	$(".list-group-item").each(function(index, el) {
-    		if($(el).children().children().is(':checked')) {
-        	console.log($(el).children().children().val());
-    		}
-    		// 채팅용 웹소켓 연결
-				/*
-				chatting = new SockJS("${contextPath}/chatting");
-				stompClient = Stomp.over(chatting);
-				stompClient.connect({}, function(frame) {
-					console.log("Connected : " + frame);
-					stompClient.subscribe("/topic/a", function(msg) {
-						console.log(msg);
-					})
-				})
-				*/
+    	// 1. 채팅방 데이터 생성 => Chatting Room 데이터 추가, Chatting Participation 데이터 추가
+    	var roomNo;
+    	// 1-1. 채팅방 생성
+    	$.ajax({
+   			url: "${contextPath}/chat/room"
+   			, method: "post"
+   			, success: function(result) {
+   				if(result > 0) {
+   					roomNo = result;
+   					// 1-2. 채팅방 참여인원 생성
+ 			    	$(".list-group-item").each(function(index, el) {
+ 			    		if($(el).children().children().is(':checked')) {    			
+ 			    			// 1-2-1. 체크된 회원 채팅방 참여
+ 			    			$.ajax({
+ 			    				url: "${contextPath}/chat/parti"
+ 			    				, method: "post"
+ 			    				, data: {partUserNo: $(el).children().children().val()
+ 			    									, chatRoomNo: roomNo}
+ 			    				, success: function(result) {
+ 			    					if(result == "SUCCESS") {
+ 			    						// 1-2-2. 채팅방 구독
+	 		 			    			stompClient.connect({}, function(frame) {
+	 		 			    				stompClient.subscribe("/topic/room/" + roomNo, function(msg) {
+	 		 			    					console.log(msg);
+	 		 			    				})
+	 		 			    				// 1-2-3. 입장 메세지 발송
+	 		 				     			stompClient.send("/app/chat/enter/" + roomNo, {}, JSON.stringify({name : '${loginMember.userName}'
+	 		 				     																																				, roomNo: roomNo}));
+	 		 			    			})
+ 			    					}
+ 			    				}
+ 			    				, error: function() {
+ 			    					console.log("채팅방 참여인원 생성 ajax 통신 실패");
+ 			    				}
+ 			    			})
+ 			    			
+ 			    		}
+ 			    		// 채팅용 웹소켓 연결
+ 			    		/*
+ 							chatting = new SockJS("${contextPath}/chatting");
+ 							stompClient = Stomp.over(chatting);
+ 							stompClient.connect({}, function(frame) {
+ 								console.log("Connected : " + frame);
+ 								stompClient.subscribe("/topic/a", function(msg) {
+ 									console.log(msg);
+ 								})
+ 							})
+ 							*/
+ 			    	})
+   				}
+   			}
+   			, error: function() {
+   				console.log("채팅방 생성 ajax 통신 실패");
+   			}
     	})
     }
     
+    // 구독 중인 채팅방 목록 조회
+    $.ajax({
+    	url: "${contextPath}/chat/rooms"
+    	, method: "get"
+    	, success: function(result) {
+    		console.log(result)
+    		// 참여중인 채팅방 구독
+    		for(var i = 0; i < result.length; i++) {
+    			stompClient.connect({}, function(frame) {
+	    			stompClient.subscribe("/topic/chat/room/" + result[i].chatRoomNo, function(msg) {
+	    				console.log(msg);
+	    			})
+	    		})
+    		}
+    	}
+    	, error: function() {
+    		console.log("채팅방 목록 조회 ajax 통신 실패");
+    	}
+    })
+    
+    // 현재 접속한 채팅방 구독 주소로 메세지 발송
 		function sendMsg() {
-			stompClient.send("/app/user", {}, JSON.stringify({name : '${loginMember.userId}'}));
+			//stompClient.send("/app/user", {}, JSON.stringify({name: '${loginMember.userId}'
+			//																									, roomNo: roomNo}));
 		}
 </script>
 </html>

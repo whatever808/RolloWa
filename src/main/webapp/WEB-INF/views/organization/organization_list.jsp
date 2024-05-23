@@ -2,101 +2,27 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<%
+	String department = (request.getAttribute("department") != null) ? request.getAttribute("department").toString() : "";
+	String team = (request.getAttribute("team") != null) ? request.getAttribute("team").toString() : "";
+	
+    System.out.println("부서명: " + department);
+    System.out.println("팀명: " + team);
+%>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
 	<title>1.2 직원 검색</title>
-
-	<!-- animate -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
-	<!-- bootstrap -->
-	<link href="${ contextPath }/resources/css/common/bootstrap.min.css" rel="stylesheet">
-	
-	<!-- fontawesome -->
-	<script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
-	
-	<!-- Google Fonts Roboto -->
-	<link rel="stylesheet"
-	    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
-	
-	<!-- Google Fonts Jua -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-	
-	<!-- jQuery -->
-	<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
-	
-	<!-- 모달 관련 -->
-    <script src="${ contextPath }/resources/js/iziModal.min.js"></script>
-    <link rel="stylesheet" href="${ contextPath }/resources/css/iziModal.min.css">
 	
 	<!-- css -->
-	<link href="${ contextPath }/resources/css/common/sidebars.css" rel="stylesheet">
-	<link rel="stylesheet" href="${ contextPath }/resources/css/common.css">
-	<link rel="stylesheet" href="${ contextPath }/resources/css/common/mdb.min.css" />
-  
+	<link rel="stylesheet" href="${contextPath}/resources/css/organization/organization.css">
+
 	<style>
 	.main_content{
 	    width: 1200px !important;
 	    padding: 20px;
 	}
-	
-	.search_menu{
-	    justify-content: center;
-	    width: 100%;
-	}
-	.tr_search th{
-	    background-color: rgb(203, 237, 255) !important;
-	    text-align: center;
-	    width: 20%;
-	    vertical-align: middle !important;
-	    font-size: 30px;
-	}
-	.tr_search td{
-	    width: 200px;
-	    text-align: center;
-	}
-	.tr_search input {
-	    width: 100% !important;
-	}
-	.btn_center{
-	    text-align: center;
-	    padding-top: 30px !important;
-	}
-	.btn_center button {
-	    width: 140px;
-	    height: 50px;
-	    font-size: 20px;
-	}
-	.employee_count {
-	    margin-left: 10px;
-	}
-	table{
-		table-layout: fixed;
-	}
-	.table_empinfo {
-	    text-align: center;
-	    table-layout: fixed !important;
-	}
-	.table_empinfo th{
-	    background-color: rgb(255,247,208) !important;
-	    font-size: 19px;
-	}
-	.table_empinfo td{
-	    vertical-align: middle !important;
-	}
-	.table_empinfo td img{
-	    border: 1px solid gainsboro;
-	    border-radius: 100%;
-	    width: 50px;
-	    height: 50px;
-		object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
-	    margin: -10px;
- 	}
- 	
 	</style>
 </head>
 <body>
@@ -110,7 +36,7 @@
 	    <hr>
 	    
 	    <!-- ------------ -->
-	    <form id="search_Form" action="${ contextPath }/orginfo/search.do" method="GET">
+	    <form id="search_Form" action="${ contextPath }/organization/search.do" method="GET">
 	    	<input type="hidden" name="page" value="1">
 			
 	        <table class="table table_search">
@@ -138,7 +64,7 @@
 	                <!-- 검색 메뉴 4 : 이름 -->
 	                <th>이름</th>
 	                <td>
-	                    <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하세요.">
+	                    <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하세요.(한글만 입력)">
 	                </td>
 	            </tr>
 	            <tr>
@@ -165,6 +91,16 @@
 				
 				// 팀 조회 이동
 				selectTeamList();
+				if(""!="${department}" &&""!="${team}"){
+					let selectedDepartment = "${department}";
+					selectTeamList(selectedDepartment);
+				}
+				
+				// 자동 검색 실행
+                if ("${department}" !== "" || "${team}" !== "" || "${request.getParameter('phone')}" !== "" || "${request.getParameter('name')}" !== "") {
+                    search();
+                }
+				
 				
 	 		})
 	 		
@@ -177,9 +113,9 @@
 				}));
 				
 				$.ajax({
-			 		url:"${contextPath}/orginfo/department.do",
+			 		url:"${contextPath}/organization/department.do",
 			 		type:"GET",
-			 		async:"false",
+			 		/* async:"false", */
 			 		success: function(data){
 			 			
 			 			$.each(data, function(index, organizationDto) {
@@ -214,9 +150,9 @@
 		 	    }));
 	 			
 		 	    $.ajax({
-		 	        url:"${contextPath}/orginfo/team.do?selectedDepartment=" + departmentSelect.val(),
+		 	        url:"${contextPath}/organization/team.do?selectedDepartment=" + departmentSelect.val(),
 		 	        type:"GET",
-		 	        async:"false",
+		 	        /* async:"false", */
 		 	        success: function(data){
 		 	        	
 		 	            $.each(data, function(index, organizationDto) {
@@ -267,7 +203,7 @@
 		 	    let name = $("#name").val();
 		 	 
 	 			$.ajax({
-	 				url:"${contextPath}/orginfo/search.do",
+	 				url:"${contextPath}/organization/search.do",
 	 				type: "GET",
 	 				data: {
 	 		            department: department,
@@ -324,10 +260,10 @@
 				            <td>
 					            <c:choose>
 					            	<c:when test="${ not empty m.profileUrl }">
-						                <img src="${ m.profileUrl }" class="profile_img">
+						                <img src="${ m.profileUrl }" class="profile_img" onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
 					            	</c:when>
 					            	<c:otherwise>
-						                <img src="${ contextPath }/resources/images/defaultProfile.png">
+						                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">
 					            	</c:otherwise>
 					            </c:choose>
 				            </td>
@@ -354,13 +290,13 @@
 	    <!--페이징 처리 start-->
 		<div id="pagingArea" class="container">
 	        <ul class="pagination justify-content-center">
-	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/list.do?page=${pi.currentPage-1}">Previous</a></li>
+	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${pi.currentPage-1}">Previous</a></li>
 				
 				<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/list.do?page=${p}">${ p }</a></li>
+					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${p}">${ p }</a></li>
 				</c:forEach>
 				
-				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/orginfo/list.do?page=${pi.currentPage+1}">Next</a></li> 
+				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${pi.currentPage+1}">Next</a></li> 
 	        </ul>
 	    </div>
 	    

@@ -1,40 +1,99 @@
 package com.br.project.controller.chat;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dao.chat.ChatDao;
+import com.br.project.dto.chat.ChatRoomDto;
+import com.br.project.dto.member.MemberDto;
+import com.br.project.service.chat.ChatService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/chat")
 @RequiredArgsConstructor
+@Slf4j
 public class RoomController {
-	private final ChatDao chatDao;
-	
-	// 채팅방 목록 조회
-	@GetMapping("/rooms")
-	public String rooms(Model model) {
-		//model.addAttribute("list", chatDao.findAllRooms());
+	private final ChatService chatService;
 		
-		return "chat/rooms";
-	}
-	
 	// 채팅방 생성
 	@PostMapping("/room")
-	public String create(String name, RedirectAttributes redirectAttribute) {
-		//redirectAttribute.addFlashAttribute("roomName", chatDao.createChatRoomDto(name));
-		return "redirect:/chat/rooms";
+	@ResponseBody
+	public String insertChatRoom(HttpSession session) {
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		Map<String, Object> map = new HashMap<>();
+		
+		// 채팅방 생성 회원번호
+		map.put("userNo", loginMember.getUserNo());
+		
+		// 채팅방 이름
+		map.put("crName", UUID.randomUUID().toString());
+		
+		int result = chatService.insertChatRoom(map);
+		
+		if (result > 0) {
+			// 채팅방 번호 반환
+			return String.valueOf(result);
+		}
+		
+		return "FAIL";
 	}
 	
-	// 채팅방 조회
-	@GetMapping("/room")
-	public void getRoom(String roomId, Model model) {
-		//model.addAttribute("room", chatDao.findRoomById(roomId));
+	// 채팅방 참여인원 생성
+	@PostMapping("/parti")
+	@ResponseBody
+	public String insertChatParticipation(@RequestParam(value="partUserNo") String partUserNo,
+			HttpSession session
+			, String chatRoomNo) {
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		
+		// 체크된 회원이 있을 시
+		if(partUserNo != null) {
+			Map<String, Object> map = new HashMap<>();
+			
+			// 채팅방 생성 회원번호
+			map.put("userNo", loginMember.getUserNo());
+			
+			// 채팅방 번호
+			map.put("chatRoomNo", chatRoomNo);
+			log.debug("chatRoomNO : {}", chatRoomNo);
+			
+			// 채팅방 참여 회원번호
+			map.put("partUserNo", partUserNo);
+			log.debug("partUserNo : {}", partUserNo);
+			
+			int result = chatService.insertChatParticipation(map);
+			
+			if(result > 0) {
+				return "SUCCESS";
+			}
+		}
+		return "FAIL";
+	}
+	
+	// 로그인한 회원의 채팅방 목록 조회
+	@GetMapping(value="/rooms", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public List<ChatRoomDto> getRoom(HttpSession session) {
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		
+		List<ChatRoomDto> chatRoomList = chatService.selectChatRoom(loginMember.getUserNo());
+		return chatRoomList;
 	}
 }

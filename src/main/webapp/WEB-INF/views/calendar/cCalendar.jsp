@@ -189,7 +189,7 @@
 			       if(checkDate && checkTime){
 			       	updateCal();
 			       }else {
-			    	   alertify.alert('일정 수정','날짜 및 시간을 확인 해 주세요.');
+			    	   redAlert('일정 수정','날짜 및 시간을 확인 해 주세요.');
 			       }
 			   	};
 			   	/* 일정 update ajax */
@@ -274,14 +274,42 @@
 					  })
 				  }
 				  
-				  function checkAdmin(){
-					  
-				  }
-				  
+					function allDate(e){
+						console.log($(e).children('input').is(':checked'));
+						
+						const offset = new Date().getTimezoneOffset() * 60000;
+						const today = new Date(Date.now() - offset);
+						let dateData = today.toISOString().slice(0, 10);
+						let timeData = today.toISOString().slice(11, 16);
+						
+						if($(e).children('input').is(':checked')){
+					    $('#currentDate1').val(dateData);
+					    $('#currentTime1').val('00:00:00');
+					    $('#currentDate2').val(dateData);
+					    $('#currentTime2').val('23:59:00');
+				
+						}else {
+							document.getElementById('currentDate1').value = dateData;
+							document.getElementById('currentTime1').value = timeData;
+
+							today.setDate(today.getDate() + 1);
+							today.setTime(today.getTime() + 12 * 1000 * 60 * 60);
+
+							dateData = today.toISOString().slice(0, 10);
+							timeData = today.toISOString().slice(11, 16);
+							document.getElementById('currentDate2').value = dateData;
+							document.getElementById('currentTime2').value = timeData;
+						}
+					}
+					
 		   		/* document 후 실행 될 함수 */
 					$(document).ready(function(){
 						addEvent();
-						//console.log('${loginMember}');
+						
+						$('#allDate').on('click', function(){
+							allDate(this);
+						});
+						
 					})
 				</script>
         <!-- 컨텐츠 영역 -->
@@ -295,10 +323,10 @@
 	<!-- 상세보기 일정 모달 -->
 	<div id="cal_modal">
 	<form id='updateForm'>
-		<input type="hidden" name="calNO">
+		<input type="hidden" name="calNO" required>
 		<div>
 			<div class="jua-regular">Title</div>
-			<div><input type="text" name="calTitle" style="width: 80%"></div>
+			<div><input type="text" name="calTitle" style="width: 80%" required></div>
 		</div>
 		<br>
 		<div style="display: flex; justify-content: space-between; align-items: center">
@@ -329,7 +357,7 @@
 		<div style="display: flex; justify-content: space-between;">
 			<div class="jua-regular">All Day</div>
 
-		<div class="pretty p-switch all_day">
+		<div class="pretty p-switch all_day" id="allDate">
 				<input type="checkbox">
 				<div class="state p-success">
 					<label>종일</label>
@@ -341,21 +369,21 @@
 		<div class="date-time-area">
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular" type="date" id="currentDate1" name="date">
+					<input class="date-area jua-regular" type="date" id="currentDate1" name="date" required>
 				</div>
 				<br>
 				<div>
-					<input class="time-area jua-regular" type="time" id="currentTime1" name="time">
+					<input class="time-area jua-regular" type="time" id="currentTime1" name="time" required>
 				</div>
 			</div>
 			<div style="place-self: center; font-size: xx-large;">~</div>
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular" type="date" id="currentDate2" name="date">
+					<input class="date-area jua-regular" type="date" id="currentDate2" name="date" required>
 				</div>
 				<br>
 				<div>
-					<input class="time-area jua-regular" type="time" id="currentTime2" name="time">
+					<input class="time-area jua-regular" type="time" id="currentTime2" name="time" required>
 				</div>
 			</div>
 		</div>
@@ -369,7 +397,7 @@
 		
 		<div class="jua-regular">Place</div>
 		<div class="Place">
-			<input style="width: 80%" type="text" name="place">
+			<input style="width: 80%" type="text" name="place" required>
 		</div>
 		<br>
 		

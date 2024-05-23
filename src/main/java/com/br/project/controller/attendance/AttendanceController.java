@@ -1,17 +1,20 @@
 package com.br.project.controller.attendance;
 
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,99 +47,139 @@ public class AttendanceController {
 	private final OrganizationService organizationService;
 	private final PagingUtil pagingUtil;
 	private final BCryptPasswordEncoder bcryptPwdEncoder;
-
-	// 2.1 출결 상태 조회
+	
+	// 2.1 출결 상태 조회 -----------------------------------------------------------
 	@GetMapping("/list.do")
 	public ModelAndView list(@RequestParam(value = "page", defaultValue = "1") int currentPage,
 			@RequestParam(value = "nowDate", required = false) String nowDate, ModelAndView mv) {
 		
-		if (nowDate == null || nowDate.isEmpty()) {
-		    // nowDate가 null이거나 비어 있는 경우에만 현재 날짜 생성
-		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.KOREA);
-		    nowDate = sdf.format(new Date());
-		} else {
-		    // 사용자가 선택한 날짜를 Date 객체로 변환
-		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA);
-		    Date selectedDate = null;
-		    try {
-		        selectedDate = sdf.parse(nowDate);
-		    } catch (ParseException e) {
-		        // 파싱에 실패한 경우 처리
-		        e.printStackTrace();
-		    }
-		    // 현재 날짜 생성
-		    nowDate = sdf.format(selectedDate);
-		}
-
-		// 사용자가 선택한 날짜를 Date 객체로 변환
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA);
-		Date userSelectedDate = null;
-		try {
-		    userSelectedDate = sdf.parse(nowDate);
-		} catch (ParseException e) {
-		    // 파싱에 실패한 경우 처리
-		    e.printStackTrace();
-		}
-
-		// 로그에 출력
-		log.debug("사용자 날짜 : {}", userSelectedDate);
-
 		int listCount = attendanceService.selectAttendanceListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
-		List<HashMap<String, String>> list = attendanceService.selectAttendanceList(pi);
+		List<HashMap<String, String>> list = attendanceService.selectAttendanceList(pi, nowDate);
 
 		List<AttendanceDto> attendanceCount = attendanceService.SelectAttendanceCount();
-		// 오늘 날짜
-		Date today = new Date();
 
 		// 로그에 출력
-		log.debug("오늘 날짜 : {}", today);
-		log.debug("사용자 날짜 : {}", nowDate);
+		log.debug("리스트 오늘날짜 : {}", nowDate);
 		
-		mv.addObject("pi", pi).addObject("listCount", listCount).addObject("list", list)
-				.addObject("attendanceCount", attendanceCount).addObject("nowDate", nowDate)
-				.setViewName("attendance/list");
+		mv.addObject("pi", pi)
+		  .addObject("listCount", listCount)
+		  .addObject("list", list)
+		  .addObject("attendanceCount", attendanceCount)
+		  .setViewName("attendance/attendance_list");
 
 		return mv;
 	}
 	
-	
-	// 2.2 출결 검색
+	// 2.2 출결 검색 ------------------------------------------------------
 	@GetMapping("/search.do")
-	public ModelAndView search(@RequestParam(value="page", defaultValue="1") int currentPage,
-					   @RequestParam Map<String, String> search,
-					   ModelAndView mv) {
+	public ModelAndView search(@RequestParam(value = "page", defaultValue = "1") int currentPage,
+			@RequestParam(value = "selectedDate") String selectedDate, ModelAndView mv) {
 		
-		String department =search.get("department"); 
-		String team = search.get("team");
-		
-		if(department.equals("전체 부서")) {
-			search.put("department", "");
-		}
-		if(team.equals("전체 팀")) {
-			search.put("team", "");
-		}
-		
-		log.debug("◆◇◆◇◆◇◆◇◆ 출결 검색 ◆◇◆◇◆◇◆◇◆");
-		log.debug(" search: {}", search);
-		
-		int listCount = organizationService.selectSearchListCount(search);
+		String formattedDate = selectedDate.replace("-","");
+		log.debug("가져온 날짜 변환: {}" , formattedDate);
+
+		int listCount = attendanceService.selectAttendanceListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
-		List<MemberDto> list = organizationService.selectSearchList(search, pi);
+		
+		// 해당 selectSearchList에 날짜값(year,month) 넣어서 전달
+		List<HashMap<String, String>> list = attendanceService.selectAttendanceList(pi, formattedDate);
+
+		List<AttendanceDto> attendanceCount = attendanceService.SelectAttendanceCount();
+
+		mv.addObject("pi", pi)
+		  .addObject("listCount", listCount)
+		  .addObject("list", list)
+		  .addObject("attendanceCount", attendanceCount)
+		  .setViewName("attendance/attendance_list");
+
+		return mv;
+	}
+	
+	// 2.2 급여 조회(기본 페이지) --------------------------------------------------------------------------------------------
+	@GetMapping("/accountList.do")
+	public ModelAndView list(@RequestParam(value="page", defaultValue="1") int currentPage
+			, ModelAndView mv) {
+
+		// 오늘 날짜를 가져오기
+		Calendar cal = Calendar.getInstance();
+		int currentYear = cal.get(Calendar.YEAR);
+		int currentMonth = cal.get(Calendar.MONTH) + 1; // 월은 0부터 시작하므로 +1 해줍니다.
+
+		// year와 month 설정 (오늘 날짜를 기준으로 설정)
+		String year = String.valueOf(currentYear);
+		String month = String.format("%02d", currentMonth);
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("year", year);
+	    paramMap.put("month", month);
+		    
+		int listCount = organizationService.selectOrganizationListCount();
+		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
+		paramMap.put("pi", pi);
+		List<MemberDto> list = organizationService.selectAccountList(paramMap);
 		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .addObject("listCount", listCount)
-		  .addObject("search", search)
-		  .setViewName("attendance/list");
+		  .setViewName("attendance/account_list");
 		
 		return mv;
 	}
+	
+	// 2.2 급여 조회(검색 페이지) --------------------------------------------------------------------------------------------
+	@GetMapping("/accountSearch.do")
+	public ModelAndView accountSearch(@RequestParam(value="page", defaultValue="1") int currentPage, 
+			@RequestParam(value = "selectedDate") String selectedDate, ModelAndView mv) {
+		
+		String year = null;
+	    String month = null;
 
-	// 2.4 구성원 추가
+	    if (selectedDate != null && !selectedDate.isEmpty()) {
+	        year = selectedDate.split("-")[0];
+	        month = selectedDate.split("-")[1];
+	    }
+	    Map<String, Object> paramMap = new HashMap<>();
+	    paramMap.put("year", year);
+	    paramMap.put("month", month);
+	    
+		//log.debug("검색 year : {}", year);
+		//log.debug("검색 month : {}", month);
+		
+		int listCount = organizationService.selectOrganizationListCount();
+		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
+		paramMap.put("pi", pi);
+		List<MemberDto> list = organizationService.selectAccountList(paramMap);
+		
+		log.debug("사용자가 선택한 날짜 : {}", selectedDate);
+		
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .addObject("listCount", listCount)
+		  .setViewName("attendance/account_list");
+		
+		return mv;
+	}
+	
+	// 2.2 급여 상세 조회 페이지
+	@GetMapping("/accountDetail.do")
+	public String accountDetail(@RequestParam("userNo") int userNo, Model model) {
+		
+		List<MemberDto> list = organizationService.selectAccountDetail(userNo);
+		
+		model.addAttribute("list", list);
+		
+		return "attendance/account_detail";
+	}
+	
+	
+	
+	
+	
+	// 2.4 구성원 추가  ------------ 비밀번호 ajax 수정필요 --------------------------------------------------------------------
 	@GetMapping("/signup.page")
 	public String signupPage() {
-		return "attendance/signup";
+		return "attendance/attendance_signup";
 	}
 
 	@ResponseBody
@@ -146,28 +189,26 @@ public class AttendanceController {
 	}
 
 	@PostMapping("/signup.do")
-	public String signup(MemberDto member, RedirectAttributes redirectAttributes) {
+	public String insertMembmer(MemberDto member, RedirectAttributes redirectAttributes) {
 		log.debug("암호화 전 : {}", member);
 		member.setUserPwd(bcryptPwdEncoder.encode(member.getUserPwd()));
 		log.debug("암호화 후 : {}", member);
-
+		
 		int result = attendanceService.insertMember(member);
-
-		redirectAttributes.addFlashAttribute("alertTitle", "회원가입 서비스");
-		if (result > 0) {
-			redirectAttributes.addFlashAttribute("alertMsg", "가입 성공");
-		} else {
-			redirectAttributes.addFlashAttribute("alertMsg", "가입 실패");
-			redirectAttributes.addFlashAttribute("historyBackYN", "Y");
-		}
-
-		return "redirect:/";
+		
+			redirectAttributes.addFlashAttribute("alertTitle", "회원가입 서비스");
+			if (result > 0) {
+				redirectAttributes.addFlashAttribute("alertMsg", "가입 성공");
+			} else {
+				redirectAttributes.addFlashAttribute("alertMsg", "가입 실패");
+				redirectAttributes.addFlashAttribute("historyBackYN", "Y");
+			}
+			return "redirect:/";
 	}
-
 	
 	
 	
-	// select box 컨트롤러
+	// select box 컨트롤러 ------------------------------------------------------------------------------------
 	// 1. 부서 조회
 	@ResponseBody
 	@GetMapping("/department.do")

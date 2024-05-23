@@ -1,5 +1,8 @@
 package com.br.project.dto.pay;
 
+import java.util.List;
+
+import com.br.project.dto.common.AttachmentDto;
 import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.member.MemberDto;
 
@@ -23,10 +26,11 @@ public class VacationDto {
 	private String vacaComment;
 	private String vacaApporvalDate;
 	private String vacaColor;
-	private String vacaRetractC;
-	private String vacationRRetractC;
-	private String vacationApprorvalStatus;
-	private String vacationGroupCode;
-	private GroupDto group;
-	private MemberDto member;
+	private String RetractComent;
+	private String RRequestComent;
+	private String approrvalStatus;
+	private String vacaGroupCode;
+	private GroupDto 			group;
+	private MemberDto 			member;
+	private List<AttachmentDto> attach;
 }

@@ -87,9 +87,12 @@
 				 	<when test="refNo != null and !refNo.equals('')">
 				 		,#{refNo}
 				 	</when>
-				 	<otherwise>
+				 	<when test='refType.equals("BD")'>
 				 		,seq_bdno.currval
-				 	</otherwise>
+				 	</when>
+				 	<when test='refType.equals("VACT")'>
+				 		,seq_vano.currval
+				 	</when>
 				 </choose>
 				)
 	</insert>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="chatMapper">
+	<resultMap type="ChatRoomDto" id="chatRoomResult">
+		<id column="CR_NO" property="chatRoomNo"/>
+		<result column="CR_NAME" property="chatRoomName"/>
+		<result column="CR_ENROLL_DATE" property="enrollDate"/>
+		<result column="CR_MODIFY_DATE" property="modifyDate"/>
+		<result column="STATUS" property="status"/>
+		<result column="CR_ENROLL_USER_NO" property="enrollUserNo"/>
+		<result column="CR_MODIFY_USER_NO" property="modifyUserNo"/>
+	</resultMap>
+
+	<!-- 채팅방 생성 -->
+  <insert id="insertChatRoom">
+  	insert into
+    	chatting_room
+    	(
+        cr_no
+        , cr_name
+        , cr_enroll_user_no
+        , cr_modify_user_no
+    	)
+	    values
+	    (
+	        seq_crno.nextval
+	        , #{ crName }
+	        , #{ userNo }
+	        , #{ userNo }
+	    )
+  </insert>
+  
+  <!-- 채팅방 참여인원 생성 -->
+  <insert id="insertChatParti" parameterType="java.util.Map">
+  	insert into
+	    chatting_participation
+	    (
+	        chat_no
+	        , chat_user_no
+	        , chat_inv_user_no
+	        , cr_no
+	    )
+	    values
+	    (
+	        seq_cpno.nextval
+	        <choose>
+		        <when test="partUserNo != null">
+		        	, #{ partUserNo }
+		        </when>
+		        <otherwise>
+		        	, #{ userNo }
+		        </otherwise>
+	        </choose>
+	        , #{ userNo }
+	        <choose>
+		        <when test="chatRoomNo != null">
+		        	, #{ chatRoomNo }
+		        </when>
+		        <otherwise>
+		        	, seq_crno.currval
+		        </otherwise>
+	        </choose>
+	    )
+  </insert>
+  
+  <!-- 최신 채팅방 번호 조회 -->
+  <select id="selectLatestChatRoomNo" resultType="_int">
+  select
+	    cr_no
+	from 
+	    ( select
+	        cr_no, rownum
+	    from
+	        chatting_room
+	    order by
+	        cr_enroll_date desc)
+	where rownum = 1
+  </select>
+  
+  <!-- seq_crno.currval 반환 -->
+  <select id="selectSeqCurrVal" resultType="_int">
+  select
+  	seq_crno.currval
+  from
+   dual
+  </select>
+  
+  <!-- 채팅방 목록 조회 -->
+  <select id="selectChatRoom" resultMap="chatRoomResult">
+  select
+    	cr.cr_no
+	from
+	    chatting_participation cp
+	join
+	    chatting_room cr
+	on
+	    cp.cr_no = cr.cr_no
+	where
+	    chat_user_no = '1051'
+	and
+	    cr.status = 'Y'
+	and
+	    cp.status = 'Y'
+	order by
+	    chat_in_date desc
+  </select>
+  
+</mapper>
