@@ -142,7 +142,16 @@
 		}
 		
 		function ajaxSearchOld(){
-			
+			$.ajax({
+				url:'${path}/vacation/',
+				type:'post',
+				success:function(e){
+					console.log(e);
+				},
+				error:function(){
+					console.log('list select fail');
+				}
+			})
 		}
 		
 		$(document).ready(function(){
