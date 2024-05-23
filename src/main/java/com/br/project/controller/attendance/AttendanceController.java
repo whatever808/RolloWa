@@ -90,6 +90,7 @@ public class AttendanceController {
 			@RequestParam(value = "team") String team,
 			@RequestParam(value = "attendanceStatus") String attendanceStatus,
 			@RequestParam(value = "name") String name,
+			@RequestParam(value = "disassembledName") String disassembledName,
 			ModelAndView mv) {
 		
 		log.debug("검색 selectedDate : {}", selectedDate);
@@ -97,6 +98,7 @@ public class AttendanceController {
 		log.debug("검색 team : {}", team);
 		log.debug("검색 attendanceStatus : {}", attendanceStatus);
 		log.debug("검색 name : {}", name);
+		log.debug("검색 disassembledName : {}", disassembledName);
 		
 	    if(department.equals("전체 부서")) {
 	    	department = "";
@@ -114,6 +116,7 @@ public class AttendanceController {
 	    paramMap.put("team", team);
 	    paramMap.put("attendanceStatus", attendanceStatus);
 	    paramMap.put("name", name);
+	    paramMap.put("disassembledName", disassembledName);
 	    
 		//log.debug("paramMap : {}", paramMap);
 		
@@ -303,13 +306,6 @@ public class AttendanceController {
 	public List<GroupDto> selectPosition() {
 		log.debug("직급 조회 실행");
 	    return organizationService.selectPosition();
-	}
-	// 4. 상태 조회
-	@ResponseBody
-	@GetMapping("/status.do")
-	public List<GroupDto> selectStatus() {
-		log.debug("상태 조회 실행");
-	    return attendanceService.selectStatus();
 	}
 	
 	

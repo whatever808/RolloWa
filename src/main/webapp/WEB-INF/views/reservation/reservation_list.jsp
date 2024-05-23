@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
 
@@ -511,20 +512,25 @@
 									<td><h6>${ loop.index + 1 }</h6></td>
 									<td><h6>${ e.equipmentName }</h6></td>
 									
-									<td>${ e.code }</td>
-									
 									<!-- 모든 예약 확인 -->
 									<c:forEach var="r" items="${reservationList}">
 									
 									    <!-- e.code와 equipmentCode가 일치하는 경우 -->
-									    <c:if test="${e.code eq r.equipmentCode}">
-									    
-									        <!-- 시작 시간의 시간 부분만 표시 -->
-									        <% SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss"); %>
-									        <td>${sdf.format(r.reserveStart)}</td>
-									        <td>${r.reserveStart}</td>
-									        <td>${r.reserveEnd}</td>
-									    </c:if>
+									    <c:choose>
+										    <c:when test="${e.code eq r.equipmentCode}">
+										    	<c:forEach begin="1" end="${fn:substring(r.reserveStart, 11, 13)*2}" varStatus="loop">
+												    <td></td>
+												</c:forEach>
+												<c:forEach begin="1" end="${fn:substring(r.reserveStart, 14, 16)}" varStatus="loop">
+												    <c:if test="${loop.index == 1}">
+												        <td></td>
+												    </c:if>
+												</c:forEach>
+										        <td>${r.reserveStart}</td>
+										        <td>${r.reserveEnd}</td>
+										        <td>${ e.code }</td>
+										    </c:when>
+										</c:choose>
 									</c:forEach>
 					                
 					            </tr>
