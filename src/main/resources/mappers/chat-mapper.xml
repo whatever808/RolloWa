@@ -140,7 +140,7 @@
 		    msg_no, msg_content, send_date, user_name, user_no, profile_url
 		from
 		    (select
-		        msg_no, msg_content, send_date, user_name, cm.user_no, profile_url, rownum
+		        msg_no, msg_content, to_char(send_date, 'HH24:MI') as "SEND_DATE", user_name, cm.user_no, profile_url, rownum
 		    from
 		        chatting_message cm, member m
 		    where
@@ -150,9 +150,23 @@
 		    and
 		        cr_no = #{ roomNo }
 		    order by
-		        send_date)
+		        send_date desc)
 		where
 		    rownum <= 30
+    order by
+          send_date
 		]]>
   </select>
+  
+  <!-- 채팅방 접속 날짜 수정 -->
+  <update id="updateChatInDate">
+  	update
+		    chatting_participation
+		set
+		    chat_in_date = sysdate
+		where
+		    user_no = #{userNo}
+		and
+		    cr_no = #{roomNo}
+  </update>
 </mapper>
