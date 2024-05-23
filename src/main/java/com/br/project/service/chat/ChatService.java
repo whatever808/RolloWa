@@ -6,7 +6,10 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.br.project.dao.chat.ChatDao;
+import com.br.project.dao.member.MemberDao;
+import com.br.project.dto.chat.ChatMessageDto;
 import com.br.project.dto.chat.ChatRoomDto;
+import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ChatService {
 	private final ChatDao chatDao;
+	private final MemberDao memberDao;
 
 	// 채팅방 생성
 	public int insertChatRoom(Map<String, Object> map) {
@@ -45,5 +49,25 @@ public class ChatService {
 	// 로그인한 회원의 채팅방 목록 조회
 	public List<ChatRoomDto> selectChatRoom(int userNo) {
 		return chatDao.selectChatRoom(userNo);
+	}
+	
+	// 채팅 메세지 삽입
+	public int insertChatMsg(ChatMessageDto chatMsg) {
+		return chatDao.insertChatMsg(chatMsg);
+	}
+
+	// 채팅방 참여인원 조회
+	public List<MemberDto> selectParticipants(Map<String, Object> map) {
+		return memberDao.selectParticipants(map);
+	}
+
+	// 채팅 메세지 조회
+	public List<ChatMessageDto> selectChatMsg(String roomNo) {
+		return chatDao.selectChatMsg(roomNo);
+	}
+
+	// 채팅방 접속 날짜 수정
+	public int updateChatInDate(Map<String, String> map) {
+		return chatDao.updateChatInDate(map);
 	}
 }
