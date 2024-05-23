@@ -61,10 +61,10 @@ flex: wrap; */
 	width: 100px;
 }
 .input_name{
-	width: 100px;
+	width: 50px;
 }
 .search_menu select{
-    width: 150px;
+    width: 200px;
 }
 
 /* 직원 정보 테이블 */
@@ -99,7 +99,7 @@ object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
 
 
 /* 급여 상세 조회 페이지 css */
-
+	
     /* css */
     /* 화살표 */
     .arrow{
@@ -162,6 +162,7 @@ object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
         justify-content: center;
         margin: 50px;
     }
+    #pagingArea{width:fit-content;margin:auto;}
     /* 맨밑 여백 주기 */
     .btn_center button{
         width: 130px;

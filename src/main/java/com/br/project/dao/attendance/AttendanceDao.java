@@ -4,46 +4,35 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.br.project.dto.attendance.AttendanceDto;
-import com.br.project.dto.common.GroupDto;
-import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Repository
+@Slf4j
 public class AttendanceDao {
 
 	private final SqlSessionTemplate sqlSessionTemplate;
 	
+	// 출결 조회 dao
 	public int selectAttendanceListCount() {
 		return sqlSessionTemplate.selectOne("attendanceMapper.selectAttendanceListCount");
 	}
-
-
-	public List<HashMap<String, String>> selectAttendanceList(PageInfoDto pi, String nowDate) {
-		
-		int limit = pi.getListLimit();
-		int offset = (pi.getCurrentPage()-1) * limit;
-		
-		RowBounds rowBounds = new RowBounds(offset, limit);
-		
-		Map<String, Object> prams = new HashMap<String, Object>();
-		prams.put("nowDate", nowDate);
-		prams.put("rowBounds", rowBounds);
-
-		return sqlSessionTemplate.selectList("attendanceMapper.selectAttendanceList", prams, rowBounds);
-		
+	public List<HashMap<String, Object>> selectAttendanceList(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.selectList("attendanceMapper.selectAttendanceList", paramMap);
 	}
-
+	
+	/*
 	public List<AttendanceDto> SelectAttendanceCount() {
 		return sqlSessionTemplate.selectList("attendanceMapper.SelectAttendanceCount");
 	}
+	*/
 
 	// 아이디 중복체크
 	public int selectUserIdCount(String checkId) {
@@ -54,10 +43,8 @@ public class AttendanceDao {
 	public int insertMember(MemberDto member) {
 		return sqlSessionTemplate.insert("attendanceMapper.insertMember", member);
 	}
-
-	// 출결 상태 조회
-	public List<GroupDto> selectStatus() {
-		return sqlSessionTemplate.selectList("attendanceMapper.selectStatus");
+	public List<AttendanceDto> selectAttendanceCount(String selectedDate) {
+		return sqlSessionTemplate.selectList("attendanceMapper.selectAttendanceCount", selectedDate);
 	}
 	
 	/* ======================================= "가림" 구역 ======================================= */
@@ -113,5 +100,13 @@ public class AttendanceDao {
 	
 	/* ======================================= "가림" 구역 ======================================= */
 
+	
+
+	// 출결 상태 조회
+	/* 삭제 예정
+	public List<GroupDto> selectStatus() {
+		return sqlSessionTemplate.selectList("attendanceMapper.selectStatus");
+	}
+	 */
 	
 }
