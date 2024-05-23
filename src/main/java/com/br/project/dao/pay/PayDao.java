@@ -266,6 +266,10 @@ public class PayDao {
 	public List<Map<String, Object>> draftDetail(Map<String, Object> map){
 		return sqlSessionTemplate.selectList("payMapper.draftDetail", map);
 	}
+	//지출결의서 첨부파일 가져오기..
+	public List<Map<String, Object>>fileDraftDetail(Map<String, Object> map){
+		return sqlSessionTemplate.selectList("payMapper.fileDraftDetail", map);
+	}
 	
 	
 	//지출결의서 수정하기페이지 (리스트불러오기)
@@ -284,7 +288,10 @@ public class PayDao {
 		return sqlSessionTemplate.delete("payMapper.deleteJItem", map);
 	}
 	
-	//지출결의서 아이템품목 등록 재사용
+	//지출결의서 아이템품목 등록
+	public int updateInsertItemsJ(Map<String, Object> item) {
+		return sqlSessionTemplate.insert("payMapper.updateInsertItemsJ", item);
+	}
 	
 	//파일등록하기전에 기존파일 삭제한거있으면 삭제
 	public int deleteAttachment(String[] delFileNo) {
@@ -296,5 +303,70 @@ public class PayDao {
 		return sqlSessionTemplate.insert("payMapper.insertAttachment", map);
 	}
 	//-------------------
+	
+	//일주일이상지연된 목록리스트조회
+	public List<PayDto> delayDateList(String userName, PageInfoDto pi){
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.delayDateList", userName, rowBounds);
+	}
+	
+	public int moreDateSelectCount(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.moreDateSelectCount", map);
+	}
+	
+	public List<PayDto> delayDateSelectList(Map<String, Object> userMap, PageInfoDto pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.delayDateSelectList", userMap, rowBounds);
+	}
+	
+	public int moreDateSearchCount(Map<String, Object> userMap) {
+		return sqlSessionTemplate.selectOne("payMapper.moreDateSearchCount", userMap);
+	}
+	
+	public List<PayDto> delayDateSearchList(Map<String, Object> userMap, PageInfoDto pi){
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.delayDateSearchList", userMap, rowBounds);
+	}
+	
+	public List<Map<String, Object>> retireModify(Map<String, Object> map){
+		return sqlSessionTemplate.selectList("payMapper.retireDetail", map);
+	}
+	
+	public int hReportUpdate(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.hReportUpdate", map);
+	}
+	
+	public int updateHreport(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.updateHreport", map);
+	}
+	
+	public int updateBReport(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.updateBReport", map);
+	}
+	
+	public int deleteBItem(Map<String, Object> map) {
+		return sqlSessionTemplate.delete("payMapper.deleteBItem", map);
+	}
+	
+	public int updateInsertItemsB(Map<String, Object> item) {
+		return sqlSessionTemplate.insert("payMapper.updateInsertItemsB", item);
+	}
+	
+	public int ajaxSign(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.ajaxSign", map);
+	}
+	
+	public List<Map<String, Object>> teamNameList(){
+		return sqlSessionTemplate.selectList("payMapper.teamNameList");
+	}
+	
+	public List<Map<String, Object>> ajaxTeamSearch(String name){
+		return sqlSessionTemplate.selectList("payMapper.ajaxTeamSearch", name);
+	}
+	
+	public List<Map<String, Object>> ajaxSearchName(String name){
+		return sqlSessionTemplate.selectList("payMapper.ajaxSearchName", name);
+	}
+	
 	
 }

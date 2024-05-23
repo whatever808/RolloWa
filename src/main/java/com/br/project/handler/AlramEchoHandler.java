@@ -55,16 +55,16 @@ public class AlramEchoHandler extends TextWebSocketHandler {
 		// 로그인한 회원 => 모두 소켓에 연결
 		// 공지사항 등록 시 알림 발생 => 부서 회원에게만 공지사항 전송
 
-		log.debug("session : {}", session.getAttributes().get("loginMember"));
+		//log.debug("session : {}", session.getAttributes().get("loginMember"));
 		sessionList.add(session);
-		log.debug("sessionList : {}", sessionList);
+		//log.debug("sessionList : {}", sessionList);
 
 	}
 	
 	@Override
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-		log.debug("websocket으로 전달된 메세지 내용 : {}", message.getPayload());
-		log.debug("message 객체 : {}", message);		
+		//log.debug("websocket으로 전달된 메세지 내용 : {}", message.getPayload());
+		//log.debug("message 객체 : {}", message);		
 
 		Map<String, String> map = jsonToMap(message.getPayload().toString());		
 		// 알림 보낸 회원 조회
@@ -73,7 +73,9 @@ public class AlramEchoHandler extends TextWebSocketHandler {
 		// 공지사항 팀번호
 		String teamCode = map.get("teamCode");
 		// 공지사항 글번호
-		int boardNo = notificationService.selectLatestBno(teamCode);
+		String boardNo = map.get("boardNo");
+		
+		log.debug("boardNo : {}", boardNo);
 		
 		// message에 팀코드를 포함해서 전송되면 해당 팀코드를 갖는 사원에게만 알림 전송
 		for(WebSocketSession webSession : sessionList) {
@@ -85,11 +87,11 @@ public class AlramEchoHandler extends TextWebSocketHandler {
 				if(member.getTeamCode().equals(teamCode)) {
 					Map<String, String> textMap = new HashMap<>();
 					textMap.put("teamCode", teamCode);
-					textMap.put("boardNo", String.valueOf(boardNo));
+					textMap.put("boardNo", boardNo);
 					textMap.put("message", "부서 공지사항이 등록 되었습니다.");
 					
 					webSession.sendMessage(new TextMessage(mapToJson(textMap)));
-					log.debug("mapToJson : {}", mapToJson(textMap));
+					//log.debug("mapToJson : {}", mapToJson(textMap));
 				}
 			}
 		}

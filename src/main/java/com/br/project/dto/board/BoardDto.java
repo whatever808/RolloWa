@@ -28,6 +28,7 @@ public class BoardDto {
 	private String modifyDate;
 	private String title;
 	private String content;
+	private String textContent;
 	private String profileURL;
 	private int readCount;
 	private String status;

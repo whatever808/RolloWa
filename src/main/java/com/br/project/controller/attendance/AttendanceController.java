@@ -1,10 +1,18 @@
 package com.br.project.controller.attendance;
 
+
 import java.text.SimpleDateFormat;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -17,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.br.project.controller.common.CommonController;
 import com.br.project.dto.attendance.AttendanceDto;
 import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
@@ -295,5 +304,98 @@ public class AttendanceController {
 		log.debug("직급 조회 실행");
 	    return organizationService.selectPosition();
 	}
+	// 4. 상태 조회
+	@ResponseBody
+	@GetMapping("/status.do")
+	public List<GroupDto> selectStatus() {
+		log.debug("상태 조회 실행");
+	    return attendanceService.selectStatus();
+	}
+	
+	
+	/*
+	@ResponseBody
+	@GetMapping("/team.do")
+	public Map<String, List<GroupDto>> selectTeam() {
+		Map<String, List<GroupDto>> result = new HashMap<>();
+		result.put("department", attendanceService.selectDepartment());
+		result.put("team", attendanceService.selectTeam());
+		result.put("position", attendanceService.selectPosition());
+		
+		log.debug("==================");
+		List<GroupDto> departmentList = result.get("department");
+		log.debug("부서 값 : {}", departmentList);
+		log.debug("==================");
+		List<GroupDto> teamList = result.get("team");
+		log.debug("팀 값 : {}", teamList);
+		log.debug("==================");
+		return result;
+	}
+	*/
+	
+	/*
+	 * @ResponseBody
+	 * @GetMapping("/department.do") public String selectDepartment(Model model) {
+	 * 
+	 * /* 부서 조회 List<GroupDto> department = attendanceService.selectDepartment();
+	 * model.addAttribute("department", department);
+	 * 
+	 * 팀 조회 List<GroupDto> team = attendanceService.selectTeam();
+	 * model.addAttribute("team", team);
+	 * 
+	 * 직급 조회 List<GroupDto> position = attendanceService.selectPosition();
+	 * model.addAttribute("position", position);
+	 * 
+	 * 보여줄 페이지 이름 return "attendance/signup"; }
+	 */
+	
+	
+	
+	/* ======================================= "가림" 구역 ======================================= */
+	/**
+	 * 년도 & 월별 로그인 사용자의 근태현황 조회
+	 */
+	@RequestMapping(value="/myAttend.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public Map<String, Object> ajaxSelectMyAttend(HttpServletRequest request){
+		
+		HashMap<String, Object> params = CommonController.getParameterMap(request);
+		
+		Map<String, Object> responseData = new HashMap<>();
+		Map<String, Object> memberAttend = attendanceService.selectMemberAttend(params);
+		if(memberAttend != null && !memberAttend.isEmpty()) {
+			responseData.put("result", "SUCCESS");
+			responseData.put("attendInfo", memberAttend);
+		}else {
+			responseData.put("result", "FAIL");
+		}
+		
+		return responseData;
+	}
+	
+	/**
+	 * 출근 등록 | 퇴근/조퇴 등록(수정)
+	 */
+	@RequestMapping(value={"/insert.ajax", "/update.ajax"})
+	@ResponseBody
+	public Map<String, Object> ajaxMemberAttendCheck(HttpServletRequest request) {
+		
+		HashMap<String, Object> params = CommonController.getParameterMap(request);
+		
+		int result = request.getRequestURL().indexOf("insert") != -1 ? attendanceService.insertMemberAttend(params)
+																	 : attendanceService.updateMemberAttend(params);
+		
+		Map<String, Object> responseData = new HashMap<>();
+		if(result > 0) {
+			responseData.put("result", "SUCCESS");
+			responseData.put("attendTime", attendanceService.selectAttendTime(params));
+		}else {
+			responseData.put("result", "FAILED");
+		}
+
+		return responseData;
+	}
+	
+	/* ======================================= "가림" 구역 ======================================= */
 
 }

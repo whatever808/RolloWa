@@ -13,6 +13,7 @@
 	min-height: 800px;
 	width: 100%;
 	box-sizing: border-box;
+	display: flex;
 }
 
 .search-date {
@@ -54,12 +55,68 @@
 	overflow: hidden;
 	white-space: nowrap;
 }
+.del_input{
+	width: inherit;
+	
+}
 </style>
 </head>
 <body>
 	<div class="out-line">
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
+		<!-- 삭제 모달 -->
+		<div id="checkDelCalendar"></div>
+		
 		<script>
+			$('#checkDelCalendar').iziModal({
+	      title: '일정 삭제 확인',
+	      subtitle: '정말로 삭제 합니까?',
+	      headerColor: '#dc3545',
+	      padding: '15px',
+	      radius: 10,
+	      scrollHeight: 'auto',
+	      onOpening: function(){
+	    	  const $num = $('input[name=check]:checked');
+					let del_arr = new Array();
+					
+					$num.get().forEach((e) => {
+						del_arr.push(e.value);
+					})
+					$('#checkDelCalendar .iziModal-content').append('<input type="text" class="del_input" readonly>')
+																									.append('<div align="end"><button onclick="deleteCal();" class=" mt-3 btn btn-outline-danger jua-regular">삭제</button></div>');
+					$('#checkDelCalendar .del_input').val(del_arr);
+
+	      },
+	      onClosing: function(){
+	    	  $('#checkDelCalendar .iziModal-content *').remove();
+	      }
+	      
+			});
+			
+			function checkDelCal(){
+				$('#checkDelCalendar').iziModal('open');
+			}
+			
+			function deleteCal() {
+				$.ajax({
+					url : '${path}/calendar/deletedCheck.do',
+					type : 'post',
+					data : $('input[name=check]:checked').serialize(),
+					success : function(result) {
+						if (result > 0) {
+							$('#checkDelCalendar').iziModal('close');
+							greenAlert("일정 삭제", "성공적으로 삭제 되었습니다.");
+							importList($('.page-item.active>a').text())
+						} else {
+							redAlert("일정 삭제", "다시 시도 해주세요. 관리자를 호출 해 주세요.");
+						}
+					},
+					error : function() {
+						console.log('삭제ajax 실패');
+					}
+				})
+			};
+			
 			function currentDate() {
 				const offset = new Date().getTimezoneOffset() * 60000;
 				const today = new Date(Date.now() - offset);
@@ -114,7 +171,7 @@
 								+ list[i].duraDate
 								+ '</td>'
 								+ '<td><div class="pretty p-icon p-curve p-thick p-jelly">'
-								+ '<input type="checkbox" name="check" value="'+ list[i].calNO +'" />'
+								+ '<input type="checkbox" required name="check" value="'+ list[i].calNO +'" />'
 								+ '<div class="state p-danger"><label></label></div></div></td></tr>'
 					}
 				} else {
@@ -156,42 +213,16 @@
 				}
 				$('.pagination').append(page);
 			};
-
-			function deleteCal() {
- 	/* 		var checkedValues = $('input[name=check]:checked').map(function() {
-				 return this.value;
-				 }).get();  */ 
-
-				console.log(checkedValues);
-				$.ajax({
-					url : '${path}/calendar/deletedCheck.do',
-					type : 'post',
-					data : $('input[name=check]:checked').serialize(),
-				 /* 	data: JSON.stringify({ check: "1" }), 
- 					contentType: 'application/json', 
-				 	traditional: true, */
-					success : function(result) {
-						//console.log(page);
-						if (result > 0) {
-							alert("성공적으로 삭제 되었습니다.");
-							importList($('.page-item.active>a').text())
-						} else {
-							alert("다시 시도 해주세요. 관리자를 호출 해 주세요.");
-						}
-					},
-					error : function() {
-						console.log('삭제ajax 실패');
-					}
-				})
-
-			};
-
+			
 			$(document).ready(function() {
 				currentDate();
 				importList();
 			});
 		</script>
 		<!-- 컨텐츠 영역 -->
+		
+		<script></script>
+		
 		<div class="content" style="max-width: 1120px; padding: 30px;">
 			<fieldset class="radious10 inner-line line-shadow">
 				<legend>
@@ -241,7 +272,7 @@
 					</div>
 					<div>
 						<button class="btn btn-outline-danger jua-regular"
-							onclick="deleteCal();">삭제</button>
+							onclick="checkDelCal();">삭제</button>
 					</div>
 				</div>
 			</fieldset>

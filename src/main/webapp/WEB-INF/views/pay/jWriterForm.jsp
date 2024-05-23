@@ -166,30 +166,17 @@
                 <!-- informations left area start -->
                 <div class="left_con">
                     <div><h3>지출결의서</h3></div>
-                    <c:choose>
-                    	<c:when test="${ empty list }">
 	                    	<form action="${contextPath}/pay/jReportInsert.do" method="post" enctype="multipart/form-data">
-	                    </c:when>
-	                    <c:otherwise>
-	                    	<form action="${contextPath}/pay/jReportUpdate.do" method="post" enctype="multipart/form-data">
-	                    </c:otherwise>
-                    </c:choose>
                         <div id="sign_top">
                             <div id="sign_div_left">
                                 <table border="1" id="sign_left">
                                     <tr>
                                         <th>부 서</th>
-                                        <td>${list.get(0).DEPARTMENT} ${member.get(0).teamName}</td>                   
+                                        <td>${member.get(0).teamName}</td>                   
                                         <input type="hidden" name="deptName" value="${member.get(0).teamName}">
-                                        <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
-                                        <input type="hidden" name="draftNo" value="${list.get(0).DRAFT_NO}">
-                                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
-                                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
                                         <input type="hidden" name="writerNo" value="${userNo}">
-                                        <input type="hidden" name="documentNo" value="${list.get(0).DOCUMENT_NUMBER}">
                                         <input type="hidden" name="writerName" value="${member.get(0).userName}">
-                                        
-                                                                           
+                                                                      
                                     </tr>
                                     <tr>
                                         <th>기안일</th>
@@ -197,9 +184,7 @@
                                     </tr>
                                     <tr>
                                         <th>기안자</th>
-                                        <td>${list.get(0).PAYMENT_WRITER} ${member.get(0).userName}</td>
-                                        <input type="hidden" name="payWriter" value="${list.get(0).PAYMENT_WRITER}">
-                                        <input type="hidden" name="payWriterNo" value="${list.get(0).PAYMENT_WRITER_NO}">
+                                        <td>${member.get(0).userName}</td>
                                     </tr>
                                     <tr>
                                         <th>상태</th>
@@ -312,17 +297,15 @@
                         </div>
                        
                          <div class="table_middle">
-		                         <input type="hidden" name="firstApproval" id="first_name" class="namecheck" value="${ list.get(0).FIRST_APPROVAL }">
-		                         <input type="hidden" name="middleApproval" id="middle_name" class="namecheck" value="${ list.get(0).MIDDLE_APPROVAL }">
-		                         <input type="hidden" name="finalApproval" id="last_name" class="namecheck" value="${ list.get(0).FINAL_APPROVAL }"> 
+		                         <input type="hidden" name="firstApproval" id="first_name" class="namecheck">
+		                         <input type="hidden" name="middleApproval" id="middle_name" class="namecheck">
+		                         <input type="hidden" name="finalApproval" id="last_name" class="namecheck"> 
                             <table border="1" id="tr_table">
                                 <tr>
                                     <th>거래처</th>
                                     <th>사용내역 및 용도</th>
                                     <th>금액</th>
                                 </tr>
-                                <c:choose>
-                                <c:when test="${ empty list }">
 	                                <tr>
 	                                    <td><input type="text" name="account1"></td>
 	                                    <td><input type="text" name="usage1"></td>
@@ -343,30 +326,19 @@
 	                                    <td><input type="text" name="usage4"></td>
 	                                    <td class="num"><input type="text" name="price4"></td>
 	                                </tr>
-	                               </c:when>
-	                               <c:otherwise>
-	                               	<c:forEach var="i" begin="0" end="${ list.size() - 1 }">
-			                               	<tr>
-			                                   	<td><input type="text" name="account${i}" value="${ list.get(i).ACCOUNT }"></td>
-			                                    <td><input type="text" name="usage${i}" value="${ list.get(i).CONTENT }"></td>
-			                                    <td class="num"><input type="text${i}" name="price"  value="${ list.get(i).AMOUNT }"></td>
-			                                </tr>
-		                                </c:forEach>
-	                               </c:otherwise>
-                                </c:choose>
                            </table>
                            <table>
                                 <tr>
                                     <th colspan="2">합계</th>
-                                    <td><input type="text" name="totalPrice" value="${ list.get(0).SUM }"></td>
+                                    <td><input type="text" name="totalPrice"></td>
                                 </tr>
                                 <tr>
                                     <th colspan="2">부가가치세</th>
-                                    <td><input type="text" name="vat" value="${ list.get(0).VAT }"></td>
+                                    <td><input type="text" name="vat"></td>
                                 </tr>
                                 <tr>
                                     <th colspan="2">총 지출 합계</th>
-                                    <td><input type="text" name="totalExpendPrice"  value="${ list.get(0).TOTAL_SUM }"></td>
+                                    <td><input type="text" name="totalExpendPrice"></td>
                                 </tr>
                                 <tr>
                                     <th>파일첨부</th>
@@ -374,22 +346,6 @@
                                     	<input type="file"  name="uploadFiles" multiple>
                                     </td>
                                 </tr>
-                               <c:if test="${ not empty list }">
-                                <tr id="trFile">
-                                  <th>기존첨부파일</th> 
-                                  <td colspan="2">
-                                   <!-- 기존의 첨부파일 목록들 -->
-		                            		<c:forEach var="at" items="${ list }">
-		                            			<div class="attach">
-		                            				<a href="${contextPath}${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${at.ORIGIN_NAME}">${at.ORIGIN_NAME}</a>
-		                            				<span class="origin_del" data-fileno="${ at.FILE_NO }">x</span>
-		                            			</div>
-		                            		</c:forEach>
-                                  </td>
-                                </tr>
-                               </c:if>
-                               <input type="hidden" name="fileLength">
-                               <input type="hidden" name="fileDelete">
                             </table>
                         </div>
                         <!--버튼 영역-->
@@ -405,35 +361,6 @@
                 </div>
             </div>
         </div>
-        <script>
-        	$(document).ready(function(){
-        		let atlength = $(".attach").length;
-        		$("#fileLength").val(atlength);
-        		console.log($("#fileLength").val(atlength));
-        	  
-        		if($(".attach").children("a").length == 0){
-        			$("#trFile").remove();
-        		}
-        		
-        	})
-        </script>
-        
-       <script>
-       	$(document).on("click", ".origin_del", function(){
-       			
-       			let arr = [];
-       			$(".origin_del").each(function(){
-       				arr.push($(this).data("fileno"));
-       			})
-       			
-       			$("#fileDelete").val(arr);
-       			
-       			$(this).parent().remove();
-       			
-       	})
-       
-       </script>
-       
        <script>
 	    	function submitbtn(){
    					let itemArr = [];

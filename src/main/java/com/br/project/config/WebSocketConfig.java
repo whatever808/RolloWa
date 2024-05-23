@@ -16,7 +16,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 	 */
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/endpoint").withSockJS();
+		registry.addEndpoint("/chatting").withSockJS();
 		// 커넥션 맺는 경로
 	}
 
@@ -25,8 +25,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 	 */
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
-		registry.enableSimpleBroker("/subscribe");
-		// publisher가 /subscribe 경로로 메시지를 전송하면 subscriber에게 전달
+		registry.enableSimpleBroker("/topic");
+		// publisher가 /sub 경로로 메시지를 전송하면 subscriber에게 전달
         registry.setApplicationDestinationPrefixes("/app");
         // publisher가 /app 경로로 메세지를 보내면 가공해서 subscriber에게 전달
 	}

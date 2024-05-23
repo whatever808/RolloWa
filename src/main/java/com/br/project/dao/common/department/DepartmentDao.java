@@ -19,7 +19,7 @@ public class DepartmentDao {
 	
 	
 	/**
-	 * @param code : [그룹코드]
+	 * @param map : [그룹코드]
 	 * @return : 조회된 부서 리스트
 	 */
 	public List<GroupDto> selectDepartmentList(Map<String, String> map){
@@ -34,7 +34,9 @@ public class DepartmentDao {
 	public GroupDto selectUppderCode(HashMap<String, Object> params) {
 		return sqlSessionTemplate.selectOne("departmentMapper.selectUppderCode", params);
 	}
-	
 	/* ================================================= "가림" 구역 end ================================================= */
 	
+	/* ================================================= "기웅" 구역 start ================================================= */
+	
+	/* ================================================= "기웅" 구역 end ================================================= */
 }

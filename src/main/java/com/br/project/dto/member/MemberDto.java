@@ -38,6 +38,7 @@ public class MemberDto {
 	private int authLevel;
 	private int salary;
 	private String teamCode;
-	private String positionCode;	
+	private String positionCode;
+	private String position;
 	
 }

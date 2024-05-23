@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,8 +33,8 @@ public class FileUtil {
 	 * @param category    : 저장할 파일의 유형
 	 */
 	public Map<String, String> fileUpload(MultipartFile uploadFile, String category) {
-		
-		String filePath = "/upload/" + category + new SimpleDateFormat("/yyyy/MM/dd").format(new Date());
+		String filePath =  /*request.getServletContext().getRealPath("/") + */"/upload/" + category + new SimpleDateFormat("/yyyy/MM/dd").format(new Date());
+		log.debug("filePath : {}", filePath);
 		File filePathDir = new File(filePath);
 		if(!filePathDir.exists()) {
 			filePathDir.mkdirs();

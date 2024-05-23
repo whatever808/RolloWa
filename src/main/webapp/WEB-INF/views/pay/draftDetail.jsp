@@ -133,8 +133,8 @@
                                 <tr>
                                     <th colspan="2">파일 첨부</th>
                                     <td colspan="4">
-                                    	<c:forEach var="f" items="${ list }">
-																				<a href="${contextPath}${f.ATTACH_PATH}/${f.MODIFY_NAME}" download="${f.ORIGIN_NAME}">${f.ORIGIN_NAME}</a><br>
+                                    	<c:forEach var="at" items="${ fileList }">
+																				<a href="${contextPath}${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${at.ORIGIN_NAME}">${at.ORIGIN_NAME}</a><br>
 																			</c:forEach>
 																		</td>
                                 </tr>

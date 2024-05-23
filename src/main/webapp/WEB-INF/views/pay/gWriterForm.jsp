@@ -214,7 +214,7 @@
 		                                                    <ul>
 		                                                    	 <c:forEach var="l" items="${maDeptList}">
 																												 <button class="btn_result">${l.teamName}(${l.positionName}) ▶${l.userName}</button><br>
-																									 </c:forEach>
+																									 				</c:forEach>
 		                                                    </ul>
 		                                                    
 		                                                    <button class="atag">운영부</button>
@@ -329,7 +329,6 @@
                     </form>
                 </div>
             </div>
-        </div>
 
        <script>
        $("#submit_btn").click(function(){
