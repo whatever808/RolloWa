@@ -9,32 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3.1 비품 예약</title>
 
-    <!-- animate -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
-	<!-- bootstrap -->
-	<link href="${contextPath}/resources/css/common/bootstrap.min.css" rel="stylesheet">
-	
-	<!-- fontawesome -->
-	<script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
-	
-	<!-- Google Fonts Roboto -->
-	<link rel="stylesheet"
-	    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
-	
-	<!-- Google Fonts Jua -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-	
-	<!-- jQuery -->
-	<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
-	
-	<!-- css -->
-	<link href="${contextPath}/resources/css/common/sidebars.css" rel="stylesheet">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
-  
 	<style>
     .main_content{
     	width: 1200px !important;
@@ -42,11 +16,18 @@
     }
     
     /* 비품 예약 css */
+    .select_date{
+    	margin: 50px;
+    }
     .table_2{
 	    font-size: 25px;
 	    margin: auto;   
 	    width: 350px;
 	}
+	#currentDate{
+    	white-space: nowrap;
+    	font-size: 25px;
+    }
     .div_date{
         margin-top: 20px;
         text-align: center;
@@ -93,6 +74,7 @@
     .div_common{
         display: flex;
         justify-content: center;
+        align-items: center;
     }
     .table_count{
         width: 100%;
@@ -175,15 +157,6 @@
         width: 80px !important;
         text-align: center;
     }
-    .i_minus, .i_plus{
-        border-radius: 30%;
-    }
-    .i_minus{
-        background-color: rgb(255, 50, 50);
-    }
-    .i_plus{
-        background-color: rgb(47, 180, 47) ;
-    }
     .div_count h5{
         margin: 0 30px;
     }
@@ -207,253 +180,275 @@
 	    <h2>비품 예약</h2>
 	    <hr>
 	    
-		<!-- ------------ -->
+		<!-- ----------------------------------------------------------------------------------------- -->
 	
 		<!--날짜, 오늘 선택 -->
 		<div class="select_date">
 		<table class="table_2">
 		    <tr>
 				<td><h3><div class="arrow" onclick="changeDate(-1);">◀</div></h3></td>
-				<td><input type="month" id="currentDate" onchange="changeDate(0);"></td>
+				<td><input type="date" id="currentDate" onchange="changeDate(0);"></td>
 				<td><h3><div class="arrow" onclick="changeDate(1);">▶</div></h3></td>
 				</tr>
 		    </table>
 		</div>
+		
+		<!-- 날짜 관련 js -->
+		<script>
+		// 페이지 로드시 오늘 날짜 표시하기 
+        window.onload = function() {
+        	todayDate();
+        }
+		
+        let currentDate = new Date(); // 다음값 : Tue May 21 2024 13:16:45 GMT+0900 (한국 표준시)
+        
+		let currentYear = currentDate.getFullYear(); // 2024
+		let currentMonth = currentDate.getMonth() + 1; // 5
+		let currentDay = currentDate.getDate(); // 일
+		
+		// 오늘 날짜로 설정하기 (2024-05-11 형식)
+        function todayDate(){
+			
+			// 날짜 형식 2024-05로 설정
+			let currentMonthString = currentYear + '-' + (currentMonth < 10 ? '0' : '') + currentMonth + '-' + (currentDay < 10 ? '0' : '') + currentDay;
+			
+			document.getElementById('currentDate').value = currentMonthString;
+        }
+        
+     	// 날짜 변경 함수
+		function changeDate(number) {
+			let currentDateInput = document.getElementById('currentDate').value;
+			
+			currentDate = new Date(currentDateInput);
+	        newDate = new Date(currentDate);
+	        newDate.setDate(currentDate.getDate() + number);
+			
+			let newYear = newDate.getFullYear();
+			let newMonth = newDate.getMonth() + 1;
+			let newDay = newDate.getDate();
+			let selectedDate = newYear + '-' + (newMonth < 10 ? '0' : '') + newMonth + '-' + (newDay < 10 ? '0' : '') + newDay;
+			
+			document.getElementById('currentDate').value = selectedDate;
+			console.log("현재 날짜 : ", selectedDate);
+			
+			$.ajax({
+				url:"${ contextPath }/reservation/search.do",
+				type:"GET",
+				data:{ 
+					selectedDate: selectedDate,
+				},
+				success: function(data){	
+					//console.log("통신 성공");
+					
+				}, error: function(){
+					//console.log("통신 실패");
+				}
+			})
+		}
+        
+		</script>
 
-            <!-- 비품명 검색 -->
-            <div class="div_search">
-                <form id="serarForm">
-                    <table >
-                        <tr>
-                            <th class="th_title">
-                                <h3>비품명</h3>
-                            </th>
-                            <td>
-                                <input type="text" placeholder="비품명을 입력하세요.">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <div class="div_searchBtn">
-                                    <button type="reset" class="btn btn-outline-primary"><h6>초기화</h6></button>
-                                    <button type="submit" class="btn btn-primary"><h6>검색</h6></button>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
-            
-            <!-- 상단 수량, 사용불가 제외-->
-            <div class="div_common">
-                <table class="table_count">
+        <!-- 비품명 검색 -->
+        <div class="div_search">
+            <form id="serarForm">
+                <table >
                     <tr>
-                        <td class="td_left"><h4>전체 10개</h4></td>
-                        <td class="td_right">
-                            <input type="checkbox" id="checkEquipment" name="checkEquipment" class="form-check-input">
-                            <label for="checkEquipment">
-                                <h4>사용불가 제외</h4>
-                            </label>
+                        <th class="th_title">
+                            <h3>비품명</h3>
+                        </th>
+                        <td>
+                            <input type="text" placeholder="비품명을 입력하세요.">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div class="div_searchBtn">
+                                <button type="reset" class="btn btn-outline-primary"><h6>초기화</h6></button>
+                                <button type="submit" class="btn btn-primary"><h6>검색</h6></button>
+                            </div>
                         </td>
                     </tr>
                 </table>
-            </div>
+            </form>
+        </div>
+        
+        <!-- 상단 수량, 사용불가 제외-->
+        <div class="div_common">
+            <table class="table_count">
+                <tr>
+                    <td class="td_left"><h4>전체 ${ listCount }개</h4></td>
+                    <td class="td_right">
+                        <input type="checkbox" id="checkEquipment" name="checkEquipment" class="form-check-input">
+                        <label for="checkEquipment">
+                            <h4>사용불가 제외</h4>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-            <!-- 비품 예약 모달창 -->
-            <div id="modal_reserve">
-                <div class="div_modal">
-                    <table class="table-bordered table_modal">
-                        <tr>
-                            <th><h5>예약자</h5></th>
-                            <td><h5>김병오(kimbyungoh123)</h5></td>
-                        </tr>
-                        
-                        <tr>
-                            <th><h5>부서명</h5></th>
-                            <td><h5>기획부</h5></td>
-                        </tr>
+        <!-- 비품 예약 모달창 -->
+        <div id="modal_reserve">
+            <div class="div_modal">
+                <table class="table-bordered table_modal">
+                    <tr>
+                        <th><h5>예약자</h5></th>
+                        <td><h5>김병오(kimbyungoh123)</h5></td>
+                    </tr>
+                    
+                    <tr>
+                        <th><h5>부서명</h5></th>
+                        <td><h5>기획부</h5></td>
+                    </tr>
 
-                        <tr>
-                            <th><h5>비품명</h5></th>
-                            <td><h5>업무미팅룸 208호</h5></td>
-                        </tr>
+                    <tr>
+                        <th><h5>비품명</h5></th>
+                        <td><h5>업무미팅룸 208호</h5></td>
+                    </tr>
 
-						<!-- 수량제거 예정
-                        <tr>
-                            <th><h5>수량</h5></th>
-                            <td>
-                                <div class="div_count">
-                                    <h5>
-                                        <i class="fa-solid fa-minus i_minus"></i>
-                                        <input type="text" value="1" class="modal_count">
-                                        <i class="fa-solid fa-plus i_plus"></i>
-                                    </h5>
+                    <tr>
+                        <th><h5>예약일</h5></th>
+                        <td>
+                            <h5>
+                                <input type="date" class="date" id="modal_date">
+                            </h5>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th><h5>예약시간</h5></th>
+                        <td>
+                            <h6>
+                                <div class="div_reserveTime">
+                                    <select id="start" class="select-box form-control" style="width:125px;">
+                                        <option value="00:00:00">오전 00:00</option>
+                                        <option value="00:30:00">오전 00:30</option>
+                                        <option value="01:00:00">오전 01:00</option>
+                                        <option value="01:30:00">오전 01:30</option>
+                                        <option value="02:00:00">오전 02:00</option>
+                                        <option value="02:30:00">오전 02:30</option>
+                                        <option value="03:00:00">오전 03:00</option>
+                                        <option value="03:30:00">오전 03:30</option>
+                                        <option value="04:00:00">오전 04:00</option>
+                                        <option value="04:30:00">오전 04:30</option>
+                                        <option value="05:00:00">오전 05:00</option>
+                                        <option value="05:30:00">오전 05:30</option>
+                                        <option value="06:00:00">오전 06:00</option>
+                                        <option value="06:30:00">오전 06:30</option>
+                                        <option value="07:00:00">오전 07:00</option>
+                                        <option value="07:30:00">오전 07:30</option>
+                                        <option value="08:00:00">오전 08:00</option>
+                                        <option value="08:30:00">오전 08:30</option>
+                                        <option value="09:00:00">오전 09:00</option>
+                                        <option value="09:30:00">오전 09:30</option>
+                                        <option value="10:00:00">오전 10:00</option>
+                                        <option value="10:30:00">오전 10:30</option>
+                                        <option value="11:00:00">오전 11:00</option>
+                                        <option value="11:30:00">오전 11:30</option>
+                                        <option value="12:00:00">오후 12:00</option>
+                                        <option value="12:30:00">오후 12:30</option>
+                                        <option value="13:00:00">오후 01:00</option>
+                                        <option value="13:30:00">오후 01:30</option>
+                                        <option value="14:00:00">오후 02:00</option>
+                                        <option value="14:30:00">오후 02:30</option>
+                                        <option value="15:00:00">오후 03:00</option>
+                                        <option value="15:30:00">오후 03:30</option>
+                                        <option value="16:00:00">오후 04:00</option>
+                                        <option value="16:30:00">오후 04:30</option>
+                                        <option value="17:00:00">오후 05:00</option>
+                                        <option value="17:30:00">오후 05:30</option>
+                                        <option value="18:00:00">오후 06:00</option>
+                                        <option value="18:30:00">오후 06:30</option>
+                                        <option value="19:00:00">오후 07:00</option>
+                                        <option value="19:30:00">오후 07:30</option>
+                                        <option value="20:00:00">오후 08:00</option>
+                                        <option value="20:30:00">오후 08:30</option>
+                                        <option value="21:00:00">오후 09:00</option>
+                                        <option value="21:30:00">오후 09:30</option>
+                                        <option value="22:00:00">오후 10:00</option>
+                                        <option value="22:30:00">오후 10:30</option>
+                                        <option value="23:00:00">오후 11:00</option>
+                                        <option value="23:30:00">오후 11:30</option>						
+                                    </select>
+                                <h6 class="h6_separator">~</h6>
+                                    <select id="end" class="select-box form-control" style="width:125px;">
+                                        <option value="00:00:00">오전 00:00</option>
+                                        <option value="00:30:00">오전 00:30</option>
+                                        <option value="01:00:00">오전 01:00</option>
+                                        <option value="01:30:00">오전 01:30</option>
+                                        <option value="02:00:00">오전 02:00</option>
+                                        <option value="02:30:00">오전 02:30</option>
+                                        <option value="03:00:00">오전 03:00</option>
+                                        <option value="03:30:00">오전 03:30</option>
+                                        <option value="04:00:00">오전 04:00</option>
+                                        <option value="04:30:00">오전 04:30</option>
+                                        <option value="05:00:00">오전 05:00</option>
+                                        <option value="05:30:00">오전 05:30</option>
+                                        <option value="06:00:00">오전 06:00</option>
+                                        <option value="06:30:00">오전 06:30</option>
+                                        <option value="07:00:00">오전 07:00</option>
+                                        <option value="07:30:00">오전 07:30</option>
+                                        <option value="08:00:00">오전 08:00</option>
+                                        <option value="08:30:00">오전 08:30</option>
+                                        <option value="09:00:00">오전 09:00</option>
+                                        <option value="09:30:00">오전 09:30</option>
+                                        <option value="10:00:00">오전 10:00</option>
+                                        <option value="10:30:00">오전 10:30</option>
+                                        <option value="11:00:00">오전 11:00</option>
+                                        <option value="11:30:00">오전 11:30</option>
+                                        <option value="12:00:00">오후 12:00</option>
+                                        <option value="12:30:00">오후 12:30</option>
+                                        <option value="13:00:00">오후 01:00</option>
+                                        <option value="13:30:00">오후 01:30</option>
+                                        <option value="14:00:00">오후 02:00</option>
+                                        <option value="14:30:00">오후 02:30</option>
+                                        <option value="15:00:00">오후 03:00</option>
+                                        <option value="15:30:00">오후 03:30</option>
+                                        <option value="16:00:00">오후 04:00</option>
+                                        <option value="16:30:00">오후 04:30</option>
+                                        <option value="17:00:00">오후 05:00</option>
+                                        <option value="17:30:00">오후 05:30</option>
+                                        <option value="18:00:00">오후 06:00</option>
+                                        <option value="18:30:00">오후 06:30</option>
+                                        <option value="19:00:00">오후 07:00</option>
+                                        <option value="19:30:00">오후 07:30</option>
+                                        <option value="20:00:00">오후 08:00</option>
+                                        <option value="20:30:00">오후 08:30</option>
+                                        <option value="21:00:00">오후 09:00</option>
+                                        <option value="21:30:00">오후 09:30</option>
+                                        <option value="22:00:00">오후 10:00</option>
+                                        <option value="22:30:00">오후 10:30</option>
+                                        <option value="23:00:00">오후 11:00</option>
+                                        <option value="23:30:00">오후 11:30</option>					
+                                    </select>
                                 </div>
-                            </td>
-                        </tr>
- 						-->
- 						
-                        <script>
-                            // 마이너스 버튼 클릭 시
-                            document.querySelector('.i_minus').addEventListener('click', function() {
-                                var inputElement = document.querySelector('.modal_count');
-                                var value = parseInt(inputElement.value);
-                                if (value > 1) {
-                                    inputElement.value = value - 1;
-                                }
-                            });
-                        
-                            // 플러스 버튼 클릭 시
-                            document.querySelector('.i_plus').addEventListener('click', function() {
-                                var inputElement = document.querySelector('.modal_count');
-                                var value = parseInt(inputElement.value);
-                                inputElement.value = value + 1;
-                            });
-                        </script>
-
-                        <tr>
-                            <th><h5>예약일</h5></th>
-                            <td>
-                                <h5>
-                                    <input type="date" class="date" id="modal_date">
-                                </h5>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <th><h5>예약시간</h5></th>
-                            <td>
-                                <h6>
-                                    <div class="div_reserveTime">
-                                        <select id="start" class="select-box form-control" style="width:125px;">
-                                            <option value="00:00:00">오전 00:00</option>
-                                            <option value="00:30:00">오전 00:30</option>
-                                            <option value="01:00:00">오전 01:00</option>
-                                            <option value="01:30:00">오전 01:30</option>
-                                            <option value="02:00:00">오전 02:00</option>
-                                            <option value="02:30:00">오전 02:30</option>
-                                            <option value="03:00:00">오전 03:00</option>
-                                            <option value="03:30:00">오전 03:30</option>
-                                            <option value="04:00:00">오전 04:00</option>
-                                            <option value="04:30:00">오전 04:30</option>
-                                            <option value="05:00:00">오전 05:00</option>
-                                            <option value="05:30:00">오전 05:30</option>
-                                            <option value="06:00:00">오전 06:00</option>
-                                            <option value="06:30:00">오전 06:30</option>
-                                            <option value="07:00:00">오전 07:00</option>
-                                            <option value="07:30:00">오전 07:30</option>
-                                            <option value="08:00:00">오전 08:00</option>
-                                            <option value="08:30:00">오전 08:30</option>
-                                            <option value="09:00:00">오전 09:00</option>
-                                            <option value="09:30:00">오전 09:30</option>
-                                            <option value="10:00:00">오전 10:00</option>
-                                            <option value="10:30:00">오전 10:30</option>
-                                            <option value="11:00:00">오전 11:00</option>
-                                            <option value="11:30:00">오전 11:30</option>
-                                            <option value="12:00:00">오후 12:00</option>
-                                            <option value="12:30:00">오후 12:30</option>
-                                            <option value="13:00:00">오후 01:00</option>
-                                            <option value="13:30:00">오후 01:30</option>
-                                            <option value="14:00:00">오후 02:00</option>
-                                            <option value="14:30:00">오후 02:30</option>
-                                            <option value="15:00:00">오후 03:00</option>
-                                            <option value="15:30:00">오후 03:30</option>
-                                            <option value="16:00:00">오후 04:00</option>
-                                            <option value="16:30:00">오후 04:30</option>
-                                            <option value="17:00:00">오후 05:00</option>
-                                            <option value="17:30:00">오후 05:30</option>
-                                            <option value="18:00:00">오후 06:00</option>
-                                            <option value="18:30:00">오후 06:30</option>
-                                            <option value="19:00:00">오후 07:00</option>
-                                            <option value="19:30:00">오후 07:30</option>
-                                            <option value="20:00:00">오후 08:00</option>
-                                            <option value="20:30:00">오후 08:30</option>
-                                            <option value="21:00:00">오후 09:00</option>
-                                            <option value="21:30:00">오후 09:30</option>
-                                            <option value="22:00:00">오후 10:00</option>
-                                            <option value="22:30:00">오후 10:30</option>
-                                            <option value="23:00:00">오후 11:00</option>
-                                            <option value="23:30:00">오후 11:30</option>						
-                                        </select>
-                                    <h6 class="h6_separator">~</h6>
-                                        <select id="end" class="select-box form-control" style="width:125px;">
-                                            <option value="00:00:00">오전 00:00</option>
-                                            <option value="00:30:00">오전 00:30</option>
-                                            <option value="01:00:00">오전 01:00</option>
-                                            <option value="01:30:00">오전 01:30</option>
-                                            <option value="02:00:00">오전 02:00</option>
-                                            <option value="02:30:00">오전 02:30</option>
-                                            <option value="03:00:00">오전 03:00</option>
-                                            <option value="03:30:00">오전 03:30</option>
-                                            <option value="04:00:00">오전 04:00</option>
-                                            <option value="04:30:00">오전 04:30</option>
-                                            <option value="05:00:00">오전 05:00</option>
-                                            <option value="05:30:00">오전 05:30</option>
-                                            <option value="06:00:00">오전 06:00</option>
-                                            <option value="06:30:00">오전 06:30</option>
-                                            <option value="07:00:00">오전 07:00</option>
-                                            <option value="07:30:00">오전 07:30</option>
-                                            <option value="08:00:00">오전 08:00</option>
-                                            <option value="08:30:00">오전 08:30</option>
-                                            <option value="09:00:00">오전 09:00</option>
-                                            <option value="09:30:00">오전 09:30</option>
-                                            <option value="10:00:00">오전 10:00</option>
-                                            <option value="10:30:00">오전 10:30</option>
-                                            <option value="11:00:00">오전 11:00</option>
-                                            <option value="11:30:00">오전 11:30</option>
-                                            <option value="12:00:00">오후 12:00</option>
-                                            <option value="12:30:00">오후 12:30</option>
-                                            <option value="13:00:00">오후 01:00</option>
-                                            <option value="13:30:00">오후 01:30</option>
-                                            <option value="14:00:00">오후 02:00</option>
-                                            <option value="14:30:00">오후 02:30</option>
-                                            <option value="15:00:00">오후 03:00</option>
-                                            <option value="15:30:00">오후 03:30</option>
-                                            <option value="16:00:00">오후 04:00</option>
-                                            <option value="16:30:00">오후 04:30</option>
-                                            <option value="17:00:00">오후 05:00</option>
-                                            <option value="17:30:00">오후 05:30</option>
-                                            <option value="18:00:00">오후 06:00</option>
-                                            <option value="18:30:00">오후 06:30</option>
-                                            <option value="19:00:00">오후 07:00</option>
-                                            <option value="19:30:00">오후 07:30</option>
-                                            <option value="20:00:00">오후 08:00</option>
-                                            <option value="20:30:00">오후 08:30</option>
-                                            <option value="21:00:00">오후 09:00</option>
-                                            <option value="21:30:00">오후 09:30</option>
-                                            <option value="22:00:00">오후 10:00</option>
-                                            <option value="22:30:00">오후 10:30</option>
-                                            <option value="23:00:00">오후 11:00</option>
-                                            <option value="23:30:00">오후 11:30</option>						
-                                        </select>
-                                    </div>
-                                </h6>
-                            </td>
-                        </tr>
+                            </h6>
+                        </td>
+                    </tr>
 
 
 
-                        <tr>
-                            <th><h5>메모</h5></th>
-                            <td>
-                                <h5>
-                                    <input type="text" placeholder="내용을 입력하세요.">
-                                </h5>
-                            </td>
-                        </tr>
+                    <tr>
+                        <th><h5>메모</h5></th>
+                        <td>
+                            <h5>
+                                <input type="text" placeholder="내용을 입력하세요.">
+                            </h5>
+                        </td>
+                    </tr>
 
-                        <tr>
-                            <td colspan="2">
-                                <div class="div_searchBtn">
-                                    <button class="btn btn-outline-primary button-close" data-izimodal-close=""><h6>닫기</h6></a></button>
-                                    <button type="submit" class="btn btn-primary"><h6>예약하기</h6></button>
-                                </div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div class="div_searchBtn">
+                                <button class="btn btn-outline-primary button-close" data-izimodal-close=""><h6>닫기</h6></a></button>
+                                <button type="submit" class="btn btn-primary"><h6>예약하기</h6></button>
+                            </div>
+                        </td>
+                    </tr>
 
-                    </table>
-                </div>
+                </table>
             </div>
+        </div>
 
 
             <!-- 모달창 -->
@@ -502,60 +497,58 @@
                         <th colspan="2"><h6>22</h6></th>
                         <th colspan="2"><h6>23</h6></th>
                     </tr>
+                    
+                    <c:choose>
+                    	<c:when test="${ not empty list }">
+                    		<c:forEach var="e" items="${ list }" varStatus="loop">
+	                   			<tr data-izimodal-open="#modal_reserve" class="tr_cursor">
+	                   				
+	                   				<!-- 비품 정보 표시 -->
+									<td><h6>${ loop.index + 1 }</h6></td>
+									<td><h6>${ e.equipmentName }</h6></td>
+									
+									<td>${ e.code }</td>
+									
+									<!-- 모든 예약 확인 -->
+					                <c:forEach var="r" items="${ reservationList }">
+					                
+					                    <!-- e.code와 equipmentCode가 일치하는 경우 -->
+					                    <c:if test="${e.code eq r.equipmentCode}">
 
-                    <tr data-izimodal-open="#modal_reserve" class="tr_cursor">
-                        <td><h6>1</h6></td>
-                        <td><h6>회의실1번회의실1번회의실1번회의실1번회의실1번회의실1번</h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        </a>
-                    </tr>
+										    <!-- 시작 시간의 시간 부분만 표시 -->
+						                    <td>${ r.reserveStart }</td>
+						                    <td>${ r.reserveEnd }</td>
+					                    </c:if>
+					                    
+					                </c:forEach>
+					                
+					            </tr>
+					        </c:forEach>
+					    </c:when>
+					    
+				    	<c:otherwise>
+					        <tr>
+					            <td colspan="26">조회된 비품이 없습니다.</td>
+					        </tr>
+					    </c:otherwise>
+					</c:choose>
+                    
+                    <!-- 
+						시작값에서 15:30 이면 30분으로 나눴을때 값 만큼 td생성시키고
+						시작값 15:30 빼기 17:30 뺀 값을 30으로 나눴을 때 만큼 td생성이아닌 td하나를 colspan만큼 지정하고
+						마지막 td로 채운다. 
+						---------------------------------------------------------------------------------
+						퇴직자
+						가입날짜, 수정날짜, 상태, 
+						
+						날짜에 따라서
+						가입날짜가 선택한 날짜 이전이면 그 사용자는 보여지면 안됨
+						
+						반대로,
+						선택한 날짜가 가입한 날짜 이후이면 보여져야하고,
+						상태값이 N이면서, 수정한 날짜 이후이면 출력되서는 안된다.
+						출결조회, 급여조회에 적용할 것
+                     -->
 
                     <tr data-izimodal-open="#modal_reserve" class="tr_cursor">
                         <td><h6>2</h6></td>

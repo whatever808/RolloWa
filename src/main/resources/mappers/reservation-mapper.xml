@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="reservationMapper">
+	
+	<resultMap id="reservationList" type="ReservationDto">
+		<id column="equipment_no" property="equipmentNo" />
+		<result column="equipment_name" property="equipmentName" />
+		<result column="regist_date" property="registDate" />
+		<result column="regist_emp" property="registEmp" />
+		<result column="modify_date" property="modifyDate" />
+		<result column="equipment_abilability" property="equipmentAb" />
+		
+		<collection property="groupList" ofType="GroupDto">
+			<result column="group_code" property="groupCode"/>
+			<result column="code" property="code"/>
+			<result column="code_name" property="codeName"/>
+			<result column="upper_code" property="upperCode"/>
+		</collection>
+		
+	</resultMap>
+
+	<!-- 비품 전체 카운트 -->
+	<select id="selectEquipmentListCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM TB_GROUP
+		 WHERE GROUP_CODE LIKE 'EQPT%'
+           AND STATUS = 'Y'
+	</select>
+
+	<!-- 비품 출력 -->
+	<select id="selectEquipmentList" resultType="hashmap">
+		SELECT CODE AS "code"
+        	 , CODE_NAME AS "equipmentName"
+		  FROM TB_GROUP
+		 WHERE GROUP_CODE LIKE 'EQPT%'
+           AND STATUS = 'Y'
+         ORDER BY TO_NUMBER(CODE) ASC
+	</select>
+
+	<!-- 비품 예약 상태 -->
+	<select id="selectReservationState" resultType="hashmap">
+    <![CDATA[
+        SELECT RESERVE_NO as "reserveNo"
+             , RESERVE_MEMO as "reserveMemo"
+             , RESERVE_START as "reserveStart"
+             , RESERVE_END as "reserveEnd"
+             , USER_NO as "userNo"
+             , EQUIPMENT_CODE as "equipmentCode"
+          FROM RESERVATION
+         WHERE (RESERVE_START >= TO_DATE(#{selectedDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+            AND RESERVE_START <= TO_DATE(#{selectedDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
+            OR (RESERVE_END >= TO_DATE(#{selectedDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+            AND RESERVE_END <= TO_DATE(#{selectedDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
+            OR (RESERVE_START < TO_DATE(#{selectedDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+            AND RESERVE_END > TO_DATE(#{selectedDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
+    ]]>
+</select>
+
+
+
+
+
+
+
+</mapper>

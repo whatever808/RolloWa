@@ -56,6 +56,7 @@
 		// 페이지 로드시 오늘 날짜 표시하기 
 		window.onload = function(){
 			showDailyData();
+			changeDate(0);
 		}
 			
 		let currentDate = new Date(); // 다음값 : Tue May 21 2024 13:16:45 GMT+0900 (한국 표준시)
@@ -150,17 +151,29 @@
 				success: function(data){
 					//console.log("통신 성공");
 					
-					// 검색한 사용자 수
+					// 출결 인원 수
 					$(".table_1 tbody").html($(data).find(".table_1 tbody").html());
-					
+
 					// 직원 테이블 업데이트
 					$(".employee_info tbody").html($(data).find(".employee_info tbody").html());
+					
+					// 검색한 사용자 수
+					let totalRows = $(data).find(".employee_info tbody > tr").length-1;
+					if (totalRows > 0) {
+				        let isEmptyMessage = $(data).find(".employee_info tbody > tr td[colspan='8']").text();
+				        if (isEmptyMessage === "조회된 직원이 없습니다.") {
+				            totalRows--;
+				        }
+				    }
+				    $(".employee_count").text("전체 " + totalRows + "명");
+					
 				}, error: function(){
 					//console.log("통신 실패");
 				}
 			})
 			
      	}
+     	
 		</script>
         
         <!-- 일별 화면 -->
@@ -168,7 +181,7 @@
 
 			<!--출근, 퇴근, 결근, 조퇴, 휴가 현황 조회-->
 			<table class="table table_1" border="1"> 
-			    <tr>
+				<tr>
 			        <td class="table-success">출근</td>
 			        <td class="table-danger">결근</td>
 			        <td class="table-secondary">퇴근</td>
@@ -344,6 +357,7 @@
 	 		function resetForm() {
 	            document.getElementById('department').selectedIndex = 0;
 	            document.getElementById('team').selectedIndex = 0;
+	            document.getElementById('attendanceStatus').value = '';
 	            document.getElementById('name').value = '';
 	            changeDate(0);
 	 		}
@@ -368,8 +382,8 @@
 				        <tr>
 				            <td>
 					            <c:choose>
-						            <c:when test="${ not empty m.profileUrl }">
-						                <img src="${ m.profileUrl }" class="profile_img" onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
+						            <c:when test="${ not empty m.profileURL }">
+						                <img src="${ m.profileURL }" class="profile_img" onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
 						            </c:when>
 						            <c:otherwise>
 						                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">

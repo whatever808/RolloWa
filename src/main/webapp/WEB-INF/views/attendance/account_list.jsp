@@ -52,6 +52,10 @@
         
        	let currentDate = new Date(); // 다음값 : Tue May 21 2024 13:16:45 GMT+0900 (한국 표준시)
         
+       	let currentYear = currentDate.getFullYear(); // 년도
+		let currentMonth = currentDate.getMonth() + 1; // 월
+		let currentDay = currentDate.getDate(); // 일
+       	
 		// 오늘 날짜로 설정하기 (2024-05 형식)
         function todayDate(){
 			let currentYear = currentDate.getFullYear(); // 2024
@@ -93,11 +97,21 @@
 				success: function(data){	
 					//console.log("통신 성공");
 
-					// 검색한 사용자 수(수정필요)
-					//let rowCount = $(data).find(".employee_info tbody tr").length;
-					
 					// 통신 성공 시 값 바꿔주기
 					$(".employee_info tbody").html($(data).find(".employee_info tbody").html());
+					
+					// 검색한 사용자 수
+					let totalRows = $(data).find(".employee_info tbody > tr").length-1;
+				    
+				    if (totalRows > 0) {
+				        let isEmptyMessage = $(data).find(".employee_info tbody > tr td[colspan='11']").text();
+				        if (isEmptyMessage === "조회된 직원이 없습니다.") {
+				            totalRows--;
+				        }
+				    }
+				    
+				    $(".employee_count").text("전체 " + totalRows + "명");
+				    
 				}, error: function(){
 					//console.log("통신 실패");
 				}
@@ -115,12 +129,8 @@
 				<tr class="search_menu">
 					<!-- 전체 인원수 -->
 					<td>
-						<h5 class="employee_count">총 00명</h5>
+					    <h5 class="employee_count">전체 ${ listCount } 명</h5>
 					</td>
-					<td>
-					    <h5 class="employee_count">총 ${searchResultCount}명</h5>
-					</td>
-					
 					<td>
 						<select name="department" id="department" class="form-select"></select>
 					</td>
