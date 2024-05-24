@@ -1,6 +1,7 @@
 package com.br.project.controller.member;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dto.common.AttachmentDto;
+import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.service.common.department.DepartmentService;
 import com.br.project.service.member.MemberService;
 import com.br.project.util.FileUtil;
 
@@ -37,6 +40,7 @@ import net.nurigo.sdk.message.service.DefaultMessageService;
 @RequestMapping("/member")
 public class MemberController {
 	private final MemberService memberService;
+	private final DepartmentService departmentService;
 	private final FileUtil fileUtil;
 	private final BCryptPasswordEncoder bcryptPasswordEncoder;
 	DefaultMessageService messageService = NurigoApp.INSTANCE.initialize("NCSVIKI2KIZ8BWZP", "FRCLTDLTRNZ8AYQ3ABSZCF4JOBNBFIGK", "https://api.coolsms.co.kr");
@@ -148,7 +152,8 @@ public class MemberController {
 	// 마이페이지 프로필 이미지 수정
 	@PostMapping("/modifyProfile.do")
 	@ResponseBody
-	public String ajaxUpdateProfile(MultipartFile uploadFile, HttpSession session) {
+	public String ajaxUpdateProfile(MultipartFile uploadFile, HttpSession session
+							, HttpServletRequest request) {
 		log.debug("{}", uploadFile);
 		MemberDto member = new MemberDto();
 		// 로그인한 회원 정보 확인
@@ -220,7 +225,7 @@ public class MemberController {
 		
 		return "redirect:/member/mypage.page";
 	}
-		// 비밀번호 수정
+	// 비밀번호 수정
 	@PostMapping("modifyPwd.do")
 	public String updateUserPwd(@RequestParam Map<String, String> map
 				, HttpSession session
@@ -242,6 +247,47 @@ public class MemberController {
 		redirectAttributes.addFlashAttribute("alertMsg", "비밀번호 변경 실패. 현재 비밀번호를 다시 확인해주세요.");
 		return "redirect:/member/mypage.page";
 	}
+	
+	// 채팅 - 전체 부서 조회
+	@GetMapping("/select.do")
+	@ResponseBody
+	public Map<String, List> selectDept() {
+		Map<String, List> groupMap = new HashMap<>();
+		Map<String, String> codeMap = new HashMap<>();
+		
+		// 부서 조회
+		codeMap.put("code", "DEPT01");
+		groupMap.put("deptList", departmentService.selectDepartmentList(codeMap));
+		
+		// 팀 조회
+		codeMap.put("code", "TEAM01");
+		groupMap.put("teamList", departmentService.selectDepartmentList(codeMap));
+		
+		// 사원 조회
+		groupMap.put("memberList", memberService.selectAllMember());
+		
+		return groupMap;
+	}
+	
+	// 채팅 - 부서의 팀 조회
+	@GetMapping("/selectTeam.do")
+	@ResponseBody
+	public List<GroupDto> selectTeam(String upperCode) {
+		Map<String, String> codeMap = new HashMap<>();
+		codeMap.put("code", "TEAM01");
+		codeMap.put("upperCode", upperCode);
+		return departmentService.selectDepartmentList(codeMap);
+	}
+	
+	// 채팅 - 전체 사원 조회
+	@GetMapping("/selectMember.do")
+	@ResponseBody
+	public List<MemberDto> selectMember(String teamCode) {
+		return memberService.selectAllMember();
+	}
+	
+	// 채팅 - 전체 부서&팀&사원 조회
+	@GetMapping("/selectMember.do")
 
 	/* ======================================= "가림" 구역 ======================================= */
 	@RequestMapping("/memInfo.do")

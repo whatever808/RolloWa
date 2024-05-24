@@ -22,12 +22,13 @@
 	<result column="SALARY" property="salary"/>
 	<result column="TEAM_CODE" property="teamCode"/>
 	<result column="POSITION_CODE" property="positionCode"/>
+	<result column="POSITION" property="position"/>
 </resultMap>
 
   <!--  회원 로그인  -->
   <select id="memberLogin" resultMap="memberResult">
   	select
-  		user_no, user_id, user_pwd, team_code, POSITION_CODE
+  		user_no, user_name, user_id, user_pwd, team_code, POSITION_CODE, profile_url
   	from
   		member
   	where
@@ -97,6 +98,39 @@
 		where
 			user_no = #{ userNo }
 	</update>
+	<!-- 전체 회원 조회 -->
+	<select id="selectAllMember" resultMap="memberResult">
+		select
+		    USER_NO , USER_NAME , PROFILE_URL , TEAM_CODE , POSITION_CODE
+		    , (
+		        select code_name
+		        from tb_group
+		        where group_code = 'POSI01'
+		        and position_code = code
+		    ) as "position"
+		from
+		    member
+		where
+		    status = 'Y'
+		order by
+    		position_code desc
+	</select>
+	
+	<!-- 채팅방 참여인원 조회 -->
+	<select id="selectParticipants" resultMap="memberResult">
+	  select
+        user_no, user_name, profile_url
+    from
+        chatting_participation cp, member
+    where
+        chat_user_no = user_no
+    and
+        cr_no = #{ roomNo }
+    and
+    		chat_user_no != #{ userNo }
+	</select>
+	
+	
  <!-- ================== 이예찬 ========================== -->
  <!-- 이예찬 : Member 캘린더 위의 동료 선택 창에 필요한 데이터 조회 쿼리 -->
 	<select id="selectTeamPeer"
@@ -113,5 +147,41 @@
 		and group_code = 'DEPT01'
 	</select>
  <!-- ================== 이예찬 ========================== -->
+ 
+ <!-- ======================================= "가림" 구역 ======================================= -->
+ <!-- -->  
+ <select id="selectMemberForMainPage" parameterType="MemberDto" resultType="map">
+	 	select 
+	 		   user_no "userNo"
+	 		  ,user_name "userName"
+	 		  ,user_id "userId"
+	 		  ,user_pwd "userPwd"
+	 		  ,profile_url "profileURL"
+	 		  ,vacation_count "vacationCount"
+	 		  ,position_code "positionCode"
+	 		  ,team_code "teamCode"
+	 		  ,(
+	 		  	 select upper_code
+	 		  	   from tb_group
+	 		  	  where group_code like 'TEAM%'
+	 		  	    and code = member.team_code
+	 		  	) "deptCode"
+	 		  ,(
+	 		  	select code_name
+	 		  	  from tb_group
+	 		  	 where group_code like 'TEAM%'
+	 		  	   and code = member.team_code
+	 		   ) "teamName"
+	 		  ,(
+	 		  	 select code_name
+	 		  	   from tb_group
+	 		  	  where group_code like 'POSI%'
+	 		  	    and code = member.position_code
+	 		    ) "positionName"
+	 	   from member
+	 	  where user_no = #{userNo}
+ </select>
+ 
+ <!-- ======================================= "가림" 구역 ======================================= -->
  
 </mapper>

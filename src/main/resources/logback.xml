@@ -14,7 +14,7 @@
 	<logger name="jdbc.sqltiming" 			level="off" /> 		<!-- 쿼리문 + 실행시간 -->
 	<logger name="jdbc.audit" 					level="off" /> 		<!-- JDBC 호출 정보 -->
 	<logger name="jdbc.resultset" 			level="off" />		<!-- ResultSet 호출 정보 -->
-	<logger name="jdbc.resultsettable" 	level="off" />		<!-- ResultSet 결과 (조회결과 테이블) -->
+	<logger name="jdbc.resultsettable" 	level="ㅐㄹㄹ" />		<!-- ResultSet 결과 (조회결과 테이블) -->
 	<logger name="jdbc.connection" 			level="off" />		<!-- Connection 호출 정보 -->
 	
 	<root level="warn">

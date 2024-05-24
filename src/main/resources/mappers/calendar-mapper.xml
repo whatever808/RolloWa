@@ -49,7 +49,7 @@ and
 and 
 	Months_between(end_DATE				, sysdate) >= -6
 ]]>
-<if test="calNoList != null">
+<if test="calNoList != null and !calNoList.isEmpty()">
     <foreach item="num" collection="calNoList"
        open="and cal_no in (" separator="," close=")" >
         #{num}
@@ -70,7 +70,12 @@ resultType="string">
 <!-- 갤린더 일정 등록 쿼리 -->
 <insert id="insertCal">
 	insert 
-	into calender(CAL_NO,CAL_SORT,CAL_TITLE,CAL_CONTENT,START_DATE,END_DATE,CAL_COLOR,CAL_PLACE,REGIST_EMP,MODIFY_EMP,GROUP_CODE
+	into calender(
+		CAL_NO,CAL_SORT,CAL_TITLE,CAL_CONTENT,START_DATE,END_DATE,CAL_COLOR
+		<if test="place != ''">
+			,CAL_PLACE
+		</if>
+		,REGIST_EMP,MODIFY_EMP,GROUP_CODE
 	) values ( 
 		SEQ_CALNO.nextval
 		,#{calSort}
@@ -79,7 +84,9 @@ resultType="string">
 		,to_date(#{startDate} 	, 'YYYY-MM-DD HH24:MI:SS')
 		,to_date(#{endDate}			, 'YYYY-MM-DD HH24:MI:SS')
 		,#{color}
-		,#{place}
+		<if test="place != ''">
+			,#{place}		
+		</if>
 		,#{emp}
 		,#{emp}
 		,#{groupCode}
@@ -243,4 +250,24 @@ set
 where
     cal_no = #{calNO}
 </update>
+
+<!-- ======================================= "가림" 구역 ======================================= -->
+<select id="selectTodaySchedule" resultType="map" parameterType="hashmap">
+	select 
+	         cal_no "calNo"
+	        ,cal_sort "calSort"
+	        ,(
+	          case when cal_sort = 'P' then '개인'
+	               when cal_sort = 'D' then '부서'
+	               when cal_sort = 'C' then '회사'
+	           end
+	          ) "calSortName"
+	        ,cal_title "calTitle"
+	        ,cal_color "calColor"
+	  from calender
+	where status = 'Y'
+	   and to_char(sysdate, 'YYYYMMDD') between to_char(start_date, 'YYYYMMDD') and to_char(end_date, 'YYYYMMDD')
+	   and regist_emp = #{userNo}
+</select>
+<!-- ======================================= "가림" 구역 ======================================= -->
 </mapper>

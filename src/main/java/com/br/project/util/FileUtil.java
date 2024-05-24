@@ -10,6 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @NoArgsConstructor
 public class FileUtil {
+	
+	@Autowired
+	private HttpSession session;
 
 	/**
 	 * 첨부파일 업로드시 실행될 파일업로드 처리 템플릿 메소드
@@ -30,8 +38,8 @@ public class FileUtil {
 	 * @param category    : 저장할 파일의 유형
 	 */
 	public Map<String, String> fileUpload(MultipartFile uploadFile, String category) {
-		
-		String filePath = "/upload/" + category + new SimpleDateFormat("/yyyy/MM/dd").format(new Date());
+		String filePath =  /*request.getServletContext().getRealPath("/") + */"/upload/" + category + new SimpleDateFormat("/yyyy/MM/dd").format(new Date());
+		log.debug("filePath : {}", filePath);
 		File filePathDir = new File(filePath);
 		if(!filePathDir.exists()) {
 			filePathDir.mkdirs();
@@ -87,6 +95,33 @@ public class FileUtil {
 		}
 		
 		return attachmentList;
+	}
+	
+	/**
+	 * @param file : 저장할 이미지파일
+	 * @param dir  : resources/images/ 이폴더 안에 어떤폴더에 이미지를 저장할건지 폴더명
+	 * @return     : 데이터베이스에 저장할 파일경로 + 수정명을 문자열로 반환
+	 */
+	public String getFileUrl(MultipartFile file, String dir){
+		
+		String filePath = "/resources/images/" + dir + "/";
+		File fileDir = new File(session.getServletContext().getRealPath(filePath));
+		if(!fileDir.exists()) {
+			fileDir.mkdir();
+		}
+		
+		String originalName = file.getOriginalFilename();
+		String ext = originalName.endsWith(".tar.gz") ? ".tar.gz" : originalName.substring(originalName.lastIndexOf("."));
+		String filesystemName = UUID.randomUUID().toString().replace("-", "") + ext;
+		
+		try {
+			file.transferTo(new File(fileDir, filesystemName));
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+		}
+		
+		return filePath + filesystemName;
+		
 	}
 	/* ================================================================= "가림" 구역 ================================================================= */
 }

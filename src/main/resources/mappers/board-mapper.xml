@@ -31,7 +31,7 @@
 
 
 	<!-- 총 공지사항 갯수조회 -->
-	<select id="selectTotalBoardCount" parameterType="map" resultType="_int">
+	<select id="selectTotalBoardCount" parameterType="hashmap" resultType="_int">
 		select count(*) totalBoards
 		  from tb_board
 		  left outer join member on (user_no = tb_board.modify_emp)
@@ -64,16 +64,16 @@
 			<choose>
 				<when test="(condition.equals('') or condition.equals('all')) and !keyword.equals('')">
 					and 
-							(title like 	 		'%' || #{keyword} || '%'
-					 		 or content like 		'%' || #{keyword} || '%'
-					 		 or user_name like 	'%' || #{keyword} || '%'
-					 		 )
+						(	title like 	 		'%' || #{keyword} || '%'
+				 		 or text_content like 	'%' || #{keyword} || '%'
+				 		 or user_name like 		'%' || #{keyword} || '%'
+				 		 )
 				</when>
 				<when test="condition.equals('title') and !keyword.equals('')">
 					and title like 	 			'%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('content') and !keyword.equals('')">
-					and content like 			 	'%' || #{keyword} || '%'
+					and text_content like 		'%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('writer') and !keyword.equals('')">
 					and user_name like 		 	'%' || #{keyword} || '%'
@@ -86,12 +86,12 @@
 	</select>
 
 	<!-- 공지사항 목록조회 -->
-	<select id="selectBoardList" parameterType="map" resultMap="boardResultMap">
+	<select id="selectBoardList" parameterType="hashmap" resultMap="boardResultMap">
 		select
 					 board_no
 					,title
 					,profile_url
-					,user_no				"modify_emp"
+					,user_no			"modify_emp"
 					,user_name 			"writer_name"
 					,to_char(tb_board.modify_date, 'YYYY-MM-DD') "modify_date"
 					,read_count
@@ -139,26 +139,26 @@
 			<choose>
 				<when test="(condition.equals('') or condition.equals('all')) and !keyword.equals('')">
 					and 
-							(title like 	 			'%' || #{keyword} || '%'
-					 		 or content like 			'%' || #{keyword} || '%'
+							(	title like 	 		'%' || #{keyword} || '%'
+					 		 or text_content like 	'%' || #{keyword} || '%'
 					 		 or user_name like 		'%' || #{keyword} || '%'
 					 		 )
 				</when>
 				<when test="condition.equals('title') and !keyword.equals('')">
-					and title like 	 				'%' || #{keyword} || '%'
+					and title like 			'%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('content') and !keyword.equals('')">
-					and content like 			 		'%' || #{keyword} || '%'
+					and text_content like 	'%' || #{keyword} || '%'
 				</when>
 				<when test="condition.equals('writer') and !keyword.equals('')">
-					and user_name like 		 		'%' || #{keyword} || '%'
+					and user_name like 		 '%' || #{keyword} || '%'
 				</when>
 			</choose>
 		</if>
 		<if test="userNo != null and !userNo.equals('')">
 			and (tb_board.regist_emp = #{userNo} or tb_board.modify_emp = #{userNo})
 		</if>
-     order by to_number(board_no) desc
+     order by tb_board.modify_date desc
 	</select>
 	
 	<!-- 공지사항 조회수 증가 -->
@@ -195,14 +195,20 @@
 		  from tb_board
 		  join member on (user_no = modify_emp)
 		  left outer join attachment on (ref_type  = 'BD'
-		  									  and ref_no    = #{no}
-		  									  and attachment.status = #{status})
+									and ref_no    = #{no}
+									and attachment.status = #{status})
 		 where board_no = #{no}
 		   and tb_board.status   = #{status}
 	</select>
 	
+	<!-- 공지사항 번호조회 -->
+	<select id="selectPostedBoardNo" resultType="_int">
+		select seq_bdno.currval "boardNo"
+			from dual
+	</select>
+	
 	<!-- 공지사항 등록 -->
-	<insert id="insertBoard" parameterType="BoardDto">
+	<insert id="insertBoard" parameterType="hashmap">
 		insert
 			into tb_board
 				 (
@@ -211,6 +217,7 @@
 				  ,modify_emp
 				  ,title
 				  ,content
+				  ,text_content
 				  ,category
 				  ,status
 				 )
@@ -220,19 +227,21 @@
 				 ,#{registEmp}
 				 ,#{modifyEmp}
 				 ,#{title}
+				 <!-- REPLACE(REPLACE(#{content}, CHR(13), ''), CHR(10), '') -->
 				 ,#{content}
+				 ,#{textContent}
 				 ,(
 				 	select upper_code
 				 	  from tb_group
-				 	 where group_code = 'TEAM01'
-				 	 	and code = #{category}
+				 	 where group_code like 'TEAM%'
+				 	 	 and code = #{category}
 				  )
 				 ,#{status}
 				)
-	</insert>
+	</insert>	
 	
 	<!-- 공지사항 수정 -->
-	<update id="updateBoard" parameterType="BoardDto">
+	<update id="updateBoard" parameterType="hashmap">
 		update tb_board
 		   set 
 		   	    title = #{title}
@@ -240,15 +249,53 @@
 		   	   ,category = #{category}
 		   	   ,status = #{status}
 		   	   ,modify_date = sysdate
+		   	   ,modify_emp = #{modifyEmp}
 		 where board_no = #{boardNo}
-	</update>
+	</update>	<!--  REPLACE(REPLACE(#{content}, CHR(13), ''), CHR(10), '') -->
 	
 	<!-- 공지사항 상태 수정 or 공지사항 삭제 -->
-	<update id="updateBoardStatus" parameterType="string">
+	<update id="updateBoardStatus" parameterType="hashmap">
 		update tb_board
 		   set status   = #{status}
-		   	,modify_date = sysdate
-		 where board_no = #{boardNo}
+		   		,modify_date = sysdate
+		<if test="no != null and !no.equals('')">
+			<where>
+				board_no = #{no}
+			</where>
+		</if>
+		<if test="delBoardNoArr != null">
+			<where>
+				<foreach item="no" collection="delBoardNoArr" open="board_no in (" separator="," close=")">
+					#{no}
+				</foreach>
+			</where>
+		</if> 
 	</update>
+	
+	<!-- 기웅 추가 -->
+		<!-- 부서의 최신 공지사항 글 번호 조회 -->
+	<select id="selectLatestBno" resultType="_int">
+	SELECT
+	    BOARD_NO
+	    , ROWNUM
+	FROM
+	    (
+	    SELECT
+	        BOARD_NO
+	        , CATEGORY
+	        , ROWNUM
+	    FROM
+	        TB_BOARD
+	    WHERE
+	        STATUS = 'Y'
+	    AND
+	        CATEGORY = #{ teamCode }
+	    ORDER BY
+	        MODIFY_DATE DESC
+	    )
+	WHERE
+	    ROWNUM = 1
+	</select>
+	<!-- 기웅 추가 -->
   
 </mapper>

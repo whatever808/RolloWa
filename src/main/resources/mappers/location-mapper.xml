@@ -3,21 +3,14 @@
 
 <mapper namespace="locationMapper">
 	
-	<resultMap 		id="locationResultMap" 	type="LocationDto">
-		<id 	column="location_no" 		property="locationNo" />
-		<result column="modify_emp" 		property="modifyEmp" />
-		<result column="regist_emp" 		property="registEmp" />
-		<result column="location_name" 		property="locationName" />
-		<result column="regist_date" 		property="registDate" />
-		<result column="modify_date" 		property="modifyDate" />
-		<result column="status" 			property="status" />
-	</resultMap>
-	
 	<!-- 위치 목록조회 -->
-	<select id="selectLocationList" resultMap="locationResultMap">
+	<select id="selectLocationList" resultType="map">
 		select
-			   location_no
-			  ,location_name
+			   location_no "locationNo"
+			  ,location_name "locationName"
+			  ,latitude "latitude"
+			  ,longitude "longitude"
+			  ,map_mark "mapMark"
 	  	  from tb_location
 	  	 where status = 'Y'
 	</select>

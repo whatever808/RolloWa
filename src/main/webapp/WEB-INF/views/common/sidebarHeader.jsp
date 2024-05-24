@@ -93,6 +93,14 @@
             color: #FEEFAD;
             z-index: 10;
         }
+        
+        .chat_alram {
+        	position: fixed;
+       		bottom: 90px;
+    			right: 20px;
+    			cursor: pointer;
+    			z-index: 10;
+        }
 
         .msg_open_btn:hover,
         .msg_close_btn:hover {
@@ -285,22 +293,108 @@
 
         /* 채팅방 스타일 끝 */
     </style>
+<style>
+#main_logo span:hover {
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  animation: bounce 0.3s ease infinite alternate;
+}
+#main_logo span:{
+	animation-delay: 0.1s;
+}
+#main_logo span{
+	background: linear-gradient(to left, #f6eec9, #dfc853 70%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@keyframes bounce {
+  100% {top: -3px;}
+}
+.allposition{
+	display: flex;
+}
+</style>
 </head>
-<body>
-<c:if test="${ alertMsg != null }" >
-<script>
-	alertify.alert('${alertTitle}','${alertMsg}');
-</script>
-</c:if>
+<body class="allposition">
 
-<main class="d-flex flex-nowrap">
+<!--  -->
+
+
+<script>
+$(document).ready(function(){
+	if(${ alertMsg != null }){
+		switch ('${ modalColor }'){
+			case 'R' :
+				redAlert('${ alertTitle }', '${ alertMsg }');
+				break;
+			case 'G' :
+				greenAlert('${ alertTitle }', '${ alertMsg }');
+				break;
+			case 'Y' :
+				yellowAlert('${ alertTitle }', '${ alertMsg }');
+				break;
+		}
+	}
+	})
+</script>
+
+<main class="d-flex flex-nowrap"></main>
+	<!-- 알림창 div -->
+    <div id="redModal"></div>
+    <div id="greenModal"></div>
+    <div id="yellowModal"></div>  
+    <script>
+	    $('#redModal').iziModal({
+	        headerColor: '#dc3545',
+	        timeout: 3000,
+          zindex: 9999,
+	        timeoutProgressbar: true
+	    });
+	
+	    $('#greenModal').iziModal({
+	        headerColor: '#28a745',
+	        timeout: 3000,
+	        zindex: 9999,
+	        timeoutProgressbar: true
+	    });
+	    
+      $('#yellowModal').iziModal({
+          headerColor: '#ffc107', 
+          timeout: 3000,
+          zindex: 9999,
+          timeoutProgressbar: true,
+      });
+	    
+      function redAlert(title, content){
+          $('#redModal').iziModal('setTitle', title);
+          $('#redModal').iziModal('setSubtitle', content);
+          $('#redModal').iziModal('open');
+      };
+
+      function greenAlert(title, content){
+          $('#greenModal').iziModal('setTitle', title);
+          $('#greenModal').iziModal('setSubtitle', content);
+          $('#greenModal').iziModal('open');
+      };
+      
+      function yellowAlert(title, content){
+          $('#yellowModal').iziModal('setTitle', title);
+          $('#yellowModal').iziModal('setSubtitle', content);
+          $('#yellowModal').iziModal('open');
+      };
+    </script>
+	
         <div class="flex-shrink-0 p-3" style="width: 280px;">
-            <a href="/"
+            <a href="${contextPath}/"
                 class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
                 <svg class="bi pe-none me-2" width="30" height="24">
                     <use xlink:href="#bootstrap" />
                 </svg>
-                <span class="fs-5 fw-semibold">회사로고</span>
+                <span id="main_logo" class="fs-5 fw-semibold font-size25 jua-regular">
+	                <span>RoLLoWa</span>
+                </span>
             </a>
             <ul class="list-unstyled ps-0">
                 <li class="mb-1">
@@ -359,25 +453,6 @@
                         </ul>
                     </div>
                 </li>
-              
-               <script>
-                $(document).ready(function(){
-                  // 로그인 회원 정보조회
-                  $.ajax({
-                      url:"${ contextPath }/member/memInfo.do",
-                      method:"get",
-                      data:"userId=${ loginMember.userNo }",
-                      success:function(memInfo){
-                        // 부장 or 사장일 경우, 공지사항 작성메뉴 노출
-                        if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
-                          $(".board-publisher").removeClass("d-none");
-                        }
-                      },error:function(){
-                        console.log("로그인 회원 정보조회 AJAX 실패");
-                      }
-                    })
-                })
-              </script>
              <!-- ======================================= 게시판 관련 end ======================================= -->
              <!-- ======================================= 어트랙션 관련 start ======================================= -->
               <li class="mb-1">
@@ -388,16 +463,16 @@
                   <div class="collapse" id="attraction-collapse">
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 
-                          <li><a href=""
+                          <li><a href="${ contextPath }/attraction/list.do"
                                  class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 조회</a>
-                          </li>
+                           </li> 
 
                           <li><a href="${ contextPath }/attraction/regist.page"
-                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
+                                 class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
                           </li>
 
-                          <li><a href=""
-                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
+                          <li><a href="${ contextPath }/attraction/manage.do"
+                                 class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
                           </li>
 
 
@@ -405,6 +480,29 @@
                   </div>
               </li>
               <!-- ======================================= 어트랙션 관련 end ======================================= -->
+              <script>
+                $(document).ready(function(){
+                  // 로그인 회원 정보조회
+                  $.ajax({
+                      url:"${ contextPath }/member/memInfo.do",
+                      method:"get",
+                      data:"userId=${ loginMember.userNo }",
+                      success:function(memInfo){
+                        // 직급이 부장 or 사장일 경우에만 공지사항 관리자 메뉴 노출
+                        if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
+                          $(".board-publisher").removeClass("d-none");
+                        }
+                        
+                        // 어트랙션 운영팀 소속 팀원들에게만 어트랙션 관리자 메뉴 노출
+                        if(memInfo.teamCode == 'B'){
+                        	$(".attraction-manager").removeClass("d-none");
+                        }
+                      },error:function(){
+                        console.log("로그인 회원 정보조회 AJAX 실패");
+                      }
+                    })
+                })
+              </script>
               <!-- ======================================= "가림" 구역 end ======================================= -->
 
                 <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
@@ -416,13 +514,13 @@
                     <div class="collapse" id="org-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li>
-                            	<a href="${ contextPath }/orginfo/orgChart.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
+                            	<a href="${ contextPath }/organization/chart.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/orginfo/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
+                            	<a href="${ contextPath }/organization/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/orginfo/orgManager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
+                            	<a href="${ contextPath }/organization/manager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
                             </li>
                         </ul>
                     </div>
@@ -439,7 +537,7 @@
                             	<a href="${ contextPath }/attendance/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">출결 조회</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/attendance/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</a>
+                            	<a href="${ contextPath }/attendance/accountList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</a>
                             </li>
                             <li>
                             	<a href="${ contextPath }/attendance" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 상세 조회</a>
@@ -490,32 +588,17 @@
                             <li><a href="${contextPath}/calendar/calendarList.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">일정 관리</a>
                             </li>
+                            <li><a href="${contextPath}/vacation/vacation.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">휴가</a>
+                            </li>
+                            <li><a href="${contextPath}/vacation/complete.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">지난 휴가</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
                 <!-- ======================================= calendar page ========================================= -->
-             
-                 <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#-collapse" aria-expanded="false">
-                        Orders
-                    </button>
-                    <div class="collapse" id="-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+  
                 <!-- 전자결재 -->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
@@ -571,21 +654,50 @@
                 </li>
             </ul>
         </div>
-				
-				<div>
-					<button type="button" onclick="sendMsg();">메세지</button>
-				</div>
-				
+								
         <div class="b-example-divider b-example-vr"></div>
 				<script>
-					let alram;
-					let chatting;
+					var alram;
+					var chatting;
 					var stompClient;
 					
+					// 내가 현재 열어놓은 채팅방 번호
+					// 채팅방을 열지 않았다면 0
+					var subRoomNo = 0;
+					
+					// 수신한 메세지 개수
+					var msgCount = 0;
+					
+					
+					
 					$(document).ready(function() {
+						// 채팅용 웹소켓 연결
+						chatting = new SockJS("${contextPath}/chatting");
+						stompClient = Stomp.over(chatting);
+			    	stompClient.connect({}, function(frame) {
+							// 구독 중인 채팅방 목록 조회
+					    $.ajax({
+					    	url: "${contextPath}/chat/rooms"
+					    	, method: "get"
+					    	, async: false
+					    	, success: function(result) {					    		
+					    		// 참여중인 채팅방 구독
+					    		for(var i = 0; i < result.length; i++) {
+					    			stompClient.subscribe("/topic/chat/room/" + result[i].chatRoomNo, function(msg) {
+					    				// 메세지 수신 처리
+					    				receiveMsg(msg);
+					    			})
+					    		}
+					    		selectChatRoom();
+					    	}
+					    	, error: function() {
+					    		console.log("채팅방 목록 조회 ajax 통신 실패");
+					    	}
+					    })
+					    
+						})
 						// 알람용 웹소켓 연결
 						alram = new SockJS("${contextPath}/alram");
-						
 						// 알람 수신 시 alert 발생
 						alram.onmessage = function(evt) {
 							const obj = JSON.parse(evt.data);
@@ -594,22 +706,8 @@
 								alertify.success('공지사항 페이지로 이동'); }
 			                , function(){ alertify.error('Cancel')}).set('labels', {ok:'이동하기', cancel:'취소'});;
 						}
-						
-						// 채팅용 웹소켓 연결
-						chatting = new SockJS("${contextPath}/endpoint");
-						stompClient = Stomp.over(chatting);
-						stompClient.connect({}, function(frame) {
-							console.log("Connected : " + frame);
-							stompClient.subscribe("${contextPath}/subscribe/test", function() {
-								console.log("수신완료!");
-							})
-						})
 					})
 					
-					function sendMsg() {
-						stompClient.send("${contextPath}/subscribe/test", {}, JSON.stringify({"name" : "test"}));
-					}
-
 				</script>
 </body>
 </html>

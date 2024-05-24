@@ -1,0 +1,147 @@
+/*------------- page title -------------*/
+.page-title{
+    margin-bottom: 50px;
+    font-weight: bold;
+    font-family: "Jua";
+}
+/* ------------- map ------------- */
+#map{
+		height: 500px;
+		width: 100%;
+		border-radius: 20px;
+		margin-bottom: 20px;
+}
+
+/* ------------- search form ------------- */
+#filter-search{
+	display: block;
+	float: right;
+	margin-bottom: 50px;
+}
+#keyword, #condition, #search-btn, #reset-search{
+	height: 50px;
+}
+#condition{
+  display: inline-block;
+  width: 200px;
+}
+#keyword{
+	border: 1px solid lightgray;
+	width: 500px;
+}
+
+/* ------------- reset search value ------------- */
+#reset-search{
+	display: inline-block;
+	color: #2985DB;
+	width: 160px;
+	align-content: center;
+}
+#reset-search:hover{
+	cursor: pointer;
+}
+
+/*------------- attraction list -------------*/
+thead>tr{
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+    background-color: lightgray;
+}
+
+.attraction-list{
+    text-align: center;
+}
+.attraction-list td{
+		vertical-align: middle;
+}
+.thumbnail{
+		display: flex;
+		justify-content: center;
+}
+.thumbnail>img{
+		width: 80%;
+		height: 200px;
+		border-radius: 20px;
+}
+.thumbnail:hover{
+		cursor: pointer;
+		opacity: 0.8;
+}
+.attraction-name-td:hover{
+	cursor:pointer;
+}
+.attraction-name-td{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: 0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* ------------- pagination ------------- */
+.pagination-div{
+		width: 100%;
+		display: flex;
+		justify-content: cneter;
+		align-items: center;
+		margin-top: 100px;
+}
+.attraction-list-pagination{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-itmes: center;
+}
+.attraction-list-pagination>.pagination span:hover{
+		cursor: pointer;
+}
+
+/* ------------- attraction detail ------------- */
+.attraction-detail-div{
+}
+.thumbnail-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.thumbnail-div>img{
+  width: 80%;
+  height: 300px;
+  border-radius: 20px;
+  box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
+}
+
+.attraction-info{
+  padding-top: 10px;
+  padding-bottom: 30px;
+  padding-right: 20px;
+  padding-left: 20px;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+}
+
+h3{
+  text-align: center;
+  font-family: "Jua";
+}
+
+.attraction-intro{
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.info-div{
+  margin-top: 20px;
+  display: flex;
+}
+.info-title{
+  width: 20%;
+  font-weight: bold;
+}
+.info-content{
+  width: 80%;
+}

@@ -1,11 +1,10 @@
 package com.br.project.dao.location;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
-
-import com.br.project.dto.location.LocationDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +17,7 @@ public class LocationDao {
 	/**
 	 * @return : 등록된 위치객체 리스트
 	 */
-	public List<LocationDto> selectLocationList(){
+	public List<Map<String, Object>> selectLocationList(){
 		return sqlSessionTemplate.selectList("locationMapper.selectLocationList");
 	}
 	

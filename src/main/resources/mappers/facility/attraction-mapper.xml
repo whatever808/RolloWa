@@ -3,39 +3,154 @@
 
 <mapper namespace="attractionMapper">
 	
+	<!-- 총 어트랙션 갯수 -->
+	<select id="selectTotalAttractionCount" resultType="_int" parameterType="hashmap">
+		select count(attraction_no) "totalAttractions"
+		  from tb_attraction
+		<where>
+			<if test="locations != null and !locations.equals('')">
+				<foreach item="location" collection="locations" open="and location in(" separator="," close=")">
+					#{location}
+				</foreach>
+			</if>
+			<if test="status != null and !status.equals('')">
+				and tb_attraction.status = #{status}
+			</if>
+			<if test="keyword != null and !keyword.equals('')">
+				and attraction_name like '%' || #{keyword} || '%'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 어트랙션 목록조회 -->
+	<select id="selectAttractionList" resultType="hashmap" parameterType="hashmap">
+		select 
+			  attraction_no "attractionNo"
+			 ,location_name "locationName"
+			 ,attraction_name "attractionName"
+			 ,customer_limit || '명' "customerLimit"
+			 ,nvl2(age_limit, age_limit || '세 ' || age_limit_range, '') "ageLimit"
+			 ,nvl2(height_limit, height_limit || 'cm ' || height_limit_range, '') "heightLimit"
+			 ,tb_attraction.status "status"
+			 ,thumbnail_url "thumbnailURL"
+			 ,(
+			 	 select user_name
+			 		 from member
+			 		where user_no = tb_attraction.regist_emp
+			  ) "registEmp"
+			 ,(
+			 		select user_name
+			 		  from member
+			 		 where user_no = tb_attraction.modify_emp
+			 	 ) "modifyEmp"
+		 from tb_attraction
+		 join tb_location on (location = location_no)
+		 <where>
+			<if test="locations != null and !locations.equals('')">
+				<foreach item="location" collection="locations" open="and location in(" separator="," close=")">
+					#{location}
+				</foreach>
+			</if>
+			<if test="status != null and !status.equals('')">
+				and tb_attraction.status = #{status}
+			</if>
+			<if test="keyword != null and !keyword.equals('')">
+				and attraction_name like '%' || #{keyword} || '%'
+			</if>
+		</where>
+		  order by decode(tb_attraction.status, 'OPERATING', 1),
+	          decode(tb_attraction.status, 'PENDING', 2),
+	          decode(tb_attraction.status, 'STOP', 3),
+	          decode(tb_attraction.status, 'CLOSED', 4),
+	          tb_attraction.regist_date desc,
+	          tb_attraction.modify_date desc
+	</select>
+	
+	<!-- 어트랙션 상세조회 -->
+	<select id="selectAttraction" resultType="hashmap" parameterType="hashmap">
+		select 
+			  attraction_no "attractionNo"
+			 ,location "locationNo"
+			 ,location_name "locationName"
+			 ,attraction_name "attractionName"
+			 ,attraction_intro "attractionIntro"
+			 ,customer_limit "customerLimit"
+			 ,nvl2(age_limit, age_limit, '') "ageLimit"
+			 ,nvl2(age_limit, age_limit_range, '') "ageLimitRange"
+			 ,nvl2(height_limit, height_limit, '') "heightLimit"
+			 ,nvl2(height_limit_range, height_limit_range, '') "heightLimitRange"
+			 ,tb_attraction.status "status"
+			 ,status_reason "statusReason"
+		 from tb_attraction
+		 join tb_location on (location_no = location)
+		where attraction_no = #{no}
+	</select>
+	
 	<!-- 어트랙션 등록 -->
-	<insert id="insertAttraction" parameterType="AttractionDto">
+	<insert id="insertAttraction" parameterType="hashmap">
 		insert 
 		  into tb_attraction
 		  	   (
 		  	    attraction_no
 		  	   ,location
+		  	   ,manage_emp
 		  	   ,regist_emp
 		  	   ,modify_emp
 		  	   ,attraction_name
 		  	   ,attraction_intro
 		  	   ,customer_limit
-		  	   ,age_limit
-		  	   ,age_limit_range
-		  	   ,height_limit
-		  	   ,height_limit_range
+		  	   <if test="ageLimitYN.equals('Y')">
+		  	     ,age_limit
+		  	     ,age_limit_range
+		  	   </if>
+		  	   <if test="heightLimitYN.equals('Y')">
+				  	 ,height_limit
+				  	 ,height_limit_range
+		  	   </if>
 		  	   ,status
+		  	   ,status_reason
+		  	   ,thumbnail_url
 		  	   )
 		 values 
-		 		(
+		 	   (
 		 		 seq_atrtno.nextval
 		 		,#{location}
+		 		,#{manageEmp}
 		 		,#{registEmp}
 		 		,#{modifyEmp}
 		 		,#{attractionName}
 		 		,#{attractionIntro}
 		 		,#{customerLimit}
-		 		,#{ageLimit}
-		 		,#{ageLimitRange}
-		 		,#{heightLimit}
-		 		,#{heightLimitRange}
-		 		.#{status}
-		 		)
+		 		<if test="ageLimitYN.equals('Y')">
+		 		  ,#{ageLimit}
+		 		  ,#{ageLimitRange}
+		 		</if>
+		 		<if test="heightLimitYN.equals('Y')">
+		 		  ,#{heightLimit}
+		 		  ,#{heightLimitRange}
+		 		</if>
+		 		,#{status}
+		 		,#{statusReason}
+		 		,#{thumbnailURL}
+		 	   )
 	</insert>
+	
+	<!-- 어트랙션 수정 -->
+	<update id="updateAttraction" parameterType="hashmap">
+		update tb_attraction
+		   set location = #{location}
+		   	  ,modify_emp = #{modifyEmp}
+		   	  ,attraction_name = #{attractionName}
+		   	  ,attraction_intro = #{attractionIntro}
+		   	  ,customer_limit = #{customerLimit}
+		   	  ,age_limit = #{ageLimit}
+		   	  ,age_limit_range = #{ageLimitRange}
+		   	  ,height_limit = #{heightLimit}
+		   	  ,height_limit_range = #{heightLimitRange}
+		   	  ,status = #{status}
+		   	  ,status_reason = #{statusReason}
+		 where attraction_no = #{attractionNo}
+	</update>
+	
 	
 </mapper>

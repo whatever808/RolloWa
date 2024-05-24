@@ -25,7 +25,7 @@ public class OrganizationDto {
 	private String userPwd;
 	private String phone;
 	private String address;
-	private String accountNo;
+	private String bankAccount;
 	private String bank;
 	private String email;
 	private String profileUrl;
@@ -40,7 +40,10 @@ public class OrganizationDto {
 	private int salary;
 	private int deptNo;
 	private int teamNo;
-	private int positionNo;	
+	private int positionNo;
+	private int alltime;
+	private int totalSalary;
+	private int payment;
 	
 	private String dept;
 	private String team;
