@@ -70,4 +70,9 @@ public class ChatService {
 	public int updateChatInDate(Map<String, String> map) {
 		return chatDao.updateChatInDate(map);
 	}
+
+	// 읽지 않은 메세지 갯수 조회
+	public int selectUnreadMsg(Map<String, String> map) {
+		return chatDao.selectUnreadMsg(map);
+	}
 }

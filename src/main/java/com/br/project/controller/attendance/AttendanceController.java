@@ -303,8 +303,7 @@ public class AttendanceController {
 	public List<GroupDto> selectPosition() {
 		log.debug("직급 조회 실행");
 	    return organizationService.selectPosition();
-	}
-	
+	}	
 	
 	/*
 	@ResponseBody

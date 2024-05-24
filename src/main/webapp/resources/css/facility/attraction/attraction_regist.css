@@ -22,8 +22,10 @@
 	height: 400px;
 	border-radius: 20px;
 }
-input.map{
+span.map{
 	width: 250px;
+	padding: 10px 10px 10px 10px;
+	margin-left: 15px;
 	border-radius: 20px;
 	border: 1px solid lightgray;
 }

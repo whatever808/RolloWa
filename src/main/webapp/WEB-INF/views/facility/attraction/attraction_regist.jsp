@@ -9,7 +9,7 @@
 	<title>어트랙션 등록</title>
 	
 	<!-- 어트랙션 등록페이지 스타일 -->
-  	<link href="${ contextPath }/resources/css/facility/attraction/attraction_regist.css" rel="stylesheet">
+  <link href="${ contextPath }/resources/css/facility/attraction/attraction_regist.css" rel="stylesheet">
 </head>
 <body>
 
@@ -39,17 +39,10 @@
 	            
 	            <div class="field-group">
 	                <label for="attraction-location" class="field-title">위치</label>
-	                <input type="text" class="map text-center text-primary ms-3 mb-2" placeholder="지도에서 위치를 선택해주세요.">
+	                <span class="map text-center text-secondary">지도에서 위치를 선택해주세요.</span>
 	                <input type="hidden" name="location"><br>
 	                <div id="map"></div>
 	            </div>
-	            
-	            <script>
-					$("input.map").on("keyup", function(){
-						yellowAlert("지도에서 위치를 선택해주세요.", "");
-						$(this).val("");
-					})
-				</script>
 	            
 	            <div class="field-group">
 	                <label for="attraction-status" class="field-title">운영상태</label><br>
@@ -73,17 +66,17 @@
 	            <div class="field-group">
 	                <label class="field-title">연령제한</label><br>
 	                
-	                <input type="radio" id="age-limit-n" name="ageLimit" value="N" checked>
+	                <input type="radio" id="age-limit-n" name="ageLimitYN" value="N" checked>
 	                <label class="form-check-label" for="age-limit-n">없음</label>
 	
 	                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	
-	                <input type="radio" id="age-limit-y" name="ageLimit">
+	                <input type="radio" id="age-limit-y" name="ageLimitYN" value="Y">
 	                <label class="form-check-label" for="age-limit-y">있음</label>
 	
 	                <!-- if age-limit-y checked start -->
 	                <div class="age-limit d-none">
-	                    <input type="text" class="form-input text-center" id="age-limit" name="ageLimit" value="Y" placeholder="나이를 입력하세요.(숫자만)">
+	                    <input type="text" class="form-input text-center" id="age-limit" name="ageLimit" placeholder="나이를 입력하세요.(숫자만)">
 	                    <select class="form-select" name="ageLimitRange">
 	                        <option>이상</option>
 	                        <option>이하</option>
@@ -97,12 +90,12 @@
 	            <div class="field-group">
 	                <label class="field-title">키제한</label><br>
 	                
-	                <input type="radio" id="height-limit-n" name="heightLimit" value="N" checked>
+	                <input type="radio" id="height-limit-n" name="heightLimitYN" value="N" checked>
 	                <label class="form-check-label" for="height-limit-n">없음</label>
 	
 	                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	
-	                <input type="radio" id="height-limit-y" name="heightLimit" value="Y">
+	                <input type="radio" id="height-limit-y" name="heightLimitYN" value="Y">
 	                <label class="form-check-label" for="height-limit-y">있음</label>
 	
 	                <!-- if height-limit-y checked start -->
@@ -201,6 +194,7 @@
 	    
 	    // 등록요청전, 유효성검사 ------------------------------------------------------------------------------------------------
 	    $("#regist-form").on("submit", function(){
+	    	console.log($("input[name=status]").val() == 'STOP');
 	    	// 등록폼 입력값 유효성검사
 	    	if(($("input[name=attractionName]").val()).trim().length == 0){
 	    		yellowAlert("어트랙션명을 입력해주세요.", "");
@@ -211,8 +205,8 @@
 	    	}else if(($("input[name=location]").val()).length == 0){
 	    		yellowAlert("위치를 선택해주세요.", "");
 	    		return false;
-	    	}else if(($("input[name=status]").val() == 'STOP' || $("input[name=status]").val() == 'CLOSED')&&($("input[name=statusReason]").val()).length == 0){
-	    		yellowAlert($("input[name=status]").text() + " 사유를 작성해주세요.", "");
+	    	}else if(($("select[name=status]").val() == 'STOP' || $("select[name=status]").val() == 'CLOSED')&&($("input[name=statusReason]").val()).length == 0){
+	    		yellowAlert(($("select[name=status]").val() == 'STOP' ? '운영중지' : '운영종료') + " 사유를 작성해주세요.", "");
 	    		return false;
 	    	}else if(!($(".age-limit").hasClass("d-none")) && ($("input[name=ageLimit]").val()).length == 0){
 	    		yellowAlert("제한 나이를 입력해주세요.", "");
@@ -277,7 +271,9 @@
 				});
 			
 				// 등록시, 데이터베이스에 기록할 위치정보값 설정
-				$("input.map").val(locationName);
+				$("span.map").text(locationName)
+										 .removeClass("text-secondary")
+										 .addClass("text-primary");
 				$("input[name=location]").val(locationNo);
 			
 			});

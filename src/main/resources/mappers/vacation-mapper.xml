@@ -99,11 +99,57 @@ select
     , MODIFY_NAME
     , ATTACH_PATH 
 from vacation v
-left join  attachment a on (VACATION_NO = REF_NO and REF_TYPE = 'VACT')
+left join  attachment a on (VACATION_NO = REF_NO and REF_TYPE = 'VACT' and a.STATUS = 'Y')
 where REGIST_EMP = #{userNo}
 and v.STATUS = 'Y'
-and APPORVAL_STATUS in ('I', 'N')
+and APPORVAL_STATUS in ('I', 'D', 'N')
 order by VACATION_NO desc 
+</select>
+
+<update id="updateVacation">
+update 
+	vacation
+set 
+	VACATION_STRAT = To_date(#{vacaStart}, 'YYYY-MM-DD HH24:MI:SS')
+, VACATION_END = To_date(#{vacaEnd}, 'YYYY-MM-DD HH24:MI:SS')
+, VACATION_COMMNET = #{vacaComment}
+, MODIFY_EMP = #{member.userNo}
+where 
+    VACATION_NO = #{vacaNO}
+</update>
+
+<select id="selectVacarionCount"
+resultType="_int">
+select count(*)
+from 
+	vacation
+where 
+	REGIST_EMP = #{userNo}
+and 
+	STATUS = 'Y'
+and 
+	APPORVAL_STATUS = 'Y'
+</select>
+
+<select id="searchOld">
+select 
+    VACATION_NO
+    , VACATION_STRAT
+    , VACATION_END
+    , VACATION_COLOR
+    , GROUP_CODE
+from vacation 
+where STATUS = 'Y'
+<if test="!vacaGroupCode.equals('all')">
+and GROUP_CODE = #{vacaGroupCode}
+</if>
+<![CDATA[
+and VACATION_STRAT >= To_date(#{vacaStart}, 'YYYY-MM-DD HH24:MI:SS')
+and VACATION_END <= (To_date(#{vacaEnd}, 'YYYY-MM-DD HH24:MI:SS')+ 1)
+and REGIST_EMP = #{member.userNO}
+and APPORVAL_STATUS = 'Y'
+order by VACATION_NO desc
+]]>
 </select>
 
 </mapper>
