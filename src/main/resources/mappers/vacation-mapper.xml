@@ -99,12 +99,24 @@ select
     , MODIFY_NAME
     , ATTACH_PATH 
 from vacation v
-left join  attachment a on (VACATION_NO = REF_NO and REF_TYPE = 'VACT')
+left join  attachment a on (VACATION_NO = REF_NO and REF_TYPE = 'VACT' and a.STATUS = 'Y')
 where REGIST_EMP = #{userNo}
 and v.STATUS = 'Y'
-and APPORVAL_STATUS in ('I', 'N')
+and APPORVAL_STATUS in ('I', 'D', 'N')
 order by VACATION_NO desc 
 </select>
+
+<update id="updateVacation">
+update 
+	vacation
+set 
+	VACATION_STRAT = To_date(#{vacaStart}, 'YYYY-MM-DD HH24:MI:SS')
+, VACATION_END = To_date(#{vacaEnd}, 'YYYY-MM-DD HH24:MI:SS')
+, VACATION_COMMNET = #{vacaComment}
+, MODIFY_EMP = #{member.userNo}
+where 
+    VACATION_NO = #{vacaNO}
+</update>
 
 <select id="selectVacarionCount"
 resultType="_int">

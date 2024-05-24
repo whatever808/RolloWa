@@ -29,6 +29,10 @@ public class VacationDao {
 	public int selectVacarionCount(int userNo) {
 		return sqlSession.selectOne("vacationMapper.selectVacarionCount", userNo);
 	}
+
+	public int updateVacation(VacationDto vacationDto) {
+		return sqlSession.update("vacationMapper.updateVacation", vacationDto);
+	}
 	
 	
 	
