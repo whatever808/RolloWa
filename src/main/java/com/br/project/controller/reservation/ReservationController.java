@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.reservation.ReservationDto;
 import com.br.project.service.reservation.ReservationService;
@@ -45,8 +47,6 @@ public class ReservationController {
 		Calendar cal = Calendar.getInstance();
 		String currentDate = sdf.format(cal.getTime());
 		
-		log.debug("selectedDate??:  {}", selectedDate);
-		
 		Map<String, Object> paramMap = new HashMap<>();
 		int listCount = reservationService.selectEquipmentListCount();
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
@@ -70,7 +70,7 @@ public class ReservationController {
 	// 3.1 예약 관리
 	@GetMapping("/search.do")
 	public ModelAndView reservationListSearch(@RequestParam(value = "page", defaultValue = "1") int currentPage,
-			@RequestParam(value = "selectedDate", required = false) String selectedDate,
+			@RequestParam(value = "selectedDate") String selectedDate,
 			ModelAndView mv) {
 		
 		Map<String, Object> paramMap = new HashMap<>();
@@ -94,6 +94,17 @@ public class ReservationController {
 		
 		return mv;
 	}
+	// 3.2 내 예약 조회
+	@GetMapping("/my.page")
+	public String reservationMy() {
+		return "reservation/reservation_my";
+	}
 	
+	
+	// 3.3 비품 관리
+	@GetMapping("/manager.page")
+	public String reservationManager() {
+		return "reservation/reservation_manager";
+	}
 	
 }

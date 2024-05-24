@@ -189,11 +189,11 @@
 	
 		<!--날짜, 오늘 선택 -->
 		<div class="select_date">
-		<table class="table_2">
-		    <tr>
-				<td><h3><div class="arrow" onclick="changeDate(-1);">◀</div></h3></td>
-				<td><input type="date" id="currentDate" onchange="changeDate(0);"></td>
-				<td><h3><div class="arrow" onclick="changeDate(1);">▶</div></h3></td>
+			<table class="table_2">
+		    	<tr>
+					<td><h3><div class="arrow" onclick="changeDate(-1);">◀</div></h3></td>
+					<td><input type="date" id="currentDate" onchange="changeDate(0);"></td>
+					<td><h3><div class="arrow" onclick="changeDate(1);">▶</div></h3></td>
 				</tr>
 		    </table>
 		</div>
@@ -245,6 +245,8 @@
 				success: function(data){	
 					//console.log("통신 성공");
 					
+					$(".table_time tbody").html($(data).find(".table_time tbody").html());
+					
 				}, error: function(){
 					//console.log("통신 실패");
 				}
@@ -291,6 +293,34 @@
                 </tr>
             </table>
         </div>
+        
+        <!-- 모달창 스크립트 -->
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+			// console.log("loginMember: ", MemberDto(userNo=1109, userName=박호중, userId=user60, 
+			// userPwd=$2a$10$PWYc/G1CPm2svFw4HehFXuDjDWYHyc7h.1Lee.XB9hTZrGkdBqk4., phone=null, 
+			// postCode=null, address=null, detailAddress=null, totalAddress=null, bankAccount=null, bank=null, email=null, 
+			// profileURL=null, countFail=0, enrollDate=null, enrollUserNo=0, modifyDate=null, modifyUserNo=0, status=null, 
+			// vacationCount=0, authLevel=0, salary=0, teamCode=C, positionCode=C, position=null));
+            const trElements = document.querySelectorAll('.tr_cursor'); // 클릭할 tr 요소를 선택합니다.
+        	const userName = "${loginMember.userName}";
+        	const userId = "${loginMember.userId}";
+        	//const userDepartment = "${loginMember.teamCode}";
+        	
+            trElements.forEach(function(trElement) {
+                trElement.addEventListener('click', function() {
+                    const equipmentName = trElement.querySelector('td:nth-child(2) h6').textContent; // 클릭한 tr 요소에서 비품명을 가져옵니다.
+                    
+                    document.getElementById('userName').textContent = userName + "(" + userId + ")";
+                    document.getElementById('selectedEquipmentName').textContent = equipmentName;
+                    
+                    //const department = userDepartment === 'C' ? 'C이다' : '아니다';
+                    //document.getElementById('department').textContent = department;
+
+                });
+            });
+        });
+        </script>
 
         <!-- 비품 예약 모달창 -->
         <div id="modal_reserve">
@@ -298,17 +328,17 @@
                 <table class="table-bordered table_modal">
                     <tr>
                         <th><h5>예약자</h5></th>
-                        <td><h5>김병오(kimbyungoh123)</h5></td>
+                        <td><h5 id="userName"></h5></td>
                     </tr>
                     
                     <tr>
                         <th><h5>부서명</h5></th>
-                        <td><h5>기획부</h5></td>
+                        <td><h5 id="department"></h5></td>
                     </tr>
 
                     <tr>
                         <th><h5>비품명</h5></th>
-                        <td><h5>업무미팅룸 208호</h5></td>
+                        <td><h5 id="selectedEquipmentName"></h5></td>
                     </tr>
 
                     <tr>
@@ -454,6 +484,7 @@
                 </table>
             </div>
         </div>
+        
 
 
             <!-- 모달창 -->
@@ -505,36 +536,54 @@
                     
                     <c:choose>
                     	<c:when test="${ not empty list }">
-                    		<c:forEach var="e" items="${ list }" varStatus="loop">
-	                   			<tr data-izimodal-open="#modal_reserve" class="tr_cursor">
-	                   				
-	                   				<!-- 비품 정보 표시 -->
-									<td><h6>${ loop.index + 1 }</h6></td>
-									<td><h6>${ e.equipmentName }</h6></td>
-									
-									<!-- 모든 예약 확인 -->
-									<c:forEach var="r" items="${reservationList}">
-									
-									    <!-- e.code와 equipmentCode가 일치하는 경우 -->
-									    <c:choose>
-										    <c:when test="${e.code eq r.equipmentCode}">
-										    	<c:forEach begin="1" end="${fn:substring(r.reserveStart, 11, 13)*2}" varStatus="loop">
-												    <td></td>
-												</c:forEach>
-												<c:forEach begin="1" end="${fn:substring(r.reserveStart, 14, 16)}" varStatus="loop">
-												    <c:if test="${loop.index == 1}">
-												        <td></td>
-												    </c:if>
-												</c:forEach>
-										        <td>${r.reserveStart}</td>
-										        <td>${r.reserveEnd}</td>
-										        <td>${ e.code }</td>
-										    </c:when>
-										</c:choose>
-									</c:forEach>
-					                
-					            </tr>
-					        </c:forEach>
+                    		<c:forEach var="e" items="${list}" varStatus="loop">
+							    <tr data-izimodal-open="#modal_reserve" class="tr_cursor">
+							        <!-- 비품 정보 표시 -->
+							        <td><h6>${loop.index + 1}</h6></td>
+							        <td><h6>${e.equipmentName}</h6></td>
+							        
+							        <!-- 비품 예약 확인 -->
+							        <c:set var="reservationFound" value="false"/>
+							        <c:forEach var="r" items="${reservationList}">
+							            <c:if test="${e.code eq r.equipmentCode}">
+							                <c:set var="reservationFound" value="true"/>
+							                <!-- 날짜 형식 : 2024-05-05 00:00:00.0 -->
+							                
+							                <!-- 시작 시간까지 채우기 -->
+							                <c:forEach begin="1" end="${fn:substring(r.reserveStart, 11, 13)*2}" varStatus="loop">
+						                    	<td></td>
+							                </c:forEach>
+							                
+							                <!-- 예약한 시간 채우기(시간) -->
+							                <c:forEach begin="1" end="${(fn:substring(r.reserveEnd, 11, 13)- fn:substring(r.reserveStart, 11, 13))*2}" varStatus="loop">
+							                    <td class="td_reserve"></td>
+							                </c:forEach>
+							                
+							                <!-- 예약한 시간 채우기(분) -->
+							                <c:forEach begin="1" end="${fn:substring(r.reserveStart, 14, 16)}" varStatus="loop">
+							                    <c:if test="${loop.index == 1}">
+							                        <td class="td_reserve"></td>
+							                    </c:if>
+							                </c:forEach>
+							                
+							                <!-- 나머지 시간 매꾸기 -->
+							                <c:forEach begin="1" end="${ 48-fn:substring(r.reserveStart, 11, 13)*2
+							                                                -(fn:substring(r.reserveEnd, 11, 13)- fn:substring(r.reserveStart, 11, 13))*2
+							                                                -(fn:substring(r.reserveStart, 14, 16)/30)
+							                                                }" varStatus="loop">
+							                    <td></td>
+							                </c:forEach>
+							            </c:if>
+							        </c:forEach>
+							        
+							        <!-- 예약이 없는 경우 -->
+							        <c:if test="${not reservationFound}">
+							            <c:forEach begin="1" end="48">
+							                <td></td>
+							            </c:forEach>
+							        </c:if>
+							    </tr>
+							</c:forEach>
 					    </c:when>
 					    
 				    	<c:otherwise>
@@ -543,23 +592,6 @@
 					        </tr>
 					    </c:otherwise>
 					</c:choose>
-                    
-                    <!-- 
-						시작값에서 15:30 이면 30분으로 나눴을때 값 만큼 td생성시키고
-						시작값 15:30 빼기 17:30 뺀 값을 30으로 나눴을 때 만큼 td생성이아닌 td하나를 colspan만큼 지정하고
-						마지막 td로 채운다. 
-						---------------------------------------------------------------------------------
-						퇴직자
-						가입날짜, 수정날짜, 상태, 
-						
-						날짜에 따라서
-						가입날짜가 선택한 날짜 이전이면 그 사용자는 보여지면 안됨
-						
-						반대로,
-						선택한 날짜가 가입한 날짜 이후이면 보여져야하고,
-						상태값이 N이면서, 수정한 날짜 이후이면 출력되서는 안된다.
-						출결조회, 급여조회에 적용할 것
-                     -->
 
                     <tr data-izimodal-open="#modal_reserve" class="tr_cursor">
                         <td><h6>2</h6></td>
