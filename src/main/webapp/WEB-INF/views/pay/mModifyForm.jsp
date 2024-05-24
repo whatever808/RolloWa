@@ -431,9 +431,9 @@ $(document).ready(function(){
 																					</svg>
 	                                        </button>
 										                    </td>
-										                    <td class="value small sing_name" id="f_name"></td>
-										                    <td class="value small sing_name" id="m_name"></td>
-										                    <td class="value small sing_name" id="l_name"></td>
+										                    <td class="value small sing_name" id="f_name">${ list.get(0).FIRST_APPROVAL }</td>
+										                    <td class="value small sing_name" id="m_name">${ list.get(0).MIDDLE_APPROVAL }</td>
+										                    <td class="value small sing_name" id="l_name">${ list.get(0).FINAL_APPROVAL }</td>
 										                </tr>
 										                <tr>
                                         <td class="label">상태</td>
@@ -446,7 +446,7 @@ $(document).ready(function(){
                                     </tr>
 										                <tr>
 										                    <td class="label">제목</td>
-										                    <td class="value" colspan="4"><input type="text" name="title" required></td>
+										                    <td class="value" colspan="4"><input type="text" name="title"  value="${ list.get(0).TITLE }" required></td>
 										                </tr>
 										            </table>
 										        </div>
@@ -520,10 +520,16 @@ $(document).ready(function(){
     <script>
     	$(document).ready(function(){
     			$("#status").val("${list.get(0).PAYMENT_STATUS}");
-    			$("#sales").val("${list.get(0).SALES_DIVISION}")
+    			$("#sales").val("${list.get(0).SALES_DIVISION}");
     	})
     </script>
     </c:if>
+    
+    <script>
+    	$(document).ready(function(){
+    		
+    	})
+    </script>
      
     <script>
     	

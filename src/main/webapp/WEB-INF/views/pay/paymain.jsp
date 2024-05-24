@@ -95,7 +95,7 @@
   </c:if>
   
   
-                               
+  <main>                         
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
         <!-- content 추가 -->
         <div class="content p-4">
@@ -313,7 +313,7 @@
                                 </div>
                             </div>
                             <div id="cen_bot_table">
-                                <table e class="table table-hover">
+                                <table class="table table-hover">
                                     <thead>
                                       <tr>
                                         <th>번호</th>
@@ -354,8 +354,6 @@
                                   
                                     </tbody>
                                   </table>
-                                
-                                
                             </div>
                             <div id="cen_bottom_pagging">
                                 <div id="pagin_form">
@@ -499,6 +497,7 @@
                     </div>
                 </div>
             </div>
+            </div>
             
         </div>
         <!-- content 끝 -->
@@ -509,12 +508,14 @@
     $(document).ready(function(){
         $("#cen_bot_table .ing").each(function(){
             var text = $(this).text();
-            if(text == '진행중'){
+            if(text == '진행'){
                 $(this).css("color", "green");
             } else if(text == '반려'){
                 $(this).css("color", "orange");
-            } else if(text == '승인완료'){
+            } else if(text == '완료'){
                 $(this).css("color", "red");
+            } else if(text == '대기'){
+                $(this).css("color", "pink");
             }
         });
 

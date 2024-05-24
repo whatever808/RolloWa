@@ -658,7 +658,7 @@ public class PayController {
 			//-------------------------------------
 			model.addAttribute("list", listM);
 			
-			return "pay/mWriterForm";
+			return "pay/mModifyForm";
 			
 		}else if(map.get("report").equals("j")){
 			map.put("refType", "PJ");
@@ -1378,6 +1378,28 @@ public class PayController {
 		model.addAttribute("approvalSelect", "approvalSelect");
 		
 		return "pay/paymain";
+		
+	}
+	
+	@RequestMapping("/myAllApproval.page")
+	public void myAllApproval(@RequestParam(value="page", defaultValue="1") int currentPage
+							, HttpSession session, Model model) {
+		
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userName", userName);
+		mapUserMember.put("userNo", userNo);
+		
+		int myAllApCount = payService.myAllApCount(mapUserMember);
+		
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(myAllApCount, currentPage, 5, 10);
+
+		List<Map<String, Object>> list = payService.myAllApproval(mapUserMember, pi);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
 		
 	}
 	

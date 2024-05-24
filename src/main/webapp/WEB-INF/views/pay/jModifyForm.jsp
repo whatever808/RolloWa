@@ -451,7 +451,7 @@ $(document).ready(function(){
                                     </tr>
 										                <tr>
 										                    <td class="label">제목</td>
-										                    <td class="value" colspan="4"><input type="text" name="title" required></td>
+										                    <td class="value" colspan="4"><input type="text" name="title" value="${ list.get(0).TITLE }" required></td>
 										                </tr>
 										            </table>
 										        </div>
@@ -542,7 +542,7 @@ $(document).ready(function(){
         		inputEl.name = "delFileNo";
         		inputEl.type = "hidden";
         		
-        		$(".left_con").append(inputEl);
+        		$(".header2").append(inputEl);
         		
         		$(this).closest(".attach").remove();
         		

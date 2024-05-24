@@ -460,5 +460,12 @@ public class PayService {
 		return payDao.approvalSelectList(map, pi);
 	}
 	
+	public int myAllApCount(Map<String, Object> map) {
+		return payDao.myAllApCount(map);
+	}
+	
+	public List<Map<String, Object>> myAllApproval(Map<String, Object> map, PageInfoDto pi){
+		return payDao.myAllApproval(map, pi);
+	}
 	
 }

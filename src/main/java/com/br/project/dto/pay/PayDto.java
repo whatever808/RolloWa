@@ -46,6 +46,7 @@ public class PayDto {
 	private String firstSign; // 1차 승인싸인
 	private String middleSign; // 2차 승인싸인
 	private String finalSign; // 3차 승인싸인
+	private String title; // 제목
 	
 	
 	private List<ExpenditureDto> expenditureList;

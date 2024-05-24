@@ -394,4 +394,12 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.approvalSelectList", map, rowbounds);
 	}
 	
+	public int myAllApCount(Map<String, Object> map){
+		return sqlSessionTemplate.selectOne("payMapper.myAllApCount", map);
+	} 
+	
+	public List<Map<String, Object>> myAllApproval(Map<String, Object> map, PageInfoDto pi){
+		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.myAllApproval", map, rowbounds);
+	}
 }

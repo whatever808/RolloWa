@@ -70,58 +70,60 @@ $(document).ready(function(){
 	    if (signature.isEmpty()) {
 	        alert("내용이 없습니다.");
 	    } else {
-	    		alert("정말로 승인을 하시겠습니까?");
-	        var data = signature.toDataURL("image/png");
-	        const image = canvas.toDataURL();
-	        
-	        
-	        
-	        var approvalName = "${list.get(0).FIRST_APPROVAL == userName ? 1 : list.get(0).MIDDLE_APPROVAL == userName ? 2 : list.get(0).FINAL_APPROVAL == userName ? 3 : 0}" 
-	        
-	        $.ajax({
-	        	url:"${contextPath}/pay/ajaxSign.do",
-	        	type:"post",
-	        	data:{
-	        		dataUrl:data,
-	        		signName:"${userName}",
-	        		approvalNo:"${list.get(0).APPROVAL_NO}",
-	        		approvalSignNo:approvalName
-	        	},
-	        	success:function(response){
-	        		
-	        		console.log(response);
-	        		
-	        		if (response != "") {
-	        		    alert("성공적으로 승인이 완료되었습니다.");
+	    		if(confirm("정말로 승인을 하시겠습니까?")){
+	    			
+	    			var data = signature.toDataURL("image/png");
+	    	        const image = canvas.toDataURL();
+	    	        
+	    	        var approvalName = "${list.get(0).FIRST_APPROVAL == userName ? 1 : list.get(0).MIDDLE_APPROVAL == userName ? 2 : list.get(0).FINAL_APPROVAL == userName ? 3 : 0}" 
+	    	        
+	    	        $.ajax({
+	    	        	url:"${contextPath}/pay/ajaxSign.do",
+	    	        	type:"post",
+	    	        	data:{
+	    	        		dataUrl:data,
+	    	        		signName:"${userName}",
+	    	        		approvalNo:"${list.get(0).APPROVAL_NO}",
+	    	        		approvalSignNo:approvalName
+	    	        	},
+	    	        	success:function(response){
+	    	        		
+	    	        		console.log(response);
+	    	        		
+	    	        		if (response != "") {
+	    	        		    alert("성공적으로 승인이 완료되었습니다.");
 
-	        		    if (response.approvalSignNo == 1) {
-	        		    	$('#firstSign').children().remove();
-	        		    	$("#apDt1").children().remove();
-	        		      $('#firstSign').append('<img src="' + response.sign[0].firstSign + '" alt="First Approval Signature">');
-	        		      	if($("#apDt1").text() == ""){
-			        		      $("#apDt1").append(response.sign[0].firstApDt);	
-	        		      	}
-	        		        
-	        		    } else if (response.approvalSignNo == 2) {
-	        		    	$('#middleSign').children().remove();
-		        		    $("#apDt2").children().remove();
-	        		      $('#middleSign').append('<img src="' + response.sign[0].middleSign + '" alt="Middle Approval Signature">');
-	        		      if($("#apDt2").text() == ""){
-		        		      $("#apDt2").append(response.sign[0].middleApDt);	
-        		      	}
-	        		    } else {
-	        		    	$('#finalSign').children().remove();
-	        		    	$("#apDt3").children().remove();
-	        		      $('#finalSign').append('<img src="' + response.sign[0].finalSign + '" alt="Final Approval Signature">');
-	        		    	if($("#apDt3").text() == ""){
-	        		        $("#apDt3").append(response.sign[0].finalApDt);	        		    		
-	        		    	}
-	        		    }
-	        		}
-	              
-	        		$("#modal2").iziModal('close');
-	        	}
-	        })
+	    	        		    if (response.approvalSignNo == 1) {
+	    	        		    	$('#firstSign').children().remove();
+	    	        		    	$("#apDt1").children().remove();
+	    	        		      $('#firstSign').append('<img src="' + response.sign[0].firstSign + '" alt="First Approval Signature">');
+	    	        		      	if($("#apDt1").text() == ""){
+	    			        		      $("#apDt1").append(response.sign[0].firstApDt);	
+	    	        		      	}
+	    	        		        
+	    	        		    } else if (response.approvalSignNo == 2) {
+	    	        		    	$('#middleSign').children().remove();
+	    		        		    $("#apDt2").children().remove();
+	    	        		      $('#middleSign').append('<img src="' + response.sign[0].middleSign + '" alt="Middle Approval Signature">');
+	    	        		      if($("#apDt2").text() == ""){
+	    		        		      $("#apDt2").append(response.sign[0].middleApDt);	
+	            		      	}
+	    	        		    } else {
+	    	        		    	$('#finalSign').children().remove();
+	    	        		    	$("#apDt3").children().remove();
+	    	        		      $('#finalSign').append('<img src="' + response.sign[0].finalSign + '" alt="Final Approval Signature">');
+	    	        		    	if($("#apDt3").text() == ""){
+	    	        		        $("#apDt3").append(response.sign[0].finalApDt);	        		    		
+	    	        		    	}
+	    	        		    }
+	    	        		}
+	    	              
+	    	        		$("#modal2").iziModal('close');
+	    	        	}
+	    	        })
+	    			
+	    		};
+	        
 	        
 	    }
 	});
@@ -200,7 +202,7 @@ $(document).on("click", "#rejectBtn", function(){
                    
 	                 <div class="document-container">
 								      <div class="header">
-								          <h1>지출결의서</h1>
+								          <h1>매출보고서</h1>
 								          <!--버튼 영역-->
 								          <div id="btn_content">
 									        <c:if test="${ not empty list and list.get(0).FINAL_APPROVAL == userName }  ">

@@ -30,11 +30,11 @@
 		<result column="FIRST_SIGN" property="firstSign"/>
 		<result column="MIDDLE_SIGN" property="middleSign"/>
 		<result column="FINAL_SIGN" property="finalSign"/>
+		<result column="TITLE" property="title"/>
 		
 		<result column="more_date" property="moreDate"/>
 		
 		<collection resultMap="ExpenditureResult" property="expenditureList" /> 
-		<collection resultMap="FixturesResult" property="fixturesList" /> 
 	</resultMap>
 	
 	<!-- 매출보고서 -->
@@ -49,18 +49,6 @@
 		<result column="SALES_AMOUNT" property="salesAmount" />
 	</resultMap>
 	
-	<!-- 비품신청서 -->
-	<resultMap id="FixturesResult" type="FixturesDto">
-		<result column="FIX_NO" property="fixturesNo" />
-		<result column="TITLE" property="belong" />
-		<result column="TOTAL_SUM" property="title" />
-		<result column="PRODUCT_NAME" property="productName" />
-		<result column="PRODUCT_SIZE" property="standard" />
-		<result column="QUANTITY" property="quantity" />
-		<result column="UNIT_PRICE" property="unitPrice" />
-		<result column="PRICE" property="price" />
-		<result column="NOTE" property="note" />
-	</resultMap>
 	
 	<!-- 휴직 신청서 -->
 	<resultMap id="RetireResult" type="RetireDto">
@@ -129,7 +117,7 @@
 		select count(*) count
 			from approval A
 			WHERE STATUS = 'Y'
-			AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+			AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 	</select>
 	
 	
@@ -150,9 +138,10 @@
 		   , DEPARTMENT
 		   , PAYMENT_WRITER
 		   , PAYMENT_WRITER_NO
-		   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-		           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+		   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+		           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
 		           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+		           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
 		           END) DOCUMENT_STATUS
 		   ,(SELECT count(*)
 		        FROM SALES_REPORT S
@@ -175,15 +164,11 @@
 		     , to_char(regist_date, 'YYYY-MM-DD') regist_date
 		     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 		     , PAYMENT_STATUS
+		     , TITLE
 		from approval A
     join member m on( USER_NO =  PAYMENT_WRITER_NO)
 		WHERE A.STATUS = 'Y'
-		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
-		<if test="userName != null">
-			and (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null
-        or MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null
-        or FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is not null)
-		</if>
+		AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 		order
 			 by APPROVAL_NO desc
 	</select>
@@ -193,7 +178,7 @@
       SELECT COUNT(*) count
 			  FROM APPROVAL A
 			 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-			   AND DOCUMENT_STATUS = 'I'
+			   AND DOCUMENT_STATUS IN ('I', 'D') 
 			   AND STATUS = 'Y'
 			    and (
 		            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
@@ -207,7 +192,7 @@
 		select count(*) count
 			from approval A
 			WHERE STATUS = 'Y'
-		    AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+		    AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 			   and (
 		            FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null
 		         or MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null
@@ -241,7 +226,7 @@
 		 select count(*)
 				from approval
 				WHERE STATUS = 'Y'
-				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+				AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 				AND ${condition} LIKE '%' || #{keyword} || '%'
 	 </select>
 	 
@@ -262,9 +247,10 @@
 		   , DEPARTMENT
 		   , PAYMENT_WRITER
 		   , PAYMENT_WRITER_NO
-		   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-		           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+		   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+		           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
 		           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+		           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
 		           END) DOCUMENT_STATUS
 		   ,(SELECT count(*)
 		        FROM SALES_REPORT S
@@ -289,7 +275,7 @@
 		     , PAYMENT_STATUS
 		from approval A
 		WHERE A.STATUS = 'Y'
-		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+		AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 		AND ${condition} LIKE '%' || #{keyword} || '%'
 		order
 			 by APPROVAL_NO desc
@@ -300,7 +286,7 @@
 			select count(*) count
 			  from approval
 			  WHERE STATUS = 'Y'
-			  AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+			  AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 			  <choose>
 					<when test="conditions == '전체'">
 					and DOCUMENT_TYPE IN ('T','C','B','M','J','G','H','V')
@@ -337,9 +323,10 @@
 		   , DEPARTMENT
 		   , PAYMENT_WRITER
 		   , PAYMENT_WRITER_NO
-		   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-		           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+		   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+		           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
 		           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+		           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
 		           END) DOCUMENT_STATUS
 		   ,(SELECT count(*)
 		        FROM SALES_REPORT S
@@ -365,7 +352,7 @@
 		from approval A
     join member m on( USER_NO =  PAYMENT_WRITER_NO)
 		WHERE A.STATUS = 'Y'
-			AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+			AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 			<choose>
 				<when test="conditions == '전체'">
 					and DOCUMENT_TYPE IN ('T','C','B','M','J','G','H','V')
@@ -431,7 +418,7 @@
 		     	count(*)
 				from approval A
 				WHERE STATUS = 'Y'
-				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+				AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 		        and (FIRST_APPROVAL = #{userName}
 		        or MIDDLE_APPROVAL = #{userName}
 		        or FINAL_APPROVAL = #{userName})
@@ -457,9 +444,10 @@
 				   , DEPARTMENT
 				   , PAYMENT_WRITER
 				   , PAYMENT_WRITER_NO
-				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-				           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
 				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
 				           END) DOCUMENT_STATUS
 				   ,(SELECT count(*)
 				        FROM SALES_REPORT S
@@ -485,7 +473,7 @@
 		from approval A
     join member m on( USER_NO =  PAYMENT_WRITER_NO)
 		WHERE A.STATUS = 'Y'
-				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+				AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 	      and( 
 	      		FIRST_APPROVAL = #{userName}
 	       or MIDDLE_APPROVAL = #{userName}
@@ -502,7 +490,7 @@
 			     		count(*)
 					from approval A
 					WHERE STATUS = 'Y'
-					AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+					AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 			        and (FIRST_APPROVAL = #{userName}
 			        or MIDDLE_APPROVAL = #{userName}
 			        or FINAL_APPROVAL = #{userName})
@@ -542,9 +530,10 @@
 				   , DEPARTMENT
 				   , PAYMENT_WRITER
 				   , PAYMENT_WRITER_NO
-				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-				           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
 				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
 				           END) DOCUMENT_STATUS
 				   ,(SELECT count(*)
 				        FROM SALES_REPORT S
@@ -570,7 +559,7 @@
 				from approval A
 		    join member m on( USER_NO =  PAYMENT_WRITER_NO)
 				WHERE A.STATUS = 'Y'
-				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+				AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 	      and( 
 	      		FIRST_APPROVAL = #{userName}
 	       or MIDDLE_APPROVAL = #{userName}
@@ -595,38 +584,6 @@
 				</choose>
 				order
 					 by APPROVAL_NO desc
-   </select>
-   
-   <!--  -->
-   <select id="bdetail" resultMap="FixturesResult">
-	   	select 
-	          FIXTURES_NO
-	        , BELONG
-	        , TITLE
-	        , PRODUCT_NAME
-	        , STANDARD
-	        , QUANTITY
-	        , to_char(UNIT_PRICE, '999,999,999') UNIT_PRICE
-	        , to_char(PRICE, '999,999,999') PRICE
-	        , NOTE
-	        , to_char(SUM, '999,999,999') SUM
-	        , ETC
-	        , to_char(A.REGIST_DATE, 'YYYY-MM-DD') REGIST_DATE
-	        , FIRST_APPROVAL
-	        , MIDDLE_APPROVAL
-	        , FINAL_APPROVAL
-	        , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
-	        , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
-	        , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
-	        , DEPARTMENT
-	        , PAYMENT_STATUS
-	        , PAYMENT_WRITER
-	    from FIXTURES_REPORT F
-	    join approval A on(F.FIXTURES_NO = A.DOCUMENT_NUMBER) 
-	   where DOCUMENT_TYPE = 'M'
-	     and APPROVAL_NO = #{approvalNo}
-			 and DOCUMENT_NUMBER = #{documentNo}
-			 and A.PAYMENT_WRITER = #{payWriter}
    </select>
    
    <!-- 각부서의 속한 팀명, 부장, 과장, 차장 이름 리스트 -->
@@ -664,15 +621,13 @@
 		    EXPENDITURE_REPORT
 		    (
 		      EXPEND_NO
-				,	TITLE
 				,	SALES_DIVISION
 				,	MANAGER_NAME
 				,	TOTAL_SALES
 		    )
 		    VALUES
 		    (
-		      SEQ_EXNO.NEXTVAL		      
-		    , #{title}
+		      SEQ_EXNO.NEXTVAL
 		    , #{sales}
 		    , #{manager}
 		    , #{totalSales}
@@ -714,6 +669,7 @@
 		    , MIDDLE_APPROVAL
 		    , FINAL_APPROVAL
 		    , REGIST_DATE
+		    , TITLE
 		    )
 		    VALUES
 		    (
@@ -728,6 +684,7 @@
 		    , #{middleApproval}
 		    , #{finalApproval}
 		    , #{writerDate}
+		    , #{title}
 		    )
    </insert>
       
@@ -759,7 +716,7 @@
 		     		count(*)
 				from approval A
 				WHERE STATUS = 'Y'
-				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+				AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
          and (FIRST_APPROVAL = #{userName}
 	       or MIDDLE_APPROVAL = #{userName}
 	       or FINAL_APPROVAL = #{userName})
@@ -782,9 +739,10 @@
 				   , DEPARTMENT
 				   , PAYMENT_WRITER
 				   , PAYMENT_WRITER_NO
-				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-				           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
 				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
 				           END) DOCUMENT_STATUS
 				   ,(SELECT count(*)
 				        FROM SALES_REPORT S
@@ -809,7 +767,7 @@
 				     , PAYMENT_STATUS
 				from approval A
 				WHERE A.STATUS = 'Y'
-				AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+				AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 	      and (FIRST_APPROVAL = #{userName}
 	       or MIDDLE_APPROVAL = #{userName}
 	       or FINAL_APPROVAL = #{userName})
@@ -856,6 +814,7 @@
 	   <update id="updateApproval">
 	   		update APPROVAL
 	   		   set PAYMENT_STATUS = #{status}
+	   		     , TITLE = #{title}
 	   		     , FIRST_APPROVAL = #{firstApproval}
 	   		     , MIDDLE_APPROVAL = #{middleApproval} 
 	   		     , FINAL_APPROVAL = #{finalApproval}
@@ -870,7 +829,6 @@
 	   			  SALES_NO
 					, EFFECTIVE_DATE
 					, COOPERATION_DEPARTMENT
-					, TITLE
 					, CONTENT
 					, STATUS
 	   			)
@@ -879,7 +837,6 @@
 	   			  SEQ_SRNO.NEXTVAL
 	   			, #{dateStart}
 	   			, #{depWith}
-	   			, #{title}
 	   			, #{content}
 	   			, #{fileStatus}
 	   			)
@@ -923,6 +880,7 @@
 						,	MIDDLE_APPROVAL
 						,	FINAL_APPROVAL
 						,	REGIST_DATE
+						, TITLE
 	   	      )
 	   	     values
 	   	     (
@@ -937,6 +895,7 @@
 	   	     , #{middleApproval}
 	   	     , #{finalApproval}
 	   	     , #{writerDate}
+	   	     , #{title}
 	   	     )
 	   </insert>
 	   
@@ -990,14 +949,12 @@
 	   				FIXTURES_REPORT
 	   				(
 				   	  FIX_NO
-						, TITLE
 						, TOTAL_SUM
 						, ETC_CONTENT   				
 	   				)
 						values
 						(
 						SEQ_FIXNO.NEXTVAL
-						, #{title}
 						, #{totalSum}
 						, #{etcList}
 						)
@@ -1045,6 +1002,7 @@
 		    , MIDDLE_APPROVAL
 		    , FINAL_APPROVAL
 		    , REGIST_DATE
+		    , TITLE
 		    )
 		    VALUES
 		    (
@@ -1059,6 +1017,7 @@
 		    , #{middleApproval}
 		    , #{finalApproval}
 		    , #{writerDate}
+		    , #{title}
 		    )
    </insert>
    
@@ -1108,7 +1067,6 @@
    					into RETIRE_REPORT
    							(
    							RETIRE_NO
-							,	TITLE
 							,	START_PERIOD
 							,	LAST_PERIOD
 							,	RETIRE_CONTENT
@@ -1117,7 +1075,6 @@
    						VALUES
    						(
    						 SEQ_RETNO.NEXTVAL
-   						,#{title}
    						,#{startDate}
    						,#{endDate}
    						,#{content}
@@ -1140,6 +1097,7 @@
 			    , MIDDLE_APPROVAL
 			    , FINAL_APPROVAL
 			    , REGIST_DATE
+			    , TITLE
 			    )
 			    VALUES
 			    (
@@ -1154,6 +1112,7 @@
 			    , #{middleApproval}
 			    , #{finalApproval}
 			    , #{writerDate}
+			    , #{title}
 			    )
    </insert>
    
@@ -1197,7 +1156,6 @@
   					DRAFT_REPORT
   					(
   					 DRAFT_NO
-						,	TITLE
 						,	SUM
 						,	VAT
 						,	TOTAL_SUM
@@ -1206,7 +1164,6 @@
   					VALUES
   					(
   					SEQ_DRNO.NEXTVAL
-  					,#{title}
   					,#{totalPrice}
   					,#{vat}
   					,#{totalExpendPrice}
@@ -1250,6 +1207,7 @@
 							,	MIDDLE_APPROVAL
 							,	FINAL_APPROVAL
 							,	REGIST_DATE
+							, TITLE
 		   	      )
 		   	     values
 		   	     (
@@ -1264,6 +1222,7 @@
 		   	     , #{middleApproval}
 		   	     , #{finalApproval}
 		   	     , #{writerDate}
+		   	     , #{title}
 		   	     )
 	  </insert>
 	  
@@ -1434,9 +1393,10 @@
 				   , DEPARTMENT
 				   , PAYMENT_WRITER
 				   , PAYMENT_WRITER_NO
-				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-				           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
 				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
 				           END) DOCUMENT_STATUS
 				   ,(SELECT count(*)
 				        FROM SALES_REPORT S
@@ -1462,7 +1422,7 @@
 		  from approval A
       join member m on( USER_NO =  PAYMENT_WRITER_NO)
 		 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-		   AND DOCUMENT_STATUS = 'I'
+		   AND DOCUMENT_STATUS IN ('I', 'D') 
 		   AND A.STATUS = 'Y'
 		    and (
 	            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
@@ -1477,7 +1437,7 @@
 			SELECT COUNT(*) count
 			  FROM APPROVAL A
 			 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-			   AND DOCUMENT_STATUS = 'I'
+			   AND DOCUMENT_STATUS IN ('I', 'D')
 			   AND STATUS = 'Y'
 			    and (
 		            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
@@ -1520,9 +1480,10 @@
 				   , DEPARTMENT
 				   , PAYMENT_WRITER
 				   , PAYMENT_WRITER_NO
-				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-				           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
 				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
 				           END) DOCUMENT_STATUS
 				   ,(SELECT count(*)
 				        FROM SALES_REPORT S
@@ -1548,7 +1509,7 @@
 		  from approval A
       join member m on( USER_NO =  PAYMENT_WRITER_NO)
 		 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-		   AND DOCUMENT_STATUS = 'I'
+		   AND DOCUMENT_STATUS IN ('I', 'D') 
 		   AND A.STATUS = 'Y'
 		    and (
 	            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
@@ -1580,7 +1541,7 @@
 				SELECT COUNT(*) count
 			  FROM APPROVAL A
 			 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-			   AND DOCUMENT_STATUS = 'I'
+			   AND DOCUMENT_STATUS IN ('I', 'D')
 			   AND STATUS = 'Y'
 			    and (
 		            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
@@ -1606,9 +1567,10 @@
 				   , DEPARTMENT
 				   , PAYMENT_WRITER
 				   , PAYMENT_WRITER_NO
-				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-				           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
 				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
 				           END) DOCUMENT_STATUS
 				   ,(SELECT count(*)
 				        FROM SALES_REPORT S
@@ -1634,7 +1596,7 @@
 		  from approval A
       join member m on( USER_NO =  PAYMENT_WRITER_NO)
 		 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-		   AND DOCUMENT_STATUS = 'I'
+		   AND DOCUMENT_STATUS IN ('I', 'D')
 		   AND A.STATUS = 'Y'
 		    and (
 	            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
@@ -1650,7 +1612,6 @@
 				 SET START_PERIOD = #{startDate}
 					 , LAST_PERIOD = #{endDate}
 					 , RETIRE_CONTENT = #{content}
-					 , TITLE = #{title}
 			 WHERE STATUS = 'H'
 			   AND RETIRE_NO = #{retireNo}
 		</update>
@@ -1660,8 +1621,7 @@
 		<update id="updateBReport">
 			update FIXTURES_REPORT
 				 set 
-					  	TITLE = #{title}
-						,	TOTAL_SUM = #{totalSum}
+							TOTAL_SUM = #{totalSum}
 						,	ETC_CONTENT = #{etcList}
 			  where FIX_NO = #{fixNo}
 		</update>
@@ -1817,9 +1777,10 @@
 		   , DEPARTMENT
 		   , PAYMENT_WRITER
 		   , PAYMENT_WRITER_NO
-		   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-		           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+		   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+		           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
 		           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+		           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
 		           END) DOCUMENT_STATUS
 		   ,(SELECT count(*)
 		        FROM SALES_REPORT S
@@ -1844,7 +1805,7 @@
 		     , PAYMENT_STATUS
 		from approval A
 		WHERE A.STATUS = 'Y'
-		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+		AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 			and (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null
         or MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null
         or FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is not null
@@ -1859,7 +1820,7 @@
 		     		 count(*)
 				from approval A
 			 WHERE STATUS = 'Y'
-         AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+         AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 				 AND (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null
       					or MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null
       					or FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is not null
@@ -1883,9 +1844,10 @@
 			   , DEPARTMENT
 			   , PAYMENT_WRITER
 			   , PAYMENT_WRITER_NO
-			   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-			           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+			   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+			           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
 			           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+			           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
 			           END) DOCUMENT_STATUS
 			   ,(SELECT count(*)
 			        FROM SALES_REPORT S
@@ -1910,7 +1872,7 @@
 			     , PAYMENT_STATUS
 			from approval A
 			WHERE A.STATUS = 'Y'
-				 AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
+				 AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 				 AND (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null
       					or MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null
       					or FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is not null
@@ -1923,7 +1885,7 @@
 		<select id="approvalSelectCount" resultType="_int">
 			SELECT COUNT(*) count
 			  FROM APPROVAL A
-			 WHERE DOCUMENT_STATUS IN ('Y', 'N', 'I')
+			 WHERE DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 			   AND STATUS = 'Y'
 			    and (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null
       					or MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null
@@ -1965,9 +1927,10 @@
 			   , DEPARTMENT
 			   , PAYMENT_WRITER
 			   , PAYMENT_WRITER_NO
-			   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '승인완료'
-			           WHEN DOCUMENT_STATUS = 'I' THEN '진행중'
+			   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+			           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
 			           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+			           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
 			           END) DOCUMENT_STATUS
 			   ,(SELECT count(*)
 			        FROM SALES_REPORT S
@@ -1991,7 +1954,7 @@
 			     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 			     , PAYMENT_STATUS
 			from approval A
-			WHERE DOCUMENT_STATUS IN ('Y', 'N', 'I')
+			WHERE DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
 			   AND STATUS = 'Y'
 			    and (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null
       					or MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null
@@ -2019,7 +1982,70 @@
 		</select>
 		
 		
-		
+		<!-- 내문서함(전체) 목록갯수조회용 -->
+	<select id="myAllApCount" resultType="_int">
+		select count(*) count
+			from approval A
+			WHERE STATUS = 'Y'
+			AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
+      and PAYMENT_WRITER_NO = #{userNo}
+	</select>
+	
+	
+	<!-- 진행중, 승인완료, 반려 처리된 목록리스트 조회 -->
+	<select id="myAllApproval" resultType="map">
+		select 
+		      APPROVAL_NO
+		    , case when document_type = 'C' then '출장보고서'
+		           when document_type = 'H' then '휴직신청서'
+		           when document_type = 'T' then '퇴직신청서'
+		           when document_type = 'B' then '비품신청서'
+		           when document_type = 'J' then '지출결의서'
+		           when document_type = 'G' then '기안서'
+		           when document_type = 'M' then '매출보고서'
+		      else '휴가신청서'
+		   end DOCUMENT_TYPE
+		   , DOCUMENT_NUMBER
+		   , DEPARTMENT
+		   , PAYMENT_WRITER
+		   , PAYMENT_WRITER_NO
+		   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+		           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
+		           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+		           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
+		           END) DOCUMENT_STATUS
+		   ,(SELECT count(*)
+		        FROM SALES_REPORT S
+		      WHERE A.DOCUMENT_NUMBER = S.SALES_NO
+		        AND A.document_type = 'G'
+		        AND S.STATUS = 'Y'
+		    )SALES_STATUS
+		    , (SELECT count(*)
+		        FROM DRAFT_REPORT D
+		        WHERE A.DOCUMENT_NUMBER = D.DRAFT_NO
+		         AND A.document_type = 'J'
+		         AND D.STATUS = 'Y'
+		     ) DRAFT_STATUS
+		    , (SELECT count(*)
+		        FROM BUSINESSTRIP_REPORT B
+		        WHERE A.DOCUMENT_NUMBER = B.BUSINESS_NO
+		        AND A.document_type = 'C'
+		        AND B.STATUS = 'Y'
+		     ) BUSINESSTRIP_STATUS
+		     , to_char(regist_date, 'YYYY-MM-DD') REGIST_DATE
+		     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+		     , PAYMENT_STATUS
+		     , TITLE
+		from approval A
+    join member m on( USER_NO =  PAYMENT_WRITER_NO)
+		WHERE A.STATUS = 'Y'
+		AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
+		and PAYMENT_WRITER_NO = #{userNo}
+		order
+			 by APPROVAL_NO desc
+	</select>
+	
+	
 		
 	 
 	 
