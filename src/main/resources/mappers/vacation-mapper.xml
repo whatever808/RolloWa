@@ -144,8 +144,8 @@ where STATUS = 'Y'
 and GROUP_CODE = #{vacaGroupCode}
 </if>
 <![CDATA[
-and VACATION_STRAT >= To_date(#{vacaStart}, 'YYYY-MM-DD HH24:MI:SS')
-and VACATION_END <= (To_date(#{vacaEnd}, 'YYYY-MM-DD HH24:MI:SS')+ 1)
+and VACATION_STRAT >= To_date(#{vacaStart}, 'YYYY-MM-DD')
+and VACATION_END <= To_date(#{vacaEnd}, 'YYYY-MM-DD')
 and REGIST_EMP = #{member.userNO}
 and APPORVAL_STATUS = 'Y'
 order by VACATION_NO desc

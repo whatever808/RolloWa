@@ -403,7 +403,7 @@
 	     // 오늘 날짜
 	     function getToday() {
 	         const todaydate = new Date();
-	         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '긑요일', '토요일'];
+	         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
 	         const days_num = todaydate.getDay();
 	         const year = todaydate.getFullYear();
 	         const month = todaydate.getMonth() + 1;
