@@ -8,9 +8,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.br.project.dto.common.PageInfoDto;
-import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.MemberDeptDto;
 import com.br.project.dto.pay.PayDto;
+import com.br.project.dto.pay.SignDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -133,8 +133,8 @@ public class PayDao {
 	
 	
 	//반려
-	public int updateReject(Map<String, Object> map) {
-		return sqlSessionTemplate.update("payMapper.updateReject", map);
+	public int ajaxUpdateReject(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.ajaxUpdateReject", map);
 	}
 	
 	//수정하기(매출)
@@ -201,7 +201,7 @@ public class PayDao {
 	//로그인한 사용자의 완료함갯수
 	public List<PayDto> ApprovedList(PageInfoDto pi, String userName){
 		RowBounds rowBounds = new RowBounds( (pi.getCurrentPage() -1) * pi.getListLimit(), pi.getListLimit() ); 
-		return sqlSessionTemplate.selectList("payMapper.paymainPage" , userName, rowBounds);
+		return sqlSessionTemplate.selectList("payMapper.ApprovedList" , userName, rowBounds);
 	}
 	
 	//1_1)비품신청서 등록
@@ -368,5 +368,38 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.ajaxSearchName", name);
 	}
 	
+	public int ajaxSignUpdate(Map<String, Object> map){
+		return sqlSessionTemplate.update("payMapper.ajaxSignUpdate", map);
+	}
 	
+	public List<SignDto> ajaxSignSelect(Map<String, Object> map) {
+		return sqlSessionTemplate.selectList("payMapper.ajaxSignSelect", map);
+	}
+	
+	public int approvalSearchCount(Map<String, Object> map){
+		return sqlSessionTemplate.selectOne("payMapper.approvalSearchCount", map);
+	}
+	
+	public List<PayDto> approvalSearchList(Map<String, Object> map, PageInfoDto pi) {
+		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.approvalSearchList", map, rowbounds);
+	}
+	
+	public int approvalSelectCount(Map<String, Object> map){
+		return sqlSessionTemplate.selectOne("payMapper.approvalSelectCount", map);
+	}
+	
+	public List<PayDto> approvalSelectList(Map<String, Object> map, PageInfoDto pi) {
+		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.approvalSelectList", map, rowbounds);
+	}
+	
+	public int myAllApCount(Map<String, Object> map){
+		return sqlSessionTemplate.selectOne("payMapper.myAllApCount", map);
+	} 
+	
+	public List<Map<String, Object>> myAllApproval(Map<String, Object> map, PageInfoDto pi){
+		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.myAllApproval", map, rowbounds);
+	}
 }

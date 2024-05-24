@@ -28,6 +28,7 @@ import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.MemberDeptDto;
 import com.br.project.dto.pay.PayDto;
+import com.br.project.dto.pay.SignDto;
 import com.br.project.service.pay.PayService;
 import com.br.project.util.FileUtil;
 import com.br.project.util.PagingUtil;
@@ -199,37 +200,51 @@ public class PayController {
 		log.debug("map : {}", map);
 		if(map != null && !map.isEmpty() && map.get("documentType").equals("매출보고서")) {
 			List<Map<String, Object>> list = payService.expendDetail(map);
+			List<SignDto> sign = payService.ajaxSignSelect(map);
+			
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", String.valueOf(userName));
+			model.addAttribute("sign", sign);
+			
 			return "pay/expendDetail";
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("기안서")){
 			map.put("refType", "PG");
 			List<Map<String, Object>> list = payService.salesDetail(map);
+			List<SignDto> sign = payService.ajaxSignSelect(map);
+			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
+			model.addAttribute("sign", sign);
+			model.addAttribute("fileList", fileList);
 			return "pay/salesDetail";
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("비품신청서")) {
 			List<Map<String, Object>> list = payService.fixDetail(map);
+			List<SignDto> sign = payService.ajaxSignSelect(map);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
+			model.addAttribute("sign", sign);
 			return "pay/fixDetail";
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("휴직신청서")) {
 			List<Map<String, Object>> list = payService.retireDetail(map);
+			List<SignDto> sign = payService.ajaxSignSelect(map);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
+			model.addAttribute("sign", sign);
 			return "pay/retireDetail";
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("지출결의서")) {
 			List<Map<String, Object>> list = payService.draftDetail(map);
 			map.put("refType", "PJ");
 			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
+			List<SignDto> sign = payService.ajaxSignSelect(map);
 			model.addAttribute("list", list);
 			model.addAttribute("fileList", fileList);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
+			model.addAttribute("sign", sign);
 			return "pay/draftDetail";
 		}
 		
@@ -447,9 +462,12 @@ public class PayController {
 	//---------매출 보고서 ----------------------
 	@PostMapping("/mReportInsert.do")
 	public String mReportInsert(@RequestParam Map<String, Object> map
-							  , HttpSession session, RedirectAttributes redirectAttributes) {
+							  , HttpSession session, RedirectAttributes redirectAttributes
+							  , String[] approvalName) {
 		//map =>최초/중간/최종 승인자의 이름, 매출구분, 담당자, 총매출 금액이 담겨있음
 		log.debug("{}", map.get("items"));
+		
+		
 		
 		// 품목, 수량, 매출금액이 담긴 리스트
 		List<Map<String, Object>> list = new ArrayList<>();
@@ -481,19 +499,29 @@ public class PayController {
 		return "redirect:/pay/paymain.page";
 	}
 	
-	@RequestMapping("/reject.do")
-	public String reject(@RequestParam Map<String, Object> map, HttpSession session) {
+	@ResponseBody
+	@RequestMapping("/ajaxReject.do")
+	public List<SignDto> ajaxReject(@RequestParam Map<String, Object> map, HttpSession session) {
 		
-		int result = payService.updateReject(map);
+		int result = payService.ajaxUpdateReject(map);
 		
+		List<SignDto> list = new ArrayList<>();
 		if(result == 1) {
-			session.setAttribute("alertMsg", "성공적으로 제출이 완료되었습니다.");
+			list = payService.ajaxSignSelect(map);
 		}
 		
-		return "pay/paymain"; 
+	    String approvalSignNo = (String)map.get("approvalSignNo");
+	    
+	    if(approvalSignNo != null) {
+	        SignDto signDto = new SignDto();
+	        signDto.setApprovalSignNo(approvalSignNo);
+	        list.add(signDto);
+	    }
+		
+		
+		return list;
 		
 	}
-	
 	
 	@RequestMapping("/modify.do")
 	public String mModify(@RequestParam Map<String, Object> map, Model model
@@ -517,8 +545,10 @@ public class PayController {
 		mapUserMember.put("userName", userName);
 		mapUserMember.put("userNo", userNo);
 		List<MemberDeptDto> member = payService.selectloginUserDept(mapUserMember);
+		
 		//---------------------------
 		
+		List<Map<String, Object>> teamNames = payService.teamNameList();
 		
 		//-----전체 팀이름, 부서, 팀명, 직급 (부장,차장,과장)--------
 		List<MemberDeptDto> teamList = payService.selectDepartment(); 
@@ -621,68 +651,48 @@ public class PayController {
 		
 		
 		if(map.get("report").equals("m")) {
-			model.addAttribute("maDeptList", maDeptList);
-			model.addAttribute("operatDeptList", operatDeptList);
-			model.addAttribute("marketDeptList", marketDeptList);
-			model.addAttribute("fbDeptList", fbDeptList);
-			model.addAttribute("hrDeptList", hrDeptList);
-			model.addAttribute("serviceDeptList", serviceDeptList);
 			model.addAttribute("member", member);
 			model.addAttribute("userName", userName);
+			model.addAttribute("userNo", userNo);
+			model.addAttribute("teamNames", teamNames);
 			//-------------------------------------
 			model.addAttribute("list", listM);
 			
-			return "pay/mWriterForm";
+			return "pay/mModifyForm";
 			
 		}else if(map.get("report").equals("j")){
 			map.put("refType", "PJ");
 			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
-			model.addAttribute("maDeptList", maDeptList);
-			model.addAttribute("operatDeptList", operatDeptList);
-			model.addAttribute("marketDeptList", marketDeptList);
-			model.addAttribute("fbDeptList", fbDeptList);
-			model.addAttribute("hrDeptList", hrDeptList);
-			model.addAttribute("serviceDeptList", serviceDeptList);
 			model.addAttribute("member", member);
 			model.addAttribute("userName", userName);
+			model.addAttribute("userNo", userNo);
+			model.addAttribute("teamNames", teamNames);
 			//-------------------------------------
 			model.addAttribute("list", listJ);
 			model.addAttribute("fileList", fileList);
 			
 			return "pay/jModifyForm";
 		}else if(map.get("report").equals("h")){
-			map.put("refType", "PJ");
 			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
-			model.addAttribute("maDeptList", maDeptList);
-			model.addAttribute("operatDeptList", operatDeptList);
-			model.addAttribute("marketDeptList", marketDeptList);
-			model.addAttribute("fbDeptList", fbDeptList);
-			model.addAttribute("hrDeptList", hrDeptList);
-			model.addAttribute("serviceDeptList", serviceDeptList);
 			model.addAttribute("member", member);
 			model.addAttribute("userName", userName);
+			model.addAttribute("userNo", userNo);
+			model.addAttribute("teamNames", teamNames);
 			//-------------------------------------
 			model.addAttribute("list", listH);
 			
 			return "pay/hModifyForm";
 		}else if(map.get("report").equals("b")){
-			map.put("refType", "PJ");
 			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
-			model.addAttribute("maDeptList", maDeptList);
-			model.addAttribute("operatDeptList", operatDeptList);
-			model.addAttribute("marketDeptList", marketDeptList);
-			model.addAttribute("fbDeptList", fbDeptList);
-			model.addAttribute("hrDeptList", hrDeptList);
-			model.addAttribute("serviceDeptList", serviceDeptList);
 			model.addAttribute("member", member);
 			model.addAttribute("userName", userName);
+			model.addAttribute("userNo", userNo);
+			model.addAttribute("teamNames", teamNames);
 			//-------------------------------------
 			model.addAttribute("list", listB);
 			
 			return "pay/bModifyForm";
 		}
-		
-		
 		
 		return "pay/mWriterForm";
 		
@@ -870,7 +880,7 @@ public class PayController {
 	
 	//로그인한 사용자의 승인완료된 수신함
 	@GetMapping("/approvedList.do")
-	public String ApprovedList(HttpSession session, @RequestParam (value="page", defaultValue="1") int currntPage
+	public String ApprovedList(HttpSession session, @RequestParam (value="page", defaultValue="1") int currentPage
 									, Model model){
 		
 		//회원정보조회용
@@ -879,7 +889,7 @@ public class PayController {
 		//로그인한 사용자가 승인완료한 갯수
 		int slistCount = payService.successListCount(userName);
 		
-		PageInfoDto pi = pagingUtil.getPageInfoDto(slistCount, slistCount, 5, 10);
+		PageInfoDto pi = pagingUtil.getPageInfoDto(slistCount, currentPage, 5, 10);
 		
 		List<PayDto> list = payService.ApprovedList(pi, userName);
 		
@@ -924,6 +934,7 @@ public class PayController {
 		}
 		
 		int result = payService.bReportInsert(map, list);
+		
 		redirectAttributes.addFlashAttribute("alertTitle", "비품신청서");
 		if(result == list.size()) {
 			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
@@ -1236,15 +1247,33 @@ public class PayController {
 		
 	}
 	
-	/*
+	// 승인 싸인 저장하기 ajax
 	@ResponseBody
 	@PostMapping("/ajaxSign.do")
-	public int ajaxSign(@RequestParam Map<String, Object> map) {
+	public Map<String, Object> ajaxSign(@RequestParam Map<String, Object> map
+											, HttpServletRequest request) {
+		log.debug("map : {}", map);
+		String dataUrl = (String)map.get("dataUrl");
 		
-		return payService.ajaxSign(map);
+        map.put("fileName", dataUrl);
+		
+		int result =  payService.ajaxSignUpdate(map);
+		log.debug("result : {}", result);
+		
+		List<SignDto> sign = new ArrayList<>();
+		if(result > 0) {
+			sign = payService.ajaxSignSelect(map);
+		}
+		log.debug("sign : {}", sign);
+		
+		Map<String, Object> maps = new HashMap<>();
+		maps.put("sign", sign);
+		maps.put("approvalSignNo", map.get("approvalSignNo"));
+		
+		return maps;
 		
 	}
-	*/
+	
 	
 	// 결재승인자 선택 ajax
 	@ResponseBody
@@ -1267,6 +1296,112 @@ public class PayController {
 		return list;
 	}
 	
+	
+	// 승인 완료한 수신결재함
+	@GetMapping("/approvalSearch.do")
+	public String approvalSearch(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
+							, Model model, HttpSession session) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);
+		
+		Map<String, Object> userMap = new HashMap<>();
+		userMap.put("userName", userName);
+		userMap.put("condition", map.get("condition"));
+		userMap.put("keyword", map.get("keyword"));;
+		
+		//일주일이상 처리가안된 목록갯수
+		int approvalSearchCount = payService.approvalSearchCount(userMap);
+		PageInfoDto pi = pagingUtil.getPageInfoDto(approvalSearchCount, currentPage, 5, 10);
+		
+		List<PayDto> list = payService.approvalSearchList(userMap, pi);
+		
+		int mdCount = payService.moreDateCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payService.successListCount(userName);
+		// 로그인한 사용자의 전체수신갯수
+		int ulistCount = payService.allUserCount(userName);
+		//개시글총갯수
+		int listCount = payService.selectListCount();
+		
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("userName", userName);
+		model.addAttribute("map", map);
+		model.addAttribute("approvalSearch", "approvalSearch");
+		
+		return "pay/paymain";
+	}
+	
+	
+	@RequestMapping("/approvalSelectList.do")
+	public String approvalSelectList(HttpServletRequest request,@RequestParam (value="page", defaultValue="1") int currentPage
+									, Model model, HttpSession session, @RequestParam Map<String, Object> map) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);
+		
+		Map<String, Object> maps = new HashMap<>();
+		maps.put("userName", userName);
+		maps.put("conditions", map.get("conditions"));
+		maps.put("status", map.get("status"));;
+		
+		//일주일이상 처리가안된 목록갯수
+		int approvalSelectCount = payService.approvalSelectCount(maps);
+		PageInfoDto pi = pagingUtil.getPageInfoDto(approvalSelectCount, currentPage, 5, 10);
+		
+		log.debug("userMap : {}", maps);
+		List<PayDto> list = payService.approvalSelectList(maps, pi);
+		
+		int mdCount = payService.moreDateCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payService.successListCount(userName);
+		// 로그인한 사용자의 전체수신갯수
+		int ulistCount = payService.allUserCount(userName);
+		//개시글총갯수
+		int listCount = payService.selectListCount();
+		
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("userName", userName);
+		model.addAttribute("map", map);
+		model.addAttribute("approvalSelect", "approvalSelect");
+		
+		return "pay/paymain";
+		
+	}
+	
+	@RequestMapping("/myAllApproval.page")
+	public void myAllApproval(@RequestParam(value="page", defaultValue="1") int currentPage
+							, HttpSession session, Model model) {
+		
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userName", userName);
+		mapUserMember.put("userNo", userNo);
+		
+		int myAllApCount = payService.myAllApCount(mapUserMember);
+		
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(myAllApCount, currentPage, 5, 10);
+
+		List<Map<String, Object>> list = payService.myAllApproval(mapUserMember, pi);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		
+	}
 	
 	
 

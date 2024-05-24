@@ -7,10 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.br.project.dao.pay.PayDao;
 import com.br.project.dto.common.PageInfoDto;
-import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.MemberDeptDto;
 import com.br.project.dto.pay.PayDto;
-
+import com.br.project.dto.pay.SignDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -149,8 +148,8 @@ public class PayService {
 	}
 	
 	//반려하기------
-	public int updateReject(Map<String, Object> map) {
-		return payDao.updateReject(map);		
+	public int ajaxUpdateReject(Map<String, Object> map) {
+		return payDao.ajaxUpdateReject(map);		
 	}
 	
 	
@@ -433,5 +432,40 @@ public class PayService {
 		return payDao.ajaxSearchName(name);
 	}
 	
+	
+	public int ajaxSignUpdate(Map<String, Object> map){
+		return payDao.ajaxSignUpdate(map);
+	}
+	
+	public List<SignDto> ajaxSignSelect(Map<String, Object> map) {
+		return payDao.ajaxSignSelect(map);
+	}
+	
+	
+	public int approvalSearchCount(Map<String, Object> map){
+		return payDao.approvalSearchCount(map);
+	}
+	
+	
+	public List<PayDto> approvalSearchList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.approvalSearchList(map, pi);
+	}
+	
+	
+	public int approvalSelectCount(Map<String, Object> map){
+		return payDao.approvalSelectCount(map);
+	}
+	
+	public List<PayDto> approvalSelectList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.approvalSelectList(map, pi);
+	}
+	
+	public int myAllApCount(Map<String, Object> map) {
+		return payDao.myAllApCount(map);
+	}
+	
+	public List<Map<String, Object>> myAllApproval(Map<String, Object> map, PageInfoDto pi){
+		return payDao.myAllApproval(map, pi);
+	}
 	
 }
