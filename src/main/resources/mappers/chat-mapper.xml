@@ -181,7 +181,7 @@
 		on
 		    cp.chat_user_no = cm.user_no
 		where
-		    cm.user_no = #{ userNo }
+		    cm.user_no != #{ userNo }
 		and
 		    cm.cr_no = #{ roomNo }
 		and

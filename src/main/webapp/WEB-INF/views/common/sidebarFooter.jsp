@@ -251,10 +251,11 @@
     // 채팅방의 읽지 않은 메세지 갯수 조회
     function selectUnreadMsg(roomNo) {
     	$.ajax({
-    		url: "${contextPath}/chat/messages/unread";
+    		url: "${contextPath}/chat/messages/unread"
     		, method: "get"
-    		, data: {roomNo: roomNo, user:No: ${loginMember.userNo}}
+    		, data: {roomNo: roomNo, userNo: ${loginMember.userNo}}
     		, success: function(unreadMsgCount) {
+    			console.log(unreadMsgCount);
     			return unreadMsgCount;
     		}
     		, error: function() {
@@ -485,6 +486,8 @@
 				
 			// 알림 표시 구역
 			const $chatRoomInfo = $(".chat_room_list").find($("#chat_room_info" + chatBody.roomNo)).children($("p"));
+			
+			//console.log(selectUnreadMsg(chatBody.roomNo));
 			
 			if(subRoomNo == 0) {
 				// 메신저를 닫아놨을 경우

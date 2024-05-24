@@ -149,7 +149,7 @@ public class RoomController {
 	// 채팅방의 읽지 않은 메세지 갯수 조회
 	@GetMapping(value="/messages/unread")
 	@ResponseBody
-	public String selectUnreadMsg(Map<String, String> map) {
+	public String selectUnreadMsg(@RequestParam Map<String, String> map) {
 		int unreadMsgCount = 0;
 		
 		if(map.get("roomNo") != null && map.get("userNo") != null) {
