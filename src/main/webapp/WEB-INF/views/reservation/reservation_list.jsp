@@ -297,25 +297,20 @@
         <!-- 모달창 스크립트 -->
         <script>
         document.addEventListener("DOMContentLoaded", function() {
-			// console.log("loginMember: ", MemberDto(userNo=1109, userName=박호중, userId=user60, 
-			// userPwd=$2a$10$PWYc/G1CPm2svFw4HehFXuDjDWYHyc7h.1Lee.XB9hTZrGkdBqk4., phone=null, 
-			// postCode=null, address=null, detailAddress=null, totalAddress=null, bankAccount=null, bank=null, email=null, 
-			// profileURL=null, countFail=0, enrollDate=null, enrollUserNo=0, modifyDate=null, modifyUserNo=0, status=null, 
-			// vacationCount=0, authLevel=0, salary=0, teamCode=C, positionCode=C, position=null));
             const trElements = document.querySelectorAll('.tr_cursor'); // 클릭할 tr 요소를 선택합니다.
         	const userName = "${loginMember.userName}";
         	const userId = "${loginMember.userId}";
-        	//const userDepartment = "${loginMember.teamCode}";
+        	const modal_date = document.getElementById('currentDate').value;
         	
             trElements.forEach(function(trElement) {
                 trElement.addEventListener('click', function() {
                     const equipmentName = trElement.querySelector('td:nth-child(2) h6').textContent; // 클릭한 tr 요소에서 비품명을 가져옵니다.
                     
+                    console.log("날짜자 : ", document.getElementById('currentDate').value);
+                    
                     document.getElementById('userName').textContent = userName + "(" + userId + ")";
                     document.getElementById('selectedEquipmentName').textContent = equipmentName;
-                    
-                    //const department = userDepartment === 'C' ? 'C이다' : '아니다';
-                    //document.getElementById('department').textContent = department;
+                    document.getElementById('modal_date').textContent = document.getElementById('currentDate').value;
 
                 });
             });
@@ -323,17 +318,14 @@
         </script>
 
         <!-- 비품 예약 모달창 -->
+        <form id="modalForm" action="${ contextPath }/reservation/reserve.do" method="post">
+        
         <div id="modal_reserve">
             <div class="div_modal">
                 <table class="table-bordered table_modal">
                     <tr>
                         <th><h5>예약자</h5></th>
                         <td><h5 id="userName"></h5></td>
-                    </tr>
-                    
-                    <tr>
-                        <th><h5>부서명</h5></th>
-                        <td><h5 id="department"></h5></td>
                     </tr>
 
                     <tr>
@@ -343,11 +335,7 @@
 
                     <tr>
                         <th><h5>예약일</h5></th>
-                        <td>
-                            <h5>
-                                <input type="date" class="date" id="modal_date">
-                            </h5>
-                        </td>
+                        <td><h5 id="modal_date"></h5></td>
                     </tr>
 
                     <tr>
@@ -464,10 +452,10 @@
 
 
                     <tr>
-                        <th><h5>메모</h5></th>
+                        <th><h5>내용</h5></th>
                         <td>
                             <h5>
-                                <input type="text" placeholder="내용을 입력하세요.">
+                                <input id="content" type="text" placeholder="내용을 입력하세요.">
                             </h5>
                         </td>
                     </tr>
@@ -476,7 +464,7 @@
                         <td colspan="2">
                             <div class="div_searchBtn">
                                 <button class="btn btn-outline-primary button-close" data-izimodal-close=""><h6>닫기</h6></a></button>
-                                <button type="submit" class="btn btn-primary"><h6>예약하기</h6></button>
+                                <button type="submit" class="btn btn-primary" onclick="reserveSubmit();"><h6>예약하기</h6></button>
                             </div>
                         </td>
                     </tr>
@@ -484,7 +472,47 @@
                 </table>
             </div>
         </div>
+		</form>
         
+	<script>
+	    function reserveSubmit() {
+	        const userNo = "${loginMember.userNo}";
+	        const selectedEquipmentName = document.getElementById('selectedEquipmentName').textContent;
+	        const reserveDate = document.getElementById('modal_date').textContent;
+	        const startTime = document.getElementById('start').value;
+	        const endTime = document.getElementById('end').value;
+	        const content = document.getElementById('content').value;
+	
+	        console.log("사용자번호: ", userNo);
+	        console.log("비품명: ", selectedEquipmentName);
+	        console.log("예약일: ", reserveDate);
+	        console.log("예약 시간: ", startTime + " ~ " + endTime);
+	        console.log("내용: ", content);
+	        
+	        $.ajax({
+	            type: "POST",
+	            url: "${ contextPath }/reservation/reserve.do",
+	            data: {
+	                userNo: userNo,
+	                equipmentName: selectedEquipmentName, // 선택한 장비 이름
+	                date: modal_date, // 예약일
+	                startTime: startTime, // 시작 시간
+	                endTime: endTime, // 종료 시간
+	                content: content // 예약 내용
+	            },
+	            success: function(response) {
+	                // 성공적으로 서버에 데이터를 전송한 후 실행할 코드
+	                console.log("예약이 성공적으로 완료되었습니다.");
+	            },
+	            error: function(xhr, status, error) {
+	                // 서버에 데이터를 전송하는 도중 오류가 발생한 경우 실행할 코드
+	                console.error("오류가 발생했습니다:", error);
+	            }
+	        });
+	        
+	    }
+	</script>
+
 
 
             <!-- 모달창 -->

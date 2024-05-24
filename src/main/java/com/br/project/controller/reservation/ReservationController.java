@@ -10,6 +10,7 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -94,6 +95,29 @@ public class ReservationController {
 		
 		return mv;
 	}
+	
+	// 예약 하기
+	@PostMapping("/reserve.do")
+	public String reserve(@RequestParam("userName") String userName,
+                          @RequestParam("selectedEquipmentName") String selectedEquipmentName,
+                          @RequestParam("reserveDate") String reserveDate,
+                          @RequestParam("start") String startTime,
+                          @RequestParam("end") String endTime,
+                          @RequestParam("content") String content) {
+
+		log.debug("userName : {}", userName );
+		log.debug("selectedEquipmentName : {}", selectedEquipmentName );
+		log.debug("reserveDate : {}", reserveDate );
+		log.debug("startTime : {}", startTime );
+		log.debug("endTime : {}", endTime );
+		log.debug("content : {}", content );
+	
+	
+        return "/reservation/list.do";
+    }
+
+	
+	
 	// 3.2 내 예약 조회
 	@GetMapping("/my.page")
 	public String reservationMy() {
