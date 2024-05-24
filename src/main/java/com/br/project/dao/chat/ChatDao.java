@@ -56,4 +56,9 @@ public class ChatDao {
 		return sqlSessionTemplate.update("chatMapper.updateChatInDate", map);
 	}
 	
+	// 읽지 않은 메세지 갯수 조회
+	public int selectUnreadMsg(Map<String, String> map) {
+		return sqlSessionTemplate.selectOne("chatMapper.selectUnreadMsg", map);
+	}
+	
 }

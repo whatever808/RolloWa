@@ -135,7 +135,7 @@ public class RoomController {
 	public String updateChatInDate(Map<String, String> map) {
 		int result = 0;
 		
-		if(map.get("roomNo") != null) {
+		if(map.get("roomNo") != null && map.get("userNo") != null) {
 			result = chatService.updateChatInDate(map);
 		}
 		
@@ -144,6 +144,19 @@ public class RoomController {
 		}
 		
 		return "FAIL";
+	}
+	
+	// 채팅방의 읽지 않은 메세지 갯수 조회
+	@GetMapping(value="/messages/unread")
+	@ResponseBody
+	public String selectUnreadMsg(@RequestParam Map<String, String> map) {
+		int unreadMsgCount = 0;
+		
+		if(map.get("roomNo") != null && map.get("userNo") != null) {
+			unreadMsgCount = chatService.selectUnreadMsg(map);
+		}
+		
+		return String.valueOf(unreadMsgCount);
 	}
 
 }
