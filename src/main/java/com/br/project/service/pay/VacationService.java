@@ -57,5 +57,9 @@ public class VacationService {
 		return vacationDao.selectRequest(userNo);
 	}
 
+	public int selectVacarionCount(int userNo) {
+		return vacationDao.selectVacarionCount(userNo);
+	}
+
 	
 }

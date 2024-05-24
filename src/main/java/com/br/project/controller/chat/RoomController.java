@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dao.chat.ChatDao;
+import com.br.project.dto.chat.ChatMessageDto;
 import com.br.project.dto.chat.ChatRoomDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.chat.ChatService;
@@ -56,7 +57,7 @@ public class RoomController {
 	}
 	
 	// 채팅방 참여인원 생성
-	@PostMapping("/parti")
+	@PostMapping("/participants")
 	@ResponseBody
 	public String insertChatParticipation(@RequestParam(value="partUserNo") String partUserNo,
 			HttpSession session
@@ -72,11 +73,9 @@ public class RoomController {
 			
 			// 채팅방 번호
 			map.put("chatRoomNo", chatRoomNo);
-			log.debug("chatRoomNO : {}", chatRoomNo);
 			
 			// 채팅방 참여 회원번호
 			map.put("partUserNo", partUserNo);
-			log.debug("partUserNo : {}", partUserNo);
 			
 			int result = chatService.insertChatParticipation(map);
 			
@@ -90,10 +89,61 @@ public class RoomController {
 	// 로그인한 회원의 채팅방 목록 조회
 	@GetMapping(value="/rooms", produces="application/json; charset=utf-8")
 	@ResponseBody
-	public List<ChatRoomDto> getRoom(HttpSession session) {
+	public List<ChatRoomDto> selectChatRoom(HttpSession session) {
 		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
 		
 		List<ChatRoomDto> chatRoomList = chatService.selectChatRoom(loginMember.getUserNo());
 		return chatRoomList;
 	}
+	
+	// 채팅방의 참여인원 조회
+	@GetMapping(value="/participants", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public List<MemberDto> selectParticipants(String roomNo
+					, HttpSession session) {
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		List<MemberDto> memberList = new ArrayList<>();
+		
+		Map<String, Object> map = new HashMap<>();
+		// 채팅방 번호
+		map.put("roomNo", roomNo);
+		// 로그인한 회원 번호
+		map.put("userNo", loginMember.getUserNo());
+		
+		if(roomNo != null) {
+			memberList = chatService.selectParticipants(map);
+		}
+		
+		return memberList;
+	}
+	
+	// 채팅방의 채팅 메세지 조회
+	@GetMapping(value="/messages", produces="application/json; chartset=urf-8")
+	@ResponseBody
+	public List<ChatMessageDto> selectChatMsg(String roomNo) {
+		List<ChatMessageDto> msgList = new ArrayList<>();
+		
+		if(roomNo != null) {
+			msgList = chatService.selectChatMsg(roomNo);
+		}
+		return msgList;
+	}
+	
+	// 채팅방 접속 시간 update
+	@PostMapping(value="/inDate")
+	@ResponseBody
+	public String updateChatInDate(Map<String, String> map) {
+		int result = 0;
+		
+		if(map.get("roomNo") != null) {
+			result = chatService.updateChatInDate(map);
+		}
+		
+		if(result > 0) {
+			return "SUCCESS";
+		}
+		
+		return "FAIL";
+	}
+
 }

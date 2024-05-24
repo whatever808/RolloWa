@@ -290,13 +290,19 @@
 	    <!--페이징 처리 start-->
 		<div id="pagingArea" class="container">
 	        <ul class="pagination justify-content-center">
-	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${pi.currentPage-1}">Previous</a></li>
+	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
+	        		<a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${pi.currentPage-1}">Previous</a>
+        		</li>
 				
 				<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${p}">${ p }</a></li>
+					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }">
+						<a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${p}">${ p }</a>
+					</li>
 				</c:forEach>
 				
-				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${pi.currentPage+1}">Next</a></li> 
+				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }">
+					<a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${pi.currentPage+1}">Next</a>
+				</li> 
 	        </ul>
 	    </div>
 	    

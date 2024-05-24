@@ -716,10 +716,20 @@ a {
 			let element = '';
 			
 			element +='<div class="s-wrap radious10" onclick="onpening(1, this);">'
-							+ '<div class="info" data-start="'+e.vacaStart+'" data-end="'+e.vacaEnd+'" data-coment="'+e.retractComent+'"'
-							+ '></div>'
+							+ '<div class="info" data-start="'+e.vacaStart
+															 +'" data-end="'+e.vacaEnd
+															 +'" data-coment="'+e.retractComent
+															 +'" data-color="'+e.vacaColor
+															 + '"></div>'
 							+ '<div class="s-category line-border-square-sm">'+codeName(e.vacaGroupCode)+'</div>'
 							+ '<div class="s-situation line-border-square-sm gContext">대기</div>';
+			if(e.attach.length != 0){
+				e.attach.forEach((arr) => {
+					element +=  '<input class="attach-put" type="hidden" value="'+arr.attachPath+'">'
+									+   '<input class="attach-put" type="hidden" value="'+arr.originName+'">'
+									+		'<input class="attach-put" type="hidden" value="'+arr.modifyName+'">'
+				})
+			}
 			if(e.vacaGroupCode != 'B'){
 				element += '<div class="s-date line-border-square-sm">'
 								+  e.vacaStart.slice(0,10) + ' ~ ' + e.vacaEnd.slice(0,10)
@@ -734,9 +744,19 @@ a {
 		function addReject(e){
 		let element = '';
 		element	+='<div class="s-wrap radious10" onclick="onpening(0, this);">'
-						+ '<div class="info" data-start="'+e.vacaStart+'" data-end="'+e.vacaEnd+'" data-coment="'+e.retractComent+'"></div>'
+						+ '<div class="info" data-start="'+e.vacaStart
+														 +'" data-end="'+e.vacaEnd
+														 +'" data-coment="'+e.retractComent
+														 +'"></div>'
 						+ '<div class="s-category line-border-square-sm">'+codeName(e.vacaGroupCode)+'</div>'
 						+ '<div class="s-situation line-border-square-sm RedContext">철회</div>'
+		if(e.attach.length != 0){
+			e.attach.forEach((arr) => {
+				element +=  '<input class="attach-put" type="text" value="'+arr.attachPath+'">'
+								+   '<input class="attach-put" type="text" value="'+arr.originName+'">'
+								+		'<input class="attach-put" type="text" value="'+arr.modifyName+'">'
+			})
+		}
 		if(e.vacaGroupCode != 'B'){
 			element	+= '<div class="s-date line-border-square-sm">'
 							+		e.vacaStart.slice(0,10) + ' ~ ' + e.vacaEnd.slice(0,10)
@@ -809,6 +829,7 @@ a {
 					let coment = event.children[0].dataset.coment;
 					let str = (coment == 'null') ? '내용이 없습니다.':coment;
 					$(this).eq(0).find('textarea').val(str);
+					$(event).children('.attach-put');
 				});
 
 			$('#retract_request').iziModal('open');
@@ -821,6 +842,8 @@ a {
 					let coment = event.children[0].dataset.coment;
 					let str = (coment == 'null') ? '내용이 없습니다.':coment;
 					$(this).eq(0).find('textarea').val(str);
+					$(this).eq(0).find('#color-style').val(event.children[0].dataset.color);
+					$(event).children('.attach-put');
 				});
 				
 				

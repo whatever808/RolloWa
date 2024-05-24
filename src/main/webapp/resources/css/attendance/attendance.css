@@ -1,0 +1,86 @@
+/* 2.1 출결 조회 */
+
+/* 출결상태 조회 css */
+    .select_date{
+        margin: 20px 0;
+        text-align: center;
+    }
+    .today_btn{
+        position: relative;
+        top: -40px;
+        left: 230px;
+    }
+    #currentDate{
+    	white-space: nowrap;
+    	font-size: 25px;
+    }
+    .arrow{
+    	cursor: pointer;	
+   	}
+    h3{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: black !important;
+    }
+    .table{
+        width: 100% !important;
+    }
+    .table_1{
+        font-size: 20px !important;
+        margin: auto;
+        width: 600px !important;
+        text-align: center;
+    }
+    .table_2{
+        font-size: 25px;
+        margin: auto;   
+        width: 350px;
+    }
+    /* 조회 메뉴 css */
+    .td_search{
+    	display: flex;
+    }
+    .td_search button{
+    	width: 100px;
+    	white-space: nowrap;
+    }
+    #team{
+		width: 180px;
+    }
+    #name{
+    	margin-right: 20px;
+    }
+    .search_menu select{
+        width: 150px;
+    }
+    .employee_info {
+        text-align: center;
+    }
+    .employee_info th{
+        background-color: lightgray !important;
+    }
+    .employee_info td{
+        vertical-align: middle !important;
+    }
+    .employee_info td img{
+        border: 1px solid gainsboro;
+        border-radius: 100%;
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        margin: -10px;
+    }
+    .td_status{
+    	he: 100px;
+    }
+
+    /* 맨 밑 여백 주기 */
+    .container{
+        padding-bottom: 100px;
+    }
+    
+    /* 추가 */
+    .monthly_data {
+        display: none; /* 기본적으로 숨김 */
+    }

@@ -124,6 +124,9 @@
 	 LEFT JOIN ATTENDANCE A ON M.USER_NO = A.USER_NO
 	 	 WHERE D1.STATUS = 'Y'
 	 	   AND D2.STATUS = 'Y'
+	 	   AND D1.CODE_NAME LIKE '%' || #{department} || '%'
+	 	   AND D2.CODE_NAME LIKE '%' || #{team} || '%'
+	 	   AND M.USER_NAME LIKE '%' || #{name} || '%'
 	 	 GROUP BY
 	 	 	   M.USER_NO
 	 	 	 , M.PROFILE_URL
