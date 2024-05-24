@@ -492,6 +492,7 @@
 			if(subRoomNo == 0) {
 				// 메신저를 닫아놨을 경우
 				// 메신저 아이콘에 알림 표시 추가
+				$(".chat_alram").children().empty();
 				$(".chat_alram").append("<span class='badge bg-danger float-end'>New</span>");
 			}
 			
