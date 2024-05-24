@@ -460,7 +460,7 @@ public class BoardController {
 	 */
 	@RequestMapping(value={"/publisher/delete.ajax", "/temp/delete.ajax"}, produces="text/html; charset=utf-8")
 	@ResponseBody
-	public String ajaxDeleteBoard(HttpServletRequest request, @RequestParam(value="delBoardNoArr[]", defaultValue="") String[] delBoardNoArr) {
+	public String ajaxDeleteBoard(HttpServletRequest request, @RequestParam(value="delBoardNoArr[]", defaultValue="") List<String> delBoardNoArr) {
 		HashMap<String, Object> params = getParameterMap(request);
 		params.put("status", "N");
 		params.put("refType", "BD");
