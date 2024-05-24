@@ -87,7 +87,7 @@
 }
 
 .content-area {
-	max-width: 800px;
+	max-width: 1500px;
 }
 
 .Category, .Co-worker {

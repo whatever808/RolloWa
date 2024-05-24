@@ -61,8 +61,7 @@ public class VacationController {
 	@ResponseBody
 	@PostMapping(value="/insertVact.do", produces="text/html; charset=utf-8")
 	public int insertVacation(VacationDto vacation , List<MultipartFile> files, HttpSession session) {
-//		int emp = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
-		int emp = 1050;
+		int emp = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
 		vacation.setMember(MemberDto.builder().userNo(emp).build());
 		
 		HashMap<String, Object> fileInfo = new HashMap<>();
@@ -95,8 +94,7 @@ public class VacationController {
 	@ResponseBody
 	@PostMapping(value="/request.ajax")
 	public List<VacationDto> selectRequest(HttpSession session){
-		//int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
-		int userNo = 1050;
+		int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
 		
 		return vactService.selectRequest(userNo);
 	}
@@ -104,8 +102,7 @@ public class VacationController {
 	@ResponseBody
 	@PostMapping(value="/requestUpdate.ajax")
 	public int requestUpdate(VacationDto vacation, List<MultipartFile> files ,HttpSession session) {
-		//int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
-		int userNo = 1050;
+		int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
 		vacation.setMember(MemberDto.builder().userNo(userNo).build());
 		
 		HashMap<String, Object> fileInfo = new HashMap<>();
@@ -155,8 +152,7 @@ public class VacationController {
 		
 		HashMap<String, Object> fileInfo = new HashMap<>();
 		fileInfo.put("refType", "VACT");
-		fileInfo.put("refNo", vacaNO);
-		
+		fileInfo.put("refNo", vacaNO);	
 		String[] arr ={vacaNO};
 		fileInfo.put("delBoardNoArr", arr);			
 		List<AttachmentDto> list =  vactService.selectOriginAtt(fileInfo);
@@ -184,9 +180,8 @@ public class VacationController {
 	public Map<String, Object> searchOld(@RequestParam(defaultValue = "1") int page
 										, HttpSession session
 										, VacationDto vacation){
-		//int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
-		int userNO = 1050;
-		vacation.setMember(MemberDto.builder().userNo(userNO).build());
+		int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		vacation.setMember(MemberDto.builder().userNo(userNo).build());
 		Map<String, Object> map = new HashMap<>();
 		int listCount = vactService.selectVacarionCount(vacation.getMember().getUserNo());
 		PageInfoDto paging = new PagingUtil().getPageInfoDto(listCount, page, 5, 5);
@@ -194,5 +189,29 @@ public class VacationController {
 		map.put("list", list);
 		map.put("paging", paging);
 		return map;
+	}
+	
+	/**
+	 * @param vacaNO
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping("/RRequest.ajax")
+	public int RRequest(VacationDto vacation) {
+		int result = vactService.RRequest(vacation);
+		HashMap<String, Object> fileInfo = new HashMap<>();
+		fileInfo.put("refType", "VACT");
+		fileInfo.put("refNo", vacation.getVacaNO());	
+		String[] arr ={vacation.getVacaNO()};
+		fileInfo.put("delBoardNoArr", arr);			
+		List<AttachmentDto> list =  vactService.selectOriginAtt(fileInfo);
+		
+		if(list != null && !list.isEmpty()) {
+			for(AttachmentDto att : list) {
+				new File(att.getAttachPath(), att.getModifyName()).delete();				
+				vactService.deleteRequest(att.getFileNo());
+			}
+		}
+		return result;
 	}
 }

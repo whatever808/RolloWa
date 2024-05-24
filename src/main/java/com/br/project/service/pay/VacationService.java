@@ -111,5 +111,21 @@ public class VacationService {
 		return vacationDao.deleteRcequest(vacaNo);
 	}
 
+	/**
+	 * @param vacation
+	 * @return
+	 */
+	public List<VacationDto> searchOld(VacationDto vacation) {
+		return vacationDao.searchOld(vacation);
+	}
+
+	/**
+	 * @param vacation
+	 * @return
+	 */
+	public int RRequest(VacationDto vacation) {
+		return vacationDao.RRequest(vacation);
+	}
+
 	
 }

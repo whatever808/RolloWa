@@ -37,6 +37,14 @@ public class VacationDao {
 	public int deleteRcequest(String vacaNo) {
 		return sqlSession.update("vacationMapper.deleteRcequest", vacaNo);
 	}
+
+	public List<VacationDto> searchOld(VacationDto vacation) {
+		return sqlSession.selectList("vacationMapper.searchOld", vacation);
+	}
+
+	public int RRequest(VacationDto vacation) {
+		return sqlSession.update("vacationMapper.RRequest", vacation);
+	}
 	
 	
 	

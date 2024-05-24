@@ -19,7 +19,7 @@
 
 .content-area {
 	width: 75%;
-	max-width: 1120px;
+	max-width: 1500px;
 	padding: 30px;
 }
 
@@ -84,7 +84,7 @@
 		<div class="content-area">
 			<fieldset class="line-show radious10 inner-line">
 				<legend>
-					<h1 class="jua-regular animate__animated animate__bounce">지난휴가</h1>
+					<h1 class="jua-regular">지난휴가</h1>
 				</legend>
 				<br>
 				<br>
@@ -114,6 +114,7 @@
 								<th class="font-size20 jua-regular spaceNO">Category</th>
 								<th class="font-size20 jua-regular spaceNO">Date</th>
 								<th class="font-size20 jua-regular spaceNO">Using</th>
+								<th class="font-size20 jua-regular spaceNO">Del</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -121,13 +122,38 @@
 					</table>
 				</div>
 				<div align="end">
-					<!-- <button class="btn btn-outline-danger">철회</button> -->
 					<ul class="pagination"></ul>
 				</div>
 			</fieldset>
 		</div>
 	</div>
+	
+	<form id="RR_modal">
+		<div style="display:flex">
+			<div>
+				<br>
+				<div style="text-align: center;" class="font-size20 jua-regular">
+				정말로 삭제 하시겠습니까? 삭제 후 첨부파일 data를 복구 할 수 없습니다.
+				</div>
+				<br>
+				<div class="jua-regular">철회 사유</div>
+				<textarea name="RRequestComent" style="width: -webkit-fill-available;"></textarea>
+				<input type="hidden" name="vacaNO">
+			</div>
+		</div>
+		<div style="text-align: end;"><button type="button" class="btn btn-outline-danger" onclick="RRequest(this);">신청</button></div>
+	</form>
+	
+	
 	<script>
+		$('#RR_modal').iziModal({
+			headerColor : '#dc3545',
+			theme : 'light',
+			padding : '15px',
+			radius : 10,
+			zindex : 300,
+			focusInput : true,
+		});
 	
 		function current(){
 			const offset = new Date().getTimezoneOffset() * 60000;
@@ -142,7 +168,6 @@
 				type:'post',
 				data:'vacaGroupCode='+$('select').val()
 							+'&vacaStart=' + document.getElementById('currentDate1').value 
-							+'&vacaEnd='+ document.getElementById('currentDate2').value 
 							+ '&page='+ page,
 				success:function(map){
 					console.log(map);
@@ -154,6 +179,33 @@
 					console.log('list select fail');
 				}
 			})
+		}
+		
+		function deleteCheck(num){
+			$(document).on('opening', '#RR_modal', function (e) {
+			   $(this).find('input[name="vacaNO"]').val(num);
+			});
+			$('#RR_modal').iziModal('setTitle', num);
+			$('#RR_modal').iziModal('open');
+		}
+		
+		function RRequest(t){
+			$.ajax({
+				url:'${path}/vacation/RRequest.ajax',
+				type:'post',
+				data:'vacaNO='+$('#RR_modal').find('input[name="vacaNO"]').val()
+							+'&RRequestComent='+$('#RR_modal').find('textarea').val(),
+				success:function(e){
+					if(e > 0){
+						greenAlert('철회 요청', '철회가 신청 되었습니다.');
+						$('#RR_modal').iziModal('close');
+					}else{
+						redAlert('철회 요청', '관리자를 호출 해 주세요');
+					}
+					ajaxSearchOld(1);
+				}
+			})
+			
 		}
 		
 		function codeName(code){
@@ -185,10 +237,12 @@
 									+ '</td>'
 									+ '<td><div class="fontRed">- '
 									+ ((new Date(e.vacaEnd.slice(0,10)) - new Date(e.vacaStart.slice(0,10))) / (1000 * 60 * 60 * 24) +1)
-									+ '</div></td></tr>'
+									+ '</div></td>'
+									+ '<td><button class="btn btn-outline-danger" onclick="deleteCheck('+ e.vacaNO +');">철회</button></td>'
+									+ '</tr>'
 				})
 			} else {
-				tableEl += '<tr><td colspan="5">조회 되는 일정이 없습니다.</td>'
+				tableEl += '<tr><td colspan="6">조회 되는 일정이 없습니다.</td>'
 			}
 			$('tbody').append(tableEl);
 		};
