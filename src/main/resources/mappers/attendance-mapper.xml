@@ -179,19 +179,19 @@
 	<insert id="insertVacationOrDayOffMemberAttend" parameterType="map">
 			insert
 				into attendance
-						 (
-						  attendance_no
-						 ,user_no
-						 ,clock_out
-						 ,request_detail
-						 )
+					 (
+					  attendance_no
+					 ,user_no
+					 ,clock_out
+					 ,request_detail
+					 )
 			 values 
-			 				(
-			 				 seq_atteno.nextval
-			 				,#{userNo}
-			 				,sysdate
-			 				,#{requestDetail}
-			 				)
+	 				(
+	 				 seq_atteno.nextval
+	 				,#{userNo}
+	 				,sysdate
+	 				,#{requestDetail}
+	 				)
 	</insert>
 	
 	<!-- 당일 결근 사원조회 -->
@@ -276,8 +276,8 @@
 		      ,request_detail "requestDetail"
 		  from attendance
 		 where user_no = #{userNo}
-		   and to_char(clock_in, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
-		    or to_char(clock_out, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
+		   and (to_char(clock_in, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
+		    or to_char(clock_out, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD'))
 	</select>
 	
 	<!-- ======================================= "가림" 구역 ======================================= -->

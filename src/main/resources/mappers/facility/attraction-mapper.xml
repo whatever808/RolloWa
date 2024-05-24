@@ -8,8 +8,10 @@
 		select count(attraction_no) "totalAttractions"
 		  from tb_attraction
 		<where>
-			<if test="location != null and !location.equals('')">
-				and location = #{location}
+			<if test="locations != null and !locations.equals('')">
+				<foreach item="location" collection="locations" open="and location in(" separator="," close=")">
+					#{location}
+				</foreach>
 			</if>
 			<if test="status != null and !status.equals('')">
 				and tb_attraction.status = #{status}
@@ -44,8 +46,10 @@
 		 from tb_attraction
 		 join tb_location on (location = location_no)
 		 <where>
-			<if test="location != null and !location.equals('')">
-				and location = #{location}
+			<if test="locations != null and !locations.equals('')">
+				<foreach item="location" collection="locations" open="and location in(" separator="," close=")">
+					#{location}
+				</foreach>
 			</if>
 			<if test="status != null and !status.equals('')">
 				and tb_attraction.status = #{status}

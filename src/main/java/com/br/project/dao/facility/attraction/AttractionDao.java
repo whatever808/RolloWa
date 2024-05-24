@@ -40,7 +40,7 @@ public class AttractionDao {
 	 * @param params : {"no" : {조회할 어트랙션 번호}}
 	 * @return : 조회된 어트랙션 상세정보
 	 */
-	public HashMap<String, String> selectAttraction(HashMap<String, Object> params){
+	public HashMap<String, Object> selectAttraction(HashMap<String, Object> params){
 		return sqlSessionTemplate.selectOne("attractionMapper.selectAttraction", params);
 	}
 	

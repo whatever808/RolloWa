@@ -17,7 +17,7 @@
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
 	<!-- content 추가 -->
-  <div class="content m-5">
+  	<div class="content m-5">
 
      <h1 class="page-title">어트랙션 조회</h1>
      
@@ -56,11 +56,10 @@
 	     <!-- about search end -->
 	     
 	     <!-- about location filtering start -->
-	     <span>조회할 어트랙션 위치를 지도에서 선택하세요.</span>
 	     <div id="map"></div>
-	     <input type="hidden" class="attraction-location">
+	     <div class="locations d-none"></div>
 	     <!-- about location filtering end -->
-
+		
 	     <!-- attraction list start -->
 	     <div class="attraction-list">
 	         <!-- attraction list table start-->
@@ -74,15 +73,15 @@
 	                 <th>연령제한</th>
 	                 <th>키제한</th>
 	                 <th>
-	                 		<!-- attraction status start -->
-								      <select class="attraction-status form-select d-inline-block" style="width: 150px;">
-								         <option value="">전체</option>
-								         <option value="PENDING">운영예정</option>
-								         <option value="OPERATING">운영중</option>
-								         <option value="STOP">운영중지</option>
-								         <option value="CLOSED">운영종료</option>
-								      </select>
-								      <!-- attraction status end -->
+	                 	<!-- attraction status start -->
+					    <select class="attraction-status form-select d-inline-block" style="width: 150px;">
+					       <option value="">전체</option>
+					       <option value="PENDING">운영예정</option>
+					       <option value="OPERATING">운영중</option>
+					       <option value="STOP">운영중지</option>
+					       <option value="CLOSED">운영종료</option>
+					    </select>
+					    <!-- attraction status end -->
 	                 </th>
 	               </tr>
 	             </thead>
@@ -95,35 +94,35 @@
 	               	</c:when>
 	               	<c:otherwise>
 	               		<c:forEach var="attraction" items="${ attractionList }">
-	               			<tr>
-	               				 <td class="thumbnail">
-	               				 		<img src="${ contextPath }/${ attraction.thumbnailURL }" alt="">
-	               				 </td>
-		                   <td class="attraction-name-td">${ attraction.attractionName }</td>
-		                   <td>${ attraction.locationName }</td>
-		                   <td>${ attraction.customerLimit }</td>
-		                   <td>
-		                     <c:out value="${ attraction.ageLimit }" />
-		                   </td>
-		                   <td>
-		                     <c:out value="${ attraction.heightLimit }" />
-		                   </td>
-		                   <td>
-		                   	 <c:choose>
-		                   	 	<c:when test="${ attraction.status.equals('PENDING') }">
-			                      <span class="badge badge-secondary rounded-pill d-inline">운영예정</span>
-		                   	 	</c:when>
-		                   	 	<c:when test="${ attraction.status.equals('OPERATING') }">
-			                      <span class="badge badge-success rounded-pill d-inline">운영중</span>
-		                   	 	</c:when>
-		                   	 	<c:when test="${ attraction.status.equals('STOP') }">
-			                      <span class="badge badge-warning rounded-pill d-inline">운영중지</span>
-		                   	 	</c:when>
-		                   	 	<c:when test="${ attraction.status.equals('CLOSED') }">
-			                      <span class="badge badge-danger rounded-pill d-inline">운영종료</span>
-		                   	 	</c:when>
-		                   	 </c:choose>
-		                   </td>
+	               			<tr class="attraction" onclick="showAttractionDetail(${ attraction.attractionNo });">
+	               			   <td class="thumbnail">
+	               				 <img src="${ contextPath }/${ attraction.thumbnailURL }" alt="">
+	               			   </td>
+			                   <td class="attraction-name-td">${ attraction.attractionName }</td>
+			                   <td>${ attraction.locationName }</td>
+			                   <td>${ attraction.customerLimit }</td>
+			                   <td>
+			                     <c:out value="${ attraction.ageLimit }" />
+			                   </td>
+			                   <td>
+			                     <c:out value="${ attraction.heightLimit }" />
+			                   </td>
+			                   <td>
+			                   	 <c:choose>
+			                   	 	<c:when test="${ attraction.status.equals('PENDING') }">
+				                      <span class="badge badge-secondary rounded-pill d-inline">운영예정</span>
+			                   	 	</c:when>
+			                   	 	<c:when test="${ attraction.status.equals('OPERATING') }">
+				                      <span class="badge badge-success rounded-pill d-inline">운영중</span>
+			                   	 	</c:when>
+			                   	 	<c:when test="${ attraction.status.equals('STOP') }">
+				                      <span class="badge badge-warning rounded-pill d-inline">운영중지</span>
+			                   	 	</c:when>
+			                   	 	<c:when test="${ attraction.status.equals('CLOSED') }">
+				                      <span class="badge badge-danger rounded-pill d-inline">운영종료</span>
+			                   	 	</c:when>
+			                   	 </c:choose>
+			                   </td>
 		                 </tr>
 	               		</c:forEach>
 	               	</c:otherwise>
@@ -131,73 +130,160 @@
 	             </tbody>
 	           </table>
 	           <!-- attraction list table end -->
-	           
-				   	 <!-- pagination start -->
-			       <div class="pagination-div">
-			       		<div class="attraction-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
-		             <ul class="pagination">
-				            <!-- Previous -->
-							      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
-									  onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '' }">
-							      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
-							      </li>
-								    
-								    <!-- Page -->
-								    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
-									    <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
-									    	onclick="${ pageInfo.currentPage != page ? 'ajaxAttractionList();' : '' }">
-									    	<span class="page-link" data-pageno="${ page }">${ page }</span>
-									    </li>
-								    </c:forEach>
+
+			   <!-- pagination start -->
+		       <div class="pagination-div">
+		       	 <div class="attraction-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
+	             	<ul class="pagination">
+			          <!-- Previous -->
+				      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
+						  onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '' }">
+				      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
+				      </li>
 					    
-								    <!-- Next -->
-								    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
-								    	onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : ''}">
-								      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
-								    </li>
-						  		</ul>
-				        </div>
-			       </div>
-		         <!-- pagination end -->
+					  <!-- Page -->
+					  <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
+					 	 <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
+						    	onclick="${ pageInfo.currentPage != page ? 'ajaxAttractionList();' : '' }">
+						    	<span class="page-link" data-pageno="${ page }">${ page }</span>
+						 </li>
+					  </c:forEach>
+		    
+					  <!-- Next -->
+					  <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
+					  	  onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : ''}">
+					    <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
+					  </li>
+			  		</ul>
+			     </div>
+		     </div>
+	         <!-- pagination end -->
+	         
+	         
+	         
+	         	           
+	           
+	           <script>
+   			  	 function showAttractionDetail(attractionNo){
+   			  		$.ajax({
+		  				url:"${ contextPath }/attraction/detail.do",
+		  				method:"get",
+		  				data:{no: attractionNo,},
+		  				success:function(attraction){
+		  					console.log(attraction);
+		  					console.log(attraction.length);
+		  					if(attraction.length == 0){
+		  						yellowAlert("존재하지 않는 어트랙션입니다.", "");
+		  					}else{
+		  						$(".detail-attractionName").text(attraction.attractionName);
+		  						$(".detail-attractionIntro").text(attraction.attractionIntro);
+		  						$(".detail-location").text(attraction.location);
+		  						$(".detail-customerLimit").text(attraction.customerLimit);
+		  						$(".detail-ageLimit").text(attraction.ageLimit != null ? attraction.ageLimit : 'x');
+		  						$(".detail-heightLimit").text(attraction.heightLimit != null ? attraction.heightLimit : 'x');
+		  						
+		  						let status = "";
+		  						let statusColor = "";
+		  						swtich (attraction.status){
+		  							case 'OPERATING' : 
+		  								status = '운영중';
+		  								statusColor = 'badge-success';
+		  								break;
+		  							case 'PENDING' :
+		  								status = '운영예정';
+		  								statusColor = 'badge-secondary';
+		  								break;
+		  							case 'STOP' :
+		  								status = '운영중지';
+		  								statusColor = 'badge-warning';
+		  								$(".detail-statusReason").text('  (  ' + attraction-statusReason + '  )  ');
+		  								break;
+		  							case 'CLOSED' :
+		  								status = '운영종료';
+		  								statusColor = 'badge-danger';
+		  								$(".detail-statusReason").text('  (  ' + attraction-statusReason + '  )  ');
+		  								break;
+		  						}
+		  						$(".detail-status").text(status).addClass(statusColor);
+		  						$("#open-attraction-detail-modal").click();
+		  						// console.log(($(event.target).parents("tr")).hasClass("attraction"));
+		  					}
+		  					
+		  				},error:function(){
+		  					console.log("SELECT ATTRACTION DETAIL AJAX FAILED");
+		  				}
+		  			})
+		  			
+   			  	 }
+   			  </script>
+	         
+	         <!-- attraction detail modal start -->
+	         <button type="button" class="d-none" id="open-attraction-detail-modal" data-izimodal-open="#attraction-detail"></button>
+	         
+	         <div class="attraction-detail-div" id="attraction-detail">
+				  <div class="thumbnail-div">
+				    <img src="">
+				  </div>
+				
+				  <div class="attraction-info">
+					    <h3 class="detail-attractionName">바오 하우스</h3>
+					    
+					    <div class="attraction-intro detail-attractionIntro">
+					      바오 하우스에는 실제 판다가 살고 있는 않습니다. 판다월드에서 만나보세요. 바오 하우스에서는 푸바오의 이야기를 만날 수 있어요. 태어난 순간부터의 성장일기, 푸덕이들이 보내준 멋진 팬아트와 푸바오를 돌보는 사육사들의 하루까지 
+					    </div>
+					    
+					    <hr>
+					    
+					    <div class="info-div">
+					       <span class="info-title">위치정보</span>
+					       <span class="info-content detail-location">10명</span>
+					    </div>
+					    
+					    <div class="info-div">
+					       <span class="info-title">수용인원</span>
+					       <span class="info-content detail-customerLimit">10명</span>
+					    </div>
+					    
+					    <div class="info-div">
+					       <span class="info-title">연령제한</span>
+					       <span class="info-content detail-ageLimit">12세 이상</span>
+					    </div>
+					    
+					    <div class="info-div">
+					       <span class="info-title">신장제한</span>
+					       <span class="info-content detail-heightLimit">10명</span>
+					    </div>
+					    
+					    <div class="info-div">
+					       <span class="info-title">운영상태</span>
+					       <span class="info-content">
+					       	  <span class="detail-status badge rounded-pill d-inline">운영예정</span>
+					       	  <span class="detail-statusReason">( 사고 발생으로 이한 일시 중지 )</span>
+					       </span>
+					    </div>
+					    
+				  </div>
+			 </div>
+	         <!-- attraction detail modal end -->
 		         
-		         <!-- attraction detail modal start -->
-		         <div class="attraction-detail-div">
-							  <div class="thumbnail-div">
-							    <img src="">
-							  </div>
-							
-							  <div class="attraction-info">
-								    <h3>바오 하우스</h3>
-								    
-								    <div class="attraction-intro">
-								      바오 하우스에는 실제 판다가 살고 있는 않습니다. 판다월드에서 만나보세요. 바오 하우스에서는 푸바오의 이야기를 만날 수 있어요. 태어난 순간부터의 성장일기, 푸덕이들이 보내준 멋진 팬아트와 푸바오를 돌보는 사육사들의 하루까지 
-								    </div>
-								    
-								    <hr>
-								    
-								    <div class="info-div">
-								       <span class="info-title">수용인원</span>
-								       <span class="info-content">10명</span>
-								    </div>
-								    
-								    <div class="info-div">
-								       <span class="info-title">연령제한</span>
-								       <span class="info-content">12세 이상</span>
-								    </div>
-								    
-								    <div class="info-div">
-								       <span class="info-title">신장제한</span>
-								       <span class="info-content">10명</span>
-								    </div>
-								    
-								    <div class="info-div">
-								       <span class="info-title">운영상태</span>
-								       <span class="info-content">운영중지(사고발생하여 당분간 운영을 중지함)</span>
-								    </div>
-								    
-							  </div>
-						 </div>
-		         <!-- attraction detail modal end -->
+		         <script>
+		         	$('#attraction-detail').iziModal({
+		                title: '<h6>어트랙션 상세조회</h6>',
+		                subtitle: '',
+		                headerColor: '#FEEFAD', // 헤더 색깔
+		                theme: 'light', //Theme of the modal, can be empty or "light".
+		                padding: '15px', // content안의 padding
+		                radius: 10, // 모달 외각의 선 둥글기
+		                group: '',
+		                loop: true,
+		                arrowKeys: true,
+		                navigateCaption: true,
+		                navigateArrows: true,
+		                zindex: 300, // zindex 모달의 화면 우선 순위 입니다. 
+		                focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
+		                restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
+		            });
+		         </script>
 	         
     </div>
     <!-- content 끝 -->
@@ -287,13 +373,17 @@
 	// 어트랙션 리스트조회 AJAX
 	function ajaxAttractionList(){
 		let page = $(event.target).data("pageno") == undefined ? 1 : $(event.target).data("pageno");
+		let attractionLocations = [];
+		$(".attraction-location").each(function(){
+			attractionLocations.push($(this).val());			
+		});
 		
 		$.ajax({
 			url:"${ contextPath }/attraction/list.ajax",
 			method:"get",
 			data:{
 				page: page,
-				location: $(".attraction-location").val(),
+				locations: attractionLocations,
 				status: $(".attraction-status").val(),
 				keyword: $("#keyword").val().trim()
 			},
@@ -410,7 +500,7 @@
  			// 마커생성 및 설정
  			const marker = new google.maps.Marker({
  				position: { lat: latitude, lng: longitude },
- 				label: mapMark,
+ 				label: locationName,
  				map: map,
  			});
  			bounds.extend(marker.position);	// 마커의 위치 정보를 넘겨줌
@@ -418,15 +508,19 @@
  			// 마커클릭시, 보여질 정보성 메세지
  			marker.addListener("click", function(){
  				map.panTo(marker.position);				// 마커를 클릭했을 때, 마커가 있는 위치로 지도의 중심이 이동
- 				infoWindow.setContent(locationName);	// 마커를 클릭했을때, 보여질 내용
- 				infoWindow.open({
- 					anchor: marker,
- 					map: map,
- 				});
  				
  				// 조회요청시 전달될 위치값 설정
- 				$(".attraction-location").val(locationNo);
- 				ajaxAttractionList();
+ 				if(marker.getIcon() == 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'){
+ 					marker.setIcon('');
+ 					$(".locations").children("input").each(function(){
+ 						$(this).attr("location-name") == marker.label && $(this).remove();
+ 					});
+ 					ajaxAttractionList();
+ 				} else{
+ 					marker.setIcon('https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png');
+ 					$(".locations").append("<input type='hidden' class='attraction-location' location-name='" + locationName + "' value='" + locationNo + "'>");
+ 					ajaxAttractionList();
+ 				}
  			
  			});
  		});
