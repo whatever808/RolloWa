@@ -85,7 +85,6 @@ public class VacationService {
 				result *= attachDao.insertBoardAttachment(att);
 			}
 		}
-		
 		return result;
 	}
 
@@ -102,6 +101,14 @@ public class VacationService {
 	 */
 	public void deleteRequest(String fileNo) {
 		attachDao.deleteBoardAttachment(fileNo);
+	}
+
+	/**
+	 * @param vacaNo
+	 * @return
+	 */
+	public int deleteRcequest(String vacaNo) {
+		return vacationDao.deleteRcequest(vacaNo);
 	}
 
 	

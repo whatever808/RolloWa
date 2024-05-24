@@ -79,14 +79,12 @@
 <body>
 	<div class="out-line">
 		<!-- 메뉴판 -->
-		<!-- 메뉴판 -->
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 		<!-- 컨텐츠 영역 -->
 		<div class="content-area">
 			<fieldset class="line-show radious10 inner-line">
 				<legend>
-					<h1 class="jua-regular animate__animated animate__bounce">지난
-						휴가</h1>
+					<h1 class="jua-regular animate__animated animate__bounce">지난휴가</h1>
 				</legend>
 				<br>
 				<br>
@@ -104,7 +102,6 @@
 					<div class="font-size25 jua-regular spaceNO">날짜</div>
 					<div class="size-fit">
 						<input type="date" id="currentDate1" class="date-area jua-regular">
-						<input type="date" id="currentDate2" class="date-area jua-regular">
 					</div>
 					<div><button type="button" onclick="ajaxSearchOld(1);" class="jua-regular btn btn-outline-secondary"> 검색 </button></div>
 				</form>

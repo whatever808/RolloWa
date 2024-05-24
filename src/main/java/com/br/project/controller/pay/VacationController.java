@@ -19,11 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.br.project.dto.common.AttachmentDto;
 import com.br.project.dto.common.GroupDto;
+import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.VacationDto;
 import com.br.project.service.common.department.DepartmentService;
 import com.br.project.service.pay.VacationService;
 import com.br.project.util.FileUtil;
+import com.br.project.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -119,17 +121,7 @@ public class VacationController {
 		if(files != null && !files.isEmpty()) {			
 			uploadFile = fileUtil.getAttachmentList(files, fileInfo);
 			map.put("uploadFile", uploadFile);
-		}
-		
-		int result = vactService.requestUpdate(map);
-		
-		if(result <= 0) {
-			if(uploadFile != null) {
-				for(AttachmentDto att : uploadFile) {
-					new File(att.getAttachPath(), att.getModifyName()).delete();				
-				}
-			}
-		}else {
+			
 			String[] arr ={vacation.getVacaNO()};
 			fileInfo.put("delBoardNoArr", arr);			
 			List<AttachmentDto> list =  vactService.selectOriginAtt(fileInfo);
@@ -140,9 +132,44 @@ public class VacationController {
 					vactService.deleteRequest(att.getFileNo());
 				}
 			}
+			
+		}
+		
+		int result = vactService.requestUpdate(map);
+		
+		if(result <= 0) {
+			
+			if(uploadFile != null) {
+				for(AttachmentDto att : uploadFile) {
+					new File(att.getAttachPath(), att.getModifyName()).delete();				
+				}
+			}
 		}
 		return result;
 	} 
+	
+	@PostMapping("/deleteRequest.ajax")
+	@ResponseBody
+	public int deleteRequest(String vacaNO) {
+		int result = vactService.deleteRcequest(vacaNO);
+		
+		HashMap<String, Object> fileInfo = new HashMap<>();
+		fileInfo.put("refType", "VACT");
+		fileInfo.put("refNo", vacaNO);
+		
+		String[] arr ={vacaNO};
+		fileInfo.put("delBoardNoArr", arr);			
+		List<AttachmentDto> list =  vactService.selectOriginAtt(fileInfo);
+		
+		if(list != null && !list.isEmpty()) {
+			for(AttachmentDto att : list) {
+				new File(att.getAttachPath(), att.getModifyName()).delete();				
+				vactService.deleteRequest(att.getFileNo());
+			}
+		}
+		
+		return result;
+	}
 	
 	@GetMapping("/complete.page")
 	public void moveComplete(Model model) {
@@ -158,13 +185,14 @@ public class VacationController {
 										, HttpSession session
 										, VacationDto vacation){
 		//int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
-		vacation.setMember(MemberDto.builder().userNo(1050).build());
+		int userNO = 1050;
+		vacation.setMember(MemberDto.builder().userNo(userNO).build());
 		Map<String, Object> map = new HashMap<>();
-		//int listCount = vactService.selectVacarionCount(vacation);
-		//PageInfoDto paging = new PagingUtil().getPageInfoDto(listCount, page, 5, 5);
-		//List<VacationDto> list = vactService.searchOld(vacation);
-		//map.put("list", list);
-		//map.put("paging", paging);
+		int listCount = vactService.selectVacarionCount(vacation.getMember().getUserNo());
+		PageInfoDto paging = new PagingUtil().getPageInfoDto(listCount, page, 5, 5);
+		List<VacationDto> list = vactService.searchOld(vacation);
+		map.put("list", list);
+		map.put("paging", paging);
 		return map;
 	}
 }

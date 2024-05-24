@@ -33,6 +33,10 @@ public class VacationDao {
 	public int updateVacation(VacationDto vacationDto) {
 		return sqlSession.update("vacationMapper.updateVacation", vacationDto);
 	}
+
+	public int deleteRcequest(String vacaNo) {
+		return sqlSession.update("vacationMapper.deleteRcequest", vacaNo);
+	}
 	
 	
 	

@@ -761,25 +761,37 @@ a {
 			console.log($form);
 			
 			$.ajax({
-				url:'${path}/vacation/delecteRequest.ajax',
+				url:'${path}/vacation/deleteRequest.ajax',
 				type:'post',
-				data: $form.serialize(),
-				success:function(){
-					
+				data: new FormData($(button).parents('form')[0]),
+				processData:false,
+				contentType:false,
+				enctype: 'multipart/form-data',
+				success:function(result){
+					if(result>0){
+						greenAlert('휴가 삭제', '휴가 삭제가 완료 되었습니다.');
+						$('#standby_request').iziModal('close');
+						$('#retract_request').iziModal('close');
+						selectRequest()
+					}else {
+						redAlert('휴가 삭제', '관리자를 호출 해 주세요');
+					}
 				},
 				error:function(){}
 			})
 		}
 		
 		function selectRequest(){
+			
+			$('.standby *').remove();
+			$('.retract *').remove();
+			
 			$.ajax({
 				url:'${path}/vacation/request.ajax',
 				type:'post',
 				contentType : 'application/json',
 				success:function(list){
 					console.log(list);
-					$('.standby *').remove();
-					$('.retract *').remove();
 					
 					list.forEach((e) => {
 						let ch = (e.approrvalStatus == 'N');
