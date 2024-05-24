@@ -107,8 +107,11 @@
         	// 스타일 조정
         	btnControl(".msg_open_btn", ".msg_close_btn", "flex");
           
-          // 채팅방 목록 조회
-          selectChatRoom();
+          // 페이지 새로고침 시에만 채팅방 목록 조회
+          if (subRoomNo == -1) {
+        	  selectChatRoom();
+          }
+          
           
           // 메신저 열었음을 표시
           subRoomNo = 1;
@@ -121,6 +124,13 @@
         $(".msg_close_btn").on("click", function () {
         	// 스타일 조정
         	btnControl(".msg_close_btn", ".msg_open_btn", "none");
+        	
+        	// 채팅방 닫았을 경우 내가 열어놨던 채팅방의 채팅방 나간 시간 update
+        	updateOutDate(subRoomNo);
+        	
+        	// 채팅 메세지 구역 초기화
+        	$(".chat_msg_list").empty();
+        	$(".sendBtn_ul").empty();
         	
         	// 메신저 닫았음을 표시
         	subRoomNo = 0;
@@ -232,7 +242,7 @@
     
     /*==================================== 함수 구역 =======================================*/   
     // 채팅방 접속 시간 update
-    function updateInDate(roomNo) {
+    function updateOutDate(roomNo) {
     	$.ajax({
     		url: "${contextPath}/chat/inDate"
     		, method: "post"
@@ -257,7 +267,6 @@
     		, async: false
     		, data: {roomNo: roomNo, userNo: ${loginMember.userNo}}
     		, success: function(unreadMsgCount) {
-    			console.log(unreadMsgCount);
     			unreadMsg = unreadMsgCount;
     		}
     		, error: function() {
@@ -301,6 +310,22 @@
 	       	  chatRoomVal += "</div>";
 	       	  chatRoomVal += "<div class='pt-1' id='chat_room_info" + chatRoomNo + "'>";
 	       	  chatRoomVal += "<p class='small text-muted mb-1'>" + participantsList.length + "명</p>";
+	       	  
+	       	  // 읽지 않은 메세지가 존재할 경우
+	       	  if (selectUnreadMsg(chatRoomNo) > 0) {
+	       		  
+	       		  // 처음 페이지를 새로고침해서 페이지를 열지 않은 경우만 실행
+	       		  if(subRoomNo == -1) {
+	       			  // 기존 알림 제거
+								$(".chat_alram").children().empty();
+								// 메신저 아이콘에 알림 표시 추가
+								$(".chat_alram").append("<span class='badge bg-danger float-end'>New</span>");
+	       		  }
+							
+							// 채팅방에 읽지 않은 메세지 표시
+	       			chatRoomVal += "<span class='badge bg-danger float-end'>" + selectUnreadMsg(chatRoomNo) + "</span>";
+	       	  }
+	       	  
 	       	  chatRoomVal += "</div>";
 	       	  chatRoomVal += "</a>";
 	       	  chatRoomVal += "</li>";
@@ -324,8 +349,17 @@
 		function selectChatMsg(chatRoomNo) {
 			// 채팅방 알림 제거
 			$("#chat_room_info" + chatRoomNo).children($("p")).next().empty();
+			
+			// 다른 채팅방을 열었을 경우 기존 채팅방의 나간 시간 업데이트
+			if(subRoomNo != chatRoomNo) {
+				// 채팅방 나간 시간 update
+				updateOutDate(subRoomNo);
+			}
+
 			// 내가 어떤 채팅방을 열었는지 표시
 			subRoomNo = chatRoomNo;
+			
+			
 			
 			$.ajax({
 		 	url: "${contextPath}/chat/messages"
@@ -362,8 +396,8 @@
 		 		console.log("채팅방 메세지 이력 조회 ajax 통신 실패");
 		 	}
 		 })
-		 // 스크롤 맨 아래로 고정 (이후 스크롤 높이 구해서 5000 수정해야함)
-		 $(".chatting_history").animate({scrollTop:'5000'}, '500');
+		 // 스크롤 맨 아래로 고정 (이후 스크롤 높이 구해서 10000 수정해야함)
+		 $(".chatting_history").animate({scrollTop:'10000'}, '500');
 		}
     // 채팅하기 버튼 클릭 시 체크된 회원들과 채팅방 생성
     function createChatRoom() {
@@ -423,6 +457,12 @@
     																				.children($(".sendBtn_li"))
     																				.children($(".sendBtn_div"))
     																				.children($("textarea"));
+    	
+    	// 채팅 메세지를 입력하지 않았을 경우 메세지를 발송하지 않음
+    	if($chatArea.val().trim().length == 0) {
+    		return;
+    	}
+
 			// 채팅 메세지 전송
     	stompClient.send("/app/chat/message/" + chatRoomNo, {}, JSON.stringify({userNo: '${loginMember.userNo}'
 																												, roomNo: chatRoomNo
@@ -434,7 +474,7 @@
     	chatTextDisplay(1, '${loginMember.userName}', dateFormat(new Date()) , $chatArea.val(), '$(loginMbmer.profileURL)')
     	
 			// 채팅 메세지 보내고 스크롤 이동
-			$(".chatting_history").animate({scrollTop:'5000'}, '500');
+			$(".chatting_history").animate({scrollTop:'10000'}, '500');
     	
     	$chatSendBox.children($chatArea.val(""));
 		}
@@ -490,34 +530,35 @@
 			// 알림 표시 구역
 			const $chatRoomInfo = $(".chat_room_list").find($("#chat_room_info" + chatBody.roomNo)).children($("p"));
 			
-			if(subRoomNo == 0) {
-				// 메신저를 닫아놨을 경우
-				// 메신저 아이콘에 알림 표시 추가
+			if(subRoomNo == 0 || subRoomNo == -1) {
+				// 메신저를 닫아놨거나 페이지 처음 로딩한 경우
+				// 기존 알림 제거
 				$(".chat_alram").children().empty();
+				// 메신저 아이콘에 알림 표시 추가
 				$(".chat_alram").append("<span class='badge bg-danger float-end'>New</span>");
 			}
-
-			console.log(selectUnreadMsg(chatBody.roomNo));
 			
 			// 현재 내가 메세지가 수신된 채팅방을 열어 놓은지 확인
 			if(subRoomNo == chatBody.roomNo) {
+				// 내가 메세지가 수신된 채팅방을 열어 놨을 때
 				// 메세지 보낸 사람이 자신이 아닐 때만 실행
 				if(chatBody.userNo != ${ loginMember.userNo }) {
 					// 메세지 수신
    				chatTextDisplay(2, chatBody.userName, chatBody.sendDate, chatBody.msgContent, chatBody.profileURL)
 					
    				// 채팅 메세지 수신하고 스크롤 이동
-   				$(".chatting_history").animate({scrollTop:'5000'}, '500');
+   				$(".chatting_history").animate({scrollTop:'10000'}, '500');
 				}
 			} else {
+				console.log("메신저 닫아놨을 경우 알림 표시 실행됨");
 				// 메세지가 수신된 채팅방을 열어 놓지 않은 경우 채팅방 목록에 알림 표시
 				// 만약 이미 알림이 표시되지 않은 경우에만 알림 표시
 				if($chatRoomInfo.next().length == 0) {
 					$chatRoomInfo.after(
-						"<span class='badge bg-danger float-end'>1</span>");
+						"<span class='badge bg-danger float-end'>" + selectUnreadMsg(chatBody.roomNo) + "</span>");
 				} else if ($chatRoomInfo.next().length > 0) {
 					// 이미 알림 표시가 된 경우 메세지 추가 도착함을 표시
-					$chatRoomInfo.next().text("1+");
+					$chatRoomInfo.next().text(selectUnreadMsg(chatBody.roomNo));
 				}
 			}
 

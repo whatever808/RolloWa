@@ -137,10 +137,10 @@
   <select id="selectChatMsg" resultMap="chatMsgResult">
 		<![CDATA[
 		select
-		    msg_no, msg_content, send_date, user_name, user_no, profile_url
+		    msg_no, msg_content, to_char(send_date, 'HH24:MI') as "send_date", user_name, user_no, profile_url
 		from
 		    (select
-		        msg_no, msg_content, to_char(send_date, 'HH24:MI') as "SEND_DATE", user_name, cm.user_no, profile_url, rownum
+		        msg_no, msg_content, send_date, user_name, cm.user_no, profile_url, rownum
 		    from
 		        chatting_message cm, member m
 		    where
@@ -154,7 +154,7 @@
 		where
 		    rownum <= 30
     order by
-          send_date
+        send_date
 		]]>
   </select>
   
@@ -163,30 +163,28 @@
   	update
 		    chatting_participation
 		set
-		    chat_in_date = sysdate
+		    chat_out_date = sysdate
 		where
-		    user_no = #{userNo}
+		    chat_user_no = #{userNo}
 		and
 		    cr_no = #{roomNo}
   </update>
   
   <!-- 읽지 않은 메세지 갯수 조회 -->
   <select id="selectUnreadMsg" resultType="_int">
-  	select
+    select
 		    count(*)
 		from
 		    chatting_message cm
 		join
 		    chatting_participation cp
 		on
-		    cp.chat_user_no = cm.user_no
+		    cp.cr_no = cm.cr_no
 		where
-		    cm.user_no != #{ userNo }
+		    cp.chat_user_no = #{ userNo }
+    and
+        cm.cr_no = #{ roomNo }
 		and
-		    cm.cr_no = #{ roomNo }
-		and
-		    cp.cr_no = #{ roomNo }
-		and
-		    cm.send_date > cp.chat_in_date
+		   cm.send_date > cp.chat_out_date
   </select>
 </mapper>

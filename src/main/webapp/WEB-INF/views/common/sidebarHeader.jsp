@@ -662,8 +662,9 @@ $(document).ready(function(){
 					var stompClient;
 					
 					// 내가 현재 열어놓은 채팅방 번호
-					// 채팅방을 열지 않았다면 0
-					var subRoomNo = 0;
+					// 페이지 새로고침 시 -1
+					// 채팅방 닫았을 경우 0
+					var subRoomNo = -1;
 					
 					// 수신한 메세지 개수
 					var msgCount = 0;
@@ -671,6 +672,14 @@ $(document).ready(function(){
 					
 					
 					$(document).ready(function() {
+						// 새로고침 감지
+						window.addEventListener('beforeunload', (event) => {
+							// 메신저를 아예 열지 않았거나 채팅방을 닫아놨을 경우를 제외하고 실행
+		          if(subRoomNo != -1 && subRoomNo != 0) {
+		        	  // 새로고침 전 열어놓은 채팅방의 나간 시간 update
+		        	  updateOutDate(subRoomNo);
+		          }  
+		        });
 						// 채팅용 웹소켓 연결
 						chatting = new SockJS("${contextPath}/chatting");
 						stompClient = Stomp.over(chatting);
