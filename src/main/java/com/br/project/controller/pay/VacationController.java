@@ -1,5 +1,7 @@
 package com.br.project.controller.pay;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,12 +71,23 @@ public class VacationController {
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("vacation", vacation);
-		
+		List<AttachmentDto> uploadFile = new ArrayList<>();
 		if(files != null && !files.isEmpty()) {			
-			List<AttachmentDto> uploadFile = fileUtil.getAttachmentList(files, fileInfo);
+			uploadFile = fileUtil.getAttachmentList(files, fileInfo);
 			map.put("uploadFile", uploadFile);
 		}
-		return vactService.insertVacation(map);
+		
+		int result = vactService.insertVacation(map);
+		
+		if(result<=0) {
+			if(files != null && !files.isEmpty()) {
+				for(AttachmentDto att : uploadFile) {
+					new File(att.getAttachPath(), att.getModifyName()).delete();				
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	@ResponseBody
@@ -85,7 +99,50 @@ public class VacationController {
 		return vactService.selectRequest(userNo);
 	}
 	
-	/*수정*/
+	@ResponseBody
+	@PostMapping(value="/requestUpdate.ajax")
+	public int requestUpdate(VacationDto vacation, List<MultipartFile> files ,HttpSession session) {
+		//int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		int userNo = 1050;
+		vacation.setMember(MemberDto.builder().userNo(userNo).build());
+		
+		HashMap<String, Object> fileInfo = new HashMap<>();
+		fileInfo.put("category", "vacation_" + vacation.getVacaGroupCode());
+		fileInfo.put("refType", "VACT");
+		fileInfo.put("refNo", vacation.getVacaNO());
+		fileInfo.put("status", "Y");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("vacation", vacation);
+		List<AttachmentDto> uploadFile = new ArrayList<>();
+		
+		if(files != null && !files.isEmpty()) {			
+			uploadFile = fileUtil.getAttachmentList(files, fileInfo);
+			map.put("uploadFile", uploadFile);
+		}
+		
+		int result = vactService.requestUpdate(map);
+		
+		if(result <= 0) {
+			if(uploadFile != null) {
+				for(AttachmentDto att : uploadFile) {
+					new File(att.getAttachPath(), att.getModifyName()).delete();				
+				}
+			}
+		}else {
+			String[] arr ={vacation.getVacaNO()};
+			fileInfo.put("delBoardNoArr", arr);			
+			List<AttachmentDto> list =  vactService.selectOriginAtt(fileInfo);
+			
+			if(uploadFile != null && !uploadFile.isEmpty()) {
+				for(AttachmentDto att : list) {
+					new File(att.getAttachPath(), att.getModifyName()).delete();				
+					vactService.deleteRequest(att.getFileNo());
+				}
+			}
+		}
+		return result;
+	} 
 	
 	@GetMapping("/complete.page")
 	public void moveComplete(Model model) {
@@ -95,4 +152,19 @@ public class VacationController {
 		model.addAttribute("vactList", vactList);
 	}
 	
+	@ResponseBody
+	@PostMapping(value="/searchOld.ajax")
+	public Map<String, Object> searchOld(@RequestParam(defaultValue = "1") int page
+										, HttpSession session
+										, VacationDto vacation){
+		//int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		vacation.setMember(MemberDto.builder().userNo(1050).build());
+		Map<String, Object> map = new HashMap<>();
+		//int listCount = vactService.selectVacarionCount(vacation);
+		//PageInfoDto paging = new PagingUtil().getPageInfoDto(listCount, page, 5, 5);
+		//List<VacationDto> list = vactService.searchOld(vacation);
+		//map.put("list", list);
+		//map.put("paging", paging);
+		return map;
+	}
 }

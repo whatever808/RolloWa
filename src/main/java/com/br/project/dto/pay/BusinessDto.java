@@ -13,17 +13,14 @@ import lombok.ToString;
 @Getter
 @Setter
 @Builder
-public class FixturesDto {
+public class BusinessDto {
 	
-	private int fixNo;
+	private int businessNo;
 	private String title;
-	private String totalSum;
-	private String productName;
-	private int productSize;
-	private int quantity;
-	private String unitPrice;
-	private String price;
-	private String note;
-	
+	private String reDepartment;
+	private String content;
+	private String businessDt;
+	private String etcContent;
+	private String status;
 
 }

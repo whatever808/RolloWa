@@ -208,6 +208,9 @@ a {
 .info{
 	display: none;
 }
+.attach-put{
+	display:none;
+}
 </style>
 </head>
 <body>
@@ -611,34 +614,36 @@ a {
 	</script>
 	<!-- =================================================================== -->
 	<!-- 대기 -->
-	<div id="standby_request">
+	<form id="standby_request">
 		<div class="Category">
 			<div class="jua-regular">Category</div>
 			<div class="line-cirecle-sm"></div>
 			<i class="fa-regular fa-star"></i>
 		</div>
 		<div class="jua-regular">
-			Color <input type="color" id="color-style" >
+			Color <input name="vacaColor" type="color" id="color-style" >
+			<input name="vacaNO" type="hidden" readonly>
+			<input name="vacaGroupCode" type="hidden" readonly>
 		</div>
 		<br>
 		<div class="jua-regular">Date</div>
 		<div class="date-time-area">
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular" type="date">
+					<input name="vacaStart" class="date-area jua-regular" type="date">
 				</div>
 			</div>
 			<div style="place-self: center; font-size: xx-large;">~</div>
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular" type="date">
+					<input name="vacaEnd" class="date-area jua-regular" type="date">
 				</div>
 			</div>
 		</div>
 		<br>
 		<div class="jua-regular">Content</div>
 		<div>
-			<textarea class="content-text-area"
+			<textarea class="content-text-area" name="vacaComment"
 				style="resize: none; height: 200px;"></textarea>
 		</div>
 		<br>
@@ -647,13 +652,13 @@ a {
 			<input type="file" style="width: 71%;" name="files" accept="image/*" multiple>
 		</div>
 		<br>
+		<div class="download" style="overflow: hidden;"></div>
 		<div align="end">
-			<button class="btn btn-outline-warning" >수정</button>
+			<button type="button" class="btn btn-outline-warning" onclick="updateRequest(this);">수정</button>
 		</div>
-	</div>
+	</form>
 	<script>
 		$('#standby_request').iziModal({
-			title : '대기 중',
 			subtitle : '결제가 대기 중 입니다.',
 			headerColor : '#28a745',
 			theme : 'light',
@@ -666,7 +671,7 @@ a {
 	</script>
 
 	<!-- 철회 -->
-	<div id="retract_request">
+	<form id="retract_request">
 		<div class="Category">
 			<div class="jua-regular">Category</div>
 			<div class="line-cirecle-sm">
@@ -674,34 +679,37 @@ a {
 			</div>
 		</div>
 		<br>
+		<input name="vacaNO" type="hidden" readonly>					
+		<input name="vacaGroupCode" type="hidden" readonly>					
 		<div class="jua-regular">Date</div>
 		<div class="date-time-area">
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular" type="date" readonly>
+					<input name="vacaStart" class="date-area jua-regular" type="date" readonly>
 				</div>
 			</div>
 			<div style="place-self: center; font-size: xx-large;">~</div>
 			<div style="width: 40%;">
 				<div>
-					<input class="date-area jua-regular" type="date" readonly>
+					<input name="vacaEnd" class="date-area jua-regular" type="date" readonly>
 				</div>
 			</div>
 		</div>
 		<br>
 		<div class="jua-regular">Content</div>
 		<div>
-			<textarea class="content-text-area"
+			<textarea class="content-text-area" name="vacaComment"
 				style="resize: none; height: 200px;" readonly></textarea>
 		</div>
 		<br>
+		<div class="download" style="overflow: hidden;"></div>
+		<br>
 		<div align="end">
-			<button class="btn btn-outline-danger">삭제</button>
+			<button type="button" class="btn btn-outline-danger" onclick="delecteRequest(this);">삭제</button>
 		</div>
-	</div>
+	</form>
 	<script>
 		$('#retract_request').iziModal({
-			title : '철회',
 			subtitle : '결제가 철회 되었습니다.',
 			headerColor : '#dc3545',
 			theme : 'light',
@@ -711,42 +719,7 @@ a {
 			focusInput : true,
 			restoreDefaultContent : false,
 		});
-
-		function addWating(e){
-			let element = '';
-			
-			element +='<div class="s-wrap radious10" onclick="onpening(1, this);">'
-							+ '<div class="info" data-start="'+e.vacaStart+'" data-end="'+e.vacaEnd+'" data-coment="'+e.retractComent+'"'
-							+ '></div>'
-							+ '<div class="s-category line-border-square-sm">'+codeName(e.vacaGroupCode)+'</div>'
-							+ '<div class="s-situation line-border-square-sm gContext">대기</div>';
-			if(e.vacaGroupCode != 'B'){
-				element += '<div class="s-date line-border-square-sm">'
-								+  e.vacaStart.slice(0,10) + ' ~ ' + e.vacaEnd.slice(0,10)
-								+  '</div>'
-			}else {
-				element += '<div class="s-date line-border-square-sm">'+ e.vacaEnd +'</div>'
-			}
-			element += '</div>';							
-			$('.standby').append(element);
-		}
 		
-		function addReject(e){
-		let element = '';
-		element	+='<div class="s-wrap radious10" onclick="onpening(0, this);">'
-						+ '<div class="info" data-start="'+e.vacaStart+'" data-end="'+e.vacaEnd+'" data-coment="'+e.retractComent+'"></div>'
-						+ '<div class="s-category line-border-square-sm">'+codeName(e.vacaGroupCode)+'</div>'
-						+ '<div class="s-situation line-border-square-sm RedContext">철회</div>'
-		if(e.vacaGroupCode != 'B'){
-			element	+= '<div class="s-date line-border-square-sm">'
-							+		e.vacaStart.slice(0,10) + ' ~ ' + e.vacaEnd.slice(0,10)
-							+		'</div>'
-		}else {
-			element	+= '<div class="s-date line-border-square-sm">'+ e.vacaEnd +'</div>'
-		}
-		element	+= '</div>';	
-		$('.retract').append(element);
-		}
 		function codeName(code){
 			let string = '';
 			switch (code){
@@ -758,6 +731,46 @@ a {
 			}
 			return string;
 		}
+		
+		function updateRequest(button){
+			
+			$.ajax({
+				url:'${path}/vacation/requestUpdate.ajax',
+				type:'post',
+				data: new FormData($(button).parents('form')[0]),
+				processData:false,
+				contentType:false,
+				enctype: 'multipart/form-data',
+				success:function(result){
+					if(result>0){
+						greenAlert('휴가 수정', '휴가 정정이 완료 되었습니다.');
+						$('#standby_request').iziModal('close');
+						$('#retract_request').iziModal('close');
+						selectRequest()
+					}else {
+						redAlert('휴가 수정', '관리자를 호출 해 주세요');
+					}
+				},
+				error:function(){}
+			})
+			
+		}
+		
+		function delecteRequest(button){
+			const $form = $(button).parents('form')[0];
+			console.log($form);
+			
+			$.ajax({
+				url:'${path}/vacation/delecteRequest.ajax',
+				type:'post',
+				data: $form.serialize(),
+				success:function(){
+					
+				},
+				error:function(){}
+			})
+		}
+		
 		function selectRequest(){
 			$.ajax({
 				url:'${path}/vacation/request.ajax',
@@ -765,12 +778,39 @@ a {
 				contentType : 'application/json',
 				success:function(list){
 					console.log(list);
+					$('.standby *').remove();
+					$('.retract *').remove();
+					
 					list.forEach((e) => {
-						if(e.approrvalStatus == 'N'){
-							addReject(e);
-						}else {
-							addWating(e);
+						let ch = (e.approrvalStatus == 'N');
+						let element = '';
+						element	+='<div class="s-wrap radious10" onclick="onpening('+(ch ? 0:1)+', this);">'
+										+ '<div class="info" data-start="'+e.vacaStart
+																		 +'" data-end="'+e.vacaEnd
+																		 +'" data-coment="'+e.retractComent
+																		 +'" data-num="'+e.vacaNO
+																		 +'" data-code="'+e.vacaGroupCode
+																		 +'"></div>'
+										+ '<div class="s-category line-border-square-sm">'+codeName(e.vacaGroupCode)+'</div>'
+										+ '<div class="s-situation line-border-square-sm '+ ((ch) ? 'RedContext">철회' : 'gContext">대기') +'</div>'
+						if(e.attach.length != 0){
+							e.attach.forEach((arr) => {
+								element +=  '<input class="attach-put" type="text" value="'+arr.attachPath+'">'
+												+   '<input class="attach-put" type="text" value="'+arr.originName+'">'
+												+		'<input class="attach-put" type="text" value="'+arr.modifyName+'">'
+							})
 						}
+						if(e.vacaGroupCode != 'B'){
+							element	+= '<div class="s-date line-border-square-sm">'
+											+		e.vacaStart.slice(0,10) + ' ~ ' + e.vacaEnd.slice(0,10)
+											+		'</div>'
+						}else {
+							element	+= '<div class="s-date line-border-square-sm">'+ e.vacaEnd +'</div>'
+						}
+						element	+= '</div>';	
+						
+						$( ch ? '.retract' :'.standby').append(element);
+
 					})
 				},
 				error:function(){
@@ -800,32 +840,31 @@ a {
 		}
 		
 		function onpening(num, event){
-			if(num == 0){
-				$(document).on('opening', '#retract_request', function (e) {
-					
-					let arr = $(this).eq(0).find('input.date-area').get();
-					arr[0].value = event.children[0].dataset.start.slice(0,10);
-					arr[1].value = event.children[0].dataset.end.slice(0,10);
-					let coment = event.children[0].dataset.coment;
-					let str = (coment == 'null') ? '내용이 없습니다.':coment;
-					$(this).eq(0).find('textarea').val(str);
-				});
+			let check_modal = (( num == 0) ?'#retract_request' :'#standby_request');
 
-			$('#retract_request').iziModal('open');
-			}else {
-				$(document).on('opening', '#standby_request', function (e) {
+				$(document).on('opening', check_modal, function (e) {
 					
+					$(this).eq(0).find('input[name=vacaNO]').val(event.children[0].dataset.num);
+					$(this).eq(0).find('input[name=vacaGroupCode]').val(event.children[0].dataset.code);
 					let arr = $(this).eq(0).find('input.date-area').get();
 					arr[0].value = event.children[0].dataset.start.slice(0,10);
 					arr[1].value = event.children[0].dataset.end.slice(0,10);
+					
 					let coment = event.children[0].dataset.coment;
 					let str = (coment == 'null') ? '내용이 없습니다.':coment;
 					$(this).eq(0).find('textarea').val(str);
+					
+					const $download = $(event).children('.attach-put');
+					$(".download *").remove();
+					for(let i =0; i<$download.length; i +=3 ){
+					$(".download").append('<a href="${path}'+ $download[i].value +"/"+ $download[i+2].value
+																			+'" download="'+$download[i+1].value+'">'+$download[i+1].value+'</a><br>')
+					}
 				});
-				
-				
-			$('#standby_request').iziModal('open');		
-			}
+			
+			$(check_modal).iziModal('setTitle', codeName(event.children[0].dataset.code) + (num == 0 ? ' 철회':' 대기중'));
+			$(check_modal).iziModal('open');
+			
 		}
 
 		$(document).ready(function() {

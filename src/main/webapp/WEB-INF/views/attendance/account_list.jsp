@@ -266,7 +266,7 @@
 	    </script>
 	    
 	    <script>
-        /* 이름 : 한글만 입력되고 나머지 글자는 공백으로 변환 */
+        // 이름 : 한글만 입력되고 나머지 글자는 공백으로 변환
         $("#search_Form input[name=name]").on("keyup", function(){
             let regExp = $(this).val().replace(/[^가-힣ㄱ-ㅎ]+/g, '');
             $(this).val(regExp);

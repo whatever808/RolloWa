@@ -4,18 +4,26 @@
     font-weight: bold;
     font-family: "Jua";
 }
+/* ------------- map ------------- */
+#map{
+		height: 500px;
+		width: 100%;
+		border-radius: 20px;
+		margin-bottom: 20px;
+}
 
 /* ------------- search form ------------- */
 #filter-search{
+	display: block;
 	float: right;
-	margin-bottom: 100px;
+	margin-bottom: 50px;
 }
 #keyword, #condition, #search-btn, #reset-search{
 	height: 50px;
 }
 #condition{
-    display: inline-block;
-    width: 200px;
+  display: inline-block;
+  width: 200px;
 }
 #keyword{
 	border: 1px solid lightgray;
@@ -34,14 +42,31 @@
 }
 
 /*------------- attraction list -------------*/
-thead tr{
+thead>tr{
     font-size: 16px;
     font-weight: 400;
     text-align: center;
+    background-color: lightgray;
 }
 
 .attraction-list{
     text-align: center;
+}
+.attraction-list td{
+		vertical-align: middle;
+}
+.thumbnail{
+		display: flex;
+		justify-content: center;
+}
+.thumbnail>img{
+		width: 80%;
+		height: 200px;
+		border-radius: 20px;
+}
+.thumbnail:hover{
+		cursor: pointer;
+		opacity: 0.8;
 }
 .attraction-name-td:hover{
 	cursor:pointer;
@@ -52,79 +77,71 @@ thead tr{
     white-space: nowrap;
     margin-bottom: 0;
     text-align: center;
+    font-weight: bold;
+    font-size: 16px;
 }
 
 /* ------------- pagination ------------- */
+.pagination-div{
+		width: 100%;
+		display: flex;
+		justify-content: cneter;
+		align-items: center;
+		margin-top: 100px;
+}
 .attraction-list-pagination{
-    margin-top: 90px;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-itmes: center;
-    
 }
 .attraction-list-pagination>.pagination span:hover{
 		cursor: pointer;
 }
 
-/* ------------- detail form content div ------------- */
-.detailForm{
-    padding: 30px;
-    padding-bottom: 100px;
-    box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
-    border-radius: 10px;
+/* ------------- attraction detail ------------- */
+.attraction-detail-div{
+}
+.thumbnail-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.thumbnail-div>img{
+  width: 80%;
+  height: 300px;
+  border-radius: 20px;
+  box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
 }
 
-/* ------------- detail form ------------- */
-.field-group{
-    margin-bottom: 50px;
+.attraction-info{
+  padding-top: 10px;
+  padding-bottom: 30px;
+  padding-right: 20px;
+  padding-left: 20px;
+  border: 1px solid lightgray;
+  border-radius: 10px;
 }
 
-.field-title{
-    font-weight: bold;
-    font-size: large;
-    margin-bottom: 10px;
+h3{
+  text-align: center;
+  font-family: "Jua";
 }
 
-#attraction-name, #attraction-manage-emp, #attraction-intro{
-    width: 1000px;
+.attraction-intro{
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-#attraction-location, #capacity-limit, #attraction-status{
-    display: inline-block;
-    width: 200px;
-    margin-right: 60px;
+.info-div{
+  margin-top: 20px;
+  display: flex;
 }
-
-input[name=statusReason]{
-	display: block;
-	width: 1000px;
-	margin-top: 20px;
+.info-title{
+  width: 20%;
+  font-weight: bold;
 }
-
-.age-limit, .height-limit{
-    display: inline-block;
-}
-#age-limit, #height-limit{
-    margin-left: 30px;
-    width: 250px;
-}
-.age-limit>select, .height-limit>select{
-    display: inline-block;
-    margin-left: 20px;
-    width: 100px;
-}
-
-#attraction-intro{
-    resize: none;
-}
-.button-group{
-    display: flex;
-    justify-content: space-around;
-    margin-top: 200px;
-}
-.button-group>button{
-	 width: 30%;
-    padding: 15px 0 15px 0;
-    font-size: 18px;
-    border-radius: 10px;
+.info-content{
+  width: 80%;
 }

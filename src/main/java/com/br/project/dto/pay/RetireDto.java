@@ -7,23 +7,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @ToString
 @Getter
 @Setter
-@Builder
-public class FixturesDto {
+public class RetireDto {
 	
-	private int fixNo;
+	private int retireNo;
 	private String title;
-	private String totalSum;
-	private String productName;
-	private int productSize;
-	private int quantity;
-	private String unitPrice;
-	private String price;
-	private String note;
-	
+	private String startPeriod;
+	private String lastPeriod;
+	private String content;
+	private String status;
 
 }

@@ -94,6 +94,7 @@
 					<div class="font-size25 jua-regular spaceNO">검색</div>
 					<div>
 						<select style="border: 0px;" class="jua-regular" name="code">
+							<option value="all">All</option>
 						<c:forEach var="c" items="${vactList}">
 							<option value="${c.code}">${c.codeName}</option>							
 						</c:forEach>
@@ -103,31 +104,28 @@
 					<div class="font-size25 jua-regular spaceNO">날짜</div>
 					<div class="size-fit">
 						<input type="date" id="currentDate1" class="date-area jua-regular">
+						<input type="date" id="currentDate2" class="date-area jua-regular">
 					</div>
-					<div><button type="button" onclick="searchOld();" class="jua-regular btn btn-outline-secondary"> 검색 </button></div>
+					<div><button type="button" onclick="ajaxSearchOld(1);" class="jua-regular btn btn-outline-secondary"> 검색 </button></div>
 				</form>
 				<div>
 					<table class="search-list table table-hover">
 						<thead>
 							<tr>
 								<th class="font-size20 jua-regular spaceNO">No</th>
-								<th class="font-size20 jua-regular spaceNO">카테고리</th>
-								<th class="font-size20 jua-regular spaceNO">날짜</th>
-								<th class="font-size20 jua-regular spaceNO">사용 일수</th>
+								<th class="font-size20 jua-regular spaceNO">Color</th>
+								<th class="font-size20 jua-regular spaceNO">Category</th>
+								<th class="font-size20 jua-regular spaceNO">Date</th>
+								<th class="font-size20 jua-regular spaceNO">Using</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>1</td>
-								<td class="spaceNO">연차</td>
-								<td class="spaceNO">2024-04-24 ~ 2024-04-27</td>
-								<td><div class="fontRed">-3</div></td>
-							</tr>
 						</tbody>
 					</table>
 				</div>
 				<div align="end">
-					<button class="btn btn-outline-danger">철회</button>
+					<!-- <button class="btn btn-outline-danger">철회</button> -->
+					<ul class="pagination"></ul>
 				</div>
 			</fieldset>
 		</div>
@@ -141,12 +139,19 @@
 			document.getElementById('currentDate1').value = dateData;
 		}
 		
-		function ajaxSearchOld(){
+		function ajaxSearchOld(page){
 			$.ajax({
-				url:'${path}/vacation/',
+				url:'${path}/vacation/searchOld.ajax',
 				type:'post',
-				success:function(e){
-					console.log(e);
+				data:'vacaGroupCode='+$('select').val()
+							+'&vacaStart=' + document.getElementById('currentDate1').value 
+							+'&vacaEnd='+ document.getElementById('currentDate2').value 
+							+ '&page='+ page,
+				success:function(map){
+					console.log(map);
+					
+					creatTable(map.list);
+					creatPaging(map.paging);
 				},
 				error:function(){
 					console.log('list select fail');
@@ -154,9 +159,81 @@
 			})
 		}
 		
+		function codeName(code){
+			let string = '';
+			switch (code){
+				case 'A': string = '연차'; break;
+				case 'B': string = '반차'; break;
+				case 'C': string = '병가'; break;
+				case 'G': string = '소집일'; break;
+				default : String = '기타'			
+			}
+			return string;
+		}
+		
+		function creatTable(list) {
+			$('tbody>tr').remove();
+			let tableEl = '';
+			if (list.length != 0) {
+				list.forEach((e) => {
+					tableEl += '<tr><td>'
+									+ e.vacaNO
+									+ '</td>'
+									+ '<td class="spaceNO"><input type="color" value="' + e.vacaColor + '" id="color-style" style="width: 35px; height: 15px;" onclick="return false"></td>'
+									+ '<td class="spaceNO">'
+									+ codeName(e.vacaGroupCode)
+									+ '</td>'
+									+ '<td class="spaceNO">'
+									+ e.vacaStart.slice(0,10) +' ~ '+ e.vacaEnd.slice(0,10)
+									+ '</td>'
+									+ '<td><div class="fontRed">- '
+									+ ((new Date(e.vacaEnd.slice(0,10)) - new Date(e.vacaStart.slice(0,10))) / (1000 * 60 * 60 * 24) +1)
+									+ '</div></td></tr>'
+				})
+			} else {
+				tableEl += '<tr><td colspan="5">조회 되는 일정이 없습니다.</td>'
+			}
+			$('tbody').append(tableEl);
+		};
+		
+		function creatPaging(paging) {
+			$('.pagination>li').remove();
+			let page = '';
+
+			if (paging.currentPage == 1) {
+				page += '<li class="page-item disabled"><a class="page-link">◁</a></li>';
+			} else {
+				page += '<li class="page-item"><a class="page-link" onclick="ajaxSearchOld('
+						+ (paging.currentPage - 1) + ');">◁</a></li>';
+			}
+
+			for (let i = paging.startPage; i <= paging.endPage; i++) {
+				if (paging.currentPage == i) {
+					page += '<li class="page-item active"><a class="page-link">'
+							+ i + '</a></li>';
+				} else if (i <= paging.maxPage) {
+					page += '<li class="page-item"><a class="page-link" onclick="ajaxSearchOld('
+							+ i + ');">' + i + '</a></li>';
+				} else {
+					page += '<li class="page-item disabled"><a class="page-link">'
+							+ i + '</a></li>';
+				}
+			}
+
+			if (paging.currentPage >= paging.maxPage) {
+				page += '<li class="page-item disabled"><a class="page-link">▷</a></li>';
+			} else {
+				page += '<li class="page-item"><a class="page-link" onclick="ajaxSearchOld('
+						+ (Number(paging.currentPage) + 1)
+						+ ');">▷</a></li>';
+			}
+			$('.pagination').append(page);
+		};
+		
 		$(document).ready(function(){
 			current();
-			ajaxSearchOld();
+			ajaxSearchOld(1);
+			
 		})
 	</script>
 <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />

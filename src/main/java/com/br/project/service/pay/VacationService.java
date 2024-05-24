@@ -1,5 +1,6 @@
 package com.br.project.service.pay;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,10 @@ import com.br.project.dto.pay.VacationDto;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * @author GD
+ *
+ */
 @Service
 @RequiredArgsConstructor
 public class VacationService {
@@ -55,6 +60,48 @@ public class VacationService {
 	 */
 	public List<VacationDto> selectRequest(int userNo) {
 		return vacationDao.selectRequest(userNo);
+	}
+
+	/**
+	 * @param userNo
+	 * @return
+	 */
+	public int selectVacarionCount(int userNo) {
+		return vacationDao.selectVacarionCount(userNo);
+	}
+
+	/**
+	 * @param vacation
+	 * @return
+	 */
+	public int requestUpdate(Map<String, Object> map) {
+		
+		int result = vacationDao.updateVacation((VacationDto)map.get("vacation"));
+
+		List<AttachmentDto> uploadFile = (List<AttachmentDto>)map.get("uploadFile");
+		
+		if(uploadFile != null && !uploadFile.isEmpty()) {
+			for (AttachmentDto att : uploadFile) {
+				result *= attachDao.insertBoardAttachment(att);
+			}
+		}
+		
+		return result;
+	}
+
+	/**
+	 * @param fileInfo
+	 * @return
+	 */
+	public List<AttachmentDto> selectOriginAtt(HashMap<String, Object> fileInfo) {
+		return attachDao.selectBoardAttachmentList(fileInfo);
+	}
+
+	/**
+	 * @param fileNo
+	 */
+	public void deleteRequest(String fileNo) {
+		attachDao.deleteBoardAttachment(fileNo);
 	}
 
 	
