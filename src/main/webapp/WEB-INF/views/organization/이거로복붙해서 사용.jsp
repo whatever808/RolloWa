@@ -9,32 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1.1 조직도</title>
 
-    <!-- animate -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
-	<!-- bootstrap -->
-	<link href="${contextPath}/resources/css/common/bootstrap.min.css" rel="stylesheet">
-	
-	<!-- fontawesome -->
-	<script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
-	
-	<!-- Google Fonts Roboto -->
-	<link rel="stylesheet"
-	    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
-	
-	<!-- Google Fonts Jua -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-	
-	<!-- jQuery -->
-	<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
-	
-	<!-- css -->
-	<link href="${contextPath}/resources/css/common/sidebars.css" rel="stylesheet">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common.css">
-	<link rel="stylesheet" href="${contextPath}/resources/css/common/mdb.min.css" />
-  
 	<style>
     .main_content{
     	width: 1200px !important;
