@@ -618,18 +618,6 @@ $(document).ready(function(){
                             <li><a href="${contextPath}/pay/myAllApproval.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">나의전체함</a> 
                             </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재대기함</a>
-                                    
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">승인함</a>
-                                    
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">반려함</a> 
-                            </li>
-                            
                         </ul>
                     </div>
                 </li>

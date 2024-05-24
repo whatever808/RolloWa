@@ -1069,7 +1069,7 @@ public class PayController {
 				fileList.add(file);
 			}
 		}
-
+		
 		if(fileLeng == delFileNoLeng && fileList.isEmpty()) {
 			map.put("fileStatus", "N");
 		}else {
@@ -1391,6 +1391,7 @@ public class PayController {
 		Map<String, Object> mapUserMember = new HashMap<>();
 		mapUserMember.put("userName", userName);
 		mapUserMember.put("userNo", userNo);
+		mapUserMember.put("documentStatus", "전체");
 		
 		int myAllApCount = payService.myAllApCount(mapUserMember);
 		
@@ -1402,6 +1403,33 @@ public class PayController {
 		model.addAttribute("pi", pi);
 		
 	}
+	@ResponseBody
+	@GetMapping("/myWaitApproval.page")
+	public Map<String, Object> myWaitApproval(@RequestParam(value="page", defaultValue="1") int currentPage
+							 , HttpSession session, Model model) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userName", userName);
+		mapUserMember.put("userNo", userNo);
+		mapUserMember.put("documentStatus", "D");
+		
+		int myAllApCount = payService.myAllApCount(mapUserMember);
+		
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(myAllApCount, currentPage, 5, 10);
+
+		List<Map<String, Object>> list = payService.myAllApproval(mapUserMember, pi);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
+		
+		return map;
+	}
+	
+	
+	
 	
 	
 

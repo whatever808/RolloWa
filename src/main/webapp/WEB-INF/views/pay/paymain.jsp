@@ -13,8 +13,6 @@
     <link href="${ contextPath }/resources/css/pay/paymain.css" rel="stylesheet">
     <style>
     	.input-group-append{border: 1px solid white; background-color: white;}
-    
-    
     </style>
 
 </head>
@@ -95,12 +93,11 @@
   </c:if>
   
   
-  <main>                         
+  <main style="display: flex;">                         
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
         <!-- content 추가 -->
         <div class="content p-4">
             <!-- 프로필 영역 -->
-            <div>
             <div class="informations" >
                 <!-- informations left area start -->
                 <div class="left_con">
@@ -126,7 +123,7 @@
                                     <div><label>${userName}님의 <br> 승인완료한 수신결재함</label></div>
                                     <div><b>${ slistCount.length() == 1 ? "0" + slistCount 
                                     				 														: slistCount == "0" ? "0" : slistCount}건</b></div>
-                                 </div>
+                                </div>
                                 <div class="di_top_rigth">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard-check-fill" viewBox="0 0 16 16">
                                         <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"/>
@@ -313,7 +310,7 @@
                                 </div>
                             </div>
                             <div id="cen_bot_table">
-                                <table class="table table-hover">
+                                <table e class="table table-hover">
                                     <thead>
                                       <tr>
                                         <th>번호</th>
@@ -354,6 +351,8 @@
                                   
                                     </tbody>
                                   </table>
+                                
+                                
                             </div>
                             <div id="cen_bottom_pagging">
                                 <div id="pagin_form">
@@ -497,9 +496,8 @@
                     </div>
                 </div>
             </div>
-            </div>
             
-        </div>
+        	</div>
         <!-- content 끝 -->
         <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
     </main>

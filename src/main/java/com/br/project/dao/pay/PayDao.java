@@ -402,4 +402,5 @@ public class PayDao {
 		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
 		return sqlSessionTemplate.selectList("payMapper.myAllApproval", map, rowbounds);
 	}
+	
 }

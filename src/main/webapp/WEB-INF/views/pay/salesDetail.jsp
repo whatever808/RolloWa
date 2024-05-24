@@ -283,7 +283,7 @@ $(document).on("click", "#rejectBtn", function(){
                     <th>상태</th>
                     <td>${list.get(0).PAYMENT_STATUS}</td>
                     <th>승인상태</th>
-                    <td>${list.get(0).DOCUMENT_STATUS == 'I' ? '진행중' : list.get(0).DOCUMENT_STATUS == 'N' ? '반려' : '완료' }
+                    <td>${list.get(0).DOCUMENT_STATUS == 'I' ? '진행중' : list.get(0).DOCUMENT_STATUS == 'N' ? '반려' : list.get(0).DOCUMENT_STATUS == 'D' ? "대기" : "완료" }
                     </td>
                 </tr>
             </table>

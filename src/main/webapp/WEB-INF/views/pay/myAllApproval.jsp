@@ -17,8 +17,9 @@
     }
     
     .content2 {
-        margin-left: 220px;
-        padding: 20px;
+       padding: 20px;
+    	 height: 1073px;
+    	 margin: auto;;
     }
     .task-table th, .task-table td {
         text-align: center;
@@ -85,6 +86,12 @@
     	justify-content: center;
     	margin: 52px
     }
+    #svg{
+      width: 49px;
+    	color: #007bff;
+    	height: 21px;
+    }
+    #tStatus td:hover{cursor: pointer;}
 </style>
 </head>
 <body>
@@ -106,44 +113,97 @@ $(document).ready(function(){
     });
 });
 
-$("#all").on("click", function(){
+$(document).on("click", "#all",function(){
 
-	$(this).addClass("active");
-  $(this).siblings().removeClass("active");
+	 $(this).addClass("active");
+	    $(this).siblings().removeClass("active");
     
 	location.href="${contextPath}/pay/myAllApproval.page";
 	
-})
+});
 
-$("#wait").on("click", function(){
+</script>
 
-	$(this).addClass("active");
-  $(this).siblings().removeClass("active");
 
-	$.ajax({
-		url:"${contextPath}/pay/myWaitApproval.page",
-		success:function(){
-			
-		}
+<script>
+$(document).ready(function(){
+	$(document).on("click", "#wait", function(){
+		$.ajax({
+	     url: "${contextPath}/pay/myAllApproval.page",
+	     method: 'GET',
+	     data: { page: 1 },
+	     success: function(response) {
+	    	 console.log(response);
+	       updateTable(response.list);
+	       updatePagination(response.pi);
+	     }
+	  });
 	})
-	
-})
-
-$("#progress").on("click", function(){
-
-	$(this).addClass("active");
-  $(this).siblings().removeClass("active");
-	
-	$.ajax({
-		url:"${contextPath}/pay/myProgressApproval.page",
-		success:function(){
-			
-		}
-	})
-	
 })
 </script>
-		<main>
+
+
+<script>
+$(document).ready(function(){
+    function updateTable(data) {
+        var tbody = $('#data-table tbody');
+        tbody.empty(); // 기존 데이터를 제거합니다.
+
+        data.forEach(function(item) {
+            var documentStatusClass = '';
+            if (item.DOCUMENT_STATUS === '반려') {
+                documentStatusClass = 'badge-pending';
+            } else if (item.DOCUMENT_STATUS === '완료') {
+                documentStatusClass = 'badge-completed';
+            } else if (item.DOCUMENT_STATUS === '진행') {
+                documentStatusClass = 'badge-in-progress';
+            } else if (item.DOCUMENT_STATUS === '대기') {
+                documentStatusClass = 'badge-pending';
+            }
+
+            var row = '<tr>' +
+                      '<td><input type="checkbox"></td>' +
+                      '<td><span class="badge ' + documentStatusClass + '">' + item.DOCUMENT_STATUS + '</span></td>' +
+                      '<td>' + item.TITLE +
+                      ((item.SALES_STATUS + item.DRAFT_STATUS + item.BUSINESSTRIP_STATUS == 1) ?
+                      '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
+                      '<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>' +
+                      '</svg>' : '') +
+                      '</td>' +
+                      '<td>' + item.DOCUMENT_TYPE + '</td>' +
+                      '<td>' + item.PAYMENT_WRITER + '</td>' +
+                      '<td>' + item.DEPARTMENT + '</td>' +
+                      '<td>' + item.REGIST_DATE + '</td>' +
+                      '<td>' + (item.FINAL_APPROVAL_DATE === "" ? "-" : item.FINAL_APPROVAL_DATE) + '</td>' +
+                      '</tr>';
+
+            tbody.append(row);
+        });
+    }
+
+    function updatePagination(pagination) {
+        var ul = $('.pagination');
+        ul.empty(); // 기존 페이지네이션을 제거합니다.
+
+        ul.append('<li class="page-item ' + (pagination.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-link" href="#" data-page="' + (pagination.currentPage - 1) + '">Previous</a></li>');
+
+        for (var p = pagination.startPage; p <= pagination.endPage; p++) {
+            ul.append('<li class="page-item ' + (pagination.currentPage == p ? 'disabled' : '') + '"><a class="pages-link" href="#" data-page="' + p + '">' + p + '</a></li>');
+        }
+
+        ul.append('<li class="page-item ' + (pagination.currentPage == pagination.maxPage ? 'disabled' : '') + '"><a class="pages-link" href="#" data-page="' + (pagination.currentPage - 1) + '">Next</a></li>');
+    }
+
+    $(document).on('click', '.pages-link', function() {
+        location.href= "${contextPath}/pay/myAllApproval.page";
+    });
+
+    loadPage(1);
+    
+});
+</script>
+
+		<main style="display: flex;">
 				<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 	        <!-- content 추가 -->
 	        <div class="content p-4">
@@ -155,12 +215,22 @@ $("#progress").on("click", function(){
 							<div class="content2">
 							   <h2>나의 결재함</h2>
 							    <div class="d-flex justify-content-between align-items-center mb-3">
-							        <div class="filter-buttons d-flex">
-							            <button id="all" type="button">전체</button>
+							        <div class="filter-buttons d-flex" style="margin: 16px;">
 							            <button id="wait" type="button">대기</button>
+							             	<svg xmlns="http://www.w3.org/2000/svg" id="svg" fill="currentColor" class="bi bi-reception-0" viewBox="0 0 16 16">
+															<path d="M0 13.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
+														</svg>
 							            <button id="progress" type="button">진행</button>
+							              <svg xmlns="http://www.w3.org/2000/svg" id="svg" fill="currentColor" class="bi bi-reception-0" viewBox="0 0 16 16">
+															<path d="M0 13.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
+														</svg>
 							            <button id="complete" type="button">완료</button>
-							            <button id="reject" type="button">반려</button>
+							        </div>
+							        <div class="filter-buttons d-flex">	
+												<button id="all" type="button">전체</button>
+							        </div>
+							        <div class="filter-buttons d-flex">	
+							        	<button id="reject" type="button">반려</button>
 							        </div>
 							        <div class="d-flex align-items-center">
 							            <input type="text" class="form-control search-bar" placeholder="검색하세요.">
@@ -188,9 +258,13 @@ $("#progress").on("click", function(){
 							        <tbody id="tStatus">
 							        		<c:forEach var="i" items="${ list }">
 							            <tr>
-							            		<th><input type="checkbox"></th>
+							            		<td><input type="checkbox"></td>
 							                <td><span class="badge">${ list.get(0).DOCUMENT_STATUS }</span></td>
-							                <td>${ i.TITLE }</td>
+							                <td>${ i.TITLE }
+							                		${ i.SALES_STATUS + i.DRAFT_STATUS + i.BUSINESSTRIP_STATUS == 1 ? '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">
+				                             <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>
+				                             </svg>' : ""}
+							                </td>
 							                <td>${ i.DOCUMENT_TYPE }</td>
 							                <td>${ i.PAYMENT_WRITER }</td>
 							                <td>${ i.DEPARTMENT }</td>

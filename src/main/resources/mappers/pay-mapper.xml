@@ -1805,7 +1805,7 @@
 		     , PAYMENT_STATUS
 		from approval A
 		WHERE A.STATUS = 'Y'
-		AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
+		AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 			and (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null
         or MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null
         or FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is not null
@@ -2039,11 +2039,29 @@
 		from approval A
     join member m on( USER_NO =  PAYMENT_WRITER_NO)
 		WHERE A.STATUS = 'Y'
-		AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
+		<choose>
+			<when test="documentStatus == '전체'">
+			AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
+			</when>
+			<when test="documentStatus == 'D'">
+			AND DOCUMENT_STATUS = 'D'
+			</when>
+			<when test="documentStatus == 'I'">
+			AND DOCUMENT_STATUS = 'I'
+			</when>
+			<when test="documentStatus == 'Y'">
+			AND DOCUMENT_STATUS = 'Y'
+			</when>
+			<otherwise>
+			AND DOCUMENT_STATUS = 'N'
+			</otherwise>
+		</choose>
 		and PAYMENT_WRITER_NO = #{userNo}
 		order
 			 by APPROVAL_NO desc
 	</select>
+	
+	
 	
 	
 		
