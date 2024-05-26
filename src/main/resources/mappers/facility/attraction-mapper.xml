@@ -8,7 +8,7 @@
 		select count(attraction_no) "totalAttractions"
 		  from tb_attraction
 		<where>
-			<if test="locations != null and !locations.equals('')">
+			<if test="locations != null">
 				<foreach item="location" collection="locations" open="and location in(" separator="," close=")">
 					#{location}
 				</foreach>
@@ -46,7 +46,7 @@
 		 from tb_attraction
 		 join tb_location on (location = location_no)
 		 <where>
-			<if test="locations != null and !locations.equals('')">
+			<if test="locations != null">
 				<foreach item="location" collection="locations" open="and location in(" separator="," close=")">
 					#{location}
 				</foreach>
@@ -72,6 +72,7 @@
 			  attraction_no "attractionNo"
 			 ,location "locationNo"
 			 ,location_name "locationName"
+			 ,thumbnail_url "thumbnailURL"
 			 ,attraction_name "attractionName"
 			 ,attraction_intro "attractionIntro"
 			 ,customer_limit "customerLimit"
@@ -142,13 +143,21 @@
 		   	  ,modify_emp = #{modifyEmp}
 		   	  ,attraction_name = #{attractionName}
 		   	  ,attraction_intro = #{attractionIntro}
+		   	  ,thumbnail_url = #{thumbnailURL}
 		   	  ,customer_limit = #{customerLimit}
-		   	  ,age_limit = #{ageLimit}
-		   	  ,age_limit_range = #{ageLimitRange}
-		   	  ,height_limit = #{heightLimit}
-		   	  ,height_limit_range = #{heightLimitRange}
+		   	  <if test="ageLimitYN.equals('Y')">
+			   	  ,age_limit = #{ageLimit}
+			   	  ,age_limit_range = #{ageLimitRange}
+		   	  </if>
+		   	  <if test="heightLimitYN.equals('Y')">		   	  
+			   	  ,height_limit = #{heightLimit}
+			   	  ,height_limit_range = #{heightLimitRange}
+		   	  </if>
 		   	  ,status = #{status}
-		   	  ,status_reason = #{statusReason}
+		   	  <if test="statusReason != null">
+		   	  	,status_reason = #{statusReason}
+		   	  </if>
+		   	  ,modify_date = sysdate
 		 where attraction_no = #{attractionNo}
 	</update>
 	

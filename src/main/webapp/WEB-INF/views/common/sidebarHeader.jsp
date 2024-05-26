@@ -465,13 +465,17 @@ $(document).ready(function(){
 
                           <li><a href="${ contextPath }/attraction/list.do"
                                  class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 조회</a>
-                           </li> 
+                          </li>
+                          
+                          <li><a href="${ contextPath }/attraction/utilization.do"
+                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 이용률</a>
+                          </li> 
 
                           <li><a href="${ contextPath }/attraction/regist.page"
                                  class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
                           </li>
 
-                          <li><a href="${ contextPath }/attraction/manage.do"
+                          <li><a href="${ contextPath }/attraction/manage/list.do"
                                  class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
                           </li>
 

@@ -17,29 +17,10 @@
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
 	<!-- content 추가 -->
-    <div class="content m-5">
+  <div class="content m-5">
 
-       <h1 class="page-title">어트랙션 관리</h1>
+     <h1 class="page-title">어트랙션 관리</h1>
 
-	   <!-- location options start -->
-     <select class="attraction-location form-select d-inline-block me-5" style="width: 200px;">
-         <option value="">전체</option>
-         <c:forEach var="location" items="${ locationList }">
-          <option value="${ location.locationNo }">${ location.locationName }</option>
-         </c:forEach>
-     </select>
-     <!-- location options end -->
-       
-     <!-- attraction status start -->
-     <select class="attraction-status form-select d-inline-block" style="width: 200px;">
-         <option value="">전체</option>
-         <option value="PENDING">운영예정</option>
-         <option value="OPERATING">운영중</option>
-         <option value="STOP">운영중지</option>
-         <option value="CLOSED">운영종료</option>
-     </select>
-     <!-- attraction status end -->
-	   <br>
      <!-- about search start -->
 	   <div id="filter-search">
 	     	 <!-- search form start-->
@@ -73,22 +54,103 @@
 		     <!-- search form end -->
 	     </div>
 	     <!-- about search end -->
+	     
+	     <!-- about location filtering start -->
+	     <div id="map"></div>
+	     <div class="search-location-list d-none"></div>
+	   	 <!-- about location filtering end -->
+	   	 
+	   	 <!-- Googel Map 스크립트 -->
+			 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfeL19x8FxIk3SsSNFLKuL9N_1w9pAs24&callback=initMap"></script>
+	   	 <script>
+	   	 		// 구글맵 관련 ====================================================================================
+	   	 		function initMap (){
+				 		// 지도생성 및 설정
+				 		const map = new google.maps.Map(document.getElementById("map"), {
+				 			center: {lat: 35.636033359, lng: 139.878632426 },	// 초기값의 위도, 경도 설정
+				 			zoom: 12,	// 지도 가까운 정도
+				 		});
+				 		
+				 		// 어트랙션 위치 리스트조회
+				 		$.ajax({
+				 			url:"${ contextPath }/attraction/location/list.ajax",
+				 			method:"get",
+				 			async:false,
+				 			success:function(locationList){
+				 				locations = locationList;	// 놀이공원 위치목록
+				 			},error:function(){
+				 				console.log("SELECT LOCATION LIST AJAX FAILED");
+				 			}
+				 		});
+				 		
+				 		const bounds = new google.maps.LatLngBounds();		// 마커 위치표시를 위한 객체
+				 		const infoWindow = new google.maps.InfoWindow();	// 마커 클릭시 보여질 정보창 객체
+				 		
+				 		locations.forEach(function(location){
+				 			let locationNo = location.locationNo;
+				 			let locationName = location.locationName;
+				 			let latitude = parseFloat(location.latitude);
+				 			let longitude = parseFloat(location.longitude);
+				 			let mapMark = location.mapMark;
+				 			
+				 			// 마커생성 및 설정
+				 			const marker = new google.maps.Marker({
+				 				position: { lat: latitude, lng: longitude },
+				 				label: locationName,
+				 				map: map,
+				 			});
+				 			bounds.extend(marker.position);	// 마커의 위치 정보를 넘겨줌
+				
+				 			// 마커클릭시, 보여질 정보성 메세지
+				 			marker.addListener("click", function(){
+				 				map.panTo(marker.position);				// 마커를 클릭했을 때, 마커가 있는 위치로 지도의 중심이 이동
+				 				
+				 				let flag = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+				 				
+				 				// 조회요청시 전달될 위치값 설정
+				 				if(marker.getIcon() == flag){
+				 					marker.setIcon('');
+				 					$(".search-location-list").children("input").each(function(){
+				 						$(this).attr("location-name") == marker.label && $(this).remove();
+				 					});
+				 					ajaxAttractionList();
+				 				} else{
+				 					marker.setIcon(flag);
+				 					$(".search-location-list").append("<input type='hidden' class='search-location' location-name='" + locationName + "' value='" + locationNo + "'>");
+				 					ajaxAttractionList();
+				 				}
+				 			
+				 			});
+				 		});
+				 		map.fitBounds(bounds);	// 지도 경계객체를 넘겨주면서 지도 경계조정하기
+				 	}
+	   	 </script>
 
        <!-- attraction list start -->
        <div class="attraction-list">
            <!-- attraction list table start-->
            <table class="table table-hover bg-white">
-               <thead class="bg-secondary">
+               <thead>
                  <tr>
-                   <th>기구명</th>
-                   <th>위치</th>
-                   <th>최대수용인원</th>
-                   <th>연령제한</th>
-                   <th>키제한</th>
-                   <th>운영상태</th>
-                   <th>등록자</th>
-                   <th>수정자</th>
-                   <th></th>
+                   <th class='attraction-name'>기구명</th>
+                   <th class='attraction-location'>위치</th>
+                   <th class='attraction-customer-limit'>최대수용인원</th>
+                   <th class='attraction-age-limit'>연령제한</th>
+                   <th class='attraction-height-limit'>키제한</th>
+                   <th class='attraction-status'>
+                   	 <!-- attraction status start -->
+								     <select class="attraction-status-select form-select d-inline-block">
+								         <option value="">전체</option>
+								         <option value="PENDING">운영예정</option>
+								         <option value="OPERATING">운영중</option>
+								         <option value="STOP">운영중지</option>
+								         <option value="CLOSED">운영종료</option>
+								     </select>
+								     <!-- attraction status end -->
+                   </th>
+                   <th class='attraction-regist-emp'>등록자</th>
+                   <th class='attraction-modify-emp'>수정자</th>
+                   <th class='attraction-modify-button'></th>
                  </tr>
                </thead>
                <tbody id="attraction-list">
@@ -100,17 +162,17 @@
                  	</c:when>
                  	<c:otherwise>
                  		<c:forEach var="attraction" items="${ attractionList }">
-                 			<tr>
-			                   <td>${ attraction.attractionName }</td>
-			                   <td>${ attraction.locationName }</td>
-			                   <td>${ attraction.customerLimit }</td>
-			                   <td>
+                 			<tr class='attraction'>
+			                   <td class="attraction-name">${ attraction.attractionName }</td>
+			                   <td class='attraction-location'>${ attraction.locationName }</td>
+			                   <td class='attraction-customer-limit'>${ attraction.customerLimit }</td>
+			                   <td class='attraction-age-limit'>
 			                     <c:out value="${ attraction.ageLimit }" />
 			                   </td>
-			                   <td>
+			                   <td class='attraction-height-limit'>
 			                     <c:out value="${ attraction.heightLimit }" />
 			                   </td>
-			                   <td>
+			                   <td class='attraction-status'>
 			                   	 <c:choose>
 			                   	 	<c:when test="${ attraction.status.equals('PENDING') }">
 				                      <span class="badge badge-secondary rounded-pill d-inline">운영예정</span>
@@ -126,9 +188,9 @@
 			                   	 	</c:when>
 			                   	 </c:choose>
 			                   </td>
-			                   <td>${ attraction.registEmp }</td>
-			                   <td>${ attraction.modifyEmp }</td>
-			                   <td>
+			                   <td class='attraction-regist-emp'>${ attraction.registEmp }</td>
+			                   <td class='attraction-modify-emp'>${ attraction.modifyEmp }</td>
+			                   <td class='attraction-modify-button'>
 			                   		<a href="${ contextPath }/attraction/modify.page?no=${ attraction.attractionNo }" class="btn btn-warning p-1">정보수정</a>
 			                   </td>
 			                 </tr>
@@ -141,29 +203,29 @@
 		   
 		   	 <!-- pagination start -->
 	       <div class="attraction-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
-	             <ul class="pagination">
+	           <ul class="pagination">
 	             
 	             	<!-- Previous -->
-				      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
-						  onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '' }">
-				      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
-				      </li>
+					      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
+							  onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '' }">
+					      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
+					      </li>
 				    
-				    <!-- Page -->
-				    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
-					    <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
-					    	onclick="${ pageInfo.currentPage != page ? 'ajaxAttractionList();' : '' }">
-					    	<span class="page-link" data-pageno="${ page }">${ page }</span>
-					    </li>
-				    </c:forEach>
+						    <!-- Page -->
+						    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
+							    <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
+							    	onclick="${ pageInfo.currentPage != page ? 'ajaxAttractionList();' : '' }">
+							    	<span class="page-link" data-pageno="${ page }">${ page }</span>
+							    </li>
+						    </c:forEach>
 				    
-				    <!-- Next -->
-				    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
-				    	onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : ''}">
-				      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
-				    </li>
-				    
-				  </ul>
+						    <!-- Next -->
+						    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
+						    	onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : ''}">
+						      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
+						    </li>
+						    
+				  		</ul>
 	         </div>
 	         <!-- pagination end -->
 
@@ -181,16 +243,9 @@
 	$(document).ready(function(){
 		const urlParams = new URLSearchParams(location.search);
 		
-		// "위치"값이 지정되었을 경우
-		if(urlParams.get("location") != null && urlParams.get("location") != '') {
-			$(".attraction-location").children().each(function(){
-				$(this).val() == urlParams.get("location") && $(this).prop("selected", "true");
-			});
-		}
-		
 		// "상태"값이 지정되었을 경우
 		if(urlParams.get("status") != null && urlParams.get("status") != '') {
-			$(".attraction-status").children().each(function(){
+			$(".attraction-status-select").children().each(function(){
 				$(this).val() == urlParams.get("status") && $(this).prop("selected", "true");
 			});
 		}
@@ -201,18 +256,9 @@
 		}
 	})
 	
-	// 어트랙션 상세조회 function =====================================================================
-	function showDetail(attractionNo){
-		location.href = "${ contextPath }/attraction/detail.do?no=" + attractionNo;
-	}
-	
 	// 어트랙션 리스트조회 ============================================================================
-	// "위치" 선택값 변경시
-	$(".attraction-location").on("change", function(){
-		ajaxAttractionList();
-	})
 	// "상태" 선택값 변경시
-	$(".attraction-status").on("change", function(){
+	$(".attraction-status-select").on("change", function(){
 		ajaxAttractionList();
 	})
 	// 키워드값 입력후 "Enter"를 눌렀을 경우 =========================================================================================
@@ -235,8 +281,6 @@
 	// 검색값 설정값 초기화
 	$("#reset-search").on("click", function(){
 		// 1) 선택값 모두 초기화
-		$(".attraction-location").children().eq(0).prop("selected", "true");
-		$(".attraction-status").children().eq(0).prop("selected", "true");
 		$("#keyword").val("");
 		
 		// 2) "검색 취소" 버튼 비활성화
@@ -253,14 +297,18 @@
 	// 어트랙션 리스트조회 AJAX
 	function ajaxAttractionList(){
 		let page = $(event.target).data("pageno") == undefined ? 1 : $(event.target).data("pageno");
+		let locationList = [];
+		$(".search-location-list").children("input").each(function(){
+			locationList.push($(this).val());
+		});
 		
 		$.ajax({
-			url:"${ contextPath }/attraction/list.ajax",
+			url:"${ contextPath }/attraction/manage/list.ajax",
 			method:"get",
 			data:{
 				page: page,
-				location: $(".attraction-location").val(),
-				status: $(".attraction-status").val(),
+				locations: locationList,
+				status: $(".attraction-status-select").val(),
 				keyword: $("#keyword").val().trim()
 			},
 			success:function(data){
@@ -280,13 +328,13 @@
 				else{
 					// 생성할 리스트 태그 문자열
 					for(let i=0 ; i<attractionList.length ; i++){
-						list += "<tr>";
-						list += 	"<td class='attraction-name-td'>" + attractionList[i].attractionName + "</td>";
-						list += 	"<td>" + attractionList[i].locationName + "</td>";
-						list += 	"<td>" + attractionList[i].customerLimit + "</td>";
-						list += 	"<td>" + (attractionList[i].ageLimit == null ? '' : attractionList[i].ageLimit) + "</td>";
-						list += 	"<td>" + (attractionList[i].heightLimit == null ? '' : attractionList[i].heightLimit) + "</td>";
-						list += 	"<td>";
+						list += "<tr class='attraction'>";
+						list += 	"<td class='attraction-name'>" + attractionList[i].attractionName + "</td>";
+						list += 	"<td class='attraction-location'>" + attractionList[i].locationName + "</td>";
+						list += 	"<td class='attraction-customer-limit'>" + attractionList[i].customerLimit + "</td>";
+						list += 	"<td class='attraction-age-limit'>" + (attractionList[i].ageLimit == null ? '' : attractionList[i].ageLimit) + "</td>";
+						list += 	"<td class='attraction-height-limit'>" + (attractionList[i].heightLimit == null ? '' : attractionList[i].heightLimit) + "</td>";
+						list += 	"<td class='attraction-status'>";
 						switch(attractionList[i].status){
 							case 'PENDING' :
 								list += "<span class='badge badge-secondary rounded-pill d-inline'>운영예정</span>";
@@ -302,10 +350,10 @@
 								break;
 						}
 						list += 	 "</td>";
-						list += 	 "<td>" + attractionList[i].registEmp + "</td>";
-						list += 	 "<td>" + attractionList[i].modifyEmp + "</td>";
-						list += 	 "<td>";
-						list += 			"<a href='${ contextPath }/attraction/modify.do?no=" + attractionList[i].attractionNo + "' class='btn btn-warning p-1'>정보수정</a>";
+						list += 	 "<td class='attraction-regist-emp'>" + attractionList[i].registEmp + "</td>";
+						list += 	 "<td class='attraction-modify-emp'>" + attractionList[i].modifyEmp + "</td>";
+						list += 	 "<td class='attraction-modify-button'>";
+						list += 			"<a href='${ contextPath }/attraction/modify.page?no=" + attractionList[i].attractionNo + "' class='btn btn-warning p-1'>정보수정</a>";
 						list += 	 "</td>";
 						list +=  "</tr>";
 					}
@@ -331,17 +379,11 @@
 		
 				$("#attraction-list").html(list);
 				$(".attraction-list-pagination").children(".pagination").html(pagination);
-				
-				
-				// 2) URL 주소값 변경
-				history.pushState(null, null, "${ contextPath }/attraction/manage.do?page=" + page +
-																				 "&location=" + $(".attraction-location").val() +
-																				 "&status=" + $(".attraction-status").val() +
-																				 "&keyword=" + $("#keyword").val());
+
 			},error:function(){
 				console.log("SELECT ATTRACTION LIST AJAX FAILED");
 			}
-		})
+		});
 		
 	}
 

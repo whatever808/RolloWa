@@ -9,11 +9,10 @@
 	<title>공지사항</title>
 	
 	<!-- 게시글 목록페이지 스타일 -->
-	<link href="${ contextPath }/resources/css/board/list.css" rel="stylesheet" />
+	<link href="${ contextPath }/resources/css/board/board_list.css" rel="stylesheet" />
 	<!-- jQuery UI -->
-	<link rel="stylesheet" href="${ contextPath }/resources/jquery-ui/jquery-ui.css">
-  <script src="${ contextPath }/resources/jquery-ui/external/jquery/jquery.js"></script>
-  <script src="${ contextPath }/resources/jquery-ui/jquery-ui.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+  
 </head>
 <body>
 
@@ -25,7 +24,7 @@
 	
 	     <h1 class="page-title">공지사항</h1>
 	
-		 <!-- about category start  -->
+		   <!-- about category start  -->
 	     <div id="filter-category">
 	     	 <!-- board category start -->
 		     <select id="category" name="category" class="board-category form-select" onchange="categoryChange(this);" style="width:200px;">
@@ -43,7 +42,7 @@
 		     	</c:forEach>
 		     </select>
 	     </div>
-		 <!-- about category end -->
+		 	 <!-- about category end -->
 		 
 	     <!-- about search start -->
 	     <div id="filter-search">
@@ -59,40 +58,18 @@
 		       	<!-- search condition end -->
 		       	
 		        <!-- search keyword start -->
-			    <span class="form-outline" data-mdb-input-init> 
-			        <input type="search" id="keyword" class="form-control" placeholder="게시글 검색" aria-label="게시글 검색"/>
-			    </span>
-			    <!-- search keyword end -->
+				    <span class="form-outline" data-mdb-input-init> 
+				        <input type="search" id="keyword" class="form-control" placeholder="게시글 검색" aria-label="게시글 검색"/>
+				    </span>
+				    <!-- search keyword end -->
 			    
+			    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
 			    <script>
-			    	/*
 			    	$(document).ready(function(){
-			    		 var searchSource = ['엽기떡볶이', '신전떡볶이', '걸작떡볶이', '신당동떡볶이'];
-			    		$("#keyword").autocomplete({
-			    			source: searchSource,	// 자동완성 대상
-			    			select: function(evenet, ui){	// select 이벤트 발생시
-			    				console.log(ui.item);
-			    			},
-			    			focus: function(event, ui){	// focus 이벤트 발생시
-			    				return false;
-			    			},
-			    			minLength: 1,	// 최소 글자 수
-			    			autoFocus: true,	// true : 메뉴에서 첫번째 항목에 자동초점
-			    			class: {	// 윗젯요소에 추가할 클래스
-			    				'ui-autocomplete' : 'highlight'
-			    			},
-			    			delay: 100, // 키워드가 입력되기 시작해서 autocomplete 이벤트 발싱시까지 지연시간(ms)
-			    			disable: false,	// true : 자동완성 기능 꺼짐
-			    			position: {	// 제안메뉴 위치식별
-			    				my : 'right top',
-			    				at : 'right bottom'
-			    			},
-			    			close: function(event){
-			    				console.log(event);
-			    			}
-			    		});
+			    		
+			    		
 			    	});
-			    	*/
+			    	
 			    </script>
 			    
 			    <!-- search button start -->
@@ -241,26 +218,84 @@
 			// 2) "검색 취소" 버튼 활성화
 			$("#reset-search").removeClass("d-none");
 		}	
-	})	
+	});	
 	
 	// 게시글 카테고리값 변경(== 카테고리별 게시글 조회요청) ==============================================================================
 	function categoryChange(option){
 		// 1) 부서 선택 <select> 요소 숨김여부 처리
 		$(option).val() == 'department' ? $("#department").removeClass("d-none")
 												  : $("#department").addClass("d-none")
-														  				  .children("[value=all]").select();
+														  				  		.children("[value=all]").select();
 		// 2) 게시글 목록조회 요청
 		ajaxBoardList();
 	}
 	
-	// 키워드값 입력후 "Enter"를 눌렀을 경우 =========================================================================================
-	$("#keyword").on("keyup", function(){
-		(event.key == 'Enter' || event.code == 'Enter') && searchValidation();
-	})
+
+	
+	// 키워드값 입력시 함수 =========================================================================================
+	$(document).ready(function(){
+		$("#keyword").on("keyup", function(){
+			console.log("키워드 : ", $("#keyword").val());
+			// 자동완성 검색어 리스트 조회 ==================================================================================================
+			$.ajax({
+				url:"${ contextPath }/board/detail/list.ajax",
+				method:"get",
+				async:false,
+				data:{
+					category:$("#category").val(),
+					department:$("#department").val(),
+					condition:$("condition").val(),
+					keyword:$("#keyword").val(),
+				},
+				success:function(boardList){
+					autoList = [];
+					let map = boardList.map(function(board){
+						return board.title;
+					});
+					for(let i=0 ; i<5 ; i++){
+						autoList.push(map[i]);
+					}
+				},error:function(){
+					console.log("SELECT AUTOCOMPLETE BOARD LIST AJAX FAILED");
+				}
+			});
+			
+			// "Enter"를 입력했을 경우
+			(event.key == 'Enter' || event.code == 'Enter') && searchValidation();
+		});
+		
+		// 검색어 자동완성 함수 ======================================================================================================
+		$("#keyword").autocomplete({
+			console.log('자동완성');
+			source: autoList, // 자동완성 검색어 대상	
+			select: function(event, ui){	// item 선택시 이벤트
+				console.log(ui.item);	// {label: '자동완성검색어', value: '자동완성검색어'}
+			},
+			focus: function(event, ui){	// focus 시 이벤트
+				return false;
+			},
+			minLength: 1,	// 최소 글자 수
+			autoFocus: true, 	// true 설정시 자동완성 대상의 첫번째 항목에 자동으로 초점이 맞춰짐
+			classes: {	// 요소에 추가 할 클래스
+				'ui-autocomplete' : 'highlight'
+			},
+			delay: 100,	// 검색창에 값이 입력되고 autocomplete 이벤트 발생시까지 지연시간
+			disable: false,	// true 시, 자동완성 기능 꺼짐
+			position: {
+				my: 'right top',
+				at: 'right bottom',
+			},
+			close: function(event){	// 자동완성 창 종료시 이벤트
+				console.log("자동완성 창 종료 : ", event);
+			}
+		});
+	});
+	
 	// 키워드검색 게시글 목록조회 요청시 입력값 유효성 체크 
 	function searchValidation(){
 		if($("#keyword").val().trim().length == 0){
-			alertify.alert("게시글 목록조회 서비스", "검색어를 입력해주세요.", $("#keyword").select());
+			yellowAlert("검색어를 입력해주세요.", "");
+			$("#keyword").select();
 		}else{
 			// 1) 키워드 검색요청시 "전체" 검색 value값 변경설정
 			$("#condition").children().each(function(){
@@ -305,7 +340,7 @@
 	function ajaxBoardList(){
 		// 1) 요청 페이지값 설정
 		let page = event.target.dataset.pageno == undefined ? 1
-																			 :event.target.dataset.pageno;
+																			 			:event.target.dataset.pageno;
 		
 		// 2) 게시글 목록조회 AJAX
 		$.ajax({

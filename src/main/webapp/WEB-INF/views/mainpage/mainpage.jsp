@@ -10,7 +10,10 @@
 	<title>롤러와</title>
 	
 	<!-- 메인페이지 스타일 -->
-	<link href="${ contextPath }/resources/css/mainPage/mian_page.css" rel="stylesheet">
+	<link href="${ contextPath }/resources/css/mainPage/main_page.css" rel="stylesheet">
+	
+	<!-- fullcalendar -->
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
 </head>
 <body>
 
@@ -74,14 +77,16 @@
                 </div>
                 <!-- profile & attend (main-left-top)-->
 
-                <!-- today's schedule (main-left-bottom)-->
-                <div class="today-schedule">
-                    <h5 class="fw-bold text-end mb-4">오늘의 일정</h5>
-                    <div class="today-schedule-list">
+                <!-- login user list (main-left-bottom)-->
+                <div class="login-user-list-div">
+                    <h5 class="fw-bold text-end mb-4"></h5>
+                    <div class="login-user-list">
 	                    <!-- 부서 일정 목록영역 -->
                     </div>
                 </div>
-                <!-- today's schedule (main-left-bottom)-->
+                <!-- login user list (main-left-bottom)-->
+                
+                
             </div>
             <!-- main-left-end -->
 
@@ -93,22 +98,12 @@
 
                     <h4>근태관리</h4>
                     
-					<c:set var="today" value="<%=new java.util.Date()%>" />
-					<c:set var="sysYear"><fmt:formatDate value="${ today }" pattern="yyyy" /></c:set> 
                     <div class="my-attend-content">
                         <!-- my attend select (left) -->
                         <div class="my-attend-select-div">
-                            <select class="year form-select text-center" name="year">
-                            	<c:forEach var="year" begin="2000" end="${ sysYear }">                            	
-                                	<option value="${ year }">${ year }년</option>
-                            	</c:forEach>
-                            </select>
+                            <select class="year form-select text-center" name="year"></select>
         
-                            <select class="month form-select text-center" name="month">
-                            	<c:forEach var="month" begin="1" end="12">
-	                                <option value="${ month }">${ month }월</option>
-                            	</c:forEach>
-                            </select>
+                            <select class="month form-select text-center" name="month"></select>
                         </div>
                         <!-- my attend select (left) -->
 
@@ -147,47 +142,14 @@
                 </div>
                 <!-- my attendance (main-right-top) -->
                 
-                <!-- alert list start (main-right-middle) -->
-                <div class="alert-list-div">
-                    <h4>알림</h4>
-                    <table class="alert-table table table-hover table-responsive">
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-                    </table>
-                </div>
-                <!-- alert list end (main-right-middle) -->
-
-
-                <!-- notice list start (main-right-bottom) -->
+                <!-- notice list start (main-right-middle) -->
                 <div class="notice-list-div">
                     <h4>공지사항</h4>
                     
                     <div class="notice-category">
-					  <span class="normal">일반공지</span>
-					  <span class="department">부서공지</span>
-					</div>
+										  <span class="normal">일반공지</span>
+										  <span class="department">부서공지</span>
+										</div>
                     
                     <table class="notice-table table table-hover table-responsive">
                     	<tbody class="notice-table-tbody">
@@ -195,9 +157,21 @@
                     	</tbody>
                     </table>
                 </div>
-                <!-- notice list end (main-right-bottom) -->
-            </div>
-            <!-- main-right end-->
+                <!-- notice list end (main-right-middle) -->
+                
+                <!-- calendar (main-right-bottom) -->
+                <div class="calendar-div">
+                    <div class="calendar box">
+											<!-- main calendar -->
+											<jsp:include page="/WEB-INF/views/common/mainCal.jsp" />
+											<div id="calendar"></div>
+										</div>
+                </div>
+                <!-- calendar (main-right-bottom) -->
+
+        	</div>
+        	<!-- main right end -->
+        	        
         </div>
         <!-- main contents end (bottom) -->
         
@@ -279,15 +253,15 @@
 		// 출근체크
 		$(".work-on").on("click", function(){
 			ajaxAttendCheck("출근");
-		})
+		});
 		// 퇴근체크
 		$(".work-off").on("click", function(){
 			ajaxAttendCheck("퇴근");
-		})
+		});
 		// 조퇴체크
 		$(".leave-early").on("click", function(){
 			ajaxAttendCheck("조퇴");
-		})
+		});
 		
 		// 출근/퇴근/조퇴 등록 AJAX
 		function ajaxAttendCheck(requestDetail){
@@ -330,22 +304,46 @@
 					},error:function(){
 						console.log("INSERT ATTENDANCE AJAX FAILED");
 					}
-				})
+				});
 			}
 		}
-	})
+	});
 	
 	// 근태조회 관련 ===================================================================================
 	$(document).ready(function(){
-		const todayDate = new Date();
-		// 오늘날짜의 년도설정
-		$("select[name=year]").children("option").each(function(){
-			$(this).val() == todayDate.getFullYear() && $(this).attr("selected", true);
-		})
-		// 오늘날짜의 월설정
+		const sysdate = new Date();
+		const sysYear = sysdate.getFullYear();
+		const sysMonth = sysdate.getMonth() + 1;
+		
+		// "년" 옵션값 생성 및 설정
+		for(let y=sysYear ; y>=2000 ; y--){
+			$("select[name=year]").append("<option value='" + y + "'>" + y + "년</option>");
+		}
+		// "년" 선택값 변경시
+		$("select[name=year]").on("change", function(){
+			let maxMonth = ($("select[name=year]").val() == sysYear) ? sysMonth : 12;
+			let oldMonth = $("select[name=month]").val();
+			const $monthSelect = $("select[name=month]");
+			
+			$monthSelect.empty();
+			
+			for(let m=1 ; m<=maxMonth ; m++){
+				$monthSelect.append("<option value='" + m + "'>" + m + "월</option>");
+			}
+			
+			$monthSelect.children("option").each(function(){
+				$(this).val() == oldMonth && $(this).attr("selected", true);
+			});
+		});
+		
+		// "월" 옵션값 생성 및 설정
+		for(let m=1 ; m<=sysMonth ; m++){
+			$("select[name=month]").append("<option value='" + m + "'>" + m + "월</option>");
+		}
 		$("select[name=month]").children("option").each(function(){
-			$(this).val() == todayDate.getMonth() + 1 && $(this).attr("selected", true);
-		})
+			$(this).val() == sysMonth && $(this).attr("selected", true);
+		});
+		
 		// 년도별 나의 근태조회
 		$("select[name=year]").on("change", function(){
 			ajaxSelectMyAttend();
@@ -414,34 +412,6 @@
 	     }
     })
     
-    // 오늘일정 관련 =====================================================================================================
-   	$(document).ready(function(){
-   		$.ajax({
-   			url:"${ contextPath }/calendar/todaySchedule.ajax",
-   			method:"get",
-   			data: {
-   				userNo:${ loginMember.userNo }
-   			},
-   			success:function(todayScheduleList){
- 					if(todayScheduleList.length == 0){
- 						$(".today-schedule-list").text("조회된 일정이 없습니다.")
- 																		 .addClass('d-flex justify-content-center align-items-center text-secondary');
- 					}else{
- 						list = "";
- 						for(let i=0 ; i<todayScheduleList.length ; i++){
- 							list += "<div class='schedule mb-2'>";
-							list += 	"<span class='schedule-color me-3' style='background-color: " + todayScheduleList[i].calColor + "'></span>";
-							list += 	"<span class='schedule-title'><b>[" + todayScheduleList[i].calSortName + "]</b>&nbsp;&nbsp;" + todayScheduleList[i].calTitle + "</span>";
-							list += "</div>";
- 						}
- 						$(".today-schedule-list").html(list);
- 					}
-   			},error:function(){
-   				console.log("SELECT TODAY'S SCHEDULE AJAX FAILED");
-   			}
-   		})
-   	})
-	
    	// 공지사항 목록조회 관련 ==========================================================================================================
    	$(document).ready(function(){
 		// 카테고리별 공지사항 목록조회 AJAX
@@ -479,8 +449,8 @@
        			},error:function(){
        				console.log("SELECT NOTICE LIST AJAX FAILED");
        			}
-       		})
-   		})
+       		});
+   		});
    		
    		// 페이지 로딩즉시(요소가 다 생성된 후)
    		$("span.normal").click();
@@ -496,8 +466,37 @@
    			}else{
    				location.href = "${ contextPath }/board/reader/detail.do?no=" + boardNo;
    			}
+   		});
+   	});
+	
+		/* 오늘일정 관련 =====================================================================================================
+   	$(document).ready(function(){
+   		$.ajax({
+   			url:"${ contextPath }/calendar/todaySchedule.ajax",
+   			method:"get",
+   			data: {
+   				userNo:${ loginMember.userNo }
+   			},
+   			success:function(todayScheduleList){
+ 					if(todayScheduleList.length == 0){
+ 						$(".today-schedule-list").text("조회된 일정이 없습니다.")
+ 																		 .addClass('d-flex justify-content-center align-items-center text-secondary');
+ 					}else{
+ 						list = "";
+ 						for(let i=0 ; i<todayScheduleList.length ; i++){
+ 							list += "<div class='schedule mb-2'>";
+							list += 	"<span class='schedule-color me-3' style='background-color: " + todayScheduleList[i].calColor + "'></span>";
+							list += 	"<span class='schedule-title'><b>[" + todayScheduleList[i].calSortName + "]</b>&nbsp;&nbsp;" + todayScheduleList[i].calTitle + "</span>";
+							list += "</div>";
+ 						}
+ 						$(".today-schedule-list").html(list);
+ 					}
+   			},error:function(){
+   				console.log("SELECT TODAY'S SCHEDULE AJAX FAILED");
+   			}
    		})
    	})
+		*/	
   
 </script>
 

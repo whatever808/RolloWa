@@ -17,12 +17,12 @@
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
 	<!-- content 추가 -->
-  	<div class="content m-5">
+  <div class="content m-5">
 
      <h1 class="page-title">어트랙션 조회</h1>
      
      <!-- about search start -->
-	   <div id="filter-search" style="border: 1px solid tomato;">
+	   <div id="filter-search">
 	     	 <!-- search form start-->
 		     <div id="search-form" class="input-group">
 		       	
@@ -57,7 +57,7 @@
 	     
 	     <!-- about location filtering start -->
 	     <div id="map"></div>
-	     <div class="locations d-none"></div>
+	     <div class="search-location-list d-none"></div>
 	     <!-- about location filtering end -->
 		
 	     <!-- attraction list start -->
@@ -65,23 +65,20 @@
 	         <!-- attraction list table start-->
 	         <table class="table table-hover bg-white">
 	             <thead>
-	               <tr class="bg-secondary fw-bold">
+	               <tr class="fw-bold">
 	               	 <th></th>
-	                 <th>어트랙션</th>
-	                 <th>위치</th>
-	                 <th>최대수용인원</th>
-	                 <th>연령제한</th>
-	                 <th>키제한</th>
-	                 <th>
-	                 	<!-- attraction status start -->
-					    <select class="attraction-status form-select d-inline-block" style="width: 150px;">
-					       <option value="">전체</option>
-					       <option value="PENDING">운영예정</option>
-					       <option value="OPERATING">운영중</option>
-					       <option value="STOP">운영중지</option>
-					       <option value="CLOSED">운영종료</option>
-					    </select>
-					    <!-- attraction status end -->
+	                 <th class="attraction-name">어트랙션</th>
+	                 <th class="attraction-location">위치</th>
+	                 <th class="attraction-status">
+		                 	<!-- attraction status start -->
+									    <select class="attraction-status form-select d-inline-block" id="search-status" style="width: 150px;">
+									       <option value="">전체</option>
+									       <option value="PENDING">운영예정</option>
+									       <option value="OPERATING">운영중</option>
+									       <option value="STOP">운영중지</option>
+									       <option value="CLOSED">운영종료</option>
+									    </select>
+									    <!-- attraction status end -->
 	                 </th>
 	               </tr>
 	             </thead>
@@ -89,25 +86,18 @@
 	               <c:choose>
 	               	<c:when test="${ empty attractionList }">
 	               		<tr>
-	               			<td colspan="7">조회된 어트랙션이 없습니다.</td>
+	               			<td colspan="4">조회된 어트랙션이 없습니다.</td>
 	               		</tr>
 	               	</c:when>
 	               	<c:otherwise>
 	               		<c:forEach var="attraction" items="${ attractionList }">
 	               			<tr class="attraction" onclick="showAttractionDetail(${ attraction.attractionNo });">
-	               			   <td class="thumbnail">
-	               				 <img src="${ contextPath }/${ attraction.thumbnailURL }" alt="">
+	               			   <td class="attraction-thumbnail">
+	               				 		<img src="${ contextPath }/${ attraction.thumbnailURL }" alt="">
 	               			   </td>
-			                   <td class="attraction-name-td">${ attraction.attractionName }</td>
-			                   <td>${ attraction.locationName }</td>
-			                   <td>${ attraction.customerLimit }</td>
-			                   <td>
-			                     <c:out value="${ attraction.ageLimit }" />
-			                   </td>
-			                   <td>
-			                     <c:out value="${ attraction.heightLimit }" />
-			                   </td>
-			                   <td>
+			                   <td class="attraction-name">${ attraction.attractionName }</td>
+			                   <td class="attraction-location">${ attraction.locationName }</td>
+			                   <td class="attracction-status">
 			                   	 <c:choose>
 			                   	 	<c:when test="${ attraction.status.equals('PENDING') }">
 				                      <span class="badge badge-secondary rounded-pill d-inline">운영예정</span>
@@ -131,159 +121,80 @@
 	           </table>
 	           <!-- attraction list table end -->
 
-			   <!-- pagination start -->
+			   	 <!-- pagination start -->
 		       <div class="pagination-div">
 		       	 <div class="attraction-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
 	             	<ul class="pagination">
-			          <!-- Previous -->
-				      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
-						  onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '' }">
-				      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
-				      </li>
+				          <!-- Previous -->
+						      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
+								  		onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '' }">
+						      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
+						      </li>
 					    
-					  <!-- Page -->
-					  <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
-					 	 <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
-						    	onclick="${ pageInfo.currentPage != page ? 'ajaxAttractionList();' : '' }">
-						    	<span class="page-link" data-pageno="${ page }">${ page }</span>
-						 </li>
-					  </c:forEach>
+								  <!-- Page -->
+								  <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
+								 	 <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
+									    	onclick="${ pageInfo.currentPage != page ? 'ajaxAttractionList();' : '' }">
+									    	<span class="page-link" data-pageno="${ page }">${ page }</span>
+									 </li>
+								  </c:forEach>
 		    
-					  <!-- Next -->
-					  <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
-					  	  onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : ''}">
-					    <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
-					  </li>
-			  		</ul>
-			     </div>
-		     </div>
+								  <!-- Next -->
+								  <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
+								  	  onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : ''}">
+								    <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
+								  </li>
+			  				</ul>
+			     		</div>
+		     	 </div>
 	         <!-- pagination end -->
-	         
-	         
-	         
-	         	           
-	           
-	           <script>
-   			  	 function showAttractionDetail(attractionNo){
-   			  		$.ajax({
-		  				url:"${ contextPath }/attraction/detail.do",
-		  				method:"get",
-		  				data:{no: attractionNo,},
-		  				success:function(attraction){
-		  					console.log(attraction);
-		  					console.log(attraction.length);
-		  					if(attraction.length == 0){
-		  						yellowAlert("존재하지 않는 어트랙션입니다.", "");
-		  					}else{
-		  						$(".detail-attractionName").text(attraction.attractionName);
-		  						$(".detail-attractionIntro").text(attraction.attractionIntro);
-		  						$(".detail-location").text(attraction.location);
-		  						$(".detail-customerLimit").text(attraction.customerLimit);
-		  						$(".detail-ageLimit").text(attraction.ageLimit != null ? attraction.ageLimit : 'x');
-		  						$(".detail-heightLimit").text(attraction.heightLimit != null ? attraction.heightLimit : 'x');
-		  						
-		  						let status = "";
-		  						let statusColor = "";
-		  						swtich (attraction.status){
-		  							case 'OPERATING' : 
-		  								status = '운영중';
-		  								statusColor = 'badge-success';
-		  								break;
-		  							case 'PENDING' :
-		  								status = '운영예정';
-		  								statusColor = 'badge-secondary';
-		  								break;
-		  							case 'STOP' :
-		  								status = '운영중지';
-		  								statusColor = 'badge-warning';
-		  								$(".detail-statusReason").text('  (  ' + attraction-statusReason + '  )  ');
-		  								break;
-		  							case 'CLOSED' :
-		  								status = '운영종료';
-		  								statusColor = 'badge-danger';
-		  								$(".detail-statusReason").text('  (  ' + attraction-statusReason + '  )  ');
-		  								break;
-		  						}
-		  						$(".detail-status").text(status).addClass(statusColor);
-		  						$("#open-attraction-detail-modal").click();
-		  						// console.log(($(event.target).parents("tr")).hasClass("attraction"));
-		  					}
-		  					
-		  				},error:function(){
-		  					console.log("SELECT ATTRACTION DETAIL AJAX FAILED");
-		  				}
-		  			})
-		  			
-   			  	 }
-   			  </script>
 	         
 	         <!-- attraction detail modal start -->
 	         <button type="button" class="d-none" id="open-attraction-detail-modal" data-izimodal-open="#attraction-detail"></button>
 	         
 	         <div class="attraction-detail-div" id="attraction-detail">
-				  <div class="thumbnail-div">
-				    <img src="">
-				  </div>
+				   <div class="thumbnail-div">
+				    	<img class="detail-thumbnail" src="">
+				   </div>
 				
-				  <div class="attraction-info">
-					    <h3 class="detail-attractionName">바오 하우스</h3>
+				   <div class="attraction-info">
+					    <h3 class="detail-attractionName"></h3>
 					    
-					    <div class="attraction-intro detail-attractionIntro">
-					      바오 하우스에는 실제 판다가 살고 있는 않습니다. 판다월드에서 만나보세요. 바오 하우스에서는 푸바오의 이야기를 만날 수 있어요. 태어난 순간부터의 성장일기, 푸덕이들이 보내준 멋진 팬아트와 푸바오를 돌보는 사육사들의 하루까지 
-					    </div>
+					    <div class="attraction-intro detail-attractionIntro"></div>
 					    
 					    <hr>
 					    
 					    <div class="info-div">
 					       <span class="info-title">위치정보</span>
-					       <span class="info-content detail-location">10명</span>
+					       <span class="info-content detail-location"></span>
 					    </div>
 					    
 					    <div class="info-div">
 					       <span class="info-title">수용인원</span>
-					       <span class="info-content detail-customerLimit">10명</span>
+					       <span class="info-content detail-customerLimit"></span>
 					    </div>
 					    
 					    <div class="info-div">
 					       <span class="info-title">연령제한</span>
-					       <span class="info-content detail-ageLimit">12세 이상</span>
+					       <span class="info-content detail-ageLimit"></span>
 					    </div>
 					    
 					    <div class="info-div">
 					       <span class="info-title">신장제한</span>
-					       <span class="info-content detail-heightLimit">10명</span>
+					       <span class="info-content detail-heightLimit"></span>
 					    </div>
 					    
 					    <div class="info-div">
 					       <span class="info-title">운영상태</span>
 					       <span class="info-content">
-					       	  <span class="detail-status badge rounded-pill d-inline">운영예정</span>
-					       	  <span class="detail-statusReason">( 사고 발생으로 이한 일시 중지 )</span>
+					       	  <span class="detail-status badge rounded-pill d-inline"></span>
+					       	  <span class="detail-statusReason"></span>
 					       </span>
 					    </div>
 					    
 				  </div>
 			 </div>
-	         <!-- attraction detail modal end -->
-		         
-		         <script>
-		         	$('#attraction-detail').iziModal({
-		                title: '<h6>어트랙션 상세조회</h6>',
-		                subtitle: '',
-		                headerColor: '#FEEFAD', // 헤더 색깔
-		                theme: 'light', //Theme of the modal, can be empty or "light".
-		                padding: '15px', // content안의 padding
-		                radius: 10, // 모달 외각의 선 둥글기
-		                group: '',
-		                loop: true,
-		                arrowKeys: true,
-		                navigateCaption: true,
-		                navigateArrows: true,
-		                zindex: 300, // zindex 모달의 화면 우선 순위 입니다. 
-		                focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
-		                restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
-		            });
-		         </script>
+	     <!-- attraction detail modal end -->
 	         
     </div>
     <!-- content 끝 -->
@@ -301,13 +212,6 @@
 	$(document).ready(function(){
 			const urlParams = new URLSearchParams(location.search);
 			
-			// "위치"값이 지정되었을 경우
-			if(urlParams.get("location") != null && urlParams.get("location") != '') {
-				$(".attraction-location").children().each(function(){
-					$(this).val() == urlParams.get("location") && $(this).prop("selected", "true");
-				});
-			}
-			
 			// "상태"값이 지정되었을 경우
 			if(urlParams.get("status") != null && urlParams.get("status") != '') {
 				$(".attraction-status").children().each(function(){
@@ -321,16 +225,7 @@
 			}
 	})
 	
-	// 어트랙션 상세조회 function =====================================================================
-	function showDetail(attractionNo){
-			location.href = "${ contextPath }/attraction/detail.do?no=" + attractionNo;
-	}
-	
 	// 어트랙션 리스트조회 ============================================================================
-	// "위치" 선택값 변경시
-	$(".attraction-location").on("change", function(){
-		ajaxAttractionList();
-	})
 	// "상태" 선택값 변경시
 	$(".attraction-status").on("change", function(){
 		ajaxAttractionList();
@@ -342,7 +237,8 @@
 	// 키워드검색 게시글 목록조회 요청시 입력값 유효성 체크 
 	function searchValidation(){
 		if($("#keyword").val().trim().length == 0){
-			alertify.alert("어트랙션 조회서비스", "검색어를 입력해주세요.", $("#keyword").select());
+			yellowAlert("어트랙션명을 입력해주세요.", "");
+			$("#keyword").select();
 		}else{
 			// 1) 검색값 초기화 버튼 활성화
 			showResetBtn();
@@ -354,9 +250,7 @@
 	}
 	// 검색값 설정값 초기화
 	$("#reset-search").on("click", function(){
-		// 1) 선택값 모두 초기화
-		$(".attraction-location").children().eq(0).prop("selected", "true");
-		$(".attraction-status").children().eq(0).prop("selected", "true");
+		// 1) 검색어 초기화
 		$("#keyword").val("");
 		
 		// 2) "검색 취소" 버튼 비활성화
@@ -374,7 +268,7 @@
 	function ajaxAttractionList(){
 		let page = $(event.target).data("pageno") == undefined ? 1 : $(event.target).data("pageno");
 		let attractionLocations = [];
-		$(".attraction-location").each(function(){
+		$(".search-location").each(function(){
 			attractionLocations.push($(this).val());			
 		});
 		
@@ -384,7 +278,7 @@
 			data:{
 				page: page,
 				locations: attractionLocations,
-				status: $(".attraction-status").val(),
+				status: $("#search-status").val(),
 				keyword: $("#keyword").val().trim()
 			},
 			success:function(data){
@@ -397,23 +291,20 @@
 				// 조회된 어트랙션이 없을 경우
 				if(attractionList.length == 0){
 					list += "<tr>";
-					list += 	"<td colspan='7'>조회된 어트랙션이 없습니다.</td>";
+					list += 	"<td colspan='4'>조회된 어트랙션이 없습니다.</td>";
 					list += "</tr>";
 				}
 				// 조회된 어트랙션이 있을 경우
 				else{
 					// 생성할 리스트 태그 문자열
 					for(let i=0 ; i<attractionList.length ; i++){
-						list += "<tr>";
-						list += 	"<td class='thumbnail'>";
+						list += "<tr class='attraction' onclick='showAttractionDetail(" + attractionList[i].attractionNo + ");'>";
+						list += 	"<td class='attraction-thumbnail'>";
 						list += 		"<img src='${ contextPath }/" + attractionList[i].thumbnailURL + "' alt=''>";
 						list += 	"</td>";
-						list += 	"<td class='attraction-name-td' onclick='showDetail(" + attractionList[i].attractionNo + ");'>" + attractionList[i].attractionName + "</td>";
-						list += 	"<td>" + attractionList[i].locationName + "</td>";
-						list += 	"<td>" + attractionList[i].customerLimit + "</td>";
-						list += 	"<td>" + (attractionList[i].ageLimit == null ? '' : attractionList[i].ageLimit) + "</td>";
-						list += 	"<td>" + (attractionList[i].heightLimit == null ? '' : attractionList[i].heightLimit) + "</td>";
-						list += 	"<td>";
+						list += 	"<td class='attraction-name' onclick='showDetail(" + attractionList[i].attractionNo + ");'>" + attractionList[i].attractionName + "</td>";
+						list += 	"<td class='attraction-location'>" + attractionList[i].locationName + "</td>";
+						list += 	"<td class='attraction-status'>";
 						switch(attractionList[i].status){
 							case 'PENDING' :
 								list += "<span class='badge badge-secondary rounded-pill d-inline'>운영예정</span>";
@@ -454,12 +345,6 @@
 				$("#attraction-list").html(list);
 				$(".attraction-list-pagination").children(".pagination").html(pagination);
 				
-				
-				// 2) URL 주소값 변경
-				history.pushState(null, null, "${ contextPath }/attraction/list.do?page=" + page +
-																				 "&location=" + $(".attraction-location").val() +
-																				 "&status=" + $(".attraction-status").val() +
-																				 "&keyword=" + $("#keyword").val());
 			},error:function(){
 				console.log("SELECT ATTRACTION LIST AJAX FAILED");
 			}
@@ -504,21 +389,23 @@
  				map: map,
  			});
  			bounds.extend(marker.position);	// 마커의 위치 정보를 넘겨줌
- 		
+
  			// 마커클릭시, 보여질 정보성 메세지
  			marker.addListener("click", function(){
  				map.panTo(marker.position);				// 마커를 클릭했을 때, 마커가 있는 위치로 지도의 중심이 이동
  				
+ 				let flag = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+ 				
  				// 조회요청시 전달될 위치값 설정
- 				if(marker.getIcon() == 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'){
+ 				if(marker.getIcon() == flag){
  					marker.setIcon('');
- 					$(".locations").children("input").each(function(){
+ 					$(".search-location-list").children("input").each(function(){
  						$(this).attr("location-name") == marker.label && $(this).remove();
  					});
  					ajaxAttractionList();
  				} else{
- 					marker.setIcon('https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png');
- 					$(".locations").append("<input type='hidden' class='attraction-location' location-name='" + locationName + "' value='" + locationNo + "'>");
+ 					marker.setIcon(flag);
+ 					$(".search-location-list").append("<input type='hidden' class='search-location' location-name='" + locationName + "' value='" + locationNo + "'>");
  					ajaxAttractionList();
  				}
  			
@@ -526,7 +413,74 @@
  		});
  		map.fitBounds(bounds);	// 지도 경계객체를 넘겨주면서 지도 경계조정하기
  	}
-
+	
+	// 어트랙션 상세조회 관련 =========================================================================================================================================
+	$('#attraction-detail').iziModal({	// 상세조회 모달창 설정
+       title: '<h6>어트랙션 상세조회</h6>',
+       subtitle: '',
+       headerColor: '#FEEFAD', // 헤더 색깔
+       theme: 'light', //Theme of the modal, can be empty or "light".
+       padding: '15px', // content안의 padding
+       radius: 10, // 모달 외각의 선 둥글기
+       group: '',
+       loop: true,
+       arrowKeys: true,
+       navigateCaption: true,
+       navigateArrows: true,
+       zindex: 300, // zindex 모달의 화면 우선 순위 입니다. 
+       focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
+       restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
+   });
+	 // 어트랙션 상세조회 AJAX
+	 function showAttractionDetail(attractionNo){
+			$.ajax({
+  				url:"${ contextPath }/attraction/detail.do",
+  				method:"get",
+  				data:{no: attractionNo,},
+  				success:function(attraction){
+  					console.log(attraction);
+  					console.log(attraction.length);
+  					if(attraction.length == 0){
+  						yellowAlert("존재하지 않는 어트랙션입니다.", "");
+  					}else{
+  						$(".detail-thumbnail").attr("src", '${ contextPath }/' + attraction.thumbnailURL);
+  						$(".detail-attractionName").text(attraction.attractionName);
+  						$(".detail-attractionIntro").text(attraction.attractionIntro);
+  						$(".detail-location").text(attraction.locationName);
+  						$(".detail-customerLimit").text(attraction.customerLimit + '명');
+  						$(".detail-ageLimit").text(attraction.ageLimit != null ? attraction.ageLimit : 'x');
+  						$(".detail-heightLimit").text(attraction.heightLimit != null ? attraction.heightLimit : 'x');
+  						
+  						let status = "";
+  						let statusColor = "";
+  						switch (attraction.status){
+  							case 'OPERATING' : 
+  								status = '운영중';
+  								statusColor = 'badge-success';
+  								break;
+  							case 'PENDING' :
+  								status = '운영예정';
+  								statusColor = 'badge-secondary';
+  								break;
+  							case 'STOP' :
+  								status = '운영중지';
+  								statusColor = 'badge-warning';
+  								$(".detail-statusReason").text('  (  ' + attraction.statusReason + '  )  ');
+  								break;
+  							case 'CLOSED' :
+  								status = '운영종료';
+  								statusColor = 'badge-danger';
+  								$(".detail-statusReason").text('  (  ' + attraction.statusReason + '  )  ');
+  								break;
+  						}
+  						$(".detail-status").text(status).addClass(statusColor);
+  						$("#open-attraction-detail-modal").click();
+ 					}
+ 				},error:function(){
+ 					console.log("SELECT ATTRACTION DETAIL AJAX FAILED");
+ 				}
+ 		 })
+	}
 </script>
 
 </html>
