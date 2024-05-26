@@ -55,12 +55,33 @@
             OR (RESERVE_START < TO_DATE(#{selectedDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
             AND RESERVE_END > TO_DATE(#{selectedDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
     ]]>
-</select>
+	</select>
 
+	<insert id="insertReservation">
+		INSERT INTO RESERVATION
+			( 
+			  RESERVE_NO
+			, RESERTVE_MEMO
+			, RESERVE_START
+			, RESERVE_END
+			, USER_NO
+			, EQUIPMEMT_CODE
+			)
+			VALUES
+			(
+			 SEQ_RNO.NEXTVAL
+			 , #{ content }
+			 , #{ startTime }
+			 , #{ endTime }
+			 , #{ userNo }
+			 , (SELECT CODE_NAME 
+			FROM TB_GROUP
+			WHERE GROUP_CODE LIKE 'EQPT%'
+			AND CODE_NAME = #{ selectedEquipmentName })
+			) 
 
-
-
-
-
+	</insert>
+	
+	
 
 </mapper>

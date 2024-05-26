@@ -99,10 +99,10 @@ public class ReservationController {
 	// 예약 하기
 	@PostMapping("/reserve.do")
 	public String reserve(@RequestParam("userName") String userName,
-                          @RequestParam("selectedEquipmentName") String selectedEquipmentName,
-                          @RequestParam("reserveDate") String reserveDate,
-                          @RequestParam("start") String startTime,
-                          @RequestParam("end") String endTime,
+                          @RequestParam("equipmentName") String selectedEquipmentName,
+                          @RequestParam("date") String reserveDate,
+                          @RequestParam("startTime") String startTime,
+                          @RequestParam("endTime") String endTime,
                           @RequestParam("content") String content) {
 
 		log.debug("userName : {}", userName );
@@ -112,8 +112,8 @@ public class ReservationController {
 		log.debug("endTime : {}", endTime );
 		log.debug("content : {}", content );
 	
-	
-        return "/reservation/list.do";
+		return null;
+        //return "/reservation/list.do";
     }
 
 	

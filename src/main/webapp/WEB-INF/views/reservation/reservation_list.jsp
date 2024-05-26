@@ -318,7 +318,7 @@
         </script>
 
         <!-- 비품 예약 모달창 -->
-        <form id="modalForm" action="${ contextPath }/reservation/reserve.do" method="post">
+        <form id="modalForm" method="post">
         
         <div id="modal_reserve">
             <div class="div_modal">
@@ -475,42 +475,44 @@
 		</form>
         
 	<script>
-	    function reserveSubmit() {
-	        const userNo = "${loginMember.userNo}";
-	        const selectedEquipmentName = document.getElementById('selectedEquipmentName').textContent;
-	        const reserveDate = document.getElementById('modal_date').textContent;
-	        const startTime = document.getElementById('start').value;
-	        const endTime = document.getElementById('end').value;
-	        const content = document.getElementById('content').value;
-	
-	        console.log("사용자번호: ", userNo);
-	        console.log("비품명: ", selectedEquipmentName);
-	        console.log("예약일: ", reserveDate);
-	        console.log("예약 시간: ", startTime + " ~ " + endTime);
-	        console.log("내용: ", content);
-	        
-	        $.ajax({
-	            type: "POST",
-	            url: "${ contextPath }/reservation/reserve.do",
-	            data: {
-	                userNo: userNo,
-	                equipmentName: selectedEquipmentName, // 선택한 장비 이름
-	                date: modal_date, // 예약일
-	                startTime: startTime, // 시작 시간
-	                endTime: endTime, // 종료 시간
-	                content: content // 예약 내용
-	            },
-	            success: function(response) {
-	                // 성공적으로 서버에 데이터를 전송한 후 실행할 코드
-	                console.log("예약이 성공적으로 완료되었습니다.");
-	            },
-	            error: function(xhr, status, error) {
-	                // 서버에 데이터를 전송하는 도중 오류가 발생한 경우 실행할 코드
-	                console.error("오류가 발생했습니다:", error);
-	            }
-	        });
-	        
-	    }
+	/*
+    function reserveSubmit() {
+        const userNo = "${loginMember.userNo}";
+        const selectedEquipmentName = document.getElementById('selectedEquipmentName').textContent;
+        const reserveDate = document.getElementById('modal_date').textContent;
+        const startTime = document.getElementById('start').value;
+        const endTime = document.getElementById('end').value;
+        const content = document.getElementById('content').value;
+
+        console.log("사용자번호: ", userNo);
+        console.log("비품명: ", selectedEquipmentName);
+        console.log("예약일: ", reserveDate);
+        console.log("예약 시간: ", startTime + " ~ " + endTime);
+        console.log("내용: ", content);
+        
+        $.ajax({
+            type: "POST",
+            url: "${ contextPath }/reservation/reserve.do",
+            data: {
+                userNo: userNo,
+                equipmentName: selectedEquipmentName,
+                date: modal_date,
+                startTime: startTime,
+                endTime: endTime,
+                content: content
+            },
+            success: function(response) {
+                // 성공적으로 서버에 데이터를 전송한 후 실행할 코드
+                console.log("예약이 성공적으로 완료되었습니다.");
+            },
+            error: function(xhr, status, error) {
+                // 서버에 데이터를 전송하는 도중 오류가 발생한 경우 실행할 코드
+                console.error("오류가 발생했습니다:", error);
+            }
+        });
+        
+    }
+    */
 	</script>
 
 
@@ -526,7 +528,26 @@
                     radius: 10, 
                     zindex:	300,
                     focusInput:	true,
-                    restoreDefaultContent: false, 
+                    restoreDefaultContent: false,
+                    onOpening: function(modal){
+    		            // 모달 열릴 때 실행할 함수
+    		            console.log('모달이 열립니다.');
+    		            let userNo = "${ loginMember.userNo }";
+    		            let userName = "${ loginMember.userName }";
+    		            let userId = "${ loginMember.userId }";
+    		            let equipmentName = $('#modal_reserve').data('equipment-name');
+    		            let currentDate = document.getElementById('currentDate').value;
+    		            
+    		            $('#userName').html('<span>' + userName + '</span><span>(' + userId + ')</span>');
+    		            $('#selectedEquipmentName').text(equipmentName);
+    		            $('#modal_date').text(currentDate);
+    		            
+    		            
+    		        },
+                    onClosing: function(modal) {
+                        // 모달이 닫힐 때 실행할 작업
+                        console.log('모달이 닫힙니다.');
+                    }
                 });
             </script>
 
