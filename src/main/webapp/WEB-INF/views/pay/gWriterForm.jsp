@@ -407,7 +407,7 @@ $(document).ready(function(){
 											 <input type="hidden" name="middleApproval">
 											 <input type="hidden" name="finalApproval">
 		                   <div class="document">
-										        <h1 class="title2">비품 신청서</h1>
+										        <h1 class="title2">기안서</h1>
 										
 										        <div class="header2">
 										            <table>

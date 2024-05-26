@@ -616,7 +616,7 @@ $(document).ready(function(){
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재작성하기</a>
                             </li>
                             <li><a href="${contextPath}/pay/myAllApproval.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">나의전체함</a> 
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">나의 결재함</a> 
                             </li>
                         </ul>
                     </div>

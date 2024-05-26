@@ -519,6 +519,7 @@ $(document).ready(function(){
                 </div>
             </div>
         </div>
+
         
     <c:if test="${ not empty list }">
     <script>

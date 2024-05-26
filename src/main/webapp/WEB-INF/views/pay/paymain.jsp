@@ -13,11 +13,60 @@
     <link href="${ contextPath }/resources/css/pay/paymain.css" rel="stylesheet">
     <style>
     	.input-group-append{border: 1px solid white; background-color: white;}
+		/* 기본 스타일 설정 */
+.custom-select {
+    width: 115px; /* 원하는 너비로 설정 */
+    padding: 6px; /* 내측 여백 */
+    border: 1px solid #3b71ca;
+    border-radius: 11px;
+    background-color: #fff;
+    font-size: 16px; /* 글꼴 크기 */
+    color: #333; /* 글꼴 색상 */
+    -webkit-appearance: none; /* 기본 스타일 제거 (웹킷 브라우저) */
+    -moz-appearance: none; /* 기본 스타일 제거 (모질라 브라우저) */
+    appearance: none; /* 기본 스타일 제거 (기타 브라우저) */
+    cursor: pointer; /* 커서 스타일 */
+}
+
+/* 옵션 스타일 설정 */
+.custom-select option {
+    padding: 10px; /* 내측 여백 */
+    background-color: #fff; /* 배경 색상 */
+    color: #333; /* 글꼴 색상 */
+}
+
+/* 포커스 및 호버 스타일 설정 */
+.custom-select:focus {
+    border-color: #007bff; /* 포커스 시 테두리 색상 */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 포커스 시 그림자 */
+    outline: none; /* 포커스 시 외곽선 제거 */
+}
+
+.custom-select option:hover {
+    background-color: #007bff; /* 호버 시 배경 색상 */
+    color: #fff; /* 호버 시 글꼴 색상 */
+}
+
+/* 화살표 추가를 위한 스타일 설정 */
+.custom-select-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-select::after {
+    content: '▼'; /* 화살표 모양 (유니코드 화살표 사용) */
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none; /* 화살표 클릭 불가능하게 설정 */
+    color: #333; /* 화살표 색상 */
+}
     </style>
 
 </head>
 <body>
-    <c:if test="${not empty paymain or not empty params}">
+    <c:if test="${not empty paymain or not empty params or not empty  searchmain}">
 			<script>
         function typeSelect() {
             location.href = "${contextPath}/pay/selectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
@@ -54,10 +103,10 @@
 		</script>
   </c:if>
   
-  <c:if test="${ not  empty userAllList or not empty userAllListSelect or not empty userSearchList}">
+ 	<c:if test="${ not empty delayDate or not empty delayDateSelect or not empty delayDateSearch}">
   	<script>
 	  	function typeSelect(){
-				location.href="${contextPath}/pay/userSelectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
+				location.href="${contextPath}/pay/delayDateSelectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
 			
 			};
 			
@@ -73,7 +122,7 @@
 		</script>
   </c:if>
   
-    <c:if test="${ not empty userSuccessList or not empty approvalSearch or not empty approvalSelect}">
+  <c:if test="${ not empty userSuccessList or not empty approvalSearch or not empty approvalSelect}">
   	<script>
 	  	function typeSelect(){
 				location.href="${contextPath}/pay/approvalSelectList.do?conditions=" + $("#selects").val() + "&status=" + $("#statusSelect").val();
@@ -250,16 +299,16 @@
                         </div>
                         <div id="cen_bottom_rigth">
                             <div id="cen_bottom_search">
-                                <div id="cen_bottom_search_next">
-                                    <div>
-                                        <select name="status" id="statusSelect">
+                                <div>
+                                    <div class="custom-select-wrapper">
+                                        <select name="status" id="statusSelect" class="custom-select">
                                         		<option value="전체">전체</option>
                                             <option value="보통">보통</option>
                                             <option value="긴급">긴급</option>
                                         </select>
                                     </div>
-                                    <div style="margin-left: 30px;">
-                                        <select name="conditions" id="selects">
+                                    <div style="margin-left: 30px;" class="custom-select-wrapper">
+                                        <select name="conditions" id="selects" class="custom-select">
                                             <option value="전체">전체</option>
                                             <option value="T">퇴직신청서</option>
                                             <option value="C">출장보고서</option>
@@ -275,34 +324,27 @@
                                 <div id="cen_bottom_search_center">
                                 			<c:choose>
                                 				<c:when test="${ not empty userAllList or not empty userAllListSelect or not empty userSearchList}">
-                                					 <form action="${contextPath}/pay/userSearch.do" method="get">
+                                					 <form action="${contextPath}/pay/userSearch.do" method="get" class="searches">
                                 				</c:when>
                                 				<c:when test="${ not empty delayDate or not empty delayDateSelect or not empty delayDateSearch}">
-                                					 <form action="${contextPath}/pay/delayDateSearch.do" method="get">
+                                					 <form action="${contextPath}/pay/delayDateSearch.do" method="get" class="searches">
                                 				</c:when>
                                 				<c:when test="${ not empty userSuccessList or not empty approvalSearch or not empty approvalSelect}">
-                                					 <form action="${contextPath}/pay/approvalSearch.do" method="get">
+                                					 <form action="${contextPath}/pay/approvalSearch.do" method="get" class="searches">
                                 				</c:when>
                                 				<c:otherwise>
-                                     			<form action="${contextPath}/pay/search.do" method="get">
+                                     			<form action="${contextPath}/pay/search.do" method="get" class="searches">
                                 				</c:otherwise>
                                 			</c:choose>
                                 			
                                      		<input type="hidden" name="page" value="1">
-                                    		<div class="input-group mb-3">
-                                        <select name="condition" id="select_search">
-                                            <option value="PAYMENT_WRITER">기안자</option>
-                                            <option value="DEPARTMENT">부서</option>
-                                        </select>
+                                    		<div class="input-group mb-3 custom-select-wrapper" >
+	                                        <select name="condition" id="select_search" class="custom-select">
+	                                            <option value="PAYMENT_WRITER">기안자</option>
+	                                            <option value="DEPARTMENT">부서</option>
+	                                        </select>
                                         <input type="text" name="keyword" value="${ search.keyword }"  id="search_input" class="form-control" placeholder="검색어를 입력하세요" style="width: 400px;">
-                                       
-                                   
-                                     	 <div class="input-group-append">
-                                     		<button type="submit" id="user_mybutton">
-                                       	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" style=" color: rgb(0, 0, 0);">
-                                       	<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                       	</svg>
-                                     		</button>
+                                     	 	<div class="input-group-append">
                                      		</div>
                                      </form>
                                         
@@ -593,25 +635,19 @@
 	</c:choose>
 	
 	<script>
-		$("#my_button").on("click", function(){
-			
-			if($("#search_input").val().trim().length == 0){
-				alert("다시입력해주세요.");
-				return false;
-			}
-			
-		})
-		
-		$("#user_mybutton").on("click", function(){
+	$(document).ready(function(){	
+		$("#search_input").on("keypress", function(){
 				
-			if($("#search_input").val().trim().length == 0){
+			if($(this).val().trim().length == 0){
 				alert("다시입력해주세요.");
 				return false;
+			}else{
+				$(".searches").submit();
 			}
 			
 		})
+	});
 	</script>
-	
 	
 	
 	

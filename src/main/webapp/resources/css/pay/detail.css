@@ -162,3 +162,75 @@ body {
 		display: flex;
     justify-content: space-evenly;
  }
+ .suBtn{
+	 display: none;
+ }
+ .suBtn:hover{
+	 display: none;
+ }
+ 
+ #rejectContentBtn{display: none;}
+ #rej{    
+	 	display: flex;
+	  justify-content: flex-end;
+	  margin: 20px;
+  }
+  .info-table td{width: 100px;}
+ 
+ #rejectContentBtn{display: none;}
+ #rej{    
+	 	display: flex;
+	  justify-content: flex-end;
+	  margin: 20px;
+  }
+  
+ /* 버튼 스타일 */
+.approve-button,
+.reject-button {
+    padding: 10px 20px; /* 내부 여백 */
+    border: none; /* 테두리 없음 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    cursor: pointer; /* 커서 모양 */
+    font-size: 14px; /* 글꼴 크기 */
+    transition: background-color 0.3s; /* 호버 시 부드러운 전환 효과 */
+}
+
+/* 승인 버튼 스타일 */
+.approve-button {
+    background-color: #1685e7; /* 배경 색상 */
+    color: #fff; /* 텍스트 색상 */
+}
+
+/* 반려 버튼 스타일 */
+.reject-button {
+    background-color: #dc4c64; /* 배경 색상 */
+    color: #fff; /* 텍스트 색상 */
+}
+
+/* 호버 시 스타일 */
+.approve-button:hover,
+.reject-button:hover {
+    opacity: 0.8; 
+}
+ 
+ 
+ #rejectContentBtn{display: none;}
+ #rej{    
+	 	display: flex;
+	  justify-content: flex-end;
+	  margin: 20px;
+  }
+  .delete-buttons {
+  	display : none;
+    background-color: #dc3545; /* 배경 색상 */
+    color: #fff; /* 텍스트 색상 */
+    border: none; /* 테두리 없음 */
+    padding: 10px 20px; /* 내부 여백 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    cursor: pointer; /* 마우스 커서 */
+    font-size: 14px; /* 글꼴 크기 */
+}
+
+.delete-buttons:hover {
+    background-color: #c82333; /* 호버 시 배경 색상 변경 */
+}

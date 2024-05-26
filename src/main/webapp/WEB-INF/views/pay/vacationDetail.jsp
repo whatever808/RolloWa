@@ -18,6 +18,35 @@
 		<!-- 기안서 공통 스타일 -->
     <link rel="stylesheet" href="${contextPath}/resources/css/pay/detail.css">
 <style>
+ .suBtn{
+	 display: none;
+	 margin: 10px;
+	 width: 99px;
+   height: 44px;
+   background-color: #3f51b5;
+   color: white;
+   border-radius: 25px;
+   border: none;
+   font-size: 17px;
+ }
+ .suBtn:hover{
+	 display: none;
+	 margin: 10px;
+	 width: 99px;
+   height: 44px;
+   background-color: #3f51b5ba;
+   color: white;
+   border-radius: 25px;
+   border: none;
+   font-size: 17px;
+ }
+ 
+ #rejectContentBtn{display: none;}
+ #rej{    
+	 	display: flex;
+	  justify-content: flex-end;
+	  margin: 20px;
+  }
 </style>
 </head>
 <body>
@@ -71,8 +100,7 @@ $(document).ready(function(){
 	    	        		      	if($("#apDt1").text() == ""){
 	    			        		      $("#apDt1").append(response.sign[0].firstApDt);	
 	    	        		      	}
-	    	        		      	$("#approvalSt").empty();
-														$("#approvalSt").text("승인");
+	    	        		        
 	    	        		    } else if (response.approvalSignNo == 2) {
 	    	        		    	$('#middleSign').children().remove();
 	    		        		    $("#apDt2").children().remove();
@@ -80,8 +108,6 @@ $(document).ready(function(){
 	    	        		      if($("#apDt2").text() == ""){
 	    		        		      $("#apDt2").append(response.sign[0].middleApDt);	
 	            		      	}
-	    	        		      $("#approvalSt").empty();
-													$("#approvalSt").text("승인");
 	    	        		    } else {
 	    	        		    	$('#finalSign').children().remove();
 	    	        		    	$("#apDt3").children().remove();
@@ -89,8 +115,6 @@ $(document).ready(function(){
 	    	        		    	if($("#apDt3").text() == ""){
 	    	        		        $("#apDt3").append(response.sign[0].finalApDt);	        		    		
 	    	        		    	}
-	    	        		    	$("#approvalSt").empty();
-	    										$("#approvalSt").text("승인");	
 	    	        		    }
 	    	        		}
 	    	              
@@ -131,9 +155,7 @@ $(document).on("click", "#rejectBtn", function(){
 						  if($("#apDt1").text() == ""){
 				        	$("#apDt1").append(list[0].firstApDt);	
 		        	}
-						  $("#approvalSt").empty();
-							$("#approvalSt").text("반려");	
-							
+						  $("#modal").iziModal('close');
 				  }else if(list[1].approvalSignNo == "2"){
 					  alert("반려가 완료되었습니다.");
 					  $("#middleSign").children().remove();
@@ -142,9 +164,8 @@ $(document).on("click", "#rejectBtn", function(){
 						  if($("#apDt2").text() == ""){
 		        		$("#apDt2").append(list[0].middleApDt);	
 	    		  	}
-						  $("#approvalSt").empty();
-							$("#approvalSt").text("반려");	
-							
+					  $("#modal").iziModal('close');
+					  
 				  }else{
 					  alert("반려가 완료되었습니다.");
 					  $("#finalSign").children().remove();
@@ -153,14 +174,11 @@ $(document).on("click", "#rejectBtn", function(){
 						  if($("#apDt3").text() == ""){
 		        		$("#apDt3").append(list[0].finalApDt);	
 	    		  	}
-						  $("#approvalSt").empty();
-							$("#approvalSt").text("반려");	
-					 }
-				  $("#modal").iziModal('close');
+					  $("#modal").iziModal('close');
 					  
 				  }
 				
-			  
+			  }
 			  
 		  })
 		  
@@ -184,7 +202,7 @@ $(document).on("click", "#rejectBtn", function(){
                    
 	                 <div class="document-container">
 								      <div class="header">
-								          <h1>비품신청서</h1>
+								          <h1>지출결의서</h1>
 								          <!--버튼 영역-->
 								          <div id="btn_content">
 									        <c:if test="${ not empty list and list.get(0).FINAL_APPROVAL == userName }  ">
@@ -193,8 +211,8 @@ $(document).on("click", "#rejectBtn", function(){
 								             </div>                        	
 								           </c:if>
 								          	<div style="display: flex;">
-								          			<button class="approve-button suBtn" data-izimodal-open="#modal2">승인</button>
-								          			<button class="reject-button suBtn" data-izimodal-open="#modal">반려</button>
+								          			<button class="suBtn" data-izimodal-open="#modal2">승인</button>
+								          			<button class="suBtn" data-izimodal-open="#modal">반려</button>
 								          	</div>
 								         </div>
 								         <!------------>
@@ -264,60 +282,65 @@ $(document).on("click", "#rejectBtn", function(){
                     <th>상태</th>
                     <td>${list.get(0).PAYMENT_STATUS}</td>
                     <th>승인상태</th>
-                    <td id="approvalSt">${list.get(0).DOCUMENT_STATUS == 'I' ? '진행중' : list.get(0).DOCUMENT_STATUS == 'N' ? '반려' : list.get(0).DOCUMENT_STATUS == 'D' ? "대기" : "완료" }
+                    <td>${list.get(0).DOCUMENT_STATUS == 'I' ? '진행중' : list.get(0).DOCUMENT_STATUS == 'N' ? '반려' : list.get(0).DOCUMENT_STATUS == 'D' ? "대기" : "완료" }
                     </td>
+                    
                 </tr>
             </table>
-            <div id="rej">
+            	<div id="rej">
             		<button class="btn btn-danger" data-izimodal-open="#modal3" id="rejectContentBtn">사유 확인</button>
-            </div>
+            	</div>
             <table class="content-table">
                 
                 <tr>
                     <th>제목</th>
-                    <td colspan="5">${ list.get(0).TITLE }</td>
+                    <td colspan="2">${list.get(0).TITLE}</td>
                 </tr>
                  <tr>
-                     <th>품명</th>
-                     <th>규격</th>
-                     <th>수량</th>
-                     <th>단가</th>
-                     <th>가격</th>
-                     <th colspan="2">비고</th>
+                     <th>거래처</th>
+                     <th>사용내역 및 용도</th>
+                     <th>금액</th>
                  </tr>
-                 	<c:forEach var="l" items="${list}">
-                    <tr>
-                        <td>${l.PRODUCT_NAME}</td>
-                        <td>${l.PRODUCT_SIZE}</td>
-                        <td>${l.QUANTITY}</td>
-                        <td>${l.UNIT_PRICE}</td>
-                        <td>${l.PRICE}</td>
-                        <td>${l.NOTE}</td>
-                    </tr> 			
-                  </c:forEach>
-                  <tr>
-	                    <th colspan="3">합계</th>
-	                    <td colspan="3">${list.get(0).TOTAL_SUM}</td>
-	                </tr>
-	                <tr>
-		                  <th colspan="3">기타</th>
-		                  <td colspan="3">${list.get(0).ETC_CONTENT}</td>
-		               </tr>
+								 <c:forEach var="l" items="${list}">
+                   <tr>
+                       <td>${l.ACCOUNT}</td>
+                       <td>${l.CONTENT}</td>
+                       <td>${l.AMOUNT}</td>
+                   </tr> 			
+	                 </c:forEach>
+	                  <tr>
+	                    <th colspan="2">합계</th>
+	                    <td colspan="4">${list.get(0).SUM}</td>
+		                </tr>
+		                <tr>
+		                    <th colspan="2">부가가치세</th>
+		                    <td colspan="4">${list.get(0).VAT}</td>
+		                </tr>
+		                <tr>
+		                    <th colspan="2">총 지출 합계</th>
+		                    <td colspan="4">${list.get(0).TOTAL_SUM}</td>
+		                </tr>
+		                <tr>
+                    <th colspan="2">파일 첨부</th>
+                    	<td colspan="4">
+                    		<c:forEach var="at" items="${ fileList }">
+												<a href="${contextPath}${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${at.ORIGIN_NAME}">${at.ORIGIN_NAME}</a><br>
+												</c:forEach>
+										</td>
+                		</tr>
             </table>
 					        </div>
 					      			<div id="modifybtn">
 					           			<button class="btn btn-warning" id="modifyWriter" type="submit" style="display: none;">수정</button>
 					          			<button class="btn btn-primary" onclick="submitbtn();" style="display: none;" id="aproS">완료</button>
 					          	</div>
-					          	<div style="display: flex; justify-content: flex-end;">
-					          			<button class="delete-buttons" id="deldo">삭제</button>
-					          	</div>
 					 				</div> 
                 </div>
             </div>
         </div>
         
-       <!-------------- 승인싸인 모달창 ------------->
+        
+        <!-------------- 승인싸인 모달창 ------------->
         <div id="modal2">
 		        <div class="m_content_style"  >
 		        <canvas id="signature" width="600" height="200"></canvas>
@@ -350,53 +373,31 @@ $(document).on("click", "#rejectBtn", function(){
 		    </div>
 		    <!---------------------------------------------->
 		    
-    <script>
-		   $(document).ready(function() {
-		   		if("${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}"){
-		   			$(".delete-buttons").css("display", "block");
-		   		}
-			   
-		   })
-		   
+		
+		    
+		<script>
+				function submitbtn() {
+				    if (confirm('결재을 완료하시겠습니까?')) {
+				        $(".rejects").each(function () {
+			            if ($(this).text() == '반려') {
+			                $(".suBtn").css("display", "none");
+			            }
+				        });
+				        alert("결재가 완료되었습니다.");
+			          history.back();
+				    }
+				}
+		
+				function successbtn() {
+				    if (confirm("결재를 최종승인 하시겠습니까?")) {
+				        alert("최종승인이 완료되었습니다.");
+				    }
+				}
     </script>
-    <script>
-    $(document).ready(function() {
-        $("#deldo").on("click", function(){
-            var isDeletable = "${ list.get(0).DOCUMENT_STATUS == 'D' && userNo == list.get(0).PAYMENT_WRITER_NO }";
-            if(isDeletable == 'true') {
-            	
-                if(confirm("정말로 삭제하시겠습니까?")) {
-                    $.ajax({
-                        url: "${contextPath}/pay/ajaxApprovaldelete.do",
-                        type: "GET",
-                        data: {
-                            no: "${list.get(0).APPROVAL_NO}"
-                        },
-                        success: function(response) {
-                        	 if(response == "SUCCESS") {
-                                 alert("삭제가 완료되었습니다.");
-                                 history.back();
-                                 setTimeout(function() {
-                                     location.reload();
-                                 }, 1); 
-                             } else {
-                                 alert("삭제에 실패했습니다.");
-                             }
-                        },
-                        error: function() {
-                            console.log("ajax 통신 오류");
-                        }
-                    });
-                }
-                
-            } else {
-                alert("결재가 진행된 상태이므로 삭제가 불가능합니다.");
-            }
-        });
-    });
-    </script>
+		    
+	
         
-   <script>
+    <script>
     $(document).ready(function() {
     
         if ("${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}") {
@@ -420,16 +421,17 @@ $(document).on("click", "#rejectBtn", function(){
          	 "${list.get(0).MIDDLE_APPROVAL}" == "${userName}" ||
          	 "${list.get(0).FINAL_APPROVAL}" == "${userName}" ){
          	$("#aproS").css("display", "block");
-        }	
+     	  }	
         
-        if("${list.get(0).CANCELLATION_CONTENT}" != "" && "${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}"){
-    			$("#rejectContentBtn").css("display", "block");
-        }	
+        var content = "${list.get(0).CANCELLATION_CONTENT.trim()}";
+        if( content != "" && "${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}"){
+					$("#rejectContentBtn").css("display", "block");
+		    }	
         	
         
     });
     </script>
-    
+        
     <script>
        $('#modal3').iziModal({
            title: '반려(철회)된 사유.',
@@ -446,9 +448,9 @@ $(document).on("click", "#rejectBtn", function(){
            $('#modal3').iziModal('open'); // 모달을 출현
 
        });
-    </script>
-        
-        
+    </script>	    
+		
+		
 		<script>
        $('#modal').iziModal({
            title: '반려사유를 작성해주세요.',
@@ -466,6 +468,7 @@ $(document).on("click", "#rejectBtn", function(){
 
        });
     </script>	
+    
     <script>
        $('#modal2').iziModal({
            title: '싸인',
@@ -488,16 +491,16 @@ $(document).on("click", "#rejectBtn", function(){
     
     $("#modifyWriter").on("click", function(){
     	
-    	let writerNo = '${ not empty list and list.get(0).DOCUMENT_STATUS == "D" and userNo == list.get(0).PAYMENT_WRITER_NO }';
+    	let writerNo = "${ not empty list and list.get(0).FIRST_APPROVAL_DATE == null and userNo == list.get(0).PAYMENT_WRITER_NO }";
     	
     	if(writerNo == "true"){
 	    	 	if(confirm('수정하시겠습니까?')){
 						alert("작성페이지로 이동합니다.");
-							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).FIX_NO} 
+							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).DRAFT_NO} 
 																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
 																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
 																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
-																									 			+ "&report=b";
+																									 			+ "&report=j";
 	    		}
     	}else{
     		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
@@ -506,25 +509,9 @@ $(document).on("click", "#rejectBtn", function(){
     })
     </script>
     
-    <script>
-				function submitbtn() {
-					if (confirm('결재을 완료하시겠습니까?')) {
-				        $(".rejects").each(function () {
-			            if ($(this).text() == '반려') {
-			                $(".suBtn").css("display", "none");
-			            }
-				        });
-				        alert("결재가 완료되었습니다.");
-			          history.back();
-				    }
-				}
-		
-				function successbtn() {
-				    if (confirm("결재를 최종승인 하시겠습니까?")) {
-				        alert("최종승인이 완료되었습니다.");
-				    }
-				}
-    </script>
+    
+
+  
         
         
         

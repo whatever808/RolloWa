@@ -469,4 +469,15 @@ public class PayService {
 	}
 	
 	
+	public int ajaxAppprovaldelete(String no){
+		return payDao.ajaxAppprovaldelete(no);
+	}
+	
+	public int mySearchApCount(Map<String, Object> map){
+		return payDao.mySearchApCount(map);
+	}
+	
+	public List<Map<String, Object>> mySearchApList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.mySearchApList(map, pi);
+	}
 }
