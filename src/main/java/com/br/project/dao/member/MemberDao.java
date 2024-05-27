@@ -62,6 +62,14 @@ public class MemberDao {
 	public Map<String, Object> selectMemberForMainPage(MemberDto member){
 		return sqlSessionTemplate.selectOne("memberMapper.selectMemberForMainPage", member);
 	}
-	
+
 	/* ======================================= "가림" 구역 ======================================= */
+	
+	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 start ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+	// 사이드바(구성원 관리) 관리자만 표시 하기
+	public Map<String, Object> selectAuthLevel(int userNo) {
+		return sqlSessionTemplate.selectOne("memberMapper.selectAuthLevel", userNo);
+	}
+	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+	
 }

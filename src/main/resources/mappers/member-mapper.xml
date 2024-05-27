@@ -184,4 +184,14 @@
  
  <!-- ======================================= "가림" 구역 ======================================= -->
  
+	 <!-- ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 start ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆-->
+	 <!-- 사이드바(구성원 관리) 관리자만 표시 하기 -->
+	<select id="selectAuthLevel" parameterType="MemberDto" resultType="map">
+		select auth_level AS "authLevel"
+		  from member
+		 where user_no = #{ userNo }
+	</select>
+ 	<!-- ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆-->
+ 
+ 
 </mapper>

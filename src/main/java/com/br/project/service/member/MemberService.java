@@ -61,6 +61,14 @@ public class MemberService {
 	public Map<String, Object> selectMemberForMainPage(MemberDto member){
 		return memberDao.selectMemberForMainPage(member);
 	}
-	
 	/* ======================================= "가림" 구역 ======================================= */
+	
+	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 start ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+	// 사이드바(구성원 관리) 관리자만 표시 하기
+	public Map<String, Object> selectAuthLevel(int userNo) {
+		return memberDao.selectAuthLevel(userNo);
+	}
+	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+	
+	
 }

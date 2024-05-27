@@ -505,7 +505,7 @@ $(document).ready(function(){
               </script>
               <!-- ======================================= "가림" 구역 end ======================================= -->
 
-                <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
+				<!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#org-collapse" aria-expanded="false">
@@ -526,7 +526,32 @@ $(document).ready(function(){
                     </div>
                 </li>
                 
-                <li class="mb-1">
+                <script>
+                $(document).ready(function(){
+                    $.ajax({
+                        url:"${ contextPath }/member/selectAuthLevel.do",
+                        method:"GET",
+                        data:{ userNo: "${ loginMember.userNo }" },
+                        dataType: "json",
+                        success:function(result){
+                        	//console.log("통신 성공");
+                        	//console.log("result : ", result);
+                        	let authLevel = result.authLevel;
+                        	if (authLevel == 1 || authLevel == 2) {
+                        		$('.onlyManagerShow').show();
+                        		//console.log("구성원 보임 성공");
+                        	} else {
+                        		$('.onlyManagerShow').hide();
+                        		//console.log("구성원 안 보임 성공");
+                        	}
+                        }, error:function(){
+                        	//console.log("통신 실패");
+                        }
+                      })
+                  })
+                </script>
+                
+                <li class="mb-1 onlyManagerShow">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#mem-collapse" aria-expanded="false">
                         구성원 관리
