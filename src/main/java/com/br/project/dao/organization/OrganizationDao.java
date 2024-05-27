@@ -80,6 +80,14 @@ public class OrganizationDao {
 		return sqlSessionTemplate.selectList("organizationMapper.selectAccountDetail", userNo);
 	}
 
+	/* 수정중 */
+    public int countEmployeesInDepartment(String departmentName) {
+        return sqlSessionTemplate.selectOne("organization.countEmployeesInDepartment", departmentName);
+    }
+    public int countEmployeesInTeam(String teamName) {
+        return sqlSessionTemplate.selectOne("organization.countEmployeesInTeam", teamName);
+    }
+
 	
 	
 }

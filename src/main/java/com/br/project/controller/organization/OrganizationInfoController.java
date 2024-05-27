@@ -3,6 +3,7 @@ package com.br.project.controller.organization;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -144,14 +145,32 @@ public class OrganizationInfoController {
 	public List<Map<String, Object>> addDepartment(@RequestBody List<Map<String, Object>> departmentData) {
 	    // departmentData를 받아서 처리하고, 필요에 따라 출력
 	    
+		/*
 		for (Map<String, Object> department : departmentData) {
 	        log.debug("부서명: {}", department.get("departmentName"));
 	        List<String> teams = (List<String>) department.get("teams");
 	        log.debug("소속 팀: {}", teams);
 	    }
+	    */
+		
+		// 직원이 속한 팀 또는 부서가 있는지 확인
+		for (Map<String, Object> department : departmentData) {
+	        String departmentName = (String) department.get("departmentName");
+	        if (organizationService.hasEmployeesInDepartment(departmentName)) {
+	            throw new RuntimeException("부서에 속한 직원이 있습니다. 삭제할 수 없습니다.");
+	        }
+	        List<String> teams = (List<String>) department.get("teams");
+	        for (String teamName : teams) {
+	            if (organizationService.hasEmployeesInTeam(teamName)) {
+	                throw new RuntimeException("팀에 속한 직원이 있습니다. 삭제할 수 없습니다.");
+	            }
+	        }
+	    }
+		
+        return departmentData;
 		
 	    // 받은 데이터를 그대로 반환하여 클라이언트로 전송
-	    return departmentData;
+	    //return departmentData;
 	}
 
 	
