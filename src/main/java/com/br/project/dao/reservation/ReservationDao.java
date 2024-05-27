@@ -7,9 +7,6 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.br.project.dao.organization.OrganizationDao;
-import com.br.project.dto.reservation.ReservationDto;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +28,15 @@ public class ReservationDao {
 	// 예약 출력 dao
 	public List<HashMap<String, Object>> selectReservationState(Map<String, Object> paramMap) {
 		return sqlSessionTemplate.selectList("reservationMapper.selectReservationState", paramMap);
+	}
+	
+	// 1. 먼저 예약 가능한지 시간 체크하기
+	public int selectTimeCheck(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.selectOne("reservationMapper.selectTimeCheck", paramMap);
+	}
+	// 2. 예약 하기
+	public int insertReservation(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.insert("reservationMapper.insertReservation", paramMap);
 	}
 	
 	

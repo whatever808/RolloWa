@@ -56,31 +56,44 @@
             AND RESERVE_END > TO_DATE(#{selectedDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
     ]]>
 	</select>
-
-	<insert id="insertReservation">
-		INSERT INTO RESERVATION
-			( 
-			  RESERVE_NO
-			, RESERTVE_MEMO
-			, RESERVE_START
-			, RESERVE_END
-			, USER_NO
-			, EQUIPMEMT_CODE
-			)
-			VALUES
-			(
-			 SEQ_RNO.NEXTVAL
-			 , #{ content }
-			 , #{ startTime }
-			 , #{ endTime }
-			 , #{ userNo }
-			 , (SELECT CODE_NAME 
-			FROM TB_GROUP
-			WHERE GROUP_CODE LIKE 'EQPT%'
-			AND CODE_NAME = #{ selectedEquipmentName })
-			) 
-
-	</insert>
+	
+	<!-- 1. 예약 가능한지 시간 체크 -->
+	<select id="selectTimeCheck" resultType="_int">
+	    <![CDATA[
+	    SELECT COUNT(*)
+	    FROM RESERVATION
+	    WHERE EQUIPMENT_CODE = (SELECT CODE FROM TB_GROUP WHERE CODE_NAME = #{equipmentName})
+	    AND (
+	        (RESERVE_START >= TO_DATE(#{reserveDate} || ' ' || #{startTime}, 'YYYY-MM-DD HH24:MI:SS') AND RESERVE_START < TO_DATE(#{reserveDate} || ' ' || #{endTime}, 'YYYY-MM-DD HH24:MI:SS'))
+	        OR
+	        (RESERVE_END > TO_DATE(#{reserveDate} || ' ' || #{startTime}, 'YYYY-MM-DD HH24:MI:SS') AND RESERVE_END <= TO_DATE(#{reserveDate} || ' ' || #{endTime}, 'YYYY-MM-DD HH24:MI:SS'))
+	        OR
+	        (RESERVE_START < TO_DATE(#{reserveDate} || ' ' || #{startTime}, 'YYYY-MM-DD HH24:MI:SS') AND RESERVE_END > TO_DATE(#{reserveDate} || ' ' || #{endTime}, 'YYYY-MM-DD HH24:MI:SS'))
+	    )
+	    ]]>
+	</select>
+	
+	<!-- 2. 예약 하기 -->
+	<insert id="insertReservation" parameterType="map">
+    INSERT INTO
+    	   RESERVATION (
+    	   RESERVE_NO
+    	 , RESERVE_MEMO
+    	 , RESERVE_START
+    	 , RESERVE_END
+    	 , USER_NO
+    	 , EQUIPMENT_CODE
+    	 )
+    SELECT SEQ_RNO.NEXTVAL
+    	 , #{content}
+    	 , TO_DATE(#{reserveDate} || ' ' || #{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+    	 , TO_DATE(#{reserveDate} || ' ' || #{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+    	 , #{userNo}
+    	 , CODE
+      FROM TB_GROUP
+     WHERE GROUP_CODE LIKE 'EQPT%'
+       AND CODE_NAME = #{equipmentName}
+</insert>
 	
 	
 

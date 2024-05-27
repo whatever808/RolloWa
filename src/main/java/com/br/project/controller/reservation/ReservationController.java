@@ -8,22 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
-import com.br.project.dto.reservation.ReservationDto;
 import com.br.project.service.reservation.ReservationService;
 import com.br.project.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import oracle.jdbc.clio.annotations.Debug;
 
 
 // 3. 예약 관련 controller
@@ -96,23 +92,45 @@ public class ReservationController {
 		return mv;
 	}
 	
-	// 예약 하기
-	@PostMapping("/reserve.do")
-	public String reserve(@RequestParam("userName") String userName,
-                          @RequestParam("equipmentName") String selectedEquipmentName,
-                          @RequestParam("date") String reserveDate,
-                          @RequestParam("startTime") String startTime,
-                          @RequestParam("endTime") String endTime,
-                          @RequestParam("content") String content) {
-
-		log.debug("userName : {}", userName );
-		log.debug("selectedEquipmentName : {}", selectedEquipmentName );
+	// 비품 예약 하기
+	
+	@ResponseBody
+	@RequestMapping("/reserve.do")
+	public Map<String, Object> insertReservation(@RequestParam ("userNo") int userNo,
+			@RequestParam ("equipmentName") String equipmentName,
+			@RequestParam ("reserveDate") String reserveDate,
+			@RequestParam ("startTime") String startTime,
+			@RequestParam ("endTime") String endTime,
+			@RequestParam ("content") String content){
+	
+		/*
+        log.debug("userNo: {}", userNo);
+		log.debug("selectedEquipmentName : {}", equipmentName );
 		log.debug("reserveDate : {}", reserveDate );
 		log.debug("startTime : {}", startTime );
 		log.debug("endTime : {}", endTime );
 		log.debug("content : {}", content );
-	
-		return null;
+		*/
+		
+		// 1. 먼저 예약 가능한지 시간 체크하기
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("userNo", userNo);
+		paramMap.put("equipmentName", equipmentName);
+		paramMap.put("reserveDate", reserveDate);
+		paramMap.put("startTime", startTime);
+		paramMap.put("endTime", endTime);
+		paramMap.put("content", content);
+		
+		
+		int timeCheck = reservationService.selectTimeCheck(paramMap);
+		if (timeCheck > 0) {
+			paramMap.put("success", false);
+	    } else {
+	    	int result = reservationService.insertReservation(paramMap);
+	    }
+		
+		
+		return paramMap;
         //return "/reservation/list.do";
     }
 

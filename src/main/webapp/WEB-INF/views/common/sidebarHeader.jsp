@@ -519,7 +519,7 @@ $(document).ready(function(){
                             <li>
                             	<a href="${ contextPath }/organization/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
                             </li>
-                            <li>
+                            <li class="onlyManagerShow">
                             	<a href="${ contextPath }/organization/manager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
                             </li>
                         </ul>
@@ -587,7 +587,7 @@ $(document).ready(function(){
                             <li>
                             	<a href="${ contextPath }/reservation/myList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">내 예약 조회</a>
                             </li>
-                            <li>
+                            <li class="onlyManagerShow">
                             	<a href="${ contextPath }/reservation/reManager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 관리</a>
                             </li>
                         </ul>
