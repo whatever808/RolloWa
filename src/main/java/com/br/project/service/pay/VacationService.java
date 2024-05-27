@@ -127,5 +127,11 @@ public class VacationService {
 		return vacationDao.RRequest(vacation);
 	}
 
+	/**
+	 * @return
+	 */
+	public int updateYearLabor() {
+		return vacationDao.updateYearLabor();
+	}
 	
 }

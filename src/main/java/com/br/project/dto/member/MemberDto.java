@@ -34,11 +34,14 @@ public class MemberDto {
 	private String modifyDate;
 	private int modifyUserNo;
 	private String status;
-	private int vacationCount;
 	private int authLevel;
 	private int salary;
 	private String teamCode;
 	private String positionCode;
 	private String position;
+	private int vacationCount;
+	private String givenDate;
+	private String yearLabor;
+	private String usingDate;
 	
 }

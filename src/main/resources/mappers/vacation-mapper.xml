@@ -170,5 +170,13 @@ order by VACATION_NO desc
 		where
 			VACATION_NO = #{vacaNO}
 	</update>
+	
+	<update id="updateYearLabor">
+	update member a
+	set YEAR_LABOR = (select 
+                  	abs(extract(year from ENROLL_DATE)  - extract(year from sysdate)) 
+                  	from member b
+                  	where a.user_no = b.user_no)
+	</update>
 
 </mapper>

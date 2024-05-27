@@ -45,6 +45,10 @@ public class VacationDao {
 	public int RRequest(VacationDto vacation) {
 		return sqlSession.update("vacationMapper.RRequest", vacation);
 	}
+
+	public int updateYearLabor() {
+		return sqlSession.update("vacationMapper.updateYearLabor");
+	}
 	
 	
 	

@@ -77,6 +77,12 @@ public class AttendanceService {
 	 * 퇴근/조퇴 등록(수정)
 	 */
 	public int updateMemberAttend(HashMap<String, Object> params) {
+		
+		/*======================== 예찬 ===========================*/
+	
+		
+		/*======================== 예찬 ===========================*/
+		
 		return attendanceDao.updateMemberAttend(params);
 	}
 	
