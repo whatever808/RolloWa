@@ -15,6 +15,7 @@
 	<result column="BANK_ACCOUNT" property="bankAccount"/>
 	<result column="BANK" property="bank"/>
 	<result column="EMAIL" property="email"/>
+	<result column="ENROLL_DATE" property="enrollDate"/>
 	<result column="PROFILE_URL" property="profileURL"/>
 	<result column="COUNT_FAIL" property="countFail"/>
 	<result column="VACATION_COUNT" property="vacationCount"/>
@@ -28,7 +29,7 @@
   <!--  회원 로그인  -->
   <select id="memberLogin" resultMap="memberResult">
   	select
-  		user_no, user_name, user_id, user_pwd, team_code, POSITION_CODE, profile_url
+  		user_no, user_name, user_id, user_pwd, team_code, POSITION_CODE, profile_url, ENROLL_DATE
   	from
   		member
   	where
