@@ -20,33 +20,12 @@
 <style>
  .suBtn{
 	 display: none;
-	 margin: 10px;
-	 width: 99px;
-   height: 44px;
-   background-color: #3f51b5;
-   color: white;
-   border-radius: 25px;
-   border: none;
-   font-size: 17px;
  }
  .suBtn:hover{
 	 display: none;
-	 margin: 10px;
-	 width: 99px;
-   height: 44px;
-   background-color: #3f51b5ba;
-   color: white;
-   border-radius: 25px;
-   border: none;
-   font-size: 17px;
  }
  
- #rejectContentBtn{display: none;}
- #rej{    
-	 	display: flex;
-	  justify-content: flex-end;
-	  margin: 20px;
-  }
+
 </style>
 </head>
 <body>
@@ -313,7 +292,7 @@ $(document).on("click", "#rejectBtn", function(){
                  		<th colspan="4" style="text-align: center">사유</th>
                  </tr>
                   <tr>
-                      <td colspan="4">${list.get(0).RETIRE_CONTENT}</td>
+                      <td colspan="4" style="height:400px;">${list.get(0).RETIRE_CONTENT.trim()}</td>
                   </tr>
             </table>
 					        </div>
@@ -386,10 +365,7 @@ $(document).on("click", "#rejectBtn", function(){
                         success: function(response) {
                         	 if(response == "SUCCESS") {
                                  alert("삭제가 완료되었습니다.");
-                                 history.back();
-                                 setTimeout(function() {
-                                     location.reload();
-                                 }, 1); 
+                                 location.href = document.referrer; 
                              } else {
                                  alert("삭제에 실패했습니다.");
                              }
@@ -503,11 +479,11 @@ $(document).on("click", "#rejectBtn", function(){
     	if(writerNo == "true"){
 	    	 	if(confirm('수정하시겠습니까?')){
 						alert("작성페이지로 이동합니다.");
-							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).FIX_NO} 
+							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).RETIRE_NO} 
 																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
 																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
 																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
-																									 			+ "&report=b";
+																									 			+ "&report=h";
 	    		}
     	}else{
     		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
@@ -525,13 +501,7 @@ $(document).on("click", "#rejectBtn", function(){
 			            }
 				        });
 				        alert("결재가 완료되었습니다.");
-			          history.back();
-				    }
-				}
-		
-				function successbtn() {
-				    if (confirm("결재를 최종승인 하시겠습니까?")) {
-				        alert("최종승인이 완료되었습니다.");
+				        location.href = document.referrer; 
 				    }
 				}
     </script>

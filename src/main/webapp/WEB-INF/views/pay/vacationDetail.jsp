@@ -372,7 +372,39 @@ $(document).on("click", "#rejectBtn", function(){
 		        </div>
 		    </div>
 		    <!---------------------------------------------->
-		    
+		<script>
+    $(document).ready(function() {
+        $("#deldo").on("click", function(){
+            var isDeletable = "${ list.get(0).DOCUMENT_STATUS == 'D' && userNo == list.get(0).PAYMENT_WRITER_NO }";
+            if(isDeletable == 'true') {
+            	
+                if(confirm("정말로 삭제하시겠습니까?")) {
+                    $.ajax({
+                        url: "${contextPath}/pay/ajaxApprovaldelete.do",
+                        type: "GET",
+                        data: {
+                            no: "${list.get(0).APPROVAL_NO}"
+                        },
+                        success: function(response) {
+                        	 if(response == "SUCCESS") {
+                                 alert("삭제가 완료되었습니다.");
+                                 location.href = document.referrer; 
+                             } else {
+                                 alert("삭제에 실패했습니다.");
+                             }
+                        },
+                        error: function() {
+                            console.log("ajax 통신 오류");
+                        }
+                    });
+                }
+                
+            } else {
+                alert("결재가 진행된 상태이므로 삭제가 불가능합니다.");
+            }
+        });
+    });
+    </script>   
 		
 		    
 		<script>
@@ -384,13 +416,7 @@ $(document).on("click", "#rejectBtn", function(){
 			            }
 				        });
 				        alert("결재가 완료되었습니다.");
-			          history.back();
-				    }
-				}
-		
-				function successbtn() {
-				    if (confirm("결재를 최종승인 하시겠습니까?")) {
-				        alert("최종승인이 완료되었습니다.");
+				        location.href = document.referrer; 
 				    }
 				}
     </script>

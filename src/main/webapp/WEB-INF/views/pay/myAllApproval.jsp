@@ -74,17 +74,17 @@
     }
     
     .pending {
-        background-color: #ffc107;
+        background-color: #e91e6387;
     }
     .completes {
-        background-color: #28a745;
+        background-color: #F44336;
     }
     .progresses {
-        background-color: #007bff;
+        background-color: #3F51B5;;
     }
     /* 추가적인 배지 상태에 대한 스타일 */
     .rejected {
-        background-color: #dc3545;
+        background-color: #FF9800;;
     }
     
     #cen_bottom_pagging{
@@ -189,6 +189,10 @@
     background-color: #003f7f;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+.pagination li{padding: 6px 12px;}
+.pagination a : hover{
+background-color : #FEEFAD
+};
 </style>
 </head>
 <body>
@@ -222,12 +226,15 @@ $(document).ready(function() {
         $("#btnSearch").val("ALL");
         loadPageAll(1);
     });
+});
 
-    $(document).on('click', '.pages-linka', function(e) {
-        e.preventDefault();
-        var page = $(this).data('page');
-        loadPageAll(page);
-    });
+
+$(document).on('click', '.pages-linka', function(e) {
+    e.preventDefault();
+    var page = parseInt($(this).data('page'));
+    if (page > 0) {
+        loadPageSearch(page);
+    }
 });
 
 function loadPageAll(page) {
@@ -284,7 +291,7 @@ function loadPageAll(page) {
 								    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-linka" data-page="' + p + '">' + p + '</a></li>');
 								}
 
-								ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linka" data-page="' + (response.pi.currentPage + 1) + '">▷</a></li>');
+								ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linka" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
 					}else {
 						var row = '<tr>' +
                '<td>존재하는 게시글이 없습니다.</td>' +
@@ -313,13 +320,14 @@ $(document).ready(function() {
         $("#btnSearch").val("Y");
     		loadPageCompletes(1);
     });
+});
 
-    // 페이지 네비게이션 클릭 이벤트
-    $(document).on('click', '.pages-linkc', function(e) {
-        e.preventDefault();
-        var page = $(this).data('page');
-        loadPageCompletes(page);
-    });
+$(document).on('click', '.pages-linkc', function(e) {
+    e.preventDefault();
+    var page = parseInt($(this).data('page'));
+    if (page > 0) {
+        loadPageSearch(page);
+    }
 });
 
 function loadPageCompletes(page) {
@@ -375,7 +383,7 @@ function loadPageCompletes(page) {
 							    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-linkc" data-page="' + p + '">' + p + '</a></li>');
 							}
 
-							ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linkc" data-page="' + (response.pi.currentPage + 1) + '">▷</a></li>');
+							ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linkw" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
 				}else {
 					 var row = '<tr>' +
                '<td colspan="7">존재하는 게시글이 없습니다.</td>' +
@@ -407,13 +415,14 @@ $(document).ready(function() {
         $("#btnSearch").val("D");
         loadPageWait(1);
     });
+});
 
-    // 페이지 네비게이션 클릭 이벤트
-    $(document).on('click', '.pages-linkw', function(e) {
-        e.preventDefault();
-        var page = $(this).data('page');
-        loadPageWait(page);
-    });
+$(document).on('click', '.pages-linkw', function(e) {
+    e.preventDefault();
+    var page = parseInt($(this).data('page'));
+    if (page > 0) {
+        loadPageSearch(page);
+    }
 });
 
 function loadPageWait(page) {
@@ -422,7 +431,7 @@ function loadPageWait(page) {
         method: 'GET',
         data: { page: page },
         success: function(response) {
-            console.log(response);
+            console.log(response.pi);
 
             var tbody = $('#tStatus');
             tbody.empty();
@@ -463,14 +472,14 @@ function loadPageWait(page) {
 								
 								var ul = $('.pagination');
 								ul.empty(); 
-
+								
 								ul.append('<li class="page-item ' + ((response.pi.currentPage == 1 ) ? 'disabled' : '') + '"><a class="pages-linkw" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
 
 								for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
 								    ul.append('<li class="page-item ' + ((response.pi.currentPage == p) ? 'disabled' : '') + '"><a class="pages-linkw" data-page="' + p + '">' + p + '</a></li>');
 								}
 
-								ul.append('<li class="page-item ' + ((response.pi.currentPage === response.pi.maxPage) ? 'disabled' : '') + '"><a class="pages-linkw" data-page="' + (response.pi.currentPage + 1) + '">▷</a></li>');
+								ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linkw" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
 								}else {
 									 var row = '<tr>' +
 				               '<td colspan="7">존재하는 게시글이 없습니다.</td>' +
@@ -502,12 +511,17 @@ $(document).ready(function() {
     });
 });
 
-//페이지 네비게이션 클릭 이벤트
+
 $(document).on('click', '.pages-linkr', function(e) {
     e.preventDefault();
     var page = parseInt($(this).data('page'));
-    loadPageReject(page);
+    if (page > 0) {
+        loadPageSearch(page);
+    }
 });
+
+
+
 
 		function loadPageReject(page) {
 			
@@ -544,27 +558,27 @@ $(document).on('click', '.pages-linkr', function(e) {
 			        }
 			
 			        var row = '<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.APPROVAL_NO  + '&documentNo=' + item.DOCUMENT_NUMBER + '&documentType=' + item.DOCUMENT_TYPE + '&payWriter=' + item.PAYMENT_WRITER + '&payWriterNo=' + item.PAYMENT_WRITER_NO + '">' +
-						                '<td><span class="badge ' + documentStatusClass + '">' + item.DOCUMENT_STATUS + '</span></td>' +
-						                '<td>' + item.TITLE + attachmentIcon + '</td>' +
-						                '<td>' + item.DOCUMENT_TYPE + '</td>' +
+				                '<td><span class="badge ' + documentStatusClass + '">' + item.DOCUMENT_STATUS + '</span></td>' +
+				                '<td>' + item.TITLE + attachmentIcon + '</td>' +
+				                '<td>' + item.DOCUMENT_TYPE + '</td>' +
 				                '<td>' + item.PAYMENT_WRITER + '</td>' +
 				                '<td>' + item.DEPARTMENT + '</td>' +
 				                '<td>' + item.REGIST_DATE + '</td>' +
 				                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
 				                '</tr>';
-	
+			
 	       			 tbody.append(row);
 			        });
 							var ul = $('.pagination');
 							ul.empty(); 
 	
-							ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
-	
+							ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + (response.pi.currentPage == 1 ? 0 : response.pi.currentPage - 1) + '">◁</a></li>');
+							
 							for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
 							    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + p + '">' + p + '</a></li>');
 							}
 	
-							ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + (response.pi.currentPage + 1) + '">▷</a></li>');
+							ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
 							
 							}else {
 								 var row = '<tr>' +
@@ -603,13 +617,15 @@ $(document).ready(function() {
     loadPageProgresses(1);
 });
 
-  
- 
+});
+
+
 $(document).on('click', '.pages-linkp', function(e) {
     e.preventDefault();
     var page = parseInt($(this).data('page'));
-    loadPageProgresses(page);
-});
+    if (page > 0) {
+        loadPageSearch(page);
+    }
 });
 
 function loadPageProgresses(page) {
@@ -660,13 +676,13 @@ function loadPageProgresses(page) {
 								var ul = $('.pagination');
 								ul.empty(); 
 
-								ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
+								ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-linkp" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
 
 								for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-								    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + p + '">' + p + '</a></li>');
+								    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-linkp" data-page="' + p + '">' + p + '</a></li>');
 								}
 
-								ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + (response.pi.currentPage + 1) + '">▷</a></li>');
+								ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linkp" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
 								
 								}else {
 									 var row = '<tr>' +
@@ -692,17 +708,19 @@ $(document).ready(function() {
     		 loadPageSearch(1);
       }
     });
-
-    $(document).on('click', '.pages-linki', function(e) {
-        e.preventDefault();
-        var page = parseInt($(this).data('page'));
-        loadPageSearch(page);
-    });
-    
+		
 });
 
+$(document).on('click', '.pages-linki', function(e) {
+    e.preventDefault();
+    var page = parseInt($(this).data('page'));
+    if (page > 0) {
+        loadPageSearch(page);
+    }
+});
+	
+
 	 function loadPageSearch(page) {
-		 
 	        var option = $("#select_search").val();
 	        var statusType = $("#btnSearch").val();
 					var keyword = $("#searchInput").val();
@@ -723,7 +741,8 @@ $(document).ready(function() {
             
 									if(Array.isArray(response.list) && response.list.length > 0){
 							
-									response.list.forEach(function(item) {
+										response.list.forEach(function(item) {
+		                console.log(item);
 		                var documentStatusClass = '';
 		                if (item.DOCUMENT_STATUS === '반려') {
 		                    documentStatusClass = 'rejected';
@@ -734,14 +753,14 @@ $(document).ready(function() {
 		                } else if (item.DOCUMENT_STATUS === '대기') {
 		                    documentStatusClass = 'pending';
 		                }
-		
+
 		                var attachmentIcon = '';
 		                if (item.SALES_STATUS + item.DRAFT_STATUS + item.BUSINESSTRIP_STATUS > 0) {
 		                    attachmentIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
 		                                     '<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>' +
 		                                     '</svg>';
 		                }
-		
+
 		                var row = '<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.APPROVAL_NO  + '&documentNo=' + item.DOCUMENT_NUMBER + '&documentType=' + item.DOCUMENT_TYPE + '&payWriter=' + item.PAYMENT_WRITER + '&payWriterNo=' + item.PAYMENT_WRITER_NO + '">' +
 							                '<td><span class="badge ' + documentStatusClass + '">' + item.DOCUMENT_STATUS + '</span></td>' +
 							                '<td>' + item.TITLE + attachmentIcon + '</td>' +
@@ -751,49 +770,35 @@ $(document).ready(function() {
 							                '<td>' + item.REGIST_DATE + '</td>' +
 							                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
 							                '</tr>';
-		               
-							     tbody.append(row);
-									 });
-									 var ul = $('.pagination');
-									    ul.empty();
 
-									    var prevPageDisabled = response.pi.currentPage == 1 ? 'disabled' : '';
-									    var nextPageDisabled = response.pi.currentPage == response.pi.maxPage ? 'disabled' : '';
+		                tbody.append(row);
+						        });
+										var ul = $('.pagination');
+										ul.empty(); 
 
-									    ul.append('<li class="page-item ' + prevPageDisabled + '"><a class="pages-linki" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
+										ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-linki" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
 
-									    for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-									        var currentPageDisabled = response.pi.currentPage == p ? 'disabled' : '';
-									        ul.append('<li class="page-item ' + currentPageDisabled + '"><a class="pages-linki" data-page="' + p + '">' + p + '</a></li>');
-									    }
+										for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
+										    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-linki" data-page="' + p + '">' + p + '</a></li>');
+										}
 
-									    ul.append('<li class="page-item ' + nextPageDisabled + '"><a class="pages-linki" data-page="' + (response.pi.currentPage + 1) + '">▷</a></li>');
-		             } else {
-		                 var row = '<tr>' +
-		                            '<td colspan="7">존재하는 게시글이 없습니다.</td>' +
-		                            '</tr>';
-		                 tbody.append(row);
-		                 var ul = $('.pagination');
-		                 ul.empty();
-		             }
+										ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linki" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
+										
+										}else {
+											 var row = '<tr>' +
+			                           '<td colspan="7">존재하는 게시글이 없습니다.</td>' +
+			                           '</tr>';
+											 tbody.append(row);
+											 var ul = $('.pagination');
+											 ul.empty();
+										}
 		          },
 		          error: function(xhr, status, error) {
 		              console.log("AJAX request failed");
-		          }
-	            
-	            
-	            
-	            
-	            
+		          } 
 	        });
+	        
 	  }
-			
-	    	
-          
-	    
-	
-
-   
 </script>
 
 

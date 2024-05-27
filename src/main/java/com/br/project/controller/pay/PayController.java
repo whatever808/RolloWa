@@ -525,7 +525,7 @@ public class PayController {
 	}
 	
 	@RequestMapping("/modify.do")
-	public String mModify(@RequestParam Map<String, Object> map, Model model
+	public String modify(@RequestParam Map<String, Object> map, Model model
 						  , HttpSession session) {
 		
 		//기존에 작성된 데이터값들

@@ -179,9 +179,8 @@
 }
 #cen_bottom_search_next{display: flex; justify-content: space-around;}
 
-#select_search{
-    height: 35px;
-    margin-bottom: 16px;
+#select_search {
+    height: 40px;
 }
 
 #cen_bot_table{width: auto;text-align: center;}

@@ -385,13 +385,8 @@ $(document).on("click", "#rejectBtn", function(){
                         },
                         success: function(response) {
                         	 if(response == "SUCCESS") {
-                                 alert("삭제가 완료되었습니다.");
-                                 history.back();
-                                 setTimeout(function() {
-                                     location.reload();
-                                 }, 1); 
-                             } else {
-                                 alert("삭제에 실패했습니다.");
+                                alert("삭제가 완료되었습니다.");
+                                location.href = document.referrer; 
                              }
                         },
                         error: function() {
@@ -416,7 +411,7 @@ $(document).on("click", "#rejectBtn", function(){
 			            }
 				        });
 				        alert("결재가 완료되었습니다.");
-			          history.back();
+				        location.href = document.referrer; 
 				    }
 				}
 		

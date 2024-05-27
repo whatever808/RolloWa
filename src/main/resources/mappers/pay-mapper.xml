@@ -1085,6 +1085,7 @@
    <insert id="hReportApprovalInsert">
    	   INSERT
 			    INTO APPROVAL
+			    
 			    (
 			      APPROVAL_NO
 			    , DOCUMENT_NUMBER

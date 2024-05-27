@@ -14,55 +14,41 @@
     <style>
     	.input-group-append{border: 1px solid white; background-color: white;}
 		/* 기본 스타일 설정 */
-.custom-select {
-    width: 115px; /* 원하는 너비로 설정 */
-    padding: 6px; /* 내측 여백 */
-    border: 1px solid #3b71ca;
-    border-radius: 11px;
-    background-color: #fff;
-    font-size: 16px; /* 글꼴 크기 */
-    color: #333; /* 글꼴 색상 */
-    -webkit-appearance: none; /* 기본 스타일 제거 (웹킷 브라우저) */
-    -moz-appearance: none; /* 기본 스타일 제거 (모질라 브라우저) */
-    appearance: none; /* 기본 스타일 제거 (기타 브라우저) */
-    cursor: pointer; /* 커서 스타일 */
-}
 
-/* 옵션 스타일 설정 */
-.custom-select option {
-    padding: 10px; /* 내측 여백 */
-    background-color: #fff; /* 배경 색상 */
-    color: #333; /* 글꼴 색상 */
-}
-
-/* 포커스 및 호버 스타일 설정 */
-.custom-select:focus {
-    border-color: #007bff; /* 포커스 시 테두리 색상 */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 포커스 시 그림자 */
-    outline: none; /* 포커스 시 외곽선 제거 */
-}
-
-.custom-select option:hover {
-    background-color: #007bff; /* 호버 시 배경 색상 */
-    color: #fff; /* 호버 시 글꼴 색상 */
-}
-
-/* 화살표 추가를 위한 스타일 설정 */
 .custom-select-wrapper {
-    position: relative;
-    display: inline-block;
+    display: flex;
+    align-items: center;
 }
 
-.custom-select::after {
-    content: '▼'; /* 화살표 모양 (유니코드 화살표 사용) */
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    pointer-events: none; /* 화살표 클릭 불가능하게 설정 */
-    color: #333; /* 화살표 색상 */
+.custom-select {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    width: 111px;
 }
-    </style>
+
+#search_input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-left: none;
+    flex: 1; /* 검색 입력 필드가 가능한 넓게 차지하도록 합니다 */
+}
+
+.input-group-append .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.input-group {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.custom-select,
+#search_input,
+.input-group-append .btn {
+    height: 40px; /* 높이를 동일하게 설정 */
+    padding: 8px 12px;
+}
+</style>
 
 </head>
 <body>
@@ -216,17 +202,7 @@
 
                     <div id="cen_bottom">
                         <div id="cen_bottom_left">
-                            <a href="">
-                                <div class="cen_bottom_left_div">
-                                    <div>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16" style="color: black;">
-                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                        </svg>
-                                    </div>
-                                    <div><b>퇴직신청서</b></div>
-                                </div>
-                            </a>
+                        		<a href="${contextPath}/payment/payment.page">결제페이지</a>
                             <a href="${contextPath}/pay/writerForm.page?writer=b">
                                 <div class="cen_bottom_left_div">
                                     <div>
@@ -284,7 +260,7 @@
                                     <div><b>휴직신청서</b></div>
                                 </div>
                             </a>
-                            <a href="">
+                            <a href="${ contextPath }/vacation/vacation.page">
                                 <div class="cen_bottom_left_div">
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-clipboard-heart" viewBox="0 0 16 16" style="color: black;">
@@ -401,134 +377,134 @@
                                    <c:choose>
                                    	<c:when test="${ not empty params }">
                                    		<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/selectList.do?page=${pi.currentPage-1}&conditions=${params.conditions}&status=${params.status}">Previous</a></li>
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/selectList.do?page=${pi.currentPage-1}&conditions=${params.conditions}&status=${params.status}">◁</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/selectList.do?page=${p}&conditions=${params.conditions}&status=${params.status}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/selectList.do?page=${pi.currentPage+1}&conditions=${params.conditions}&status=${params.status}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/selectList.do?page=${pi.currentPage+1}&conditions=${params.conditions}&status=${params.status}">▷</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:when test="${ not empty paymain }">
                                    		<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${pi.currentPage-1}">Previous</a></li>
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${pi.currentPage-1}">◁</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${p}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${pi.currentPage+1}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/paymain.page?page=${pi.currentPage+1}">▷</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:when test="${not empty userAllList}">
                                    		<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/allUserlist.do?page=${pi.currentPage-1}">Previous</a></li>
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/allUserlist.do?page=${pi.currentPage-1}">◁</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/allUserlist.do?page=${p}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/allUserlist.do?page=${pi.currentPage+1}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/allUserlist.do?page=${pi.currentPage+1}">▷</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:when test="${not empty userAllListSelect }">
                                 			<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSelectList.do?page=${pi.currentPage-1}&conditions=${map.conditions}&status=${map.status}">Previous</a></li>
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSelectList.do?page=${pi.currentPage-1}&conditions=${map.conditions}&status=${map.status}">◁</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSelectList.do?page=${p}&conditions=${map.conditions}&status=${map.status}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSelectList.do?page=${pi.currentPage+1}&conditions=${map.conditions}&status=${map.status}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSelectList.do?page=${pi.currentPage+1}&conditions=${map.conditions}&status=${map.status}">▷</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:when test="${not empty userSearchList }">
                                 			<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">Previous</a></li>
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">◁</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${p}&condition=${map.condition}&keyword=${map.keyword}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">▷</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:when test="${ not empty userSuccessList }">
                                    		<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvedList.do?page=${pi.currentPage-1}">Previous</a></li>
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvedList.do?page=${pi.currentPage-1}">◁</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvedList.do?page=${p}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvedList.do?page=${pi.currentPage+1}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvedList.do?page=${pi.currentPage+1}">▷</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:when test="${ not empty delayDate }">
                                    		<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateList.do?page=${pi.currentPage-1}">Previous</a></li>
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateList.do?page=${pi.currentPage-1}">◁</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateList.do?page=${p}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateList.do?page=${pi.currentPage+1}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateList.do?page=${pi.currentPage+1}">▷</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:when test="${ not empty delayDateSelect }">
                                    		<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSelectList.do?page=${pi.currentPage-1}&conditions=${map.conditions}&status=${map.status}">Previous</a></li>
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSelectList.do?page=${pi.currentPage-1}&conditions=${map.conditions}&status=${map.status}">◁</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSelectList.do?page=${p}&conditions=${map.conditions}&status=${map.status}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSelectList.do?page=${pi.currentPage+1}&conditions=${map.conditions}&status=${map.status}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSelectList.do?page=${pi.currentPage+1}&conditions=${map.conditions}&status=${map.status}">▷</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:when test="${not empty delayDateSearch }">
 													             <ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">Previous</a></li>
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">◁</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSearch.do?page=${p}&condition=${map.condition}&keyword=${map.keyword}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/delayDateSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">▷</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:when test="${not empty approvalSearch }">
                                 			<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">Previous</a></li>
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">◁</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalSearch.do?page=${p}&condition=${map.condition}&keyword=${map.keyword}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">▷</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:when test="${ not empty approvalSelect }">
                                    		<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalSelectList.do?page=${pi.currentPage-1}&conditions=${map.conditions}&status=${map.status}">Previous</a></li>
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalSelectList.do?page=${pi.currentPage-1}&conditions=${map.conditions}&status=${map.status}">◁</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalSelectList.do?page=${p}&conditions=${map.conditions}&status=${map.status}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalSelectList.do?page=${pi.currentPage+1}&conditions=${map.conditions}&status=${map.status}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalSelectList.do?page=${pi.currentPage+1}&conditions=${map.conditions}&status=${map.status}">▷</a></li>
 													             </ul>
                                    	</c:when>
                                    	<c:otherwise>
                                    		<ul class="pagination">
-		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">Previous</a></li>
+		                                    <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage-1}&condition=${map.condition}&keyword=${map.keyword}">◁</a></li>
 													                
 													                <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													                 	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${p}&condition=${map.condition}&keyword=${map.keyword}">${ p }</a></li>
 													                </c:forEach>
 													                
-													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">Next</a></li>
+													                <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/userSearch.do?page=${pi.currentPage+1}&condition=${map.condition}&keyword=${map.keyword}">▷</a></li>
 													             </ul>
                                    	</c:otherwise>
                                    </c:choose>

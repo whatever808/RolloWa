@@ -21,33 +21,11 @@
 <style>
  .suBtn{
 	 display: none;
-	 margin: 10px;
-	 width: 99px;
-   height: 44px;
-   background-color: #3f51b5;
-   color: white;
-   border-radius: 25px;
-   border: none;
-   font-size: 17px;
  }
  .suBtn:hover{
 	 display: none;
-	 margin: 10px;
-	 width: 99px;
-   height: 44px;
-   background-color: #3f51b5ba;
-   color: white;
-   border-radius: 25px;
-   border: none;
-   font-size: 17px;
  }
  
- #rejectContentBtn{display: none;}
- #rej{    
-	 	display: flex;
-	  justify-content: flex-end;
-	  margin: 20px;
-  }
 </style>
 </head>
 <body>
@@ -194,6 +172,7 @@ $(document).on("click", "#rejectBtn", function(){
 				  }
 				
 			  }
+			  
 			  
 		  })
 		  
@@ -395,12 +374,7 @@ $(document).on("click", "#rejectBtn", function(){
                         success: function(response) {
                         	 if(response == "SUCCESS") {
                                  alert("삭제가 완료되었습니다.");
-                                 history.back();
-                                 setTimeout(function() {
-                                     location.reload();
-                                 }, 1); 
-                             } else {
-                                 alert("삭제에 실패했습니다.");
+                                 location.href = document.referrer;  
                              }
                         },
                         error: function() {
@@ -536,7 +510,7 @@ $(document).on("click", "#rejectBtn", function(){
 			            }
 				        });
 				        alert("결재가 완료되었습니다.");
-			          history.back();
+				        location.href = document.referrer; 
 				    }
 				}
 		

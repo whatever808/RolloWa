@@ -408,7 +408,7 @@ public class PayDao {
 	}
 	
 	public int mySearchApCount(Map<String, Object> map){
-		return sqlSessionTemplate.update("payMapper.mySearchApCount", map);
+		return sqlSessionTemplate.selectOne("payMapper.mySearchApCount", map);
 	}
 	
 	public List<Map<String, Object>> mySearchApList(Map<String, Object> map, PageInfoDto pi){
