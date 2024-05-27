@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -179,26 +180,33 @@ public class AttractionController {
 	@RequestMapping("/modify.do")
 	public String modifyAttraction(MultipartHttpServletRequest request, RedirectAttributes redirectAttributes) {
 		try {
-			// 기존 업로드 대표이미지 삭제
-			int idx = request.getParameter("oldThumbnailURL").lastIndexOf("/");
-			String oldThumbnailFileName = request.getParameter("oldThumbnailURL").substring(idx + 1);
-			String oldThumbnailFilePath = request.getParameter("oldThumbnailURL").substring(0 ,idx);
-			new File(oldThumbnailFilePath, oldThumbnailFileName).delete();
-			
+			// 파라미터값
 			HashMap<String, Object> params = getParameterMap(request);
 			MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
 			params.put("modifyEmp", loginMember.getUserNo());
-			params.put("thumbnailURL", fileUtil.getFileUrl(request.getFile("thumbnail"), "attraction"));
+			params.put("thumbnailURL", request.getParameter("oldThumbnailURL"));
+			
+			// 신규 업로드 대표이미지 저장
+			MultipartFile newThumbnail = request.getFile("thumbnail");
+			String newThumbnailURL = null;
+			if(newThumbnail != null) {
+				newThumbnailURL = fileUtil.getFileUrl(newThumbnail, "attraction");
+				params.put("thumbnailURL", newThumbnailURL);				
+			}
 			
 			if(attractionService.updateAttraction(params) > 0) {
 				redirectAttributes.addFlashAttribute("modalColor", "G");
 				redirectAttributes.addFlashAttribute("alertMsg", "어트랙션 정보가 수정되었습니다.");
-				return "redirect:/attraction/manage/list/do";
+				return "redirect:/attraction/manage/list.do";
 			}else {
+				if(newThumbnailURL != null) {
+					new File(newThumbnailURL).delete();
+				}
 				redirectAttributes.addFlashAttribute("modalColor", "R");
 				redirectAttributes.addFlashAttribute("alertMsg", "어트랙션 정보수정에 실패했습니다.");
 				return "redirect:" + request.getHeader("Referer");
 			}
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("modalColor", "R");
@@ -207,6 +215,7 @@ public class AttractionController {
 		}finally {
 			redirectAttributes.addFlashAttribute("alertTitle", "어트랙션 수정서비스");
 		}
+		
 	}
 	
 	/**

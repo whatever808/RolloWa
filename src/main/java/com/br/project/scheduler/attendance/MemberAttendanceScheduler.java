@@ -49,6 +49,9 @@ public class MemberAttendanceScheduler {
 				attendanceService.insertVacationOrDayOffMemberAttend(params);
 			}
 		}
+		
+		// 당일 조퇴/퇴근 미처리 사용자 퇴근처리
+		
 	}
 	
 }

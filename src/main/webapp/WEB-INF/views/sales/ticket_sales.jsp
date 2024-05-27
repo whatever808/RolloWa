@@ -1,55 +1,22 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${ pageContext.request.contextPath }" />
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>매출관리</title>
-
-    <!-- bootstrap -->
-    <link href="../../../resources/css/common/bootstrap.min.css" rel="stylesheet">
-
-    <!-- fontawesome -->
-    <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
-
-    <!-- Google Fonts Roboto -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
-
-    <!-- Google Fonts Jua -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-
- 		<!-- socket 통신을 위한 js -->
-    <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-    <!-- jQuery -->
-    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-    <!-- 모달 관련 -->
-    <script src="${ contextPath }/resources/js/iziModal.min.js"></script>
-    <link rel="stylesheet" href="${ contextPath }/resources/css/iziModal.min.css">
-
-    <!-- 체크박스 관련 스타일 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
-    
-    <!-- alertify -->
-     <script src="${ contextPath }/resources/alertify/js/alertify.min.js"></script>
-		 <link href="${contextPath}/resources/alertify/css/alertify.min.css" rel="stylesheet">
-		 <link href="${contextPath}/resources/alertify/css/default.min.css" rel="stylesheet">
-		 <link href="${contextPath}/resources/alertify/css/semantic.min.css" rel="stylesheet">
-
-    <!-- css -->
-    <link href="../../../resources/css/common/sidebars.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../../resources/css/common.css">
-    <link rel="stylesheet" href="../../../resources/css/common/mdb.min.css" />
-
-    <link href="../../../resources/css/sales/ticket_sales.css" rel="stylesheet">
+	<meta charset="UTF-8">
+	<title>이용권 매출관리</title>
+	
+	<!-- 이용권 매출관리 스타일 -->
+	<link href="${ contextPath }/resources/css/sales/ticket_sales.css" rel="stylesheet">
 </head>
 <body>
-    
-    <!-- content 추가 -->
+
+	<!-- side bar -->
+	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
+	
+	<!-- content 추가 -->
     <div class="content p-5">
 
         <!-- management page start -->
@@ -192,6 +159,9 @@
     
     </div>
     <!-- content 끝 -->
-
+	
+	<!-- chat floating -->
+	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />
+	
 </body>
 </html>

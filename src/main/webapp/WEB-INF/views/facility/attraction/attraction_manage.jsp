@@ -17,7 +17,7 @@
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
 	<!-- content 추가 -->
-  <div class="content m-5">
+  	<div class="content m-5">
 
      <h1 class="page-title">어트랙션 관리</h1>
 
@@ -55,76 +55,10 @@
 	     </div>
 	     <!-- about search end -->
 	     
-	     <!-- about location filtering start -->
-	     <div id="map"></div>
-	     <div class="search-location-list d-none"></div>
-	   	 <!-- about location filtering end -->
-	   	 
-	   	 <!-- Googel Map 스크립트 -->
-			 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfeL19x8FxIk3SsSNFLKuL9N_1w9pAs24&callback=initMap"></script>
-	   	 <script>
-	   	 		// 구글맵 관련 ====================================================================================
-	   	 		function initMap (){
-				 		// 지도생성 및 설정
-				 		const map = new google.maps.Map(document.getElementById("map"), {
-				 			center: {lat: 35.636033359, lng: 139.878632426 },	// 초기값의 위도, 경도 설정
-				 			zoom: 12,	// 지도 가까운 정도
-				 		});
-				 		
-				 		// 어트랙션 위치 리스트조회
-				 		$.ajax({
-				 			url:"${ contextPath }/attraction/location/list.ajax",
-				 			method:"get",
-				 			async:false,
-				 			success:function(locationList){
-				 				locations = locationList;	// 놀이공원 위치목록
-				 			},error:function(){
-				 				console.log("SELECT LOCATION LIST AJAX FAILED");
-				 			}
-				 		});
-				 		
-				 		const bounds = new google.maps.LatLngBounds();		// 마커 위치표시를 위한 객체
-				 		const infoWindow = new google.maps.InfoWindow();	// 마커 클릭시 보여질 정보창 객체
-				 		
-				 		locations.forEach(function(location){
-				 			let locationNo = location.locationNo;
-				 			let locationName = location.locationName;
-				 			let latitude = parseFloat(location.latitude);
-				 			let longitude = parseFloat(location.longitude);
-				 			let mapMark = location.mapMark;
-				 			
-				 			// 마커생성 및 설정
-				 			const marker = new google.maps.Marker({
-				 				position: { lat: latitude, lng: longitude },
-				 				label: locationName,
-				 				map: map,
-				 			});
-				 			bounds.extend(marker.position);	// 마커의 위치 정보를 넘겨줌
-				
-				 			// 마커클릭시, 보여질 정보성 메세지
-				 			marker.addListener("click", function(){
-				 				map.panTo(marker.position);				// 마커를 클릭했을 때, 마커가 있는 위치로 지도의 중심이 이동
-				 				
-				 				let flag = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-				 				
-				 				// 조회요청시 전달될 위치값 설정
-				 				if(marker.getIcon() == flag){
-				 					marker.setIcon('');
-				 					$(".search-location-list").children("input").each(function(){
-				 						$(this).attr("location-name") == marker.label && $(this).remove();
-				 					});
-				 					ajaxAttractionList();
-				 				} else{
-				 					marker.setIcon(flag);
-				 					$(".search-location-list").append("<input type='hidden' class='search-location' location-name='" + locationName + "' value='" + locationNo + "'>");
-				 					ajaxAttractionList();
-				 				}
-				 			
-				 			});
-				 		});
-				 		map.fitBounds(bounds);	// 지도 경계객체를 넘겨주면서 지도 경계조정하기
-				 	}
-	   	 </script>
+	   <!-- about location filtering start -->
+	   <div id="map"></div>
+	   <div class="search-location-list d-none"></div>
+	   <!-- about location filtering end -->
 
        <!-- attraction list start -->
        <div class="attraction-list">
@@ -139,14 +73,14 @@
                    <th class='attraction-height-limit'>키제한</th>
                    <th class='attraction-status'>
                    	 <!-- attraction status start -->
-								     <select class="attraction-status-select form-select d-inline-block">
-								         <option value="">전체</option>
-								         <option value="PENDING">운영예정</option>
-								         <option value="OPERATING">운영중</option>
-								         <option value="STOP">운영중지</option>
-								         <option value="CLOSED">운영종료</option>
-								     </select>
-								     <!-- attraction status end -->
+				     <select class="attraction-status-select form-select d-inline-block">
+				         <option value="">전체</option>
+				         <option value="PENDING">운영예정</option>
+				         <option value="OPERATING">운영중</option>
+				         <option value="STOP">운영중지</option>
+				         <option value="CLOSED">운영종료</option>
+				     </select>
+				     <!-- attraction status end -->
                    </th>
                    <th class='attraction-regist-emp'>등록자</th>
                    <th class='attraction-modify-emp'>수정자</th>
@@ -199,10 +133,10 @@
                  </c:choose>
                </tbody>
              </table>
-           <!-- attraction list table end -->
+           	 <!-- attraction list table end -->
 		   
 		   	 <!-- pagination start -->
-	       <div class="attraction-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
+	       	 <div class="attraction-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
 	           <ul class="pagination">
 	             
 	             	<!-- Previous -->
@@ -238,6 +172,8 @@
 </body>
 
 <!-- 어트랙션 조회 스크립트 -->
+<!-- Googel Map 스크립트 -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfeL19x8FxIk3SsSNFLKuL9N_1w9pAs24&callback=initMap"></script>
 <script>
 	// URL 페이지 요청시, 파라미터에 지정된 값이 있을경우, 해당값으로 선택값 및 입력값 지정
 	$(document).ready(function(){
@@ -385,6 +321,69 @@
 			}
 		});
 		
+	}
+	
+  	 
+	// 구글맵 관련 ====================================================================================
+	function initMap (){
+		// 지도생성 및 설정
+		const map = new google.maps.Map(document.getElementById("map"), {
+			center: {lat: 35.636033359, lng: 139.878632426 },	// 초기값의 위도, 경도 설정
+			zoom: 12,	// 지도 가까운 정도
+		});
+		
+		// 어트랙션 위치 리스트조회
+		$.ajax({
+			url:"${ contextPath }/attraction/location/list.ajax",
+			method:"get",
+			async:false,
+			success:function(locationList){
+				locations = locationList;	// 놀이공원 위치목록
+			},error:function(){
+				console.log("SELECT LOCATION LIST AJAX FAILED");
+			}
+		});
+		
+		const bounds = new google.maps.LatLngBounds();		// 마커 위치표시를 위한 객체
+		const infoWindow = new google.maps.InfoWindow();	// 마커 클릭시 보여질 정보창 객체
+		
+		locations.forEach(function(location){
+			let locationNo = location.locationNo;
+			let locationName = location.locationName;
+			let latitude = parseFloat(location.latitude);
+			let longitude = parseFloat(location.longitude);
+			let mapMark = location.mapMark;
+			
+			// 마커생성 및 설정
+			const marker = new google.maps.Marker({
+				position: { lat: latitude, lng: longitude },
+				label: locationName,
+				map: map,
+			});
+			bounds.extend(marker.position);	// 마커의 위치 정보를 넘겨줌
+	
+			// 마커클릭시, 보여질 정보성 메세지
+			marker.addListener("click", function(){
+				map.panTo(marker.position);				// 마커를 클릭했을 때, 마커가 있는 위치로 지도의 중심이 이동
+				
+				let flag = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+				
+				// 조회요청시 전달될 위치값 설정
+				if(marker.getIcon() == flag){
+					marker.setIcon('');
+					$(".search-location-list").children("input").each(function(){
+						$(this).attr("location-name") == marker.label && $(this).remove();
+					});
+					ajaxAttractionList();
+				} else{
+					marker.setIcon(flag);
+					$(".search-location-list").append("<input type='hidden' class='search-location' location-name='" + locationName + "' value='" + locationNo + "'>");
+					ajaxAttractionList();
+				}
+			
+			});
+		});
+		map.fitBounds(bounds);	// 지도 경계객체를 넘겨주면서 지도 경계조정하기
 	}
 
 </script>

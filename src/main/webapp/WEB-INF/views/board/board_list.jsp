@@ -50,7 +50,7 @@
 		     <div id="search-form" class="input-group">
 		     	<!-- search condition start -->
 			    <select id="condition" class="search-condition form-select">
-			       <option value="">전체</option>
+			       <option value="all">전체</option>
 			       <option value="title">제목</option>
 			       <option value="content">내용</option>
 			       <option value="writer">작성자</option>
@@ -58,20 +58,11 @@
 		       	<!-- search condition end -->
 		       	
 		        <!-- search keyword start -->
-				    <span class="form-outline" data-mdb-input-init> 
-				        <input type="search" id="keyword" class="form-control" placeholder="게시글 검색" aria-label="게시글 검색"/>
-				    </span>
-				    <!-- search keyword end -->
-			    
-			    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
-			    <script>
-			    	$(document).ready(function(){
-			    		
-			    		
-			    	});
-			    	
-			    </script>
-			    
+			    <span class="form-outline" data-mdb-input-init> 
+			        <input type="search" id="keyword" class="form-control" placeholder="게시글 검색" aria-label="게시글 검색"/>
+			    </span>
+			    <!-- search keyword end -->
+			 
 			    <!-- search button start -->
 			    <button id="search-btn" type="button" class="btn btn-secondary" onclick="searchValidation();" data-mdb-ripple-init>
 			        <i class="fas fa-search"></i>
@@ -182,6 +173,7 @@
 
 </body>
 
+<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
 <script>
 	//페이지 로드 즉시 실행되어야할 functions ===========================================================================
 	$(document).ready(function(){
@@ -235,47 +227,51 @@
 	// 키워드값 입력시 함수 =========================================================================================
 	$(document).ready(function(){
 		$("#keyword").on("keyup", function(){
-			console.log("키워드 : ", $("#keyword").val());
-			// 자동완성 검색어 리스트 조회 ==================================================================================================
-			$.ajax({
-				url:"${ contextPath }/board/detail/list.ajax",
-				method:"get",
-				async:false,
-				data:{
-					category:$("#category").val(),
-					department:$("#department").val(),
-					condition:$("condition").val(),
-					keyword:$("#keyword").val(),
-				},
-				success:function(boardList){
-					autoList = [];
-					let map = boardList.map(function(board){
-						return board.title;
-					});
-					for(let i=0 ; i<5 ; i++){
-						autoList.push(map[i]);
-					}
-				},error:function(){
-					console.log("SELECT AUTOCOMPLETE BOARD LIST AJAX FAILED");
-				}
-			});
-			
 			// "Enter"를 입력했을 경우
-			(event.key == 'Enter' || event.code == 'Enter') && searchValidation();
+			if(event.key == 'Enter' || event.code == 'Enter'){
+				$("#keyword").autocomplete( "option", "disabled", true );
+				searchValidation();
+			}
 		});
 		
 		// 검색어 자동완성 함수 ======================================================================================================
 		$("#keyword").autocomplete({
-			console.log('자동완성');
-			source: autoList, // 자동완성 검색어 대상	
+			source: function(request, response){ // 자동완성 검색어 대상
+				let autoList = [];
+				$.ajax({
+					url:"${ contextPath }/board/detail/list.ajax",
+					method:"get",
+					async:false,
+					data:{
+						category:$("#category").val(),
+						department:$("#department").val(),
+						condition:$("#condition").val(),
+						keyword:request.term,
+					},
+					success:function(boardList){
+						let map = boardList.map(function(board){
+							return board.title;
+						});
+						for(let i=0 ; i< (map.length < 5 ? map.length : 5) ; i++){
+							autoList.push({
+								label: map[i],
+								value: map[i],
+							});
+						}
+					},error:function(){
+						console.log("SELECT AUTOCOMPLETE BOARD LIST AJAX FAILED");
+					}
+				});
+				response(autoList);
+			}, 	
 			select: function(event, ui){	// item 선택시 이벤트
-				console.log(ui.item);	// {label: '자동완성검색어', value: '자동완성검색어'}
+				console.log("select : ", ui.item);	// {label: '자동완성검색어', value: '자동완성검색어'}
 			},
 			focus: function(event, ui){	// focus 시 이벤트
 				return false;
 			},
 			minLength: 1,	// 최소 글자 수
-			autoFocus: true, 	// true 설정시 자동완성 대상의 첫번째 항목에 자동으로 초점이 맞춰짐
+			autoFocus: false, 	// true 설정시 자동완성 대상의 첫번째 항목에 자동으로 초점이 맞춰짐
 			classes: {	// 요소에 추가 할 클래스
 				'ui-autocomplete' : 'highlight'
 			},
@@ -289,7 +285,7 @@
 				console.log("자동완성 창 종료 : ", event);
 			}
 		});
-	});
+	});	
 	
 	// 키워드검색 게시글 목록조회 요청시 입력값 유효성 체크 
 	function searchValidation(){
@@ -324,7 +320,7 @@
 		// 3) 게시글 목록조회 요청
 		ajaxBoardList();
 		
-	})
+	});
 	
 	// 검색 초기화 버튼 활성화
 	function showResetBtn(){
@@ -334,7 +330,7 @@
 	// 검색조건 값이 바뀌었을 경우
 	$("#condition").on("change", function(){
 		$("#keyword").val().trim().length != 0 && ajaxBoardList();
-	})
+	});
 	
 	// 게시글 목록조회 (비동기식) ================================================================================================
 	function ajaxBoardList(){

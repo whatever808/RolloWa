@@ -60,6 +60,13 @@ public class AttendanceService {
 	}
 	
 	/**
+	 * 당일 출근후 퇴근/조퇴 미처리 사용자 퇴근처리
+	 */
+	public int updateWorkOffTime() {
+		return attendanceDao.updateWorkOffTime();
+	}
+	
+	/**
 	 * 사용자가 요청한 년 & 월의 사용자 근태현황 조회
 	 */
 	public Map<String, Object> selectMemberAttend(HashMap<String, Object> params){

@@ -448,8 +448,8 @@
   						$(".detail-attractionIntro").text(attraction.attractionIntro);
   						$(".detail-location").text(attraction.locationName);
   						$(".detail-customerLimit").text(attraction.customerLimit + '명');
-  						$(".detail-ageLimit").text(attraction.ageLimit != null ? attraction.ageLimit : 'x');
-  						$(".detail-heightLimit").text(attraction.heightLimit != null ? attraction.heightLimit : 'x');
+  						$(".detail-ageLimit").text(attraction.ageLimit != null ? (attraction.ageLimit + '세 ' + attraction.ageLimitRange) : 'x');
+  						$(".detail-heightLimit").text(attraction.heightLimit != null ? (attraction.heightLimit + 'cm ' + attraction.heightLimitRange) : 'x');
   						
   						let status = "";
   						let statusColor = "";

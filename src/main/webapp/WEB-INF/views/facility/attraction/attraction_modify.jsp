@@ -24,7 +24,7 @@
 	        <h1 class="page-title">어트랙션 수정</h1>
 	
 	        <!-- modify form start -->
-	        <form action="${ contextPath }/attraction/modify.do" method="post" id="modify-form" enctype="multipart-form-data">
+	        <form action="${ contextPath }/attraction/modify.do" method="post" id="modify-form" enctype="multipart/form-data">
 	            
 	            <input type="hidden" name="attractionNo" value="${ attraction.attractionNo }">
 	            
@@ -36,7 +36,7 @@
 	            <div class="field-group">
 	                <label for="attraction-thumbnail" class="field-title">대표이미지</label><br>
 	                <input type="hidden" name="oldThumbnailURL" value="${ attraction.thumbnailURL }">
-	                <input type="file" id="attraction-thumbnail" class="d-none" name="thumbnail" accept="image/*">
+	                <input type="file" id="attraction-thumbnail" class="d-none" name="newThumbnail" accept="image/*">
 	                <img id="thumbnail-preview" src="${ contextPath }${ attraction.thumbnailURL }">
 	            </div>
 	            
@@ -120,8 +120,8 @@
 	            </div>
 	
 	            <div class="button-group">
-	            		<button type="button" class="btn btn-outline" id="back-manage-list">목록가기<button>
 	                <button type="reset" class="btn btn-outline-warning">초기화</button>
+	            	<button type="button" class="btn btn-outline-secondary" id="back-manage-list">목록가기</button>
 	                <button type="submit" class="btn btn-outline-primary">수정하기</button>
 	            </div>
 	        
@@ -260,30 +260,32 @@
      		$(this).val() == "${ attraction.status }" && $(this).attr("selected", true);
      	});
 			
-			// 입력값 모두 초기화 =================================================================================
-			$("button[type=reset]").on("click", function(){
-				$('input[name=attractionName]').val('');
-				$('input[name=thumbnail]').val('');
-				$('#thumbnail-preview').attr('src', '');
-				$('input[name=location]').val('');
-				$('.map').text('지도에서 위치를 선택해주세요').removeClass('text-primary').addClass('text-secondary');
-				$('select[name=status]').children().eq(0).attr('selected', true);
-				$('select[name=customerLimit]').children().eq(0).attr('selected', true);
-				$('#age-limit-n').prop('checked', true);
-				$('.age-limit').addClass('d-none');
-				$('#age-limit').val('');
-				$('select[name=ageLimitRange]').children().eq(0).attr('selected', true);
-				$('#height-limit-n').prop('checked', true);
-				$('.height-limit').addClass('d-none');
-				$('#height-limit').val('');
-				$('select[name=heightLimitRange]').children().eq(0).attr('selected', true);
-				$('textarea[name=attractionIntro]').val('');
-			});
+		/* 입력값 모두 초기화 =================================================================================
+		$("button[type=reset]").on("click", function(){
+			$('input[name=attractionName]').val(''); // x
+			$('input[name=oldThumbnailURL]').val('');
+			$('input[name=newThumbnail]').val('');
+			$('#thumbnail-preview').attr('src', '');
+			$('input[name=location]').val('');
+			$('.map').text('지도에서 위치를 선택해주세요').removeClass('text-primary').addClass('text-secondary');
+			$('select[name=status]').children().eq(0).attr('selected', true);
+			$('select[name=customerLimit]').children().eq(0).attr('selected', true);
+			$('#age-limit-n').prop('checked', true);
+			$('.age-limit').addClass('d-none');
+			$('#age-limit').val('');
+			$('select[name=ageLimitRange]').children().eq(0).attr('selected', true);
+			$('#height-limit-n').prop('checked', true);
+			$('.height-limit').addClass('d-none');
+			$('#height-limit').val('');
+			$('select[name=heightLimitRange]').children().eq(0).attr('selected', true);
+			$('textarea[name=attractionIntro]').val('');
+		});
 			
-			// 목록가기 버튼 클릭시, 관리목록페이지로 이동 ===================================================================================
-			$("#back-manage-list").on("click", function(){
-				location.href = "${ contextPath }/attraction/manage/list.do";
-			})
+		// 목록가기 버튼 클릭시, 관리목록페이지로 이동 ===================================================================================
+		$("#back-manage-list").on("click", function(){
+			location.href = "${ contextPath }/attraction/manage/list.do";
+		});
+		*/
 	});
 	
 	// 구글맵 관련 ============================================================================================================

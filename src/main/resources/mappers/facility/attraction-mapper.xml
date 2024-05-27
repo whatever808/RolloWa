@@ -100,11 +100,11 @@
 		  	   ,attraction_name
 		  	   ,attraction_intro
 		  	   ,customer_limit
-		  	   <if test="ageLimitYN.equals('Y')">
+		  	   <if test='"Y".equals(ageLimitYN)'>
 		  	     ,age_limit
 		  	     ,age_limit_range
 		  	   </if>
-		  	   <if test="heightLimitYN.equals('Y')">
+		  	   <if test='"Y".equals(heightLimitYN)'>
 				  	 ,height_limit
 				  	 ,height_limit_range
 		  	   </if>
@@ -122,11 +122,11 @@
 		 		,#{attractionName}
 		 		,#{attractionIntro}
 		 		,#{customerLimit}
-		 		<if test="ageLimitYN.equals('Y')">
+		 		<if test='"Y".equals(ageLimitYN)'>
 		 		  ,#{ageLimit}
 		 		  ,#{ageLimitRange}
 		 		</if>
-		 		<if test="heightLimitYN.equals('Y')">
+		 		<if test='"Y".equals(heightLimitYN)'>
 		 		  ,#{heightLimit}
 		 		  ,#{heightLimitRange}
 		 		</if>
@@ -145,16 +145,16 @@
 		   	  ,attraction_intro = #{attractionIntro}
 		   	  ,thumbnail_url = #{thumbnailURL}
 		   	  ,customer_limit = #{customerLimit}
-		   	  <if test="ageLimitYN.equals('Y')">
+		   	  <if test='"Y".equals(ageLimitYN)'>
 			   	  ,age_limit = #{ageLimit}
 			   	  ,age_limit_range = #{ageLimitRange}
 		   	  </if>
-		   	  <if test="heightLimitYN.equals('Y')">		   	  
+		   	  <if test='"Y".equals(heightLimitYN)'>		   	  
 			   	  ,height_limit = #{heightLimit}
 			   	  ,height_limit_range = #{heightLimitRange}
 		   	  </if>
 		   	  ,status = #{status}
-		   	  <if test="statusReason != null">
+		   	  <if test='statusReason != null'>
 		   	  	,status_reason = #{statusReason}
 		   	  </if>
 		   	  ,modify_date = sysdate
