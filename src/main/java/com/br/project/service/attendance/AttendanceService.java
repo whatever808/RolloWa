@@ -62,8 +62,8 @@ public class AttendanceService {
 	/**
 	 * 당일 출근후 퇴근/조퇴 미처리 사용자 퇴근처리
 	 */
-	public int updateWorkOffTime() {
-		return attendanceDao.updateWorkOffTime();
+	public int updateMemberWorkOffTime() {
+		return attendanceDao.updateMemberWorkOffTime();
 	}
 	
 	/**

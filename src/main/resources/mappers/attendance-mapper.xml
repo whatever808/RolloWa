@@ -266,7 +266,7 @@ ORDER BY
 	</select>
 	
 	<!-- 당일 퇴근/조퇴 미처리 사원 퇴근처리 -->
-	<update id="updateWorkOffTime">
+	<update id="updateMemberWorkOffTime">
 		update attendance
 	       set clock_out = to_date(to_char(sysdate, 'YYYYMMDD') || '18:00:00', 'YYYYMMDD HH24:MI:SS')
 	          ,request_detail = '퇴근'

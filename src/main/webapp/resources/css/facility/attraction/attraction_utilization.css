@@ -23,7 +23,7 @@
 }
 .filter-div{
     display: inline-block;
-    width: 25%;
+    width: 18%;
     text-align: center;
 }
 .filter-select{
@@ -33,6 +33,7 @@
     text-align: center;
     border: 1px solid lightgray;
     margin-bottom: 10px;
+    font-weight: bold;
 }
 .filter-table{
     border: 1px solid lightgray;
@@ -56,10 +57,9 @@
 
 /* ------------- chart filter ------------- */
 .chart-filter{
-    display: inline-block;
-    font-size: 20px;
+     display: inline-block;
+    font-size: 16px;
     font-weight: bold;
-    border: 1px solid tomato;
 }
 
 /* ------------- main bottom ------------- */
