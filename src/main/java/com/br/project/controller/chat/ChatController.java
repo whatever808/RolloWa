@@ -1,5 +1,6 @@
 package com.br.project.controller.chat;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +11,10 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.br.project.dto.chat.ChatMessageDto;
+import com.br.project.dto.member.MemberDto;
 import com.br.project.service.chat.ChatService;
+import com.br.project.service.member.MemberService;
+import com.br.project.service.notification.NotificationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +29,8 @@ public class ChatController {
 
 	private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 	private final ChatService chatService;
+	private final NotificationService notificationService;
+	private final MemberService memberService;
 	
 	//json을 Map으로 변환
 	public Map<String, String> jsonToMap(String json) throws Exception
@@ -47,17 +53,79 @@ public class ChatController {
 		
 		return json;
 	}
+	
+    // 채팅 메세지 데이터베이스에 저장
+    public int insertChatMsg(Map<String, String> map) {
+    	ChatMessageDto chatMsg = ChatMessageDto.builder()
+				.msgContent(map.get("msgContent"))
+				.chatRoomNo(Integer.parseInt(map.get("roomNo")))
+				.userNo(Integer.parseInt(map.get("userNo")))
+				.build();
+
+    	return chatService.insertChatMsg(chatMsg);
+    }
+    
+    // 알림 보내기
+    @MessageMapping(value = "/alram/send")
+    public void alram(String json) {
+    	try {
+			Map<String, String> map = jsonToMap(json);
+			log.debug("실행됨");
+			
+			if(map.get("flag").equals("1")) {
+				// 공지사항 전송일 경우
+				
+				// 결과 저장
+				int result = 0;
+				
+				// 알림 보낸 사람을 제외한 부서원 조회
+				List<MemberDto> teamMemberList = memberService.selectTeamMember(map);
+				log.debug("팀원 : {}", teamMemberList);
+				
+				// 알림 전송 내역 저장
+				for(MemberDto member : teamMemberList) {
+					map.put("receiveUserNo", String.valueOf(member.getUserNo()));
+					
+					result += notificationService.insertNotificationSend(map);
+				}
+				
+				log.debug("result : {}", result);
+				log.debug("teamMemberList.size : {}", teamMemberList.size());
+				
+				// 알림을 성공적으로 저장 했을 경우
+				if(result == teamMemberList.size()) {
+					template.convertAndSend("/topic/chat/alram", json);
+					log.debug("알림 전송 성공");
+				} else {
+					log.debug("알림 저장 실패");
+				}
+			}	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+    
 		
 	// 채팅방 입장
-	@MessageMapping(value = "/chat/enter/{roomNo}")
+	@MessageMapping(value = "/chat/invite")
     public void enter(String json){
 		try {
+			log.debug("함수 실행");
+			// **님이 **님을 채팅방에 초대하였습니다.
 			Map<String, String> map = jsonToMap(json);
-			map.put("msgContent", map.get("name") + "님이 채팅방에 입장하셨습니다.");
+			String partUserName = memberService.selectUserName(map.get("partUserNo"));
+			
+			map.put("msgContent", map.get("name") + "님이 " + partUserName + "님을 채팅방에 초대하였습니다.");
+			
+			// flag 번호 부여
+			map.put("flagNo", "0");
+			
 			int result = insertChatMsg(map);
 			
 			if (result > 0) {
-				template.convertAndSend("/topic/chat/room/" + map.get("roomNo"), map.get("msgContent"));
+				log.debug("초대 메세지 전송 성공");
+				template.convertAndSend("/topic/chat/alram", map);
 			} else {
 				log.debug("채팅 메세지 저장 중 오류 발생");
 			}
@@ -84,15 +152,5 @@ public class ChatController {
 		}   
     }
     
-    // 채팅 메세지 데이터베이스에 저장
-    public int insertChatMsg(Map<String, String> map) {
-    	ChatMessageDto chatMsg = ChatMessageDto.builder()
-				.msgContent(map.get("msgContent"))
-				.chatRoomNo(Integer.parseInt(map.get("roomNo")))
-				.userNo(Integer.parseInt(map.get("userNo")))
-				.build();
-
-    	return chatService.insertChatMsg(chatMsg);
-    }
 }
 

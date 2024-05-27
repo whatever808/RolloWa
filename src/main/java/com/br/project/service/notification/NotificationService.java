@@ -39,6 +39,11 @@ public class NotificationService {
 	// 최신 공지사항 글 번호 조회
 	public int selectLatestBno(String teamCode) {
 		return nDao.selectLatestBno(teamCode);
+	}
+	
+	// 알림 전송 이력 저장
+	public int insertNotificationSend(Map<String, String> map) {
+		return nDao.insertNotificationSend(map);
 	}	
 	
 }

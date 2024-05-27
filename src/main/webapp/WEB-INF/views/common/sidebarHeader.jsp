@@ -654,6 +654,10 @@ $(document).ready(function(){
                 </li>
             </ul>
         </div>
+        
+        <div id="alram">
+        	<button type="button" class="">알림으로 이동하기</button>
+        </div>
 								
         <div class="b-example-divider b-example-vr"></div>
 				<script>
@@ -704,6 +708,32 @@ $(document).ready(function(){
 					    	}
 					    })
 					    
+					    // 알림용 주소 구독
+					    stompClient.subscribe("/topic/chat/alram", function(msg) {
+					    	// 문자열을 json으로 변환
+					    	const msgBody = JSON.parse(msg.body);
+					    	
+					    	console.log(msgBody);
+					    	
+					    	if(msgBody.flag == 0) {
+					    		// 채팅방 초대 알림인 경우
+					    		receiveInviteMsg(msgBody)
+					    		
+					    	} else if (msgBody.flag == 1) {
+					    		// 공지사항 등록 알림인 경우
+					    		console.log("부서 공지사항 등록됨");
+					    		
+					    		$("#alram").iziModal('open');
+					    		
+					    	} else if (msgBody.flag == 2) {
+					    		// 결재 등록 알림인 경우
+					    		
+					    	} else if (msgBody.flag == 3) {
+					    		// 부서 내 일정 등록 알림인 경우
+					    		
+					    	}
+					    })
+					    
 						})
 						// 알람용 웹소켓 연결
 						alram = new SockJS("${contextPath}/alram");
@@ -716,6 +746,22 @@ $(document).ready(function(){
 			                , function(){ alertify.error('Cancel')}).set('labels', {ok:'이동하기', cancel:'취소'});;
 						}
 					})
+					
+					// 알림 스타일
+					$("#alram").iziModal({
+						title: '<h6>부서 알림 서비스</h6>'
+						, subtitle: '부서 알림이 등록되었습니다.'
+						, headerColor: '#FEEFAD'
+						, theme: 'light'
+						, radius: '2'
+						, arrowKeys: 'false'
+						, navigateCaption: 'false'
+						, timeout: '3000'
+						, timeoutProgressbar: 'true'
+						, timeoutProgressbarColor: '#FFFFFF'
+						, pauseOnHover: 'true'
+					})
+					
 					
 				</script>
 </body>

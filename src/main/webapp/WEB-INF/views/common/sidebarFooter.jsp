@@ -83,6 +83,9 @@
              </div>
          </section>
      </div>
+     <div>
+     	<button type="button" onclick="test();">테스트 하기</button>
+     </div>
     </main>
     <script src="${ contextPath }/resources/js/common/bootstrap.bundle.min.js"></script>
     <script src="${ contextPath }/resources/js/common/sidebars.js"></script>
@@ -412,12 +415,13 @@
    					roomNo = result;
    					// 1-2. 채팅방 참여인원 생성
  			    	$(".list-group-item").each(function(index, el) {
+ 			    		var partUserNo = $(el).children().children().val();
  			    		if($(el).children().children().is(':checked')) {    			
  			    			// 1-2-1. 체크된 회원 채팅방 참여
  			    			$.ajax({
  			    				url: "${contextPath}/chat/participants"
  			    				, method: "post"
- 			    				, data: {partUserNo: $(el).children().children().val()
+ 			    				, data: {partUserNo: partUserNo
  			    									, chatRoomNo: roomNo}
  			    				, success: function(result) {
  			    					if(result == "SUCCESS") {
@@ -425,11 +429,14 @@
  		 			    				stompClient.subscribe("/topic/chat/room/" + roomNo, function(msg) {
  		 			    					receiveMsg(msg);
  		 			    				})
- 		 			    				// 1-2-3. 입장 메세지 발송
- 		 				     			stompClient.send("/app/chat/enter" + roomNo, {}, JSON.stringify({userName: '${loginMember.userName}'
- 		 				     																							, roomNo: roomNo}));
- 			    						// 1-2-4. 채팅방 목록 새로고침
+ 		 			    				// 1-2-3. 채팅방 목록 새로고침
  			    						selectChatRoom();
+ 		 			    				
+ 		 			    				// 1-2-4. 입장 메세지 발송
+ 		 				     			stompClient.send("/app/chat/invite", {}, JSON.stringify({userName: '${loginMember.userName}'
+ 		 				     																							, roomNo: roomNo
+ 		 				     																							, partUserNo : partUserNo
+		 				     																							, userNo: '${loginMember.userNo}'}));
  			    					}
  			    				}
  			    				, error: function() {
@@ -445,6 +452,11 @@
    				console.log("채팅방 생성 ajax 통신 실패");
    			}
     	})
+    }
+    
+    function test() {
+			stompClient.send("/app/chat/invite", {}, JSON.stringify({userName: '${loginMember.userName}'
+					, userNo: '${loginMember.userNo}'}));
     }
     
     // 현재 접속한 채팅방 구독 주소로 메세지 발송
@@ -562,6 +574,11 @@
 				}
 			}
 
+		}
+		
+		// 채팅방 초대 알림 수신 시
+		function receiveInviteMsg(msgBody) {
+			selectChatRoom();
 		}
 
 		// 날짜 형식 바꾸기

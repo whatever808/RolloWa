@@ -82,4 +82,25 @@
 	    ROWNUM = 1
 	</select>
 	
+	<!-- 알림 전송 이력 저장 -->
+	<insert id="insertNotificationSend">
+		insert into
+			noti_send
+			(
+				nsend_no
+				, noti_url
+				, noti_check_date
+				, receive_user_no
+				, send_user_no
+			)
+			values
+			(
+				seq_nsno.nextval
+				, #{ url }
+				, null
+				, #{ receiveUserNo }
+				, #{ sendUserNo }
+			)
+	</insert>
+	
 </mapper>
