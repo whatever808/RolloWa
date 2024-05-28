@@ -640,7 +640,7 @@ $(document).ready(function(){
                                     
                                <li>
                                <a href="${ contextPath }/payment/payment.page" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                               payment</a>
+                               Payment</a>
                                </li>       
                         </ul>
                     </div>

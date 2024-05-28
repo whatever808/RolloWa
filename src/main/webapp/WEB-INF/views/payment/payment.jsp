@@ -347,6 +347,7 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     padding: 20px;
+    margin-top: 50px;
 }
 
 .ticket-table {
@@ -431,6 +432,18 @@ body {
 
 .purchase-button:hover {
     background-color: #feefad87;
+}
+input{
+    margin-bottom: 10px;
+}
+img{
+    width: 100%;
+}
+.deatil_pay{
+		padding: 10px;
+    position: absolute;
+    top: 1px;
+    backdrop-filter: blur(10px);
 }
 </style>
 
@@ -609,25 +622,45 @@ $(document).ready(function(){
 									          <div class="quantity-container">
 											        <div class="quantity-group">
 											            <label for="teens"><h5>일반 이용권</h5></label>
-											            <div class="quantity-controls">
-											                <button class="quantity-btn" id="teen-decrease">−</button>
-											                <input type="number" value="0" id="teens" min="0" readonly>
-											                <button class="quantity-btn" id="teen-increase">+</button>
+ 											            <div style="position: relative;">
+											            	<div><img src="${contextPath}/resources/images/rollooo.avif"></div>
+											            	<div class="deatil_pay jua-regular">
+											            		가격 : <del>25000원</del><br>
+											            		가격 : <b>20000원</b><br>
+											            		<span style="color:red;">직원 할인가 : 20%</span>
+											            	</div>
+											            </div>
+											            <div style="display: flex;justify-content: space-around;">
+													           	<div align="left">
+													           		<input style="margin-bottom: 10px;" type="date">
+													           	</div>
+													           	<div class="quantity-controls">
+												                <button class="quantity-btn" id="teen-decrease">−</button>
+												                <input type="number" value="0" id="teens" min="0" readonly>
+												                <button class="quantity-btn" id="teen-increase">+</button>
+													           	</div>
 											            </div>
 											        </div>
 											        <div class="quantity-group">
 											            <label for="children"><h5>정기 이용권</h5></label>
-											            <div>
-											            	<div>사진</div>
-											            	<div>가격</div>
+											            <div style="position: relative;">
+											            	<div><img src="${contextPath}/resources/images/rollooo.avif"></div>
+											            	<div class="deatil_pay jua-regular">
+											            		가격 : <del>25000원</del><br>
+											            		가격 : <b>20000원</b><br>
+											            		<span style="color:red;">직원 할인가 : 20%</span>
+											            	</div>
 											            </div>
-											           	<div>
-											           		<input type="date">
-											           	</div>
-											            <div class="quantity-controls">
-											                <button class="quantity-btn" id="child-decrease">−</button>
-											                <input type="number" id="children" value="0" min="0" readonly>
-											                <button class="quantity-btn" id="child-increase">+</button>
+											            <div style="display: flex;justify-content: space-around;">
+													           	<div align="left">
+													           		<input style="margin-bottom: 10px;" type="date">
+													           	</div>
+													           	
+													           	<div class="quantity-controls">
+												                <button class="quantity-btn" id="child-decrease">−</button>
+												                <input type="number" id="children" value="0" min="0" readonly>
+												                <button class="quantity-btn" id="child-increase">+</button>
+													           	</div>
 											            </div>
 											            
 											        </div>
