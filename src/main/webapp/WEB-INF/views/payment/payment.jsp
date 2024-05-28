@@ -446,10 +446,11 @@ $(document).ready(function() {
         let price1 = parseInt($("#adult-own-price1 span").text()) || 0;
         let price2 = parseInt($("#adult-own-price2 span").text()) || 0;
         let total = price1 + price2;
-        $("#total").text(total + "원");
+        let totalComma = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        $("#total").text(totalComma + "원");
     }
 
-    // 청소년 티켓 증가 버튼 클릭
+
     $("#teen-increase").on("click", function() {
         sum1 += 1;
         $("#teens").val(sum1);
@@ -479,7 +480,7 @@ $(document).ready(function() {
         }
     });
 
-    // 청소년 티켓 감소 버튼 클릭
+    
     $("#teen-decrease").on("click", function() {
         if (sum1 > 0) {
             sum1 -= 1;
@@ -499,7 +500,7 @@ $(document).ready(function() {
         }
     });
 
-    // 어린이 티켓 증가 버튼 클릭
+   
     $("#child-increase").on("click", function() {
         sum2 += 1;
         $("#children").val(sum2);
@@ -529,7 +530,7 @@ $(document).ready(function() {
         }
     });
 
-    // 어린이 티켓 감소 버튼 클릭
+   
     $("#child-decrease").on("click", function() {
         if (sum2 > 0) {
             sum2 -= 1;
@@ -549,7 +550,6 @@ $(document).ready(function() {
         }
     });
 
-    // 페이지 로드 시 총 금액 업데이트
     updateTotal();
 });
 
