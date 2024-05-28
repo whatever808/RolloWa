@@ -755,11 +755,11 @@ img {
 						</div>
 						<div style="display: flex; justify-content: flex-end; gap: 10px;">
 							<button class="purchase-kakao" onclick="">
-								<h5>카카오 결제</h5>
+								<h5>카카오</h5>
 							</button>
 							
 							<button class="purchase-toss" onclick="">
-								<h5>토스 결제</h5>
+								<h5>토스</h5>
 							</button>
 						</div>
 					</div>
@@ -770,9 +770,47 @@ img {
 
 
 	<script>
-		function cash() {
-			$('#pay_select_modal').iziModal('open');
+		function merchantUID(){
+			return toStringByFormatting(new Date())+(Math.round(Math.random()*1000) + 1);
 		}
+		
+		function toStringByFormatting(source) {
+		    const year = source.getFullYear();
+		    const month = source.getMonth() + 1;
+		    const day = source.getDate();
+
+		    return [year, month, day].join('');
+		}
+		
+		$(document).ready(function(){
+			/* dpcks 
+				 포스트원을 이용한 토스 결제
+			*/
+			$('.purchase-toss').click(function(){
+				console.log('토스 결제 실행');
+				
+				IMP.init('imp24467387');
+				
+				IMP.request_pay(
+					{
+					    pg: "tosspay.tosstest",
+					    pay_method: "card",
+					    merchant_uid: 'toss_' + merchantUID(), 
+					    name: "Rollowa 일반이용권",
+					    amount: 20000,
+					    buyer_name: "홍길동",
+					    buyer_no: 1050,
+					    buyer_postcode: "01181",
+					},
+					async (response) => {
+						console.log(response);
+					}
+				
+				);
+				
+			});
+			
+		})
 	</script>
 
 
