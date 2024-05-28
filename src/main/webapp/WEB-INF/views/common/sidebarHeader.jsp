@@ -644,18 +644,18 @@ $(document).ready(function(){
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-                        Account
+                        계정 관리
                     </button>
                     <div class="collapse" id="account-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li><a href="${ contextPath }/member/mypage.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">My Page</a>
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">마이페이지</a>
                             </li>
                             <li><a href="${ contextPath }/notification/list.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
                             </li>
-                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
-                                    out</a></li>
+                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">로그아웃
+                                    </a></li>
                         </ul>
                     </div>
                 </li>
