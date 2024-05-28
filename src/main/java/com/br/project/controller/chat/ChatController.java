@@ -59,7 +59,7 @@ public class ChatController {
     	ChatMessageDto chatMsg = ChatMessageDto.builder()
 				.msgContent((String)map.get("msgContent"))
 				.chatRoomNo((int)(map.get("roomNo")))
-				.userNo((int)(map.get("userNo")))
+				.userNo(Integer.parseInt(String.valueOf(map.get("userNo"))))
 				.build();
 
     	return chatService.insertChatMsg(chatMsg);
