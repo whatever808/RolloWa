@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.br.project.dto.member.MemberDto;
 import com.br.project.service.attendance.AttendanceService;
 import com.br.project.service.pay.VacationService;
 
@@ -51,6 +52,11 @@ public class MemberAttendanceScheduler {
 			for(Map<String, Object> params : dayOffMemberList) {
 				params.put("requestDetail", "결근");
 				attendanceService.insertVacationOrDayOffMemberAttend(params);
+				attendanceService.checkAnuual(MemberDto.builder()
+														.userNo((int)params.get("userNo"))
+														.vaYearLabor((String)params.get("year"))
+														.vaGivenDate((String)params.get("date"))
+														.build());
 			}
 		}
 		
