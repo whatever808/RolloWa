@@ -535,91 +535,103 @@
 
             <!-- 모달창 -->
             <script>
-                $('#modal_reserve').iziModal({
-                    title: '<h4>비품예약</h4>',
-                    subtitle: '',
-                    headerColor: ' rgb(255,247,208)', 
-                    theme:'light',
-                    padding: '15px',
-                    radius: 10, 
-                    zindex:	300,
-                    focusInput:	true,
-                    restoreDefaultContent: false,
-                    onOpening: function(modal){
-    		            // 모달 열릴 때 실행할 함수
-    		            console.log('모달이 열립니다.');
-    		            let userNo = "${ loginMember.userNo }";
-    		            let userName = "${ loginMember.userName }";
-    		            let userId = "${ loginMember.userId }";
-    		            let equipmentName = $('#modal_reserve').data('equipment-name');
-    		            let currentDate = document.getElementById('currentDate').value;
-    		            
-    		            $('#userName').html('<span>' + userName + '</span><span>(' + userId + ')</span>');
-    		            $('#selectedEquipmentName').text(equipmentName);
-    		            $('#modal_date').text(currentDate);
-    		            
-    		            
-    		        },
-                    onClosing: function(modal) {
-                        // 모달이 닫힐 때 실행할 작업
-                        console.log('모달이 닫힙니다.');
-                    }
-                });
-                function searchEquipment() {
-                    var input, filter, table, tr, td, i, txtValue;
-                    input = document.getElementById("searchInput");
-                    filter = input.value.toUpperCase();
-                    table = document.getElementsByClassName("table_time")[0];
-                    tr = table.getElementsByTagName("tr");
+            let equipmentName = '';
+            
+            $('#modal_reserve').iziModal({
+                title: '<h4>비품예약</h4>',
+                subtitle: '',
+                headerColor: ' rgb(255,247,208)', 
+                theme:'light',
+                padding: '15px',
+                radius: 10, 
+                zindex:	300,
+                focusInput:	true,
+                restoreDefaultContent: false,
+                onOpening: function(modal){
+		            // 모달 열릴 때 실행할 함수
+		            
+		            console.log('모달이 열립니다.');
+		            let userNo = "${ loginMember.userNo }";
+		            let userName = "${ loginMember.userName }";
+		            let userId = "${ loginMember.userId }";
+		            //let equipmentName = $('#modal_reserve').data('equipment-name');
+                	let equipmentName = $('#selectedEquipmentName').text();
+		            let currentDate = document.getElementById('currentDate').value;
+		            
+		            $('#userName').html('<span>' + userName + '</span><span>(' + userId + ')</span>');
+		            $('#selectedEquipmentName').text(equipmentName);
+		            $('#modal_date').text(currentDate);
+		            
+		            
+		            
+		        },
+                onClosing: function(modal) {
+                    // 모달이 닫힐 때 실행할 작업
+                    console.log('모달이 닫힙니다.');
+                }
+            });
+         	// 비품 검색 테이블의 각 행에 대한 클릭 이벤트 설정
+            $('.tr_cursor').on('click', function() {
+                // 클릭된 행에서 비품명 가져오기
+                let equipmentName = $(this).find('td:nth-child(2) h6').text();
 
-                    var found = false; // found 변수를 정의하고 초기화합니다.
+                // 가져온 비품명을 모달에 표시
+                $('#selectedEquipmentName').text(equipmentName);
+            });
+            
+            
+            function searchEquipment() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("searchInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementsByClassName("table_time")[0];
+                tr = table.getElementsByTagName("tr");
 
-                    for (i = 1; i < tr.length; i++) { // 첫 번째 행을 건너뛰고 두 번째 행부터 시작합니다.
-                        td = tr[i].getElementsByTagName("td")[1]; // 비품명이 들어있는 열(2번째 열)
-                        if (td) {
-                            txtValue = td.textContent || td.innerText;
-                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                                tr[i].style.display = "";
-                                found = true; // 일치하는 항목이 있음을 표시합니다.
-                            } else {
-                                tr[i].style.display = "none";
-                            }
+                var found = false; // found 변수를 정의하고 초기화합니다.
+
+                for (i = 1; i < tr.length; i++) { // 첫 번째 행을 건너뛰고 두 번째 행부터 시작합니다.
+                    td = tr[i].getElementsByTagName("td")[1]; // 비품명이 들어있는 열(2번째 열)
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            found = true; // 일치하는 항목이 있음을 표시합니다.
+                        } else {
+                            tr[i].style.display = "none";
                         }
-                    }
-
-                    // 이전에 추가된 메시지가 있다면 제거합니다.
-                    var existingMessage = table.querySelector('.noResultMessage');
-                    if (existingMessage) {
-                        existingMessage.parentNode.removeChild(existingMessage);
-                    }
-
-                    if (!found) {
-                        var noResultRow = document.createElement('tr');
-                        var noResultCell = document.createElement('td');
-                        noResultCell.colSpan = "50";
-                        noResultCell.innerText = "조회된 비품이 없습니다.";
-                        noResultCell.className = 'noResultMessage'; // 클래스를 추가하여 메시지를 식별합니다.
-                        noResultRow.appendChild(noResultCell);
-                        table.appendChild(noResultRow); // tbody가 아닌 table에 추가합니다.
                     }
                 }
 
+                // 이전에 추가된 메시지가 있다면 제거합니다.
+                var existingMessage = table.querySelector('.noResultMessage');
+                if (existingMessage) {
+                    existingMessage.parentNode.removeChild(existingMessage);
+                }
 
-
-				
-				// 검색 시 엔터키 사용 안되게하기
-		        function handleKeyPress(event) {
-		            if (event.keyCode === 13) {
-		                event.preventDefault();
-		                searchEquipment();
-		            }
-		        }
-				// 초기화
-		        function reload() {
-		        	let input = document.getElementById("searchInput");
-		        	$('#modal_reserve').iziModal('close');
-		            searchEquipment();
-		        }
+                if (!found) {
+                    var noResultRow = document.createElement('tr');
+                    var noResultCell = document.createElement('td');
+                    noResultCell.colSpan = "50";
+                    noResultCell.innerText = "조회된 비품이 없습니다.";
+                    noResultCell.className = 'noResultMessage'; // 클래스를 추가하여 메시지를 식별합니다.
+                    noResultRow.appendChild(noResultCell);
+                    table.appendChild(noResultRow); // tbody가 아닌 table에 추가합니다.
+                }
+            }
+			
+			// 검색 시 엔터키 사용 안되게하기
+	        function handleKeyPress(event) {
+	            if (event.keyCode === 13) {
+	                event.preventDefault();
+	                searchEquipment();
+	            }
+	        }
+			// 초기화
+	        function reload() {
+	        	let input = document.getElementById("searchInput");
+	        	$('#modal_reserve').iziModal('close');
+	            searchEquipment();
+	        }
             </script>
 
             <!-- 비품 테이블-->

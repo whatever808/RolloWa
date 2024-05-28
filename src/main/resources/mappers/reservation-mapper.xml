@@ -114,7 +114,7 @@
 	</select>
 	
 	<!-- 내가 예약한 비품 취소 -->
-	<update id="updateReservation">
+	<update id="updateReservation" parameterType="map">
 		UPDATE RESERVATION
 		   SET STATUS = 'N'
 		 WHERE RESERVE_NO IN

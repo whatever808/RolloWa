@@ -43,8 +43,8 @@ public class ReservationDao {
 		return sqlSessionTemplate.selectList("reservationMapper.selectMyReservation", paramMap);
 	}
 	// 4. 내 예약 취소하기
-	public int updateReservation(List<Integer> reservationNo) {
-		return sqlSessionTemplate.update("reservationMapper.updateReservation", reservationNo);
+	public int updateReservation(Map<String, Object> params) {
+		return sqlSessionTemplate.update("reservationMapper.updateReservation", params);
 	}
 	
 	

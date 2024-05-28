@@ -163,23 +163,24 @@ public class ReservationController {
 
 	// 3.3 내 예약 취소
 	@PostMapping("/cancel.do")
-    @ResponseBody
-    public String cancelReservations(@RequestBody Map<String, List<Integer>> request) {
-        List<Integer> reservationNo = request.get("reservationNo");
+	@ResponseBody
+	public String cancelReservations(@RequestBody Map<String, Object> request) {
+	    List<Integer> reservationNo = (List<Integer>) request.get("reservationNo");
 
-        log.debug("reservationNo값 : {}", reservationNo);
-        
-        int result = reservationService.updateReservation(reservationNo);
-        if(result > 0) {
-        	log.debug("업데이트 성공");
-        	return "SUCCESS";
-        } else {
-        	log.debug("업데이트 실패");
-        	return "FAIL";
-        }
-        
-    }
-	
+	    log.debug("reservationNo값 : {}", reservationNo);
+	    
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("reservationNo", reservationNo);
+	    
+	    int result = reservationService.updateReservation(params);
+	    if(result > 0) {
+	        log.debug("업데이트 성공");
+	        return "SUCCESS";
+	    } else {
+	        log.debug("업데이트 실패");
+	        return "FAIL";
+	    }
+	}
 	
 	
 	

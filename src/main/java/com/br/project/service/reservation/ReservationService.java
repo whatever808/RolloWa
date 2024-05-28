@@ -46,8 +46,8 @@ public class ReservationService {
     	return reservationDao.selectMyReservation(paramMap);
     }
     // 4. 예약 취소
-	public int updateReservation(List<Integer> reservationNo) {
-		return reservationDao.updateReservation(reservationNo);
+	public int updateReservation(Map<String, Object> params) {
+		return reservationDao.updateReservation(params);
 	}
 	
 }

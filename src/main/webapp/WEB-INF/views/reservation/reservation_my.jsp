@@ -168,6 +168,15 @@
                 $('.table_1 tbody input[type="checkbox"]').prop('checked', isChecked);
             });
 
+         	// 개별 체크박스 클릭 시
+            $(document).on('click', '.table_1 tbody input[type="checkbox"]', function() {
+                var totalCheckboxes = $('.table_1 tbody input[type="checkbox"]').length;
+                var checkedCheckboxes = $('.table_1 tbody input[type="checkbox"]:checked').length;
+                var isAllChecked = totalCheckboxes === checkedCheckboxes;
+
+                $('#selectAll').prop('checked', isAllChecked);
+            });
+         	
             // 예약 테이블 업데이트 후 다시 바인딩
             /*
             $(document).on('change', '#selectAll', function() {
