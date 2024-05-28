@@ -34,24 +34,24 @@
                     <select class="filter-select form-control py-2 fw-bold" id="year-select"></select> 
 
                     <!-- year sales info -->
-                    <div class="filter-table">
+                    <div class="filter-table year-sales-table">
+                       
                         <div class="d-flex mb-2 justify-content-between">
                             <b class="filter-table-title">총 매출액</b>
-                            <span class="filter-table-content">2000</span>
+                            <span class="filter-table-content sum-sales">2000</span>
                         </div>
                         <div class="d-flex mb-2 justify-content-between">
                             <b class="filter-table-title">평균 매출액</b>
-                            <span class="filter-table-content">2000</span>
+                            <span class="filter-table-content avg-sales">2000</span>
                         </div>
                         <div class="d-flex mb-2 justify-content-between">
                             <b class="filter-table-title">최고 매출액</b>
-                            <span class="filter-table-content">2000</span>
+                            <span class="filter-table-content max-sales">2000</span>
                         </div>
                         <div class="d-flex mb-2 justify-content-between">
                             <b class="filter-table-title">최저 매출액</b>
-                            <span class="filter-table-content">2000</span>
+                            <span class="filter-table-content min-sales">2000</span>
                         </div>
-                        
                         
                     </div>
 
@@ -61,28 +61,28 @@
                 <!-- month filter area start -->
                 <div class="filter-div year-filter-div">
 
-                    <!-- year select -->
+                    <!-- month select -->
                     <select class="filter-select form-control py-2 fw-bold" id="month-select"></select> 
 
-                    <!-- year sales info -->
-                    <div class="filter-table">
+                    <!-- month sales info -->
+                    <div class="filter-table month-sales-table">
+                        
                         <div class="d-flex mb-2 justify-content-between">
                             <b class="filter-table-title">총 매출액</b>
-                            <span class="filter-table-content">2000</span>
+                            <span class="filter-table-content sum-sales">2000</span>
                         </div>
                         <div class="d-flex mb-2 justify-content-between">
                             <b class="filter-table-title">평균 매출액</b>
-                            <span class="filter-table-content">2000</span>
+                            <span class="filter-table-content avg-sales">2000</span>
                         </div>
                         <div class="d-flex mb-2 justify-content-between">
                             <b class="filter-table-title">최고 매출액</b>
-                            <span class="filter-table-content">2000</span>
+                            <span class="filter-table-content max-sales">2000</span>
                         </div>
                         <div class="d-flex mb-2 justify-content-between">
                             <b class="filter-table-title">최저 매출액</b>
-                            <span class="filter-table-content">2000</span>
+                            <span class="filter-table-content min-sales">2000</span>
                         </div>
-                        
                         
                     </div>
 
@@ -96,24 +96,24 @@
                     <select class="filter-select form-control py-2 fw-bold" id="date-select"></select> 
 
                     <!-- date sales info -->
-                    <div class="filter-table">
+                    <div class="filter-table date-sales-table">
+                        
                         <div class="d-flex mb-2 justify-content-between">
                             <b class="filter-table-title">총 매출액</b>
-                            <span class="filter-table-content">2000</span>
+                            <span class="filter-table-content sum-sales">2000</span>
                         </div>
                         <div class="d-flex mb-2 justify-content-between">
                             <b class="filter-table-title">평균 매출액</b>
-                            <span class="filter-table-content">2000</span>
+                            <span class="filter-table-content avg-sales">2000</span>
                         </div>
                         <div class="d-flex mb-2 justify-content-between">
                             <b class="filter-table-title">최고 매출액</b>
-                            <span class="filter-table-content">2000</span>
+                            <span class="filter-table-content max-sales">2000</span>
                         </div>
                         <div class="d-flex mb-2 justify-content-between">
                             <b class="filter-table-title">최저 매출액</b>
-                            <span class="filter-table-content">2000</span>
+                            <span class="filter-table-content min-sales">2000</span>
                         </div>
-                        
                         
                     </div>
 
@@ -122,10 +122,11 @@
 
             </div>
             <!-- main top end(filter) -->
-
+            
             <div class="chart-filter-div d-flex">
-                <span class="chart-filter btn btn-secondary-outline fw-bold bg-warning text-white" style="font-size: 16px;">총 매출액</span>
-                <span class="chart-filter btn btn-secondary-outline  fw-bold" style="font-size: 16px;">평균 매출액</span>
+                <span class="chart-filter btn btn-outline-secondary fw-bold" style="font-size: 16px;">년도</span>
+                <span class="chart-filter btn btn-outline-secondary  fw-bold" style="font-size: 16px;">월</span>
+                <span class="chart-filter btn btn-outline-secondary  fw-bold" style="font-size: 16px;">일</span>
             </div>
 
             <!-- main bottom start (chart) -->
@@ -164,6 +165,7 @@
 		for(let y=sysYear ; y>=2000 ; y--){
 			$("#year-select").append("<option value='" + y + "'>" + y + "년</option>");
 		}
+		
 		for(let m=1 ; m<=sysMonth ; m++){
 			$("#month-select").append("<option value='" + m + "'>" + m + "월</option>");
 		}
@@ -197,6 +199,8 @@
 				$(this).val() == oldMonth && $(this).attr("selected", true);
 			});
 			
+			ajaxSelectTicketSalesByTicketType();	// 매출 데이터 조회
+			
 		});
 		
 		// "월" 선택값이 바뀌었을 경우 ==================================================================
@@ -217,11 +221,66 @@
 			
 			$("#date-select").children("option").each(function(){
 				$(this).val() == oldDate && $(this).attr("selected", true);
-			})
+			});
+			
+			ajaxSelectTicketSalesByTicketType();	// 매출 데이터 조회
 		});
 		
-		
+		// "일" 선택값이 바뀌었을 경우
+		$("#date-select").on("change", function(){
+			ajaxSelectTicketSalesByTicketType();	// 매출 데이터 조회
+		});
 	});
+	
+	// 이용권 매출정보 관련 ===============================================================================================
+	$(document).ready(function(){
+		
+		// 매출 데이터 조회
+		ajaxSelectTicketSalesByTicketType({
+			year: $("#year-select").val(),
+			month: '',
+			date: '',
+		}, $(".year-sales-table"));	
+	});
+	
+	// 년, 월, 일별 이용권 매출정보 조회 AJAX
+	function ajaxSelectTicketSalesByTicketType(params, table){
+		console.log("params : ", params.month == '');
+		$.ajax({
+			url: "${ contextPath }/sales/ticket/sales.ajax",
+			method: "get",
+			data: params,
+			success: function(salesList){
+				let sumSales = 0;
+				let sumTicket = 0;
+				let avgSales = 0;
+				let avgTicket = 0;
+				let maxSales = 0;
+				let maxTicket = 0;
+				let minSales = 0;
+				let minTicket = 0;
+				
+				for(let i=0 ; i<salesList.length ; i++){
+					sumSales += salesList[i].sumSales;
+					sumTicket += salesList[i].sumTicket;
+					avgSales += salesList[i].avgSales;
+					avgTicket += salesList[i].avgTicket;
+					maxSales += salesList[i].maxSales;
+					maxTicket += salesList[i].maxTicket;
+					minSales += salesList[i].minSales;
+					minTicket += salesList[i].minTicket;
+				}
+			
+				
+				table.find('.sum-sales').text(sumSales.toLocaleString() + ' ( ' + sumTicket + '장 ) ');
+				table.find('.avg-sales').text(avgSales.toLocaleString() + ' ( ' + avgTicket + '장 ) ');
+				table.find('.max-sales').text(maxSales.toLocaleString() + ' ( ' + maxTicket + '장 ) ');
+				table.find('.min-sales').text(minSales.toLocaleString() + ' ( ' + minTicket + '장 ) ');
+			},error: function(){
+				console.log("SELECT TICKET SALES BY TICKET TYPE AJAX FAILED");
+			}
+		});
+	}
 </script>
 
 </html>
