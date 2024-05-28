@@ -136,6 +136,7 @@ public class PayController {
 		  .addObject("slistCount", String.valueOf(slistCount))
 		  .addObject("ulistCount", String.valueOf(ulistCount))
 		  .addObject("userName", userName)
+		  .addObject("searchmain", "searchmain")
 		  .setViewName("pay/paymain");
 		
 		
@@ -524,7 +525,7 @@ public class PayController {
 	}
 	
 	@RequestMapping("/modify.do")
-	public String mModify(@RequestParam Map<String, Object> map, Model model
+	public String modify(@RequestParam Map<String, Object> map, Model model
 						  , HttpSession session) {
 		
 		//기존에 작성된 데이터값들
@@ -1069,7 +1070,7 @@ public class PayController {
 				fileList.add(file);
 			}
 		}
-
+		
 		if(fileLeng == delFileNoLeng && fileList.isEmpty()) {
 			map.put("fileStatus", "N");
 		}else {
@@ -1391,6 +1392,7 @@ public class PayController {
 		Map<String, Object> mapUserMember = new HashMap<>();
 		mapUserMember.put("userName", userName);
 		mapUserMember.put("userNo", userNo);
+		mapUserMember.put("statusType", "전체");
 		
 		int myAllApCount = payService.myAllApCount(mapUserMember);
 		
@@ -1402,6 +1404,186 @@ public class PayController {
 		model.addAttribute("pi", pi);
 		
 	}
+	
+	@ResponseBody
+	@GetMapping("/ajaxmyWaitApproval.page")
+	public Map<String, Object> myWaitApproval(@RequestParam(value="page", defaultValue="1") int currentPage
+							 , HttpSession session, Model model) {
+		
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userName", userName);
+		mapUserMember.put("userNo", userNo);
+		mapUserMember.put("statusType", "D");
+		
+		int myAllApCount = payService.myAllApCount(mapUserMember);
+		
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(myAllApCount, currentPage, 5, 10);
+
+		List<Map<String, Object>> list = payService.myAllApproval(mapUserMember, pi);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
+		
+		return map;
+	}
+	
+	@ResponseBody
+	@GetMapping("/ajaxMyReAllApproval.page")
+	public Map<String, Object> ajaxmyReAllApproval(@RequestParam(value="page", defaultValue="1") int currentPage
+			 						, HttpSession session, Model model, ModelAndView mv) {
+		
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userName", userName);
+		mapUserMember.put("userNo", userNo);
+		mapUserMember.put("statusType", "All");
+		
+		int myAllApCount = payService.myAllApCount(mapUserMember);
+		
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(myAllApCount, currentPage, 5, 10);
+
+		List<Map<String, Object>> list = payService.myAllApproval(mapUserMember, pi);
+			
+		Map<String, Object> maps = new HashMap<>();
+		maps.put("list", list);
+		maps.put("pi", pi);
+		
+		return maps;
+		
+	}
+	
+
+	@ResponseBody
+	@GetMapping("/ajaxMyRejectApproval.page")
+	public Map<String, Object> ajaxMyRejectApproval(@RequestParam(value="page", defaultValue="1") int currentPage
+											, HttpSession session, Model model) {
+		
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userName", userName);
+		mapUserMember.put("userNo", userNo);
+		mapUserMember.put("statusType", "N");
+		
+		int myAllApCount = payService.myAllApCount(mapUserMember);
+		
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(myAllApCount, currentPage, 5, 10);
+
+		List<Map<String, Object>> list = payService.myAllApproval(mapUserMember, pi);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
+		
+		return map;
+	}
+	
+	@ResponseBody
+	@GetMapping("/ajaxMyCompleteApproval.page")
+	public Map<String, Object> ajaxMyCompletedApproval(@RequestParam(value="page", defaultValue="1") int currentPage
+			 						, HttpSession session, Model model, ModelAndView mv) {
+		
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userName", userName);
+		mapUserMember.put("userNo", userNo);
+		mapUserMember.put("statusType", "Y");
+		
+		int myAllApCount = payService.myAllApCount(mapUserMember);
+		
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(myAllApCount, currentPage, 5, 10);
+
+		List<Map<String, Object>> list = payService.myAllApproval(mapUserMember, pi);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
+		
+		return map;
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/ajaxMyProgressesApproval.page")
+	public Map<String, Object> ajaxMyProgressesApproval(@RequestParam(value="page", defaultValue="1") int currentPage
+			 						, HttpSession session, Model model, ModelAndView mv) {
+		
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userName", userName);
+		mapUserMember.put("userNo", userNo);
+		mapUserMember.put("statusType", "I");
+		
+		int myAllApCount = payService.myAllApCount(mapUserMember);
+		
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(myAllApCount, currentPage, 5, 10);
+
+		List<Map<String, Object>> list = payService.myAllApproval(mapUserMember, pi);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
+		
+		return map;
+		
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping("/ajaxMyApprovalSearch.do")
+	public Map<String, Object> ajaxMyApprovalSearch(@RequestParam(value="page", defaultValue="1") int currentPage
+			 						, HttpSession session, @RequestParam Map<String, Object> map) {
+		
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		map.put("userName", userName);
+		map.put("userNo", userNo);
+		
+		int mySearchApCount = payService.mySearchApCount(map);
+		
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(mySearchApCount, currentPage, 5, 10);
+
+		List<Map<String, Object>> list = payService.mySearchApList(map, pi);
+		
+		Map<String, Object> maps = new HashMap<>();
+		maps.put("list", list);
+		maps.put("pi", pi);
+		maps.put("statusType", map.get("statusType"));
+		maps.put("option", map.get("option"));
+		maps.put("keyword", map.get("keyword"));
+		
+		return maps;
+		
+	}
+	
+	
+	@ResponseBody
+	@GetMapping("/ajaxApprovaldelete.do")
+	public String ajaxAppprovaldelete(String no) {
+		
+		log.debug("no : {}", no);
+		
+		int result = payService.ajaxAppprovaldelete(no);
+		
+		return result == 1 ? "SUCCESS" : "FAIL";
+	}
+	
+	
+	
+	
+	
 	
 	
 

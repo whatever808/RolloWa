@@ -402,4 +402,20 @@ public class PayDao {
 		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
 		return sqlSessionTemplate.selectList("payMapper.myAllApproval", map, rowbounds);
 	}
+	
+	public int ajaxAppprovaldelete(String no){
+		return sqlSessionTemplate.update("payMapper.ajaxAppprovaldelete", no);
+	}
+	
+	public int mySearchApCount(Map<String, Object> map){
+		return sqlSessionTemplate.selectOne("payMapper.mySearchApCount", map);
+	}
+	
+	public List<Map<String, Object>> mySearchApList(Map<String, Object> map, PageInfoDto pi){
+		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.mySearchApList", map, rowbounds);
+	}
+	
+	
+	
 }
