@@ -210,22 +210,15 @@ $(document).ready(function(){
 			$(document).ready(function(){
 		    $(document).on("click", "#okay", function(){
 		        var selectedNames = []; // 선택된 사용자의 이름을 저장할 배열
-		        var selectedNos = [];
+		        
 		        $(".selected-users tbody tr").each(function(){
 		            var name = $(this).find(".name").text();
-		            var no = $(this).find("apNo").val();
 		            selectedNames.push(name); // 배열에 사용자 이름 추가
-		            selectedNos.push(no); 
 		        });
-		        //승인자이름
+		        
 		        $("input[type='hidden'][name='firstApproval']").val(selectedNames[0]);
 		        $("input[type='hidden'][name='middleApproval']").val(selectedNames[1]);
 		        $("input[type='hidden'][name='finalApproval']").val(selectedNames[2]);
-		        //승인자번호
-		        $("input[type='hidden'][name='firstApprovalNo']").val(selectedNos[0]);
-		        $("input[type='hidden'][name='middleApprovalNo']").val(selectedNos[1]);
-		        $("input[type='hidden'][name='finalApprovalNo']").val(selectedNos[2]);
-		        
 		        $("#f_name").text("");
 		        $("#m_name").text("");
 		        $("#l_name").text("");
@@ -248,7 +241,8 @@ $(document).ready(function(){
 			
 		
 		$(document).on("keyup", "#userSearch", function(ev){
-			if(ev.key == "Enter"){
+			
+			if(ev.key == 'Enter'){
 				if($(this).val().trim() == ""){
 					alert("다시입력해주세요");
 					$("#userSearch").val("");
@@ -272,8 +266,7 @@ $(document).ready(function(){
 			                htmlString += '<tr class="nameClick" data-name="' + result[i].USER_NAME + '"><td>' + (i + 1) + '</td>' +
 			                              '<td>' + result[i].USER_NAME + '</td>' +
 			                              '<td>' + result[i].POSITION_NAME + '</td>' + 
-			                              '<td>' + result[i].TEAM_NAME + '</td></tr>' + 
-			                              '<input type="hidden" name="apNo" value="' + result[i].USER_NO + '">';
+			                              '<td>' + result[i].TEAM_NAME + '</td></tr>';
 			            }
 			            
 			            $(".user-list thead").html(htmlthead);
@@ -283,7 +276,6 @@ $(document).ready(function(){
 						}
 					})
 				}
-				
 				
 			}
 		})
@@ -405,10 +397,6 @@ $(document).ready(function(){
             <div class="informations">
                 <!-- informations left area start -->
                 <div class="left_con">
-                
-                		<input type="hidden" name="fNo">
-                		<input type="hidden" name="mNo">
-                		<input type="hidden" name="lNo">
 		                <form action="${contextPath}/pay/bReportInsert.do" method="post" id="myForm">
 		                   <input type="hidden" name="deptName" value="${member.get(0).teamName}">
                        <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
