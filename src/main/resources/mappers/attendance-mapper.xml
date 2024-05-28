@@ -4,11 +4,11 @@
 <mapper namespace="attendanceMapper">
 
 	<resultMap id="attendanceList" type="AttendanceDto">
-		<id column="attendance_no" property="attendanceNo"/>
-		<result column="user_no" property="userNo"/>
-		<result column="clock_in" property="clockIn"/>
-		<result column="clock_out" property="clockOut"/>
-		<result column="request_detail" property="requestDetail"/>
+		<id column="attendance_no" property="attendanceNo" />
+		<result column="user_no" property="userNo" />
+		<result column="clock_in" property="clockIn" />
+		<result column="clock_out" property="clockOut" />
+		<result column="request_detail" property="requestDetail" />
 		<result column="dept" property="dept" />
 		<result column="team" property="team" />
 		<result column="posi" property="posi" />
@@ -19,14 +19,14 @@
 		<result column="c" property="c" />
 		<result column="d" property="d" />
 		<result column="e" property="e" />
-		
+
 		<collection property="groupList" ofType="GroupDto">
-			<result column="group_code" property="groupCode"/>
-			<result column="code" property="code"/>
-			<result column="code_name" property="codeName"/>
-			<result column="upper_code" property="upperCode"/>
+			<result column="group_code" property="groupCode" />
+			<result column="code" property="code" />
+			<result column="code_name" property="codeName" />
+			<result column="upper_code" property="upperCode" />
 		</collection>
-		
+
 		<collection property="memberList" ofType="MemberDto">
 			<result column="user_no" property="userNo" />
 			<result column="user_id" property="userId" />
@@ -55,288 +55,279 @@
 			<result column="totalSalary" property="totalSalary" />
 			<result column="payment" property="payment" />
 		</collection>
-		
+
 	</resultMap>
 
 	<!-- 출결 전체 카운트 -->
 	<select id="selectAttendanceListCount" resultType="_int">
 		SELECT
-			   COUNT(*)
-		  FROM MEMBER
-		 WHERE STATUS = 'Y'
-	</select>
-	
-	<!-- 출결 조회  -->
-	<select id="selectAttendanceList" resultType="hashmap">
-		SELECT 
-    M.USER_NO,
-    M.PROFILE_URL AS "profileURL",
-    M.USER_NAME AS "userName",
-    D1.CODE_NAME AS "dept",
-    D2.CODE_NAME AS "team",
-    (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = M.POSITION_CODE) AS "posi",
-    A.CLOCK_IN AS "todayIn",
-    A.CLOCK_OUT AS "todayOut",
-    A.REQUEST_DETAIL AS "requestDetail"
-FROM 
-    MEMBER M
-JOIN 
-    TB_GROUP D2 ON M.TEAM_CODE = D2.CODE
-LEFT JOIN 
-    TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
-LEFT JOIN 
-    ATTENDANCE A ON M.USER_NO = A.USER_NO
-    AND TO_CHAR(A.CLOCK_IN, 'yyyymmdd') = #{selectedDate}
- 
-   WHERE D1.STATUS = 'Y'
-    AND D2.STATUS = 'Y'
-    AND D1.CODE_NAME LIKE '%' || #{department} || '%'
-    AND D2.CODE_NAME LIKE '%' || #{team} || '%'
-    AND (
-        (#{attendanceStatus} = '결근' AND A.REQUEST_DETAIL IS NULL)
-        OR
-        (#{attendanceStatus} IS NULL AND A.REQUEST_DETAIL IS NULL)
-        OR
-        (A.REQUEST_DETAIL LIKE '%' || #{attendanceStatus} || '%')
-    )
-    AND M.USER_NAME LIKE '%' || #{name} || '%'
-ORDER BY 
-    M.USER_NO ASC
+		COUNT(*)
+		FROM MEMBER
+		WHERE STATUS = 'Y'
 	</select>
 
-	<!-- 출결 조회  삭제 하면 안됨
-	<select id="selectAttendanceList" resultMap="attendanceList">
-		SELECT M.USER_NO
-			 , M.PROFILE_URL AS "profileURL"
-			 , M.USER_NAME AS "userName"
-			 , D1.CODE_NAME AS "dept"
-			 , D2.CODE_NAME AS "team"
-			 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = M.POSITION_CODE) AS "posi"
-			 ,  A.CLOCK_IN AS "todayIn"
-			 ,  A.CLOCK_OUT AS "todayOut"
-			 ,  A.REQUEST_DETAIL AS "requestDetail"
-		  FROM MEMBER M
-		  JOIN TB_GROUP D2 ON M.TEAM_CODE = D2.CODE
- 	 LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
- 	 LEFT JOIN ATTENDANCE A ON M.USER_NO = A.USER_NO
- 	       AND TO_CHAR(A.CLOCK_IN, 'yyyymmdd') = #{ selectedDate }
-	     WHERE D1.STATUS = 'Y'
-	       AND D2.STATUS = 'Y'
-	       AND D1.CODE_NAME LIKE '%' || #{ department } || '%'
-	       AND D2.CODE_NAME LIKE '%' || #{ team } || '%'
-	       AND (A.REQUEST_DETAIL LIKE '%' || #{ attendanceStatus } || '%' OR A.REQUEST_DETAIL IS NULL)
-	       AND M.USER_NAME LIKE '%' || #{ name } || '%'
-	     ORDER BY 
-	      	   M.USER_NO ASC
+	<!-- 출결 조회 -->
+	<select id="selectAttendanceList" resultType="hashmap">
+		SELECT
+		M.USER_NO,
+		M.PROFILE_URL AS "profileURL",
+		M.USER_NAME AS "userName",
+		D1.CODE_NAME AS "dept",
+		D2.CODE_NAME AS "team",
+		(SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE =
+		M.POSITION_CODE) AS "posi",
+		A.CLOCK_IN AS "todayIn",
+		A.CLOCK_OUT AS "todayOut",
+		A.REQUEST_DETAIL AS "requestDetail"
+		FROM
+		MEMBER M
+		JOIN
+		TB_GROUP D2 ON M.TEAM_CODE = D2.CODE
+		LEFT JOIN
+		TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
+		LEFT JOIN
+		ATTENDANCE A ON M.USER_NO = A.USER_NO
+		AND TO_CHAR(A.CLOCK_IN, 'yyyymmdd') = #{selectedDate}
+
+		WHERE D1.STATUS = 'Y'
+		AND D2.STATUS = 'Y'
+		AND D1.CODE_NAME LIKE '%' || #{department} || '%'
+		AND D2.CODE_NAME LIKE '%' || #{team} || '%'
+		AND (
+		(#{attendanceStatus} = '결근' AND A.REQUEST_DETAIL IS NULL)
+		OR
+		(#{attendanceStatus} IS NULL AND A.REQUEST_DETAIL IS NULL)
+		OR
+		(A.REQUEST_DETAIL LIKE '%' || #{attendanceStatus} || '%')
+		)
+		AND M.USER_NAME LIKE '%' || #{name} || '%'
+		ORDER BY
+		M.USER_NO ASC
 	</select>
-	-->
-	
-	<!-- 출결 개수 조회(출근|결근|퇴근|조퇴|휴가)-->
+
+	<!-- 출결 조회 삭제 하면 안됨 <select id="selectAttendanceList" resultMap="attendanceList"> 
+		SELECT M.USER_NO , M.PROFILE_URL AS "profileURL" , M.USER_NAME AS "userName" 
+		, D1.CODE_NAME AS "dept" , D2.CODE_NAME AS "team" , (SELECT CODE_NAME FROM 
+		TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = M.POSITION_CODE) AS "posi" 
+		, A.CLOCK_IN AS "todayIn" , A.CLOCK_OUT AS "todayOut" , A.REQUEST_DETAIL 
+		AS "requestDetail" FROM MEMBER M JOIN TB_GROUP D2 ON M.TEAM_CODE = D2.CODE 
+		LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%' 
+		LEFT JOIN ATTENDANCE A ON M.USER_NO = A.USER_NO AND TO_CHAR(A.CLOCK_IN, 'yyyymmdd') 
+		= #{ selectedDate } WHERE D1.STATUS = 'Y' AND D2.STATUS = 'Y' AND D1.CODE_NAME 
+		LIKE '%' || #{ department } || '%' AND D2.CODE_NAME LIKE '%' || #{ team } 
+		|| '%' AND (A.REQUEST_DETAIL LIKE '%' || #{ attendanceStatus } || '%' OR 
+		A.REQUEST_DETAIL IS NULL) AND M.USER_NAME LIKE '%' || #{ name } || '%' ORDER 
+		BY M.USER_NO ASC </select> -->
+
+	<!-- 출결 개수 조회(출근|결근|퇴근|조퇴|휴가) -->
 	<select id="selectAttendanceCount" resultMap="attendanceList">
-		SELECT 
-			    SUM(CASE WHEN attendanceStatus = '출근' THEN 1 ELSE 0 END) AS a,
-			    SUM(CASE WHEN attendanceStatus = '결근' THEN 1 ELSE 0 END) AS b,
-			    SUM(CASE WHEN attendanceStatus = '퇴근' THEN 1 ELSE 0 END) AS c,
-			    SUM(CASE WHEN attendanceStatus = '조퇴' THEN 1 ELSE 0 END) AS d,
-			    SUM(CASE WHEN attendanceStatus = '휴가' THEN 1 ELSE 0 END) AS e
-			FROM (
-			    SELECT 
-			        CASE 
-			            WHEN A.CLOCK_IN IS NOT NULL THEN
-			                CASE 
-			                    WHEN A.REQUEST_DETAIL LIKE '%출근%' THEN '출근'
-			                    WHEN A.REQUEST_DETAIL LIKE '%퇴근%' THEN '퇴근'
-			                    WHEN A.REQUEST_DETAIL LIKE '%조퇴%' THEN '조퇴'
-			                    WHEN A.REQUEST_DETAIL LIKE '%휴가%' THEN '휴가'
-			                    ELSE '결근'
-			                END
-			            ELSE '결근'
-			        END AS attendanceStatus
-			    FROM 
-			        MEMBER M
-			    JOIN 
-			        TB_GROUP D2 ON M.TEAM_CODE = D2.CODE
-			    LEFT JOIN 
-			        TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
-			    LEFT JOIN 
-			        ATTENDANCE A ON M.USER_NO = A.USER_NO
-			        AND TO_CHAR(A.CLOCK_IN, 'yyyy-mm-dd') = #{ selectedDate }
-			    WHERE 
-			        D1.STATUS = 'Y'
-			        AND D2.STATUS = 'Y')
+		SELECT
+		SUM(CASE WHEN attendanceStatus = '출근' THEN 1 ELSE 0 END) AS a,
+		SUM(CASE WHEN attendanceStatus = '결근' THEN 1 ELSE 0 END) AS b,
+		SUM(CASE WHEN attendanceStatus = '퇴근' THEN 1 ELSE 0 END) AS c,
+		SUM(CASE WHEN attendanceStatus = '조퇴' THEN 1 ELSE 0 END) AS d,
+		SUM(CASE WHEN attendanceStatus = '휴가' THEN 1 ELSE 0 END) AS e
+		FROM (
+		SELECT
+		CASE
+		WHEN A.CLOCK_IN IS NOT NULL THEN
+		CASE
+		WHEN A.REQUEST_DETAIL LIKE '%출근%' THEN '출근'
+		WHEN A.REQUEST_DETAIL LIKE '%퇴근%' THEN '퇴근'
+		WHEN A.REQUEST_DETAIL LIKE '%조퇴%' THEN '조퇴'
+		WHEN A.REQUEST_DETAIL LIKE '%휴가%' THEN '휴가'
+		ELSE '결근'
+		END
+		ELSE '결근'
+		END AS attendanceStatus
+		FROM
+		MEMBER M
+		JOIN
+		TB_GROUP D2 ON M.TEAM_CODE = D2.CODE
+		LEFT JOIN
+		TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
+		LEFT JOIN
+		ATTENDANCE A ON M.USER_NO = A.USER_NO
+		AND TO_CHAR(A.CLOCK_IN, 'yyyy-mm-dd') = #{ selectedDate }
+		WHERE
+		D1.STATUS = 'Y'
+		AND D2.STATUS = 'Y')
 	</select>
-	
-	
+
+
 	<!-- 아이디 중복체크 -->
 	<select id="selectUserIdCount" resultType="_int">
 		select count(*)
-		  from member
-		 where user_id = #{checkId}
+		from member
+		where user_id = #{checkId}
 	</select>
-	
-	<!-- 회원 가입 : 사번,이름,아이디,비밀번호,생성한관리자번호,관리자권한여부,팀코드,직급-->
+
+	<!-- 회원 가입 : 사번,이름,아이디,비밀번호,생성한관리자번호,관리자권한여부,팀코드,직급 -->
 	<insert id="insertMember">
 		INSERT
-		  INTO MEMBER
-		  	 (
-		  	   USER_NO
-		  	 , USER_NAME
-		  	 , USER_ID
-		  	 , USER_PWD
-		  	 , ENROLL_USER_NO
-		  	 , VACATION_COUNT
-		  	 , AUTH_LEVEL
-             , TEAM_CODE
-		  	 , POSITION_CODE
-		  	 )
-		  	   VALUES
-		  	 (
-			   SEQ_MNO.NEXTVAL
-			 , #{userName}
-			 , #{userId}
-			 , #{userPwd}
-			 , 1
-			 , 10
-			 , #{authLevel}
-             , (SELECT CODE FROM TB_GROUP WHERE CODE_NAME = #{teamCode} )
-             , (SELECT CODE FROM TB_GROUP WHERE CODE_NAME = #{positionCode} )
-		  	 )
+		INTO MEMBER
+		(
+		USER_NO
+		, USER_NAME
+		, USER_ID
+		, USER_PWD
+		, ENROLL_USER_NO
+		, VACATION_COUNT
+		, AUTH_LEVEL
+		, TEAM_CODE
+		, POSITION_CODE
+		)
+		VALUES
+		(
+		SEQ_MNO.NEXTVAL
+		, #{userName}
+		, #{userId}
+		, #{userPwd}
+		, 1
+		, 10
+		, #{authLevel}
+		, (SELECT CODE FROM TB_GROUP WHERE CODE_NAME = #{teamCode} )
+		, (SELECT CODE FROM TB_GROUP WHERE CODE_NAME = #{positionCode} )
+		)
 	</insert>
 
 	<!-- 급여 상세 조회 -->
-	<!-- 작성 예정 
-	<select id="selectAccountDetail" resultMap="attendanceList">
-		SELECT 
-	</select>
- -->
+	<!-- 작성 예정 <select id="selectAccountDetail" resultMap="attendanceList"> 
+		SELECT </select> -->
 
-		
+
 	<!-- 출결 상태 조회 -->
 	<select id="selectStatus" resultMap="attendanceList">
 		SELECT USER_NO
-             , CLOCK_IN
-             , CLOCK_OUT
-             , REQUEST_DETAIL
-          FROM ATTENDANCE
-         WHERE TRUNC(CLOCK_IN) = TRUNC(SYSDATE-7)
+		, CLOCK_IN
+		, CLOCK_OUT
+		, REQUEST_DETAIL
+		FROM ATTENDANCE
+		WHERE TRUNC(CLOCK_IN) = TRUNC(SYSDATE-7)
 	</select>
-	
+
 	<!-- ======================================= "가림" 구역 ======================================= -->
 	<!-- 당일 휴가인 사원조회 -->
 	<select id="selectVacationMemberList" resultType="map">
-			select regist_emp "userNo"
-			  from vacation
-			 where apporval_status = 'Y'
-			   and status = 'Y'
-			   and to_char(sysdate, 'YYYYMMDD') 
-			       between to_char(vacation_strat, 'YYYYMMDD') and to_char(vacation_end, 'YYYYMMDD')
+		select regist_emp "userNo"
+		from vacation
+		where apporval_status = 'Y'
+		and status = 'Y'
+		and to_char(sysdate, 'YYYYMMDD')
+		between to_char(vacation_strat, 'YYYYMMDD') and to_char(vacation_end,
+		'YYYYMMDD')
 	</select>
-	
+
 	<!-- 당일 휴가사원 or 결근사원 근태등록 -->
-	<insert id="insertVacationOrDayOffMemberAttend" parameterType="map">
-			insert
-				into attendance
-					 (
-					  attendance_no
-					 ,user_no
-					 ,clock_out
-					 ,request_detail
-					 )
-			 values 
-	 				(
-	 				 seq_atteno.nextval
-	 				,#{userNo}
-	 				,sysdate
-	 				,#{requestDetail}
-	 				)
+	<insert id="insertVacationOrDayOffMemberAttend"
+		parameterType="map">
+		insert
+		into attendance
+		(
+		attendance_no
+		,user_no
+		,clock_out
+		,request_detail
+		)
+		values
+		(
+		seq_atteno.nextval
+		,#{userNo}
+		,sysdate
+		,#{requestDetail}
+		)
 	</insert>
-	
+
 	<!-- 당일 결근 사원조회 -->
 	<select id="selectDayOffMemberList" resultType="map">
-			select user_no "userNo"
-			  from member
-			 where status = 'Y'
-			
-			minus
-			
-			select user_no "userNo"
-			  from attendance
-			 where to_char(clock_in, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
-			   and request_detail = '휴가'
+		select user_no "userNo"
+		from member
+		where status = 'Y'
+
+		minus
+
+		select user_no "userNo"
+		from attendance
+		where to_char(clock_in, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
+		and request_detail = '휴가'
 	</select>
-	
+
 	<!-- 근태관리 정보조회 -->
-	<select id="selectMemberAttend" parameterType="hashmap" resultType="map">
-			select 
-			       vacation_count "vacationCount"
-			      ,(
-			         select count(user_no)
-			           from attendance
-			          where user_no = member.user_no
-			            and request_detail = '결근'
-			            and to_char(clock_out, 'YYYY') = #{year}
-			            and extract(month from clock_out) = extract(month from to_date(#{month}, 'MM'))
-			        ) "dayOffCount"
-			      ,(
-			         select count(user_no)
-			           from attendance
-			          where user_no = member.user_no
-			            and request_detail = '조퇴'
-			            and to_char(clock_in, 'YYYY') = #{year}
-			            and extract(month from clock_in) = extract(month from to_date(#{month}, 'MM'))
-			        ) "leaveEarlyCount"
-			      ,(
-			         select count(user_no)
-			           from attendance
-			          where user_no = member.user_no
-			            and request_detail = '휴가'
-			            and to_char(clock_out, 'YYYY') = #{year}
-			        ) "usedVacationCount"
-			  from member
-			 where user_no = #{userNo}
+	<select id="selectMemberAttend" parameterType="hashmap"
+		resultType="map">
+		select
+		vacation_count "vacationCount"
+		,(
+		select count(user_no)
+		from attendance
+		where user_no = member.user_no
+		and request_detail = '결근'
+		and to_char(clock_out, 'YYYY') = #{year}
+		and extract(month from clock_out) = extract(month from to_date(#{month},
+		'MM'))
+		) "dayOffCount"
+		,(
+		select count(user_no)
+		from attendance
+		where user_no = member.user_no
+		and request_detail = '조퇴'
+		and to_char(clock_in, 'YYYY') = #{year}
+		and extract(month from clock_in) = extract(month from to_date(#{month},
+		'MM'))
+		) "leaveEarlyCount"
+		,(
+		select count(user_no)
+		from attendance
+		where user_no = member.user_no
+		and request_detail = '휴가'
+		and to_char(clock_out, 'YYYY') = #{year}
+		) "usedVacationCount"
+		from member
+		where user_no = #{userNo}
 	</select>
-	
+
 	<!-- 출근 등록 -->
 	<insert id="insertMemberAttend" parameterType="hashmap">
 		insert
-		  into attendance
-		  	  (
-		  		attendance_no
-		  	   ,user_no
-		  	   ,clock_in
-		  	   ,request_detail
-		  	  )
+		into attendance
+		(
+		attendance_no
+		,user_no
+		,clock_in
+		,request_detail
+		)
 		values
-			   (
-			    seq_atteno.nextval
-			   ,#{userNo}
-			   ,sysdate
-			   ,#{requestDetail}
-			   )
+		(
+		seq_atteno.nextval
+		,#{userNo}
+		,sysdate
+		,#{requestDetail}
+		)
 	</insert>
-	
+
 	<!-- 퇴근/조퇴 등록(수정) -->
 	<update id="updateMemberAttend" parameterType="hashmap">
 		update attendance
-		   set request_detail = #{requestDetail}
-		   	  ,clock_out = sysdate
-		 where user_no = #{userNo}
-		   and attendance_no = #{attendanceNo}
+		set request_detail = #{requestDetail}
+		,clock_out = sysdate
+		where user_no = #{userNo}
+		and attendance_no = #{attendanceNo}
 	</update>
-	
+
 	<!-- 출근/퇴근/조퇴 시간조회 -->
-	<select id="selectAttendTime" parameterType="hashmap" resultType="map">
-		select 
-		       attendance_no "attendanceNo"
-		      ,to_char(clock_in, 'HH24:MI:SS') "clockIn"
-		      ,to_char(clock_out, 'HH24:MI:SS') "clockOut"
-		      ,request_detail "requestDetail"
-		  from attendance
-		 where user_no = #{userNo}
-		   and (to_char(clock_in, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
-		    or to_char(clock_out, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD'))
+	<select id="selectAttendTime" parameterType="hashmap"
+		resultType="map">
+		select
+		attendance_no "attendanceNo"
+		,to_char(clock_in, 'HH24:MI:SS') "clockIn"
+		,to_char(clock_out, 'HH24:MI:SS') "clockOut"
+		,request_detail "requestDetail"
+		from attendance
+		where user_no = #{userNo}
+		and (to_char(clock_in, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
+		or to_char(clock_out, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD'))
 	</select>
-	
+
 	<!-- ======================================= "가림" 구역 ======================================= -->
 </mapper>
 

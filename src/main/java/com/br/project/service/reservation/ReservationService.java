@@ -41,6 +41,13 @@ public class ReservationService {
 		return reservationDao.insertReservation(paramMap);
 	}
 
-	
+    // 3. 내 예약 조회
+    public List<HashMap<String, Object>> selectMyReservation(Map<String, Object> paramMap){
+    	return reservationDao.selectMyReservation(paramMap);
+    }
+    // 4. 예약 취소
+	public int updateReservation(List<Integer> reservationNo) {
+		return reservationDao.updateReservation(reservationNo);
+	}
 	
 }

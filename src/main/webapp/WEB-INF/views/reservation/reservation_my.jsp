@@ -16,161 +16,14 @@
     }
     
     /* css */
-    /* 비품 예약 css */
-    .div_date{
-        margin-top: 20px;
-        text-align: center;
+    /* 내 비품 예약 css */
+    .table_1 th{
+    	background-color: gainsboro !important;
     }
-    .table_date{
-        font-size: 25px;
-        margin: auto;   
-        width: 350px;
-    }
-    .button_today{
-        position: relative;
-        top: -40px;
-        left: 250px;
-    }
-    .div_search table{
-        display: flex;
-        justify-content: center;
-        margin-bottom: 50px;
-    }
-    .th_title{
-        background-color: aquamarine !important;
-        width: 170px;
-        height: 60px;
-        text-align: center;
-        border-radius: 10px;
-    }
-    .div_search input{
-        width: 400px !important;
-        margin-left: 20px;
-    }
-    .date{
-        font-size: 20px !important;
-    }
-    .td_noSelect{
-        user-select: none;
-    }
-    .btn_center{
-        display: flex;
-        text-align: center;
-    }
-    .div_searchBtn{
-        display: flexbox;
-        text-align: center;
-    }
-    .div_searchBtn button{
-        margin: 20px 5px;
-        width: 100px;
-    }
-    .div_common{
-        display: flex;
-        justify-content: center;
-    }
-    .table_count{
-        width: 100%;
-        margin: 10px 50px;
-    }
-    .td_left{
-        text-align: left;
-    }
-    .td_right{
-        text-align: right;
-    }
-    
-    h6{
-        font-size: 15px !important;
-    }
-    .tr_time th,td{
-        width: 18px;
-        height: 35px;
-        text-align: center;
-    }
-    .th_white{
-        white-space: nowrap;
-    }
-    .th_name{
-        width: 200px !important;
-    }
-    .tr_time th{
-        background-color: gainsboro;
-    }
-
-    .td_reserve{
-        background-color: cyan;
-        white-space: nowrap;
-    }
-    .td_limit{
-        background-color: red;
-        color: white;
-    }
-
-    .tr_cursor{
-        cursor: pointer;
-    }
-    .tr_cursor:hover{
-        background-color: rgb(255,247,208);
-    }
-
-    .table_modal{
-        margin:auto;
-        display: flex;
-        justify-content: center;
-        width: 500px;
-        text-align: center;
-    }
-    .table_modal th{
-        width: 100px;
-        background-color: gainsboro;
-    }
-    .table_modal td{
-        width: 300px;
-    }
-    .table_modal input[type="text"]{
-        width: 80%;
-    }
-    .div_reserveTime{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .div_count{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        user-select: none;
-    }
-    .div_count i {
-        width: 1.5em;
-        height: 1.5em;
-    }
-    .modal_count{
-        width: 80px !important;
-        text-align: center;
-    }
-    .i_minus{
-        background-color: red;
-    }
-    .i_plus{
-        background-color: green ;
-    }
-    .div_count h5{
-        margin: 0 30px;
-    }
-    .h6_separator{
-        margin: 0  10px;
-    }
-
-   
-    .div_page{
-        margin-top: 30px;
-    }
-
-    /* css */
     .div_1{
         display: flex;
+        margin-top: 50px;
+        margin-bottom: 10px;
     }
     .div_1 h4{
         margin-right: auto;
@@ -221,51 +74,143 @@
 	    
 		<!-- ------------ -->
 	
-	<div class="div_1">
-                <h4>전체 2개</h4>
-                <div>
-                    <button>예약 수정</button>
-                    <button>선택한 비품 반납</button>
-                </div>
-            </div>
+		<div class="div_1">
+		<h4>전체 개</h4>
+			<div>
+				<!-- <button class="btn btn-outline-primary">예약 수정</button> -->
+				<button class="btn btn-primary" id="cancelReservationBtn">예약 취소</button>
+			</div>
+		</div>
 
-            <table class="table">
-                <tr>
-                    <th>
-                        <input type="checkbox">
-                        전체 선택
-                    </th>
-                    <th>번호</th>
-                    <th>비품명</th>
-                    <th>예약 시간</th>
-                    <th>반납 예정 시간</th>
-                    <th>상태</th>
-                    <th>예약 설정 상태</th>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox">
-                    </td>
-                    <td>1</td>
-                    <td>비품명</td>
-                    <td>2024-04-24 10:00</td>
-                    <td>2024-04-24 13:00</td>
-                    <td class="reservation_1">예약중</td>
-                    <td class="reservation_2">반납처리</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox">
-                    </td>
-                    <td>1</td>
-                    <td>비품명</td>
-                    <td>2024-04-24 10:00</td>
-                    <td>2024-04-24 13:00</td>
-                    <td class="reservation_3">예약중</td>
-                    <td class="reservation_4">반납처리</td>
-                </tr>
+		<table class="table table-bordered line-shadow table_1 ">
+			<tr>
+				<th>
+					<input type="checkbox" id="selectAll" class="form-check-input">
+					<label for="selectAll">전체 선택</label>
+				</th>
+				<th>번호</th>
+				<th>비품명</th>
+				<th>예약 시간</th>
+				<th>반납 예정 시간</th>
+				<th>내용</th>
+			</tr>
+			<c:choose>
+				<c:when test="${ not empty reservationList }">
+					<c:forEach var="r" items="${reservationList}">
+					    <tr>
+					        <td class="checkbox-cell">
+							    <input type="checkbox" id="selectOne-${r.reservationNo}" class="form-check-input" data-reservation-no="${r.reservationNo}">
+							    <label for="selectOne-${r.reservationNo}">선택</label>
+							</td>
+					        <td>${r.reservationNo}</td>
+					        <td>${r.equipmentName}</td>
+					        <td>${r.startTime}</td>
+					        <td>${r.endTime}</td>
+					        <td>${r.content}</td>
+					    </tr>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+		        	<tr>
+		        		<td colspan="8">조회된 예약이 없습니다.</td>
+		        	</tr>
+		        </c:otherwise>
+	        </c:choose>
+           </table>
+            
+            <script>
+            //console.log("user: ", ${loginMember.userNo});
+            $(document).ready(function() {
+	            $.ajax({
+		 	        url: "${contextPath}/reservation/my.do",
+		 	        type: "GET",
+					data:{ userNo: "${ loginMember.userNo }" },
+		 	        success: function(data){
+						//console.log("통신 성공");
+						
+						// 예약 정보 테이블에 출력
+						$(".table_1 tbody").html($(data).find(".table_1 tbody").html());
+						
+						// 번호 출력, 체크박스 표시 설정
+						$(".table_1 tbody tr").each(function(index) {
+		                    $(this).find('td:nth-child(2)').text(index);
+		
+		                    var endTime = $(this).find('td:nth-child(5)').text();
+		                    var currentTime = new Date();
+		                    var returnTime = new Date(endTime.replace(/-/g, '/'));
+		
+		                    if (returnTime < currentTime) {
+		                        $(this).find('.checkbox-cell').html('');
+		                    }
+		                });
+						
+						// 시간 데이터에서 .0 제거
+		                $(".table_1 tbody td:nth-child(4), .table_1 tbody td:nth-child(5)").each(function() {
+		                    var time = $(this).text();
+		                    time = time.split(".")[0]; // 소수점 이하 부분 제거
+		                    $(this).text(time);
+		                });
+						
+						// 예약한 개수 출력
+						var rowCount = $(".table_1 tbody tr").length;
+					    $("h4").html("전체 " + (rowCount-1) + "개");
+					    
+					    
+		 	        },
+		 	        error: function(){
+		 	            //console.log("통신 실패");
+		 	        }
+		 	    });
+            });
+         	// 전체 선택 체크박스 클릭 시
+            $(document).on('click', '#selectAll', function() {
+                var isChecked = $(this).prop('checked');
+                $('.table_1 tbody input[type="checkbox"]').prop('checked', isChecked);
+            });
 
-            </table>
+            // 예약 테이블 업데이트 후 다시 바인딩
+            /*
+            $(document).on('change', '#selectAll', function() {
+                var isChecked = $(this).prop('checked');
+                $('.table_1 tbody input[type="checkbox"]').prop('checked', isChecked);
+            });
+            */
+            
+         	// 예약 취소 버튼 클릭 시
+            $('#cancelReservationBtn').on('click', function() {
+                var selectedReservations = [];
+                $('.table_1 tbody input[type="checkbox"]:checked').each(function() {
+                    selectedReservations.push($(this).data('reservation-no'));
+                });
+
+                if (selectedReservations.length > 0) {
+                    $.ajax({
+                        url: "${contextPath}/reservation/cancel.do",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({ reservationNo: selectedReservations }),
+                        success: function(response) {
+                            // 성공적으로 예약 취소 처리 후 테이블 갱신
+                            if (response == "SUCCESS") {
+	                            alert('예약이 취소되었습니다.');
+	                            location.reload();
+                            } else {
+	                            alert('예약이 취소 실패!');
+                            	
+                            }
+                        },
+                        error: function() {
+                            alert('예약 취소에 실패했습니다.');
+                        }
+                    });
+                } else {
+                    alert('취소할 예약을 선택해주세요.');
+                }
+            });
+            
+            
+            
+            </script>
 	
 		<!-- ------------ -->
 	

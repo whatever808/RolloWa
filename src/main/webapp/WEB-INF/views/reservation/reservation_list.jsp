@@ -668,11 +668,21 @@
                     <!-- 예약된 시간 확인 -->
                     <c:forEach var="r" items="${reservationList}">
                         <c:if test="${e.code eq r.equipmentCode}">
+                            <!-- 시간 계산 -->
+                            <c:set var="startHour" value="${fn:substring(r.reserveStart, 11, 13)}" />
+                            <c:set var="startMinute" value="${fn:substring(r.reserveStart, 14, 16)}" />
+                            <c:set var="endHour" value="${fn:substring(r.reserveEnd, 11, 13)}" />
+                            <c:set var="endMinute" value="${fn:substring(r.reserveEnd, 14, 16)}" />
+                            <c:set var="startSlot" value="${startHour * 2 + (startMinute / 30)}" />
+                            <!-- 예약 종료 시간이 23:59:59인 경우 48로 설정 -->
+                            <c:if test="${endHour eq '23' and endMinute eq '59'}">
+                                <c:set var="endSlot" value="48" />
+                            </c:if>
+                            <c:if test="${not (endHour eq '23' and endMinute eq '59')}">
+                                <c:set var="endSlot" value="${endHour * 2 + (endMinute / 30)}" />
+                            </c:if>
                             <!-- 시작 시간과 종료 시간 비교 -->
-                            <c:if test="${timeSlot ge fn:substring(r.reserveStart, 11, 13)*2 + 1 and timeSlot lt (fn:substring(r.reserveEnd, 11, 13)*2 + fn:substring(r.reserveEnd, 14, 16)/30 + 1)}">
-                            <%-- <c:if test="${timeSlot gt (fn:substring(r.reserveStart, 11, 13)*2 + fn:substring(r.reserveStart, 14, 16)/30) and timeSlot le (fn:substring(r.reserveEnd, 11, 13)*2 + fn:substring(r.reserveEnd, 14, 16)/30)}"> --%>
-                            
-                            
+                            <c:if test="${timeSlot > startSlot and timeSlot <= endSlot}">
                                 <!-- 해당 시간대에 예약이 있는 경우 -->
                                 <c:set var="reserved" value="true" />
                                 <!-- 색상 변경 또는 다른 표시 방법을 여기에 추가 -->
@@ -695,10 +705,12 @@
     </c:when>
     <c:otherwise>
         <tr>
-            <td colspan="26">조회된 비품이 없습니다.</td>
+            <td colspan="48">조회된 비품이 없습니다.</td>
         </tr>
     </c:otherwise>
 </c:choose>
+
+
 
 
 

@@ -7,8 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +23,7 @@ import com.br.project.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import oracle.jdbc.clio.annotations.Debug;
 
 
 // 3. 예약 관련 controller
@@ -93,7 +97,6 @@ public class ReservationController {
 	}
 	
 	// 비품 예약 하기
-	
 	@ResponseBody
 	@RequestMapping("/reserve.do")
 	public Map<String, Object> insertReservation(@RequestParam ("userNo") int userNo,
@@ -134,19 +137,57 @@ public class ReservationController {
         //return "/reservation/list.do";
     }
 
-	
-	
 	// 3.2 내 예약 조회
-	@GetMapping("/my.page")
-	public String reservationMy() {
-		return "reservation/reservation_my";
+	@GetMapping("/my.do")
+	public ModelAndView reservationList(@RequestParam(value = "userNo", defaultValue = "1") int userNo,
+			ModelAndView mv) {
+		
+		//log.debug("값을 가져왔는지 : {}", userNo);
+
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("userNo", userNo);
+		
+		//int listCount = reservationService.selectEquipmentListCount();
+		//PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
+		//paramMap.put("pi", pi);
+		
+		// 내 예약 리스트 가져오기
+		List<HashMap<String, Object>> reservationList = reservationService.selectMyReservation(paramMap);
+		log.debug("예약 리스트 : {}", reservationList);
+		
+		mv.addObject("reservationList", reservationList)
+		  .setViewName("reservation/reservation_my");
+		
+		return mv;
 	}
+
+	// 3.3 내 예약 취소
+	@PostMapping("/cancel.do")
+    @ResponseBody
+    public String cancelReservations(@RequestBody Map<String, List<Integer>> request) {
+        List<Integer> reservationNo = request.get("reservationNo");
+
+        log.debug("reservationNo값 : {}", reservationNo);
+        
+        int result = reservationService.updateReservation(reservationNo);
+        if(result > 0) {
+        	log.debug("업데이트 성공");
+        	return "SUCCESS";
+        } else {
+        	log.debug("업데이트 실패");
+        	return "FAIL";
+        }
+        
+    }
 	
 	
-	// 3.3 비품 관리
-	@GetMapping("/manager.page")
+	
+	
+	// 3.4 비품 관리
+	@GetMapping("/manager.do")
 	public String reservationManager() {
 		return "reservation/reservation_manager";
 	}
+	
 	
 }

@@ -38,7 +38,14 @@ public class ReservationDao {
 	public int insertReservation(Map<String, Object> paramMap) {
 		return sqlSessionTemplate.insert("reservationMapper.insertReservation", paramMap);
 	}
-	
+	// 3. 내 예약 조회하기
+	public List<HashMap<String, Object>> selectMyReservation(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.selectList("reservationMapper.selectMyReservation", paramMap);
+	}
+	// 4. 내 예약 취소하기
+	public int updateReservation(List<Integer> reservationNo) {
+		return sqlSessionTemplate.update("reservationMapper.updateReservation", reservationNo);
+	}
 	
 	
 }

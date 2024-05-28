@@ -76,7 +76,7 @@ public class OrganizationService {
         int employeeCount = organizationDao.countEmployeesInTeam(teamName);
         return employeeCount > 0;
     }
-
+    
 	
 
 }

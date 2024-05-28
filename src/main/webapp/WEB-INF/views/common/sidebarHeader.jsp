@@ -585,10 +585,10 @@ $(document).ready(function(){
                             	<a href="${ contextPath }/reservation/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 예약</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/reservation/myList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">내 예약 조회</a>
+                            	<a href="${ contextPath }/reservation/my.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">내 예약 조회</a>
                             </li>
                             <li class="onlyManagerShow">
-                            	<a href="${ contextPath }/reservation/reManager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 관리</a>
+                            	<a href="${ contextPath }/reservation/manager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 관리</a>
                             </li>
                         </ul>
                     </div>
