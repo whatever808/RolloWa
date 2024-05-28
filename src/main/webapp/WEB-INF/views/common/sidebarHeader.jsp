@@ -315,12 +315,10 @@
 .allposition{
 	display: flex;
 }
+
 </style>
 </head>
 <body class="allposition">
-
-<!--  -->
-
 
 <script>
 $(document).ready(function(){
@@ -663,6 +661,11 @@ $(document).ready(function(){
                 </li>
             </ul>
         </div>
+        
+        <div id="alram">
+        	<button id="alram_btn" type="button" class="btn" style="margin-left: 430px;
+    margin-bottom: 10px;">알림으로 이동하기</button>
+        </div>
 								
         <div class="b-example-divider b-example-vr"></div>
 				<script>
@@ -671,8 +674,9 @@ $(document).ready(function(){
 					var stompClient;
 					
 					// 내가 현재 열어놓은 채팅방 번호
-					// 채팅방을 열지 않았다면 0
-					var subRoomNo = 0;
+					// 페이지 새로고침 시 -1
+					// 채팅방 닫았을 경우 0
+					var subRoomNo = -1;
 					
 					// 수신한 메세지 개수
 					var msgCount = 0;
@@ -680,6 +684,14 @@ $(document).ready(function(){
 					
 					
 					$(document).ready(function() {
+						// 새로고침 감지
+						window.addEventListener('beforeunload', (event) => {
+							// 메신저를 아예 열지 않았거나 채팅방을 닫아놨을 경우를 제외하고 실행
+		          if(subRoomNo != -1 && subRoomNo != 0) {
+		        	  // 새로고침 전 열어놓은 채팅방의 나간 시간 update
+		        	  updateOutDate(subRoomNo);
+		          }  
+		        });
 						// 채팅용 웹소켓 연결
 						chatting = new SockJS("${contextPath}/chatting");
 						stompClient = Stomp.over(chatting);
@@ -704,18 +716,61 @@ $(document).ready(function(){
 					    	}
 					    })
 					    
+					    // 알림용 주소 구독
+					    stompClient.subscribe("/topic/chat/alram", function(msg) {
+					    	// 문자열을 json으로 변환
+					    	const msgBody = JSON.parse(msg.body);
+					    	
+					    	console.log(msgBody);
+					    	
+					    	if(msgBody.flag == 0) {
+					    		// 채팅방 초대 알림인 경우
+					    		receiveInviteMsg(msgBody)
+					    		
+					    	} else if (msgBody.flag == 1) {
+					    		// 공지사항 등록 알림인 경우
+					    		for (var i = 0; i < msgBody.teamMemberList.length; i++) {
+					    			if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
+							    		$("#alram").iziModal('open');
+							    		$("#alram_btn").on("click", function() {
+							    			location.href = msgBody.url;
+							    		})
+					    			}
+					    		}
+					    	} else if (msgBody.flag == 2) {
+					    		// 부서 내 일정 등록 알림인 경우
+					    		for (var i = 0; i < msgBody.teamMemberList.length; i++) {
+					    			if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
+					    				$("#alram").iziModal('open');
+							    		$("#alram_btn").on("click", function() {
+							    			location.href = msgBody.url;
+							    		})
+					    			}
+					    		}
+					    	} else if (msgBody.flag == 3) {
+					    		// 결재 등록 알림인 경우
+					    		
+					    	}
+					    })
+					    
 						})
-						// 알람용 웹소켓 연결
-						alram = new SockJS("${contextPath}/alram");
-						// 알람 수신 시 alert 발생
-						alram.onmessage = function(evt) {
-							const obj = JSON.parse(evt.data);
-							alertify.confirm('부서 알림', obj.message, function(){ 
-								location.href = "${contextPath}/board/detail.do?category=department&department=" + obj.teamCode + "&condition=&keyword&no=" + obj.boardNo;
-								alertify.success('공지사항 페이지로 이동'); }
-			                , function(){ alertify.error('Cancel')}).set('labels', {ok:'이동하기', cancel:'취소'});;
-						}
 					})
+					
+					// 알림 스타일
+					$("#alram").iziModal({
+						title: '<h6>부서 알림 서비스</h6>'
+						, subtitle: '부서 알림이 등록되었습니다.'
+						, headerColor: '#FEEFAD'
+						, theme: 'light'
+						, radius: '2'
+						, arrowKeys: 'false'
+						, navigateCaption: 'false'
+						//, timeout: '3000'
+						, timeoutProgressbar: 'true'
+						, timeoutProgressbarColor: '#FFFFFF'
+						, pauseOnHover: 'true'
+					})
+					
 					
 				</script>
 </body>

@@ -1,6 +1,7 @@
 package com.br.project.dao.notification;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -37,5 +38,10 @@ public class NotificationDao {
 	// 최신 공지사항 글 번호 조회
 	public int selectLatestBno(String teamCode) {
 		return sqlSessionTemplate.selectOne("notificationMapper.selectLatestBno", teamCode);
+	}
+
+	// 알림 전송 이력 저장
+	public int insertNotificationSend(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("notificationMapper.insertNotificationSend", map);
 	}
 }

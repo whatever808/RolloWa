@@ -49,6 +49,27 @@
 		user_id = #{ userId } 
 		and status = 'Y' 
 	</select>
+	
+	<!-- 회원 이름 찾기 -->
+	<select id="selectUserName" resultType="String">
+		select user_name
+		from member
+		where
+			user_no = #{ userNo }
+		and status = 'Y'
+	</select>
+	
+	<!-- 자신을 제외한 팀원 조회 -->
+	<select id="selectTeamMember" resultType="String">
+		select user_no
+		from member
+		where
+			team_code = #{ teamCode }
+		and
+			user_no != #{ sendUserNo }
+		and
+			status = 'Y'
+	</select>
  
 	<!-- 회원 아이디 찾기 -->
 	<select id="selectUserId" resultType="String">
@@ -56,7 +77,7 @@
 		from member
 		where
 			user_no = #{ userNo }
-			and status = 'Y'
+		and status = 'Y'
 	</select>
 	
 	<!-- 회원 랜덤 비밀번호로 수정 -->
