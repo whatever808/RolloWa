@@ -432,6 +432,70 @@ body {
 
 </head>
 <body>
+<script>
+$(document).ready(function(){
+	let sum = 0;
+	
+	$("#teen-increase").on("click", function(){
+		sum += 1;
+		$("#teens").val(sum);
+	})
+	
+	$("#teen-decrease").on("click", function(){
+		if(sum > 0){
+			sum	-= 1; 
+			$("#teens").val(sum);
+		}
+	})
+	
+});
+
+
+$(document).ready(function(){
+	let sum = 0;
+	$("#child-increase").on("click", function(){
+		sum += 1;
+		$("#children").val(sum);
+	})
+	
+	$("#child-decrease").on("click", function(){
+		if(sum > 0){
+			sum	-= 1; 
+			$("#children").val(sum);
+		}
+	})
+	
+});
+
+
+$(document).ready(function(){
+    $("#teen-increase").on("click", function(){
+    	
+        if($(".ticket-table").children("td").text() != "일반 이용권"){
+        	
+            let tr = "";
+            tr += "<tr>" +
+                  "<td>일반 이용권</td>" + 
+                  "<td>" +
+                      "<div class='quantity-controls'>" +
+                            "<input type='number' id='adult-companion' value='1' min='0' readonly>" + 
+                      "</div>" + 
+                  "</td>" + 
+                  "<td id='adult-own-price'>" +  ($("#teens").val() * 21000)  + "</td>" +
+                  "</tr>";
+            $(".ticket-table").append(tr);
+            
+        }
+    });
+});
+
+
+
+
+
+</script>
+
+
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 		
 		 <!-- content 추가 -->
@@ -450,7 +514,7 @@ body {
 											            <label for="teens"><h5>일반 이용권</h5></label>
 											            <div class="quantity-controls">
 											                <button class="quantity-btn" id="teen-decrease">−</button>
-											                <input type="number" id="teens" value="0" min="0" readonly>
+											                <input type="number" value="0" id="teens" min="0" readonly>
 											                <button class="quantity-btn" id="teen-increase">+</button>
 											            </div>
 											        </div>
@@ -473,7 +537,6 @@ body {
 											    </div>
 										    
 												<div class="ticket-container">
-														<h5>이번달의 혜택 : 10% 할인</h5>
 										        <table class="ticket-table">
 										            <thead>
 										                <tr>
@@ -482,29 +545,21 @@ body {
 										                    <th><h5>가격</h5></th>
 										                </tr>
 										            </thead>
-										            <tbody>
-										                <tr>
-										                    <td>정기 이용권</td>
-										                    <td>
-										                        <div class="quantity-controls">
-										                            <input type="number" id="adult-own" value="1" min="0" readonly>
-										                        </div>
-										                    </td>
-										                    <td id="adult-own-price">21,000 원</td>
-										                </tr>
-										                <tr>
-										                    <td>일반 이용권</td>
-										                    <td>
-										                        <div class="quantity-controls">
-										                            <input type="number" id="adult-companion" value="3" min="0" readonly>
-										                        </div>
-										                    </td>
-										                    <td id="adult-companion-price">73,500 원</td>
-										                </tr>
-										            </tbody>
+													       <tbody>
+															   	  <tr>
+																         <td>정기 이용권</td>
+																         <td>
+																             <div class="quantity-controls">
+																                 <input type="number" id="adult-own" value="1" min="0" readonly>
+																             </div>
+																         </td>
+																         <td id="adult-own-price">21,000 원</td>
+																     </tr>
+																     
+																 </tbody>
 										        </table>
 										        <div class="total-amount">
-										            최종결제금액 : <span id="total-price">94,500 원</span>
+										            <h6>최종결제금액 : <span id="total-price">94,500 원</span></h6>
 										        </div>
 										        <div style="display: flex; justify-content: flex-end;">
 										        	<button class="purchase-button"><h5>결제</h5></button>
@@ -513,7 +568,9 @@ body {
 									    </div>
 				    		</div>
 				      </div>
-				    </div>   
+				    </div>
+				    
+				  
    <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
    
     
