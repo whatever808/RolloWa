@@ -17,9 +17,16 @@
     <!-- 모달 관련 -->
     <script src="${contextPath}/resources/js/iziModal.min.js"></script>
     <link rel="stylesheet" href="${contextPath}/resources/css/iziModal.min.css">
-
-   	
+    
+    <!-- 포트원 결제 -->
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+    <!-- iamport.payment.js -->
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+		<!-- 포트원 결제 -->
 <style>
+
 /* Container styling */
 .container {
     width: 90%;
@@ -555,6 +562,54 @@ $(document).ready(function() {
 
 </script>
 
+<script>
+//구매자 정보
+$("#payment").on("click", function () {
+		
+		if($(".ticket-table tbody tr").length > 0){
+			
+				var userid = member.get(0).USER_ID;
+        var username = member.get(0).USER_NAME;   
+
+        var merchant_uid = "O" + new Date().getTime(); // 고유한 주문번호 생성 
+
+        var IMP = window.IMP;
+        IMP.init('imp37456887'); // 가맹점 식별코드 입력 
+
+        IMP.request_pay({
+            pg: "kakaopay.TC0ONETIME",           // 등록된 pg사 (적용된 pg사는 KG이니시스)
+            pay_method: "card",           // 결제방식: card(신용카드), trans(실시간계좌이체), vbank(가상계좌), phone(소액결제)
+            merchant_uid: merchant_uid,   // 주문번호
+            //name: gname,                  // 상품명
+            amount: total,     						// 금액
+            buyer_name: username,         // 주문자
+            //buyer_tel: phone,             // 전화번호 (필수입력)
+            //buyer_addr: addr,    		  // 주소
+            //buyer_postcode: post          // 우편번호
+        }, function (rsp) {
+            if (rsp.success) {
+            	
+                var mesg = '결제가 완료되었습니다.';
+                alert(mesg);
+                
+              
+            } else {
+                var mesg = '결제를 실패하였습니다.';
+                alert(msg);
+            }
+        }
+        
+        );
+			
+		}else{
+			
+			alert("결재할 상품이 존재하지않습니다.");
+			
+		}
+        
+});
+</script>
+
 
 
 
@@ -616,14 +671,14 @@ $(document).ready(function() {
 										            <h6>최종결제금액 :<span id="total"></span></h6>
 										        </div>
 										        <div style="display: flex; justify-content: flex-end;">
-										        	<button class="purchase-button"><h5>결제</h5></button>
+										        	<button class="purchase-button" id="payment" type="button"><h5>결제</h5></button>
 										        </div>
 										    </div>
 									    </div>
 				    		</div>
 				      </div>
 				    </div>
-				    
+		
 				  
    <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
    
