@@ -24,12 +24,15 @@
 	<result column="TEAM_CODE" property="teamCode"/>
 	<result column="POSITION_CODE" property="positionCode"/>
 	<result column="POSITION" property="position"/>
+	<result column="GIVEN_DATE" property="vaGivenDate"/>
+	<result column="YEAR_LABOR" property="vaYearLabor"/>
+	<result column="USING_DTAE" property="vaUsingDate"/>
 </resultMap>
 
   <!--  회원 로그인  -->
   <select id="memberLogin" resultMap="memberResult">
   	select
-  		user_no, user_name, user_id, user_pwd, team_code, POSITION_CODE, profile_url, ENROLL_DATE
+  		user_no, user_name, user_id, user_pwd, team_code, POSITION_CODE, profile_url, GIVEN_DATE , YEAR_LABOR
   	from
   		member
   	where

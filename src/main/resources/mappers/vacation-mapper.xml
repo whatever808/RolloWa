@@ -178,5 +178,11 @@ order by VACATION_NO desc
                   	from member b
                   	where a.user_no = b.user_no)
 	</update>
+	
+	<update id="updateOverAnuul">
+	update member
+	set VACATION_COUNT = VACATION_COUNT + #{vacationCount}
+	where user_no = #{userNo}
+	</update>
 
 </mapper>

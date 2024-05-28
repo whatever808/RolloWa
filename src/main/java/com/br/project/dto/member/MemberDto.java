@@ -40,8 +40,8 @@ public class MemberDto {
 	private String positionCode;
 	private String position;
 	private int vacationCount;
-	private String givenDate;
-	private String yearLabor;
-	private String usingDate;
+	private String vaGivenDate;
+	private String vaYearLabor;
+	private String vaUsingDate;
 	
 }

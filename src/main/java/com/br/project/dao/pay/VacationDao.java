@@ -5,6 +5,7 @@ import java.util.List;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.VacationDto;
 
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,10 @@ public class VacationDao {
 
 	public int updateYearLabor() {
 		return sqlSession.update("vacationMapper.updateYearLabor");
+	}
+
+	public int updateAnuul(MemberDto member) {
+		return sqlSession.update("vacationMapper.updateOverAnuul", member);
 	}
 	
 	

@@ -1,12 +1,16 @@
 package com.br.project.service.attendance;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import com.br.project.dao.attendance.AttendanceDao;
+import com.br.project.dao.pay.VacationDao;
 import com.br.project.dto.attendance.AttendanceDto;
 import com.br.project.dto.member.MemberDto;
 
@@ -17,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class AttendanceService {
 
 	private final AttendanceDao attendanceDao;
+	private final VacationDao vacationDao;
 
 	// 출결 조회
 	public int selectAttendanceListCount() {
@@ -73,17 +78,51 @@ public class AttendanceService {
 		return attendanceDao.insertMemberAttend(params);
 	}
 	
+	@Bean
+    public static LocalDate getNowDate() {
+        return LocalDate.now(Clock.systemDefaultZone());
+    }
+	
 	/**
 	 * 퇴근/조퇴 등록(수정)
 	 */
 	public int updateMemberAttend(HashMap<String, Object> params) {
 		
 		/*======================== 예찬 ===========================*/
+		MemberDto member = ((MemberDto)params.get("loginMember"));
 	
-		
+		LocalDate currentDate = getNowDate();
+
+		int result = 1;
+		int year = Integer.parseInt(member.getVaYearLabor());
+		//1년차 이상
+		if(year > 0) {
+			LocalDate givenDate = LocalDate.of(currentDate.getYear() - 1
+	   											, currentDate.getMonthValue()
+	   											, Integer.parseInt(member.getVaGivenDate()));
+			// 1년이 지날때 마다
+			if(givenDate.plusYears(1).isEqual(currentDate)) {
+				//연차 15 + 근수연수 member.getVaYearLabor()
+				member.setVacationCount(year + 15);
+				result = vacationDao.updateAnuul(member);
+			}
+			
+		// 1년차 미만
+		}else {
+			LocalDate givenDate = LocalDate.of(currentDate.getYear()
+					   							, currentDate.getMonthValue() - 1
+					   							, Integer.parseInt(member.getVaGivenDate()));
+			// 30일이 지날때마다
+			if(givenDate.plusDays(30).isEqual(currentDate)) {
+				//연차 +1
+				member.setVacationCount(1);
+				result = vacationDao.updateAnuul(member);				
+			}
+		}
 		/*======================== 예찬 ===========================*/
+
 		
-		return attendanceDao.updateMemberAttend(params);
+		return attendanceDao.updateMemberAttend(params) * result;
 	}
 	
 	/**
