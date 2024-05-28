@@ -188,9 +188,6 @@
 									}
 						    }
 							})
-		        	
-		        	console.log(teamMemberList);
-		        	
 		        	stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
 																																		, flag: '2'
 																																		, teamMemberList: teamMemberList
