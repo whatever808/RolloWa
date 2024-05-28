@@ -803,6 +803,10 @@ img {
 					    buyer_postcode: "01181",
 					},
 					async (response) => {
+				   if (response.error_code != null) {
+					      return alert(`결제에 실패하였습니다. 에러 내용: ${response.error_msg}`);
+					    }
+						
 						console.log(response);
 					}
 				
