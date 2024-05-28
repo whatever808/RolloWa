@@ -19,6 +19,7 @@
 		<result column="USER_NO" property="userNo"/>
 		<result column="CR_NO" property="chatRoomNo"/>
 		<result column="USER_NAME" property="userName"/>
+		<result column="PROFILE_URL" property="profileURL"/>
 	</resultMap>
 
 	<!-- 채팅방 생성 -->
