@@ -321,7 +321,7 @@ header h1 {
 }
 
 .quantity-controls input {
-   width: 57px;
+   width: 61px;
     text-align: center;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -408,6 +408,10 @@ body {
     color: #007bff;
 }
 
+#total {
+    color: #007bff;
+}
+
 .purchase-button {
     display: flex;
     width: 10%;
@@ -452,6 +456,7 @@ $(document).ready(function(){
 
 
 $(document).ready(function(){
+	
 	let sum = 0;
 	$("#child-increase").on("click", function(){
 		sum += 1;
@@ -466,34 +471,126 @@ $(document).ready(function(){
 	})
 	
 });
+</script>
 
-
+<script>
 $(document).ready(function(){
     $("#teen-increase").on("click", function(){
-    	
-        if($(".ticket-table").children("td").text() != "일반 이용권"){
-        	
-            let tr = "";
-            tr += "<tr>" +
-                  "<td>일반 이용권</td>" + 
-                  "<td>" +
-                      "<div class='quantity-controls'>" +
-                            "<input type='number' id='adult-companion' value='1' min='0' readonly>" + 
-                      "</div>" + 
-                  "</td>" + 
-                  "<td id='adult-own-price'>" +  ($("#teens").val() * 21000)  + "</td>" +
-                  "</tr>";
+        let found = false;
+        $(".ticket-table tr").each(function(){
+            if($(this).find("td#ticketName").text() == "일반 이용권"){
+                found = true;
+                let newQuantity = parseInt($("#teens").val()) + 1;
+                $("#teens").val(newQuantity);
+                $(this).find("#adult-companion").val(newQuantity);
+                $(this).find("#adult-own-price1 span").text(newQuantity * 21000);
+                updateTotal();
+            }
+        });
+
+        if (!found) {
+            let tr = "<tr>" +
+                     "<td id='ticketName'>일반 이용권</td>" + 
+                     "<td>" +
+                         "<div class='quantity-controls'>" +
+                               "<input type='number' id='adult-companion' value='1' min='0' readonly>" + 
+                         "</div>" + 
+                     "</td>" + 
+                     "<td id='adult-own-price1'><span>21000</span>원</td>" +
+                     "</tr>";
             $(".ticket-table").append(tr);
-            
+            $("#teens").val(1);
+            updateTotal();
+        }
+    });
+
+    $("#teen-decrease").on("click", function(){
+        let currentQuantity = parseInt($("#teens").val());
+        if(currentQuantity > 0){
+            $(".ticket-table tr").each(function(){
+                if($(this).find("td#ticketName").text() == "일반 이용권"){
+                    let newQuantity = currentQuantity - 1;
+                    $("#teens").val(newQuantity);
+                    if (newQuantity > 0) {
+                        $(this).find("#adult-companion").val(newQuantity);
+                        $(this).find("#adult-own-price1 span").text(newQuantity * 21000);
+                    } else {
+                        $(this).remove();  // 수량이 0이면 행을 제거
+                    }
+                    updateTotal();
+                }
+            });
         }
     });
 });
+</script>
+<script>
+$(document).ready(function(){
+    $("#child-increase").on("click", function(){
+        let found = false;
+        $(".ticket-table tr").each(function(){
+            if($(this).find("td#ticketName2").text() == "정기 이용권"){
+                found = true;
+                let newQuantity = parseInt($("#children").val()) + 1;
+                $("#children").val(newQuantity);
+                $(this).find("#adult-own").val(newQuantity);
+                $(this).find("#adult-own-price2 span").text(newQuantity * 21000);
+                updateTotal();
+            }
+        });
 
+        if (!found) {
+            let tr = "<tr>" +
+                     "<td id='ticketName2'>정기 이용권</td>" + 
+                     "<td>" +
+                         "<div class='quantity-controls'>" +
+                               "<input type='number' id='adult-own' value='1' min='0' readonly>" + 
+                         "</div>" + 
+                     "</td>" + 
+                     "<td id='adult-own-price2'><span>21000</span>원</td>" +
+                     "</tr>";
+            $(".ticket-table").append(tr);
+            $("#children").val(1); // 새로운 항목을 추가하면서 수량을 1로 설정
+            updateTotal();
+        }
+    });
 
-
-
+    $("#child-decrease").on("click", function(){
+        let currentQuantity = parseInt($("#children").val());
+        
+        if(currentQuantity > 0){
+            $(".ticket-table tr").each(function(){
+                if($(this).find("td#ticketName2").text() == "정기 이용권"){
+                    let newQuantity = currentQuantity - 1;
+                    $("#children").val(newQuantity);
+                    if (newQuantity > 0) {
+                        $(this).find("#adult-own").val(newQuantity);
+                        $(this).find("#adult-own-price2 span").text(newQuantity * 21000);
+                    } else {
+                        $(this).remove();  // 수량이 0이면 행을 제거
+                    }
+                    updateTotal();
+                }
+            });
+        }
+        
+    });
+});
 
 </script>
+
+<script>
+	function updateTotal() {
+	    let price1 = parseInt($("#adult-own-price1 span").text()) || 0;
+	    let price2 = parseInt($("#adult-own-price2 span").text()) || 0;
+	    let total = price1 + price2;
+	    $("#total").text(total + "원");
+	}
+
+</script>
+
+
+
 
 
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
@@ -540,26 +637,17 @@ $(document).ready(function(){
 										        <table class="ticket-table">
 										            <thead>
 										                <tr>
-										                    <th><h5>입장권</h5></th>
-										                    <th><h5>수량</h5></th>
-										                    <th><h5>가격</h5></th>
+										                    <th style="width: 300px;"><h5>입장권</h5></th>
+										                    <th style="width: 100px;"><h5>수량</h5></th>
+										                    <th style="width: 300px;"><h5>가격</h5></th>
 										                </tr>
 										            </thead>
 													       <tbody>
-															   	  <tr>
-																         <td>정기 이용권</td>
-																         <td>
-																             <div class="quantity-controls">
-																                 <input type="number" id="adult-own" value="1" min="0" readonly>
-																             </div>
-																         </td>
-																         <td id="adult-own-price">21,000 원</td>
-																     </tr>
-																     
+													       
 																 </tbody>
 										        </table>
 										        <div class="total-amount">
-										            <h6>최종결제금액 : <span id="total-price">94,500 원</span></h6>
+										            <h6>최종결제금액 :<span id="total"></span></h6>
 										        </div>
 										        <div style="display: flex; justify-content: flex-end;">
 										        	<button class="purchase-button"><h5>결제</h5></button>
