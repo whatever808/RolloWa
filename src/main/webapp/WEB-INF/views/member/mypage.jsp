@@ -112,18 +112,18 @@
 	                 <div class="user_info">
 	                     <div class="dp_info">
 	                         <div class="info_wrapper">
-	                             <span>직급</span>
-	                             <span>소속부서</span>
+	                             <span>${ loginMember.position }</span>
+	                             <span>${ loginMember.team } }</span>
 	                         </div>
 	                     </div>
 	                     <div class="sd_info">
 	                         <div class="info_wrapper">
-	                             <span>근속일수</span>
+	                             <span>${ loginMember.serviceDate }</span>
 	                         </div>
 	                     </div>
 	                     <div class="co_info">
 	                         <div class="info_wrapper">
-	                             <span>출근시간</span> | <span>퇴근시간</span>
+	                             <span>${ loginMember.clockIn }</span> | <span>${ loginMember.clockOut }</span>
 	                         </div>
 	                     </div>
 	                 </div>
