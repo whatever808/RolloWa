@@ -315,12 +315,10 @@
 .allposition{
 	display: flex;
 }
+
 </style>
 </head>
 <body class="allposition">
-
-<!--  -->
-
 
 <script>
 $(document).ready(function(){
@@ -656,7 +654,8 @@ $(document).ready(function(){
         </div>
         
         <div id="alram">
-        	<button type="button" class="">알림으로 이동하기</button>
+        	<button id="alram_btn" type="button" class="btn" style="margin-left: 430px;
+    margin-bottom: 10px;">알림으로 이동하기</button>
         </div>
 								
         <div class="b-example-divider b-example-vr"></div>
@@ -721,30 +720,31 @@ $(document).ready(function(){
 					    		
 					    	} else if (msgBody.flag == 1) {
 					    		// 공지사항 등록 알림인 경우
-					    		console.log("부서 공지사항 등록됨");
-					    		
-					    		$("#alram").iziModal('open');
-					    		
+					    		for (var i = 0; i < msgBody.teamMemberList.length; i++) {
+					    			if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
+							    		$("#alram").iziModal('open');
+							    		$("#alram_btn").on("click", function() {
+							    			location.href = msgBody.url;
+							    		})
+					    			}
+					    		}
 					    	} else if (msgBody.flag == 2) {
-					    		// 결재 등록 알림인 경우
-					    		
-					    	} else if (msgBody.flag == 3) {
 					    		// 부서 내 일정 등록 알림인 경우
+					    		for (var i = 0; i < msgBody.teamMemberList.length; i++) {
+					    			if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
+					    				$("#alram").iziModal('open');
+							    		$("#alram_btn").on("click", function() {
+							    			location.href = msgBody.url;
+							    		})
+					    			}
+					    		}
+					    	} else if (msgBody.flag == 3) {
+					    		// 결재 등록 알림인 경우
 					    		
 					    	}
 					    })
 					    
 						})
-						// 알람용 웹소켓 연결
-						alram = new SockJS("${contextPath}/alram");
-						// 알람 수신 시 alert 발생
-						alram.onmessage = function(evt) {
-							const obj = JSON.parse(evt.data);
-							alertify.confirm('부서 알림', obj.message, function(){ 
-								location.href = "${contextPath}/board/detail.do?category=department&department=" + obj.teamCode + "&condition=&keyword&no=" + obj.boardNo;
-								alertify.success('공지사항 페이지로 이동'); }
-			                , function(){ alertify.error('Cancel')}).set('labels', {ok:'이동하기', cancel:'취소'});;
-						}
 					})
 					
 					// 알림 스타일
@@ -756,7 +756,7 @@ $(document).ready(function(){
 						, radius: '2'
 						, arrowKeys: 'false'
 						, navigateCaption: 'false'
-						, timeout: '3000'
+						//, timeout: '3000'
 						, timeoutProgressbar: 'true'
 						, timeoutProgressbarColor: '#FFFFFF'
 						, pauseOnHover: 'true'

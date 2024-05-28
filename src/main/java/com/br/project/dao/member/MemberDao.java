@@ -59,7 +59,7 @@ public class MemberDao {
 	}
 	
 	// 팀원 조회
-	public List<MemberDto> selectTeamMember(Map<String, String> map) {
+	public List<String> selectTeamMember(Map<String, Object> map) {
 		return sqlSessionTemplate.selectList("memberMapper.selectTeamMember", map);
 	}
 	/* ======================================= "가림" 구역 ======================================= */

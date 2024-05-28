@@ -41,7 +41,7 @@ public class NotificationDao {
 	}
 
 	// 알림 전송 이력 저장
-	public int insertNotificationSend(Map<String, String> map) {
+	public int insertNotificationSend(Map<String, Object> map) {
 		return sqlSessionTemplate.insert("notificationMapper.insertNotificationSend", map);
 	}
 }

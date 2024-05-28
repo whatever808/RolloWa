@@ -56,7 +56,7 @@
 	</select>
 	
 	<!-- 자신을 제외한 팀원 조회 -->
-	<select id="selectTeamMember" resultMap="memberResult">
+	<select id="selectTeamMember" resultType="String">
 		select user_no
 		from member
 		where

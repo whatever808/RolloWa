@@ -60,7 +60,7 @@ public class MemberService {
 	}
 	
 	// 팀원 조회
-	public List<MemberDto> selectTeamMember(Map<String, String> map) {
+	public List<String> selectTeamMember(Map<String, Object> map) {
 		return memberDao.selectTeamMember(map);
 	}
 	/* ======================================= "가림" 구역 ======================================= */
