@@ -24,6 +24,10 @@
 	<result column="TEAM_CODE" property="teamCode"/>
 	<result column="POSITION_CODE" property="positionCode"/>
 	<result column="POSITION" property="position"/>
+	<result column="TEAM" property="team"/>
+	<result column="CLOCK_IN" property="clockIn"/>
+	<result column="CLOCK_OUT" property="clockOut"/>
+	<result column="SERVICE_DATE" property="serviceDate"/>
 	<result column="GIVEN_DATE" property="vaGivenDate"/>
 	<result column="YEAR_LABOR" property="vaYearLabor"/>
 	<result column="USING_DTAE" property="vaUsingDate"/>
@@ -43,11 +47,32 @@
   
   <!-- 회원 정보 조회 -->
 	<select id="selectMember" resultMap="memberResult"> 
-		select USER_NO , USER_NAME , USER_ID , USER_PWD , PHONE , POST_CODE, ADDRESS, DETAIL_ADDRESS, TOTAL_ADDRESS , BANK_ACCOUNT , BANK , EMAIL , PROFILE_URL , COUNT_FAIL , VACATION_COUNT , AUTH_LEVEL , SALARY , TEAM_CODE , POSITION_CODE 
-		from member
-		where 
-		user_id = #{ userId } 
-		and status = 'Y' 
+	select USER_NO 
+	    , USER_NAME
+	    , USER_ID
+	    , USER_PWD
+	    , PHONE
+	    , POST_CODE
+	    , ADDRESS
+	    , DETAIL_ADDRESS
+	    , TOTAL_ADDRESS
+	    , BANK_ACCOUNT
+	    , BANK
+	    , EMAIL
+	    , PROFILE_URL
+	    , COUNT_FAIL
+	    , VACATION_COUNT
+	    , AUTH_LEVEL
+	    , SALARY
+	    , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE = 'TEAM01' AND CODE = M.TEAM_CODE) AS TEAM
+	    , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE = 'POSI01' AND CODE = M.POSITION_CODE) AS POSITION
+	    , NVL((SELECT TO_CHAR(CLOCK_IN, 'HH24:MI:SS') FROM ATTENDANCE WHERE USER_NO = M.USER_NO AND TO_CHAR(CLOCK_IN, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')), '00:00:00') AS CLOCK_IN
+	    , NVL((SELECT TO_CHAR(CLOCK_OUT, 'HH24:MI:SS') FROM ATTENDANCE WHERE USER_NO = M.USER_NO AND TO_CHAR(CLOCK_OUT, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')), '00:00:00') AS CLOCK_OUT
+	    , TRUNC((SYSDATE - ENROLL_DATE) + 1) AS SERVICE_DATE
+	from member M
+	where 
+	user_id = 'user01'
+	and status = 'Y';
 	</select>
 	
 	<!-- 회원 이름 찾기 -->

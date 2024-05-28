@@ -476,7 +476,7 @@ $(document).ready(function(){
 										        </div>
 										
 										        <div id="btn_div">
-										           <button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
+										           <button class="btn btn-primary" id="insertBtn" type="submit">제출</button>
                             	 <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
                             	 <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
 										        </div>
@@ -515,10 +515,10 @@ $(document).ready(function(){
     </script>
    
     <script>
-	    	function submitbtn(){
-   					let itemArr = [];
-   					let countArr = [];
-   					let salesArr = [];
+	 		document.querySelector("#myForm").addEventListener("submit", function(event){
+ 					let itemArr = [];
+ 					let countArr = [];
+ 					let salesArr = [];
    					//금액
 	    		$(".item").each(function(){
 					 		if($(this).val().trim() != ""){
@@ -547,10 +547,11 @@ $(document).ready(function(){
 	         if(confirm('정말로 제출하시겠습니까?')){
 	        	 if($(".sing_name").text() == ""){
 	        		 alert("승인자를 3차까지 선택해주세요.");
+	        			 event.preventDefault();
 	        	 }
 	         }
 	                
-	       }
+	      })
    	</script>
     
     <script>

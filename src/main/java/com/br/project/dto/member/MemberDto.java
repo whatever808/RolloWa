@@ -38,7 +38,14 @@ public class MemberDto {
 	private int salary;
 	private String teamCode;
 	private String positionCode;
+	
+	private String team;
 	private String position;
+	
+	private String clockIn;
+	private String clockOut;
+	private String serviceDate;
+	
 	private int vacationCount;
 	private String vaGivenDate;
 	private String vaYearLabor;
