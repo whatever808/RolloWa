@@ -2,6 +2,7 @@ package com.br.project.controller.facility.attraction;
 
 import static com.br.project.controller.common.CommonController.getParameterMap;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -38,19 +40,20 @@ public class AttractionController {
 	/**
 	 * @method : 어트랙션 목록조회
 	 */
-	@RequestMapping({"/list.do", "/manage.do"})
-	public String selectAttractionList(HttpServletRequest request, RedirectAttributes redirectAttributes, 
-									   @RequestParam(value="locations[]", defaultValue="") List<String> locations) {
+	@RequestMapping({"/list.do", "manage/list.do"})
+	public String selectAttractionList(HttpServletRequest request, RedirectAttributes redirectAttributes, @RequestParam(value="locations[]", required=false) List<String> locations) {
 		
 		StringBuffer requestURL = request.getRequestURL();
 		
 		HashMap<String, Object> params = getParameterMap(request);
-		params.put("locations", locations);
+		if(locations != null && !locations.isEmpty()) {
+			params.put("locations", locations);			
+		}
 		
 		try {
 			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(attractionService.selectTotalAttractionCount(params)
 														    ,Integer.parseInt(request.getParameter("page") == null ? "1" : request.getParameter("page"))
-														    ,5, 5);
+														    ,5, requestURL.indexOf("manage") != -1 ? 10 : 5);
 			request.setAttribute("pageInfo", pageInfo);
 			request.setAttribute("attractionList", attractionService.selectAttractionList(params, pageInfo));
 			request.setAttribute("locationList", locationService.selectLocationList());
@@ -71,24 +74,37 @@ public class AttractionController {
 	/**
 	 * @method : 어트랙션 목록조회 (AJAX)
 	 */
-	@RequestMapping(value="/list.ajax", produces="application/json; charset=utf-8")
+	@RequestMapping(value={"/list.ajax", "manage/list.ajax"}, produces="application/json; charset=utf-8")
 	@ResponseBody
-	public HashMap<String, Object> ajaxSelectAttractionList(HttpServletRequest request, @RequestParam(value="locations[]", defaultValue="") List<String> locations){
+	public HashMap<String, Object> ajaxSelectAttractionList(HttpServletRequest request, @RequestParam(value="locations[]", required=false) List<String> locations){
+		
+		StringBuffer requestURL = request.getRequestURL();
 		
 		HashMap<String, Object> params = getParameterMap(request);
-		params.put("locations", locations);
+		if(locations != null && !locations.isEmpty()) {
+			params.put("locations", locations);			
+		}
 		
 		HashMap<String, Object> resultMap = new HashMap<>();
 		try {
 			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(attractionService.selectTotalAttractionCount(params)
 														    ,Integer.parseInt(request.getParameter("page") == null ? "1" : request.getParameter("page"))
-														    ,5, 5);
+														    ,5, requestURL.indexOf("manage") != -1 ? 10 : 5);
 			resultMap.put("pageInfo", pageInfo);
 			resultMap.put("attractionList", attractionService.selectAttractionList(params, pageInfo));
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return resultMap;
+	}
+	
+	/**
+	 * @method : 어트랙션 상세조회
+	 */
+	@RequestMapping(value="/detail.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public HashMap<String, Object> selectAttraction(HttpServletRequest request) {
+		return attractionService.selectAttraction(getParameterMap(request));
 	}
 	
 	/**
@@ -162,21 +178,35 @@ public class AttractionController {
 	 * @method : 어트랙션 정보수정
 	 */
 	@RequestMapping("/modify.do")
-	public String modifyAttraction(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+	public String modifyAttraction(MultipartHttpServletRequest request, RedirectAttributes redirectAttributes) {
 		try {
+			// 파라미터값
 			HashMap<String, Object> params = getParameterMap(request);
 			MemberDto loginMember = (MemberDto)request.getSession().getAttribute("loginMember");
 			params.put("modifyEmp", loginMember.getUserNo());
+			params.put("thumbnailURL", request.getParameter("oldThumbnailURL"));
+			
+			// 신규 업로드 대표이미지 저장
+			MultipartFile newThumbnail = request.getFile("thumbnail");
+			String newThumbnailURL = null;
+			if(newThumbnail != null) {
+				newThumbnailURL = fileUtil.getFileUrl(newThumbnail, "attraction");
+				params.put("thumbnailURL", newThumbnailURL);				
+			}
 			
 			if(attractionService.updateAttraction(params) > 0) {
 				redirectAttributes.addFlashAttribute("modalColor", "G");
 				redirectAttributes.addFlashAttribute("alertMsg", "어트랙션 정보가 수정되었습니다.");
-				return "redirect:/attraction/manage.do";
+				return "redirect:/attraction/manage/list.do";
 			}else {
+				if(newThumbnailURL != null) {
+					new File(newThumbnailURL).delete();
+				}
 				redirectAttributes.addFlashAttribute("modalColor", "R");
 				redirectAttributes.addFlashAttribute("alertMsg", "어트랙션 정보수정에 실패했습니다.");
 				return "redirect:" + request.getHeader("Referer");
 			}
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("modalColor", "R");
@@ -185,16 +215,17 @@ public class AttractionController {
 		}finally {
 			redirectAttributes.addFlashAttribute("alertTitle", "어트랙션 수정서비스");
 		}
+		
 	}
 	
 	/**
-	 * @method : 어트랙션 상세조회
+	 * @method : 어트랙션 이용률 관리페이지
 	 */
-	@RequestMapping(value="/detail.do", produces="application/json; charset=utf-8")
-	@ResponseBody
-	public HashMap<String, Object> selectAttraction(HttpServletRequest request) {
-		return attractionService.selectAttraction(getParameterMap(request));
+	@RequestMapping("/utilization.do")
+	public String showAttractionUtilizationPage() {
+		return "facility/attraction/attraction_utilization";
 	}
+	
 	
 	
 }

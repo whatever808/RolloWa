@@ -5,12 +5,21 @@
     font-family: "Jua";
 }
 
-/* ------------- attraction status select box ------------- */
+/* ------------- map ------------- */
+#map{
+		height: 400px;
+		width: 100%;
+		border-radius: 20px;
+		margin-bottom: 20px;
+		vertical-aligin: center;
+		margin-right: auto;
+		margin-left: auto;
+}
 
 /* ------------- search form ------------- */
 #filter-search{
 	float: right;
-	margin-bottom: 100px;
+	margin-bottom: 20px;
 }
 #keyword, #condition, #search-btn, #reset-search{
 	height: 50px;
@@ -36,22 +45,50 @@
 }
 
 /*------------- attraction list -------------*/
-thead tr{
-    font-size: 16px;
-    font-weight: 400;
-    text-align: center;
+thead{
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
 }
 
 .attraction-list{
-    text-align: center;
+  text-align: center;
 }
 
-.attraction-name-td{
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    margin-bottom: 0;
-    text-align: center;
+.attraction-name{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-bottom: 0;
+  text-align: center;
+  width: 20%;
+}
+.attraction-location{
+	width: 10%;
+}
+.attraction-customer-limit{
+	width: 10%;
+}
+.attraction-age-limit{
+	width: 10%;
+}
+.attraction-height-limit{
+	width: 10%;
+}
+.attraction-status{
+	width: 10%;
+}
+.attraction-status>select{
+	width: 120px;
+}
+.attraction-regist-emp{
+	width: 10%;
+}
+.attraction-modify-emp{
+	width: 10%;
+}
+.attraction-modify-button{
+	width: 10%;
 }
 
 /* ------------- pagination ------------- */

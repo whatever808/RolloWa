@@ -465,13 +465,17 @@ $(document).ready(function(){
 
                           <li><a href="${ contextPath }/attraction/list.do"
                                  class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 조회</a>
-                           </li> 
+                          </li>
+                          
+                          <li><a href="${ contextPath }/attraction/utilization.do"
+                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 이용률</a>
+                          </li> 
 
                           <li><a href="${ contextPath }/attraction/regist.page"
                                  class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
                           </li>
 
-                          <li><a href="${ contextPath }/attraction/manage.do"
+                          <li><a href="${ contextPath }/attraction/manage/list.do"
                                  class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
                           </li>
 
@@ -480,6 +484,23 @@ $(document).ready(function(){
                   </div>
               </li>
               <!-- ======================================= 어트랙션 관련 end ======================================= -->
+              <!-- ======================================= 매출관리 관련 start ======================================= -->
+              <li class="mb-1">
+                  <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                      data-bs-toggle="collapse" data-bs-target="#sales-collapse" aria-expanded="false">
+                      매출관리
+                  </button>
+                  <div class="collapse" id="sales-collapse">
+                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                          <li><a href="${ contextPath }/sales/ticket.do"
+                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">이용권 매출조회</a>
+                          </li>
+                          
+                      </ul>
+                  </div>
+              </li>
+              <!-- ======================================= 매출관리 관련 end ======================================= -->
               <script>
                 $(document).ready(function(){
                   // 로그인 회원 정보조회
