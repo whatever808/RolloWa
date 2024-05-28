@@ -253,16 +253,16 @@ ORDER BY
 	
 	<!-- 당일 결근 사원조회 -->
 	<select id="selectDayOffMemberList" resultType="map">
-			select user_no "userNo"
-			  from member
-			 where status = 'Y'
-			
-			minus
-			
-			select user_no "userNo"
-			  from attendance
-			 where to_char(clock_in, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
-			   and request_detail = '휴가'
+		select user_no "userNo"
+		  from member
+		 where status = 'Y'
+		
+		minus
+		
+		select user_no "userNo"
+		  from attendance
+		 where to_char(clock_in, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
+		   and request_detail = '휴가'
 	</select>
 	
 	<!-- 당일 퇴근/조퇴 미처리 사원 퇴근처리 -->

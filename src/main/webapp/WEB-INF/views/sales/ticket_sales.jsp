@@ -10,6 +10,9 @@
 	
 	<!-- 이용권 매출관리 스타일 -->
 	<link href="${ contextPath }/resources/css/sales/ticket_sales.css" rel="stylesheet">
+
+	<!-- Google Chart API -->
+	<script src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
 
@@ -22,7 +25,10 @@
         <!-- management page start -->
         <div class="sales-management-page">
 
-            <h1 class="page-title">이용권 매출관리</h1>
+            <div class="d-flex justify-content-between">
+            	<h1 class="page-title">이용권 매출관리</h1>
+            	<span class="mt-4 me-5">매출액 단위 : (원)</span>
+            </div>
 
             <!-- main top start(filter) -->
             <div class="main-top">
@@ -123,14 +129,33 @@
             </div>
             <!-- main top end(filter) -->
             
-            <div class="chart-filter-div d-flex">
-                <span class="chart-filter btn btn-outline-secondary fw-bold" style="font-size: 16px;">년도</span>
-                <span class="chart-filter btn btn-outline-secondary  fw-bold" style="font-size: 16px;">월</span>
-                <span class="chart-filter btn btn-outline-secondary  fw-bold" style="font-size: 16px;">일</span>
+            <!-- chart filter start -->
+            <div class="d-flex justify-content-between">
+            	<!-- chart filter button -->
+            	<div class="btn-group" role="group">
+				  <button type="button" class="chart-filter-btn btn btn-outline-warning">월별</button>
+				  <button type="button" class="chart-filter-btn btn btn-outline-warning">일별</button>
+				</div>
+				
+				<!-- chart filter radio -->
+	            <div class="chart-filter-div d-flex align-items-center">
+	               <div class="form-check me-5">
+					  <input class="form-check-input" type="radio" name="chart-type" id="radio-sales">
+					  <label class="form-check-label" for="radio-sales">매출금액 차트</label>
+				   </div>
+	               
+	               <div class="form-check">
+					  <input class="form-check-input" type="radio" name="chart-type" id="radio-ticket">
+					  <label class="form-check-label" for="radio-ticket">티켓장수 차트</label>
+				   </div>
+	            </div>
+	            
             </div>
+            <!--  chart filter end -->
 
             <!-- main bottom start (chart) -->
             <div class="main-bottom">
+            	
                 <div class="chart-left h-5 w-5" style="border: 1px solid tomato; height: 100px;">
 
                 </div>
@@ -167,10 +192,10 @@
 		}
 		
 		for(let m=1 ; m<=sysMonth ; m++){
-			$("#month-select").append("<option value='" + m + "'>" + m + "월</option>");
+			$("#month-select").append("<option value='" + ((m < 10) ? '0' + m : m ) + "'>" + m + "월</option>");
 		}
 		for(let d=1 ; d<=sysDate ; d++){
-			$("#date-select").append("<option value='" + d + "'>" + d + "일</option>");
+			$("#date-select").append("<option value='" + ((d < 10) ? '0' + d : d ) + "'>" + d + "일</option>");
 		}
 		
 		// 오늘날짜로 선택값 초기화 ====================================================================
@@ -192,14 +217,30 @@
 			$("#month-select").empty();
 			
 			for(let m=1 ; m<=month ; m++){
-				$("#month-select").append("<option value='" + m + "'>" + m + "월</option>");
+				$("#month-select").append("<option value='" + ((m < 10) ? '0' + m : m ) + "'>" + m + "월</option>");
 			}
 			
 			$("#month-select").children("option").each(function(){
 				$(this).val() == oldMonth && $(this).attr("selected", true);
 			});
 			
-			ajaxSelectTicketSalesByTicketType();	// 매출 데이터 조회
+			ajaxSelectTicketSalesByTicketType({	// 년도별 매출 데이터 조회
+				year: $("#year-select").val(),
+				month: '',
+				date: '',
+			}, $(".year-sales-table"));	
+			
+			ajaxSelectTicketSalesByTicketType({	// 월별 매출 데이터 조회
+				year: $("#year-select").val(),
+				month: $("#month-select").val(),
+				date: '',
+			}, $(".month-sales-table"));
+			
+			ajaxSelectTicketSalesByTicketType({	// 일별 매출 데이터 조회
+				year: $("#year-select").val(),
+				month: $("#month-select").val(),
+				date:  $("#date-select").val(),
+			}, $(".date-sales-table"));	
 			
 		});
 		
@@ -216,71 +257,161 @@
 			$("#date-select").empty();
 			
 			for(let d=1 ; d<=lastDate ; d++){
-				$("#date-select").append("<option value='" + d + "'>" + d + "일</option>");
+				$("#date-select").append("<option value='" + ((d < 10) ? '0' + d : d ) + "'>" + d + "일</option>");
 			}
 			
 			$("#date-select").children("option").each(function(){
 				$(this).val() == oldDate && $(this).attr("selected", true);
 			});
 			
-			ajaxSelectTicketSalesByTicketType();	// 매출 데이터 조회
+			ajaxSelectTicketSalesByTicketType({	// 월별 매출 데이터 조회
+				year: $("#year-select").val(),
+				month: $("#month-select").val(),
+				date:  '',
+			}, $(".month-sales-table"));	
+			
+			ajaxSelectTicketSalesByTicketType({	// 일별 매출 데이터 조회
+				year: $("#year-select").val(),
+				month: $("#month-select").val(),
+				date:  $("#date-select").val(),
+			}, $(".date-sales-table"));
 		});
 		
 		// "일" 선택값이 바뀌었을 경우
 		$("#date-select").on("change", function(){
-			ajaxSelectTicketSalesByTicketType();	// 매출 데이터 조회
+			ajaxSelectTicketSalesByTicketType({	// 일별 매출 데이터 조회
+				year: $("#year-select").val(),
+				month: $("#month-select").val(),
+				date:  $("#date-select").val(),
+			}, $(".date-sales-table"));	
 		});
 	});
 	
 	// 이용권 매출정보 관련 ===============================================================================================
 	$(document).ready(function(){
-		
-		// 매출 데이터 조회
-		ajaxSelectTicketSalesByTicketType({
+		ajaxSelectTicketSalesByTicketType({	// 년도별 매출 데이터 조회
 			year: $("#year-select").val(),
 			month: '',
 			date: '',
 		}, $(".year-sales-table"));	
+		
+		ajaxSelectTicketSalesByTicketType({	// 월별 매출 데이터 조회
+			year: $("#year-select").val(),
+			month: $("#month-select").val(),
+			date: '',
+		}, $(".month-sales-table"));
+		
+		ajaxSelectTicketSalesByTicketType({	// 일별 매출 데이터 조회
+			year: $("#year-select").val(),
+			month: $("#month-select").val(),
+			date:  $("#date-select").val(),
+		}, $(".date-sales-table"));	
 	});
 	
 	// 년, 월, 일별 이용권 매출정보 조회 AJAX
 	function ajaxSelectTicketSalesByTicketType(params, table){
-		console.log("params : ", params.month == '');
 		$.ajax({
 			url: "${ contextPath }/sales/ticket/sales.ajax",
 			method: "get",
 			data: params,
 			success: function(salesList){
 				let sumSales = 0;
-				let sumTicket = 0;
 				let avgSales = 0;
-				let avgTicket = 0;
 				let maxSales = 0;
-				let maxTicket = 0;
 				let minSales = 0;
-				let minTicket = 0;
 				
 				for(let i=0 ; i<salesList.length ; i++){
 					sumSales += salesList[i].sumSales;
-					sumTicket += salesList[i].sumTicket;
 					avgSales += salesList[i].avgSales;
-					avgTicket += salesList[i].avgTicket;
 					maxSales += salesList[i].maxSales;
-					maxTicket += salesList[i].maxTicket;
 					minSales += salesList[i].minSales;
-					minTicket += salesList[i].minTicket;
 				}
 			
-				
-				table.find('.sum-sales').text(sumSales.toLocaleString() + ' ( ' + sumTicket + '장 ) ');
-				table.find('.avg-sales').text(avgSales.toLocaleString() + ' ( ' + avgTicket + '장 ) ');
-				table.find('.max-sales').text(maxSales.toLocaleString() + ' ( ' + maxTicket + '장 ) ');
-				table.find('.min-sales').text(minSales.toLocaleString() + ' ( ' + minTicket + '장 ) ');
+				table.find('.sum-sales').text(sumSales.toLocaleString());
+				table.find('.avg-sales').text(Number(avgSales.toFixed(2)).toLocaleString());
+				table.find('.max-sales').text(maxSales.toLocaleString());
+				table.find('.min-sales').text(minSales.toLocaleString());
 			},error: function(){
 				console.log("SELECT TICKET SALES BY TICKET TYPE AJAX FAILED");
 			}
 		});
 	}
+	
+	// 차트 관련 ==================================================================================================
+	$(document).ready(function(){
+		drawCurrencyChart();
+	});
+	
+	// 매출금액별 차트
+	function drawCurrencyChart(){
+		let salesDataList = [];
+		$.ajax({
+			url: "${ contextPath }/sales/ticket/sales.ajax",
+			method: "get",
+			data: {
+				year: $("#year-select").val(),
+				chart: "currency",
+			},
+			success: function(salesList){
+				for(let i=0 ; i<salesList.length ; i++){
+					salesDataList.push(salesList[i]);
+				}
+			},error: function(){
+				console.log("SELECT TICKET SALES BY TICKET TYPE AJAX FAILED");
+			}
+		});
+		
+		console.log("salesDataList(chart) : ", salesDataList);
+		console.log(salesDataList.length);
+		
+		let jan = [];
+		let feb = [];
+		let mar = [];
+		let apr = [];
+		let may = [];
+		let jun = [];
+		let jul = [];
+		let aug = [];
+		let sep = [];
+		let oct = [];
+		let nov = [];
+		let dec = [];
+		
+		let month = [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec];
+		let count = 0;
+		for(let i=0 ; i<salesDataList.length ; i++){
+			salesDataList[i] = sales;
+			if(sales.month == (count + 1)){
+				if(sales.ticketType == '일반'){
+					month[count].push({
+						ticketType: '일반',
+						sumSales: sales.sumSales
+					});
+				}else if(sales.ticketType == '정기'){
+					month[count].push({
+						ticketType: '정기',
+						salesData: sales.sumSales
+					});
+				}
+			}else{
+				count++;
+			}
+		}
+		
+		console.log("jan : ", jan);
+		
+		google.charts.load('current', {'packages':['corechart']});
+		google.charts.setOnLoadCallback(drawChart);
+
+		function drawChart(){
+			let data = google.visualization.arrayToDataTable([
+				['Month', '일반', '정기'],
+				['', ]
+			]);
+		}
+	}
+	
+	
 </script>
 
 </html>

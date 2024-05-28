@@ -11,6 +11,9 @@
 	         WHERE GROUP_CODE LIKE 'TICK%'
 	           AND CODE = TICKET_TYPE
 	       ) "ticketType"
+	      <if test='chart != null and !"".equals(chart)'>
+	      	,TO_CHAR(PAYMENT_DATE, 'MM') "month"
+	      </if>
 	      ,SUM(ORDER_PAYMENT) "sumSales"
 	      ,SUM(TICKET_CTN) "sumTicket"
 	      ,AVG(ORDER_PAYMENT) "avgSales"
@@ -30,6 +33,10 @@
 	   	AND TO_CHAR(PAYMENT_DATE, 'DD') = #{date}
 	   </if>
 	 GROUP BY TICKET_ORDER_DETAIL.TICKET_TYPE
+	 <if test='chart != null and !"".equals(chart)'>
+		 	 ,TO_CHAR(PAYMENT_DATE, 'MM')
+ 	 	ORDER BY "month"
+ 	 </if>
   </select>
   
   <!-- 결제수단별 매출비율 -->
