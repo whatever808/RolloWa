@@ -416,6 +416,10 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.mySearchApList", map, rowbounds);
 	}
 	
+	public String contentSelect(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.contentSelect", map);
+	}
+	
 	
 	
 }

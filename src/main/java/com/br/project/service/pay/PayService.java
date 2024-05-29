@@ -480,4 +480,8 @@ public class PayService {
 	public List<Map<String, Object>> mySearchApList(Map<String, Object> map, PageInfoDto pi){
 		return payDao.mySearchApList(map, pi);
 	}
+	
+	public String contentSelect(Map<String, Object> map) {
+		return payDao.contentSelect(map);
+	}
 }

@@ -273,6 +273,7 @@
 		     , to_char(regist_date, 'YYYY-MM-DD') regist_date
 		     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 		     , PAYMENT_STATUS
+		     , TITLE
 		from approval A
 		WHERE A.STATUS = 'Y'
 		AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
@@ -349,6 +350,7 @@
 		     , to_char(regist_date, 'YYYY-MM-DD') regist_date
 		     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 		     , PAYMENT_STATUS
+		     , TITLE
 		from approval A
     join member m on( USER_NO =  PAYMENT_WRITER_NO)
 		WHERE A.STATUS = 'Y'
@@ -470,6 +472,7 @@
 				     , to_char(regist_date, 'YYYY-MM-DD') regist_date
 				     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 				     , PAYMENT_STATUS
+				     , TITLE
 		from approval A
     join member m on( USER_NO =  PAYMENT_WRITER_NO)
 		WHERE A.STATUS = 'Y'
@@ -556,6 +559,7 @@
 				     , to_char(regist_date, 'YYYY-MM-DD') regist_date
 				     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 				     , PAYMENT_STATUS
+				     , TITLE
 				from approval A
 		    join member m on( USER_NO =  PAYMENT_WRITER_NO)
 				WHERE A.STATUS = 'Y'
@@ -921,7 +925,6 @@
 				      , to_char(EFFECTIVE_DATE, 'YYYY-MM-DD') EFFECTIVE_DATE
               , COOPERATION_DEPARTMENT
               , TITLE
-              , CONTENT
               , FILE_NO
               , ORIGIN_NAME
               , ENROLL_DATE
@@ -940,6 +943,13 @@
           and DOCUMENT_TYPE = 'G'
           and PAYMENT_WRITER_NO = #{payWriterNo}
           and PAYMENT_WRITER = #{payWriter}
+	   </select>
+	   
+	   <select id="contentSelect" resultType="string">
+	   	select 
+	   			   content
+	   	  from SALES_REPORT
+	   	 where SALES_NO = #{documentNo}
 	   </select>
 	   
 	   
@@ -1507,6 +1517,7 @@
 				     , to_char(regist_date, 'YYYY-MM-DD') regist_date
 				     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 				     , PAYMENT_STATUS
+				     , TITLE
 		  from approval A
       join member m on( USER_NO =  PAYMENT_WRITER_NO)
 		 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE

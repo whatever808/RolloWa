@@ -102,97 +102,97 @@
 			cursor: pointer;
 		}
 		/* 기본 스타일 설정 */
-.custom-select {
-    width: 84px; /* 원하는 너비로 설정 */
-    padding: 6px; /* 내측 여백 */
-    border: 1px solid #ccc; /* 테두리 색상 */
-    border-radius: 5px; /* 모서리 둥글게 */
-    background-color: #f9f9f9; /* 배경 색상 */
-    font-size: 16px; /* 글꼴 크기 */
-    color: #333; /* 글꼴 색상 */
-    -webkit-appearance: none; /* 기본 스타일 제거 (웹킷 브라우저) */
-    -moz-appearance: none; /* 기본 스타일 제거 (모질라 브라우저) */
-    appearance: none; /* 기본 스타일 제거 (기타 브라우저) */
-    cursor: pointer; /* 커서 스타일 */
-}
-
-/* 옵션 스타일 설정 */
-.custom-select option {
-    padding: 10px; /* 내측 여백 */
-    background-color: #fff; /* 배경 색상 */
-    color: #333; /* 글꼴 색상 */
-}
-
-/* 포커스 및 호버 스타일 설정 */
-.custom-select:focus {
-    border-color: #007bff; /* 포커스 시 테두리 색상 */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 포커스 시 그림자 */
-    outline: none; /* 포커스 시 외곽선 제거 */
-}
-
-.custom-select option:hover {
-    background-color: #007bff; /* 호버 시 배경 색상 */
-    color: #fff; /* 호버 시 글꼴 색상 */
-}
-
-/* 화살표 추가를 위한 스타일 설정 */
-.custom-select-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-.custom-select::after {
-    content: '▼'; /* 화살표 모양 (유니코드 화살표 사용) */
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    pointer-events: none; /* 화살표 클릭 불가능하게 설정 */
-    color: #333; /* 화살표 색상 */
-}
-.search-container {
-    display: flex;
-    align-items: center;
-}
-
-.search-input {
-    width: 300px;
-    padding: 10px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-right: none;
-    border-radius: 4px 0 0 4px;
-    outline: none;
-}
-
-.search-input:focus {
-    border-color: #007BFF;
-}
-
-.search-button {
-    padding: 11px 20px;
-    font-size: 11px;
-    color: #fff;
-    background-color: #007BFF;
-    border: 2px solid #007BFF;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.search-button:hover {
-    background-color: #0056b3;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.search-button:active {
-    background-color: #003f7f;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.pagination li{padding: 6px 12px;}
-.pagination a : hover{
-background-color : #FEEFAD
-};
+		.custom-select {
+		    width: 84px; /* 원하는 너비로 설정 */
+		    padding: 6px; /* 내측 여백 */
+		    border: 1px solid #ccc; /* 테두리 색상 */
+		    border-radius: 5px; /* 모서리 둥글게 */
+		    background-color: #f9f9f9; /* 배경 색상 */
+		    font-size: 16px; /* 글꼴 크기 */
+		    color: #333; /* 글꼴 색상 */
+		    -webkit-appearance: none; /* 기본 스타일 제거 (웹킷 브라우저) */
+		    -moz-appearance: none; /* 기본 스타일 제거 (모질라 브라우저) */
+		    appearance: none; /* 기본 스타일 제거 (기타 브라우저) */
+		    cursor: pointer; /* 커서 스타일 */
+		}
+		
+		/* 옵션 스타일 설정 */
+		.custom-select option {
+		    padding: 10px; /* 내측 여백 */
+		    background-color: #fff; /* 배경 색상 */
+		    color: #333; /* 글꼴 색상 */
+		}
+		
+		/* 포커스 및 호버 스타일 설정 */
+		.custom-select:focus {
+		    border-color: #007bff; /* 포커스 시 테두리 색상 */
+		    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 포커스 시 그림자 */
+		    outline: none; /* 포커스 시 외곽선 제거 */
+		}
+		
+		.custom-select option:hover {
+		    background-color: #007bff; /* 호버 시 배경 색상 */
+		    color: #fff; /* 호버 시 글꼴 색상 */
+		}
+		
+		/* 화살표 추가를 위한 스타일 설정 */
+		.custom-select-wrapper {
+		    position: relative;
+		    display: inline-block;
+		}
+		
+		.custom-select::after {
+		    content: '▼'; /* 화살표 모양 (유니코드 화살표 사용) */
+		    position: absolute;
+		    top: 50%;
+		    right: 10px;
+		    transform: translateY(-50%);
+		    pointer-events: none; /* 화살표 클릭 불가능하게 설정 */
+		    color: #333; /* 화살표 색상 */
+		}
+		.search-container {
+		    display: flex;
+		    align-items: center;
+		}
+		
+		.search-input {
+		    width: 300px;
+		    padding: 10px;
+		    font-size: 16px;
+		    border: 2px solid #ccc;
+		    border-right: none;
+		    border-radius: 4px 0 0 4px;
+		    outline: none;
+		}
+		
+		.search-input:focus {
+		    border-color: #007BFF;
+		}
+		
+		.search-button {
+		    padding: 11px 20px;
+		    font-size: 11px;
+		    color: #fff;
+		    background-color: #007BFF;
+		    border: 2px solid #007BFF;
+		    border-radius: 0 4px 4px 0;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+		}
+		
+		.search-button:hover {
+		    background-color: #0056b3;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+		
+		.search-button:active {
+		    background-color: #003f7f;
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+		.pagination li{padding: 6px 12px;}
+		.pagination a : hover{
+		background-color : #FEEFAD
+		};
 </style>
 </head>
 <body>
@@ -224,6 +224,7 @@ $(document).ready(function() {
         $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
         $("#btnSearch").val("");
         $("#btnSearch").val("ALL");
+        $("#searchInput").val("");
         loadPageAll(1);
     });
 });
@@ -318,6 +319,7 @@ $(document).ready(function() {
         $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
         $("#btnSearch").val("");
         $("#btnSearch").val("Y");
+        $("#searchInput").val("");
     		loadPageCompletes(1);
     });
 });
@@ -341,8 +343,9 @@ function loadPageCompletes(page) {
             var tbody = $('#tStatus');
             tbody.empty();
             if(response.list.length != 0){
-							response.list.forEach(function(item) {
-					  console.log(item);
+						response.list.forEach(function(item) {
+							
+					  console.log(item.FINAL_APPROVAL_DATE);
 					  var documentStatusClass = '';
 					  if (item.DOCUMENT_STATUS === '반려') {
 					      documentStatusClass = 'rejected';
@@ -413,6 +416,7 @@ $(document).ready(function() {
         $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
         $("#btnSearch").val("");
         $("#btnSearch").val("D");
+        $("#searchInput").val("");
         loadPageWait(1);
     });
 });
@@ -506,6 +510,7 @@ $(document).ready(function() {
         
         $("#btnSearch").val("");
         $("#btnSearch").val("N");
+        $("#searchInput").val("");
         
         loadPageReject(1);
     });
@@ -614,6 +619,7 @@ $(document).ready(function() {
     $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
     $("#btnSearch").val("");
     $("#btnSearch").val("I");
+    $("#searchInput").val("");
     loadPageProgresses(1);
 });
 
@@ -742,7 +748,8 @@ $(document).on('click', '.pages-linki', function(e) {
 									if(Array.isArray(response.list) && response.list.length > 0){
 							
 										response.list.forEach(function(item) {
-		                console.log(item);
+											
+		                console.log(item.FINAL_APPROVAL_DATE);
 		                var documentStatusClass = '';
 		                if (item.DOCUMENT_STATUS === '반려') {
 		                    documentStatusClass = 'rejected';

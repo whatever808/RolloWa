@@ -291,8 +291,8 @@ $(document).on("click", "#rejectBtn", function(){
 			           </tr>
 				          <tr>
 				          		<th>내용</th> 
-				              <td colspan="4">
-				                  <div><c:out value="${ list.get(0).content }" escapeXml="false" /></div>
+				              <td colspan="4" style="height: 300px;">
+				                  <div><c:out value="${ content }" escapeXml="false" /></div>
 				              </td>
 				          </tr>
 				          <tr>

@@ -11,43 +11,43 @@
  
     <!-- 메인페이지스타일 -->
     <link href="${ contextPath }/resources/css/pay/paymain.css" rel="stylesheet">
-    <style>
+<style>
     	.input-group-append{border: 1px solid white; background-color: white;}
 		/* 기본 스타일 설정 */
 
-.custom-select-wrapper {
-    display: flex;
-    align-items: center;
-}
-
-.custom-select {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    width: 111px;
-}
-
-#search_input {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-left: none;
-    flex: 1; /* 검색 입력 필드가 가능한 넓게 차지하도록 합니다 */
-}
-
-.input-group-append .btn {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-
-.input-group {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.custom-select,
-#search_input,
-.input-group-append .btn {
-    height: 40px; /* 높이를 동일하게 설정 */
-    padding: 8px 12px;
-}
+		.custom-select-wrapper {
+		    display: flex;
+		    align-items: center;
+		}
+		
+		.custom-select {
+		    border-top-left-radius: 5px;
+		    border-bottom-left-radius: 5px;
+		    width: 111px;
+		}
+		
+		#search_input {
+		    border-top-right-radius: 0;
+		    border-bottom-right-radius: 0;
+		    border-left: none;
+		    flex: 1; /* 검색 입력 필드가 가능한 넓게 차지하도록 합니다 */
+		}
+		
+		.input-group-append .btn {
+		    border-top-left-radius: 0;
+		    border-bottom-left-radius: 0;
+		}
+		
+		.input-group {
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+		
+		.custom-select,
+		#search_input,
+		.input-group-append .btn {
+		    height: 40px; /* 높이를 동일하게 설정 */
+		    padding: 8px 12px;
+		}
 </style>
 
 </head>
@@ -287,7 +287,6 @@
                                         <select name="conditions" id="selects" class="custom-select">
                                             <option value="전체">전체</option>
                                             <option value="T">퇴직신청서</option>
-                                            <option value="C">출장보고서</option>
                                             <option value="B">비품신청서</option>
                                             <option value="M">매출보고서</option>
                                             <option value="J">지출결의서</option>
@@ -510,6 +509,7 @@
                                    </c:choose>
                                 </div>
                             </div>
+                            <a href="${contextPath}/pay/approvalMain.page">결재메인상세</a>
                         </div>
                     </div>
                 </div>
