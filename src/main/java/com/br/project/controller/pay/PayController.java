@@ -4,7 +4,9 @@ package com.br.project.controller.pay;
 
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,31 +77,31 @@ public class PayController {
 		int slistCount = payService.successListCount(userName);
 		// 로그인한 사용자의 전체수신갯수
 		int ulistCount = payService.allUserCount(userName);
-		
+		// 미결재함
+		int noApprovalSignCount = payService.noApprovalSignCount(userName);
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
+		String formatedNow = sdf.format(now);
 		
 		log.debug("member : {} ", member);
 		log.debug("member.get(0) : {}", member.get(0));
 		log.debug("member.get(0) : {}", member.get(0).getPositionName());
 		
 		
-		if(member.get(0).getPositionName().equals("차장") || 
-		   member.get(0).getPositionName().equals("부장") ||
-		   member.get(0).getPositionName().equals("과장")) {
+		
 			
-			model.addAttribute("list", list);
-			model.addAttribute("pi", pi);
-			model.addAttribute("listCount", String.valueOf(listCount));		
-			model.addAttribute("mdCount", String.valueOf(mdCount));
-			model.addAttribute("slistCount", String.valueOf(slistCount));
-			model.addAttribute("ulistCount", String.valueOf(ulistCount));
-			model.addAttribute("userName", userName);	
-			model.addAttribute("paymain", "paymain");
-			
-			return "pay/approvalMain";
-		}else {
-			redirectAttributes.addFlashAttribute("alertMsg", "관리자직급만 이용할 수 있는 메뉴입니다.");
-			return "redirect:/";
-		}
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("noApprovalSignCount", String.valueOf(noApprovalSignCount));
+		model.addAttribute("userName", userName);
+		model.addAttribute("today", formatedNow);
+		
+		return "pay/approvalMain";
+		
 		
 	}
 	
@@ -509,7 +511,7 @@ public class PayController {
 		}
 		
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 	}
 	
 	@ResponseBody
@@ -879,7 +881,7 @@ public class PayController {
 		}
 		
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 		
 		
 	}
@@ -942,7 +944,7 @@ public class PayController {
 			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
 		}
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 	}
 	
 	@PostMapping("/hReportInsert.do")
@@ -1019,7 +1021,7 @@ public class PayController {
 		}
 		
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 	}
 	
 	
@@ -1082,7 +1084,7 @@ public class PayController {
 
 		//log.debug("fileLength : {}", map.get("fileLength"));
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 		
 		
 	}
@@ -1545,6 +1547,54 @@ public class PayController {
 		
 		return result == 1 ? "SUCCESS" : "FAIL";
 	}
+	
+	@ResponseBody
+	@RequestMapping("/ajaxNoApprovalSign.do")
+	public Map<String, Object> ajaxNoApprovalSign(@RequestParam (value="page", defaultValue="1") int currentPage, HttpSession session) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		
+		int noApprovalSignCount = payService.noApprovalSignCount(userName);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(noApprovalSignCount, currentPage, 5, 10);
+		
+		List<Map<String, Object>> list = payService.noApprovalSign(userName, pi);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
+		return map;
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/ajaxNoApprovalSignSelectList.do")
+	public Map<String, Object> ajaxNoApprovalSignSelectList(@RequestParam (value="page", defaultValue="1") int currentPage, HttpSession session
+														 , @RequestParam Map<String, Object> map) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapes = new HashMap<>();
+		mapes.put("userName", userName);
+		mapes.put("conditions", map.get("conditions"));
+		mapes.put("status", map.get("status"));
+		
+		int noApprovalSignSelectCount = payService.noApprovalSignSelectCount(mapes);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(noApprovalSignSelectCount, currentPage, 5, 10);
+		
+		List<PayDto> list = payService.noApprovalSignSelectList(mapes, pi);
+		
+		Map<String, Object> maps = new HashMap<>();
+		maps.put("list", list);
+		maps.put("pi", pi);
+		return map;
+		
+	}
+	
+	
+	
 	
 	
 	

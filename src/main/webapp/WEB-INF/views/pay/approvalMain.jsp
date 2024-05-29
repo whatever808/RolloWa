@@ -18,12 +18,13 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <style>
 	/* Basic Container Styles */
-.container {
+.containeres {
     display: flex;
     flex-direction: column;
     background-color: #f9f9f9;
     padding: 20px;
     font-family: Arial, sans-serif;
+    max-width: 1400px;
 }
 
 /* Top Menu */
@@ -49,7 +50,7 @@
     align-content: space-around;
     justify-content: space-around;
     align-items: center;
-    background-color: #feefad;
+    background-color: #dc4c7387;
     font-size: 16px;
     display: flex;
     flex-wrap: nowrap;
@@ -693,6 +694,109 @@
 		
 		/*------*/
 		
+			/* 기본 스타일 설정 */
+		.custom-selectn {
+		    width: 124px; /* 원하는 너비로 설정 */
+		    padding: 6px; /* 내측 여백 */
+		    border: 1px solid #ccc; /* 테두리 색상 */
+		    border-radius: 5px; /* 모서리 둥글게 */
+		    background-color: #f9f9f9; /* 배경 색상 */
+		    font-size: 16px; /* 글꼴 크기 */
+		    color: #333; /* 글꼴 색상 */
+		    -webkit-appearance: none; /* 기본 스타일 제거 (웹킷 브라우저) */
+		    -moz-appearance: none; /* 기본 스타일 제거 (모질라 브라우저) */
+		    appearance: none; /* 기본 스타일 제거 (기타 브라우저) */
+		    cursor: pointer; /* 커서 스타일 */
+		}
+		
+		/* 옵션 스타일 설정 */
+		.custom-selectn option {
+		    padding: 10px; /* 내측 여백 */
+		    background-color: #fff; /* 배경 색상 */
+		    color: #333; /* 글꼴 색상 */
+		}
+		
+		/* 포커스 및 호버 스타일 설정 */
+		.custom-selectn:focus {
+		    border-color: #007bff; /* 포커스 시 테두리 색상 */
+		    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 포커스 시 그림자 */
+		    outline: none; /* 포커스 시 외곽선 제거 */
+		}
+		
+		.custom-selectn option:hover {
+		    background-color: #007bff; /* 호버 시 배경 색상 */
+		    color: #fff; /* 호버 시 글꼴 색상 */
+		}
+		
+		/* 화살표 추가를 위한 스타일 설정 */
+		.custom-selectn-wrapper {
+		    position: relative;
+		    display: inline-block;
+		}
+		
+		.custom-selectn:: after {
+		    content: '▼'; /* 화살표 모양 (유니코드 화살표 사용) */
+		    position: absolute;
+		    top: 50%;
+		    right: 10px;
+		    transform: translateY(-50%);
+		    pointer-events: none; /* 화살표 클릭 불가능하게 설정 */
+		    color: #333; /* 화살표 색상 */
+		}
+		.search-container {
+		    display: flex;
+		    align-items: center;
+		}
+		
+		.search-input {
+		    width: 300px;
+		    padding: 10px;
+		    font-size: 16px;
+		    border: 2px solid #ccc;
+		    border-right: none;
+		    border-radius: 4px 0 0 4px;
+		    outline: none;
+		}
+		
+		.search-input: focus {
+		    border-color: #007BFF;
+		}
+		
+		.search-button {
+		    padding: 11px 20px;
+		    font-size: 11px;
+		    color: #fff;
+		    background-color: #007BFF;
+		    border: 2px solid #007BFF;
+		    border-radius: 0 4px 4px 0;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+		}
+		
+		.search-button: hover {
+		    background-color: #0056b3;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+		
+		.search-button: active {
+		    background-color: #003f7f;
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+		
+		.custom-selectn{
+				width: 124px; /* 원하는 너비로 설정 */
+		    padding: 6px; /* 내측 여백 */
+		    border: 1px solid #ccc; /* 테두리 색상 */
+		    border-radius: 5px; /* 모서리 둥글게 */
+		    background-color: #f9f9f9; /* 배경 색상 */
+		    font-size: 16px; /* 글꼴 크기 */
+		    color: #333; /* 글꼴 색상 */
+		    -webkit-appearance: none; /* 기본 스타일 제거 (웹킷 브라우저) */
+		    -moz-appearance: none; /* 기본 스타일 제거 (모질라 브라우저) */
+		    appearance: none; /* 기본 스타일 제거 (기타 브라우저) */
+		    cursor: pointer; /* 커서 스타일 */
+		 }
+	<!----------->	
 		
 </style>
 </head>
@@ -769,7 +873,14 @@ $(document).on('click', '.page-linkmse', function(event) {
                        } else if (item.documentStatus === '대기') {
                            documentStatusClass = 'pending';
                        }
-
+                       
+                       var statusColor = '';
+                       if (item.status == '긴급') {
+                           statusColor = 'style="color: red;"';
+                       } else if (item.status == '보통') {
+                           statusColor = 'style="color: rgb(49, 106, 153);"';
+                       }
+                       
                        var attachmentIcon = '';
                        if (item.salesStatus + item.draftStatus + item.businessStatus > 0) {
                            attachmentIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
@@ -778,18 +889,18 @@ $(document).on('click', '.page-linkmse', function(event) {
                        }
 
                        var row = '';
-                           row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
-                           				'<td>' + item.approvalNo + '</td>' +
-                                  '<td>' + item.payWriter + '</td>' +
-                                  '<td>' + item.title + attachmentIcon + '</td>' +
-                                  '<td>' + item.documentType + '</td>' +
-                                  '<td>' + item.department + '</td>' +
-                                  '<td>' + item.registDt + '</td>' +
-                                  '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
-                                  '<td class="status">' + item.payStatus + '</td>' +
-                                  '</tr>';
-                           tbody.append(row);
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       tbody.append(row);
 								       });
 										
 										var ul = $('.pagination');
@@ -890,18 +1001,18 @@ $(document).on('click', '.page-linkmse', function(event) {
                        }
 
                        var row = '';
-                           row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
-                           				'<td>' + item.approvalNo + '</td>' +
-                                  '<td>' + item.payWriter + '</td>' +
-                                  '<td>' + item.title + attachmentIcon + '</td>' +
-                                  '<td>' + item.documentType + '</td>' +
-                                  '<td>' + item.department + '</td>' +
-                                  '<td>' + item.registDt + '</td>' +
-                                  '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
-                                  '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
-                                  '</tr>';
-                           tbody.append(row);
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       tbody.append(row);
                            
                            
 								       });
@@ -1018,7 +1129,6 @@ $(document).on('click', '.page-linkmse', function(event) {
                            documentStatusClass = 'pending';
                        }
                        
-
                        var statusColor = '';
                        if (item.status == '긴급') {
                            statusColor = 'style="color: red;"';
@@ -1035,18 +1145,18 @@ $(document).on('click', '.page-linkmse', function(event) {
                        }
 
                        var row = '';
-                           row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
-                           				'<td>' + item.approvalNo + '</td>' +
-                                  '<td>' + item.payWriter + '</td>' +
-                                  '<td>' + item.title + attachmentIcon + '</td>' +
-                                  '<td>' + item.documentType + '</td>' +
-                                  '<td>' + item.department + '</td>' +
-                                  '<td>' + item.registDt + '</td>' +
-                                  '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
-                                  '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
-                                  '</tr>';
-                           tbody.append(row);
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       tbody.append(row);
                            
                            
 								       });
@@ -1185,18 +1295,18 @@ $(document).on('click', '.page-linkmse', function(event) {
                        }
 
                        var row = '';
-                           row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
-                           				'<td>' + item.approvalNo + '</td>' +
-                                  '<td>' + item.payWriter + '</td>' +
-                                  '<td>' + item.title + attachmentIcon + '</td>' +
-                                  '<td>' + item.documentType + '</td>' +
-                                  '<td>' + item.department + '</td>' +
-                                  '<td>' + item.registDt + '</td>' +
-                                  '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
-                                  '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
-                                  '</tr>';
-                           tbody.append(row);
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       tbody.append(row);
                            
                            
 								       });
@@ -1342,18 +1452,18 @@ $(document).on('click', '.page-linkmse', function(event) {
                        }
 
                        var row = '';
-                           row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
-                           				'<td>' + item.approvalNo + '</td>' +
-                                  '<td>' + item.payWriter + '</td>' +
-                                  '<td>' + item.title + attachmentIcon + '</td>' +
-                                  '<td>' + item.documentType + '</td>' +
-                                  '<td>' + item.department + '</td>' +
-                                  '<td>' + item.registDt + '</td>' +
-                                  '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
-                                  '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
-                                  '</tr>';
-                           tbody.append(row);
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       tbody.append(row);
                            
                            
 								       });
@@ -1488,18 +1598,18 @@ $(document).on('click', '.page-linkmse', function(event) {
                        }
 
                        var row = '';
-                           row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
-                           				'<td>' + item.approvalNo + '</td>' +
-                                  '<td>' + item.payWriter + '</td>' +
-                                  '<td>' + item.title + attachmentIcon + '</td>' +
-                                  '<td>' + item.documentType + '</td>' +
-                                  '<td>' + item.department + '</td>' +
-                                  '<td>' + item.registDt + '</td>' +
-                                  '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
-                                  '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
-                                  '</tr>';
-                           tbody.append(row);
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       tbody.append(row);
                            
                            
 								       });
@@ -1627,18 +1737,18 @@ $(document).on('click', '.page-linkmse', function(event) {
                        }
 
                        var row = '';
-                           row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
-                           				'<td>' + item.approvalNo + '</td>' +
-                                  '<td>' + item.payWriter + '</td>' +
-                                  '<td>' + item.title + attachmentIcon + '</td>' +
-                                  '<td>' + item.documentType + '</td>' +
-                                  '<td>' + item.department + '</td>' +
-                                  '<td>' + item.registDt + '</td>' +
-                                  '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
-                                  '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
-                                  '</tr>';
-                           tbody.append(row);
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       tbody.append(row);
                            
                            
 								       });
@@ -1776,18 +1886,18 @@ $(document).on('click', '.page-linkmse', function(event) {
                        }
 
                        var row = '';
-                           row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
-                           				'<td>' + item.approvalNo + '</td>' +
-                                  '<td>' + item.payWriter + '</td>' +
-                                  '<td>' + item.title + attachmentIcon + '</td>' +
-                                  '<td>' + item.documentType + '</td>' +
-                                  '<td>' + item.department + '</td>' +
-                                  '<td>' + item.registDt + '</td>' +
-                                  '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
-                                  '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
-                                  '</tr>';
-                           tbody.append(row);
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       tbody.append(row);
                            
                            
 								       });
@@ -1932,18 +2042,18 @@ $(document).on('click', '.page-linkmse', function(event) {
                        }
 
                        var row = '';
-                           row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
-                           				'<td>' + item.approvalNo + '</td>' +
-                                  '<td>' + item.payWriter + '</td>' +
-                                  '<td>' + item.title + attachmentIcon + '</td>' +
-                                  '<td>' + item.documentType + '</td>' +
-                                  '<td>' + item.department + '</td>' +
-                                  '<td>' + item.registDt + '</td>' +
-                                  '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
-                                  '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
-                                  '</tr>';
-                           tbody.append(row);
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       		tbody.append(row);
                            
                            
 								       });
@@ -2077,19 +2187,18 @@ $(document).on('click', '.page-linkmse', function(event) {
                        }
 
                        var row = '';
-                           row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
-                           				'<td>' + item.approvalNo + '</td>' +
-                                  '<td>' + item.payWriter + '</td>' +
-                                  '<td>' + item.title + attachmentIcon + '</td>' +
-                                  '<td>' + item.documentType + '</td>' +
-                                  '<td>' + item.department + '</td>' +
-                                  '<td>' + item.registDt + '</td>' +
-                                  '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
-                                  '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
-                                  '</tr>';
-                           tbody.append(row);
-                           
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       	tbody.append(row);
                            
 								       });
                    
@@ -2230,18 +2339,18 @@ $(document).on('click', '.page-linkmse', function(event) {
                        }
 
                        var row = '';
-                           row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
-                           				'<td>' + item.approvalNo + '</td>' +
-                                  '<td>' + item.payWriter + '</td>' +
-                                  '<td>' + item.title + attachmentIcon + '</td>' +
-                                  '<td>' + item.documentType + '</td>' +
-                                  '<td>' + item.department + '</td>' +
-                                  '<td>' + item.registDt + '</td>' +
-                                  '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
-                                  '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
-                                  '</tr>';
-                           tbody.append(row);
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       	tbody.append(row);
                            
                            
 								       });
@@ -2383,9 +2492,9 @@ $(document).on('click', '.page-linkmse', function(event) {
                        var row = '';
                            row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
                            				'<td>' + item.approvalNo + '</td>' +
-                                  '<td>' + item.payWriter + '</td>' +
                                   '<td>' + item.title + attachmentIcon + '</td>' +
                                   '<td>' + item.documentType + '</td>' +
+                                  '<td>' + item.payWriter + '</td>' +
                                   '<td>' + item.department + '</td>' +
                                   '<td>' + item.registDt + '</td>' +
                                   '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
@@ -2429,6 +2538,300 @@ $(document).on('click', '.page-linkmse', function(event) {
   </script>
   
   
+ <!-- 승인 미결재함 Click (Start)-->
+<script> 
+	
+	$(document).on('click', '#noApprovalSignList', function() {
+		 		$(".highlight-box").css("background-color", "#feefad");
+		  	$(".highlight-box").not(this).css("background-color", "#ffffff");
+        loadnoApprovalSignTableData(1);
+	});
+	
+	$(document).on('click', '.page-linkn', function(event) {
+	    event.preventDefault();
+	    var page = $(this).data('page');
+	    if (page) {
+	    	loadnoApprovalSignTableData(page);
+	    }
+	});
+	
+
+</script> 
+<script>
+  
+  function loadnoApprovalSignTableData(page) {
+   	
+       $.ajax({
+           url:"${contextPath}/pay/ajaxNoApprovalSign.do",
+           data: {
+              page: page
+           },
+           success: function(response) {
+
+               var tbody = $('#tStatus');
+               tbody.empty();
+               var search = $(".selectContent");
+               search.empty();
+               
+               var formHTML = '<div><div>' +
+											         '<select name="status" id="statusSelectn" class="custom-selectn">' + 
+											         '<option value="전체">전체</option>' + 
+											         '<option value="보통">보통</option>' +
+											         '<option value="긴급">긴급</option>' + 
+											         '</select>' + 
+											         '<select name="conditions" id="selectn" class="custom-selectn">' + 
+											                '<option value="전체">전체</option>' + 
+											                '<option value="T">퇴직신청서</option>' + 
+											                '<option value="B">비품신청서</option>' + 
+											                '<option value="M">매출보고서</option>' + 
+											                '<option value="J">지출결의서</option>' + 
+											                '<option value="G">기안서</option>' + 
+											                '<option value="H">휴직신청서</option>' + 
+											                '<option value="V">휴가신청서</option>' + 
+											            '</select>' + 
+											        '</div>' + 
+											    '</div>' + 
+											    '<div class="search-container">' + 
+											        '<select name="condition" id="select_searchua" class="custom-selectua">' + 
+											            '<option value="PAYMENT_WRITER">기안자</option>' + 
+											            '<option value="DEPARTMENT">부서</option>' + 
+											        '</select>' + 
+											        '<input type="text" id="search_inputua" placeholder="검색어를 입력하세요" class="search-input">' + 
+											    '</div>';
+									
+											
+											$('.selectContent').append(formHTML);
+               
+               if(response.list.length !== 0) {
+            	   
+                   response.list.forEach(function(item) {
+                       var documentStatusClass = '';
+                       if (item.documentStatus === '반려') {
+                           documentStatusClass = 'rejected';
+                       } else if (item.documentStatus === '완료') {
+                           documentStatusClass = 'completed';
+                       } else if (item.documentStatus === '진행') {
+                           documentStatusClass = 'progresses';
+                       } else if (item.documentStatus === '대기') {
+                           documentStatusClass = 'pending';
+                       }
+                       
+
+                       var statusColor = '';
+                       if (item.status == '긴급') {
+                           statusColor = 'style="color: red;"';
+                       } else if (item.status == '보통') {
+                           statusColor = 'style="color: rgb(49, 106, 153);"';
+                       }
+                       
+
+                       var attachmentIcon = '';
+                       if (item.salesStatus + item.draftStatus + item.businessStatus > 0) {
+                           attachmentIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
+                                            '<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>' +
+                                            '</svg>';
+                       }
+
+                       var row = '';
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       	tbody.append(row);
+                           
+								       });
+                   
+
+										
+										var ul = $('.pagination');
+										ul.empty(); 
+					
+										ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="page-linkn" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
+					
+										for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
+										    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="page-linkn" data-page="' + p + '">' + p + '</a></li>');
+										}
+					
+										ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="page-linkn" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
+										
+										$('#search_inputua').focus();
+										
+							}else {
+								 var row = '<tr>' +
+					       '<td colspan="9">존재하는 게시글이 없습니다.</td>' +
+					       '</tr>';
+								 tbody.append(row);
+								 var ul = $('.pagination');
+								 ul.empty();
+								 
+                 $('#search_inputua').focus();
+								 
+							}
+           }
+               
+       });
+   }
+  </script>
+<!-- 승인 미결재함 Click (End)-->  
+ 
+<!-- 승인 미결재함 Select (Start)-->
+<script> 
+	
+		$(document).on('change', '.custom-selectn', function() {
+			var keyword = $("#search_inputn").val("");
+			var conditions = $("#selectn").val();
+			var status = $("#statusSelectn").val();
+			loadUserSelectApprovalTableData(1, conditions, status);
+		});
+		
+		
+		$(document).on('click', '.page-linkn', function(event) {
+			event.preventDefault();
+			var page = $(this).data('page');
+			if (page) {
+			    var conditions = $("#selectn").val();
+			    var status = $("#statusSelectn").val();
+			    loadUserSelectApprovalTableData(page, conditions, status);
+			}
+		});
+
+</script>
+
+ <script>
+
+   function loadUserSelectApprovalTableData(page, conditions, status) {
+   	
+       $.ajax({
+           url: "${contextPath}/pay/ajaxNoApprovalSignSelectList.do",
+           data: {
+        	   conditions:conditions,
+        	   status:status,
+             page: page
+           },
+           success: function(response) {
+               console.log(response);
+
+               var tbody = $('#tStatus');
+               tbody.empty();
+               var search = $(".selectContent");
+               search.empty();
+               
+               let conditions = response.conditions;
+               let status = response.status;
+               
+               var formHTML = '<div><div>' +
+											         '<select name="status" id="statusSelectua" class="custom-selectua">' + 
+											         '<option value="전체" ' + (status == '전체' ? 'selected': '') + '>전체</option>' + 
+											         '<option value="보통" ' + (status == '보통' ? 'selected': '') + '>보통</option>' +
+											         '<option value="긴급" ' + (status == '긴급' ? 'selected': '') + '>긴급</option>' + 
+											         '</select>' + 
+											         '<select name="conditions" id="selectsua" class="custom-selectua">' + 
+											                '<option value="전체" ' + (conditions == '전체' ? 'selected': '') +'>전체</option>' + 
+											                '<option value="T" ' + (conditions == 'T' ? 'selected': '') +'>퇴직신청서</option>' + 
+											                '<option value="B" ' + (conditions == 'B' ? 'selected': '') +'>비품신청서</option>' + 
+											                '<option value="M" ' + (conditions == 'M' ? 'selected': '') +'>매출보고서</option>' + 
+											                '<option value="J" ' + (conditions == 'J' ? 'selected': '') +'>지출결의서</option>' + 
+											                '<option value="G" ' + (conditions == 'G' ? 'selected': '') +'>기안서</option>' + 
+											                '<option value="H" ' + (conditions == 'H' ? 'selected': '') +'>휴직신청서</option>' + 
+											                '<option value="V" ' + (conditions == 'V' ? 'selected': '') +'>휴가신청서</option>' + 
+											            '</select>' + 
+											        '</div>' + 
+											    '</div>' + 
+											    '<div class="search-container">' + 
+											        '<select name="condition" id="select_searchua" class="custom-selectua">' + 
+											            '<option value="PAYMENT_WRITER">기안자</option>' + 
+											            '<option value="DEPARTMENT">부서</option>' + 
+											        '</select>' + 
+											        '<input type="text" id="search_inputua" placeholder="검색어를 입력하세요" class="search-input">' + 
+											    '</div>';
+									
+											
+											$('.selectContent').append(formHTML);
+
+               if(response.list.length !== 0) {
+            	   
+                   response.list.forEach(function(item) {
+                	   
+                       var documentStatusClass = '';
+                       if (item.documentStatus === '반려') {
+                           documentStatusClass = 'rejected';
+                       } else if (item.documentStatus === '완료') {
+                           documentStatusClass = 'completed';
+                       } else if (item.documentStatus === '진행') {
+                           documentStatusClass = 'progresses';
+                       } else if (item.documentStatus === '대기') {
+                           documentStatusClass = 'pending';
+                       }
+                       
+
+                       var statusColor = '';
+                       if (item.status == '긴급') {
+                           statusColor = 'style="color: red;"';
+                       } else if (item.status == '보통') {
+                           statusColor = 'style="color: rgb(49, 106, 153);"';
+                       }
+                       
+
+                       var attachmentIcon = '';
+                       if (item.salesStatus + item.draftStatus + item.businessStatus > 0) {
+                           attachmentIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
+                                            '<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>' +
+                                            '</svg>';
+                       }
+
+                       var row = '';
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       				'<td>' + item.approvalNo + '</td>' +
+                              '<td>' + item.title + attachmentIcon + '</td>' +
+                              '<td>' + item.documentType + '</td>' +
+                              '<td>' + item.payWriter + '</td>' +
+                              '<td>' + item.department + '</td>' +
+                              '<td>' + item.registDt + '</td>' +
+                              '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
+                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
+                              '</tr>';
+                       	tbody.append(row);
+                           
+                           
+								       });
+                   
+
+										
+										var ul = $('.pagination');
+										ul.empty(); 
+					
+										ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="page-linkn" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
+					
+										for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
+										    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="page-linkn" data-page="' + p + '">' + p + '</a></li>');
+										}
+					
+										ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="page-linkn" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
+							}else {
+								 var row = '<tr>' +
+					       '<td colspan="9">존재하는 게시글이 없습니다.</td>' +
+					       '</tr>';
+								 tbody.append(row);
+								 var ul = $('.pagination');
+								 ul.empty();
+								 
+							}
+           }
+               
+       });
+   }
+  </script>
+
+<!-- 승인 미결재함 Select (End)-->  
+  
    
   
 
@@ -2437,8 +2840,8 @@ $(document).on('click', '.page-linkmse', function(event) {
 	        <!-- content 추가 -->
 	        <div class="content p-4">
 	          <!-- 프로필 영역 -->
-	          <div class="informations" >
-	          	<div class="container">
+	          <div class="informations">
+	          	<div class="containeres">
 						    <!-- Top Menu -->
 						    <div class="top-menu">
 						        <a href="${contextPath}/pay/writerForm.page?writer=b">
@@ -2509,20 +2912,24 @@ $(document).on('click', '.page-linkmse', function(event) {
 						    <!-- Highlighted Boxes -->
 						    <div class="highlight-boxes">
 						        <div class="highlight-box" id="7daysOuterList">
-						            <div class="title"><h5>${ userName }님의 <br>일주일 이상 지연된 결재요청함</h5></div>
-						            <div class="count">${ mdCount }건</div>
+						            <div class="title"><h5>${ userName }님의 <br>일주일 이상 지연된 <br>결재요청함</h5></div>
+						            <div class="count"><h5>${ mdCount }건</h5></div>
 						        </div>
 						        <div class="highlight-box" id="UserAllList">
 						            <div class="title"><h5>${ userName }님의 <br>전체 결재 요청함</h5></div>
-						            <div class="count">${ ulistCount }건</div>
+						            <div class="count"><h5>${ ulistCount }건</h5></div>
 						        </div>
 						        <div class="highlight-box" id="UserApprovalList">
 						            <div class="title"><h5>${ userName }님의 <br>결재한 승인함</h5></div>
-						            <div class="count">${ slistCount }건</div>
+						            <div class="count"><h5>${ slistCount }건</h5></div>
+						        </div>
+						        <div class="highlight-box" id="noApprovalSignList">
+						            <div class="title"><h5>${ userName }님의 <br>미결재함</h5></div>
+						            <div class="count"><h5>${ noApprovalSignCount }건</h5></div>
 						        </div>
 						        <div class="highlight-box" id="AllList">
 						            <div class="title"><h5>전체결재함</h5></div>
-						            <div class="count">${ listCount }건</div>
+						            <div class="count"><h5>${ listCount }건</h5></div>
 						        </div>
 						    </div>
 						

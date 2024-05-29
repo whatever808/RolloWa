@@ -484,4 +484,23 @@ public class PayService {
 	public String contentSelect(Map<String, Object> map) {
 		return payDao.contentSelect(map);
 	}
+	
+	public int noApprovalSignCount(String userName) {
+		return payDao.noApprovalSignCount(userName);
+	}
+	
+	public List<PayDto> noApprovalSignSelectCount(String userName, PageInfoDto pi){
+		return payDao.noApprovalSignSelectCount(userName, pi);
+	}
+	
+	public int noApprovalSignSelectCount(Map<String, Object> map) {
+		return payDao.noApprovalSignSelectCount(map);
+	}
+	
+	
+	public List<PayDto> noApprovalSignSelectList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.noApprovalSignSelectList(map, pi);
+	}
+	
+	
 }
