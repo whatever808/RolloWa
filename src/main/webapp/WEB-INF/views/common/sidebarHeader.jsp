@@ -723,8 +723,9 @@ $(document).ready(function(){
 					    	
 					    	if(msgBody.flag == 0) {
 					    		// 채팅방 초대 알림인 경우
-					    		receiveInviteMsg(msgBody)
-					    		
+					    		if(msgBody.userNo != ${loginMember.userNo}) {
+					    			receiveInviteMsg(msgBody);
+					    		}
 					    	} else {
 					    		// 공지사항, 일정 등록 알림인 경우
 					    		for (var i = 0; i < msgBody.teamMemberList.length; i++) {

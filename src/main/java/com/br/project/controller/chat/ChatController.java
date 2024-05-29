@@ -60,7 +60,7 @@ public class ChatController {
     public int insertChatMsg(Map<String, Object> map) {
     	ChatMessageDto chatMsg = ChatMessageDto.builder()
 				.msgContent((String)map.get("msgContent"))
-				.chatRoomNo((int)(map.get("roomNo")))
+				.chatRoomNo(Integer.parseInt(String.valueOf(map.get("roomNo"))))
 				.userNo(Integer.parseInt(String.valueOf(map.get("userNo"))))
 				.build();
 
@@ -138,16 +138,16 @@ public class ChatController {
 			Map<String, Object> map = jsonToMap(json);
 			String partUserName = memberService.selectUserName((String)map.get("partUserNo"));
 			
-			map.put("msgContent", map.get("name") + "님이 " + partUserName + "님을 채팅방에 초대하였습니다.");
+			map.put("msgContent", map.get("userName") + "님이 " + partUserName + "님을 채팅방에 초대하였습니다.");
 			
 			// flag 번호 부여
-			map.put("flagNo", "0");
+			map.put("flag", "0");
 			
 			int result = insertChatMsg(map);
 			
 			if (result > 0) {
 				log.debug("초대 메세지 전송 성공");
-				template.convertAndSend("/topic/chat/alram", map);
+				template.convertAndSend("/topic/chat/alram", mapToJson(map));
 			} else {
 				log.debug("채팅 메세지 저장 중 오류 발생");
 			}

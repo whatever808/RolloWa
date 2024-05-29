@@ -47,6 +47,7 @@
 	    chatting_participation
 	    (
 	        chat_no
+	        , chat_out_date
 	        , chat_user_no
 	        , chat_inv_user_no
 	        , cr_no
@@ -54,6 +55,7 @@
 	    values
 	    (
 	        seq_cpno.nextval
+	        , null
 	        <choose>
 		        <when test="partUserNo != null">
 		        	, #{ partUserNo }
@@ -186,6 +188,6 @@
     and
         cm.cr_no = #{ roomNo }
 		and
-		   cm.send_date > cp.chat_out_date
+		   	cm.send_date > NVL(cp.chat_out_date, to_date('1000/01/01 00:00:00', 'YYYY/MM/DD HH24:MI:SS'))
   </select>
 </mapper>
