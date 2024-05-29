@@ -11,7 +11,7 @@
     <link href="${ contextPath }/resources/css/common/bootstrap.min.css" rel="stylesheet">
 
     <!-- fontawesome -->
-    <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/" crossorigin="anonymous"></script>
 
     <!-- Google Fonts Roboto -->
     <link rel="stylesheet"
