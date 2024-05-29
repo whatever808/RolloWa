@@ -18,11 +18,11 @@
     	width: 1200px !important;
         padding: 20px;
     }
+    
     /* css 추가 */
     .sortable {
 		cursor: pointer;
 	}
-	
 	.sortable:after {
 		content: ' \25B2'; /* 기본 오름차순 화살표 */
 	}
@@ -170,23 +170,95 @@
 					$(".employee_info tbody").html($(data).find(".employee_info tbody").html());
 					
 					// 검색한 사용자 수
-					let totalRows = $(data).find(".employee_info tbody > tr").length-1;
+					let totalRows = $(data).find(".employee_info tbody > tr").length;
 					if (totalRows > 0) {
-				        let isEmptyMessage = $(data).find(".employee_info tbody > tr td[colspan='8']").text();
-				        if (isEmptyMessage === "조회된 직원이 없습니다.") {
-				            totalRows--;
-				        }
-				    }
-				    $(".employee_count").text("전체 " + totalRows + "명");
-					
+					    let isEmptyMessage = $(data).find(".employee_info tbody > tr td[colspan='8']").text();
+					    if (isEmptyMessage == "조회된 직원이 없습니다.") {
+					        totalRows -= 1;
+					    } else {
+					        totalRows;
+					    }
+					} else {
+					    totalRows = 0; // 0 처리
+					}
+					$(".employee_count").text("전체 " + totalRows + "명");
+
 				}, error: function(){
 					//console.log("통신 실패");
 				}
 			})
 			
      	}
-     	
 		</script>
+		
+		<script>
+    // 정렬 기능
+    $(document).ready(function() {
+        $(".sortable").click(function() {
+            let columnIndex = parseInt($(this).data("column"));
+            let isDescending = $(this).hasClass("desc");
+
+            // 모든 정렬 가능한 열의 클래스에서 desc 클래스를 제거
+            $(".sortable").removeClass("desc");
+
+            // 클릭한 열에 desc 클래스를 추가하여 현재 정렬 상태를 표시
+            $(this).toggleClass("desc", !isDescending);
+
+            // 테이블 정렬 함수 호출
+            sortTable(columnIndex, isDescending ? 1 : -1);
+        });
+    });
+    
+    function sortTable(columnIndex, direction) {
+        let $table = $(".employee_info tbody");
+        let $rows = $table.find("tr").get();
+
+        $rows.sort(function(a, b) {
+            let A = getColumnValue(a, columnIndex);
+            let B = getColumnValue(b, columnIndex);
+
+            // 숫자 값을 비교하여 정렬
+            if ($.isNumeric(A) && $.isNumeric(B)) {
+                return (parseFloat(A) - parseFloat(B)) * direction;
+            } else {
+                // A 또는 B가 숫자가 아닌 경우 문자열로 비교하여 정렬
+                return A.localeCompare(B) * direction;
+            }
+        });
+
+        // 정렬된 행을 테이블에 다시 추가
+        $.each($rows, function(index, row) {
+            $table.append(row);
+        });
+    }
+    
+    function getColumnValue(row, columnIndex) {
+        let value = $(row).children("td").eq(columnIndex).text().trim();
+        if (columnIndex == 4) { // 직급 열의 인덱스
+            // 직급을 숫자로 매핑하여 반환
+            switch (value) {
+                case "사장":
+                    return 6;
+                case "부장":
+                    return 5;
+                case "차장":
+                    return 4;
+                case "과장":
+                    return 3;
+                case "대리":
+                    return 2;
+                case "사원":
+                    return 1;
+                default:
+                    return 0;
+            }
+        } else {
+            return value;
+        }
+    }
+</script>
+
+		
         
         <!-- 일별 화면 -->
         <div class="daily_data">
@@ -360,7 +432,7 @@
 	 		
 	 		// input text에서 엔터눌러도 페이지 안바뀌게
 			document.addEventListener('keydown', function(event) {
-			  if (event.keyCode === 13) {
+			  if (event.keyCode == 13) {
 			    event.preventDefault();
 			  };
 			}, true);
@@ -376,16 +448,18 @@
 		    </script>
            <!-- 직원 정보 테이블 start-->
            <table class="table table-bordered line-shadow employee_info">
-               <tr>
-					<th>프로필사진</th>
-					<th onclick="sortTableByColumnName('이름')">이름</th>
-				    <th onclick="sortTableByColumnName('부서')">부서</th>
-				    <th onclick="sortTableByColumnName('팀명')">팀명</th>
-				    <th onclick="sortTableByColumnName('직급')">직급</th>
-				    <th onclick="sortTableByInTime()">출근시간</th>
-				    <th onclick="sortTableByOutTime()">퇴근시간</th>
-				    <th onclick="sortTableByColumnName('상태')">상태</th>
-               </tr>
+				<thead>
+					<tr>
+						<th>프로필사진</th>
+						<th class="sortable" data-column="1">이름</th>
+					    <th class="sortable" data-column="2">부서</th>
+					    <th class="sortable" data-column="3">팀명</th>
+					    <th class="sortable" data-column="4">직급</th>
+					    <th class="sortable" data-column="5">출근시간</th>
+					    <th class="sortable" data-column="6">퇴근시간</th>
+					    <th class="sortable" data-column="7">상태</th>
+					</tr>
+				</thead>
                
                <!-- 출결 조회(이름,부서,팀명,직급, 오늘날짜의 출석시간, 오늘날짜 퇴근시간, 상태) -->
                <c:choose>
@@ -452,135 +526,6 @@
            </table>
            <!-- 직원 테이블 end -->
            
-           <!-- 정렬 기능 -->
-           <script>
-		    // 정렬 관련 전역 변수
-		    let sortByColumn = ''; // 정렬할 열 이름
-		    let sortDirection = 'asc'; // 정렬 방향 (기본값: 오름차순)
-		
-		    // 열 이름을 기준으로 테이블 정렬
-		    function sortTableByColumnName(columnName) {
-		        // 정렬할 열 이름 설정
-		        sortByColumn = columnName;
-		        // 정렬 방향 변경 (기존 정렬 방향과 반대로 변경)
-		        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-		        // 테이블 정렬 함수 호출
-		        sortTable();
-		    }
-		
-		    // 테이블 정렬 함수
-		    function sortTable() {
-		        let table, rows, switching, i, x, y, shouldSwitch;
-		        table = document.querySelector('.employee_info');
-		        switching = true;
-		        /* Make a loop that will continue until
-		        no switching has been done: */
-		        while (switching) {
-		            // Start by saying: no switching is done:
-		            switching = false;
-		            rows = table.rows;
-		            /* Loop through all table rows (except the
-		            first, which contains table headers): */
-		            for (i = 1; i < (rows.length - 1); i++) {
-		                // Start by saying there should be no switching:
-		                shouldSwitch = false;
-		                /* Get the two elements you want to compare,
-		                one from current row and one from the next: */
-		                x = rows[i].querySelectorAll("td")[getIndexByColumnName(sortByColumn)].innerText;
-		                y = rows[i + 1].querySelectorAll("td")[getIndexByColumnName(sortByColumn)].innerText;
-		                // Check if the two rows should switch place:
-		                if (sortDirection === 'asc') {
-		                    if (x.toLowerCase() > y.toLowerCase()) {
-		                        // If so, mark as a switch and break the loop:
-		                        shouldSwitch = true;
-		                        break;
-		                    }
-		                } else if (sortDirection === 'desc') {
-		                    if (x.toLowerCase() < y.toLowerCase()) {
-		                        // If so, mark as a switch and break the loop:
-		                        shouldSwitch = true;
-		                        break;
-		                    }
-		                }
-		            }
-		            if (shouldSwitch) {
-		                /* If a switch has been marked, make the switch
-		                and mark that a switch has been done: */
-		                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-		                switching = true;
-		            }
-		        }
-		    }
-		
-		    // 열 이름을 통해 해당 열의 인덱스를 가져오는 함수
-		    function getIndexByColumnName(columnName) {
-		        let headers = document.querySelectorAll('.employee_info th');
-		        for (let i = 0; i < headers.length; i++) {
-		            if (headers[i].innerText === columnName) {
-		                return i;
-		            }
-		        }
-		        return -1; // 열을 찾지 못한 경우 -1 반환
-		    }
-		    
-		 // 테이블 정렬 함수
-	    function sortTable() {
-	        let table, rows, switching, i, x, y, shouldSwitch;
-	        table = document.querySelector('.employee_info');
-	        switching = true;
-	        /* Make a loop that will continue until
-	        no switching has been done: */
-	        while (switching) {
-	            // Start by saying: no switching is done:
-	            switching = false;
-	            rows = table.rows;
-	            /* Loop through all table rows (except the
-	            first, which contains table headers): */
-	            for (i = 1; i < (rows.length - 1); i++) {
-	                // Start by saying there should be no switching:
-	                shouldSwitch = false;
-	                /* Get the two elements you want to compare,
-	                one from current row and one from the next: */
-	                x = rows[i].querySelectorAll("td")[getIndexByColumnName(sortByColumn)].innerText;
-	                y = rows[i + 1].querySelectorAll("td")[getIndexByColumnName(sortByColumn)].innerText;
-	                // Check if the two rows should switch place:
-	                if (sortDirection === 'asc') {
-	                    if (x.toLowerCase() > y.toLowerCase()) {
-	                        // If so, mark as a switch and break the loop:
-	                        shouldSwitch = true;
-	                        break;
-	                    }
-	                } else if (sortDirection === 'desc') {
-	                    if (x.toLowerCase() < y.toLowerCase()) {
-	                        // If so, mark as a switch and break the loop:
-	                        shouldSwitch = true;
-	                        break;
-	                    }
-	                }
-	            }
-	            if (shouldSwitch) {
-	                /* If a switch has been marked, make the switch
-	                and mark that a switch has been done: */
-	                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-	                switching = true;
-	            }
-	        }
-	    }
-
-	    // 정렬을 실행하는 코드
-	    function sortTableByColumnName(columnName) {
-	        // 정렬할 열 이름 설정
-	        sortByColumn = columnName;
-	        // 정렬 방향 변경 (기존 정렬 방향과 반대로 변경)
-	        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-	        // 테이블 정렬 함수 호출
-	        if (document.querySelector('.employee_info tbody tr')) {
-	            // 실제 데이터가 있는 경우에만 정렬을 수행
-	            sortTable();
-	        }
-	    }
-		</script>
-
 	           
     	</div>
     	

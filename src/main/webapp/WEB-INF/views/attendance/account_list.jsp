@@ -15,22 +15,23 @@
 	href="${contextPath}/resources/css/attendance/account.css">
 
 <style>
-.main_content {
-	width: 1200px !important;
-	padding: 20px;
-}
-/* css 추가 */
-.sortable {
-	cursor: pointer;
-}
-
-.sortable:after {
-	content: ' \25B2'; /* 기본 오름차순 화살표 */
-}
-
-.sortable.desc:after {
-	content: ' \25BC'; /* 내림차순 화살표 */
-}
+	.main_content {
+		width: 1200px !important;
+		padding: 20px;
+	}
+	
+	/* css 추가 */
+	.sortable {
+		cursor: pointer;
+	}
+	
+	.sortable:after {
+		content: ' \25B2'; /* 기본 오름차순 화살표 */
+	}
+	
+	.sortable.desc:after {
+		content: ' \25BC'; /* 내림차순 화살표 */
+	}
 </style>
 </head>
 <body>
@@ -133,15 +134,8 @@
 			})
 		}
      	
-		// 동적으로 생성된 tr 요소에 클릭 이벤트 바인딩
+		// 동적으로 생성된 tr 요소에 클릭 이벤트 (상세페이지 이동)
 	    function bindRowClickEvent() {
-			/*
-	        $(".employee_info tbody").on("click", "tr", function() {
-	            let formId = $(this).data("form-id");
-	            if (formId) {
-	                document.getElementById(formId).submit();
-	            }
-	        });*/
 	    	$(".employee_info tbody tr").click(function() {
 	            let userNo = $(this).find("input[name=userNo]").val();
 	            if (userNo) {
@@ -150,7 +144,7 @@
 	        });
 	    }
      	
-	 	// 테이블 정렬 기능
+	 	// 정렬 기능
 	    $(document).ready(function() {
 	        //let sortDirection = 1; // 1: 오름차순, -1: 내림차순
 
@@ -212,7 +206,7 @@
 	                default:
 	                    return 0;
 	            }
-	        } else if (columnIndex == 7 || columnIndex == 8 || columnIndex == 10) { // 시급, 지급 총액, 실 지급액 열의 인덱스
+	        } else if (columnIndex == 7 || columnIndex == 8 || columnIndex == 10) {
 	            return parseFloat(value.replace(/[^0-9.-]+/g,"")); // 숫자 값으로 변환
 	        } else {
 	            return value;
@@ -437,14 +431,6 @@
 				</c:otherwise>
 			</c:choose>
 		</table>
-
-
-		<!--페이징 처리 start-->
-		<!-- 일단 보류 -->
-		<!--페이징 처리 end-->
-
-
-
 
 		<!-- ------------ -->
 
