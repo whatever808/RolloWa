@@ -53,6 +53,9 @@
                 <div class="profile-attend-div">
 
                     <div class="profile-img-div">
+                    		<!-- 기웅 추가 -->
+                    		<div class="alram-div"><button type="button">버튼</button></div>
+                    		<!-- 기웅 추가 -->
                         <img src="${ contextPath }/resources/images/defaultProfile.png" alt="user profile">
 
                         <h6 class="mt-3 fw-bold">${ loginMember.userName } / ${ loginMember.positionName } / ${ loginMember.teamName }</h6>
