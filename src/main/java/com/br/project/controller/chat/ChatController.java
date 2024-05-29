@@ -1,5 +1,6 @@
 package com.br.project.controller.chat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 
 import com.br.project.dto.chat.ChatMessageDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.dto.notification.NotificationSendDto;
 import com.br.project.service.chat.ChatService;
 import com.br.project.service.member.MemberService;
 import com.br.project.service.notification.NotificationService;
@@ -70,11 +72,10 @@ public class ChatController {
     public void alram(String json) {
     	try {
 			Map<String, Object> map = jsonToMap(json);
-			log.debug("map : {}", map);
 			
 			if(map.get("flag").equals("1")) {
 				// 공지사항 알림일 경우
-				
+				map.put("type", "N");
 				// 결과 저장
 				int result = 0;
 				
@@ -99,6 +100,7 @@ public class ChatController {
 				}
 			} else if (map.get("flag").equals("2")) {
 				// 일정 알림일 경우
+				map.put("type", "C");
 				
 				int result = 0;
 				// 팀코드 리스트에 담기
