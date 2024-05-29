@@ -11,7 +11,7 @@
     <link href="${ contextPath }/resources/css/common/bootstrap.min.css" rel="stylesheet">
 
     <!-- fontawesome -->
-    <script src="https://kit.fontawesome.com/" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
 
     <!-- Google Fonts Roboto -->
     <link rel="stylesheet"
@@ -681,8 +681,6 @@ $(document).ready(function(){
 					// 수신한 메세지 개수
 					var msgCount = 0;
 					
-					
-					
 					$(document).ready(function() {
 						// 새로고침 감지
 						window.addEventListener('beforeunload', (event) => {
@@ -727,30 +725,36 @@ $(document).ready(function(){
 					    		// 채팅방 초대 알림인 경우
 					    		receiveInviteMsg(msgBody)
 					    		
-					    	} else if (msgBody.flag == 1) {
-					    		// 공지사항 등록 알림인 경우
+					    	} else {
+					    		// 공지사항, 일정 등록 알림인 경우
 					    		for (var i = 0; i < msgBody.teamMemberList.length; i++) {
 					    			if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
 							    		$("#alram").iziModal('open');
 							    		$("#alram_btn").on("click", function() {
+							    			// 알림의 noti_check_date update
+				    						$.ajax({
+													url: "${contextPath}/notification/checkDate"
+													, method: "post"
+													, data: {userNo: ${loginMember.userNo}}
+													, async: false
+													, success: function(result) {
+														if(result > 0) {
+															console.log("알림 조회 시간 update 성공");
+														}
+													}
+													, error: function() {
+														console.log("알림 조회 시간 update ajax 실패");
+													}
+												})
+							    			
 							    			location.href = msgBody.url;
 							    		})
+							    		
+							    		// 읽지 않은 알림 조회 후 알림 목록에 추가 및 읽지 않은 알림 표시
+							    		selectAlram();
 					    			}
 					    		}
-					    	} else if (msgBody.flag == 2) {
-					    		// 부서 내 일정 등록 알림인 경우
-					    		for (var i = 0; i < msgBody.teamMemberList.length; i++) {
-					    			if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
-					    				$("#alram").iziModal('open');
-							    		$("#alram_btn").on("click", function() {
-							    			location.href = msgBody.url;
-							    		})
-					    			}
-					    		}
-					    	} else if (msgBody.flag == 3) {
-					    		// 결재 등록 알림인 경우
-					    		
-					    	}
+					    	} 
 					    })
 					    
 						})
@@ -765,7 +769,7 @@ $(document).ready(function(){
 						, radius: '2'
 						, arrowKeys: 'false'
 						, navigateCaption: 'false'
-						//, timeout: '3000'
+						, timeout: '3000'
 						, timeoutProgressbar: 'true'
 						, timeoutProgressbarColor: '#FFFFFF'
 						, pauseOnHover: 'true'

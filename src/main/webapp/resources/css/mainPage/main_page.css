@@ -233,4 +233,17 @@ h4, h5{
   display: flex;
   justify-content: flex-end;
 }
-		
+	
+.alram-btn {
+	box-shadow: none;
+}	
+
+.alram_el {
+	display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alram_date {
+	margin-right: 10px;
+}

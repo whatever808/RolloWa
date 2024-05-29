@@ -101,6 +101,22 @@
         for (let i = 0; i < $(".chat_room").length; i++) {
             chatRoomArr[i] = 0;
         }
+        
+      	// 채팅방 버튼 스타일
+      	$(".msg_open_btn").on("mouseenter", function() {
+      		$(".msg_open_btn>i").addClass("fa-beat");
+      	})
+      	$(".msg_open_btn").on("mouseleave", function() {
+      		$(".msg_open_btn>i").removeClass("fa-beat");
+      	})
+      	
+      	// 채팅방 버튼 스타일
+		  	$(".msg_close_btn").on("mouseenter", function() {
+		  		$(".msg_close_btn>i").addClass("fa-beat");
+		  	})
+		  	$(".msg_close_btn").on("mouseleave", function() {
+		  		$(".msg_close_btn>i").removeClass("fa-beat");
+		  	})
 
         // 채팅방 열기 버튼
         $(".msg_open_btn").on("click", function () {
@@ -579,6 +595,24 @@
 		// 채팅방 초대 알림 수신 시
 		function receiveInviteMsg(msgBody) {
 			selectChatRoom();
+		}
+		
+		// 알림의 확인 날짜 update
+		function updateCheckDate() {
+			$.ajax({
+				url: "${contextPath}/notification/checkDate"
+				, method: "post"
+				, data: {userNo: ${loginMember.userNo}}
+				, async: false
+				, success: function(result) {
+					if(result > 0) {
+						console.log("알림 조회 시간 update 성공");
+					}
+				}
+				, error: function() {
+					console.log("알림 조회 시간 update ajax 실패");
+				}
+			})
 		}
 
 		// 날짜 형식 바꾸기
