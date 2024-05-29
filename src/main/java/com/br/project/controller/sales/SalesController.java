@@ -32,26 +32,23 @@ public class SalesController {
 	}
 	
 	/**
-	 * 년/월/일별 총매출액, 평균매출액, 최고매출액, 최저매출액 조회 (테이블)
+	 * 년/월/일 총매출액, 평균매출액, 최고매출액, 최저매출액 조회 (테이블)
 	 */
-	@RequestMapping(value="/ticket/sales.ajax", produces="application/json; charset=utf-8")
+	@RequestMapping(value="/ticket/table.ajax", produces="application/json; charset=utf-8")
 	@ResponseBody
 	public List<Map<String, Object>> selectTicketSalesByTicketType(HttpServletRequest request){
 		return salesService.selectTicketSalesForTable(getParameterMap(request));
 	}
 	
 	/**
-	 * 월/일 별 이용권별 총매출액, 평균매출액 조회 (차트)
+	 * 월/일 이용권별 총매출액, 평균매출액 조회 (차트)
 	 */
-	@RequestMapping(value="/ticket/sales/chart/sales.ajax", produces="application/json; charset=utf-8")
+	@RequestMapping(value="/ticket/chart.ajax", produces="application/json; charset=utf-8")
 	@ResponseBody
 	public List<Map<String, Object>> ajaxSelectTicketSalesForChart(HttpServletRequest request){
 		return salesService.selectTicketSalesForChart(getParameterMap(request));
 	}
-	
-	
-	
-	
+
 	
 	/**
 	 * 결제수단별 매출비율 데이터조회

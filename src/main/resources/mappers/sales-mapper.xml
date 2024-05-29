@@ -45,12 +45,25 @@
   <!-- 이용권 종류별 매출조회(차트용) -->
   <select id="selectTicketSalesForChart" parameterType="hashmap" resultType="map">
   	SELECT 
-  		  CASE WHEN #{chart} = 'year'  THEN COALESCE(T2.MONTH, T1.LV) "month"
-  		  	   WHEN #{chart} = 'month' THEN COALESCE(T2.DT, T1.LV) "date"
-          END
+  		  	<choose>
+  		  		<when test='"year".equals(chart)'>
+  		  			COALESCE(T2.MONTH, T1.LV) "period"
+  		  		</when>
+  		  		<when test='"month".equals(chart)'>
+  		  			COALESCE(T2.DT, T1.LV) "period"
+  		  		</when>
+  		  	</choose>
           , COALESCE(T2.CODE, T1.CODE) "ticketCode"
           , COALESCE(T2.CODE_NAME, T1.CODE_NAME) "ticketType"
           , COALESCE(T2.SUM_PRICE, 0) "sumSales"
+          , (
+			        SELECT CASE WHEN #{year} = EXTRACT(YEAR FROM SYSDATE) THEN SUM(ORDER_PAYMENT)/EXTRACT(MONTH FROM SYSDATE)
+			                    ELSE SUM(ORDER_PAYMENT)/12
+			               END
+			          FROM TICKET_ORDER
+			         WHERE EXTRACT(YEAR FROM PAYMENT_DATE) = #{year}
+			           AND ORDER_STATUS = 2
+			       ) "yearAvg"
 	  FROM (
 	        SELECT *
 	          FROM 
@@ -61,12 +74,12 @@
 	      		 		CONNECT
 			                 BY LEVEL &lt;= CASE  WHEN #{year} = TO_CHAR(SYSDATE, 'YYYY') THEN TO_NUMBER(TO_CHAR(SYSDATE, 'MM'))
 			                                      ELSE 12
-			                                 END
+			                                END
 	      		 	</when>
 	      		 	<when test='"month".equals(chart)'>
 	      		 		CONNECT
                              BY LEVEL &lt;= CASE  WHEN #{year} || #{month} = TO_CHAR(SYSDATE, 'YYYYMM') THEN TO_NUMBER(TO_CHAR(SYSDATE, 'DD'))
-                                                  ELSE EXTRACT(DAY FROM LAST_DAY('2024' || '04' || '01'))
+                                                  ELSE EXTRACT(DAY FROM LAST_DAY(#{year} || #{month} || '01'))
                                             END
 	      		 	</when>
 	      		 </choose>
@@ -77,8 +90,16 @@
 	        ) T1
 	   LEFT JOIN 
 	   	   (
-	          SELECT DECODE(#{chart}, 'year', MONTH, 'month', DT)
-	          		,CODE, CODE_NAME, SUM(PRICE) SUM_PRICE
+	          SELECT 
+	          			 <choose>
+	          			 	<when test='"year".equals(chart)'>
+	          			 		MONTH
+	          			 	</when>
+	          			 	<when test='"month".equals(chart)'>
+	          			 		DT
+	          			 	</when>
+	          			 </choose>
+	          			,CODE, CODE_NAME, SUM(PRICE) SUM_PRICE, AVG(PRICE) AVG_PRICE
 	            FROM (
 	                  SELECT  G.CODE, G.CODE_NAME
                              ,TOD.TICKET_CTN, TOD.TICKET_PRICE * TOD.TICKET_CTN * (1-NVL(TOD.DISCOUNT, 0)) PRICE
@@ -93,15 +114,36 @@
 	                    AND TO_CHAR(O.PAYMENT_DATE, 'YYYY') = #{year}
 	                    <if test='"month".equals(chart)'>
                              	AND TO_CHAR(O.PAYMENT_DATE, 'MM') = #{month}
-                        </if>
+                      </if>
 	                  )
 	          GROUP 
-	             BY DECODE(#{chart}, 'year', MONTH, 'month', DT), CODE, CODE_NAME
+	          	<choose>
+	          		<when test='"year".equals(chart)'>
+	          			BY MONTH, CODE, CODE_NAME
+	          		</when>
+	          		<when test='"month".equals(chart)'>
+	          			BY DT, CODE, CODE_NAME
+	          		</when>
+	          	</choose>
 	          ORDER
-	             BY DECODE(#{chart}, 'year', MONTH, 'month', DT), CODE_NAME
+	             <choose>
+	          		<when test='"year".equals(chart)'>
+	          			BY MONTH, CODE_NAME
+	          		</when>
+	          		<when test='"month".equals(chart)'>
+	          			BY DT, CODE_NAME
+	          		</when>
+	          	</choose>
 	       ) T2 
-	    ON (T1.LV = DECODE(#{chart}, 'year', T2.MONTH, 'month', T2.DT) AND T1.CODE = T2.CODE )
-	 ORDER BY DECODE(#{chart}, 'year', "month", 'month', "date"), "ticketCode"
+	 	<choose>
+	 		<when test='"year".equals(chart)'>
+	 			ON (T1.LV = T2.MONTH AND T1.CODE = T2.CODE )
+	 		</when>
+	 		<when test='"month".equals(chart)'>
+	 			ON (T1.LV = T2.DT AND T1.CODE = T2.CODE )
+	 		</when>
+	 	</choose>
+	 ORDER BY "period", "ticketCode"
   </select>
   
   <!-- 년/월별 평균매출 조회 -->
