@@ -239,9 +239,11 @@
 			
 			// 조퇴/퇴근시간 출력 & 버튼 비활성화
 			if(clockOut != null && clockOut != ''){
-				requestDetail == '퇴근' ? $(".work-off-time").text(clockOut) 
-									   : $(".leave-early-time").text(clockOut);
-				
+				if(requestDetail == '퇴근'){
+					$(".work-off-time").text(clockOut);
+				}else if(requestDetail == '조퇴'){
+					$(".work-off-time").text(clockOut);
+				}
 				$(".work-off").addClass("disabled");
 				$(".leave-early").addClass("disabled");
 			}else{

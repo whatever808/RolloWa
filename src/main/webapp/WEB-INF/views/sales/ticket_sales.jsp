@@ -311,7 +311,7 @@
 	// 년, 월, 일별 이용권 매출정보 조회 AJAX
 	function ajaxSelectTicketSalesByTicketType(params, table){
 		$.ajax({
-			url: "${ contextPath }/sales/ticket/sales.ajax",
+			url: "${ contextPath }/sales/ticket/chart/sales.ajax",
 			method: "get",
 			data: params,
 			success: function(salesList){
@@ -361,44 +361,7 @@
 			}
 		});
 		
-		console.log("salesDataList(chart) : ", salesDataList);
-		console.log(salesDataList.length);
-		
-		let jan = [];
-		let feb = [];
-		let mar = [];
-		let apr = [];
-		let may = [];
-		let jun = [];
-		let jul = [];
-		let aug = [];
-		let sep = [];
-		let oct = [];
-		let nov = [];
-		let dec = [];
-		
-		let month = [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec];
-		let count = 0;
-		for(let i=0 ; i<salesDataList.length ; i++){
-			salesDataList[i] = sales;
-			if(sales.month == (count + 1)){
-				if(sales.ticketType == '일반'){
-					month[count].push({
-						ticketType: '일반',
-						sumSales: sales.sumSales
-					});
-				}else if(sales.ticketType == '정기'){
-					month[count].push({
-						ticketType: '정기',
-						salesData: sales.sumSales
-					});
-				}
-			}else{
-				count++;
-			}
-		}
-		
-		console.log("jan : ", jan);
+		console.log("salesDataList : ", salesDataList);
 		
 		google.charts.load('current', {'packages':['corechart']});
 		google.charts.setOnLoadCallback(drawChart);

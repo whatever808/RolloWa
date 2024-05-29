@@ -35,9 +35,9 @@ public class MemberAttendanceScheduler {
 	}
 	
 	/**
-	 * 평일 매일 밤 11시 59분 59초에 당일 결근사원 근태등록
+	 * 평일 매일 밤 11시 55분 00초에 당일 결근사원 근태등록
 	 */
-	@Scheduled(cron = "59 59 23 * * MON-FRI")
+	@Scheduled(cron = "00 55 23 * * MON-FRI")
 	public void insertDayOffMemberAttend() {
 		// 결근사원 리스트
 		List<Map<String, Object>> dayOffMemberList = attendanceService.selectDayOffMemberList();

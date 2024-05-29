@@ -18,10 +18,17 @@ public class SalesService {
 	
 	
 	/**
-	 * 티켓별 매출현황 조회
+	 * 년/월/일별 총매출액, 평균매출액, 최고매출액, 최저매출액 조회 (테이블)
 	 */
-	public List<Map<String, Object>> selectTicketSalesByTicketType(HashMap<String, Object> params){
-		return salesDao.selectTicketSalesByTicketType(params);
+	public List<Map<String, Object>> selectTicketSalesForTable(HashMap<String, Object> params){
+		return salesDao.selectTicketSalesForTable(params);
+	}
+	
+	/**
+	 * 월/일 별 이용권별 총매출액, 평균매출액 조회 (차트)
+	 */
+	public List<Map<String, Object>> selectTicketSalesForChart(HashMap<String, Object> params){
+		return salesDao.selectTicketSalesForChart(params);
 	}
 	
 	/**
