@@ -68,6 +68,14 @@ public class MemberService {
 	public Map<String, Object> selectAuthLevel(int userNo) {
 		return memberDao.selectAuthLevel(userNo);
 	}
+	// 사용자 정보 조회하기
+	public MemberDto selectMemberInfo(int userNo) {
+		return memberDao.selectMemberInfo(userNo);
+	}
+	// 사용자 급여 정보 수정하기
+	public int updateSalary(Map<String, Object> paramMap) {
+		return memberDao.updateSalary(paramMap);
+	}
 	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 	
 	

@@ -61,9 +61,9 @@ public class OrganizationService {
 	public List<MemberDto> selectAccountList(Map<String, Object> paramMap) {
 		return organizationDao.selectAccountList(paramMap);
 	}
-
-	public List<MemberDto> selectAccountDetail(int userNo) {
-		return organizationDao.selectAccountDetail(userNo);
+	// 급여 조회 상세페이지
+	public List<MemberDto> selectAccountDetail( ) {
+		return organizationDao.selectAccountDetail();
 	}
 
 	

@@ -101,12 +101,4 @@ public class AttendanceDao {
 	/* ======================================= "가림" 구역 ======================================= */
 
 	
-
-	// 출결 상태 조회
-	/* 삭제 예정
-	public List<GroupDto> selectStatus() {
-		return sqlSessionTemplate.selectList("attendanceMapper.selectStatus");
-	}
-	 */
-	
 }

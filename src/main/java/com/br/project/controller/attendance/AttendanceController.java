@@ -12,8 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,7 @@ import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.attendance.AttendanceService;
+import com.br.project.service.member.MemberService;
 import com.br.project.service.organizaion.OrganizationService;
 import com.br.project.util.PagingUtil;
 
@@ -45,6 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AttendanceController {
 
+	private final MemberService memberService;
 	private final AttendanceService attendanceService;
 	private final OrganizationService organizationService;
 	private final PagingUtil pagingUtil;
@@ -79,8 +82,6 @@ public class AttendanceController {
 
 		return mv;
 	}
-	
-	
 	
 	// 2.2 출결 검색 ------------------------------------------------------
 	@GetMapping("/search.do")
@@ -221,22 +222,42 @@ public class AttendanceController {
 		return mv;
 	}
 	
-	// 2.2 급여 상세 조회 페이지
-	@GetMapping("/accountDetail.do")
-	public String accountDetail(@RequestParam("userNo") int userNo, Model model) {
+	// 2.2 급여 상세 조회 페이지	---------------------------------------------------
+	@RequestMapping("/accountDetail.do")
+	public ModelAndView selectAuthLevel(@RequestParam("userNo") int userNo, ModelAndView mv) {
+		//log.debug("사용자 번호 :  {}", userNo);
 		
-		List<MemberDto> list = organizationService.selectAccountDetail(userNo);
+		MemberDto m = memberService.selectMemberInfo(userNo);
 		
-		model.addAttribute("list", list);
-		
-		return "attendance/account_detail";
+		mv.addObject("m", m)
+		  .setViewName("attendance/account_detail");
+		  
+		  return mv;
 	}
+	// 2.2 급여 상세 페이지 수정하기
+	@ResponseBody
+	@RequestMapping("/accountDetailSave.do")
+	public int updateSalary(@RequestParam ("userNo") int userNo,
+			@RequestParam ("salary") int salary){
+		
+        //log.debug("userNo: {}", userNo);
+		//log.debug("salary : {}", salary );
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("userNo", userNo);
+		paramMap.put("salary", salary);
+		
+		int result = memberService.updateSalary(paramMap);
+
+		return result;
+    }
 	
 	
 	
 	
 	
-	// 2.4 구성원 추가  ------------ 비밀번호 ajax 수정필요 --------------------------------------------------------------------
+	
+	// 2.4 구성원 추가 ----------------------------------------------------
 	@GetMapping("/signup.page")
 	public String signupPage() {
 		return "attendance/attendance_signup";
@@ -303,44 +324,7 @@ public class AttendanceController {
 	public List<GroupDto> selectPosition() {
 		log.debug("직급 조회 실행");
 	    return organizationService.selectPosition();
-	}	
-	
-	/*
-	@ResponseBody
-	@GetMapping("/team.do")
-	public Map<String, List<GroupDto>> selectTeam() {
-		Map<String, List<GroupDto>> result = new HashMap<>();
-		result.put("department", attendanceService.selectDepartment());
-		result.put("team", attendanceService.selectTeam());
-		result.put("position", attendanceService.selectPosition());
-		
-		log.debug("==================");
-		List<GroupDto> departmentList = result.get("department");
-		log.debug("부서 값 : {}", departmentList);
-		log.debug("==================");
-		List<GroupDto> teamList = result.get("team");
-		log.debug("팀 값 : {}", teamList);
-		log.debug("==================");
-		return result;
 	}
-	*/
-	
-	/*
-	 * @ResponseBody
-	 * @GetMapping("/department.do") public String selectDepartment(Model model) {
-	 * 
-	 * /* 부서 조회 List<GroupDto> department = attendanceService.selectDepartment();
-	 * model.addAttribute("department", department);
-	 * 
-	 * 팀 조회 List<GroupDto> team = attendanceService.selectTeam();
-	 * model.addAttribute("team", team);
-	 * 
-	 * 직급 조회 List<GroupDto> position = attendanceService.selectPosition();
-	 * model.addAttribute("position", position);
-	 * 
-	 * 보여줄 페이지 이름 return "attendance/signup"; }
-	 */
-	
 	
 	
 	/* ======================================= "가림" 구역 ======================================= */

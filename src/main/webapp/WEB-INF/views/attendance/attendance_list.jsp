@@ -18,6 +18,18 @@
     	width: 1200px !important;
         padding: 20px;
     }
+    /* css 추가 */
+    .sortable {
+		cursor: pointer;
+	}
+	
+	.sortable:after {
+		content: ' \25B2'; /* 기본 오름차순 화살표 */
+	}
+	
+	.sortable.desc:after {
+		content: ' \25BC'; /* 내림차순 화살표 */
+	}
   	
     </style>
 </head>
@@ -365,14 +377,14 @@
            <!-- 직원 정보 테이블 start-->
            <table class="table table-bordered line-shadow employee_info">
                <tr>
-                   <th>프로필사진</th>
-                   <th>이름</th>
-                   <th>부서</th>
-                   <th>팀명</th>
-                   <th>직급</th>
-                   <th>출근시간</th>
-                   <th>퇴근시간</th>
-                   <th>상태</th>
+					<th>프로필사진</th>
+					<th onclick="sortTableByColumnName('이름')">이름</th>
+				    <th onclick="sortTableByColumnName('부서')">부서</th>
+				    <th onclick="sortTableByColumnName('팀명')">팀명</th>
+				    <th onclick="sortTableByColumnName('직급')">직급</th>
+				    <th onclick="sortTableByInTime()">출근시간</th>
+				    <th onclick="sortTableByOutTime()">퇴근시간</th>
+				    <th onclick="sortTableByColumnName('상태')">상태</th>
                </tr>
                
                <!-- 출결 조회(이름,부서,팀명,직급, 오늘날짜의 출석시간, 오늘날짜 퇴근시간, 상태) -->
@@ -439,52 +451,143 @@
         	</c:choose>
            </table>
            <!-- 직원 테이블 end -->
+           
+           <!-- 정렬 기능 -->
+           <script>
+		    // 정렬 관련 전역 변수
+		    let sortByColumn = ''; // 정렬할 열 이름
+		    let sortDirection = 'asc'; // 정렬 방향 (기본값: 오름차순)
+		
+		    // 열 이름을 기준으로 테이블 정렬
+		    function sortTableByColumnName(columnName) {
+		        // 정렬할 열 이름 설정
+		        sortByColumn = columnName;
+		        // 정렬 방향 변경 (기존 정렬 방향과 반대로 변경)
+		        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+		        // 테이블 정렬 함수 호출
+		        sortTable();
+		    }
+		
+		    // 테이블 정렬 함수
+		    function sortTable() {
+		        let table, rows, switching, i, x, y, shouldSwitch;
+		        table = document.querySelector('.employee_info');
+		        switching = true;
+		        /* Make a loop that will continue until
+		        no switching has been done: */
+		        while (switching) {
+		            // Start by saying: no switching is done:
+		            switching = false;
+		            rows = table.rows;
+		            /* Loop through all table rows (except the
+		            first, which contains table headers): */
+		            for (i = 1; i < (rows.length - 1); i++) {
+		                // Start by saying there should be no switching:
+		                shouldSwitch = false;
+		                /* Get the two elements you want to compare,
+		                one from current row and one from the next: */
+		                x = rows[i].querySelectorAll("td")[getIndexByColumnName(sortByColumn)].innerText;
+		                y = rows[i + 1].querySelectorAll("td")[getIndexByColumnName(sortByColumn)].innerText;
+		                // Check if the two rows should switch place:
+		                if (sortDirection === 'asc') {
+		                    if (x.toLowerCase() > y.toLowerCase()) {
+		                        // If so, mark as a switch and break the loop:
+		                        shouldSwitch = true;
+		                        break;
+		                    }
+		                } else if (sortDirection === 'desc') {
+		                    if (x.toLowerCase() < y.toLowerCase()) {
+		                        // If so, mark as a switch and break the loop:
+		                        shouldSwitch = true;
+		                        break;
+		                    }
+		                }
+		            }
+		            if (shouldSwitch) {
+		                /* If a switch has been marked, make the switch
+		                and mark that a switch has been done: */
+		                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+		                switching = true;
+		            }
+		        }
+		    }
+		
+		    // 열 이름을 통해 해당 열의 인덱스를 가져오는 함수
+		    function getIndexByColumnName(columnName) {
+		        let headers = document.querySelectorAll('.employee_info th');
+		        for (let i = 0; i < headers.length; i++) {
+		            if (headers[i].innerText === columnName) {
+		                return i;
+		            }
+		        }
+		        return -1; // 열을 찾지 못한 경우 -1 반환
+		    }
+		    
+		 // 테이블 정렬 함수
+	    function sortTable() {
+	        let table, rows, switching, i, x, y, shouldSwitch;
+	        table = document.querySelector('.employee_info');
+	        switching = true;
+	        /* Make a loop that will continue until
+	        no switching has been done: */
+	        while (switching) {
+	            // Start by saying: no switching is done:
+	            switching = false;
+	            rows = table.rows;
+	            /* Loop through all table rows (except the
+	            first, which contains table headers): */
+	            for (i = 1; i < (rows.length - 1); i++) {
+	                // Start by saying there should be no switching:
+	                shouldSwitch = false;
+	                /* Get the two elements you want to compare,
+	                one from current row and one from the next: */
+	                x = rows[i].querySelectorAll("td")[getIndexByColumnName(sortByColumn)].innerText;
+	                y = rows[i + 1].querySelectorAll("td")[getIndexByColumnName(sortByColumn)].innerText;
+	                // Check if the two rows should switch place:
+	                if (sortDirection === 'asc') {
+	                    if (x.toLowerCase() > y.toLowerCase()) {
+	                        // If so, mark as a switch and break the loop:
+	                        shouldSwitch = true;
+	                        break;
+	                    }
+	                } else if (sortDirection === 'desc') {
+	                    if (x.toLowerCase() < y.toLowerCase()) {
+	                        // If so, mark as a switch and break the loop:
+	                        shouldSwitch = true;
+	                        break;
+	                    }
+	                }
+	            }
+	            if (shouldSwitch) {
+	                /* If a switch has been marked, make the switch
+	                and mark that a switch has been done: */
+	                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+	                switching = true;
+	            }
+	        }
+	    }
+
+	    // 정렬을 실행하는 코드
+	    function sortTableByColumnName(columnName) {
+	        // 정렬할 열 이름 설정
+	        sortByColumn = columnName;
+	        // 정렬 방향 변경 (기존 정렬 방향과 반대로 변경)
+	        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+	        // 테이블 정렬 함수 호출
+	        if (document.querySelector('.employee_info tbody tr')) {
+	            // 실제 데이터가 있는 경우에만 정렬을 수행
+	            sortTable();
+	        }
+	    }
+		</script>
+
 	           
-	
-			<!--페이징 처리 start-->
-			<!-- 
-		    <div class="container">
-		        <ul class="pagination justify-content-center">
-		        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
-		        		<a class="page-link" href="${ contextPath }/attendance/list.do?page=${pi.currentPage-1}">Previous</a>
-	        		</li>
-					<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-						<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }">
-							<a class="page-link" href="${ contextPath }/attendance/list.do?page=${p}">${ p }</a>
-						</li>
-					</c:forEach>
-					<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }">
-						<a class="page-link" href="${ contextPath }/attendance/list.do?page=${pi.currentPage+1}">Next</a>
-					</li> 
-		        </ul>
-		    </div>
-		    -->
-	    	<!--페이징 처리 end-->
-	    	<!-- 
-	    	<div class="container">
-			    <ul class="pagination justify-content-center">
-			        <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
-			            <a class="page-link" href="${ contextPath }/attendance/search.do?page=${pi.currentPage-1}">Previous</a>
-			        </li>
-			        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-			            <li class="page-item ${ pi.currentPage == p ? 'active' : '' }">
-			                <a class="page-link" href="${ contextPath }/attendance/search.do?page=${p}">${ p }</a>
-			            </li>
-			        </c:forEach>
-			        <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }">
-			            <a class="page-link" href="${ contextPath }/attendance/search.do?page=${pi.currentPage+1}">Next</a>
-			        </li> 
-			    </ul>
-			</div>
-	    	 -->
-		    	
     	</div>
     	
     	<!-- ----------------------------월별 화면  --------------------------->
     	<div class="monthly_data">
     	 	<h2> 월별 출력 </h2>
     	</div>
-	
 	
 	<!-- ------------ -->
 	

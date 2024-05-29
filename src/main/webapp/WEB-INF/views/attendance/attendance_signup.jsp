@@ -230,7 +230,7 @@
 		    
 		    <div class="btn_center">
 		        <button type="reset" class="btn btn-outline-primary" onclick="reloadPage();"><h6>초기화</h6></button>
-		        <button type="submit" class="btn btn-primary" disabled><h6>구성원 추가</h6></button>
+		        <button type="submit" class="btn btn-primary"><h6>구성원 추가</h6></button>
 		    </div>
 		</form>
 		<!-- 메인 영역 end -->
@@ -433,6 +433,7 @@
 		
 		<!---------------------------- 모든 값이 true 여야만 구성원추가 버튼 활성화 ---------------------------->
 		function validate() {
+			let loginUser = ${ loginMember.userNo };
 			let departmentValue = $('#department').val();
 			let teamValue = $('#teamCode').val();
 			let positionValue = $('#positionCode').val();
@@ -440,29 +441,11 @@
 			let allValid = nameResult && idResult && pwdResult && pwdckResult && allSelected;
 
 			if (allValid) {
-				$('button[type="submit"]').prop('disabled', false);
+				//$('button[type="submit"]').prop('disabled', false);
 			} else {
-				$('button[type="submit"]').prop('disabled', true);
+				//$('button[type="submit"]').prop('disabled', true);
 			}
 		}
-		
-		/*
-		$(document).ready(function() {
-			$('#department, #teamCode, #positionCode').on('change', function() {
-				let departmentValue = $('#department').val();
-				let teamValue = $('#teamCode').val();
-				let positionValue = $('#positionCode').val();
-
-				let allSelected = departmentValue && teamValue && positionValue;
-
-				if (allSelected) {
-					$('button[type="submit"]').prop('disabled', false);
-				} else {
-					$('button[type="submit"]').prop('disabled', true);
-				}
-			});
-		});
-		*/
 		</script>
 		
 		

@@ -274,7 +274,6 @@
                         <td colspan="2">
                             <div class="div_searchBtn">
                                 <button type="reset" class="btn btn-outline-primary" onclick="reload();"><h6>초기화</h6></button>
-                                <!-- <button type="submit" class="btn btn-primary" onclick="searchEquipment()"><h6>검색</h6></button> -->
                             </div>
                         </td>
                     </tr>
@@ -452,8 +451,6 @@
                         </td>
                     </tr>
 
-
-
                     <tr>
                         <th><h5>내용</h5></th>
                         <td>
@@ -466,7 +463,7 @@
                     <tr>
                         <td colspan="2">
                             <div class="div_searchBtn">
-                                <button class="btn btn-outline-primary button-close" data-izimodal-close=""><h6>닫기</h6></a></button>
+                                <button class="btn btn-outline-primary button-close"><h6>닫기</h6></a></button>
                                 <button type="submit" class="btn btn-primary" onclick="reserveSubmit();"><h6>예약하기</h6></button>
                             </div>
                         </td>
@@ -477,61 +474,59 @@
         </div>
 		</form>
         
-	<script>
-    function reserveSubmit() {
-        
-    	const userNo = "${loginMember.userNo}";
-        const equipmentName = document.getElementById('selectedEquipmentName').textContent;
-        const reserveDate = document.getElementById('modal_date').textContent;
-        const startTime = document.getElementById('start').value;
-        const endTime = document.getElementById('end').value;
-        const content = document.getElementById('content').value;
-        
-        console.log("사용자번호: ", userNo);
-        console.log("비품명: ", equipmentName);
-        console.log("예약일: ", reserveDate);
-        console.log("예약 시간: ", startTime + " ~ " + endTime);
-        console.log("내용: ", content);
-        
-        if (startTime >= endTime) {
-            //console.log("예약을 실패했습니다. 시작 시간이 종료 시간과 같거나 더 늦습니다.");
-            alert("예약을 실패했습니다. 시작 시간이 종료 시간과 같거나 더 늦습니다.")
-            return;
-        }
-        
-        const formData = new FormData();
-        formData.append('userNo', "${loginMember.userNo}");
-        formData.append('equipmentName', document.getElementById('selectedEquipmentName').textContent);
-        formData.append('reserveDate', document.getElementById('modal_date').textContent);
-        formData.append('startTime', document.getElementById('start').value);
-        formData.append('endTime', document.getElementById('end').value);
-        formData.append('content', document.getElementById('content').value);
-
-        $.ajax({
-            type: "POST",
-            url: "${contextPath}/reservation/reserve.do",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-            	if(response.success == false){
-                	console.log("예약이 실패되었습니다. 다른 직원이 예약중인 시간입니다.");
-                	alert("예약이 실패되었습니다. 다른 직원이 예약한 시간입니다.")
-            	} else{
-                	console.log("예약이 성공적으로 완료되었습니다.");
-                	alert("예약이 성공적으로 완료되었습니다.");
-                	$('#modal_reserve').iziModal('close');
-                	location.reload();
-            	}
-            },
-            error: function(xhr, status, error) {
-                console.error("오류가 발생했습니다:", error);
-            }
-        });
-    }
-	</script>
-
-
+		<script>
+	    function reserveSubmit() {
+	        
+	    	const userNo = "${loginMember.userNo}";
+	        const equipmentName = document.getElementById('selectedEquipmentName').textContent;
+	        const reserveDate = document.getElementById('modal_date').textContent;
+	        const startTime = document.getElementById('start').value;
+	        const endTime = document.getElementById('end').value;
+	        const content = document.getElementById('content').value;
+	        
+	        console.log("사용자번호: ", userNo);
+	        console.log("비품명: ", equipmentName);
+	        console.log("예약일: ", reserveDate);
+	        console.log("예약 시간: ", startTime + " ~ " + endTime);
+	        console.log("내용: ", content);
+	        
+	        if (startTime >= endTime) {
+	            //console.log("예약을 실패했습니다. 시작 시간이 종료 시간과 같거나 더 늦습니다.");
+	            alert("예약을 실패했습니다. 시작 시간이 종료 시간과 같거나 더 늦습니다.")
+	            return;
+	        }
+	        
+	        const formData = new FormData();
+	        formData.append('userNo', "${loginMember.userNo}");
+	        formData.append('equipmentName', document.getElementById('selectedEquipmentName').textContent);
+	        formData.append('reserveDate', document.getElementById('modal_date').textContent);
+	        formData.append('startTime', document.getElementById('start').value);
+	        formData.append('endTime', document.getElementById('end').value);
+	        formData.append('content', document.getElementById('content').value);
+	
+	        $.ajax({
+	            type: "POST",
+	            url: "${contextPath}/reservation/reserve.do",
+	            data: formData,
+	            processData: false,
+	            contentType: false,
+	            success: function(response) {
+	            	if(response.success == false){
+	                	console.log("예약이 실패되었습니다. 다른 직원이 예약중인 시간입니다.");
+	                	alert("예약이 실패되었습니다. 다른 직원이 예약한 시간입니다.")
+	            	} else{
+	                	console.log("예약이 성공적으로 완료되었습니다.");
+	                	alert("예약이 성공적으로 완료되었습니다.");
+	                	$('#modal_reserve').iziModal('close');
+	                	location.reload();
+	            	}
+	            },
+	            error: function(xhr, status, error) {
+	                console.error("오류가 발생했습니다:", error);
+	            }
+	        });
+	    }
+		</script>
 
             <!-- 모달창 -->
             <script>
@@ -554,15 +549,12 @@
 		            let userNo = "${ loginMember.userNo }";
 		            let userName = "${ loginMember.userName }";
 		            let userId = "${ loginMember.userId }";
-		            //let equipmentName = $('#modal_reserve').data('equipment-name');
                 	let equipmentName = $('#selectedEquipmentName').text();
 		            let currentDate = document.getElementById('currentDate').value;
 		            
 		            $('#userName').html('<span>' + userName + '</span><span>(' + userId + ')</span>');
 		            $('#selectedEquipmentName').text(equipmentName);
 		            $('#modal_date').text(currentDate);
-		            
-		            
 		            
 		        },
                 onClosing: function(modal) {
@@ -667,65 +659,60 @@
                     </tr>
                     
                     <c:choose>
-    <c:when test="${not empty list}">
-        <c:forEach var="e" items="${list}" varStatus="loop">
-            <tr data-izimodal-open="#modal_reserve" class="tr_cursor" data-equipment-name="${e.equipmentName}">
-                <!-- 비품 정보 표시 -->
-                <td><h6>${loop.index + 1}</h6></td>
-                <td><h6>${e.equipmentName}</h6></td>
-                
-                <!-- 시간표 셀 채우기 -->
-                <c:forEach var="timeSlot" begin="1" end="48">
-                    <c:set var="reserved" value="false" />
-                    <!-- 예약된 시간 확인 -->
-                    <c:forEach var="r" items="${reservationList}">
-                        <c:if test="${e.code eq r.equipmentCode}">
-                            <!-- 시간 계산 -->
-                            <c:set var="startHour" value="${fn:substring(r.reserveStart, 11, 13)}" />
-                            <c:set var="startMinute" value="${fn:substring(r.reserveStart, 14, 16)}" />
-                            <c:set var="endHour" value="${fn:substring(r.reserveEnd, 11, 13)}" />
-                            <c:set var="endMinute" value="${fn:substring(r.reserveEnd, 14, 16)}" />
-                            <c:set var="startSlot" value="${startHour * 2 + (startMinute / 30)}" />
-                            <!-- 예약 종료 시간이 23:59:59인 경우 48로 설정 -->
-                            <c:if test="${endHour eq '23' and endMinute eq '59'}">
-                                <c:set var="endSlot" value="48" />
-                            </c:if>
-                            <c:if test="${not (endHour eq '23' and endMinute eq '59')}">
-                                <c:set var="endSlot" value="${endHour * 2 + (endMinute / 30)}" />
-                            </c:if>
-                            <!-- 시작 시간과 종료 시간 비교 -->
-                            <c:if test="${timeSlot > startSlot and timeSlot <= endSlot}">
-                                <!-- 해당 시간대에 예약이 있는 경우 -->
-                                <c:set var="reserved" value="true" />
-                                <!-- 색상 변경 또는 다른 표시 방법을 여기에 추가 -->
-                            </c:if>
-                        </c:if>
-                    </c:forEach>
-                    <!-- 예약된 시간이 있는 경우 -->
-                    <c:if test="${reserved}">
-                        <!-- 예약이 있는 경우에 대한 표시를 여기에 추가 -->
-                        <td class="td_reserve"></td>
-                    </c:if>
-                    <!-- 예약된 시간이 없는 경우 -->
-                    <c:if test="${not reserved}">
-                        <!-- 예약이 없는 경우에 대한 표시를 여기에 추가 -->
-                        <td></td>
-                    </c:if>
-                </c:forEach>
-            </tr>
-        </c:forEach>
-    </c:when>
-    <c:otherwise>
-        <tr>
-            <td colspan="48">조회된 비품이 없습니다.</td>
-        </tr>
-    </c:otherwise>
-</c:choose>
-
-
-
-
-
+					    <c:when test="${not empty list}">
+					        <c:forEach var="e" items="${list}" varStatus="loop">
+					            <tr data-izimodal-open="#modal_reserve" class="tr_cursor" data-equipment-name="${e.equipmentName}">
+					                <!-- 비품 정보 표시 -->
+					                <td><h6>${loop.index + 1}</h6></td>
+					                <td><h6>${e.equipmentName}</h6></td>
+					                
+					                <!-- 시간표 셀 채우기 -->
+					                <c:forEach var="timeSlot" begin="1" end="48">
+					                    <c:set var="reserved" value="false" />
+					                    <!-- 예약된 시간 확인 -->
+					                    <c:forEach var="r" items="${reservationList}">
+					                        <c:if test="${e.code eq r.equipmentCode}">
+					                            <!-- 시간 계산 -->
+					                            <c:set var="startHour" value="${fn:substring(r.reserveStart, 11, 13)}" />
+					                            <c:set var="startMinute" value="${fn:substring(r.reserveStart, 14, 16)}" />
+					                            <c:set var="endHour" value="${fn:substring(r.reserveEnd, 11, 13)}" />
+					                            <c:set var="endMinute" value="${fn:substring(r.reserveEnd, 14, 16)}" />
+					                            <c:set var="startSlot" value="${startHour * 2 + (startMinute / 30)}" />
+					                            <!-- 예약 종료 시간이 23:59:59인 경우 48로 설정 -->
+					                            <c:if test="${endHour eq '23' and endMinute eq '59'}">
+					                                <c:set var="endSlot" value="48" />
+					                            </c:if>
+					                            <c:if test="${not (endHour eq '23' and endMinute eq '59')}">
+					                                <c:set var="endSlot" value="${endHour * 2 + (endMinute / 30)}" />
+					                            </c:if>
+					                            <!-- 시작 시간과 종료 시간 비교 -->
+					                            <c:if test="${timeSlot > startSlot and timeSlot <= endSlot}">
+					                                <!-- 해당 시간대에 예약이 있는 경우 -->
+					                                <c:set var="reserved" value="true" />
+					                                <!-- 색상 변경 또는 다른 표시 방법을 여기에 추가 -->
+					                            </c:if>
+					                        </c:if>
+					                    </c:forEach>
+					                    <!-- 예약된 시간이 있는 경우 -->
+					                    <c:if test="${reserved}">
+					                        <!-- 예약이 있는 경우에 대한 표시를 여기에 추가 -->
+					                        <td class="td_reserve"></td>
+					                    </c:if>
+					                    <!-- 예약된 시간이 없는 경우 -->
+					                    <c:if test="${not reserved}">
+					                        <!-- 예약이 없는 경우에 대한 표시를 여기에 추가 -->
+					                        <td></td>
+					                    </c:if>
+					                </c:forEach>
+					            </tr>
+					        </c:forEach>
+					    </c:when>
+					    <c:otherwise>
+					        <tr>
+					            <td colspan="48">조회된 비품이 없습니다.</td>
+					        </tr>
+					    </c:otherwise>
+					</c:choose>
 
                 </table>
             </div>

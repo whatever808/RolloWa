@@ -41,4 +41,9 @@ public class MemberDto {
 	private String positionCode;
 	private String position;
 	
+	// 호관 작성
+	private String department;
+	private String team;
+	
+	
 }

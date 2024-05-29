@@ -70,6 +70,14 @@ public class MemberDao {
 	public Map<String, Object> selectAuthLevel(int userNo) {
 		return sqlSessionTemplate.selectOne("memberMapper.selectAuthLevel", userNo);
 	}
+	// 회원 정보 전체 조회하기
+	public MemberDto selectMemberInfo(int userNo) {
+		return sqlSessionTemplate.selectOne("memberMapper.selectMemberInfo", userNo);
+	}
+	// 사용자 급여정보 수정하기
+	public int updateSalary(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.update("memberMapper.updateSalary", paramMap);
+	}
 	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 	
 }

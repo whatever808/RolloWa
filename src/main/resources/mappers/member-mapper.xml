@@ -191,6 +191,36 @@
 		  from member
 		 where user_no = #{ userNo }
 	</select>
+	
+	<!-- 회원 정보 조회 -->
+	<select id="selectMemberInfo" resultMap="memberResult">
+	SELECT USER_NO , USER_NAME , USER_ID , USER_PWD , PHONE , POST_CODE, ADDRESS, DETAIL_ADDRESS, TOTAL_ADDRESS , BANK_ACCOUNT , BANK , EMAIL , PROFILE_URL , COUNT_FAIL , VACATION_COUNT , AUTH_LEVEL , SALARY , TEAM_CODE , POSITION_CODE 
+     ,(SELECT CODE_NAME 
+         FROM TB_GROUP 
+         WHERE GROUP_CODE LIKE 'DEPT%' 
+         AND CODE = (SELECT UPPER_CODE 
+                 FROM TB_GROUP 
+                 WHERE GROUP_CODE LIKE 'TEAM%' 
+                 AND CODE = MEMBER.TEAM_CODE)) AS DEPARTMENT
+     , (SELECT CODE_NAME 
+        FROM TB_GROUP
+        WHERE GROUP_CODE LIKE 'TEAM%' AND CODE = TEAM_CODE) AS TEAM
+     , (SELECT CODE_NAME 
+          FROM TB_GROUP
+          WHERE GROUP_CODE LIKE 'POSI%' AND CODE = POSITION_CODE) AS POSITION
+		FROM MEMBER
+		WHERE 
+		USER_NO = #{ userNo }
+		AND STATUS = 'Y' 
+	</select>
+	
+	<!-- 사용자 급여정보 수정하기 -->
+	<update id="updateSalary">
+		UPDATE MEMBER
+		   SET SALARY = #{ salary }
+		 WHERE USER_NO = #{ userNo }
+	</update>
+	
  	<!-- ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆-->
  
  

@@ -105,20 +105,6 @@
 		M.USER_NO ASC
 	</select>
 
-	<!-- 출결 조회 삭제 하면 안됨 <select id="selectAttendanceList" resultMap="attendanceList"> 
-		SELECT M.USER_NO , M.PROFILE_URL AS "profileURL" , M.USER_NAME AS "userName" 
-		, D1.CODE_NAME AS "dept" , D2.CODE_NAME AS "team" , (SELECT CODE_NAME FROM 
-		TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE = M.POSITION_CODE) AS "posi" 
-		, A.CLOCK_IN AS "todayIn" , A.CLOCK_OUT AS "todayOut" , A.REQUEST_DETAIL 
-		AS "requestDetail" FROM MEMBER M JOIN TB_GROUP D2 ON M.TEAM_CODE = D2.CODE 
-		LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%' 
-		LEFT JOIN ATTENDANCE A ON M.USER_NO = A.USER_NO AND TO_CHAR(A.CLOCK_IN, 'yyyymmdd') 
-		= #{ selectedDate } WHERE D1.STATUS = 'Y' AND D2.STATUS = 'Y' AND D1.CODE_NAME 
-		LIKE '%' || #{ department } || '%' AND D2.CODE_NAME LIKE '%' || #{ team } 
-		|| '%' AND (A.REQUEST_DETAIL LIKE '%' || #{ attendanceStatus } || '%' OR 
-		A.REQUEST_DETAIL IS NULL) AND M.USER_NAME LIKE '%' || #{ name } || '%' ORDER 
-		BY M.USER_NO ASC </select> -->
-
 	<!-- 출결 개수 조회(출근|결근|퇴근|조퇴|휴가) -->
 	<select id="selectAttendanceCount" resultMap="attendanceList">
 		SELECT
@@ -153,7 +139,6 @@
 		D1.STATUS = 'Y'
 		AND D2.STATUS = 'Y')
 	</select>
-
 
 	<!-- 아이디 중복체크 -->
 	<select id="selectUserIdCount" resultType="_int">
@@ -192,8 +177,9 @@
 	</insert>
 
 	<!-- 급여 상세 조회 -->
-	<!-- 작성 예정 <select id="selectAccountDetail" resultMap="attendanceList"> 
-		SELECT </select> -->
+	<select id="selectAccountDetail" resultMap="attendanceList"> 
+	 
+	</select>
 
 
 	<!-- 출결 상태 조회 -->
@@ -205,6 +191,9 @@
 		FROM ATTENDANCE
 		WHERE TRUNC(CLOCK_IN) = TRUNC(SYSDATE-7)
 	</select>
+	
+	<!--  -->
+	
 
 	<!-- ======================================= "가림" 구역 ======================================= -->
 	<!-- 당일 휴가인 사원조회 -->
