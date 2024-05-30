@@ -59,7 +59,7 @@ public class VacationController {
 	 * @return
 	 */
 	@ResponseBody
-	@PostMapping(value="/insertVact.do", produces="text/html; charset=utf-8")
+	@PostMapping(value="/insertVact.do")
 	public int insertVacation(VacationDto vacation , List<MultipartFile> files, HttpSession session) {
 		int emp = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
 		vacation.setMember(MemberDto.builder().userNo(emp).build());

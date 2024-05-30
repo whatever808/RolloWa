@@ -145,8 +145,9 @@
             flex-direction: column;
             overflow: auto;
             overflow-x: none;
-            z-index: 100;
-            transition: all 0.3s;
+            z-index: -1;
+            transition-property: opacity;
+            transition-duration: 0.3s;
             background: #eee;
         }
 

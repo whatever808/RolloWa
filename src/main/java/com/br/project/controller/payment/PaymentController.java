@@ -58,11 +58,19 @@ public class PaymentController {
 		
 		// 결제수단이 계좌이체일 경우 CS
 		if(param.get("pay_method").equals("trans")) {
+			param.replace("pay_method", "CS");
+		}else if(param.get("pay_method").equals("card ")){
+			param.replace("pay_method", "CD");
+		}
+		
+		int result = paymentService.ajaxTossSimplePay(param);
+		// 위의 결제가 성공 했을 경우에만 값을 조회해서 유효성 체크
+		if(param.get("status").equals("paid")) {
 			
 		}
 		
 		
-		int result = paymentService.ajaxTossSimplePay(param);
+		
 	}
 	
 
