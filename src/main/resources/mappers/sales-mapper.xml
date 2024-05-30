@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="salesMapper">
+  
+  <!-- 이용권 종류별 매출현황 및 매출건수 -->
+  <select id="selectTicketSalesByTicketType" resultType="map" parameterType="hashmap">
+  	SELECT 
+	       (SELECT CODE_NAME
+	          FROM TB_GROUP
+	         WHERE GROUP_CODE LIKE 'TICK%'
+	           AND CODE = TICKET_TYPE
+	       ) "ticketType"
+	      ,SUM(ORDER_PAYMENT) "sumSales"
+	      ,SUM(TICKET_CTN) "sumTicket"
+	      ,AVG(ORDER_PAYMENT) "avgSales"
+	      ,AVG(TICKET_CTN) "avgTicket"
+	      ,MAX(ORDER_PAYMENT) "maxSales"
+	      ,MAX(TICKET_CTN) "maxTicket"
+	      ,MIN(ORDER_PAYMENT) "minSales"
+	      ,MIN(TICKET_CTN) "minTicket"
+	  FROM TICKET_ORDER, TICKET_ORDER_DETAIL
+	 WHERE TICKET_ORDER.ORDER_NO = TICKET_ORDER_DETAIL.ORDER_NO
+	   AND ORDER_STATUS = 2
+	   AND TO_CHAR(PAYMENT_DATE, 'YYYY') = #{year}
+	   <if test='month != null and !month.equals("")'>
+	   	AND TO_CHAR(PAYMENT_DATE, 'MM') = #{month}
+	   </if>
+	   <if test='date != null and !date.equals("")'>
+	   	AND TO_CHAR(PAYMENT_DATE, 'DD') = #{date}
+	   </if>
+	 GROUP BY TICKET_ORDER_DETAIL.TICKET_TYPE
+  </select>
+  
+  <!-- 결제수단별 매출비율 -->
+  <select id="selectTicketSalesPercentByPaymentMethod" parameterType="hashmap" resultType="map">
+  	SELECT 
+          PAYMENT_METHOD
+        ,(COUNT(ORDER_NO) / (SELECT COUNT(*) 
+                               FROM TICKET_ORDER 
+                              WHERE TO_CHAR(PAYMENT_DATE, 'YYYY') = 2024))  "percent"
+	  FROM TICKET_ORDER
+	 WHERE TO_CHAR(PAYMENT_DATE, 'YYYY') = #{year}
+       <if test='month != null and !month.equals("")'>
+	   	AND TO_CHAR(PAYMENT_DATE, 'MM') = #{month}
+	   </if>
+	   <if test='date != null and !date.equals("")'>
+	   	AND TO_CHAR(PAYMENT_DATE, 'DD') = #{date}
+	   </if>
+	 GROUP BY PAYMENT_METHOD
+  </select>
+  
+  
+  
+</mapper>

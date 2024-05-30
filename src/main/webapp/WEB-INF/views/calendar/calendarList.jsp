@@ -223,7 +223,7 @@
 		
 		<script></script>
 		
-		<div class="content" style="max-width: 1120px; padding: 30px;">
+		<div class="content" style="max-width: 1500px; padding: 30px;">
 			<fieldset class="radious10 inner-line line-shadow">
 				<legend>
 					<h1 class="jua-regular">List 일정 관리</h1>

@@ -8,23 +8,28 @@
 	</settings>
 	
 	<typeAliases>
-		<typeAlias type="com.br.project.dto.board.BoardDto" 									alias="BoardDto" />
-		<typeAlias type="com.br.project.dto.common.AttachmentDto" 						alias="AttachmentDto" />
-		<typeAlias type="com.br.project.dto.common.GroupDto" 									alias="GroupDto" />
-		<typeAlias type="com.br.project.dto.pay.PayDto" 											alias="PayDto"/>
-		<typeAlias type="com.br.project.dto.pay.ExpenditureDto" 							alias="ExpenditureDto"/>
-		<typeAlias type="com.br.project.dto.organization.OrganizationDto"  		alias="OrganizationDto"/>
-		<typeAlias type="com.br.project.dto.calendar.CalendarDto" 						alias="calendarDto"/>
-		<typeAlias type="com.br.project.dto.member.MemberDto" 								alias="MemberDto"/>
-		<typeAlias type="com.br.project.dto.pay.FixturesDto" 									alias="FixturesDto"/>
-		<typeAlias type="com.br.project.dto.calendar.CoworkerDto" 						alias="CoworkerDto"/>
-    <typeAlias type="com.br.project.dto.notification.NotificationDto"     alias="NotificationDto"/>
-    <typeAlias type="com.br.project.dto.attendance.AttendanceDto"			    alias="AttendanceDto"/>
-    <typeAlias type="com.br.project.dto.pay.MemberDeptDto"                alias="MemberDeptDto"/>
-    <typeAlias type="com.br.project.dto.pay.VacationDto"           				alias="VacationDto" />
-    <typeAlias type="com.br.project.dto.reservation.ReservationDto"       alias="ReservationDto" />
-    <typeAlias type="com.br.project.dto.chat.ChatRoomDto"         				alias="ChatRoomDto" />
-    <typeAlias type="com.br.project.dto.chat.ChatMessageDto"         			alias="ChatMessageDto" />
+		<typeAlias type="com.br.project.dto.board.BoardDto" 											alias="BoardDto" />
+		<typeAlias type="com.br.project.dto.common.AttachmentDto" 								alias="AttachmentDto" />
+		<typeAlias type="com.br.project.dto.common.GroupDto" 											alias="GroupDto" />
+		<typeAlias type="com.br.project.dto.pay.PayDto" 													alias="PayDto"/>
+		<typeAlias type="com.br.project.dto.pay.ExpenditureDto" 									alias="ExpenditureDto"/>
+		<typeAlias type="com.br.project.dto.organization.OrganizationDto"  				alias="OrganizationDto"/>
+		<typeAlias type="com.br.project.dto.calendar.CalendarDto" 								alias="calendarDto"/>
+		<typeAlias type="com.br.project.dto.member.MemberDto" 										alias="MemberDto"/>
+		<typeAlias type="com.br.project.dto.pay.FixturesDto" 											alias="FixturesDto"/>
+		<typeAlias type="com.br.project.dto.calendar.CoworkerDto" 								alias="CoworkerDto"/>
+    <typeAlias type="com.br.project.dto.notification.NotificationDto"     		alias="NotificationDto"/>
+    <typeAlias type="com.br.project.dto.notification.NotificationSendDto"     alias="NotificationSendDto"/>
+    <typeAlias type="com.br.project.dto.attendance.AttendanceDto"			    		alias="AttendanceDto"/>
+    <typeAlias type="com.br.project.dto.pay.MemberDeptDto"                		alias="MemberDeptDto"/>
+    <typeAlias type="com.br.project.dto.pay.VacationDto"           						alias="VacationDto" />
+    <typeAlias type="com.br.project.dto.pay.SignDto"           								alias="SignDto" />
+    <typeAlias type="com.br.project.dto.pay.RetireDto"           							alias="RetireDto" />
+    <typeAlias type="com.br.project.dto.pay.BusinessDto"           						alias="BusinessDto" />
+    <typeAlias type="com.br.project.dto.pay.DraftDto"           							alias="DraftDto" />
+    <typeAlias type="com.br.project.dto.reservation.ReservationDto"       		alias="ReservationDto" />
+    <typeAlias type="com.br.project.dto.chat.ChatRoomDto"         						alias="ChatRoomDto" />
+    <typeAlias type="com.br.project.dto.chat.ChatMessageDto"         					alias="ChatMessageDto" />
 	</typeAliases>
 	
 	
@@ -44,6 +49,8 @@
 		<mapper resource="mappers/reservation-mapper.xml" />
 		<mapper resource="mappers/chat-mapper.xml" />
 		<mapper resource="mappers/facility/store-mapper.xml" />
+		<mapper resource="mappers/payment-mapper.xml" />
+		<mapper resource="mappers/sales-mapper.xml" />
 	</mappers>
 
 </configuration>

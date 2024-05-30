@@ -2,10 +2,6 @@ package com.br.project.controller.attendance;
 
 
 import java.text.SimpleDateFormat;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +10,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -421,6 +419,8 @@ public class AttendanceController {
 	public Map<String, Object> ajaxMemberAttendCheck(HttpServletRequest request) {
 		
 		HashMap<String, Object> params = CommonController.getParameterMap(request);
+		// 예찬 연차 체크에 필요한 parameter 담음
+		params.put("LoginMember", request.getSession().getAttribute("loginMember"));
 		
 		int result = request.getRequestURL().indexOf("insert") != -1 ? attendanceService.insertMemberAttend(params)
 																	 : attendanceService.updateMemberAttend(params);

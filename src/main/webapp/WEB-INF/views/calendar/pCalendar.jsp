@@ -376,7 +376,7 @@
 			})
 		</script>
 		<!-- 컨텐츠 영역 content-area -->
-		<div class="content" style="max-width: 1120px; padding: 30px;">
+		<div class="content" style="max-width: 1500px; padding: 30px;">
 			<!-- 직원 div 영역 -->
 			<div class="member-search-area radious10 line-shadow">
 	

@@ -315,12 +315,10 @@
 .allposition{
 	display: flex;
 }
+
 </style>
 </head>
 <body class="allposition">
-
-<!--  -->
-
 
 <script>
 $(document).ready(function(){
@@ -396,27 +394,8 @@ $(document).ready(function(){
 	                <span>RoLLoWa</span>
                 </span>
             </a>
-            <ul class="list-unstyled ps-0">
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-                        Home
-                    </button>
-                    <div class="collapse show" id="home-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                
+            
+            <ul class="list-unstyled ps-0">              
                 <!-- ======================================= "가림" 구역 start ======================================= -->
                 <!-- ======================================= 게시판 관련 start ======================================= -->
                 <li class="mb-1">
@@ -465,13 +444,17 @@ $(document).ready(function(){
 
                           <li><a href="${ contextPath }/attraction/list.do"
                                  class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 조회</a>
-                           </li> 
+                          </li>
+                          
+                          <li><a href="${ contextPath }/attraction/utilization.do"
+                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 이용률</a>
+                          </li> 
 
                           <li><a href="${ contextPath }/attraction/regist.page"
                                  class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
                           </li>
 
-                          <li><a href="${ contextPath }/attraction/manage.do"
+                          <li><a href="${ contextPath }/attraction/manage/list.do"
                                  class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
                           </li>
 
@@ -480,6 +463,23 @@ $(document).ready(function(){
                   </div>
               </li>
               <!-- ======================================= 어트랙션 관련 end ======================================= -->
+              <!-- ======================================= 매출관리 관련 start ======================================= -->
+              <li class="mb-1">
+                  <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                      data-bs-toggle="collapse" data-bs-target="#sales-collapse" aria-expanded="false">
+                      매출관리
+                  </button>
+                  <div class="collapse" id="sales-collapse">
+                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                          <li><a href="${ contextPath }/sales/ticket.do"
+                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">이용권 매출조회</a>
+                          </li>
+                          
+                      </ul>
+                  </div>
+              </li>
+              <!-- ======================================= 매출관리 관련 end ======================================= -->
               <script>
                 $(document).ready(function(){
                   // 로그인 회원 정보조회
@@ -632,7 +632,7 @@ $(document).ready(function(){
                     </button>
                     <div class="collapse" id="approval-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="${contextPath}/pay/paymain.page"
+                            <li><a href="${contextPath}/pay/approvalMain.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재Home</a></li>
                             <li><a href="#"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재함</a>
@@ -640,8 +640,8 @@ $(document).ready(function(){
                             <li><a href="#"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재작성하기</a>
                             </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">내문서함</a>
+                            <li><a href="${contextPath}/pay/myAllApproval.page"
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">나의 결재함</a> 
                             </li>
                         </ul>
                     </div>
@@ -650,22 +650,33 @@ $(document).ready(function(){
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-                        Account
+                        계정 관리
                     </button>
                     <div class="collapse" id="account-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li><a href="${ contextPath }/member/mypage.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">My Page</a>
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">마이페이지</a>
                             </li>
                             <li><a href="${ contextPath }/notification/list.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
                             </li>
+
                             <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
                                     out</a></li>
+                                    
+                               <li>
+                               <a href="${ contextPath }/payment/payment.page" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                               Payment</a>
+                               </li>       
                         </ul>
                     </div>
                 </li>
             </ul>
+        </div>
+        
+        <div id="alram">
+        	<button id="alram_btn" type="button" class="btn" style="margin-left: 430px;
+    margin-bottom: 10px;">알림으로 이동하기</button>
         </div>
 								
         <div class="b-example-divider b-example-vr"></div>
@@ -675,15 +686,22 @@ $(document).ready(function(){
 					var stompClient;
 					
 					// 내가 현재 열어놓은 채팅방 번호
-					// 채팅방을 열지 않았다면 0
-					var subRoomNo = 0;
+					// 페이지 새로고침 시 -1
+					// 채팅방 닫았을 경우 0
+					var subRoomNo = -1;
 					
 					// 수신한 메세지 개수
 					var msgCount = 0;
 					
-					
-					
 					$(document).ready(function() {
+						// 새로고침 감지
+						window.addEventListener('beforeunload', (event) => {
+							// 메신저를 아예 열지 않았거나 채팅방을 닫아놨을 경우를 제외하고 실행
+		          if(subRoomNo != -1 && subRoomNo != 0) {
+		        	  // 새로고침 전 열어놓은 채팅방의 나간 시간 update
+		        	  updateOutDate(subRoomNo);
+		          }  
+		        });
 						// 채팅용 웹소켓 연결
 						chatting = new SockJS("${contextPath}/chatting");
 						stompClient = Stomp.over(chatting);
@@ -708,18 +726,68 @@ $(document).ready(function(){
 					    	}
 					    })
 					    
+					    // 알림용 주소 구독
+					    stompClient.subscribe("/topic/chat/alram", function(msg) {
+					    	// 문자열을 json으로 변환
+					    	const msgBody = JSON.parse(msg.body);
+					    	
+					    	console.log(msgBody);
+					    	
+					    	if(msgBody.flag == 0) {
+					    		// 채팅방 초대 알림인 경우
+					    		if(msgBody.userNo != ${loginMember.userNo}) {
+					    			receiveInviteMsg(msgBody);
+					    		}
+					    	} else {
+					    		// 공지사항, 일정 등록 알림인 경우
+					    		for (var i = 0; i < msgBody.teamMemberList.length; i++) {
+					    			if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
+							    		$("#alram").iziModal('open');
+							    		$("#alram_btn").on("click", function() {
+							    			// 알림의 noti_check_date update
+				    						$.ajax({
+													url: "${contextPath}/notification/checkDate"
+													, method: "post"
+													, data: {userNo: ${loginMember.userNo}}
+													, async: false
+													, success: function(result) {
+														if(result > 0) {
+															console.log("알림 조회 시간 update 성공");
+														}
+													}
+													, error: function() {
+														console.log("알림 조회 시간 update ajax 실패");
+													}
+												})
+							    			
+							    			location.href = msgBody.url;
+							    		})
+							    		
+							    		// 읽지 않은 알림 조회 후 알림 목록에 추가 및 읽지 않은 알림 표시
+							    		selectAlram();
+					    			}
+					    		}
+					    	} 
+					    })
+					    
 						})
-						// 알람용 웹소켓 연결
-						alram = new SockJS("${contextPath}/alram");
-						// 알람 수신 시 alert 발생
-						alram.onmessage = function(evt) {
-							const obj = JSON.parse(evt.data);
-							alertify.confirm('부서 알림', obj.message, function(){ 
-								location.href = "${contextPath}/board/detail.do?category=department&department=" + obj.teamCode + "&condition=&keyword&no=" + obj.boardNo;
-								alertify.success('공지사항 페이지로 이동'); }
-			                , function(){ alertify.error('Cancel')}).set('labels', {ok:'이동하기', cancel:'취소'});;
-						}
 					})
+					
+					// 알림 스타일
+					$("#alram").iziModal({
+						title: '<h6>부서 알림 서비스</h6>'
+						, subtitle: '부서 알림이 등록되었습니다.'
+						, headerColor: '#FEEFAD'
+						, theme: 'light'
+						, radius: '2'
+						, arrowKeys: 'false'
+						, navigateCaption: 'false'
+						, timeout: '3000'
+						, timeoutProgressbar: 'true'
+						, timeoutProgressbarColor: '#FFFFFF'
+						, pauseOnHover: 'true'
+					})
+					
 					
 				</script>
 </body>
