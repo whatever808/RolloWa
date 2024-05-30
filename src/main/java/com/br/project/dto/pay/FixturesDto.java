@@ -1,20 +1,29 @@
 package com.br.project.dto.pay;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Getter
+@Setter
+@Builder
 public class FixturesDto {
 	
-	private int fixturesNo; //비품문서번호
-	private String belong; //소속
-	private String title; //제목
-	private String productName; //품명
-	private int standard; //규격
-	private int quantity; //수량
-	private String unitPrice; //단가
-	private String price; //금액
-	private String note; //비고
-	private String sum; //합계
-	private String etc; //기타
-	
-	
+	private int fixNo;
+	private String title;
+	private String totalSum;
+	private String productName;
+	private int productSize;
+	private int quantity;
+	private String unitPrice;
+	private String price;
+	private String note;
 	
 
 }

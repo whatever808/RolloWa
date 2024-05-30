@@ -121,13 +121,36 @@ object-fit: cover; /* 다른 사이즈 이미지도 안잘리고 동일하게 조절하기 */
         align-items: center;
         justify-content: center;
     }
-    .td_1 {
-        text-align: right;
+    .profile_img{
+    	width: 400px;
+    }
+    .inputFont{
+    	font-size: 30px !important;
+    	text-align: center;
+    	width: 200px;
+    }
+	.td_1{
+    	text-align: right;
+    	background-color: lightgray !important;
+    	width: 200px;
     }
     .td_2 * {
-        margin-left: 90px;
+        margin: auto;
+        width: 250px;
     }
-
+    .table_1 td{
+    	background-color: red !;
+    }
+    .td_2{
+    	margin-left: 10px !important;
+    }
+    #bank{
+    	font-size: 25px;
+    }
+    #bank option{
+    	text-align: center;
+    }
+    
     /* 직원 정보 테이블 */
     .employee_count {
         display: flex;

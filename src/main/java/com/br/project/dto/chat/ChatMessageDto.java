@@ -20,4 +20,5 @@ public class ChatMessageDto {
 	private int chatRoomNo;
 	
 	private String userName;
+	private String profileURL;
 }

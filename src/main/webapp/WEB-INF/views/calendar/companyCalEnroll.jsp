@@ -98,7 +98,7 @@
 		<!-- 메뉴판 -->
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 		<!-- 컨텐츠 영역 -->
-		<div class="content" style="max-width: 1000px; padding: 30px;">
+		<div class="content" style="max-width: 1500px; padding: 30px;">
 			<fieldset class="clander-add-area radious10 inner-line line-shadow">
 				<form action="${path}/calendar/insertCompanyCal.do" method="post">
 					<legend>

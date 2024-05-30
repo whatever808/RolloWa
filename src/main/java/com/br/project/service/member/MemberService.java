@@ -1,5 +1,6 @@
 package com.br.project.service.member;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,11 @@ public class MemberService {
 		return memberDao.selectUserId(userNo);
 	}
 	
+	// 회원 이름 찾기
+	public String selectUserName(String userNo) {
+		return memberDao.selectUserName(userNo);
+	}
+	
 	// 회원 프로필 이미지 변경
 	public int updateProfile(MemberDto member, AttachmentDto att) {
 		int result1 = memberDao.updateProfile(member);
@@ -54,6 +60,10 @@ public class MemberService {
 		return memberDao.selectAllMember();
 	}
 	
+	// 팀원 조회
+	public List<String> selectTeamMember(Map<String, Object> map) {
+		return memberDao.selectTeamMember(map);
+	}
 	/* ======================================= "가림" 구역 ======================================= */
 	/**
 	 * 메인페이지용 회원 정보 조회
@@ -61,6 +71,31 @@ public class MemberService {
 	public Map<String, Object> selectMemberForMainPage(MemberDto member){
 		return memberDao.selectMemberForMainPage(member);
 	}
-	
+
 	/* ======================================= "가림" 구역 ======================================= */
+	
+	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 start ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+	// 사이드바(구성원 관리) 관리자만 표시 하기
+	public Map<String, Object> selectAuthLevel(int userNo) {
+		return memberDao.selectAuthLevel(userNo);
+	}
+	// 사용자 정보 조회하기
+	public MemberDto selectMemberInfo(int userNo) {
+		return memberDao.selectMemberInfo(userNo);
+	}
+	// 사용자 급여 정보 수정하기
+	public int updateSalary(Map<String, Object> paramMap) {
+		return memberDao.updateSalary(paramMap);
+	}
+	// 사용자 전체 리스트 조회
+	public List<HashMap<String, Object>> selectMemberAll() {
+		return memberDao.selectMemberAll();
+	}
+	// 사용자 전체 리스트 검색 조회
+	public List<HashMap<String, Object>> selectMemberListSearch(Map<String, Object> paramMap) {
+		return memberDao.selectMemberListSearch(paramMap);
+	}
+	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+	
+	
 }

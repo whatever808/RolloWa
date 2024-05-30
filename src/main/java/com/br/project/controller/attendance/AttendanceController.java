@@ -2,17 +2,16 @@ package com.br.project.controller.attendance;
 
 
 import java.text.SimpleDateFormat;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -31,6 +30,7 @@ import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.attendance.AttendanceService;
+import com.br.project.service.member.MemberService;
 import com.br.project.service.organizaion.OrganizationService;
 import com.br.project.util.PagingUtil;
 
@@ -45,6 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AttendanceController {
 
+	private final MemberService memberService;
 	private final AttendanceService attendanceService;
 	private final OrganizationService organizationService;
 	private final PagingUtil pagingUtil;
@@ -80,8 +81,6 @@ public class AttendanceController {
 		return mv;
 	}
 	
-	
-	
 	// 2.2 출결 검색 ------------------------------------------------------
 	@GetMapping("/search.do")
 	public ModelAndView search(@RequestParam(value = "page", defaultValue = "1") int currentPage,
@@ -92,11 +91,13 @@ public class AttendanceController {
 			@RequestParam(value = "name") String name,
 			ModelAndView mv) {
 		
+		/*
 		log.debug("검색 selectedDate : {}", selectedDate);
 		log.debug("검색 department : {}", department);
 		log.debug("검색 team : {}", team);
 		log.debug("검색 attendanceStatus : {}", attendanceStatus);
 		log.debug("검색 name : {}", name);
+		*/
 		
 	    if(department.equals("전체 부서")) {
 	    	department = "";
@@ -136,7 +137,7 @@ public class AttendanceController {
 		return mv;
 	}
 	
-	// 2.2 급여 조회(기본 페이지) --------------------------------------------------------------------------------------------
+	// 2.2 급여 조회 페이지(기본 페이지 출력) --------------------------------------------------------------------------------------------
 	@GetMapping("/accountList.do")
 	public ModelAndView accountList(@RequestParam(value="page", defaultValue="1") int currentPage
 			, ModelAndView mv) {
@@ -167,7 +168,7 @@ public class AttendanceController {
 		return mv;
 	}
 	
-	// 2.2 급여 조회(검색 페이지) --------------------------------------------------------------------------------------------
+	// 2.2 급여 조회 페이지(검색 기능) --------------------------------------------------------------------------------------------
 	@GetMapping("/accountSearch.do")
 	public ModelAndView accountSearch(@RequestParam(value="page", defaultValue="1") int currentPage, 
 			@RequestParam(value = "selectedDate") String selectedDate,
@@ -221,33 +222,119 @@ public class AttendanceController {
 		return mv;
 	}
 	
-	// 2.2 급여 상세 조회 페이지
-	@GetMapping("/accountDetail.do")
-	public String accountDetail(@RequestParam("userNo") int userNo, Model model) {
+	// 2.2 급여 상세 조회 페이지	---------------------------------------------------
+	@RequestMapping("/accountDetail.do")
+	public ModelAndView selectAuthLevel(@RequestParam("userNo") int userNo, ModelAndView mv) {
+		//log.debug("사용자 번호 :  {}", userNo);
 		
-		List<MemberDto> list = organizationService.selectAccountDetail(userNo);
+		MemberDto m = memberService.selectMemberInfo(userNo);
 		
-		model.addAttribute("list", list);
+		mv.addObject("m", m)
+		  .setViewName("attendance/account_detail");
+		  
+		  return mv;
+	}
+	// 2.2 급여 상세 페이지 수정하기
+	@ResponseBody
+	@RequestMapping("/accountDetailSave.do")
+	public int updateSalary(@RequestParam ("userNo") int userNo,
+			@RequestParam ("salary") int salary ,
+			@RequestParam ("bank") String bank ,
+			@RequestParam ("bankAccount") String bankAccount){
+		/*
+        log.debug("userNo: {}", userNo);
+		log.debug("salary : {}", salary );
+		log.debug("bank : {}", bank );
+		log.debug("bankAccount : {}", bankAccount );
+		*/
 		
-		return "attendance/account_detail";
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("userNo", userNo);
+		paramMap.put("salary", salary);
+		paramMap.put("bank", bank);
+		paramMap.put("bankAccount", bankAccount);
+		
+		int result = memberService.updateSalary(paramMap);
+
+		return result;
+    }
+	
+	// 2.3.1 구성원 상세 페이지 --------------------------------------------------------------------------------
+	@GetMapping("/detailList.do")
+	public ModelAndView selectMemberDetail(ModelAndView mv) {
+		
+		List<HashMap<String, Object>> list = memberService.selectMemberAll();
+		log.debug("list출력 : {}", list);
+		
+		mv.addObject("list", list)
+		  .setViewName("attendance/attendance_detailList");
+		return mv;
+	}
+	// 2.3.2 구성원 조회 페이지 검색
+	@GetMapping("/detailSearch.do")
+	public ModelAndView search(
+			@RequestParam(value = "department") String department,
+			@RequestParam(value = "team") String team,
+			@RequestParam(value = "position") String position,
+			@RequestParam(value = "name") String name,
+			ModelAndView mv) {
+		
+		log.debug("검색 department : {}", department);
+		log.debug("검색 team : {}", team);
+		log.debug("검색 position : {}", position);
+		log.debug("검색 name : {}", name);
+		
+	    if(department.equals("전체 부서")) {
+	    	department = "";
+	    }
+	    if(team.equals("전체 팀")) {
+	    	team = "";
+	    }
+	    if(position.equals("전체 직급")) {
+	    	position = "";
+	    }
+
+	    Map<String, Object> paramMap = new HashMap<>();
+	    paramMap.put("department", department);
+	    paramMap.put("team", team);
+	    paramMap.put("position", position);
+	    paramMap.put("name", name);
+	    
+		log.debug("paramMap : {}", paramMap);
+		
+		List<HashMap<String, Object>> list = memberService.selectMemberListSearch(paramMap);
+		
+		mv.addObject("list", list)
+		  .setViewName("attendance/attendance_detailList");
+		
+		return mv;
 	}
 	
+	// 2.3.3 구성원 조회 상세 페이지---------------------------------------------------
+	@RequestMapping("/memberDetail.do")
+	public ModelAndView selectMemberDetail(@RequestParam("userNo") int userNo, ModelAndView mv) {
+		log.debug("사용자 번호 :  {}", userNo);
+		
+		MemberDto m = memberService.selectMemberInfo(userNo);
+		
+		mv.addObject("m", m)
+		  .setViewName("attendance/attendance_memberDetail");
+		  
+		  return mv;
+	}
 	
-	
-	
-	
-	// 2.4 구성원 추가  ------------ 비밀번호 ajax 수정필요 --------------------------------------------------------------------
+	// 2.4 구성원 추가 ----------------------------------------------------
 	@GetMapping("/signup.page")
 	public String signupPage() {
 		return "attendance/attendance_signup";
 	}
-
+	// 2.4.1 아이디 중복체크
 	@ResponseBody
 	@GetMapping("/idcheck.do")
 	public String ajaxIdCheck(String checkId) {
 		return attendanceService.selectUserIdCount(checkId) > 0 ? "NNNNN" : "YYYYY";
 	}
-
+	// 회원 가입하기
 	@PostMapping("/signup.do")
 	public String insertMembmer(MemberDto member, RedirectAttributes redirectAttributes) {
 		log.debug("암호화 전 : {}", member);
@@ -273,15 +360,12 @@ public class AttendanceController {
 	@ResponseBody
 	@GetMapping("/department.do")
 	public List<GroupDto> selectDepartment() {
-		log.debug("◆◇◆◇◆◇◆◇◆ 부서 조회 실행 ◆◇◆◇◆◇◆◇◆");
-
 		return organizationService.selectDepartment();
 	}
 	// 2. 팀 조회
 	@ResponseBody
 	@GetMapping("/team.do")
 	public List<GroupDto> selectTeam(@RequestParam("selectedDepartment") String selectedDepartment) {
-		log.debug("◆◇◆◇◆◇◆◇◆ 팀 조회 실행 ◆◇◆◇◆◇◆◇◆");
 		log.debug("selectedDepartment 값 : {}", selectedDepartment);
 		
 		// 초기값 설정
@@ -301,46 +385,8 @@ public class AttendanceController {
 	@ResponseBody
 	@GetMapping("/position.do")
 	public List<GroupDto> selectPosition() {
-		log.debug("직급 조회 실행");
 	    return organizationService.selectPosition();
-	}	
-	
-	/*
-	@ResponseBody
-	@GetMapping("/team.do")
-	public Map<String, List<GroupDto>> selectTeam() {
-		Map<String, List<GroupDto>> result = new HashMap<>();
-		result.put("department", attendanceService.selectDepartment());
-		result.put("team", attendanceService.selectTeam());
-		result.put("position", attendanceService.selectPosition());
-		
-		log.debug("==================");
-		List<GroupDto> departmentList = result.get("department");
-		log.debug("부서 값 : {}", departmentList);
-		log.debug("==================");
-		List<GroupDto> teamList = result.get("team");
-		log.debug("팀 값 : {}", teamList);
-		log.debug("==================");
-		return result;
 	}
-	*/
-	
-	/*
-	 * @ResponseBody
-	 * @GetMapping("/department.do") public String selectDepartment(Model model) {
-	 * 
-	 * /* 부서 조회 List<GroupDto> department = attendanceService.selectDepartment();
-	 * model.addAttribute("department", department);
-	 * 
-	 * 팀 조회 List<GroupDto> team = attendanceService.selectTeam();
-	 * model.addAttribute("team", team);
-	 * 
-	 * 직급 조회 List<GroupDto> position = attendanceService.selectPosition();
-	 * model.addAttribute("position", position);
-	 * 
-	 * 보여줄 페이지 이름 return "attendance/signup"; }
-	 */
-	
 	
 	
 	/* ======================================= "가림" 구역 ======================================= */
@@ -373,6 +419,8 @@ public class AttendanceController {
 	public Map<String, Object> ajaxMemberAttendCheck(HttpServletRequest request) {
 		
 		HashMap<String, Object> params = CommonController.getParameterMap(request);
+		// 예찬 연차 체크에 필요한 parameter 담음
+		params.put("LoginMember", request.getSession().getAttribute("loginMember"));
 		
 		int result = request.getRequestURL().indexOf("insert") != -1 ? attendanceService.insertMemberAttend(params)
 																	 : attendanceService.updateMemberAttend(params);

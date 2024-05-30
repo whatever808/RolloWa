@@ -297,6 +297,16 @@ public class MemberController {
 	}
 	/* ======================================= "가림" 구역 ======================================= */
 	
+	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 start ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+	// 사이드바(구성원 관리) 관리자만 표시 하기
+	@RequestMapping("/selectAuthLevel.do")
+	@ResponseBody
+	public Map<String, Object> selectAuthLevel(@RequestParam("userNo") int userNo) {
+		//log.debug("출력 : {}", userNo);
+		
+		return memberService.selectAuthLevel(userNo);
+	}
+	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 
 
 

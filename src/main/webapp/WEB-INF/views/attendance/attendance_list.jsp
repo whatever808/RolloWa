@@ -18,6 +18,18 @@
     	width: 1200px !important;
         padding: 20px;
     }
+    
+    /* css 추가 */
+    .sortable {
+		cursor: pointer;
+	}
+	.sortable:after {
+		content: ' \25B2'; /* 기본 오름차순 화살표 */
+	}
+	
+	.sortable.desc:after {
+		content: ' \25BC'; /* 내림차순 화살표 */
+	}
   	
     </style>
 </head>
@@ -158,23 +170,95 @@
 					$(".employee_info tbody").html($(data).find(".employee_info tbody").html());
 					
 					// 검색한 사용자 수
-					let totalRows = $(data).find(".employee_info tbody > tr").length-1;
+					let totalRows = $(data).find(".employee_info tbody > tr").length;
 					if (totalRows > 0) {
-				        let isEmptyMessage = $(data).find(".employee_info tbody > tr td[colspan='8']").text();
-				        if (isEmptyMessage === "조회된 직원이 없습니다.") {
-				            totalRows--;
-				        }
-				    }
-				    $(".employee_count").text("전체 " + totalRows + "명");
-					
+					    let isEmptyMessage = $(data).find(".employee_info tbody > tr td[colspan='8']").text();
+					    if (isEmptyMessage == "조회된 직원이 없습니다.") {
+					        totalRows -= 1;
+					    } else {
+					        totalRows;
+					    }
+					} else {
+					    totalRows = 0; // 0 처리
+					}
+					$(".employee_count").text("전체 " + totalRows + "명");
+
 				}, error: function(){
 					//console.log("통신 실패");
 				}
 			})
 			
      	}
-     	
 		</script>
+		
+		<script>
+    // 정렬 기능
+    $(document).ready(function() {
+        $(".sortable").click(function() {
+            let columnIndex = parseInt($(this).data("column"));
+            let isDescending = $(this).hasClass("desc");
+
+            // 모든 정렬 가능한 열의 클래스에서 desc 클래스를 제거
+            $(".sortable").removeClass("desc");
+
+            // 클릭한 열에 desc 클래스를 추가하여 현재 정렬 상태를 표시
+            $(this).toggleClass("desc", !isDescending);
+
+            // 테이블 정렬 함수 호출
+            sortTable(columnIndex, isDescending ? 1 : -1);
+        });
+    });
+    
+    function sortTable(columnIndex, direction) {
+        let $table = $(".employee_info tbody");
+        let $rows = $table.find("tr").get();
+
+        $rows.sort(function(a, b) {
+            let A = getColumnValue(a, columnIndex);
+            let B = getColumnValue(b, columnIndex);
+
+            // 숫자 값을 비교하여 정렬
+            if ($.isNumeric(A) && $.isNumeric(B)) {
+                return (parseFloat(A) - parseFloat(B)) * direction;
+            } else {
+                // A 또는 B가 숫자가 아닌 경우 문자열로 비교하여 정렬
+                return A.localeCompare(B) * direction;
+            }
+        });
+
+        // 정렬된 행을 테이블에 다시 추가
+        $.each($rows, function(index, row) {
+            $table.append(row);
+        });
+    }
+    
+    function getColumnValue(row, columnIndex) {
+        let value = $(row).children("td").eq(columnIndex).text().trim();
+        if (columnIndex == 4) { // 직급 열의 인덱스
+            // 직급을 숫자로 매핑하여 반환
+            switch (value) {
+                case "사장":
+                    return 6;
+                case "부장":
+                    return 5;
+                case "차장":
+                    return 4;
+                case "과장":
+                    return 3;
+                case "대리":
+                    return 2;
+                case "사원":
+                    return 1;
+                default:
+                    return 0;
+            }
+        } else {
+            return value;
+        }
+    }
+</script>
+
+		
         
         <!-- 일별 화면 -->
         <div class="daily_data">
@@ -348,7 +432,7 @@
 	 		
 	 		// input text에서 엔터눌러도 페이지 안바뀌게
 			document.addEventListener('keydown', function(event) {
-			  if (event.keyCode === 13) {
+			  if (event.keyCode == 13) {
 			    event.preventDefault();
 			  };
 			}, true);
@@ -364,16 +448,18 @@
 		    </script>
            <!-- 직원 정보 테이블 start-->
            <table class="table table-bordered line-shadow employee_info">
-               <tr>
-                   <th>프로필사진</th>
-                   <th>이름</th>
-                   <th>부서</th>
-                   <th>팀명</th>
-                   <th>직급</th>
-                   <th>출근시간</th>
-                   <th>퇴근시간</th>
-                   <th>상태</th>
-               </tr>
+				<thead>
+					<tr>
+						<th>프로필사진</th>
+						<th class="sortable" data-column="1">이름</th>
+					    <th class="sortable" data-column="2">부서</th>
+					    <th class="sortable" data-column="3">팀명</th>
+					    <th class="sortable" data-column="4">직급</th>
+					    <th class="sortable" data-column="5">출근시간</th>
+					    <th class="sortable" data-column="6">퇴근시간</th>
+					    <th class="sortable" data-column="7">상태</th>
+					</tr>
+				</thead>
                
                <!-- 출결 조회(이름,부서,팀명,직급, 오늘날짜의 출석시간, 오늘날짜 퇴근시간, 상태) -->
                <c:choose>
@@ -439,52 +525,14 @@
         	</c:choose>
            </table>
            <!-- 직원 테이블 end -->
+           
 	           
-	
-			<!--페이징 처리 start-->
-			<!-- 
-		    <div class="container">
-		        <ul class="pagination justify-content-center">
-		        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
-		        		<a class="page-link" href="${ contextPath }/attendance/list.do?page=${pi.currentPage-1}">Previous</a>
-	        		</li>
-					<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-						<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }">
-							<a class="page-link" href="${ contextPath }/attendance/list.do?page=${p}">${ p }</a>
-						</li>
-					</c:forEach>
-					<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }">
-						<a class="page-link" href="${ contextPath }/attendance/list.do?page=${pi.currentPage+1}">Next</a>
-					</li> 
-		        </ul>
-		    </div>
-		    -->
-	    	<!--페이징 처리 end-->
-	    	<!-- 
-	    	<div class="container">
-			    <ul class="pagination justify-content-center">
-			        <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
-			            <a class="page-link" href="${ contextPath }/attendance/search.do?page=${pi.currentPage-1}">Previous</a>
-			        </li>
-			        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-			            <li class="page-item ${ pi.currentPage == p ? 'active' : '' }">
-			                <a class="page-link" href="${ contextPath }/attendance/search.do?page=${p}">${ p }</a>
-			            </li>
-			        </c:forEach>
-			        <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }">
-			            <a class="page-link" href="${ contextPath }/attendance/search.do?page=${pi.currentPage+1}">Next</a>
-			        </li> 
-			    </ul>
-			</div>
-	    	 -->
-		    	
     	</div>
     	
     	<!-- ----------------------------월별 화면  --------------------------->
     	<div class="monthly_data">
     	 	<h2> 월별 출력 </h2>
     	</div>
-	
 	
 	<!-- ------------ -->
 	

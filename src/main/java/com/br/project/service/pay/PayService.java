@@ -7,10 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.br.project.dao.pay.PayDao;
 import com.br.project.dto.common.PageInfoDto;
-import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.MemberDeptDto;
 import com.br.project.dto.pay.PayDto;
-
+import com.br.project.dto.pay.SignDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -149,8 +148,8 @@ public class PayService {
 	}
 	
 	//반려하기------
-	public int updateReject(Map<String, Object> map) {
-		return payDao.updateReject(map);		
+	public int ajaxUpdateReject(Map<String, Object> map) {
+		return payDao.ajaxUpdateReject(map);		
 	}
 	
 	
@@ -432,6 +431,89 @@ public class PayService {
 	public List<Map<String, Object>> ajaxSearchName(String name){
 		return payDao.ajaxSearchName(name);
 	}
+	
+	
+	public int ajaxSignUpdate(Map<String, Object> map){
+		return payDao.ajaxSignUpdate(map);
+	}
+	
+	public List<SignDto> ajaxSignSelect(Map<String, Object> map) {
+		return payDao.ajaxSignSelect(map);
+	}
+	
+	
+	public int approvalSearchCount(Map<String, Object> map){
+		return payDao.approvalSearchCount(map);
+	}
+	
+	
+	public List<PayDto> approvalSearchList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.approvalSearchList(map, pi);
+	}
+	
+	
+	public int approvalSelectCount(Map<String, Object> map){
+		return payDao.approvalSelectCount(map);
+	}
+	
+	public List<PayDto> approvalSelectList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.approvalSelectList(map, pi);
+	}
+	
+	public int myAllApCount(Map<String, Object> map) {
+		return payDao.myAllApCount(map);
+	}
+	
+	public List<Map<String, Object>> myAllApproval(Map<String, Object> map, PageInfoDto pi){
+		return payDao.myAllApproval(map, pi);
+	}
+	
+	
+	public int ajaxAppprovaldelete(String no){
+		return payDao.ajaxAppprovaldelete(no);
+	}
+	
+	public int mySearchApCount(Map<String, Object> map){
+		return payDao.mySearchApCount(map);
+	}
+	
+	public List<Map<String, Object>> mySearchApList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.mySearchApList(map, pi);
+	}
+	
+	public String contentSelect(Map<String, Object> map) {
+		return payDao.contentSelect(map);
+	}
+	
+	
+	
+	public int noApprovalSignCount(String userName) {
+		return payDao.noApprovalSignCount(userName);
+	}
+	
+	public List<PayDto> noApprovalSign(String userName, PageInfoDto pi){
+		return payDao.noApprovalSign(userName, pi);
+	}
+	
+	public int noApprovalSignSelectCount(Map<String, Object> map) {
+		return payDao.noApprovalSignSelectCount(map);
+	}
+	
+	
+	public List<PayDto> noApprovalSignSelectList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.noApprovalSignSelectList(map, pi);
+	}
+	
+	public int noApprovalSignSearchCount(Map<String, Object> map) {
+		return payDao.noApprovalSignSearchCount(map);
+	}
+	
+	public List<PayDto> noApprovalSignSearchList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.noApprovalSignSearchList(map, pi);
+	}
+	
+	
+	
 	
 	
 }

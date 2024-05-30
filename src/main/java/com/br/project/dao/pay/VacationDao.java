@@ -5,6 +5,7 @@ import java.util.List;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.VacationDto;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,30 @@ public class VacationDao {
 
 	public int selectVacarionCount(int userNo) {
 		return sqlSession.selectOne("vacationMapper.selectVacarionCount", userNo);
+	}
+
+	public int updateVacation(VacationDto vacationDto) {
+		return sqlSession.update("vacationMapper.updateVacation", vacationDto);
+	}
+
+	public int deleteRcequest(String vacaNo) {
+		return sqlSession.update("vacationMapper.deleteRcequest", vacaNo);
+	}
+
+	public List<VacationDto> searchOld(VacationDto vacation) {
+		return sqlSession.selectList("vacationMapper.searchOld", vacation);
+	}
+
+	public int RRequest(VacationDto vacation) {
+		return sqlSession.update("vacationMapper.RRequest", vacation);
+	}
+
+	public int updateYearLabor() {
+		return sqlSession.update("vacationMapper.updateYearLabor");
+	}
+
+	public int updateAnuul(MemberDto member) {
+		return sqlSession.update("vacationMapper.updateOverAnuul", member);
 	}
 	
 	

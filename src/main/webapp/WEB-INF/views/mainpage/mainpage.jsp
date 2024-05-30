@@ -53,6 +53,9 @@
                 <div class="profile-attend-div">
 
                     <div class="profile-img-div">
+                    		<!-- 기웅 추가 -->
+                    		<div class="alram-div"><button type="button" class="btn alram-btn" style="box-shadow: none;"><i class="fa-solid fa-bell fa-2x" style="color: #ff939e;"></i></button></div>
+                    		<!-- 기웅 추가 -->
                         <img src="${ contextPath }/resources/images/defaultProfile.png" alt="user profile">
 
                         <h6 class="mt-3 fw-bold">${ loginMember.userName } / ${ loginMember.positionName } / ${ loginMember.teamName }</h6>
@@ -175,6 +178,13 @@
         </div>
         <!-- main contents end (bottom) -->
         
+      	<!-- 알람 조회 modal -->
+				<div id="alram_list">
+					<div class="list-group list-group-light alram_list">
+						<!-- 알림 영역 -->
+					</div>
+				</div>
+      	<!-- 알람 조회 modal -->
     </div>
     <!-- content end -->
 	
@@ -403,7 +413,7 @@
 	     // 오늘 날짜
 	     function getToday() {
 	         const todaydate = new Date();
-	         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '긑요일', '토요일'];
+	         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
 	         const days_num = todaydate.getDay();
 	         const year = todaydate.getFullYear();
 	         const month = todaydate.getMonth() + 1;
@@ -499,7 +509,111 @@
    		})
    	})
 		*/	
-  
+  	/* ============== 기웅 추가 알림 =============== */
+  	// 알림 modal 스타일
+  	$("#alram_list").iziModal({
+			title: '<h6>알림</h6>'
+			, subtitle: ''
+			, headerColor: '#FEEFAD'
+			, theme: 'light'
+			, radius: '2'
+			, arrowKeys: 'false'
+			, navigateCaption: 'false'
+  	})
+  	
+  	// 알림 버튼 스타일
+  	$(".alram-btn").on("mouseenter", function() {
+  		$(".alram-btn>i").addClass("fa-beat");
+  	})
+  	$(".alram-btn").on("mouseleave", function() {
+  		$(".alram-btn>i").removeClass("fa-beat");
+  	})
+  	
+  	// 메인페이지 접속 시 알림 조회
+  	$(document).ready(function() {
+  		selectAlram();
+  	})
+  	
+  	// 읽지 않은 알림 조회
+  	function selectAlram() {
+	  	$.ajax({
+	  			url: "${contextPath}/notification/list"
+	  			, method: "get"
+	  			, data: {userNo: ${loginMember.userNo}}
+	  			, success: function(notiList) {
+	  				if(notiList.length != 0) {
+	  					// 조회된 알림이 있을 시
+	  					
+	  					// 알림 구역 초기화
+	  					$(".alram_list").empty();
+	  					
+	  					// 알림 아이콘에 표시
+	  					$(".alram-btn>i").addClass("fa-bounce");
+	  					
+	  					for(var i = 0; i < notiList.length; i++) {
+	  						// updateAlram 함수 실행 시 필요한 정보 담기
+	  						var notiInfo = new Array();
+		  					
+		  					var alramText = "<div class='alram_el'>";
+		  					alramText += "<div class='alram_info'>";
+		  					alramText += "<a href='" + notiList[i].notiURL + "' onclick='return updateAlram(" + notiList[i].nsendNo + ", \"" + notiList[i].type + "\");'  class='list-group-item list-group-item-action px-3 border-0'>";
+		  					
+		  					if(notiList[i].type == 'N') {
+		  						alramText += (i + 1) + "." + notiList[i].sendUserName + "님이 공지사항을 등록하였습니다.";
+		  					} else if (notiList[i].type == 'C') {
+		  						alramText += (i + 1) + "." + notiList[i].sendUserName + "님이 부서 일정을 등록하였습니다.";
+		  					}
+		  					alramText += "</a>";
+		  					alramText += "</div>";
+		  					alramText += "<div class='alram_date'><span class='send_date'>" + notiList[i].notiSendDate + "</span></div>";
+		  					alramText += "</div>";
+		  					$(".alram_list").append(alramText);
+		  				}
+	  				} else {
+	  					// 조회된 알림이 없을 시
+	  					// 알림 구역 초기화
+	  					$(".alram_list").empty();
+	  					var alramText = "<span class='list-group-item list-group-item-action px-3 border-0'>";
+	  					alramText += "도착한 알림이 없습니다.";
+	  					alramText += "</span>";
+	  					$(".alram_list").append(alramText);
+	  				}
+	  			}
+	  			, error: function() {
+	  				
+	  			}
+  		})
+		}
+  	// 알림 버튼 클릭 시 알림 조회
+  	$(".alram-btn").on("click", function() {
+			// 알림 아이콘 표시 제거
+			$(".alram-btn>i").removeClass("fa-bounce");
+			// 모달창 열기
+			$("#alram_list").iziModal('open');
+  	})
+  	
+  	// 알림 리스트 중 하나의 알림 클릭 시
+  	function updateAlram(nsendNo, type) {
+  		// 공지사항 알림일 경우 클릭한 알림만 update
+  		// 일정 알림일 경우 일정 알림 전체 update
+  		$.ajax({
+  			url: "${contextPath}/notification/checkDate"
+  			, method: "post"
+  			, data: {userNo: ${loginMember.userNo}
+  								, type: type
+  								, nsendNo: nsendNo}
+  			, success: function(result) {
+  				if(result > 0) {
+  					console.log("알림 확인 날짜 update 성공");
+  				}
+  			}
+  			, error: function() {
+  				console.log("알림 확인 날짜 update ajax 실패");
+  			}
+  		})
+  	}
+  	
+  	
 </script>
 
 </html>

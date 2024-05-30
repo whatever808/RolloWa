@@ -6,15 +6,20 @@ import java.util.Map;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.br.project.dto.member.MemberDto;
 import com.br.project.service.attendance.AttendanceService;
+import com.br.project.service.pay.VacationService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class MemberAttendanceScheduler {
 
 	private final AttendanceService attendanceService;
+	private final VacationService vacationService;
 	
 	/**
 	 * 평일 매일 자정 12시에 당일 휴가인 사원 근태등록
@@ -47,6 +52,11 @@ public class MemberAttendanceScheduler {
 			for(Map<String, Object> params : dayOffMemberList) {
 				params.put("requestDetail", "결근");
 				attendanceService.insertVacationOrDayOffMemberAttend(params);
+				attendanceService.checkAnuual(MemberDto.builder()
+														.userNo((int)params.get("userNo"))
+														.vaYearLabor((String)params.get("year"))
+														.vaGivenDate((String)params.get("date"))
+														.build());
 			}
 		}
 		
@@ -54,5 +64,21 @@ public class MemberAttendanceScheduler {
 		attendanceService.updateMemberWorkOffTime();
 		
 	}
+	
+	/**
+	 * 1월과 6월에 각 회사 인원들의 근무일수을 갱신하는 스케줄러
+	 * @author dpcks
+	 */
+	@Scheduled(cron = "00 00 01 1 1,6 *")
+	public void updateVacation() {
+		int result = vacationService.updateYearLabor();
+		if(result > 0 ) {
+			log.debug(result +"행만큼 갱신이 완료 되었습니다.");
+		}else {
+			log.debug("갱신에 실패 했습니다.");
+		}
+		
+	}
+	
 	
 }

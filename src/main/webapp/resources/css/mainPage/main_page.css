@@ -226,4 +226,24 @@ h4, h5{
 #calendar{
 		height: 500px;
 }
-		
+
+/* ------------- 기웅 추가 알림 -----------*/
+.alram-div {
+	width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+	
+.alram-btn {
+	box-shadow: none;
+}	
+
+.alram_el {
+	display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alram_date {
+	margin-right: 10px;
+}

@@ -25,10 +25,17 @@ public class ReservationDto {
 	private String equipmentName;
 	private Date registDate;
 	private Date registEmp;
-	private Date ModifyDate ;
+	private Date modifyDate ;
 	private String equipmentAbilability;
 	private String status;
 	
+	private int userNo;
+	private String rserveDate;
+	private String startTime;
+	private String endTime;
+	private String content;
+	
 	private List<GroupDto> groupList;
+
 
 }
