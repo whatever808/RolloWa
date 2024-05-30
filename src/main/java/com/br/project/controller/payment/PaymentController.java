@@ -45,7 +45,7 @@ public class PaymentController {
 	 */
 	@ResponseBody
 	@PostMapping("/tossSimplePay.ajax")
-	public void ajaxTossSimplePay(@RequestBody HashMap<String,Object> param) {
+	public int ajaxTossSimplePay(@RequestBody HashMap<String,Object> param) {
 		
 		// 결제 상태 1:결제대기, 2:결제취소, 3:결제성공
 		if(param.get("status").equals("paid")) {
@@ -63,14 +63,12 @@ public class PaymentController {
 			param.replace("pay_method", "CD");
 		}
 		
-		int result = paymentService.ajaxTossSimplePay(param);
-		// 위의 결제가 성공 했을 경우에만 값을 조회해서 유효성 체크
-		if(param.get("status").equals("paid")) {
-			
+		if(!param.get("paid_amount").equals("")) {
+			param.put("onePrice", Integer.parseInt((String)param.get("paid_amount"))
+								/Integer.parseInt((String)param.get("paid_amount")));
 		}
 		
-		
-		
+		return paymentService.ajaxTossSimplePay(param);		
 	}
 	
 
