@@ -675,17 +675,12 @@ $(document).ready(function(){
                             <li><a href="${ contextPath }/member/mypage.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">마이페이지</a>
                             </li>
-                            <li><a href="${ contextPath }/notification/list.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
-                            </li>
-
-                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
-                                    out</a></li>
-                                    
-                               <li>
-                               <a href="${ contextPath }/payment/payment.page" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                               Payment</a>
-                               </li>       
+                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">로그아웃</a>
+                            </li>       
+                            <li>
+                            <a href="${ contextPath }/payment/payment.page" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                            Payment</a>
+                            </li>       
                         </ul>
                     </div>
                 </li>
@@ -723,6 +718,9 @@ $(document).ready(function(){
 						// 채팅용 웹소켓 연결
 						chatting = new SockJS("${contextPath}/chatting");
 						stompClient = Stomp.over(chatting);
+					  stompClient.debug = function(str) {
+						    // append the debug log
+						};
 			    	stompClient.connect({}, function(frame) {
 							// 구독 중인 채팅방 목록 조회
 					    $.ajax({
