@@ -10,19 +10,55 @@
 	<title>어트랙션 이용률</title>
 	
 	<!-- 어트랙션 이용률 스타일 -->
-	<link href="${ contextPath }/resources/css/facility/attraction/attraction_utilization.css" rel="stylesheet">
+	<link href="${ contextPath }/resources/css/facility/attraction/attraction_utilization_list.css" rel="stylesheet">
 </head>
 <body>
 
 	<!-- side bar -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
-	<!-- content 추가 -->
+		<!-- content 추가 -->
   	<div class="content p-5">
 	  
 	  <h1 class="page-title">어트랙션 이용률</h1>
-
-      
+		
+		<!-- location select start -->
+		<select class="location-select form-control py-2" style="width: 150px;">
+			<option>전체</option>
+			<option>언더우드</option>
+			<option>언더우드</option>
+			<option>지하나라</option>
+		</select>
+		<!-- location select end -->
+		
+		<!-- statics list div start -->
+		<div class="statics-list-div">
+			
+			<!-- statics list start -->
+			<table class="table text-center">
+				<thead>
+					<tr>
+						<th>어트랙션</th>
+						<th>연간 이용률</th>
+						<th>월간 이용률</th>
+						<th>일간 이용률</th>
+					</tr>
+				<thead>
+				
+				<tbody>
+					<tr>
+						<td>원더랜드</td>
+						<td>20.00%</td>
+						<td>20.00%</td>
+						<td>30.00%</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<!-- statics list end -->
+			
+		</div>
+    <!-- statics list div end -->
   
   </div>
   <!-- content 끝 -->

@@ -223,7 +223,7 @@ public class AttractionController {
 	 */
 	@RequestMapping("/utilization.do")
 	public String showAttractionUtilizationPage() {
-		return "facility/attraction/attraction_utilization";
+		return "facility/attraction/attraction_utilization_list";
 	}
 	
 	

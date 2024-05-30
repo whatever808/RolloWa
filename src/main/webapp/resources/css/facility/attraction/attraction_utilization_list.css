@@ -1,0 +1,15 @@
+/* ------------- location select ------------- */
+.location-select{
+	text-align: center;
+	margin-top: 50px;
+}
+
+/* ------------- statics list div ------------- */
+.statics-list-div{
+	display: flex;
+	justicy-content: center;
+	align-items: center;
+	border: 1px solid tomato;
+	border-radius: 10px;
+	margin-top: 50px;
+}
