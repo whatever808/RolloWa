@@ -485,12 +485,17 @@ $(document).ready(function() {
 
 
     $("#teen-increase").on("click", function() {
+    	
         sum1 += 1;
         $("#teens").val(sum1);
+        
         let found = false;
+        
         $(".ticket-table tr").each(function() {
             if ($(this).find("td#ticketName").text() == "일반 이용권") {
+            	
                 found = true;
+                
                 let newQuantity = sum1;
                 $(this).find("#adult-companion").val(newQuantity);
                 $(this).find("#adult-own-price1 span").text(newQuantity * 21000);
@@ -537,11 +542,14 @@ $(document).ready(function() {
 
    
     $("#child-increase").on("click", function() {
+    	
         sum2 += 1;
+        
         $("#children").val(sum2);
         let found = false;
         $(".ticket-table tr").each(function() {
             if ($(this).find("td#ticketName2").text() == "정기 이용권") {
+            	
                 found = true;
                 let newQuantity = sum2;
                 $(this).find("#adult-own").val(newQuantity);
@@ -574,7 +582,9 @@ $(document).ready(function() {
             $("#children").val(sum2);
             $(".ticket-table tr").each(function() {
                 if ($(this).find("td#ticketName2").text() == "정기 이용권") {
+                	
                     let newQuantity = sum2;
+                    
                     if (newQuantity > 0) {
                         $(this).find("#adult-own").val(newQuantity);
                         $(this).find("#adult-own-price2 span").text(newQuantity * 21000);
@@ -618,25 +628,11 @@ function kakaoPay() {
 	    ticket.push($("#ticketName2").text().trim());
 	}
 
-	let ticketPrice = [];
-	if ($("#adult-own-price1").text().trim() != "") {
-	    ticketPrice.push($("#adult-own-price1").text().trim());
-	}
-
-	if ($("#adult-own-price2").text().trim() != "") {
-	    ticketPrice.push($("#adult-own-price2").text().trim());
-	}
-
 	let tickets = "";
 	if (ticket.length > 0) {
 	    tickets = ticket.join(",");
 	}
-
-	let ticketPrices = "";
-	if (ticketPrice.length > 0) {
-	    ticketPrices = ticketPrice.join(",");
-	}
-
+	
 	console.log("Tickets: ", tickets);
 	console.log("Ticket Prices: ", ticketPrices);
 	
@@ -649,29 +645,32 @@ function kakaoPay() {
 	var makeMerchantUid = hours + minutes + seconds + milliseconds;
 	
 if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확인하기
-	
+		
+		console.log($("#total").text());
    //const emoticonName = document.getElementById('title').innerText
 
    IMP.init("imp37456887"); // 가맹점 식별코드
    
    IMP.request_pay({
+	   
        pg: 'kakaopay.TC0ONETIME', // PG사 코드표에서 선택
        pay_method: 'card', // 결제 방식
        merchant_uid: "IMP" + makeMerchantUid, // 결제 고유 번호
-       name: "ㅁㅁ", // 제품명
-       amount: 1, // 가격
+       name: "tickets", // 제품명
+       amount: $("#total").text(), // 가격
        //구매자 정보 ↓
        buyer_email: '${member.EMAIL}',
        buyer_name: '${member.USER_NAME}',
        buyer_tel : '${member.PHONE}'
        // buyer_addr : '서울특별시 강남구 삼성동',
        // buyer_postcode : '123-456'
+       
    }, async function (rsp) { // callback
+	   
        if (rsp.success) { //결제 성공시
            console.log(rsp);
 		
-           //결제 성공시 프로젝트 DB저장 요청 에이작스
-           
+           //결제 성공시
            if (response.status == 200) { // DB저장 성공시
                alert('결제 완료!')
                window.location.reload();
@@ -679,7 +678,6 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
                alert(`error:[${response.status}]\n결제요청이 승인된 경우 관리자에게 문의바랍니다.`);
                // DB저장 실패시 status에 따라 추가적인 작업 가능성
            }
-           
            
        } else if (rsp.success == false) { // 결제 실패시
            alert(rsp.error_msg)
@@ -782,7 +780,7 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
 							</h6>
 						</div>
 						<div style="display: flex; justify-content: flex-end; gap: 10px;">
-							<button class="purchase-kakao" onclick="">
+							<button class="purchase-kakao" onclick="" id="payment">
 								<h5>카카오</h5>
 							</button>
 							

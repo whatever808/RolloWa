@@ -488,7 +488,7 @@ $(document).on("click", "#rejectBtn", function(){
     
     $("#modifyWriter").on("click", function(){
     	
-    	let writerNo = '${ not empty list and list.get(0).DOCUMENT_STATUS == "D" and userNo == list.get(0).PAYMENT_WRITER_NO }';
+    	let writerNo = "${ not empty list && (list.get(0).DOCUMENT_STATUS == 'N' || list.get(0).DOCUMENT_STATUS == 'D') && userNo == list.get(0).PAYMENT_WRITER_NO }";
     	
     	if(writerNo == "true"){
 	    	 	if(confirm('수정하시겠습니까?')){

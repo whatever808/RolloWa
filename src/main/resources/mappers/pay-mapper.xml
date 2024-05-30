@@ -377,7 +377,7 @@
 			      , TITLE
 			      , SALES_DIVISION
 			      , MANAGER_NAME
-			      , to_char(TOTAL_SALES, '999,999,999,999') TOTAL_SALES
+			      , TOTAL_SALES
 			      , REPORT_NO
 			      , REPORT_TYPE
 			      , ITEM
@@ -1691,6 +1691,7 @@
 				    MEMBER M
 				JOIN TB_GROUP G ON M.TEAM_CODE = G.CODE AND G.GROUP_CODE = 'TEAM01'
 				WHERE  G.UPPER_CODE IN ('A', 'B', 'C', 'D', 'E', 'F')
+				 AND POSITION_CODE != 'A'
 				  and  CODE_NAME = #{name}
 		</select>
 		
@@ -1710,8 +1711,9 @@
 				FROM
 				    MEMBER M
 				JOIN TB_GROUP G ON M.TEAM_CODE = G.CODE AND G.GROUP_CODE = 'TEAM01'
-				WHERE  G.UPPER_CODE IN ('A', 'B', 'C', 'D', 'E', 'F')
-				  and  USER_NAME like '%' || #{name} || '%'
+				WHERE G.UPPER_CODE IN ('A', 'B', 'C', 'D', 'E', 'F')
+				  AND POSITION_CODE != 'A'
+				  and USER_NAME like '%' || #{name} || '%'
 		</select>
 	  
 	  <update id="ajaxSignUpdate">
