@@ -1,5 +1,6 @@
 package com.br.project.dao.payment;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,13 @@ public class PaymentDao {
 	
 	public Map<String, Object> userInformation(int userNo){
 		return sqlSessionTemplate.selectOne("paymentMapper.userInformation", userNo);
+	}
+
+	public int ajaxTossSimplePay(HashMap<String, Object> params) {
+		return sqlSessionTemplate.insert("paymentMapper.ajaxTossSimplePay", params);
+	}
+	public int ajaxTossSimplePayDetail(HashMap<String, Object> params) {
+		return 0;
 	}
 
 }

@@ -1020,9 +1020,11 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
 					    merchant_uid: 'toss_' + merchantUID(), 
 					    name: 				"Rollowa 일반이용권",
 					    amount: 			$('#adult-own-price1>span').text(),
-					    buyer_count: 	$('#teens').val(),
-					    buyer_date: 	$('#one_date').val(),
-					    buyer_no: 		${loginMember.userNo},
+					    custom_data: {
+						    buyer_count: 	$('#teens').val(),
+						    buyer_date: 	$('#one_date').val(),
+						    buyer_no: 		${loginMember.userNo},
+					    },
 					},
 					async (response) => {
 				   if (response.error_code != null) {
@@ -1036,10 +1038,16 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
 							contentType:'application/json',
 							data:JSON.stringify({
 								merchant_uid: response.merchant_uid,
-								name: response.name,
-								paid_amount: response.paid_amount,
-								pg_provider: response.pg_provider,
-								pg_tid: response.pg_tid,
+								name: 				response.name,
+								status:				response.status,
+								pay_method: 	response.pay_method,
+								paid_amount: 	response.paid_amount,
+								pg_provider: 	response.pg_provider,
+								pg_tid: 			response.pg_tid,
+								buyer_count: 	response.custom_data.buyer_count,
+								buyer_date:		response.custom_data.buyer_date,
+								buyer_no:			response.custom_data.buyer_no,
+								discount: 		'0.2',
 							}),
 							success:function(status){
 								console.log(status);

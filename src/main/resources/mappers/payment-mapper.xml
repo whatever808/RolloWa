@@ -11,5 +11,41 @@
 		  FROM MEMBER
 		 WHERE USER_NO = #{userNo}
  	</select>
+ 	
+ 	<!-- 
+ 		예찬
+ 		토스 결제시 Ticket_order에 들어갈 query
+ 	 -->
+ 	<insert id="ajaxTossSimplePay">
+ 	insert into 
+	ticket_order( ORDER_NO, PAYMENT_DATE, ORDER_PAYMENT, ORDER_STATUS, CUSTOMER_ID, PAYMENT_METHOD
+	)values(
+	    seq_tono.nextval
+	    , SYSDATE
+	    , ${paid_amount}
+	    , ${status}
+	    , ${buyer_no}
+	    , 'CD'
+	);
+ 	</insert>
+ 	<!-- 
+ 		예찬
+ 		토스 결제 상세 내역 insert문
+ 	 -->
+ 	 <insert id="ajaxTossSimplePayDetail">
+ 	 insert into 
+		ticket_order_detail( ORDER_DETAIL_NO ,ORDER_NO, TICKET_TYPE, TICKET_PRICE, TICKET_SERIAL_NO, TICKET_CTN, START_DATE, END_DATE, DISCOUNT
+		)values(
+		    SEQ_ODNO.nextval
+		    , seq_tono.currval
+		    , 'N'
+		    , 25000
+		    , 'dasdsadsa'
+		    , 4
+		    , SYsdate
+		    , SYsdate
+		    , 0.2
+		);
+ 	 </insert>
 	
 </mapper>
