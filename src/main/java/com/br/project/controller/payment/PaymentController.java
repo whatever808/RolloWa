@@ -30,7 +30,7 @@ public class PaymentController {
 		
 		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
 		
-		List<Map<String, Object>> member = paymentService.userInformation(userNo);
+		Map<String, Object> member = paymentService.userInformation(userNo);
 			
 		model.addAttribute("member", member);
 		

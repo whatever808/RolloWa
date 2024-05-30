@@ -1559,7 +1559,7 @@ public class PayController {
 		
 		PageInfoDto pi = pagingUtil.getPageInfoDto(noApprovalSignCount, currentPage, 5, 10);
 		
-		List<Map<String, Object>> list = payService.noApprovalSign(userName, pi);
+		List<PayDto> list = payService.noApprovalSign(userName, pi);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("list", list);
@@ -1589,9 +1589,45 @@ public class PayController {
 		Map<String, Object> maps = new HashMap<>();
 		maps.put("list", list);
 		maps.put("pi", pi);
-		return map;
+		maps.put("conditions", map.get("conditions"));
+		maps.put("status", map.get("status"));
+		
+		
+		return maps;
 		
 	}
+	
+	@ResponseBody
+	@RequestMapping("/ajaxNoApprovalSignSearchList.do")
+	public Map<String, Object> ajaxNoApprovalSignSearchList(@RequestParam (value="page", defaultValue="1") int currentPage, HttpSession session
+														 , @RequestParam Map<String, Object> map) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapes = new HashMap<>();
+		mapes.put("userName", userName);
+		mapes.put("condition", map.get("condition"));
+		mapes.put("keyword", map.get("keyword"));
+		
+		int noApprovalSignSearchCount = payService.noApprovalSignSearchCount(mapes);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(noApprovalSignSearchCount, currentPage, 5, 10);
+		
+		List<PayDto> list = payService.noApprovalSignSearchList(mapes, pi);
+		
+		Map<String, Object> maps = new HashMap<>();
+		maps.put("list", list);
+		maps.put("pi", pi);
+		maps.put("condition", map.get("condition"));
+		maps.put("keyword", map.get("keyword"));
+		
+		return maps;
+		
+	}
+	
+	
+	
+	
 	
 	
 	

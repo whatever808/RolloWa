@@ -18,13 +18,10 @@
     <script src="${contextPath}/resources/js/iziModal.min.js"></script>
     <link rel="stylesheet" href="${contextPath}/resources/css/iziModal.min.css">
     
-    <!-- 포트원 결제 -->
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
-    <!-- jQuery -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
-    <!-- iamport.payment.js -->
     <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
-		<!-- 포트원 결제 -->
+    
 <style>
 
 /* Container styling */
@@ -444,6 +441,7 @@ body {
 </head>
 <body>
 
+
 <script>
 $(document).ready(function() {
     let sum1 = 0;
@@ -471,6 +469,8 @@ $(document).ready(function() {
                 updateTotal();
             }
         });
+        
+        
 
         if (!found) {
             let tr = "<tr>" +
@@ -521,6 +521,8 @@ $(document).ready(function() {
                 updateTotal();
             }
         });
+        
+        
 
         if (!found) {
             let tr = "<tr>" +
@@ -530,7 +532,7 @@ $(document).ready(function() {
                              "<input type='number' id='adult-own' value='1' min='0' readonly>" +
                          "</div>" +
                      "</td>" +
-                     "<td id='adult-own-price2'><span>21000</span>원</td>" +
+                     "<td id='adult-own-price2'><span>150000</span>원</td>" +
                      "</tr>";
             $(".ticket-table").append(tr);
             updateTotal();
@@ -554,6 +556,7 @@ $(document).ready(function() {
                     updateTotal();
                 }
             });
+            
         }
     });
 
@@ -563,51 +566,100 @@ $(document).ready(function() {
 </script>
 
 <script>
+
+var IMP = window.IMP;
+
 //구매자 정보
-$("#payment").on("click", function () {
-		
-		if($(".ticket-table tbody tr").length > 0){
-			
-				var userid = member.get(0).USER_ID;
-        var username = member.get(0).USER_NAME;   
-
-        var merchant_uid = "O" + new Date().getTime(); // 고유한 주문번호 생성 
-
-        var IMP = window.IMP;
-        IMP.init('imp37456887'); // 가맹점 식별코드 입력 
-
-        IMP.request_pay({
-            pg: "kakaopay.TC0ONETIME",           // 등록된 pg사 (적용된 pg사는 KG이니시스)
-            pay_method: "card",           // 결제방식: card(신용카드), trans(실시간계좌이체), vbank(가상계좌), phone(소액결제)
-            merchant_uid: merchant_uid,   // 주문번호
-            //name: gname,                  // 상품명
-            amount: total,     						// 금액
-            buyer_name: username,         // 주문자
-            //buyer_tel: phone,             // 전화번호 (필수입력)
-            //buyer_addr: addr,    		  // 주소
-            //buyer_postcode: post          // 우편번호
-        }, function (rsp) {
-            if (rsp.success) {
-            	
-                var mesg = '결제가 완료되었습니다.';
-                alert(mesg);
-                
-              
-            } else {
-                var mesg = '결제를 실패하였습니다.';
-                alert(msg);
-            }
-        }
-        
-        );
-			
-		}else{
-			
-			alert("결재할 상품이 존재하지않습니다.");
-			
-		}
-        
+$(document).ready(function() {
+	$("#payment").on("click", function () {
+	
+		kakaoPay();
+     
+	});
 });
+
+function kakaoPay() {
+	
+	let ticket = [];
+	if($("#ticketName").text().trim != ""){
+		ticket.push($("#ticketName").text());
+	}
+	
+	if($("#ticketName2").text().trim != ""){
+		ticket.push($("#ticketName2").text());
+	}
+	
+	let ticketPrice = [];
+	
+	if($("#adult-own-price1").text().trim != ""){
+		ticketPrice.push($("#adult-own-price1").text());
+	}
+	
+	if($("#adult-own-price2").text().trim != ""){
+		ticketPrice.push($("#adult-own-price2").text());
+	}	
+	
+	
+	
+	if(ticket[0] != null)
+	
+	
+	console.log(ticket);
+	console.log(ticketPrice);
+	
+	
+	var today = new Date();
+	var hours = today.getHours(); // 시
+	var minutes = today.getMinutes();  // 분
+	var seconds = today.getSeconds();  // 초
+	var milliseconds = today.getMilliseconds();
+	var makeMerchantUid = hours + minutes + seconds + milliseconds;
+	
+if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확인하기
+	/*
+   //const emoticonName = document.getElementById('title').innerText
+
+   IMP.init("imp37456887"); // 가맹점 식별코드
+   
+   IMP.request_pay({
+       pg: 'kakaopay.TC0ONETIME', // PG사 코드표에서 선택
+       pay_method: 'card', // 결제 방식
+       merchant_uid: "IMP" + makeMerchantUid, // 결제 고유 번호
+       name: , // 제품명
+       amount: 1, // 가격
+       //구매자 정보 ↓
+       buyer_email: '${member.EMAIL}',
+       buyer_name: '${member.USER_NAME}',
+       buyer_tel : '${member.PHONE}',
+       // buyer_addr : '서울특별시 강남구 삼성동',
+       // buyer_postcode : '123-456'
+   }, async function (rsp) { // callback
+       if (rsp.success) { //결제 성공시
+           console.log(rsp);
+		
+           //결제 성공시 프로젝트 DB저장 요청 에이작스
+           
+           if (response.status == 200) { // DB저장 성공시
+               alert('결제 완료!')
+               window.location.reload();
+           } else { // 결제완료 후 DB저장 실패시
+               alert(`error:[${response.status}]\n결제요청이 승인된 경우 관리자에게 문의바랍니다.`);
+               // DB저장 실패시 status에 따라 추가적인 작업 가능성
+           }
+           
+           
+       } else if (rsp.success == false) { // 결제 실패시
+           alert(rsp.error_msg)
+       }
+   
+   
+   });
+   */
+}else{
+		return false;
+}
+
+}
 </script>
 
 

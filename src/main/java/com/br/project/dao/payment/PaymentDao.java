@@ -14,8 +14,8 @@ public class PaymentDao {
 	
 	private final SqlSessionTemplate sqlSessionTemplate;
 	
-	public List<Map<String, Object>> userInformation(int userNo){
-		return sqlSessionTemplate.selectList("paymentMapper.userInformation", userNo);
+	public Map<String, Object> userInformation(int userNo){
+		return sqlSessionTemplate.selectOne("paymentMapper.userInformation", userNo);
 	}
 
 }

@@ -15,7 +15,7 @@ public class PaymentService {
 	
 	private final PaymentDao paymentDao;
 	
-	public List<Map<String, Object>> userInformation(int userNo){
+	public Map<String, Object> userInformation(int userNo){
 		return paymentDao.userInformation(userNo);
 	}
 }

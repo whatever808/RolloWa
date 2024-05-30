@@ -7,6 +7,7 @@
 					USER_ID
 				,	USER_NAME
 			 	, EMAIL
+			 	, PHONE
 		  FROM MEMBER
 		 WHERE USER_NO = #{userNo}
  	</select>
