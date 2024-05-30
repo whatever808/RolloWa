@@ -327,15 +327,6 @@ $(document).ready(function(){
          		</c:forEach> 															               
          </ul>
      </li>
-      <li><span class="deptDiv">인사부</span>
-         <ul>
-            <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
-             	<c:if test="${ teamNames.get(i).DEPT_NAME eq '인사부' }">
-                  	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
-                  </c:if>
-         		</c:forEach> 															               
-         </ul>
-     </li>
       <li><span class="deptDiv">운영부</span>
          <ul>
             <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">

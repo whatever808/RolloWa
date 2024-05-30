@@ -247,7 +247,7 @@
     #cen_bottom_pagging{
     	display: flex;
     	justify-content: center;
-    	margin: 52px
+    	margin: 13px;
     }
     #svg{
       width: 49px;
@@ -924,7 +924,7 @@ $(document).ready(function(){
 </script>
 
 
-<!-- 전체 결재함 (카테고리) -->
+<!----------------------------- 전체 결재함 (카테고리) ------------------------------->
 <script>
 //카테고리체인지이벤트발생시
 $(document).on('change', '.custom-select', function() {
@@ -935,7 +935,7 @@ $(document).on('change', '.custom-select', function() {
 });
 
 //페이징클릭시
-$(document).on('click', '.page-link', function(event) {
+$(document).on('click', '.page-linkc', function(event) {
     event.preventDefault();
     var page = $(this).data('page');
     if (page) {
@@ -1012,13 +1012,13 @@ $(document).on('click', '.page-link', function(event) {
 										var ul = $('.pagination');
 										ul.empty(); 
 					
-										ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="page-linkmse" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
+										ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="page-linkc" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
 					
 										for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-										    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="page-linkmse" data-page="' + p + '">' + p + '</a></li>');
+										    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="page-linkc" data-page="' + p + '">' + p + '</a></li>');
 										}
 					
-										ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="page-linkmse" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
+										ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="page-linkc" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
 							}else {
 								 var row = '<tr>' +
 					       '<td colspan="9">존재하는 게시글이 없습니다.</td>' +
@@ -1045,7 +1045,7 @@ $(document).on('click', '.page-link', function(event) {
 	    }
 	});
 	
-	$(document).on('click', '.page-link', function(event) {
+	$(document).on('click', '.page-links', function(event) {
 	    event.preventDefault();
 	    var page = $(this).data('page');
 	    if (page) {
@@ -1128,13 +1128,13 @@ $(document).on('click', '.page-link', function(event) {
 										var ul = $('.pagination');
 										ul.empty(); 
 					
-										ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="page-linkms" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
+										ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="page-links" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
 					
 										for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-										    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="page-linkms" data-page="' + p + '">' + p + '</a></li>');
+										    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="page-links" data-page="' + p + '">' + p + '</a></li>');
 										}
 					
-										ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="page-linkms" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
+										ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="page-links" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
 							}else {
 								 var row = '<tr>' +
 					       '<td colspan="9">존재하는 게시글이 없습니다.</td>' +
@@ -1200,8 +1200,7 @@ $(document).on('click', '.page-link', function(event) {
 											         '<option value="긴급" ' + (status == '긴급' ? 'selected': '') + '>긴급</option>' + 
 											         '</select>' + 
 											         '<select name="conditions" id="select7" class="custom-select7">' + 
-											                '<option value="전체" ' + (conditions == '전체' ? 'selected': '') + '>전체</option>' + 
-											                '<option value="T" ' + (conditions == 'T' ? 'selected': '') + '>퇴직신청서</option>' + 
+											                '<option value="전체" ' + (conditions == '전체' ? 'selected': '') + '>전체</option>' +  
 											                '<option value="B" ' + (conditions == 'B' ? 'selected': '') + '>비품신청서</option>' + 
 											                '<option value="M" ' + (conditions == 'M' ? 'selected': '') + '>매출보고서</option>' + 
 											                '<option value="J" ' + (conditions == 'J' ? 'selected': '') + '>지출결의서</option>' + 
@@ -1350,7 +1349,6 @@ $(document).on('click', '.page-link', function(event) {
 											         '</select>' + 
 											         '<select name="conditions" id="select7" class="custom-select7">' + 
 											                '<option value="전체"' + (conditions === '전체' ? ' selected' : '') + '>전체</option>' + 
-											                '<option value="T"' + (conditions === 'T' ? ' selected' : '') + '>퇴직신청서</option>' + 
 											                '<option value="B"' + (conditions === 'B' ? ' selected' : '') + '>비품신청서</option>' + 
 											                '<option value="M"' + (conditions === 'M' ? ' selected' : '') + '>매출보고서</option>' + 
 											                '<option value="J"' + (conditions === 'J' ? ' selected' : '') + '>지출결의서</option>' + 
@@ -1506,8 +1504,7 @@ $(document).on('click', '.page-link', function(event) {
 											         '<option value="긴급">긴급</option>' + 
 											         '</select>' + 
 											         '<select name="conditions" id="select7" class="custom-select7">' + 
-											                '<option value="전체">전체</option>' + 
-											                '<option value="T">퇴직신청서</option>' + 
+											                '<option value="전체">전체</option>' +  
 											                '<option value="B">비품신청서</option>' + 
 											                '<option value="M">매출보고서</option>' + 
 											                '<option value="J">지출결의서</option>' + 
@@ -1615,6 +1612,8 @@ $(document).on('click', '.page-link', function(event) {
 		
 			 $(".highlight-box").css("background-color", "#feefad");
 		   $(".highlight-box").not(this).css("background-color", "#ffffff");
+		   $(".custom-selectall").val("전체");
+			 $(".custom-selectall2").val("기안자");
         loadAllTableData(1);
 	});
 	
@@ -1643,7 +1642,7 @@ $(document).on('click', '.page-link', function(event) {
 
                var tbody = $('#tStatus');
                tbody.empty();
-               /*
+               
                var search = $(".selectContent");
                search.empty();
                
@@ -1654,8 +1653,7 @@ $(document).on('click', '.page-link', function(event) {
 											         '<option value="긴급">긴급</option>' + 
 											         '</select>' + 
 											         '<select name="conditions" id="selects" class="custom-select">' + 
-											                '<option value="전체">전체</option>' + 
-											                '<option value="T">퇴직신청서</option>' + 
+											                '<option value="전체">전체</option>' +  
 											                '<option value="B">비품신청서</option>' + 
 											                '<option value="M">매출보고서</option>' + 
 											                '<option value="J">지출결의서</option>' + 
@@ -1675,7 +1673,7 @@ $(document).on('click', '.page-link', function(event) {
 									
 											
 											$('.selectContent').append(formHTML);
-               */
+               
                if(response.list.length !== 0) {
             	   
                    response.list.forEach(function(item) {
@@ -1755,6 +1753,8 @@ $(document).on('click', '.page-link', function(event) {
 	$(document).on('click', '#UserAllList', function() {
 			 $(".highlight-box").css("background-color", "#feefad");
 		   $(".highlight-box").not(this).css("background-color", "#ffffff");
+		   $(".custom-selectall").val("전체");
+			 $(".custom-selectall2").val("기안자");
         loadAllUserTableData(1);
 	});
 	
@@ -1794,7 +1794,6 @@ $(document).on('click', '.page-link', function(event) {
 											         '</select>' + 
 											         '<select name="conditions" id="selectall" class="custom-selectall">' + 
 											                '<option value="전체">전체</option>' + 
-											                '<option value="T">퇴직신청서</option>' + 
 											                '<option value="B">비품신청서</option>' + 
 											                '<option value="M">매출보고서</option>' + 
 											                '<option value="J">지출결의서</option>' + 
@@ -1936,19 +1935,18 @@ $(document).on('click', '.page-link', function(event) {
                
                var formHTML = '<div><div>' +
 											         '<select name="status" id="statusSelectall" class="custom-selectall">' + 
-											         '<option value="전체"' + (status === '전체' ? ' selected' : '') + '>전체</option>' + 
-											         '<option value="보통"' + (status === '보통' ? ' selected' : '') + '>보통</option>' +
-											         '<option value="긴급"' + (status === '긴급' ? ' selected' : '') + '>긴급</option>' + 
+											         '<option value="전체"' + (status === '전체' ? 'selected' : '') + '>전체</option>' + 
+											         '<option value="보통"' + (status === '보통' ? 'selected' : '') + '>보통</option>' +
+											         '<option value="긴급"' + (status === '긴급' ? 'selected' : '') + '>긴급</option>' + 
 											         '</select>' + 
-											         '<select name="conditions" id="selectsall" class="custom-selectall">' + 
-											                '<option value="전체"' + (conditions === '전체' ? ' selected' : '') + '>전체</option>' + 
-											                '<option value="T"' + (conditions === 'T' ? ' selected' : '') + '>퇴직신청서</option>' + 
-											                '<option value="B"' + (conditions === 'B' ? ' selected' : '') + '>비품신청서</option>' + 
-											                '<option value="M"' + (conditions === 'M' ? ' selected' : '') + '>매출보고서</option>' + 
-											                '<option value="J"' + (conditions === 'J' ? ' selected' : '') + '>지출결의서</option>' + 
-											                '<option value="G"' + (conditions === 'G' ? ' selected' : '') + '>기안서</option>' + 
-											                '<option value="H"' + (conditions === 'H' ? ' selected' : '') + '>휴직신청서</option>' + 
-											                '<option value="V"' + (conditions === 'V' ? ' selected' : '') + '>휴가신청서</option>' + 
+											         '<select name="conditions" id="selectall" class="custom-selectall">' + 
+											                '<option value="전체"' + (conditions === '전체' ? 'selected' : '') + '>전체</option>' + 
+											                '<option value="B"' + (conditions === 'B' ? 'selected' : '') + '>비품신청서</option>' + 
+											                '<option value="M"' + (conditions === 'M' ? 'selected' : '') + '>매출보고서</option>' + 
+											                '<option value="J"' + (conditions === 'J' ? 'selected' : '') + '>지출결의서</option>' + 
+											                '<option value="G"' + (conditions === 'G' ? 'selected' : '') + '>기안서</option>' + 
+											                '<option value="H"' + (conditions === 'H' ? 'selected' : '') + '>휴직신청서</option>' + 
+											                '<option value="V"' + (conditions === 'V' ? 'selected' : '') + '>휴가신청서</option>' + 
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -2098,7 +2096,6 @@ $(document).on('click', '.page-link', function(event) {
 										         '</select>' + 
 										         '<select name="conditions" id="selectall" class="custom-selectall">' + 
 										                '<option value="전체">전체</option>' + 
-										                '<option value="T">퇴직신청서</option>' + 
 										                '<option value="B">비품신청서</option>' + 
 										                '<option value="M">매출보고서</option>' + 
 										                '<option value="J">지출결의서</option>' + 
@@ -2203,6 +2200,8 @@ $(document).on('click', '.page-link', function(event) {
   <script> 
 	
 	$(document).on('click', '#UserApprovalList', function() {
+				$(".custom-selectall").val("전체");
+				$(".custom-selectall2").val("기안자");
 		 		$(".highlight-box").css("background-color", "#feefad");
 		  	$(".highlight-box").not(this).css("background-color", "#ffffff");
         loadUserApprovalTableData(1);
@@ -2244,7 +2243,6 @@ $(document).on('click', '.page-link', function(event) {
 											         '</select>' + 
 											         '<select name="conditions" id="selectu" class="custom-selectu">' + 
 											                '<option value="전체">전체</option>' + 
-											                '<option value="T">퇴직신청서</option>' + 
 											                '<option value="B">비품신청서</option>' + 
 											                '<option value="M">매출보고서</option>' + 
 											                '<option value="J">지출결의서</option>' + 
@@ -2395,7 +2393,6 @@ $(document).on('click', '.page-link', function(event) {
 											         '</select>' + 
 											         '<select name="conditions" id="selectu" class="custom-selectu">' + 
 											                '<option value="전체" ' + (conditions == '전체' ? 'selected': '') +'>전체</option>' + 
-											                '<option value="T" ' + (conditions == 'T' ? 'selected': '') +'>퇴직신청서</option>' + 
 											                '<option value="B" ' + (conditions == 'B' ? 'selected': '') +'>비품신청서</option>' + 
 											                '<option value="M" ' + (conditions == 'M' ? 'selected': '') +'>매출보고서</option>' + 
 											                '<option value="J" ' + (conditions == 'J' ? 'selected': '') +'>지출결의서</option>' + 
@@ -2545,8 +2542,7 @@ $(document).on('click', '.page-link', function(event) {
 											         '<option value="긴급">긴급</option>' + 
 											         '</select>' + 
 											         '<select name="conditions" id="selectu" class="custom-selectu">' + 
-											                '<option value="전체">전체</option>' + 
-											                '<option value="T">퇴직신청서</option>' + 
+											                '<option value="전체">전체</option>' +  
 											                '<option value="B">비품신청서</option>' + 
 											                '<option value="M">매출보고서</option>' + 
 											                '<option value="J">지출결의서</option>' + 
@@ -2653,6 +2649,8 @@ $(document).on('click', '.page-link', function(event) {
 	$(document).on('click', '#noApprovalSignList', function() {
 		 		$(".highlight-box").css("background-color", "#feefad");
 		  	$(".highlight-box").not(this).css("background-color", "#ffffff");
+		  	$(".custom-selectall").val("전체");
+				$(".custom-selectall2").val("기안자");
         loadnoApprovalSignTableData(1);
 	});
 	
@@ -2690,7 +2688,6 @@ $(document).on('click', '.page-link', function(event) {
 											         '</select>' + 
 											         '<select name="conditions" id="selectn" class="custom-selectn">' + 
 											                '<option value="전체">전체</option>' + 
-											                '<option value="T">퇴직신청서</option>' + 
 											                '<option value="B">비품신청서</option>' + 
 											                '<option value="M">매출보고서</option>' + 
 											                '<option value="J">지출결의서</option>' + 
@@ -2842,7 +2839,6 @@ $(document).on('click', '.page-link', function(event) {
 											         '</select>' + 
 											         '<select name="conditions" id="selectn" class="custom-selectn">' + 
 											                '<option value="전체" ' + (conditions == '전체' ? 'selected': '') +'>전체</option>' + 
-											                '<option value="T" ' + (conditions == 'T' ? 'selected': '') +'>퇴직신청서</option>' + 
 											                '<option value="B" ' + (conditions == 'B' ? 'selected': '') +'>비품신청서</option>' + 
 											                '<option value="M" ' + (conditions == 'M' ? 'selected': '') +'>매출보고서</option>' + 
 											                '<option value="J" ' + (conditions == 'J' ? 'selected': '') +'>지출결의서</option>' + 
@@ -2993,8 +2989,7 @@ $(document).on('click', '.page-link', function(event) {
 											         '<option value="긴급">긴급</option>' + 
 											         '</select>' + 
 											         '<select name="conditions" id="selectn" class="custom-selectn">' + 
-											                '<option value="전체">전체</option>' + 
-											                '<option value="T">퇴직신청서</option>' + 
+											                '<option value="전체">전체</option>' +  
 											                '<option value="B">비품신청서</option>' + 
 											                '<option value="M">매출보고서</option>' + 
 											                '<option value="J">지출결의서</option>' + 
@@ -3098,7 +3093,7 @@ $(document).on('click', '.page-link', function(event) {
   
 		
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
-		<main style="display: flex;">
+		<main style="display: flex; overflow: hidden;">
 	        <!-- content 추가 -->
 	        <div class="content p-4">
 	          <!-- 프로필 영역 -->
@@ -3210,7 +3205,6 @@ $(document).on('click', '.page-link', function(event) {
 																			</select>
 																	    <select name="conditions" id="selects" class="custom-select">
                                          <option value="전체">전체</option>
-                                         <option value="T">퇴직신청서</option>
                                          <option value="B">비품신청서</option>
                                          <option value="M">매출보고서</option>
                                          <option value="J">지출결의서</option>

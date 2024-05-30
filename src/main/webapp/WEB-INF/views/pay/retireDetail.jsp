@@ -352,7 +352,7 @@ $(document).on("click", "#rejectBtn", function(){
     <script>
     $(document).ready(function() {
         $("#deldo").on("click", function(){
-            var isDeletable = "${ list.get(0).DOCUMENT_STATUS == 'D' && userNo == list.get(0).PAYMENT_WRITER_NO }";
+            var isDeletable = "${ not empty list && (list.get(0).DOCUMENT_STATUS == 'N' || list.get(0).DOCUMENT_STATUS == 'D') && userNo == list.get(0).PAYMENT_WRITER_NO }";
             if(isDeletable == 'true') {
             	
                 if(confirm("정말로 삭제하시겠습니까?")) {
