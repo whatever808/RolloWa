@@ -291,8 +291,8 @@ public class MemberController {
 	/* ======================================= "가림" 구역 ======================================= */
 	@RequestMapping("/memInfo.do")
 	@ResponseBody
-	public MemberDto selectMemInfo(HttpSession session){
-		return memberService.selectMember((MemberDto)(session.getAttribute("loginMember")));
+	public Map<String, Object> selectMemInfo(HttpSession session){
+		return memberService.selectMemberForMainPage((MemberDto)(session.getAttribute("loginMember")));
 	}
 	/* ======================================= "가림" 구역 ======================================= */
 	
