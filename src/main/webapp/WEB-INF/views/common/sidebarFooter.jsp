@@ -121,7 +121,7 @@
         // 채팅방 열기 버튼
         $(".msg_open_btn").on("click", function () {
         	// 스타일 조정
-        	btnControl(".msg_open_btn", ".msg_close_btn", 1);
+        	btnControl(".msg_open_btn", ".msg_close_btn", 1, 100);
           
           // 페이지 새로고침 시에만 채팅방 목록 조회
           if (subRoomNo == -1) {
@@ -139,7 +139,7 @@
         // 채팅방 닫기 버튼
         $(".msg_close_btn").on("click", function () {
         	// 스타일 조정
-        	btnControl(".msg_close_btn", ".msg_open_btn", 0);
+        	btnControl(".msg_close_btn", ".msg_open_btn", 0, -1);
         	
         	// 채팅방 닫았을 경우 내가 열어놨던 채팅방의 채팅방 나간 시간 update
         	updateOutDate(subRoomNo);
@@ -708,10 +708,11 @@
 		}
 		
 		// 메신저 버튼 클릭 시 스타일 조정
-    function btnControl(none, block, style) {
+    function btnControl(none, block, opacity, z) {
     	$(block).css("display", "block");
       $(none).css("display", "none");
-      $(".msgbox").css("opacity", style);
+      $(".msgbox").css("opacity", opacity);
+      $(".msgbox").css("z-index", z);
     }
     
 </script>
