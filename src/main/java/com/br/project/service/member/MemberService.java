@@ -95,6 +95,10 @@ public class MemberService {
 	public List<HashMap<String, Object>> selectMemberListSearch(Map<String, Object> paramMap) {
 		return memberDao.selectMemberListSearch(paramMap);
 	}
+	// 사용자 정보 수정
+	public int updateMemberAttendance(Map<String, Object> paramMap) {
+		return memberDao.updateMemberAttendance(paramMap);
+	}
 	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 	
 	

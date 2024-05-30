@@ -88,13 +88,14 @@
 	    
 		<!-- ------------ -->
 	
-		<form action="${ contextPath }/attendance/signup.do" method="post" id="signup_form">
+		<form id="signup_form" method="post">
 		    <div class="div_form form-group">
 		        <table class="table table-bordered">
 				
 					<!-- 프로필 사진 영역 -->
 		            <tr>
 		                <th>
+		                	<input type="hidden" id="userNo" value="${ m.userNo }">
 		                    <label for="userId"><h5>프로필 사진</h5></label>
 		                </th>
 		                <td class="td_common">
@@ -178,6 +179,18 @@
 							</h5>
 	                	</td>
 		            </tr>
+		            
+		            <!-- 이메일 입력 -->
+		            <tr>
+		                <th>
+		                    <label for="department"><h5>이메일</h5></label>
+		                </th>
+		                <td class="td_common">
+		                    <h5>
+								<input type="text" placeholder="이메일 입력" value="${ m.email }">
+							</h5>
+						<td>
+		            </tr>
 		
 		            <!-- 부서 입력 -->
 		            <tr>
@@ -185,8 +198,7 @@
 		                    <label for="department"><h5>부서명</h5></label>
 		                </td>
 	                    <td>
-	                        <select name="department" id="department" class="form-select">
-	                    	</select>
+	                        <select name="department" id="department" class="form-select">${ m.department }</select>
 	                	</td>
 		            </tr>
 		            
@@ -219,59 +231,82 @@
 		    			let departmentSelect = $("#department");
 		    			let teamSelect = $("#teamCode");
 		    			let positionSelect = $("#positionCode");
-		         			
+		    			
+		    			let selectedDepartment = "${ m.department }";
+		    		    let selectedTeam = "${ m.team }";
+		    		    let selectedPosition = "${ m.position }";
+		    		    
+		    		    
 		    			departmentSelect.empty();
 		    			departmentSelect.append($('<option>', {
 		    				value: "",
 		    				text: "부서 선택"
 		    			}));
-		         			
+		    			
 		    			$.ajax({
-		    				url:"${contextPath}/attendance/department.do",
-		    				type:"GET",
-		    				success: function(data){
-		    					$.each(data, function(index, attendanceDto) {
-		    						$.each(attendanceDto.groupList, function(index, groupDto) {
-		    							departmentSelect.append($('<option>', {
-		    								value: groupDto.codeName,
-		    								text: groupDto.codeName
-		    							}));
-		    						});
-		    					});
-		    				}, error: function(){
-		    					console.log("ajax 부서 조회 실패 입니다.")
-		    				}
-		    			});
+		    		        url: "${contextPath}/attendance/department.do",
+		    		        type: "GET",
+		    		        success: function(data) {
+		    		            $.each(data, function(index, attendanceDto) {
+		    		                $.each(attendanceDto.groupList, function(index, groupDto) {
+		    		                    let option = $('<option>', {
+		    		                        value: groupDto.codeName,
+		    		                        text: groupDto.codeName
+		    		                    });
+		    		                    if (groupDto.codeName == selectedDepartment) {
+		    		                        option.attr('selected', true);
+		    		                    }
+		    		                    departmentSelect.append(option);
+		    		                });
+		    		            });
+		    		         	// 부서가 선택되었을 때 팀 목록을 불러옵니다.
+		    	                departmentSelect.trigger('change');
+		    		        },
+		    		        error: function() {
+		    		            console.log("ajax 부서 조회 실패 입니다.");
+		    		        }
+		    		    });
 		    			departmentSelect.change(function() {
-		    				// 선택한 부서 콘솔 출력
-		    				let selectedDepartment = departmentSelect.val();
-		    				console.log("선택한 부서 : ", selectedDepartment);
-		    	       	    
-		    				// 팀 선택 옵션 초기화
-		    				teamSelect.empty();
-		    				teamSelect.append($('<option>', {
-		    					value: "",
-		    					text: "팀 선택"
-		    				}));
-		    				
-		    				$.ajax({
-		    					url:"${contextPath}/attendance/team.do?selectedDepartment=" + selectedDepartment,
-		    					type:"GET",
-		    					success: function(data){
-		    						$.each(data, function(index, attendanceDto) {
-		    							$.each(attendanceDto.groupList, function(index, groupDto) {
-		    								teamSelect.append($('<option>', {
-		    									value: groupDto.codeName,
-		    									text: groupDto.codeName
-		    								}));
-		    							});
-		    						});
-		    					}, error: function(){
-		    						console.log("ajax 팀 조회 실패 입니다.")
-		    					}
-		    				});
+		    			    // 선택한 부서 콘솔 출력
+		    			    let selectedDepartment = departmentSelect.val();
+		    			    console.log("선택한 부서 : ", selectedDepartment);
+
+		    			    // 팀 선택 옵션 초기화
+		    			    teamSelect.empty();
+		    			    teamSelect.append($('<option>', {
+		    			        value: "",
+		    			        text: "팀 선택"
+		    			    }));
+
+		    			    $.ajax({
+		    			        url: "${contextPath}/attendance/team.do",
+		    			        type: "GET",
+		    			        data: { selectedDepartment: selectedDepartment },
+		    			        success: function(data) {
+		    			            $.each(data, function(index, attendanceDto) {
+		    			                $.each(attendanceDto.groupList, function(index, groupDto) {
+		    			                    let option = $('<option>', {
+		    			                        value: groupDto.codeName,
+		    			                        text: groupDto.codeName
+		    			                    });
+		    			                    teamSelect.append(option);
+		    			                });
+		    			            });
+		    			            // 선택된 팀을 설정합니다.
+		    			            let initialTeamExists = teamSelect.find('option').filter(function() {
+						                return $(this).val() == selectedTeam;
+						            }).length > 0;
+						
+						            if (initialTeamExists) {
+						                teamSelect.val(selectedTeam);
+						            }
+		    			        },
+		    			        error: function() {
+		    			            console.log("ajax 팀 조회 실패 입니다.");
+		    			        }
+		    			    });
 		    			});
-		           	
+
 		    			teamSelect.change(function(){
 		    	       	 	// 선택한 팀 콘솔 출력
 		    	       	    let selectedTeam = teamSelect.val();
@@ -286,26 +321,30 @@
 		    			}));
 		          	    
 		    			$.ajax({
-		    				url:"${contextPath}/attendance/position.do",
-		    				type:"GET",
-		    				success: function(data){
-		    					$.each(data, function(index, attendanceDto) {
-		    						$.each(attendanceDto.groupList, function(index, groupDto) {
-		    							positionSelect.append($('<option>', {
-		    								value: groupDto.codeName,
-		    								text: groupDto.codeName
-		    							}));
-		    						});
-		    					});
-		    				}, error: function(){
-		    					console.log("ajax 직급 조회 실패 입니다.")
-		    				}
-		    			});
-		          	    positionSelect.change(function(){
-		    	       	 	// 선택한 팀 콘솔 출력
-		    	       	    let selectedPosition = positionSelect.val();
-		    	       	    console.log("선택한 직급 : ", selectedPosition);
-		          	    })
+		    		        url: "${contextPath}/attendance/position.do",
+		    		        type: "GET",
+		    		        success: function(data) {
+		    		            $.each(data, function(index, attendanceDto) {
+		    		                $.each(attendanceDto.groupList, function(index, groupDto) {
+		    		                    let option = $('<option>', {
+		    		                        value: groupDto.codeName,
+		    		                        text: groupDto.codeName
+		    		                    });
+		    		                    if (groupDto.codeName == selectedPosition) {
+		    		                        option.attr('selected', true);
+		    		                    }
+		    		                    positionSelect.append(option);
+		    		                });
+		    		            });
+		    		        },
+		    		        error: function() {
+		    		            console.log("ajax 직급 조회 실패 입니다.");
+		    		        }
+		    		    });
+		    			positionSelect.change(function() {
+		    		        let selectedPosition = positionSelect.val();
+		    		        console.log("선택한 직급 : ", selectedPosition);
+		    		    });
 		    		});
 		            </script>
 		            
@@ -322,18 +361,18 @@
 		            </tr>
 		            
 		            <script>
-					    $(document).ready(function() {
-					        // 관리자 설정 체크박스 변경 이벤트
-					        $("#authLevel").change(function() {
-					            if ($(this).is(":checked")) {
-					                // 체크된 경우
-					                $("#authLevel").val(2); // 관리자로 설정 (2)
-					            } else {
-					                // 체크 해제된 경우
-					                $("#authLevel").val(3); // 일반 사용자로 설정 (3)
-					            }
-					        });
-					    });
+				    $(document).ready(function() {
+				        // 관리자 설정 체크박스 변경 이벤트
+				        $("#authLevel").change(function() {
+				            if ($(this).is(":checked")) {
+				                // 체크된 경우
+				                $("#authLevel").val(2); // 관리자로 설정 (2)
+				            } else {
+				                // 체크 해제된 경우
+				                $("#authLevel").val(3); // 일반 사용자로 설정 (3)
+				            }
+				        });
+				    });
 					</script>
 		            
 		
@@ -342,9 +381,55 @@
 		    
 		    <div class="btn_center">
 		        <button type="reset" class="btn btn-outline-primary" onclick="location.href='${contextPath}/attendance/detailList.do'"><h6>뒤로가기</h6></button>
-		        <button type="submit" class="btn btn-primary"><h6>구성원 수정</h6></button>
+		        <button type="submit" class="btn btn-danger"><h6>회원 탈퇴</h6></button>
+		        <button type="submit" class="btn btn-primary" onclick="updateMember();"><h6>구성원 수정</h6></button>
 		    </div>
 		</form>
+	
+		<!-- 회원 정보 수정하기 -->
+		<script>
+		function updateMember() {
+			let userNo = $("#userNo").val();
+			/*
+			let modifyUserNo = "${ loginMember.userNo }";
+			let postCode = $("#postCode");
+			let address = $("#address");
+			let addressDetail = $("#addressDetail");
+			let email = $("#email");
+			let department = $("#department");
+			let team = $("#teamCode");
+			let position = $("#positionCode");
+			let authLevel =  $("#authLevel");
+			*/
+			$.ajax({
+		        url: "${contextPath}/attendance/updateMemberAttendance.do",
+		        type: "POST",
+		        data: {
+		        	userNo: userNo/*,
+		        	
+		        	modifyUserNo: modifyUserNo,
+		        	postCode: postCode,
+		        	address: address,
+		        	addressDetail: addressDetail,
+		        	email: email,
+		        	department: department,
+		        	team: team,
+		        	position: position,
+		        	authLevel: authLevel
+		        	*/
+		        },
+		        success: function(result) {
+		            console.log("회원 정보수정 통신 성공!!!");
+		            alert("회원 정보수정 통신 성공!!!");
+		        },
+		        error: function() {
+		            console.log("회원 정보수정 통신 실패!!!");
+		            alert("회원 정보수정 통신 실패!!!");
+		        }
+		    });
+						
+		}
+		</script>
 	
 	
 		<!-- ------------ -->

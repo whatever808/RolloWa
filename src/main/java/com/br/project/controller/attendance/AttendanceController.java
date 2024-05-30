@@ -322,6 +322,46 @@ public class AttendanceController {
 		  
 		  return mv;
 	}
+	// 2.3.3 구성원 정보 수정 ---------------------------------------------------
+	@RequestMapping("/updateMemberAttendance.do")
+	public int updateMemberAttendance(@RequestParam("userNo") int userNo/*,
+			
+			@RequestParam("userName") String userName,
+			@RequestParam("phone") String phone,
+			@RequestParam("email") String email,
+			@RequestParam("postCode") String postCode,
+			@RequestParam("address") String address,
+			@RequestParam("detailAddress") String detailAddress,
+			@RequestParam("department") String department,
+			@RequestParam("team") String team,
+			@RequestParam("position") String position,
+			@RequestParam("authLevel") int authLevel
+			*/) {
+		
+		log.debug("사용자 번호11111 :  {}", userNo);
+		/*
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("userNo", userNo);
+		paramMap.put("userName", userName);
+		paramMap.put("phone", phone);
+		paramMap.put("email", email);
+		paramMap.put("postCode", postCode);
+		paramMap.put("address", address);
+		paramMap.put("detailAddress", detailAddress);
+		paramMap.put("totalAddress", '('+ postCode +')' + ' ' + address + ' ' + detailAddress);
+		paramMap.put("department", department);
+		paramMap.put("team", team);
+		paramMap.put("position", position);
+		paramMap.put("authLevel", authLevel);
+		
+		log.debug("paramMap 값 :  {} ", paramMap);
+		 */
+		
+		//int result = memberService.updateMemberAttendance(paramMap);
+		int result = 0;
+		
+		return result;
+	}
 	
 	// 2.4 구성원 추가 ----------------------------------------------------
 	@GetMapping("/signup.page")

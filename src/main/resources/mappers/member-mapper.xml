@@ -337,6 +337,24 @@
 		 WHERE USER_NO = #{ userNo }
 	</update>
 	
+	<!-- 사용자 정보 수정하기 -->
+	<update id="updateMemberAttendance">
+		UPDATE
+			MEMBER
+		SET
+			USER_NAME = #{ USERNAME }
+			, PHONE = #{ PHONE }
+			, POST_CODE = #{ POSTNUMBER }
+			, ADDRESS = #{ ADDRESS }
+			, DETAIL_ADDRESS = #{ DETAILADDRESS }
+			, TOTAL_ADDRESS = #{ TOTALADDRESS }
+			, EMAIL = #{ EMAIL }
+			, MODIFY_DATE = SYSDATE
+			, MODIFY_USER_NO = #{ USERNO }
+		WHERE
+			USER_NO = #{ USERNO }
+	</update>
+	
  	<!-- ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆-->
  
  

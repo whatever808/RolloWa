@@ -310,17 +310,16 @@
 							<tr class="tr_1"
 								onclick="document.getElementById('form_${m.userNo}').submit()">
 								<input type="hidden" name="userNo" value="${m.userNo}">
-								<td><c:choose>
+								<td>
+									<c:choose>
 										<c:when test="${ not empty m.profileURL }">
-											<img src="${ m.profileURL }" class="profile_img"
-												onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
+											<img src="${ m.profileURL }" class="profile_img">
 										</c:when>
 										<c:otherwise>
-											<img
-												src="${ contextPath }/resources/images/defaultProfile.png"
-												class="profile_img">
+											<img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">
 										</c:otherwise>
-									</c:choose></td>
+									</c:choose>
+								</td>
 								<td>${ m.userName }</td>
 								<td>${ m.userId }</td>
 								<td>${ m.department }</td>

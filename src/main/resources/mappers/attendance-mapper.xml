@@ -176,12 +176,6 @@
 		)
 	</insert>
 
-	<!-- 급여 상세 조회 -->
-	<!-- <select id="selectAccountDetail" resultMap="attendanceList"> 
-	 삭제예정
-	</select>
- -->
-
 	<!-- 출결 상태 조회 -->
 	<select id="selectStatus" resultMap="attendanceList">
 		SELECT USER_NO
@@ -242,6 +236,7 @@
 	</select>
 
 	<!-- 근태관리 정보조회 -->
+	<!-- 
 	<select id="selectMemberAttend" parameterType="hashmap"
 		resultType="map">
 		select
@@ -274,6 +269,7 @@
 		from member
 		where user_no = #{userNo}
   </select>
+   -->
 	
 	<!-- 당일 퇴근/조퇴 미처리 사원 퇴근처리 -->
 	<update id="updateMemberWorkOffTime">
