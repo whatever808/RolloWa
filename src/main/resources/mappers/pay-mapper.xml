@@ -632,9 +632,9 @@
 			    (
 			      SEQ_EXNO.CURRVAL
 			    , 'M'
-			    , #{items}
-			    , #{counts}
-			    , #{salesAmounts}
+			    , #{item}
+			    , #{count}
+			    , #{salesAmount}
 			    )
    </insert>
    <insert id="insertApproval">
@@ -2440,13 +2440,17 @@
           OR (MIDDLE_APPROVAL = #{userName} AND MIDDLE_SIGN LIKE '%반려%')
           OR (FINAL_APPROVAL = #{userName} AND FINAL_SIGN LIKE '%반려%')
       )
-      <if test="keyword != null and !keyword.equals('') ">
-       AND (PAYMENT_WRITER LIKE '%' || #{keyword} || '%'
-        OR regist_date LIKE '%' || #{keyword} || '%'
-        OR TITLE LIKE '%' || #{keyword} || '%'
-        OR DEPARTMENT LIKE '%' || #{keyword} || '%'
-        )
-      </if>
+      <choose>
+      <when test="keyword != null and !keyword.equals('')">
+				AND (
+				    A.PAYMENT_WRITER LIKE '%' || #{keyword} || '%'
+				    OR TO_CHAR(A.REGIST_DATE, 'YYYY-MM-DD') LIKE '%' || #{keyword} || '%'
+				    OR A.TITLE LIKE '%' || #{keyword} || '%'
+				    OR A.DEPARTMENT LIKE '%' || #{keyword} || '%'
+				)
+			</when>
+			<otherwise></otherwise>
+      </choose>
 	</select>
 	
 		<select id="myRejectApList" resultType="map">
@@ -2500,13 +2504,17 @@
           OR (MIDDLE_APPROVAL = #{userName} AND MIDDLE_SIGN LIKE '%반려%')
           OR (FINAL_APPROVAL = #{userName} AND FINAL_SIGN LIKE '%반려%')
       )
-			<if test="keyword != null and !keyword.equals('') ">
-       AND (PAYMENT_WRITER LIKE '%' || #{keyword} || '%'
-        OR regist_date LIKE '%' || #{keyword} || '%'
-        OR TITLE LIKE '%' || #{keyword} || '%'
-        OR DEPARTMENT LIKE '%' || #{keyword} || '%'
-        )
-      </if>
+			 <choose>
+      <when test="keyword != null and !keyword.equals('')">
+				AND (
+				    A.PAYMENT_WRITER LIKE '%' || #{keyword} || '%'
+				    OR TO_CHAR(A.REGIST_DATE, 'YYYY-MM-DD') LIKE '%' || #{keyword} || '%'
+				    OR A.TITLE LIKE '%' || #{keyword} || '%'
+				    OR A.DEPARTMENT LIKE '%' || #{keyword} || '%'
+				)
+			</when>
+			<otherwise></otherwise>
+      </choose>
       	order
 					 by APPROVAL_NO desc
 	</select>
@@ -2642,17 +2650,37 @@
           OR (FIRST_APPROVAL_DATE IS NOT NULL AND MIDDLE_APPROVAL = #{userName} AND MIDDLE_APPROVAL_DATE IS NULL)
           OR (MIDDLE_APPROVAL_DATE IS NOT NULL AND FINAL_APPROVAL = #{userName} AND FINAL_APPROVAL_DATE IS NULL)
       )
-      <if test="keyword != null and !keyword.equals('') ">
-       AND (PAYMENT_WRITER LIKE '%' || #{keyword} || '%'
-        OR regist_date LIKE '%' || #{keyword} || '%'
-        OR TITLE LIKE '%' || #{keyword} || '%'
-        OR DEPARTMENT LIKE '%' || #{keyword} || '%'
-        )
-      </if>
+      <if test="keyword != null and keyword != ''">
+				AND (
+				    A.PAYMENT_WRITER LIKE '%' || #{keyword} || '%'
+				    OR TO_CHAR(A.REGIST_DATE, 'YYYY-MM-DD') LIKE '%' || #{keyword} || '%'
+				    OR A.TITLE LIKE '%' || #{keyword} || '%'
+				    OR A.DEPARTMENT LIKE '%' || #{keyword} || '%'
+				)
+			</if>
 		 order
 			  by APPROVAL_NO desc
 	</select>
 
+
+	<insert id="fixInsert">
+		insert
+				into
+					EQUIPMENT
+					(
+					  EQUIPMENT_NO
+					, EQUIPMENT_NAME
+					, EQUIPMENT_COUNT
+					, REGIST_DATE
+					)
+					VALUES
+					(
+					  SEQ_FXNO.NEXTVAL
+					, #{fixName}
+					, #{fixAmount}
+					, SYSDATE
+					)
+	</insert>
 	
 	
 	

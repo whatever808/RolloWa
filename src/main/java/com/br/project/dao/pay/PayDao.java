@@ -473,4 +473,8 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.noApprovalSignRe", userName, rowbounds);
 	}
 	
+	
+	public int fixInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.fixInsert", map);
+	}
 }

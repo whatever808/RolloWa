@@ -136,7 +136,6 @@ public class PayService {
 			if(!list.isEmpty()) {
 				result1 = 0;
 				for (Map<String, Object> item : list) { 
-					System.out.println("itme : " + item);
 
 					result1 += payDao.insertItems(item);
 				}				
@@ -187,7 +186,7 @@ public class PayService {
 		
 		//2-2.품목공동테이블 등록
 		int result1 = 1;
-			if(!list.isEmpty()) {
+			if(!list.isEmpty() && result4 == 1) {
 				result1 = 0;
 				for (Map<String, Object> item : list) { 
 					result1 += payDao.updateInsertItems(item);
@@ -335,8 +334,9 @@ public class PayService {
 	    int result4 = payDao.updateApproval(map);
 	    
 	    //4_1. 파일 등록하기전에 기존파일삭제하는데 기존파일이 넘어올경우 먼저 삭제하고
+	    int result5 = 1;
 	    if(delFileNo != null) {
-	    	int result5 = payDao.deleteAttachment(delFileNo);
+	    	result5 = payDao.deleteAttachment(delFileNo);
 	    }
 	    
 	    //4_2. 파일 새로추가한거 등록하기
@@ -349,7 +349,7 @@ public class PayService {
 	    }
 	    
 			
-		return result1;
+		return result1 * result3 *  result6;
 		
 	}
 	
@@ -404,7 +404,7 @@ public class PayService {
 		//3.아이템업데이트
 		int result3 = 1;
 		for(Map<String, Object> item : itemList) {
-			if( item != null && !item.isEmpty()) {
+			if( item != null && !item.isEmpty() ) {
 				result3 = 0;
 				result3 = payDao. updateInsertItemsB(item);								
 			}
@@ -530,5 +530,20 @@ public class PayService {
 	
 	public List<Map<String, Object>> noApprovalSignRe(String userName, PageInfoDto pi){
 		return payDao.noApprovalSignRe(userName, pi);
+	}
+	
+	
+	//비품신청서 승인완료되면 비품테이블에 등록하기
+	public int fixInsert(List<Map<String, Object>> list) {
+		
+		int result = 1;
+		if(list != null && list.size() > 0) {
+			result = 0;
+			for(Map<String, Object> map : list) {
+				result += payDao.fixInsert(map);
+			}
+		}
+		
+		return result;
 	}
 }

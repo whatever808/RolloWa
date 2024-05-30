@@ -459,11 +459,13 @@ $(document).ready(function(){
                                     	<td class="label">금액</td>
                                 	 </tr>
                                 	 <c:forEach var="i" begin="0" end="${ list.size() - 1 }">
+                                	 <c:if test="${ list.get(i).ACCOUNT != null and !list.get(i).ACCOUNT.equals('')}">
 		                               		<tr>
-		                                   		<td><input type="text" name="account${i}" value="${ list.get(i).ACCOUNT }"></td>
-		                                    	<td><input type="text" name="usage${i}" value="${ list.get(i).CONTENT }"></td>
-		                                    	<td class="num"><input type="text" name="price${i}"  value="${ list.get(i).AMOUNT }"></td>
+		                                   		<td><input type="text" name="account" value="${ list.get(i).ACCOUNT }"></td>
+		                                    	<td><input type="text" name="usage" value="${ list.get(i).CONTENT }"></td>
+		                                    	<td class="num"><input type="text" name="price"  value="${ list.get(i).AMOUNT }"></td>
 		                                	</tr>
+		                                </c:if>
 		                              	</c:forEach>
 										            </table>
 										            <table class="content2">
@@ -630,15 +632,13 @@ $(document).ready(function(){
     <script>
     $(document).ready(function(){
     	
-    	let i = 40;
     	$(document).on("click", "#plus_btn", function () {
     		
     		let result = "<tr>";
-    		result += "<td><input type='text' name='account" + (i) + "'></td>";
-    		result += "<td><input type='text' name='usage" + (i) + "'></td>";
-    		result += "<td class='num'><input type='text' name='price" + (i) + "'></td>";
+    		result += "<td><input type='text' name='account'></td>";
+    		result += "<td><input type='text' name='usage'></td>";
+    		result += "<td class='num'><input type='text' name='price'></td>";
     		result += "</tr>";
-    		i++;
     		
        $("#tr_table").children().last().after(result);
        

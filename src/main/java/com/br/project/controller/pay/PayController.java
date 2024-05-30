@@ -34,6 +34,7 @@ import com.br.project.dto.pay.SignDto;
 import com.br.project.service.pay.PayService;
 import com.br.project.util.FileUtil;
 import com.br.project.util.PagingUtil;
+import com.google.common.collect.Maps;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -473,34 +474,60 @@ public class PayController {
 		
 	}
 	//----------------------------------------------------
-	
+	public String mReportUpdate(@RequestParam("item") List<String> items,
+			@RequestParam("count") List<String> counts,
+			@RequestParam("sales") List<String> saleses,
+			@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes) { 
+
+
+				List<Map<String, Object>> list = new ArrayList<>();
+				
+				for(int i=0; i<items.size(); i++) {
+				if(items.get(i) != null && !items.get(i).equals("")) {
+				Map<String, Object> maps = new HashMap<>();
+				maps.put("expendNo", map.get("expendNo"));
+				maps.put("item", items.get(i));
+				maps.put("count", counts.get(i));
+				maps.put("salesAmount", saleses.get(i));
+				list.add(maps);
+				}
+				}
+				
+				
+				for(int i = 0; i < list.size(); i++) {
+				log.debug("list : {}", list.get(i));
+				}
+				
+				int newlist = payService.mReportUpdate(map, list);
+				
+				if(newlist == list.size()) {
+				redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 수정되었습니다.");
+				}
+				
+				
+				}
 	//---------매출 보고서 ----------------------
 	@PostMapping("/mReportInsert.do")
-	public String mReportInsert(@RequestParam Map<String, Object> map
-							  , HttpSession session, RedirectAttributes redirectAttributes
-							  , String[] approvalName) {
-		//map =>최초/중간/최종 승인자의 이름, 매출구분, 담당자, 총매출 금액이 담겨있음
-		log.debug("{}", map.get("items"));
+	public String mReportInsert(@RequestParam("item") List<String> items,
+								@RequestParam("count") List<String> counts,
+								@RequestParam("sales") List<String> saleses,
+								@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes) {
 		
 		
 		
 		// 품목, 수량, 매출금액이 담긴 리스트
+		
 		List<Map<String, Object>> list = new ArrayList<>();
 		
-		String[] itemsArr = ((String)map.get("items")).split(",");
-		String[] countArr = ((String)map.get("counts")).split(",");
-		String[] salesArr = ((String)map.get("salesAmounts")).split(",");
-		
-		for(int i=0; i<itemsArr.length; i++) {
-			Map<String, Object> maps = new HashMap<>();
-			maps.put("items", itemsArr[i]);
-			maps.put("counts", countArr[i]);
-			maps.put("salesAmounts", salesArr[i]);
-			list.add(maps);
+		for(int i=0; i<items.size(); i++) {
+			if(items.get(i) != null && !items.get(i).equals("")) {
+				Map<String, Object> maps = new HashMap<>();
+				maps.put("item", items.get(i));
+				maps.put("count", counts.get(i));
+				maps.put("salesAmount", saleses.get(i));
+				list.add(maps);
+			}
 		}
-		log.debug("list : {}", list);
-		int writerNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
-		map.put("writerNo", writerNo);
 		
 		int result = payService.mReportInsert(map, list);
 		
@@ -786,42 +813,25 @@ public class PayController {
 	
 	
 	@PostMapping("/mReportUpdate.do")
-	public String mReportUpdate(@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes) {
+	public String mReportUpdate(@RequestParam("item") List<String> items,
+								@RequestParam("count") List<String> counts,
+								@RequestParam("sales") List<String> saleses,
+								@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes) { 
+		
 		
 		List<Map<String, Object>> list = new ArrayList<>();
-		map.put("totalSales", map.get("totalSales").toString().replace(",", ""));
 		
-		
-		
-		String expendNo = (String) map.get("expendNo");
-		log.debug("map : {}", map);
-		
-		for(int i=0; i<map.size(); i++) {
-			if(map.get("item" + i ) != null && !map.get("item" + i).toString().equals("")) {
-				Map<String, Object> nameMap = new HashMap<>();
-				nameMap.put("expendNo", expendNo);
-				nameMap.put("item", map.get("item" + i));
-				nameMap.put("count", map.get("count" + i));
-				nameMap.put("salesAmount", map.get("sales" + i));
-				list.add(nameMap);
-			}
+			for(int i=0; i<items.size(); i++) {
+				if(items.get(i) != null && !items.get(i).equals("")) {
+					Map<String, Object> maps = new HashMap<>();
+					maps.put("expendNo", map.get("expendNo"));
+					maps.put("item", items.get(i));
+					maps.put("count", counts.get(i));
+					maps.put("salesAmount", saleses.get(i));
+					list.add(maps);
+				}
 		}
 		
-		if(map.get("items") != null && !map.get("items").toString().equals("")) {
-			
-			String[] items = ((String)map.get("items")).split(",");
-			String[] counts = ((String)map.get("counts")).split(",");
-			String[] sales = ((String)map.get("salesAmounts")).split(",");
-			
-			for(int i=0; i<items.length; i++) {
-				Map<String, Object> splitMap = new HashMap<>();
-				splitMap.put("expendNo", expendNo);
-				splitMap.put("item", items[i]);
-				splitMap.put("count", counts[i]);
-				splitMap.put("salesAmount", sales[i]);
-				list.add(splitMap);
-			}
-		}
 		
 		for(int i = 0; i < list.size(); i++) {
 			log.debug("list : {}", list.get(i));
@@ -918,24 +928,32 @@ public class PayController {
 	
 	
 	@PostMapping("/bReportInsert.do")
-	public String bReportInsert(@RequestParam Map<String, Object> map, Model model
-							  , RedirectAttributes redirectAttributes) {
+	public String bReportInsert(@RequestParam("pName") List<String> pNames,
+							    @RequestParam("size") List<String> sizes,
+							    @RequestParam("amount") List<Integer> amounts,
+							    @RequestParam("unitPrice") List<Integer> unitPrices,
+							    @RequestParam("price") List<Integer> prices,
+							    @RequestParam("etc") List<String> etcs,
+							    @RequestParam Map<String, Object> map,
+							    Model model,
+							    RedirectAttributes redirectAttributes) {
 		
 		// 품목, 규격, 수량, 단가, 가격, 기타 
 		List<Map<String, Object>> list = new ArrayList<>();
-		for(int i=0; i<map.size(); i++) {
-			if(map.get("pName" + i) != null && !map.get("pName" + i).toString().equals("")) {
-				Map<String, Object> mapName = new HashMap<>();
-				mapName.put("pName", map.get("pName" + i));
-				mapName.put("size", map.get("size" + i));
-				mapName.put("amount", map.get("amount" + i));
-				mapName.put("unitPrice", map.get("unitprice" + i));
-				mapName.put("price", map.get("price" + i));
-				mapName.put("etc", map.get("etc" + i));
-				list.add(mapName);
+		
+		for(int i=0; i<pNames.size(); i++) {
+			if(pNames.get(i) != null && !pNames.get(i).equals("")) {
+				Map<String, Object> maps = new HashMap<>();
+				maps.put("pName", pNames.get(i));
+				maps.put("size", sizes.get(i));
+				maps.put("amount", amounts.get(i));
+				maps.put("unitPrice", unitPrices.get(i));
+				maps.put("price", prices.get(i));
+				maps.put("etc", etcs.get(i));
+				list.add(maps);
 			}
-			
 		}
+		log.debug("품목 : {}", list);
 		
 		int result = payService.bReportInsert(map, list);
 		
@@ -961,23 +979,28 @@ public class PayController {
 		return "redirect:/pay/paymain.page";
 	}
 	
+	
 	@PostMapping("/jReportInsert.do")
-	public String jReportInsert(@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes
-								, List<MultipartFile> uploadFiles) {
+	public String jReportInsert(@RequestParam("account") List<String> accounts,
+								@RequestParam("usage") List<String> usages,
+								@RequestParam("price") List<String> prices,
+								@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes, 
+								List<MultipartFile> uploadFiles) {
 		
 		
 		// 품목들 담기
 		List<Map<String, Object>> itemList = new ArrayList<>();
-		for(int i=0; i<map.size(); i++) {
-			if(map.get("account" + i) != null && !map.get("account" + i).toString().equals("")) {
-				Map<String, Object> itemMap = new HashMap<>();
-				itemMap.put("account", map.get("account" + i));
-				itemMap.put("usage", map.get("usage" + i));
-				itemMap.put("price", map.get("price" + i));
-				itemList.add(itemMap);
+		for(int i=0; i<accounts.size(); i++) {
+			if(accounts.get(i) != null && !accounts.get(i).equals("")) {
+				Map<String, Object> maps = new HashMap<>();
+				maps.put("account", accounts.get(i));
+				maps.put("usage", usages.get(i));
+				maps.put("price", prices.get(i));
+				itemList.add(maps);
 			}
+			
 		}
-		
+			
 		//파일 담기
 		List<Map<String, Object>> attachList = new ArrayList<>();
 		
@@ -1010,28 +1033,27 @@ public class PayController {
 			redirectAttributes.addFlashAttribute("alertMsg", "게시글등록에 성공하였습니다.");
 			
 		}else {
-			
-			//게시글등록에 실패시 저장된 파일은 저장공간만 낭비되므로 삭제
+			//실패시 파일삭제
 			for(Map<String, Object> at : attachList) {
 				new File( at.get("filePath") + "/" + at.get("filesystemName")).delete();
 			}
 			
-			redirectAttributes.addFlashAttribute("alertMsg", "게시글등록에 실패하였습니다.");
-			redirectAttributes.addFlashAttribute("historyBackYN", "Y");
 		}
 		
-		
 		return "redirect:/pay/approvalMain.page";
+	
 	}
 	
 	
-	//............
 	@PostMapping("/jReportUpdate.do")
-	public String jReportUpdate(@RequestParam Map<String, Object> map, List<MultipartFile> uploadFiles
-							  , RedirectAttributes redirectAttributes, String[] delFileNo) {
-		
+	public String jReportUpdate(@RequestParam("account") List<String> accounts,
+								@RequestParam("usage") List<String> usages,
+								@RequestParam("price") List<String> prices,
+								@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes, 
+								List<MultipartFile> uploadFiles,  String[] delFileNo) {
+							
 		//삭제된파일이 null값일 경우
-		String[] delFileNoArr = (delFileNo != null) ? delFileNo : null;
+		String[] delFileNoArr = delFileNo != null ? delFileNo : null;
 		
 		int delFileNoLeng = 0;
 		if(delFileNoArr != null) { // 삭제된파일이 null이 아니라면 길이 알아내기
@@ -1042,21 +1064,19 @@ public class PayController {
 		String fileLength = (String)map.get("fileLength");
 		int fileLeng = Integer.parseInt(fileLength);
 
-		String reportNo = (String)map.get("reportNo");
 		
-		log.debug(reportNo);
-		
-		//품목들
-		List<Map<String, Object>> list = new ArrayList<>();
-		for(int i=0; i<map.size(); i++) {
-			if(map.get("account" + i) != null && !map.get("account" + i).toString().equals("")) {
-				Map<String, Object> itemMap = new HashMap<>();			
-				itemMap.put("reportNo", reportNo);
-				itemMap.put("account", map.get("account" + i));
-				itemMap.put("usage", map.get("account" + i));
-				itemMap.put("price", map.get("price" + i));
-				list.add(itemMap);
+		// 품목들 담기
+		List<Map<String, Object>> itemList = new ArrayList<>();
+		for(int i=0; i<accounts.size(); i++) {
+			if(accounts.get(i) != null && !accounts.get(i).equals("")) {
+				Map<String, Object> maps = new HashMap<>();
+				maps.put("reportNo", map.get("reportNo"));
+				maps.put("account", accounts.get(i));
+				maps.put("usage", usages.get(i));
+				maps.put("price", prices.get(i));
+				itemList.add(maps);
 			}
+			
 		}
 		
 		//추가한 파일들
@@ -1080,10 +1100,8 @@ public class PayController {
 			map.put("fileStatus", "Y");
 		}
 		
-		int result = payService.jReportUpdate(map, list, fileList, delFileNo == null ? null : delFileNo);
+		int result = payService.jReportUpdate(map, itemList, fileList, delFileNo);
 
-		//log.debug("fileLength : {}", map.get("fileLength"));
-		
 		return "redirect:/pay/approvalMain.page";
 		
 		
@@ -1192,42 +1210,49 @@ public class PayController {
 	}
 	
 	@PostMapping("/bReportUpdate.do")
-	public String bReportUpdate(@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes) {
-		
-		List<Map<String, Object>> itemList = new ArrayList<>();
-		String reportNo = (String)map.get("reportNo");
-		String reportType = (String)map.get("reportType");
-		for(int i=0; i<map.size(); i++) {
-			if(map.get("pName" + i) != null && !map.get("pName" + i).equals("")) {
-				Map<String, Object> itemMap = new HashMap<>();
-				itemMap.put("reportNo", reportNo);
-				itemMap.put("reportType", reportType);
-				itemMap.put("pName", map.get("pName" + i));
-				itemMap.put("size", map.get("size" + i));
-				itemMap.put("amount", map.get("amount" + i));
-				itemMap.put("unitprice", map.get("unitprice" + i));
-				itemMap.put("price", map.get("price" + i));
-				itemMap.put("etc", map.get("etc" + i));
-				itemList.add(itemMap);
+	public String bReportUpdate(@RequestParam("pName") List<String> pNames,
+							    @RequestParam("size") List<String> sizes,
+							    @RequestParam("amount") List<Integer> amounts,
+							    @RequestParam("unitPrice") List<Integer> unitPrices,
+							    @RequestParam("price") List<Integer> prices,
+							    @RequestParam("etc") List<String> etcs,
+							    @RequestParam Map<String, Object> map,
+							    Model model,
+							    RedirectAttributes redirectAttributes) {
+
+			// 품목, 규격, 수량, 단가, 가격, 기타 
+			List<Map<String, Object>> list = new ArrayList<>();
+			
+			for(int i=0; i<pNames.size(); i++) {
+				if(pNames.get(i) != null && !pNames.get(i).equals("")) {
+				Map<String, Object> maps = new HashMap<>();
+				maps.put("pName", pNames.get(i));
+				maps.put("size", sizes.get(i));
+				maps.put("amount", amounts.get(i));
+				maps.put("unitPrice", unitPrices.get(i));
+				maps.put("price", prices.get(i));
+				maps.put("etc", etcs.get(i));
+				list.add(maps);
+				}
 			}
-		}
-		log.debug("itemList : {}", itemList);
-		int result = payService.bReportUpdate(map, itemList);
-		
-		redirectAttributes.addFlashAttribute("alertTitle", "비품신청서");
-		if(result == itemList.size()) {
-			redirectAttributes.addFlashAttribute("alertMsg", "결재 수정이 완료되었습니다.");
-		}
-		
-		return "redirect:/pay/paymain.page";
+			log.debug("품목 : {}", list);
+			
+			int result = payService.bReportUpdate(map, list);
+			
+			redirectAttributes.addFlashAttribute("alertTitle", "비품신청서");
+			if(result == list.size()) {
+				redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
+			}
+			
+			return "redirect:/pay/approvalMain.page";
 		
 	}
 	
 	// 승인 싸인 저장하기 ajax
 	@ResponseBody
 	@PostMapping("/ajaxSign.do")
-	public Map<String, Object> ajaxSign(@RequestParam Map<String, Object> map
-											, HttpServletRequest request) {
+	public Map<String, Object> ajaxSign(@RequestParam Map<String, Object> map, HttpServletRequest request
+									  , @RequestParam(value="fixName[]") String[] fixName, @RequestParam(value="fixAmount[]") String[] fixAmount) {
 		log.debug("map : {}", map);
 		String dataUrl = (String)map.get("dataUrl");
 		
@@ -1240,7 +1265,33 @@ public class PayController {
 		if(result > 0) {
 			sign = payService.ajaxSignSelect(map);
 		}
-		log.debug("sign : {}", sign);
+		
+		for(int i=0; i<fixName.length; i++) {
+			
+			log.debug("fixName : {}", fixName[i]);
+			log.debug("fixAmount : {}", fixAmount[i]);
+			
+		}
+		int resultFix = 0;
+		 
+		List<Map<String, Object>> list = new ArrayList<>();
+		if(map.get("approvalSignNo").equals("3") && map.get("deptType") != null && map.get("deptType").equals("Fix")) {
+			for(int i=0; i<fixName.length; i++) {
+				if(fixName != null && fixName.length > 0) {
+					Map<String, Object> maps = new HashMap<>();
+					maps.put("fixName", fixName[i]);
+					maps.put("fixAmount", fixAmount[i]);
+					list.add(maps);					
+				}
+			}
+			resultFix = payService.fixInsert(list);
+		}
+		
+		
+		
+		
+		
+		log.debug("resultFix : {}", resultFix);
 		
 		Map<String, Object> maps = new HashMap<>();
 		maps.put("sign", sign);
@@ -1721,22 +1772,14 @@ public class PayController {
 		map.put("list", list);
 		map.put("pi", pi);
 		map.put("userName", userName);
-		
+		log.debug("list : {}", list);
+		log.debug("pi : {}", pi);
+		log.debug("userName : {}", userName);
 		return map;
 	}
+	
 		
 		
-		
-		
-		
-		
-	}
-	
-	
-	
-	
-	
-	
 	
 	
 

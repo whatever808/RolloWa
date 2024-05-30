@@ -470,16 +470,18 @@ $(document).ready(function(){
 	                                    <td class="label">금액</td>
 	                                    <td class="label">비고</td>
                                 		</tr>
-												            <c:forEach var="i" begin="0" end="${ list.size() - 1 }" >
+												            <c:forEach var="i" begin="0" end="${list.size() - 1}">
+																			<c:if test="${list[i].PRODUCT_NAME != null and !list[i].PRODUCT_NAME.equals('')}">
 			                                <tr>
-			                                    <td><input type="text" class="text_1" name="pName${i}" value="${list.get(i).PRODUCT_NAME}"></td>
-			                                    <td><input type="text" class="text_2" name="size${i}" value="${list.get(i).PRODUCT_SIZE}"></td>
-			                                    <td><input type="number"  min="1" class="text_3" name="amount${i}" value="${list.get(i).QUANTITY}"></td>
-			                                    <td><input type="text" class="text_4" name="unitprice${i}" value="${list.get(i).UNIT_PRICE}"></td>
-			                                    <td><input type="text" class="text_5" name="price${i}" value="${list.get(i).PRICE}"></td>
-			                                    <td><input type="text" class="text_6" name="etc${i}" value="${list.get(i).NOTE}"></td>
+			                                    <td><input type="text" class="text_1" name="pName" value="${list.get(i).PRODUCT_NAME}"></td>
+			                                    <td><input type="text" class="text_2" name="size" value="${list.get(i).PRODUCT_SIZE}"></td>
+			                                    <td><input type="number"  min="1" class="text_3" name="amount" value="${list.get(i).QUANTITY}"></td>
+			                                    <td><input type="text" class="text_4" name="unitPrice" value="${list.get(i).UNIT_PRICE}"></td>
+			                                    <td><input type="text" class="text_5" name="price" value="${list.get(i).PRICE}"></td>
+			                                    <td><input type="text" class="text_6" name="etc" value="${list.get(i).NOTE}"></td>
 			                                </tr>
-		                                </c:forEach>
+																		   </c:if>			
+																		</c:forEach>
 										            </table>
 										            <table class="content2">
 		                                <tr>
@@ -534,57 +536,19 @@ $(document).ready(function(){
     </script>
    
     <script>
-	    	function submitbtn(){
-   					let itemArr = [];
-   					let countArr = [];
-   					let salesArr = [];
-   					//금액
-	    		$(".item").each(function(){
-					 		if($(this).val().trim() != ""){
-					 			itemArr.push($(this).val());
-							}
-	        })
-	        
-	        $("#items").val(itemArr);
-	     					
-	    					//수량
-	   			$(".count").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			countArr.push($(this).val());
-						}
-	         })
-	         $("#counts").val(countArr);
-	    					
-	   					// 매출금액
-	    		$(".sales_amount").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			salesArr.push($(this).val());
-						}
-	          })
-	         $("#sales_amounts").val(salesArr);	
-	
-	         if(confirm('정말로 제출하시겠습니까?')){
-	        	 if($(".sing_name").text() == ""){
-	        		 alert("승인자를 3차까지 선택해주세요.");
-	        	 }
-	         }
-	                
-	       }
-   	</script>
-    
-    <script>
     $(document).ready(function(){
-    		let i = 4;
+    	
     	$(document).on("click", "#plus_btn", function () {
     		var result = "<tr>";
-    		result += "<td><input type='text' class='text_1' name='pName" + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_2' name='size" + (i) +"'></td>";
-    		result += "<td><input type='number' min='1' class='text_3' name='amount"  + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_4' name='unitprice" + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_5' name='price" + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_6' name='etc" + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_1' name='pName'></td>";
+    		result += "<td><input type='text' class='text_2' name='size'></td>";
+    		result += "<td><input type='number' min='1' class='text_3' name='amount'></td>";
+    		result += "<td><input type='text' class='text_4' name='unitPrice'></td>";
+    		result += "<td><input type='text' class='text_5' name='price'></td>";
+    		result += "<td><input type='text' class='text_6' name='etc'></td>";
     		result += "</tr>";
-    		i++;
+    		
+    		
        $("#tr_table").children().last().after(result);
        
        

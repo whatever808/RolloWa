@@ -268,12 +268,23 @@ $(document).ready(function(){
 
 <script>
 
+
+
+$(document).on('keyup', '#search', function(e) {
 	
-function searchgogo(){
+		if(e.key == "Enter"){
+			 loadPageReject(1);
+		}
+   
+});
+
+
+$(document).on('click', '#searchBtn', function(e) {
 	
-    loadPageReject(1);
+		loadPageReject(1);
 	
-}
+});
+
 
 
 
@@ -290,7 +301,10 @@ function loadPageReject(page) {
     $.ajax({
         url: "${contextPath}/pay/ajaxMyRejectSearchApproval.do", 
         method: 'GET',
-        data: { page: page },
+        data: { 
+        	page: page,
+        	keyword: $("#search").val()
+        },
         success: function(response) {
           console.log(response);
 
@@ -316,7 +330,7 @@ function loadPageReject(page) {
 		                '<td>' + item.PAYMENT_WRITER + '</td>' +
 		                '<td>' + item.DEPARTMENT + '</td>' +
 		                '<td>' + item.REGIST_DATE + '</td>' +
-		                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
+		                '<td>' + (item.DOCUMENT_STATUS == '완료' ? item.FINAL_APPROVAL_DATE : "-") + '</td>' +
 		                '</tr>';
 	
       			 tbody.append(row);
@@ -378,7 +392,7 @@ function loadPageReject(page) {
 											 <div class="search-container">
 									        <form class="search-form">
 									            <input type="text" class="search-input" id="search" placeholder="검색어를 입력하세요...">
-									            <button type="submit" class="search-button22"  onsubmit="return searchgogo()">검색</button>
+									            <button type="submit" class="search-button22" id="searchBtn">검색</button>
 									        </form>
 									    </div>
 									</div>
