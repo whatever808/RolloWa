@@ -10,7 +10,10 @@
 	<title>롤러와</title>
 	
 	<!-- 메인페이지 스타일 -->
-	<link href="${ contextPath }/resources/css/mainPage/mian_page.css" rel="stylesheet">
+	<link href="${ contextPath }/resources/css/mainPage/main_page.css" rel="stylesheet">
+	
+	<!-- fullcalendar -->
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
 </head>
 <body>
 
@@ -50,6 +53,9 @@
                 <div class="profile-attend-div">
 
                     <div class="profile-img-div">
+                    		<!-- 기웅 추가 -->
+                    		<div class="alram-div"><button type="button" class="btn alram-btn" style="box-shadow: none;"><i class="fa-solid fa-bell fa-2x" style="color: #ff939e;"></i></button></div>
+                    		<!-- 기웅 추가 -->
                         <img src="${ contextPath }/resources/images/defaultProfile.png" alt="user profile">
 
                         <h6 class="mt-3 fw-bold">${ loginMember.userName } / ${ loginMember.positionName } / ${ loginMember.teamName }</h6>
@@ -74,14 +80,16 @@
                 </div>
                 <!-- profile & attend (main-left-top)-->
 
-                <!-- today's schedule (main-left-bottom)-->
-                <div class="today-schedule">
-                    <h5 class="fw-bold text-end mb-4">오늘의 일정</h5>
-                    <div class="today-schedule-list">
+                <!-- login user list (main-left-bottom)-->
+                <div class="login-user-list-div">
+                    <h5 class="fw-bold text-end mb-4"></h5>
+                    <div class="login-user-list">
 	                    <!-- 부서 일정 목록영역 -->
                     </div>
                 </div>
-                <!-- today's schedule (main-left-bottom)-->
+                <!-- login user list (main-left-bottom)-->
+                
+                
             </div>
             <!-- main-left-end -->
 
@@ -93,22 +101,12 @@
 
                     <h4>근태관리</h4>
                     
-					<c:set var="today" value="<%=new java.util.Date()%>" />
-					<c:set var="sysYear"><fmt:formatDate value="${ today }" pattern="yyyy" /></c:set> 
                     <div class="my-attend-content">
                         <!-- my attend select (left) -->
                         <div class="my-attend-select-div">
-                            <select class="year form-select text-center" name="year">
-                            	<c:forEach var="year" begin="2000" end="${ sysYear }">                            	
-                                	<option value="${ year }">${ year }년</option>
-                            	</c:forEach>
-                            </select>
+                            <select class="year form-select text-center" name="year"></select>
         
-                            <select class="month form-select text-center" name="month">
-                            	<c:forEach var="month" begin="1" end="12">
-	                                <option value="${ month }">${ month }월</option>
-                            	</c:forEach>
-                            </select>
+                            <select class="month form-select text-center" name="month"></select>
                         </div>
                         <!-- my attend select (left) -->
 
@@ -147,47 +145,14 @@
                 </div>
                 <!-- my attendance (main-right-top) -->
                 
-                <!-- alert list start (main-right-middle) -->
-                <div class="alert-list-div">
-                    <h4>알림</h4>
-                    <table class="alert-table table table-hover table-responsive">
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-
-                        <tr>
-                            <td class="list-title">유재석 총무부 부장발령</td>
-                            <td class="list-date">2024-05-20</td>
-                        </tr>
-                    </table>
-                </div>
-                <!-- alert list end (main-right-middle) -->
-
-
-                <!-- notice list start (main-right-bottom) -->
+                <!-- notice list start (main-right-middle) -->
                 <div class="notice-list-div">
                     <h4>공지사항</h4>
                     
                     <div class="notice-category">
-					  <span class="normal">일반공지</span>
-					  <span class="department">부서공지</span>
-					</div>
+										  <span class="normal">일반공지</span>
+										  <span class="department">부서공지</span>
+										</div>
                     
                     <table class="notice-table table table-hover table-responsive">
                     	<tbody class="notice-table-tbody">
@@ -195,12 +160,31 @@
                     	</tbody>
                     </table>
                 </div>
-                <!-- notice list end (main-right-bottom) -->
-            </div>
-            <!-- main-right end-->
+                <!-- notice list end (main-right-middle) -->
+                
+                <!-- calendar (main-right-bottom) -->
+                <div class="calendar-div">
+                    <div class="calendar box">
+											<!-- main calendar -->
+											<jsp:include page="/WEB-INF/views/common/mainCal.jsp" />
+											<div id="calendar"></div>
+										</div>
+                </div>
+                <!-- calendar (main-right-bottom) -->
+
+        	</div>
+        	<!-- main right end -->
+        	        
         </div>
         <!-- main contents end (bottom) -->
         
+      	<!-- 알람 조회 modal -->
+				<div id="alram_list">
+					<div class="list-group list-group-light alram_list">
+						<!-- 알림 영역 -->
+					</div>
+				</div>
+      	<!-- 알람 조회 modal -->
     </div>
     <!-- content end -->
 	
@@ -279,15 +263,15 @@
 		// 출근체크
 		$(".work-on").on("click", function(){
 			ajaxAttendCheck("출근");
-		})
+		});
 		// 퇴근체크
 		$(".work-off").on("click", function(){
 			ajaxAttendCheck("퇴근");
-		})
+		});
 		// 조퇴체크
 		$(".leave-early").on("click", function(){
 			ajaxAttendCheck("조퇴");
-		})
+		});
 		
 		// 출근/퇴근/조퇴 등록 AJAX
 		function ajaxAttendCheck(requestDetail){
@@ -330,22 +314,46 @@
 					},error:function(){
 						console.log("INSERT ATTENDANCE AJAX FAILED");
 					}
-				})
+				});
 			}
 		}
-	})
+	});
 	
 	// 근태조회 관련 ===================================================================================
 	$(document).ready(function(){
-		const todayDate = new Date();
-		// 오늘날짜의 년도설정
-		$("select[name=year]").children("option").each(function(){
-			$(this).val() == todayDate.getFullYear() && $(this).attr("selected", true);
-		})
-		// 오늘날짜의 월설정
+		const sysdate = new Date();
+		const sysYear = sysdate.getFullYear();
+		const sysMonth = sysdate.getMonth() + 1;
+		
+		// "년" 옵션값 생성 및 설정
+		for(let y=sysYear ; y>=2000 ; y--){
+			$("select[name=year]").append("<option value='" + y + "'>" + y + "년</option>");
+		}
+		// "년" 선택값 변경시
+		$("select[name=year]").on("change", function(){
+			let maxMonth = ($("select[name=year]").val() == sysYear) ? sysMonth : 12;
+			let oldMonth = $("select[name=month]").val();
+			const $monthSelect = $("select[name=month]");
+			
+			$monthSelect.empty();
+			
+			for(let m=1 ; m<=maxMonth ; m++){
+				$monthSelect.append("<option value='" + m + "'>" + m + "월</option>");
+			}
+			
+			$monthSelect.children("option").each(function(){
+				$(this).val() == oldMonth && $(this).attr("selected", true);
+			});
+		});
+		
+		// "월" 옵션값 생성 및 설정
+		for(let m=1 ; m<=sysMonth ; m++){
+			$("select[name=month]").append("<option value='" + m + "'>" + m + "월</option>");
+		}
 		$("select[name=month]").children("option").each(function(){
-			$(this).val() == todayDate.getMonth() + 1 && $(this).attr("selected", true);
-		})
+			$(this).val() == sysMonth && $(this).attr("selected", true);
+		});
+		
 		// 년도별 나의 근태조회
 		$("select[name=year]").on("change", function(){
 			ajaxSelectMyAttend();
@@ -403,7 +411,7 @@
 	     // 오늘 날짜
 	     function getToday() {
 	         const todaydate = new Date();
-	         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '긑요일', '토요일'];
+	         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
 	         const days_num = todaydate.getDay();
 	         const year = todaydate.getFullYear();
 	         const month = todaydate.getMonth() + 1;
@@ -414,34 +422,6 @@
 	     }
     })
     
-    // 오늘일정 관련 =====================================================================================================
-   	$(document).ready(function(){
-   		$.ajax({
-   			url:"${ contextPath }/calendar/todaySchedule.ajax",
-   			method:"get",
-   			data: {
-   				userNo:${ loginMember.userNo }
-   			},
-   			success:function(todayScheduleList){
- 					if(todayScheduleList.length == 0){
- 						$(".today-schedule-list").text("조회된 일정이 없습니다.")
- 																		 .addClass('d-flex justify-content-center align-items-center text-secondary');
- 					}else{
- 						list = "";
- 						for(let i=0 ; i<todayScheduleList.length ; i++){
- 							list += "<div class='schedule mb-2'>";
-							list += 	"<span class='schedule-color me-3' style='background-color: " + todayScheduleList[i].calColor + "'></span>";
-							list += 	"<span class='schedule-title'><b>[" + todayScheduleList[i].calSortName + "]</b>&nbsp;&nbsp;" + todayScheduleList[i].calTitle + "</span>";
-							list += "</div>";
- 						}
- 						$(".today-schedule-list").html(list);
- 					}
-   			},error:function(){
-   				console.log("SELECT TODAY'S SCHEDULE AJAX FAILED");
-   			}
-   		})
-   	})
-	
    	// 공지사항 목록조회 관련 ==========================================================================================================
    	$(document).ready(function(){
 		// 카테고리별 공지사항 목록조회 AJAX
@@ -479,8 +459,8 @@
        			},error:function(){
        				console.log("SELECT NOTICE LIST AJAX FAILED");
        			}
-       		})
-   		})
+       		});
+   		});
    		
    		// 페이지 로딩즉시(요소가 다 생성된 후)
    		$("span.normal").click();
@@ -496,9 +476,142 @@
    			}else{
    				location.href = "${ contextPath }/board/reader/detail.do?no=" + boardNo;
    			}
+   		});
+   	});
+	
+		/* 오늘일정 관련 =====================================================================================================
+   	$(document).ready(function(){
+   		$.ajax({
+   			url:"${ contextPath }/calendar/todaySchedule.ajax",
+   			method:"get",
+   			data: {
+   				userNo:${ loginMember.userNo }
+   			},
+   			success:function(todayScheduleList){
+ 					if(todayScheduleList.length == 0){
+ 						$(".today-schedule-list").text("조회된 일정이 없습니다.")
+ 																		 .addClass('d-flex justify-content-center align-items-center text-secondary');
+ 					}else{
+ 						list = "";
+ 						for(let i=0 ; i<todayScheduleList.length ; i++){
+ 							list += "<div class='schedule mb-2'>";
+							list += 	"<span class='schedule-color me-3' style='background-color: " + todayScheduleList[i].calColor + "'></span>";
+							list += 	"<span class='schedule-title'><b>[" + todayScheduleList[i].calSortName + "]</b>&nbsp;&nbsp;" + todayScheduleList[i].calTitle + "</span>";
+							list += "</div>";
+ 						}
+ 						$(".today-schedule-list").html(list);
+ 					}
+   			},error:function(){
+   				console.log("SELECT TODAY'S SCHEDULE AJAX FAILED");
+   			}
    		})
    	})
-  
+		*/	
+  	/* ============== 기웅 추가 알림 =============== */
+  	// 알림 modal 스타일
+  	$("#alram_list").iziModal({
+			title: '<h6>알림</h6>'
+			, subtitle: ''
+			, headerColor: '#FEEFAD'
+			, theme: 'light'
+			, radius: '2'
+			, arrowKeys: 'false'
+			, navigateCaption: 'false'
+  	})
+  	
+  	// 알림 버튼 스타일
+  	$(".alram-btn").on("mouseenter", function() {
+  		$(".alram-btn>i").addClass("fa-beat");
+  	})
+  	$(".alram-btn").on("mouseleave", function() {
+  		$(".alram-btn>i").removeClass("fa-beat");
+  	})
+  	
+  	// 메인페이지 접속 시 알림 조회
+  	$(document).ready(function() {
+  		selectAlram();
+  	})
+  	
+  	// 읽지 않은 알림 조회
+  	function selectAlram() {
+	  	$.ajax({
+	  			url: "${contextPath}/notification/list"
+	  			, method: "get"
+	  			, data: {userNo: ${loginMember.userNo}}
+	  			, success: function(notiList) {
+	  				if(notiList.length != 0) {
+	  					// 조회된 알림이 있을 시
+	  					
+	  					// 알림 구역 초기화
+	  					$(".alram_list").empty();
+	  					
+	  					// 알림 아이콘에 표시
+	  					$(".alram-btn>i").addClass("fa-bounce");
+	  					
+	  					for(var i = 0; i < notiList.length; i++) {
+	  						// updateAlram 함수 실행 시 필요한 정보 담기
+	  						var notiInfo = new Array();
+		  					
+		  					var alramText = "<div class='alram_el'>";
+		  					alramText += "<div class='alram_info'>";
+		  					alramText += "<a href='" + notiList[i].notiURL + "' onclick='return updateAlram(" + notiList[i].nsendNo + ", \"" + notiList[i].type + "\");'  class='list-group-item list-group-item-action px-3 border-0'>";
+		  					
+		  					if(notiList[i].type == 'N') {
+		  						alramText += (i + 1) + "." + notiList[i].sendUserName + "님이 공지사항을 등록하였습니다.";
+		  					} else if (notiList[i].type == 'C') {
+		  						alramText += (i + 1) + "." + notiList[i].sendUserName + "님이 부서 일정을 등록하였습니다.";
+		  					}
+		  					alramText += "</a>";
+		  					alramText += "</div>";
+		  					alramText += "<div class='alram_date'><span class='send_date'>" + notiList[i].notiSendDate + "</span></div>";
+		  					alramText += "</div>";
+		  					$(".alram_list").append(alramText);
+		  				}
+	  				} else {
+	  					// 조회된 알림이 없을 시
+	  					// 알림 구역 초기화
+	  					$(".alram_list").empty();
+	  					var alramText = "<span class='list-group-item list-group-item-action px-3 border-0'>";
+	  					alramText += "도착한 알림이 없습니다.";
+	  					alramText += "</span>";
+	  					$(".alram_list").append(alramText);
+	  				}
+	  			}
+	  			, error: function() {
+	  				
+	  			}
+  		})
+		}
+  	// 알림 버튼 클릭 시 알림 조회
+  	$(".alram-btn").on("click", function() {
+			// 알림 아이콘 표시 제거
+			$(".alram-btn>i").removeClass("fa-bounce");
+			// 모달창 열기
+			$("#alram_list").iziModal('open');
+  	})
+  	
+  	// 알림 리스트 중 하나의 알림 클릭 시
+  	function updateAlram(nsendNo, type) {
+  		// 공지사항 알림일 경우 클릭한 알림만 update
+  		// 일정 알림일 경우 일정 알림 전체 update
+  		$.ajax({
+  			url: "${contextPath}/notification/checkDate"
+  			, method: "post"
+  			, data: {userNo: ${loginMember.userNo}
+  								, type: type
+  								, nsendNo: nsendNo}
+  			, success: function(result) {
+  				if(result > 0) {
+  					console.log("알림 확인 날짜 update 성공");
+  				}
+  			}
+  			, error: function() {
+  				console.log("알림 확인 날짜 update ajax 실패");
+  			}
+  		})
+  	}
+  	
+  	
 </script>
 
 </html>

@@ -31,6 +31,11 @@ public class MemberService {
 		return memberDao.selectUserId(userNo);
 	}
 	
+	// 회원 이름 찾기
+	public String selectUserName(String userNo) {
+		return memberDao.selectUserName(userNo);
+	}
+	
 	// 회원 프로필 이미지 변경
 	public int updateProfile(MemberDto member, AttachmentDto att) {
 		int result1 = memberDao.updateProfile(member);
@@ -54,6 +59,10 @@ public class MemberService {
 		return memberDao.selectAllMember();
 	}
 	
+	// 팀원 조회
+	public List<String> selectTeamMember(Map<String, Object> map) {
+		return memberDao.selectTeamMember(map);
+	}
 	/* ======================================= "가림" 구역 ======================================= */
 	/**
 	 * 메인페이지용 회원 정보 조회
@@ -61,6 +70,8 @@ public class MemberService {
 	public Map<String, Object> selectMemberForMainPage(MemberDto member){
 		return memberDao.selectMemberForMainPage(member);
 	}
+
+
 	
 	/* ======================================= "가림" 구역 ======================================= */
 }

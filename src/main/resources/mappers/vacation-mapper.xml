@@ -131,7 +131,8 @@ and
 	APPORVAL_STATUS = 'Y'
 </select>
 
-<select id="searchOld">
+<select id="searchOld"
+resultMap="vacaResultMap">
 select 
     VACATION_NO
     , VACATION_STRAT
@@ -141,15 +142,47 @@ select
 from vacation 
 where STATUS = 'Y'
 <if test="!vacaGroupCode.equals('all')">
-and GROUP_CODE = #{vacaGroupCode}
+	and GROUP_CODE = #{vacaGroupCode}
 </if>
 <![CDATA[
-and VACATION_STRAT >= To_date(#{vacaStart}, 'YYYY-MM-DD HH24:MI:SS')
-and VACATION_END <= (To_date(#{vacaEnd}, 'YYYY-MM-DD HH24:MI:SS')+ 1)
-and REGIST_EMP = #{member.userNO}
+and to_char(VACATION_STRAT, 'YYYY-MM-DD') <= #{vacaStart}
+and to_char(VACATION_END,   'YYYY-MM-DD') >= #{vacaStart}
+and REGIST_EMP = #{member.userNo}
 and APPORVAL_STATUS = 'Y'
 order by VACATION_NO desc
 ]]>
 </select>
+
+	<update id="deleteRcequest">
+	update 
+		vacation
+	set 
+		status = 'N'
+	where 
+		VACATION_NO = #{vacaNo}
+	</update>
+	
+	<update id="RRequest">
+		update
+			vacation
+		set
+			R_REQUEST_COMMENT = #{RRequestComent}
+		where
+			VACATION_NO = #{vacaNO}
+	</update>
+	
+	<update id="updateYearLabor">
+	update member a
+	set YEAR_LABOR = (select 
+                  	abs(extract(year from ENROLL_DATE)  - extract(year from sysdate)) 
+                  	from member b
+                  	where a.user_no = b.user_no)
+	</update>
+	
+	<update id="updateOverAnuul">
+	update member
+	set VACATION_COUNT = VACATION_COUNT + #{vacationCount}
+	where user_no = #{userNo}
+	</update>
 
 </mapper>

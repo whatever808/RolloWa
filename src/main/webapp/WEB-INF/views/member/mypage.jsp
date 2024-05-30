@@ -112,18 +112,18 @@
 	                 <div class="user_info">
 	                     <div class="dp_info">
 	                         <div class="info_wrapper">
-	                             <span>직급</span>
-	                             <span>소속부서</span>
+	                             <span><h6> 직급 : ${ memberInfo.position }</h6></span>
+	                             <span><h6> 팀 : ${ memberInfo.team }</h6></span>
 	                         </div>
 	                     </div>
 	                     <div class="sd_info">
 	                         <div class="info_wrapper">
-	                             <span>근속일수</span>
+	                             <span><h6> 근속일수 : ${ memberInfo.serviceDate }</h6></span>
 	                         </div>
 	                     </div>
 	                     <div class="co_info">
 	                         <div class="info_wrapper">
-	                             <span>출근시간</span> | <span>퇴근시간</span>
+	                             <h6><span> 출근시간 : ${ memberInfo.clockIn != '00:00:00' ? memberInfo.clockIn : '' }</span> | <span> 퇴근시간 : ${ memberInfo.clockOut != '00:00:00' ? memberInfo.clockOut : '' }</span></h6>
 	                         </div>
 	                     </div>
 	                 </div>
@@ -142,8 +142,8 @@
 	                     </tr>
 	                     <tr>
 	                         <th>핸드폰 번호 : </th>
-	                         <td><input type="text" name="phone" value="${ memberInfo.phone }" placeholder="전화번호"></td>
-	                         <td><button type="button" class="btn btn-sm btn-outline-primary">인증</button></td>
+	                         <td><input type="text" name="phone" value="${ memberInfo.phone }" placeholder="전화번호" readonly></td>
+	                         <td><button type="button" class="btn btn-sm btn-outline-primary" onclick="phoneCertify();">인증</button></td>
 	                     </tr>
 	                     <tr>
 	                         <th>우편번호 : </th>
@@ -205,26 +205,110 @@
 	             </form>
 	         </div>
 	     </div>
+	     <!-- 휴대번호 인증 모달 -->
+	     <div id="phoneCertify">
+	     	전화번호 : <input type="text" id="phone" placeholder="01012345678"> 
+				<button type="button" class="btn1 forget_btn phone_vali_btn" onclick="takeTarget();">인증번호 발송</button> <br>
+				인증번호 : <input type="text" id="certNo" name="certNo" maxlength="6" placeholder="123456">
+				<span class="target__time">
+					<span id="remaining__min">3</span> :
+					<span id="remaining__sec">00</span>
+				</span>
+	     	<div class="btn_wrapper">
+					<button type="button" class="btn1 forget_btn" id="complete" onclick="certificate();">인증하기</button>
+				</div>
+	     </div>
 	     <!-- content 끝 -->
 			<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
 </body>
 <script>
 	$('#modify_pwd').iziModal({
-	    title: '비밀번호 변경',
-	    subtitle: '',
-	    headerColor: '#FEEFAD', // 헤더 색깔
-	    theme: 'light', //Theme of the modal, can be empty or "light".
-	    padding: '15px', // content안의 padding
-	    radius: 10, // 모달 외각의 선 둥글기
-	    group: 'name111',
-	    loop: true,
-	    arrowKeys: true,
-	    navigateCaption: true,
-	    navigateArrows: true,
-	    zindex: 300, // zindex 모달의 화면 우선 순위 입니다. 
-	    focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
-	    restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
+    title: '비밀번호 변경',
+    subtitle: '',
+    headerColor: '#FEEFAD', // 헤더 색깔
+    theme: 'light', //Theme of the modal, can be empty or "light".
+    padding: '15px', // content안의 padding
+    radius: 10, // 모달 외각의 선 둥글기
+    loop: true,
+    arrowKeys: true,
+    navigateCaption: true,
+    navigateArrows: true,
+    zindex: 300, // zindex 모달의 화면 우선 순위 입니다. 
+    focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
+    restoreDefaultContent: true, // 모달을 다시 키면 값을 초기화
 	});
+	
+	$('#phoneCertify').iziModal({ 
+		title: '전화번호 인증',
+    subtitle: '',
+    headerColor: '#FEEFAD', // 헤더 색깔
+    theme: 'light', //Theme of the modal, can be empty or "light".
+    padding: '15px', // content안의 padding
+    radius: 10, // 모달 외각의 선 둥글기
+    loop: true,
+    arrowKeys: true,
+    navigateCaption: true,
+    navigateArrows: true,
+    zindex: 300, // zindex 모달의 화면 우선 순위 입니다. 
+    focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
+    restoreDefaultContent: true, // 모달을 다시 키면 값을 초기화
+	})
+	
+	/*===== 전화번호 변경을 위한 인증 ======*/
+	function phoneCertify() {
+		$('#phoneCertify').iziModal('open');
+	}
+  const remainingMin = document.getElementById("remaining__min");
+	const remainingSec = document.getElementById("remaining__sec");
+	const completeBtn = document.getElementById("complete");
+	var certificationNumber = 0;
+	var timer;
+		
+	let time = 180;
+	// 인증번호 발송
+	const takeTarget = () => {
+		// 휴대전화 정규표현식
+		const regExp = /^010[0-9]{8}$/;
+		if (regExp.test($("#phone").val())) {
+			timer = setInterval(function () {							  
+			    if (time > 0) {
+				      time = time - 1; // 2:59로 시작
+				      let min = Math.floor(time / 60);
+				      let sec = String(time % 60).padStart(2, "0");
+				      remainingMin.innerText = min;
+				      remainingSec.innerText = sec;
+				    } else {
+				      completeBtn.disabled = true;
+				      clearInterval(timer);
+				    }
+				  }, 1000);	
+			$.ajax({
+				  url: "${contextPath}/member/sendMsg.do"
+					, method: "post"
+					, data: {phone: $("#phone").val()}
+				  , success: function(rand) {
+						certificationNumber = rand;
+					}
+			  	, error: function() {
+			  		console.log("AJAX 통신 실패");
+			  	}
+			  })
+		} else {
+			alertify.alert("전화번호", "전화번호가 유효하지 않습니다. 다시 확인해주세요.");
+		}		  
+	};
+
+	// 인증번호 검사
+	function certificate() {
+		if (certificationNumber == $("#certNo").val()) {
+			$("input[name=phone]").val($("#phone").val());
+			$("input[name=phone]").attr("readonly", true);
+			$("#phoneCertify").iziModal('close');
+		} else {
+			alertify.alert("전화번호 인증", "인증번호를 다시 확인해주세요");
+		}
+	}
+	/*===== 전화번호 변경을 위한 인증 ======*/
 	
 	// 프로필 이미지 변경
 	$("#profileImgFile").on("change", function(evt) {
