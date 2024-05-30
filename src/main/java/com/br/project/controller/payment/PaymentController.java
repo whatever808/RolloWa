@@ -58,7 +58,7 @@ public class PaymentController {
 		
 		// 결제수단이 계좌이체일 경우 CS
 		if(param.get("pay_method").equals("trans")) {
-			
+			param.replace("pay_method", "CS");
 		}
 		
 		

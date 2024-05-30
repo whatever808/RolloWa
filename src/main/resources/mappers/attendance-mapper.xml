@@ -283,37 +283,6 @@
 	     where to_char(clock_in, 'YYYYMMDD') = to_char(sysdate, 'YYYYMMDD')
 	       and clock_out is null;
 	</update>
-	
-	<!-- 근태관리 정보조회 -->
-	<select id="selectMemberAttend" parameterType="hashmap" resultType="map">
-		select 
-		       vacation_count "vacationCount"
-		      ,(
-		         select count(user_no)
-		           from attendance
-		          where user_no = member.user_no
-		            and request_detail = '결근'
-		            and to_char(clock_out, 'YYYY') = #{year}
-		            and extract(month from clock_out) = extract(month from to_date(#{month}, 'MM'))
-		        ) "dayOffCount"
-		      ,(
-		         select count(user_no)
-		           from attendance
-		          where user_no = member.user_no
-		            and request_detail = '조퇴'
-		            and to_char(clock_in, 'YYYY') = #{year}
-		            and extract(month from clock_in) = extract(month from to_date(#{month}, 'MM'))
-		        ) "leaveEarlyCount"
-		      ,(
-		         select count(user_no)
-		           from attendance
-		          where user_no = member.user_no
-		            and request_detail = '휴가'
-		            and to_char(clock_out, 'YYYY') = #{year}
-		        ) "usedVacationCount"
-		  from member
-		 where user_no = #{userNo}
-	</select>
 
 	<!-- 출근 등록 -->
 	<insert id="insertMemberAttend" parameterType="hashmap">
