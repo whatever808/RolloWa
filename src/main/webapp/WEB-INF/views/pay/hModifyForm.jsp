@@ -240,7 +240,8 @@ $(document).ready(function(){
 		})
 			
 		
-		$(document).on("keypress", "#userSearch", function(){
+		$(document).on("keypress", "#userSearch", function(ev){
+			if(ev.key == 'Enter'){
 				if($(this).val().trim() == ""){
 					alert("다시입력해주세요");
 					$("#userSearch").val("");
@@ -274,7 +275,7 @@ $(document).ready(function(){
 						}
 					})
 				}
-				
+			}
 		})
 		
 		
@@ -487,8 +488,6 @@ $(document).ready(function(){
 										
 										        <div id="btn_div">
 										           <button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
-                            	 <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
-                            	 <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
 										        </div>
 										    </div>
 										                        
