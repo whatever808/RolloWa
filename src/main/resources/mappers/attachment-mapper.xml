@@ -60,7 +60,7 @@
 			</if>
 		</where>
 	</select>
-	
+
 	
 	<!-- 공지사항 첨부파일 등록 -->
 	<insert id="insertBoardAttachment" parameterType="AttachmentDto">
