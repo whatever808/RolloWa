@@ -75,4 +75,9 @@ public class ChatService {
 	public int selectUnreadMsg(Map<String, String> map) {
 		return chatDao.selectUnreadMsg(map);
 	}
+
+	// 채팅방 나가기
+	public int quitChat(Map<String, String> map) {
+		return chatDao.quitChat(map);
+	}
 }

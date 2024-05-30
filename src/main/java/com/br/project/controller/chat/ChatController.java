@@ -1,6 +1,8 @@
 package com.br.project.controller.chat;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -57,11 +59,12 @@ public class ChatController {
 	}
 	
     // 채팅 메세지 데이터베이스에 저장
-    public int insertChatMsg(Map<String, Object> map) {
+    public int insertChatMsg(Map<String, Object> map) {    	
     	ChatMessageDto chatMsg = ChatMessageDto.builder()
 				.msgContent((String)map.get("msgContent"))
 				.chatRoomNo(Integer.parseInt(String.valueOf(map.get("roomNo"))))
 				.userNo(Integer.parseInt(String.valueOf(map.get("userNo"))))
+				.sendDate((String)map.get("sendDate"))
 				.build();
 
     	return chatService.insertChatMsg(chatMsg);
@@ -146,7 +149,6 @@ public class ChatController {
 			int result = insertChatMsg(map);
 			
 			if (result > 0) {
-				log.debug("초대 메세지 전송 성공");
 				template.convertAndSend("/topic/chat/alram", mapToJson(map));
 			} else {
 				log.debug("채팅 메세지 저장 중 오류 발생");
@@ -156,6 +158,31 @@ public class ChatController {
 		}         
     }
 	
+	// 채팅방 퇴장
+	@MessageMapping(value = "chat/quit")
+	public void quit(String json) {
+		try {
+			Map<String, Object> map = jsonToMap(json);
+			log.debug("map : {}", map);
+			
+			// 채팅 메세지 생성
+			map.put("msgContent", map.get("userName") + "님이 채팅방을 나갔습니다.");
+			// 채팅 메세지 저장
+			int result = insertChatMsg(map);
+			
+			
+			// 방 번호로 채팅 메세지 전송
+			if (result > 0) {
+				template.convertAndSend("/topic/chat/room/" + map.get("roomNo"), mapToJson(map));
+			} else {
+				log.debug("퇴장 메세지 보내기 실패");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	// 채팅방 메세지 전송 및 기록
     @MessageMapping(value = "/chat/message/{roomNo}")
     public void message(String json){
@@ -164,7 +191,7 @@ public class ChatController {
 			int result = insertChatMsg(map);
 			
 			if (result > 0) {
-				template.convertAndSend("/topic/chat/room/" + map.get("roomNo"), json);
+				template.convertAndSend("/topic/chat/room/" + map.get("roomNo"), mapToJson(map));
 			} else {
 				log.debug("채팅 메세지 저장 중 오류 발생");
 			}

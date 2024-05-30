@@ -60,5 +60,9 @@ public class ChatDao {
 	public int selectUnreadMsg(Map<String, String> map) {
 		return sqlSessionTemplate.selectOne("chatMapper.selectUnreadMsg", map);
 	}
+
+	public int quitChat(Map<String, String> map) {
+		return sqlSessionTemplate.update("chatMapper.quitChat", map);
+	}
 	
 }
