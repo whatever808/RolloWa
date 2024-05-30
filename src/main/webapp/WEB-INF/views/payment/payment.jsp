@@ -1021,7 +1021,7 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
 					    pg: 					"tosspay.tosstest",
 					    pay_method: 	"card",
 					    merchant_uid: 'toss_' + merchantUID(), 
-					    name: 				"Rollowa 일반이용권",
+					    name: 				"N",
 					    amount: 			$('#adult-own-price1>span').text(),
 					    custom_data: {
 						    buyer_count: 	$('#teens').val(),

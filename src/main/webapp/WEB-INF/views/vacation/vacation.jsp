@@ -322,8 +322,9 @@ a {
 				data: new FormData($(e).parents('form')[0]),
 				processData:false,
 				contentType:false,
-				enctype: 'multipart/form-data',
+				//enctype: 'multipart/form-data',
 				success:function(r){
+					console.log(r);
 					if(r > 0){
 						greenAlert('휴가신청', '신청 되었습니다.');
 					}else {
