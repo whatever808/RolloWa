@@ -158,5 +158,18 @@ public class RoomController {
 		
 		return String.valueOf(unreadMsgCount);
 	}
+	
+	// 채팅방 나가기
+	@PostMapping("/quit")
+	@ResponseBody
+	public int quitChat(@RequestParam Map<String, String> map) {
+		int result = 0;
+		
+		if (map.get("userNo") != null) {
+			result = chatService.quitChat(map);
+		}
+		
+		return result;
+	}
 
 }

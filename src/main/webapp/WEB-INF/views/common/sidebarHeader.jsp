@@ -141,11 +141,13 @@
             position: fixed;
             right: 80px;
             bottom: 30px;
-            display: none;
+            opacity: 0;
             flex-direction: column;
             overflow: auto;
             overflow-x: none;
             z-index: 100;
+            transition: all 0.3s;
+            background: #eee;
         }
 
         .people_list {
@@ -154,14 +156,21 @@
             overflow-x: hidden;
         }
 
-
         /* 채팅방 리스트 */
+        .chat_room {
+        	border-radius: 5px;
+        }
+        
         .chat_room:hover {
             background-color: #eeeeee;
         }
 
         .chat_room_active {
             background-color: #dddddd;
+        }
+        
+        .selected {
+        	background-color: #eeeeee;
         }
 
         .card-body {
@@ -172,7 +181,6 @@
 
         /* 인물 목록 */
         .people_list {
-            /* display: none; */
             display: flex;
             flex-direction: column;
         }
@@ -269,7 +277,6 @@
 
         /* 채팅방 */
         .chatting {
-            /* display: none; */
             display: block;
         }
 
@@ -292,6 +299,15 @@
         }
 
         /* 채팅방 스타일 끝 */
+        
+        /* 채팅 메세지 스타일 */
+        .fromMe {
+        	background-color: #fff8e3;
+    			color: #444444;
+        }
+        
+        /* 채팅 메세지 스타일 끝 */
+        
     </style>
 <style>
 #main_logo span:hover {
@@ -717,7 +733,7 @@ $(document).ready(function(){
 					    			stompClient.subscribe("/topic/chat/room/" + result[i].chatRoomNo, function(msg) {
 					    				// 메세지 수신 처리
 					    				receiveMsg(msg);
-					    			})
+					    			}, { id: "room" + result[i].chatRoomNo})
 					    		}
 					    		selectChatRoom();
 					    	}
@@ -731,12 +747,16 @@ $(document).ready(function(){
 					    	// 문자열을 json으로 변환
 					    	const msgBody = JSON.parse(msg.body);
 					    	
-					    	console.log(msgBody);
-					    	
 					    	if(msgBody.flag == 0) {
 					    		// 채팅방 초대 알림인 경우
 					    		if(msgBody.userNo != ${loginMember.userNo}) {
+					    			// 메세지 수신 => 채팅방 목록 새로고침
 					    			receiveInviteMsg(msgBody);
+					    			// 초대 받은 채팅방 구독
+					    			stompClient.subscribe("/topic/chat/room/" + msgBody.roomNo, function(msg) {
+					    				// 메세지 수신 처리
+					    				receiveMsg(msg);
+					    			})
 					    		}
 					    	} else {
 					    		// 공지사항, 일정 등록 알림인 경우
