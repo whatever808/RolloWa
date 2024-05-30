@@ -177,10 +177,10 @@
 	</insert>
 
 	<!-- 급여 상세 조회 -->
-	<select id="selectAccountDetail" resultMap="attendanceList"> 
-	 
+	<!-- <select id="selectAccountDetail" resultMap="attendanceList"> 
+	 삭제예정
 	</select>
-
+ -->
 
 	<!-- 출결 상태 조회 -->
 	<select id="selectStatus" resultMap="attendanceList">

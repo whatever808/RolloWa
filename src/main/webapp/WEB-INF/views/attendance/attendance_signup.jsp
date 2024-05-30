@@ -105,7 +105,7 @@
 				                        <div id="nameCheck_result" class="nocheck"></div>
 				                    </h4>
 			                    </div>
-		                    <h5 class="h5_margin">한글 2글자 이상 입력해주세요.</h5>
+		                    <h5 class="h5_margin">2글자 이상 입력해주세요.</h5>
 		                </td>
 		            </tr>
 		
@@ -169,7 +169,7 @@
 		                    <label for="department"><h5>부서명</h5></label>
 		                </td>
 	                    <td>
-	                        <select name="department" id="department" class="form-control">
+	                        <select name="department" id="department" class="form-select">
 	                    	</select>
 	                	</td>
 		            </tr>
@@ -179,7 +179,7 @@
 		                <th>
 		                    <label for="teamCode"><h5>팀명</h5></td></label>
 		                <td class="td_1">
-		                    <select name="teamCode" id="teamCode" class="form-control">
+		                    <select name="teamCode" id="teamCode" class="form-select">
 		                    	<option value="팀 선택">팀 선택</option>
 	                    	</select>
 		                </td>
@@ -191,7 +191,7 @@
 		                    <h5>직급</h5>
 		                </th>
 		                <td class="td_1">
-		                    <select name="positionCode" id="positionCode" class="form-control" required>
+		                    <select name="positionCode" id="positionCode" class="form-select" required>
 		                    	<option value="직급 선택" disabled selected hidden>직급 선택</option>
 	                    	</select>
 		                </td>
@@ -204,7 +204,7 @@
 		                </th>
 		                <td class="checkbox_flex">
 		                    <input type="checkbox" id="authLevel" name="authLevel" class="form-check-input">
-	                        <h5>관리자로 계정을 생성합니다.</h5>
+	                        <h5>계정을 관리자로 설정합니다.</h5>
 							<input type="hidden" name="authLevel" id="authLevel" value="3">
 		                </td>
 		            </tr>
@@ -305,23 +305,28 @@
       	    })
 	      	    
       	    // 직급 조회
-      	    $.ajax({
-       		url:"${contextPath}/attendance/position.do",
-       		type:"GET",
-       		success: function(data){
-       			$.each(data, function(index, attendanceDto) {
-    				$.each(attendanceDto.groupList, function(index, groupDto) {
-    					positionSelect.append($('<option>', {
-    						value: groupDto.codeName,
-    						text: groupDto.codeName
-						}));
-					});
-				});
-       		}, error: function(){
-       			console.log("ajax 직급 조회 실패 입니다.")
-       		}
-      		});
+      	   	positionSelect.empty();
+			positionSelect.append($('<option>', {
+				value: "",
+				text: "직급 선택"
+			}));
       	    
+			$.ajax({
+				url:"${contextPath}/attendance/position.do",
+				type:"GET",
+				success: function(data){
+					$.each(data, function(index, attendanceDto) {
+						$.each(attendanceDto.groupList, function(index, groupDto) {
+							positionSelect.append($('<option>', {
+								value: groupDto.codeName,
+								text: groupDto.codeName
+							}));
+						});
+					});
+				}, error: function(){
+					console.log("ajax 직급 조회 실패 입니다.")
+				}
+			});
       	    positionSelect.change(function(){
 	       	 	// 선택한 팀 콘솔 출력
 	       	    let selectedPosition = positionSelect.val();
@@ -341,7 +346,7 @@
 		      
 		/* 이름 : 한글만 입력되고 나머지 글자(숫자,영문,특문)는 공백으로 변환 */
 		$("#signup_form input[name=userName]").on("keyup", function(){
-			let regExp = $(this).val().replace(/[^가-힣ㄱ-ㅎ]+/g, '');
+			let regExp = $(this).val().replace(/[^가-힣ㄱ-ㅎa-zA-Z]+/g, '');
 			$(this).val(regExp);
 	
 			if( regExp.trim().length == 0 || regExp.length < 2){

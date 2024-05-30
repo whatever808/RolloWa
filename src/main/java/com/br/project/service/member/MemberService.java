@@ -1,5 +1,6 @@
 package com.br.project.service.member;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +76,14 @@ public class MemberService {
 	// 사용자 급여 정보 수정하기
 	public int updateSalary(Map<String, Object> paramMap) {
 		return memberDao.updateSalary(paramMap);
+	}
+	// 사용자 전체 리스트 조회
+	public List<HashMap<String, Object>> selectMemberAll() {
+		return memberDao.selectMemberAll();
+	}
+	// 사용자 전체 리스트 검색 조회
+	public List<HashMap<String, Object>> selectMemberListSearch(Map<String, Object> paramMap) {
+		return memberDao.selectMemberListSearch(paramMap);
 	}
 	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 	

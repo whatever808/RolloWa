@@ -111,7 +111,7 @@
 					team: team,
 					name: name
 				},
-				success: function(data){	
+				success: function(data){
 					//console.log("통신 성공");
 
 					// 통신 성공 시 값 바꿔주기
@@ -127,8 +127,9 @@
 					        totalRows;
 					    }
 				    } else {
-					    totalRows = 0; // 0 처리
+					    totalRows = 0;
 					}
+				    
 				    $(".employee_count").text("전체 " + totalRows + "명");
 				    bindRowClickEvent();
 				}, error: function(){

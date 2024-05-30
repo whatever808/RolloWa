@@ -93,11 +93,13 @@ public class AttendanceController {
 			@RequestParam(value = "name") String name,
 			ModelAndView mv) {
 		
+		/*
 		log.debug("검색 selectedDate : {}", selectedDate);
 		log.debug("검색 department : {}", department);
 		log.debug("검색 team : {}", team);
 		log.debug("검색 attendanceStatus : {}", attendanceStatus);
 		log.debug("검색 name : {}", name);
+		*/
 		
 	    if(department.equals("전체 부서")) {
 	    	department = "";
@@ -241,11 +243,12 @@ public class AttendanceController {
 			@RequestParam ("salary") int salary ,
 			@RequestParam ("bank") String bank ,
 			@RequestParam ("bankAccount") String bankAccount){
-		
+		/*
         log.debug("userNo: {}", userNo);
 		log.debug("salary : {}", salary );
 		log.debug("bank : {}", bank );
 		log.debug("bankAccount : {}", bankAccount );
+		*/
 		
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("userNo", userNo);
@@ -258,12 +261,69 @@ public class AttendanceController {
 		return result;
     }
 	
-	// 2.3 구성원 상세 페이지
-	@GetMapping("/detailList.page")
-	public String selectMemberDetail() {
-		return "attendance/attendance_detailList";
+	// 2.3.1 구성원 상세 페이지 --------------------------------------------------------------------------------
+	@GetMapping("/detailList.do")
+	public ModelAndView selectMemberDetail(ModelAndView mv) {
+		
+		List<HashMap<String, Object>> list = memberService.selectMemberAll();
+		log.debug("list출력 : {}", list);
+		
+		mv.addObject("list", list)
+		  .setViewName("attendance/attendance_detailList");
+		return mv;
+	}
+	// 2.3.2 구성원 조회 페이지 검색
+	@GetMapping("/detailSearch.do")
+	public ModelAndView search(
+			@RequestParam(value = "department") String department,
+			@RequestParam(value = "team") String team,
+			@RequestParam(value = "position") String position,
+			@RequestParam(value = "name") String name,
+			ModelAndView mv) {
+		
+		log.debug("검색 department : {}", department);
+		log.debug("검색 team : {}", team);
+		log.debug("검색 position : {}", position);
+		log.debug("검색 name : {}", name);
+		
+	    if(department.equals("전체 부서")) {
+	    	department = "";
+	    }
+	    if(team.equals("전체 팀")) {
+	    	team = "";
+	    }
+	    if(position.equals("전체 직급")) {
+	    	position = "";
+	    }
+
+	    Map<String, Object> paramMap = new HashMap<>();
+	    paramMap.put("department", department);
+	    paramMap.put("team", team);
+	    paramMap.put("position", position);
+	    paramMap.put("name", name);
+	    
+		log.debug("paramMap : {}", paramMap);
+		
+		List<HashMap<String, Object>> list = memberService.selectMemberListSearch(paramMap);
+		
+		mv.addObject("list", list)
+		  .setViewName("attendance/attendance_detailList");
+		
+		return mv;
 	}
 	
+	// 2.3.3 구성원 조회 상세 페이지---------------------------------------------------
+	@RequestMapping("/memberDetail.do")
+	public ModelAndView selectMemberDetail(@RequestParam("userNo") int userNo, ModelAndView mv) {
+		log.debug("사용자 번호 :  {}", userNo);
+		
+		MemberDto m = memberService.selectMemberInfo(userNo);
+		
+		mv.addObject("m", m)
+		  .setViewName("attendance/attendance_memberDetail");
+		  
+		  return mv;
+	}
 	
 	// 2.4 구성원 추가 ----------------------------------------------------
 	@GetMapping("/signup.page")
@@ -302,15 +362,12 @@ public class AttendanceController {
 	@ResponseBody
 	@GetMapping("/department.do")
 	public List<GroupDto> selectDepartment() {
-		log.debug("◆◇◆◇◆◇◆◇◆ 부서 조회 실행 ◆◇◆◇◆◇◆◇◆");
-
 		return organizationService.selectDepartment();
 	}
 	// 2. 팀 조회
 	@ResponseBody
 	@GetMapping("/team.do")
 	public List<GroupDto> selectTeam(@RequestParam("selectedDepartment") String selectedDepartment) {
-		log.debug("◆◇◆◇◆◇◆◇◆ 팀 조회 실행 ◆◇◆◇◆◇◆◇◆");
 		log.debug("selectedDepartment 값 : {}", selectedDepartment);
 		
 		// 초기값 설정
@@ -330,7 +387,6 @@ public class AttendanceController {
 	@ResponseBody
 	@GetMapping("/position.do")
 	public List<GroupDto> selectPosition() {
-		log.debug("직급 조회 실행");
 	    return organizationService.selectPosition();
 	}
 	

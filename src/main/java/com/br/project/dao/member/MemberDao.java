@@ -1,5 +1,6 @@
 package com.br.project.dao.member;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -77,6 +78,14 @@ public class MemberDao {
 	// 사용자 급여정보 수정하기
 	public int updateSalary(Map<String, Object> paramMap) {
 		return sqlSessionTemplate.update("memberMapper.updateSalary", paramMap);
+	}
+	// 사용자 전체 리스트 조회
+	public List<HashMap<String, Object>> selectMemberAll() {
+		return sqlSessionTemplate.selectList("memberMapper.selectMemberAll");
+	}
+	// 사용자 전체 리스트 검색 조회
+	public List<HashMap<String, Object>> selectMemberListSearch(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.selectList("memberMapper.selectMemberListSearch", paramMap);
 	}
 	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 	
