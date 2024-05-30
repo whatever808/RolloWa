@@ -236,7 +236,8 @@ $(document).ready(function(){
 		})
 			
 		
-		$(document).on("keypress", "#userSearch", function(){
+		$(document).on("keypress", "#userSearch", function(ev){
+			if(ev.key == 'Enter'){
 				if($(this).val().trim() == ""){
 					alert("다시입력해주세요");
 					$("#userSearch").val("");
@@ -270,7 +271,7 @@ $(document).ready(function(){
 						}
 					})
 				}
-				
+			}
 		})
 		
 		

@@ -394,27 +394,8 @@ $(document).ready(function(){
 	                <span>RoLLoWa</span>
                 </span>
             </a>
-            <ul class="list-unstyled ps-0">
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-                        Home
-                    </button>
-                    <div class="collapse show" id="home-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                
+            
+            <ul class="list-unstyled ps-0">              
                 <!-- ======================================= "가림" 구역 start ======================================= -->
                 <!-- ======================================= 게시판 관련 start ======================================= -->
                 <li class="mb-1">
@@ -654,8 +635,14 @@ $(document).ready(function(){
                             <li><a href="${ contextPath }/notification/list.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
                             </li>
-                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">로그아웃
-                                    </a></li>
+
+                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
+                                    out</a></li>
+                                    
+                               <li>
+                               <a href="${ contextPath }/payment/payment.page" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                               Payment</a>
+                               </li>       
                         </ul>
                     </div>
                 </li>

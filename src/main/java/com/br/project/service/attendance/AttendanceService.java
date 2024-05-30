@@ -96,8 +96,33 @@ public class AttendanceService {
 	public int updateMemberAttend(HashMap<String, Object> params) {
 		
 		/*======================== 예찬 ===========================*/
-		MemberDto member = ((MemberDto)params.get("loginMember"));
+		int result = checkAnuual(((MemberDto)params.get("loginMember")));
+		/*======================== 예찬 ===========================*/
+
+		
+		return attendanceDao.updateMemberAttend(params) * result;
+	}
 	
+	/**
+	 * 출근/퇴근/조퇴 시간조회
+	 */
+	public Map<String, Object> selectAttendTime(HashMap<String, Object> params){
+		return attendanceDao.selectAttendTime(params);
+	}
+	/* ======================================= "가림" 구역 ======================================= */
+	
+	/* ======================================= "예찬" 구역 ======================================= */
+	
+	/**
+	 * 사원의 근무일 수에 따라 1년 및 30일이 될때 마다 연차를 갱신 해 주는 매서드
+	 * 1년 차 이상 += 15일 + 근무일수
+	 * 1년차 미만  += 1일
+	 * {VacationCount : 새롭게 더해줄 연차 정보}
+	 * @param member 객체에 필요한 정보
+	 * @return update 성공여부
+	 */
+	public int checkAnuual(MemberDto member) {
+		
 		LocalDate currentDate = getNowDate();
 
 		int result = 1;
@@ -126,23 +151,8 @@ public class AttendanceService {
 				result = vacationDao.updateAnuul(member);				
 			}
 		}
-		/*======================== 예찬 ===========================*/
-
-		
-		return attendanceDao.updateMemberAttend(params) * result;
+		return result;
 	}
-	
-	/**
-	 * 출근/퇴근/조퇴 시간조회
-	 */
-	public Map<String, Object> selectAttendTime(HashMap<String, Object> params){
-		return attendanceDao.selectAttendTime(params);
-	}
-	/* ======================================= "가림" 구역 ======================================= */
-
-	
-
-	
-
+	/* ======================================= "에찬" 구역 ======================================= */
 	
 }

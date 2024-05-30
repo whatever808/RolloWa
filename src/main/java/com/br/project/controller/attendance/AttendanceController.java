@@ -368,7 +368,7 @@ public class AttendanceController {
 	public Map<String, Object> ajaxMemberAttendCheck(HttpServletRequest request) {
 		
 		HashMap<String, Object> params = CommonController.getParameterMap(request);
-		
+		// 예찬 연차 체크에 필요한 parameter 담음
 		params.put("LoginMember", request.getSession().getAttribute("loginMember"));
 		
 		int result = request.getRequestURL().indexOf("insert") != -1 ? attendanceService.insertMemberAttend(params)
