@@ -580,32 +580,37 @@ $(document).ready(function() {
 
 function kakaoPay() {
 	
+
 	let ticket = [];
-	if($("#ticketName").text().trim != ""){
-		ticket.push($("#ticketName").text());
+	if ($("#ticketName").text().trim() != "") {
+	    ticket.push($("#ticketName").text().trim());
 	}
-	
-	if($("#ticketName2").text().trim != ""){
-		ticket.push($("#ticketName2").text());
+
+	if ($("#ticketName2").text().trim() != "") {
+	    ticket.push($("#ticketName2").text().trim());
 	}
-	
+
 	let ticketPrice = [];
-	
-	if($("#adult-own-price1").text().trim != ""){
-		ticketPrice.push($("#adult-own-price1").text());
+	if ($("#adult-own-price1").text().trim() != "") {
+	    ticketPrice.push($("#adult-own-price1").text().trim());
 	}
-	
-	if($("#adult-own-price2").text().trim != ""){
-		ticketPrice.push($("#adult-own-price2").text());
-	}	
-	
-	
-	
-	if(ticket[0] != null)
-	
-	
-	console.log(ticket);
-	console.log(ticketPrice);
+
+	if ($("#adult-own-price2").text().trim() != "") {
+	    ticketPrice.push($("#adult-own-price2").text().trim());
+	}
+
+	let tickets = "";
+	if (ticket.length > 0) {
+	    tickets = ticket.join(",");
+	}
+
+	let ticketPrices = "";
+	if (ticketPrice.length > 0) {
+	    ticketPrices = ticketPrice.join(",");
+	}
+
+	console.log("Tickets: ", tickets);
+	console.log("Ticket Prices: ", ticketPrices);
 	
 	
 	var today = new Date();
@@ -616,7 +621,7 @@ function kakaoPay() {
 	var makeMerchantUid = hours + minutes + seconds + milliseconds;
 	
 if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확인하기
-	/*
+	
    //const emoticonName = document.getElementById('title').innerText
 
    IMP.init("imp37456887"); // 가맹점 식별코드
@@ -625,12 +630,12 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
        pg: 'kakaopay.TC0ONETIME', // PG사 코드표에서 선택
        pay_method: 'card', // 결제 방식
        merchant_uid: "IMP" + makeMerchantUid, // 결제 고유 번호
-       name: , // 제품명
+       name: "ㅁㅁ", // 제품명
        amount: 1, // 가격
        //구매자 정보 ↓
        buyer_email: '${member.EMAIL}',
        buyer_name: '${member.USER_NAME}',
-       buyer_tel : '${member.PHONE}',
+       buyer_tel : '${member.PHONE}'
        // buyer_addr : '서울특별시 강남구 삼성동',
        // buyer_postcode : '123-456'
    }, async function (rsp) { // callback
@@ -654,7 +659,7 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
    
    
    });
-   */
+   
 }else{
 		return false;
 }
