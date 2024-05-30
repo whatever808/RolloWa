@@ -3,6 +3,7 @@ package com.br.project.service.organizaion;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.br.project.dao.organization.OrganizationDao;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrganizationService {
 	
+	@Autowired
 	private final OrganizationDao organizationDao;
 
 	public int selectOrganizationListCount() {
@@ -59,11 +61,22 @@ public class OrganizationService {
 	public List<MemberDto> selectAccountList(Map<String, Object> paramMap) {
 		return organizationDao.selectAccountList(paramMap);
 	}
-
-	public List<MemberDto> selectAccountDetail(int userNo) {
-		return organizationDao.selectAccountDetail(userNo);
+	// 급여 조회 상세페이지
+	public List<MemberDto> selectAccountDetail( ) {
+		return organizationDao.selectAccountDetail();
 	}
 
+	
+	// 수정중
+	public boolean hasEmployeesInDepartment(String departmentName) {
+		int employeeCount = organizationDao.countEmployeesInDepartment(departmentName);
+        return employeeCount > 0;
+    }
+    public boolean hasEmployeesInTeam(String teamName) {
+        int employeeCount = organizationDao.countEmployeesInTeam(teamName);
+        return employeeCount > 0;
+    }
+    
 	
 
 }

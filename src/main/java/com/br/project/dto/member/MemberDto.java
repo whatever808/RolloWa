@@ -38,7 +38,9 @@ public class MemberDto {
 	private int salary;
 	private String teamCode;
 	private String positionCode;
-	
+
+  	// 호관 작성
+	private String department;
 	private String team;
 	private String position;
 	

@@ -505,7 +505,7 @@ $(document).ready(function(){
               </script>
               <!-- ======================================= "가림" 구역 end ======================================= -->
 
-                <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
+				<!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#org-collapse" aria-expanded="false">
@@ -519,14 +519,39 @@ $(document).ready(function(){
                             <li>
                             	<a href="${ contextPath }/organization/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
                             </li>
-                            <li>
+                            <li class="onlyManagerShow">
                             	<a href="${ contextPath }/organization/manager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
                             </li>
                         </ul>
                     </div>
                 </li>
                 
-                <li class="mb-1">
+                <script>
+                $(document).ready(function(){
+                    $.ajax({
+                        url:"${ contextPath }/member/selectAuthLevel.do",
+                        method:"GET",
+                        data:{ userNo: "${ loginMember.userNo }" },
+                        dataType: "json",
+                        success:function(result){
+                        	//console.log("통신 성공");
+                        	//console.log("result : ", result);
+                        	let authLevel = result.authLevel;
+                        	if (authLevel == 1 || authLevel == 2) {
+                        		$('.onlyManagerShow').show();
+                        		//console.log("구성원 보임 성공");
+                        	} else {
+                        		$('.onlyManagerShow').hide();
+                        		//console.log("구성원 안 보임 성공");
+                        	}
+                        }, error:function(){
+                        	//console.log("통신 실패");
+                        }
+                      })
+                  })
+                </script>
+                
+                <li class="mb-1 onlyManagerShow">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#mem-collapse" aria-expanded="false">
                         구성원 관리
@@ -540,7 +565,7 @@ $(document).ready(function(){
                             	<a href="${ contextPath }/attendance/accountList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/attendance" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 상세 조회</a>
+                            	<a href="${ contextPath }/attendance/detailList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 조회</a>
                             </li>
                             <li>
                             	<a href="${ contextPath }/attendance/signup.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 추가</a>
@@ -560,10 +585,10 @@ $(document).ready(function(){
                             	<a href="${ contextPath }/reservation/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 예약</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/reservation/myList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">내 예약 조회</a>
+                            	<a href="${ contextPath }/reservation/my.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">내 예약 조회</a>
                             </li>
-                            <li>
-                            	<a href="${ contextPath }/reservation/reManager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 관리</a>
+                            <li class="onlyManagerShow">
+                            	<a href="${ contextPath }/reservation/manager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 관리</a>
                             </li>
                         </ul>
                     </div>

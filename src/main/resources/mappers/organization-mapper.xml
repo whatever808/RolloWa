@@ -282,6 +282,21 @@
 		  FROM TB_GROUP
 		 WHERE GROUP_CODE LIKE 'POSI%'
 	</select>
+	
+	<!-- 수정중 -->
+	<select id="countEmployeesInDepartment" resultType="_int" parameterType="string">
+        SELECT COUNT(*) 
+		FROM TB_GROUP 
+		WHERE CODE_NAME = #{departmentName}
+		  AND GROUP_CODE LIKE 'DEPT%'
+    </select>
+	<select id="countEmployeesInTeam" resultType="_int" parameterType="string">
+        <!-- SELECT COUNT(*) FROM employee WHERE team_name =  -->
+        SELECT COUNT(*) 
+		FROM TB_GROUP 
+		WHERE CODE_NAME = #{teamName}
+		  AND GROUP_CODE LIKE 'TEAM%';
+    </select>
 
 	
 	

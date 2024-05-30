@@ -31,7 +31,23 @@ public class ReservationService {
 	public List<HashMap<String, Object>> selectReservationState(Map<String, Object> paramMap) {
 		return reservationDao.selectReservationState(paramMap);
 	}
-
 	
+	// 1. 먼저 예약 가능한지 시간 체크하기
+	public int selectTimeCheck(Map<String, Object> paramMap) {
+		return reservationDao.selectTimeCheck(paramMap);
+	}
+	// 2. 예약 하기
+	public int insertReservation(Map<String, Object> paramMap) {
+		return reservationDao.insertReservation(paramMap);
+	}
+
+    // 3. 내 예약 조회
+    public List<HashMap<String, Object>> selectMyReservation(Map<String, Object> paramMap){
+    	return reservationDao.selectMyReservation(paramMap);
+    }
+    // 4. 예약 취소
+	public int updateReservation(Map<String, Object> params) {
+		return reservationDao.updateReservation(params);
+	}
 	
 }
