@@ -213,7 +213,7 @@
 									, success: function(result) {
 										if(result.msg == 'SUCCESS') {
 											alertify.alert("비밀번호 변경", "임시 비밀번호는 다음과 같습니다. 로그인 후 비밀번호 변경해주세요.\n비밀번호 :" + result.newPwd);
-											console.log(result.newPwd);
+											$("#forget_pwd").iziModal("close");
 										} else if(result.msg == 'FAIL') {
 											alertify.alert("비밀번호 변경에 실패했습니다.");
 										}
