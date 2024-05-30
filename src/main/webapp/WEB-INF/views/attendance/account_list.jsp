@@ -118,14 +118,17 @@
 					$(".employee_info tbody").html($(data).find(".employee_info tbody").html());
 					
 					// 검색한 사용자 수
-					let totalRows = $(data).find(".employee_info tbody > tr").length-1;
+					let totalRows = $(data).find(".employee_info tbody > tr").length;
 				    if (totalRows > 0) {
 				        let isEmptyMessage = $(data).find(".employee_info tbody > tr td[colspan='11']").text();
 				        if (isEmptyMessage == "조회된 직원이 없습니다.") {
-				            totalRows--;
-				        }
-				    }
-				    
+					        totalRows -= 1;
+					    } else {
+					        totalRows;
+					    }
+				    } else {
+					    totalRows = 0; // 0 처리
+					}
 				    $(".employee_count").text("전체 " + totalRows + "명");
 				    bindRowClickEvent();
 				}, error: function(){

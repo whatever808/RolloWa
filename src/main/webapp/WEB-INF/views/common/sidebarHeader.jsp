@@ -565,7 +565,7 @@ $(document).ready(function(){
                             	<a href="${ contextPath }/attendance/accountList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/attendance" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 상세 조회</a>
+                            	<a href="${ contextPath }/attendance/detailList.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 상세 조회</a>
                             </li>
                             <li>
                             	<a href="${ contextPath }/attendance/signup.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 추가</a>

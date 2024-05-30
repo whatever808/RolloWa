@@ -17,14 +17,8 @@
     	width: 1200px !important;
         padding: 20px;
     }
-    .profile_img{
-    	width: 400px;
-    }
-    .inputFont{
-    	font-size: 30px !important;
-    	text-align: right;
-    	width: 200px;
-    }
+    
+    
     
     </style>
 </head>
@@ -41,7 +35,7 @@
 		<!-- ------------ -->
 
         <!-- 직원 정보 -->
-        <table class="table table-responsive">
+        <table class="table table-responsive table-bordered line-shadow table_1">
             <tr>
                 <th colspan="4">
                     <c:choose>
@@ -56,31 +50,64 @@
             </tr>
 
             <tr>
-                <td><h3>이름</h3></td>
+                <td class="td_1"><h3>이름</h3></td>
                 <td class="td_2"><h3>${ m.userName }</h3></td>
                 
-                <td><h3>아이디</h3></td>
+                <td class="td_1"><h3>아이디</h3></td>
                 <td class="td_2"><h3>${ m.userId }</h3></td>
                 
             </tr>
 
             <tr>
-                <td><h3>부서명</h3></td>
+                <td class="td_1"><h3>부서명</h3></td>
                 <td class="td_2"><h3>${ m.department }</h3></td>
                 
-                <td><h3>팀명</h3></td>
+                <td class="td_1"><h3>팀명</h3></td>
                 <td class="td_2"><h3>${ m.team }</h3></td>
             </tr>
             
             <tr>
-            	<td><h3>직급</h3></td>
+            	<td class="td_1"><h3>직급</h3></td>
                 <td class="td_2"><h3>${ m.position }</h3></td>
                 
-                <td><h3>시급</h3></td>
+                <td class="td_1"><h3>시급</h3></td>
                 <td>
                     <h3><input type="text" value="${ m.salary }" id="salary" class="inputFont"></h3>
                 </td>
             </tr>
+            
+            <tr>
+            	<td class="td_1"><h3>은행</h3></td>
+                <td class="td_2">
+					<h3>
+						<select name="bank" class="form-select" id="bank">
+							<option value="">은행 선택</option>
+							<option value="농협은행">농협은행</option>
+							<option value="국민은행">국민은행</option>
+							<option value="신한은행">신한은행</option>
+							<option value="우리은행">우리은행</option>
+						</select>
+					</h3>
+                </td>
+                
+                <script>
+		        let b = { bank: "${ m.bank }" };
+		        let bankSelect = document.getElementById('bank');
+
+		        if (b.bank) {
+		            bankSelect.value = b.bank;
+		        } else {
+		            bankSelect.value = "";
+		        }
+			    </script>
+                
+                
+                
+                <td class="td_1"><h3>계좌번호</h3></td>
+				<td class="td_2">
+					<h3><input type="text" value="${ m.bankAccount }" id="bankAccount" class="inputFont"></h3>
+				</td>
+			</tr>
         </table>
 
 
@@ -93,12 +120,16 @@
         function accountSave() {
         	let userNo = ${ m.userNo };
         	let salary = document.getElementById('salary').value;
+        	let bank = document.getElementById('bank').value;
+        	let bankAccount = document.getElementById('bankAccount').value;
 			$.ajax({
 				url:"${ contextPath }/attendance/accountDetailSave.do",
 				type:"GET",
 				data:{
 					userNo: userNo
-					, salary: salary 
+					, salary: salary
+					, bank: bank
+					, bankAccount: bankAccount
 				},
 				success: function(data){	
 					//console.log("통신 성공");

@@ -218,6 +218,8 @@
 	<update id="updateSalary">
 		UPDATE MEMBER
 		   SET SALARY = #{ salary }
+		     , BANK = #{ bank }
+		     , BANK_ACCOUNT = #{ bankAccount }
 		 WHERE USER_NO = #{ userNo }
 	</update>
 	

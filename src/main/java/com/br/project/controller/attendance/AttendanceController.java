@@ -137,7 +137,7 @@ public class AttendanceController {
 		return mv;
 	}
 	
-	// 2.2 급여 조회(기본 페이지) --------------------------------------------------------------------------------------------
+	// 2.2 급여 조회 페이지(기본 페이지 출력) --------------------------------------------------------------------------------------------
 	@GetMapping("/accountList.do")
 	public ModelAndView accountList(@RequestParam(value="page", defaultValue="1") int currentPage
 			, ModelAndView mv) {
@@ -168,7 +168,7 @@ public class AttendanceController {
 		return mv;
 	}
 	
-	// 2.2 급여 조회(검색 페이지) --------------------------------------------------------------------------------------------
+	// 2.2 급여 조회 페이지(검색 기능) --------------------------------------------------------------------------------------------
 	@GetMapping("/accountSearch.do")
 	public ModelAndView accountSearch(@RequestParam(value="page", defaultValue="1") int currentPage, 
 			@RequestParam(value = "selectedDate") String selectedDate,
@@ -238,23 +238,31 @@ public class AttendanceController {
 	@ResponseBody
 	@RequestMapping("/accountDetailSave.do")
 	public int updateSalary(@RequestParam ("userNo") int userNo,
-			@RequestParam ("salary") int salary){
+			@RequestParam ("salary") int salary ,
+			@RequestParam ("bank") String bank ,
+			@RequestParam ("bankAccount") String bankAccount){
 		
-        //log.debug("userNo: {}", userNo);
-		//log.debug("salary : {}", salary );
+        log.debug("userNo: {}", userNo);
+		log.debug("salary : {}", salary );
+		log.debug("bank : {}", bank );
+		log.debug("bankAccount : {}", bankAccount );
 		
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("userNo", userNo);
 		paramMap.put("salary", salary);
+		paramMap.put("bank", bank);
+		paramMap.put("bankAccount", bankAccount);
 		
 		int result = memberService.updateSalary(paramMap);
 
 		return result;
     }
 	
-	
-	
-	
+	// 2.3 구성원 상세 페이지
+	@GetMapping("/detailList.page")
+	public String selectMemberDetail() {
+		return "attendance/attendance_detailList";
+	}
 	
 	
 	// 2.4 구성원 추가 ----------------------------------------------------
@@ -262,13 +270,13 @@ public class AttendanceController {
 	public String signupPage() {
 		return "attendance/attendance_signup";
 	}
-
+	// 2.4.1 아이디 중복체크
 	@ResponseBody
 	@GetMapping("/idcheck.do")
 	public String ajaxIdCheck(String checkId) {
 		return attendanceService.selectUserIdCount(checkId) > 0 ? "NNNNN" : "YYYYY";
 	}
-
+	// 회원 가입하기
 	@PostMapping("/signup.do")
 	public String insertMembmer(MemberDto member, RedirectAttributes redirectAttributes) {
 		log.debug("암호화 전 : {}", member);
