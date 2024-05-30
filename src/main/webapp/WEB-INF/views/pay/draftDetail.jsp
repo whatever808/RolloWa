@@ -316,6 +316,7 @@ $(document).on("click", "#rejectBtn", function(){
             </table>
 					        </div>
 					      			<div id="modifybtn">
+					      					<button onclick="goBack()">뒤로 가기</button>
 					           			<button class="btn btn-warning" id="modifyWriter" type="submit" style="display: none;">수정</button>
 					          			<button class="btn btn-primary" onclick="submitbtn();" style="display: none;" id="aproS">완료</button>
 					          	</div>
@@ -360,7 +361,7 @@ $(document).on("click", "#rejectBtn", function(){
 		        </div>
 		    </div>
 		    <!---------------------------------------------->
-		    
+		  
 		 <script>
 		   $(document).ready(function() {
 		   		if("${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}"){
@@ -518,7 +519,7 @@ $(document).on("click", "#rejectBtn", function(){
     
     $("#modifyWriter").on("click", function(){
     	
-    	let writerNo = '${ not empty list and list.get(0).DOCUMENT_STATUS == "D" and userNo == list.get(0).PAYMENT_WRITER_NO }';
+    	let writerNo = '${ not empty list and list.get(0).DOCUMENT_STATUS == "N" or list.get(0).DOCUMENT_STATUS == "D" and userNo == list.get(0).PAYMENT_WRITER_NO }';
     	
     	if(writerNo == "true"){
 	    	 	if(confirm('수정하시겠습니까?')){

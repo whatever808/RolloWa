@@ -416,6 +416,37 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.mySearchApList", map, rowbounds);
 	}
 	
+	public String contentSelect(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.contentSelect", map);
+	}
+	
+	
+	public int noApprovalSignCount(String userName) {
+		return sqlSessionTemplate.selectOne("payMapper.noApprovalSignCount", userName);
+	}
+	
+	public List<PayDto> noApprovalSign(String userName, PageInfoDto pi){
+		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.noApprovalSign", userName, rowbounds);
+	}
+	
+	public int noApprovalSignSelectCount(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.noApprovalSignSelectCount", map);
+	}
+	
+	public List<PayDto> noApprovalSignSelectList(Map<String, Object> map, PageInfoDto pi){
+		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.noApprovalSignSelectList", map, rowbounds);
+	}
+	
+	public int noApprovalSignSearchCount(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.noApprovalSignSearchCount", map);
+	}
+	
+	public List<PayDto> noApprovalSignSearchList(Map<String, Object> map, PageInfoDto pi){
+		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.noApprovalSignSearchList", map, rowbounds);
+	}
 	
 	
 }

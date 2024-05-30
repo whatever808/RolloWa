@@ -480,4 +480,40 @@ public class PayService {
 	public List<Map<String, Object>> mySearchApList(Map<String, Object> map, PageInfoDto pi){
 		return payDao.mySearchApList(map, pi);
 	}
+	
+	public String contentSelect(Map<String, Object> map) {
+		return payDao.contentSelect(map);
+	}
+	
+	
+	
+	public int noApprovalSignCount(String userName) {
+		return payDao.noApprovalSignCount(userName);
+	}
+	
+	public List<PayDto> noApprovalSign(String userName, PageInfoDto pi){
+		return payDao.noApprovalSign(userName, pi);
+	}
+	
+	public int noApprovalSignSelectCount(Map<String, Object> map) {
+		return payDao.noApprovalSignSelectCount(map);
+	}
+	
+	
+	public List<PayDto> noApprovalSignSelectList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.noApprovalSignSelectList(map, pi);
+	}
+	
+	public int noApprovalSignSearchCount(Map<String, Object> map) {
+		return payDao.noApprovalSignSearchCount(map);
+	}
+	
+	public List<PayDto> noApprovalSignSearchList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.noApprovalSignSearchList(map, pi);
+	}
+	
+	
+	
+	
+	
 }

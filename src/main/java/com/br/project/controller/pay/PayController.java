@@ -4,7 +4,9 @@ package com.br.project.controller.pay;
 
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +51,64 @@ public class PayController {
 	
 	//결재메인페이지
 	
-	@RequestMapping(value="/paymain.page")
+	@RequestMapping(value="/approvalMain.page")
 	public String paymainPage(@RequestParam(value="page", defaultValue="1") int currentPage, 
+							   Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+		//개시글총갯수
+		int listCount = payService.selectListCount();
+		
+		
+		//페이지인포객체 생성
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(listCount, currentPage, 5, 10);
+		
+		//회원정보조회용
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userName", userName);
+		mapUserMember.put("userNo", userNo);
+		List<MemberDeptDto> member = payService.selectloginUserDept(mapUserMember);
+		
+		List<PayDto> list = payService.paymainPage(pi);
+		
+		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payService.moreDateCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payService.successListCount(userName);
+		// 로그인한 사용자의 전체수신갯수
+		int ulistCount = payService.allUserCount(userName);
+		// 미결재함
+		int noApprovalSignCount = payService.noApprovalSignCount(userName);
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
+		String formatedNow = sdf.format(now);
+		
+		log.debug("member : {} ", member);
+		log.debug("member.get(0) : {}", member.get(0));
+		log.debug("member.get(0) : {}", member.get(0).getPositionName());
+		
+		
+		
+			
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("noApprovalSignCount", String.valueOf(noApprovalSignCount));
+		model.addAttribute("userName", userName);
+		model.addAttribute("today", formatedNow);
+		
+		return "pay/approvalMain";
+		
+		
+	}
+	
+	//ajax용 전체결재함
+	@ResponseBody
+	@RequestMapping(value="/ajaxapprovalMain.do")
+	public Map<String, Object> ajaxapprovalMain(@RequestParam(value="page", defaultValue="1") int currentPage, 
 							   Model model, HttpSession session, RedirectAttributes redirectAttributes) {
 		//개시글총갯수
 		int listCount = payService.selectListCount();
@@ -80,30 +138,21 @@ public class PayController {
 		log.debug("member : {} ", member);
 		log.debug("member.get(0) : {}", member.get(0));
 		log.debug("member.get(0) : {}", member.get(0).getPositionName());
-		if(member.get(0).getPositionName().equals("차장") || 
-		   member.get(0).getPositionName().equals("부장") ||
-		   member.get(0).getPositionName().equals("과장")) {
-			
-			model.addAttribute("list", list);
-			model.addAttribute("pi", pi);
-			model.addAttribute("listCount", String.valueOf(listCount));		
-			model.addAttribute("mdCount", String.valueOf(mdCount));
-			model.addAttribute("slistCount", String.valueOf(slistCount));
-			model.addAttribute("ulistCount", String.valueOf(ulistCount));
-			model.addAttribute("userName", userName);	
-			model.addAttribute("paymain", "paymain");
-			
-			return "pay/paymain";
-		}else {
-			redirectAttributes.addFlashAttribute("alertMsg", "관리자직급만 이용할 수 있는 메뉴입니다.");
-			return "redirect:/";
-		}
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("list", list);
+		map.put("pi", pi);
+		
+		return map;
+		
 		
 	}
 	
 	//결재메인페이지카테고리&검색---------------------
+	@ResponseBody
 	@GetMapping("/search.do")
-	public ModelAndView searchList(@RequestParam Map<String, String> search
+	public Map<String, Object> searchList(@RequestParam Map<String, String> search
 								 , @RequestParam(value="page", defaultValue="1") int currentPage
 								 , ModelAndView mv, HttpSession session) {
 		
@@ -119,34 +168,18 @@ public class PayController {
 		PageInfoDto pi = pagingUtil.getPageInfoDto(searchlistCount, currentPage, 5, 10);
 		//리스트
 		List<PayDto> list = payService.searchList(pi, search);
-		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
-		int mdCount = payService.moreDateCount(userName);
-		//로그인한 사용자의 결재한 내역 게시글 총갯수
-		int slistCount = payService.successListCount(userName);
-		// 로그인한 사용자의 전체수신갯수
-		int ulistCount = payService.allUserCount(userName);
-
 		
-		mv.addObject("list", list)
-		  .addObject("pi", pi)
-		  .addObject("search", search)
-		  .addObject("searchlistCount", searchlistCount)
-		  .addObject("listCount", String.valueOf(listCount))		  
-		  .addObject("mdCount", String.valueOf(mdCount))
-		  .addObject("slistCount", String.valueOf(slistCount))
-		  .addObject("ulistCount", String.valueOf(ulistCount))
-		  .addObject("userName", userName)
-		  .addObject("searchmain", "searchmain")
-		  .setViewName("pay/paymain");
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
 		
-		
-		return mv;
+		return map;
 		
 	}
 	//----------------------------------------
-	
+	@ResponseBody
 	@RequestMapping(value="/selectList.do")
-	public String selectList(HttpServletRequest request,
+	public Map<String, Object> selectList(HttpServletRequest request,
 			 @RequestParam (value="page", defaultValue="1") int currentPage
 						, Model model, HttpSession session) {
 		
@@ -166,27 +199,11 @@ public class PayController {
 		//리스트
 		List<PayDto> list = payService.categoryList(params, pi);
 		
-		//개시글총갯수
-		int listCount = payService.selectListCount();
-		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
-		int mdCount = payService.moreDateCount(userName);
-		//로그인한 사용자의 결재한 내역 게시글 총갯수
-		int slistCount = payService.successListCount(userName);
-		// 로그인한 사용자의 전체수신갯수
-		int ulistCount = payService.allUserCount(userName);
-
+		Map<String, Object> map = new HashMap<>();
+		map.put("pi", pi);
+		map.put("list", list);
 		
-		model.addAttribute("clistCount", clistCount);
-		model.addAttribute("params", params);
-		model.addAttribute("pi", pi);
-		model.addAttribute("list", list);
-		model.addAttribute("listCount", String.valueOf(listCount));		
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
-		model.addAttribute("ulistCount", String.valueOf(ulistCount));
-		model.addAttribute("userName", userName);
-		
-		return "pay/paymain";
+		return map;
 		
 	}
 	
@@ -214,11 +231,14 @@ public class PayController {
 			List<Map<String, Object>> list = payService.salesDetail(map);
 			List<SignDto> sign = payService.ajaxSignSelect(map);
 			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
+			//에디터
+			String content = payService.contentSelect(map);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
 			model.addAttribute("sign", sign);
 			model.addAttribute("fileList", fileList);
+			model.addAttribute("content", content);
 			return "pay/salesDetail";
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("비품신청서")) {
 			List<Map<String, Object>> list = payService.fixDetail(map);
@@ -256,12 +276,11 @@ public class PayController {
 	}
 	
 	//메인페이지 로그인한 유저의 전체결재 수신함--------------------------
-	@GetMapping("/allUserlist.do")
-	public String allUserlist(@RequestParam (value="page", defaultValue="1") int currentPage
+	@ResponseBody
+	@RequestMapping("/allUserlist.do")
+	public Map<String, Object> allUserlist(@RequestParam (value="page", defaultValue="1") int currentPage
 								,HttpSession session, Model model) {
 		
-		
-		// userName
 		//회원정보조회용
 		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
 		String userName = payService.loginUserMember(userNo);
@@ -286,16 +305,11 @@ public class PayController {
 		
 		log.debug("list : {}", list);
 		
-		model.addAttribute("list", list);
-		model.addAttribute("pi", pi);
-		model.addAttribute("listCount", String.valueOf(listCount));		
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
-		model.addAttribute("ulistCount", String.valueOf(ulistCount));
-		model.addAttribute("userName", userName);
-		model.addAttribute("userAllList", "userAllList");
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
 		
-		return "pay/paymain";
+		return map;
 		
 	}
 	//-------------------------------------------------------
@@ -497,7 +511,7 @@ public class PayController {
 		}
 		
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 	}
 	
 	@ResponseBody
@@ -700,8 +714,9 @@ public class PayController {
 	}
 	
 	//로그인한 사용자 전체수신결재함
+	@ResponseBody
 	@RequestMapping("/userSelectList.do")
-	public String userSelectList(@RequestParam (value="page", defaultValue="1") int currenPage
+	public Map<String, Object> userSelectList(@RequestParam (value="page", defaultValue="1") int currenPage
 								, Model model, @RequestParam Map<String, Object> map
 								, HttpSession session) {
 		
@@ -724,23 +739,20 @@ public class PayController {
 		//로그인한 사용자의 결재한 내역 게시글 총갯수
 		int slistCount = payService.successListCount(userName);
 		
-		model.addAttribute("pi", pi);
-		model.addAttribute("list", list);
-		model.addAttribute("listCount", String.valueOf(listCount));		
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
-		model.addAttribute("ulistCount", String.valueOf(ulistCount));
-		model.addAttribute("map", map);
-		model.addAttribute("userName", userName);
-		model.addAttribute("userAllListSelect", "userAllListSelect");
+		Map<String, Object> maps = new HashMap<>();
 		
+		maps.put("pi", pi);
+		maps.put("list", list);
+		maps.put("conditions", map.get("conditions"));
+		maps.put("status", map.get("status"));
 		
-		
-		return "pay/paymain";
+		return maps;
 	}
+	
 	//로그인한 사용자 전체수신결재함 - 검색
+	@ResponseBody
 	@GetMapping("/userSearch.do")
-	public String userSearch(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
+	public Map<String, Object> userSearch(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
 							, Model model, HttpSession session) {
 		
 		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
@@ -762,18 +774,13 @@ public class PayController {
 		//로그인한 사용자의 결재한 내역 게시글 총갯수
 		int slistCount = payService.successListCount(userName);
 		
-		model.addAttribute("pi", pi);
-		model.addAttribute("list", list);
-		model.addAttribute("listCount", String.valueOf(listCount));		
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
-		model.addAttribute("ulistCount", String.valueOf(ulistCount));
-		model.addAttribute("map", map);
-		model.addAttribute("userName", userName);
-		model.addAttribute("userSearchList", "userSearchList");
+		Map<String, Object> maps = new HashMap<>();
+		maps.put("pi", pi);
+		maps.put("list", list);
+		maps.put("condition", map.get("condition"));
+		maps.put("keyword", map.get("keyword"));
 		
-		return "pay/paymain";
-		
+		return maps;
 		
 	}
 	
@@ -874,14 +881,15 @@ public class PayController {
 		}
 		
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 		
 		
 	}
 	
 	//로그인한 사용자의 승인완료된 수신함
+	@ResponseBody
 	@GetMapping("/approvedList.do")
-	public String ApprovedList(HttpSession session, @RequestParam (value="page", defaultValue="1") int currentPage
+	public Map<String, Object> ApprovedList(HttpSession session, @RequestParam (value="page", defaultValue="1") int currentPage
 									, Model model){
 		
 		//회원정보조회용
@@ -900,16 +908,11 @@ public class PayController {
 		int mdCount = payService.moreDateCount(userName);
 		int ulistCount = payService.allUserCount(userName);
 		
-		model.addAttribute("pi", pi);
-		model.addAttribute("list", list);
-		model.addAttribute("listCount", String.valueOf(listCount));		
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
-		model.addAttribute("ulistCount", String.valueOf(ulistCount));
-		model.addAttribute("userName", userName);
-		model.addAttribute("userSuccessList", "userSuccessList");
+		Map<String, Object> map = new HashMap<>();
+		map.put("pi", pi);
+		map.put("list", list);
 		
-		return "pay/paymain";
+		return map;
 		
 	}
 	
@@ -941,7 +944,7 @@ public class PayController {
 			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
 		}
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 	}
 	
 	@PostMapping("/hReportInsert.do")
@@ -1018,7 +1021,7 @@ public class PayController {
 		}
 		
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 	}
 	
 	
@@ -1081,13 +1084,14 @@ public class PayController {
 
 		//log.debug("fileLength : {}", map.get("fileLength"));
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 		
 		
 	}
 	
+	@ResponseBody
 	@RequestMapping("/delayDateList.do")
-	public String delayDateList(@RequestParam (value="page", defaultValue="1") int currentPage
+	public Map<String, Object> delayDateList(@RequestParam (value="page", defaultValue="1") int currentPage
 												 , HttpSession session, Model model){
 		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
 		String userName = payService.loginUserMember(userNo);
@@ -1098,30 +1102,17 @@ public class PayController {
 		
 		List<PayDto> list = payService.delayDateList(userName, pi);
 		
-		//로그인한 사용자의 결재한 내역 게시글 총갯수
-		int slistCount = payService.successListCount(userName);
-		// 로그인한 사용자의 전체수신갯수
-		int ulistCount = payService.allUserCount(userName);
-		//개시글총갯수
-		int listCount = payService.selectListCount();
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
 		
-		
-		model.addAttribute("list", list);
-		model.addAttribute("pi", pi);
-		model.addAttribute("listCount", String.valueOf(listCount));		
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
-		model.addAttribute("ulistCount", String.valueOf(ulistCount));
-		model.addAttribute("userName", userName);	
-		model.addAttribute("delayDate", "delayDate");
-		
-		return "pay/paymain";
+		return map;
 		
 	}
 	
-	
+	@ResponseBody
 	@RequestMapping("/delayDateSelectList.do")
-	public String delayDateSelectList(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
+	public Map<String, Object> delayDateSelectList(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
 							, Model model, HttpSession session) {
 		
 		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
@@ -1138,30 +1129,19 @@ public class PayController {
 		
 		List<PayDto> list = payService.delayDateSelectList(userMap, pi);
 		
-		int mdCount = payService.moreDateCount(userName);
-		//로그인한 사용자의 결재한 내역 게시글 총갯수
-		int slistCount = payService.successListCount(userName);
-		// 로그인한 사용자의 전체수신갯수
-		int ulistCount = payService.allUserCount(userName);
-		//개시글총갯수
-		int listCount = payService.selectListCount();
 		
+		Map<String, Object> maps = new HashMap<>(); 
+		maps.put("list", list);
+		maps.put("pi", pi);
+		maps.put("conditions", map.get("conditions"));
+		maps.put("status", map.get("status"));
 		
-		model.addAttribute("list", list);
-		model.addAttribute("pi", pi);
-		model.addAttribute("listCount", String.valueOf(listCount));		
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
-		model.addAttribute("ulistCount", String.valueOf(ulistCount));
-		model.addAttribute("userName", userName);
-		model.addAttribute("map", map);
-		model.addAttribute("delayDateSelect", "delayDateSelect");
-		
-		return "pay/paymain";
+		return maps;
 	}
 	
+	@ResponseBody
 	@RequestMapping("/delayDateSearch.do")
-	public String delayDateSearch(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
+	public Map<String, Object> delayDateSearch(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
 							, Model model, HttpSession session) {
 		
 		
@@ -1188,18 +1168,13 @@ public class PayController {
 		//개시글총갯수
 		int listCount = payService.selectListCount();
 		
+		Map<String, Object> maps = new HashMap<>();
+		maps.put("list", list);
+		maps.put("pi", pi);
+		maps.put("condition", map.get("condition"));
+		maps.put("keyword", map.get("keyword"));
 		
-		model.addAttribute("list", list);
-		model.addAttribute("pi", pi);
-		model.addAttribute("listCount", String.valueOf(listCount));		
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
-		model.addAttribute("ulistCount", String.valueOf(ulistCount));
-		model.addAttribute("userName", userName);
-		model.addAttribute("map", map);
-		model.addAttribute("delayDateSearch", "delayDateSearch");
-		
-		return "pay/paymain";
+		return maps;
 		
 	}
 	
@@ -1299,8 +1274,9 @@ public class PayController {
 	
 	
 	// 승인 완료한 수신결재함
-	@GetMapping("/approvalSearch.do")
-	public String approvalSearch(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
+	@ResponseBody
+	@RequestMapping("/approvalSearch.do")
+	public Map<String, Object> approvalSearch(@RequestParam Map<String, Object> map, @RequestParam (value="page", defaultValue="1") int currentPage
 							, Model model, HttpSession session) {
 		
 		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
@@ -1325,23 +1301,19 @@ public class PayController {
 		//개시글총갯수
 		int listCount = payService.selectListCount();
 		
+		Map<String, Object> mapes = new HashMap<>();
 		
-		model.addAttribute("list", list);
-		model.addAttribute("pi", pi);
-		model.addAttribute("listCount", String.valueOf(listCount));		
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
-		model.addAttribute("ulistCount", String.valueOf(ulistCount));
-		model.addAttribute("userName", userName);
-		model.addAttribute("map", map);
-		model.addAttribute("approvalSearch", "approvalSearch");
+		mapes.put("list", list);
+		mapes.put("pi", pi);
+		mapes.put("condition", map.get("condition"));
+		mapes.put("keyword", map.get("keyword"));;
 		
-		return "pay/paymain";
+		return mapes;
 	}
 	
-	
+	@ResponseBody
 	@RequestMapping("/approvalSelectList.do")
-	public String approvalSelectList(HttpServletRequest request,@RequestParam (value="page", defaultValue="1") int currentPage
+	public Map<String, Object> approvalSelectList(HttpServletRequest request,@RequestParam (value="page", defaultValue="1") int currentPage
 									, Model model, HttpSession session, @RequestParam Map<String, Object> map) {
 		
 		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
@@ -1367,18 +1339,14 @@ public class PayController {
 		//개시글총갯수
 		int listCount = payService.selectListCount();
 		
+		Map<String, Object> mapes = new HashMap<>();
 		
-		model.addAttribute("list", list);
-		model.addAttribute("pi", pi);
-		model.addAttribute("listCount", String.valueOf(listCount));		
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
-		model.addAttribute("ulistCount", String.valueOf(ulistCount));
-		model.addAttribute("userName", userName);
-		model.addAttribute("map", map);
-		model.addAttribute("approvalSelect", "approvalSelect");
+		mapes.put("list", list);
+		mapes.put("pi", pi);
+		mapes.put("conditions", map.get("conditions"));
+		mapes.put("status", map.get("status"));
 		
-		return "pay/paymain";
+		return mapes;
 		
 	}
 	
@@ -1579,6 +1547,91 @@ public class PayController {
 		
 		return result == 1 ? "SUCCESS" : "FAIL";
 	}
+	
+	@ResponseBody
+	@RequestMapping("/ajaxNoApprovalSign.do")
+	public Map<String, Object> ajaxNoApprovalSign(@RequestParam (value="page", defaultValue="1") int currentPage, HttpSession session) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		
+		int noApprovalSignCount = payService.noApprovalSignCount(userName);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(noApprovalSignCount, currentPage, 5, 10);
+		
+		List<PayDto> list = payService.noApprovalSign(userName, pi);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
+		return map;
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/ajaxNoApprovalSignSelectList.do")
+	public Map<String, Object> ajaxNoApprovalSignSelectList(@RequestParam (value="page", defaultValue="1") int currentPage, HttpSession session
+														 , @RequestParam Map<String, Object> map) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapes = new HashMap<>();
+		mapes.put("userName", userName);
+		mapes.put("conditions", map.get("conditions"));
+		mapes.put("status", map.get("status"));
+		
+		int noApprovalSignSelectCount = payService.noApprovalSignSelectCount(mapes);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(noApprovalSignSelectCount, currentPage, 5, 10);
+		
+		List<PayDto> list = payService.noApprovalSignSelectList(mapes, pi);
+		
+		Map<String, Object> maps = new HashMap<>();
+		maps.put("list", list);
+		maps.put("pi", pi);
+		maps.put("conditions", map.get("conditions"));
+		maps.put("status", map.get("status"));
+		
+		
+		return maps;
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/ajaxNoApprovalSignSearchList.do")
+	public Map<String, Object> ajaxNoApprovalSignSearchList(@RequestParam (value="page", defaultValue="1") int currentPage, HttpSession session
+														 , @RequestParam Map<String, Object> map) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapes = new HashMap<>();
+		mapes.put("userName", userName);
+		mapes.put("condition", map.get("condition"));
+		mapes.put("keyword", map.get("keyword"));
+		
+		int noApprovalSignSearchCount = payService.noApprovalSignSearchCount(mapes);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(noApprovalSignSearchCount, currentPage, 5, 10);
+		
+		List<PayDto> list = payService.noApprovalSignSearchList(mapes, pi);
+		
+		Map<String, Object> maps = new HashMap<>();
+		maps.put("list", list);
+		maps.put("pi", pi);
+		maps.put("condition", map.get("condition"));
+		maps.put("keyword", map.get("keyword"));
+		
+		return maps;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
