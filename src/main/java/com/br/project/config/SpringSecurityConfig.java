@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
+//@Configuration
 public class SpringSecurityConfig {
-	@Autowired
+	/*@Autowired
 	private HttpSession session;
 	String contextPath = session.getServletContext().getContextPath();
 	
@@ -23,5 +23,5 @@ public class SpringSecurityConfig {
 	        .anyRequest().authenticated();
 
         return http.build();
-    }
+    }*/
 }
