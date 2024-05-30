@@ -321,7 +321,7 @@
 	       	  chatRoomVal += "<div class='d-flex flex-row'>";
 	       	  chatRoomVal += "<img style='height: 70px;' src='${contextPath}" + participantsList[0].profileURL + "'";
 	       	  chatRoomVal += "class='rounded-circle d-flex align-self-center me-3 shadow-1-strong'";
-	       	  chatRoomVal += "width='60'>";
+	       	  chatRoomVal += "width='60' style='height: 70px'>";
 	       	  chatRoomVal += "<div class='pt-1'>";
 	       	  chatRoomVal += "<p class='fw-bold mb-0'>";
 	       	  for(var j = 0; j < (participantsList.length > 2 ? 2 : participantsList.length ); j++) {
@@ -555,7 +555,7 @@
 				chatText += "</div>";
 				chatText += "<img src='${contextPath}" + profileURL + "' alt='avatar'";
 				chatText += " class='rounded-circle d-flex align-self-start ms-3 shadow-1-strong'";
-				chatText += "width='60'>";
+				chatText += "width='60' style='height: 70px'>";
 				chatText += "</li>";
 			} else if (flag == 2) {
 				// 보낸 사람이 내가 아닐 때
@@ -563,8 +563,8 @@
  				chatText += "<img src='${contextPath}" + profileURL + "'";
  				chatText += "alt='profile image'";
  				chatText += "class='rounded-circle d-flex align-self-start me-3 shadow-1-strong'";
- 				chatText += "width='60'>";
- 				chatText += "<div class='card' style='width:450px;'>";
+ 				chatText += "width='60' style='height: 70px'>";
+ 				chatText += "<div class='card' style='width:100%;'>";
  				chatText += "<div class='card-header d-flex justify-content-between p-3'>";
  				chatText += "<p class='fw-bold mb-0'>" + userName + "</p>";
  				chatText += "<p class='text-muted small mb-0'><i class='far fa-clock'></i>" + sendDate + "</p>";
