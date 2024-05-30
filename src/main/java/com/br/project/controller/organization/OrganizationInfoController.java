@@ -3,6 +3,7 @@ package com.br.project.controller.organization;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.dto.organization.OrganizationDto;
 import com.br.project.service.organizaion.OrganizationService;
 import com.br.project.util.PagingUtil;
 
@@ -140,38 +142,51 @@ public class OrganizationInfoController {
 		return "organization/organization_manager";
 	}
 	
-	@ResponseBody
+	// 3. 조직 관리 -------------------------------------------------------------
+	
+	// 부서 추가
 	@PostMapping("/addDepartment.do")
-	public List<Map<String, Object>> addDepartment(@RequestBody List<Map<String, Object>> departmentData) {
-	    // departmentData를 받아서 처리하고, 필요에 따라 출력
-	    
-		/*
-		for (Map<String, Object> department : departmentData) {
-	        log.debug("부서명: {}", department.get("departmentName"));
-	        List<String> teams = (List<String>) department.get("teams");
-	        log.debug("소속 팀: {}", teams);
-	    }
-	    */
-		
-		// 직원이 속한 팀 또는 부서가 있는지 확인
-		for (Map<String, Object> department : departmentData) {
-	        String departmentName = (String) department.get("departmentName");
-	        if (organizationService.hasEmployeesInDepartment(departmentName)) {
-	            throw new RuntimeException("부서에 속한 직원이 있습니다. 삭제할 수 없습니다.");
-	        }
-	        List<String> teams = (List<String>) department.get("teams");
-	        for (String teamName : teams) {
-	            if (organizationService.hasEmployeesInTeam(teamName)) {
-	                throw new RuntimeException("팀에 속한 직원이 있습니다. 삭제할 수 없습니다.");
-	            }
-	        }
-	    }
-		
-        return departmentData;
-		
-	    // 받은 데이터를 그대로 반환하여 클라이언트로 전송
-	    //return departmentData;
-	}
-
+    @ResponseBody
+    public ResponseEntity<String> addDepartment(@RequestBody OrganizationDto organizationDto) {
+        organizationService.addDepartment(organizationDto);
+        return ResponseEntity.ok("Department added successfully");
+    }
+	
+	// 팀 추가
+	@PostMapping("/addTeam.do")
+    @ResponseBody
+    public ResponseEntity<String> addTeam(@RequestBody OrganizationDto organizationDto) {
+        organizationService.addTeam(organizationDto);
+        return ResponseEntity.ok("Team added successfully");
+    }
+	
+	// 부서 삭제
+	@PostMapping("/deleteDepartment.do")
+    @ResponseBody
+    public ResponseEntity<String> deleteDepartment(@RequestParam String departmentCode) {
+        boolean isDeleted = organizationService.deleteDepartment(departmentCode);
+        if (isDeleted) {
+            return ResponseEntity.ok("Department deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Cannot delete department with active members");
+        }
+    }
+	
+	// 팀 삭제
+	@PostMapping("/deleteTeam.do")
+    @ResponseBody
+    public ResponseEntity<String> deleteTeam(@RequestParam String teamCode) {
+        boolean isDeleted = organizationService.deleteTeam(teamCode);
+        if (isDeleted) {
+            return ResponseEntity.ok("Team deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Cannot delete team with active members");
+        }
+    }
+	
+	
+	
+	
+	
 	
 }

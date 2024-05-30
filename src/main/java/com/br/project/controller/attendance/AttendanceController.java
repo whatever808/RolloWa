@@ -225,7 +225,6 @@ public class AttendanceController {
 	// 2.2 급여 상세 조회 페이지	---------------------------------------------------
 	@RequestMapping("/accountDetail.do")
 	public ModelAndView selectAuthLevel(@RequestParam("userNo") int userNo, ModelAndView mv) {
-		//log.debug("사용자 번호 :  {}", userNo);
 		
 		MemberDto m = memberService.selectMemberInfo(userNo);
 		
@@ -313,7 +312,6 @@ public class AttendanceController {
 	// 2.3.3 구성원 조회 상세 페이지---------------------------------------------------
 	@RequestMapping("/memberDetail.do")
 	public ModelAndView selectMemberDetail(@RequestParam("userNo") int userNo, ModelAndView mv) {
-		log.debug("사용자 번호 :  {}", userNo);
 		
 		MemberDto m = memberService.selectMemberInfo(userNo);
 		
@@ -322,10 +320,32 @@ public class AttendanceController {
 		  
 		  return mv;
 	}
-	// 2.3.3 구성원 정보 수정 ---------------------------------------------------
+	// 2.3.3 구성원 탈퇴
+	@RequestMapping("/deleteMemberAttendance.do")
+	public String deleteMemberAttendance(@RequestParam("userNo") int userNo,
+			@RequestParam("modifyUserNo") int modifyUserNo,
+			RedirectAttributes redirectAttributes) {
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("userNo", userNo);
+		paramMap.put("modifyUserNo", modifyUserNo);
+		
+		log.debug("paramMap 값 :  {} ", paramMap);
+		
+		int result = memberService.deleteMemberAttendance(paramMap);
+		
+		redirectAttributes.addFlashAttribute("alertTitle", "회원탈퇴");
+		if(result > 0) {
+	        redirectAttributes.addFlashAttribute("message", "회원탈퇴를 성공 하였습니다.");
+	    } else {
+	        redirectAttributes.addFlashAttribute("message", "회원탈퇴를 실패 하였습니다.");
+	    }
+		return "redirect:/attendance/detailList.do";
+	}
+	// 2.3.4 구성원 정보 수정
 	@RequestMapping("/updateMemberAttendance.do")
-	public int updateMemberAttendance(@RequestParam("userNo") int userNo/*,
-			
+	public String updateMemberAttendance(@RequestParam("userNo") int userNo,
+			@RequestParam("modifyUserNo") int modifyUserNo,
 			@RequestParam("userName") String userName,
 			@RequestParam("phone") String phone,
 			@RequestParam("email") String email,
@@ -335,13 +355,13 @@ public class AttendanceController {
 			@RequestParam("department") String department,
 			@RequestParam("team") String team,
 			@RequestParam("position") String position,
-			@RequestParam("authLevel") int authLevel
-			*/) {
+			@RequestParam("authLevel") int authLevel,
+			RedirectAttributes redirectAttributes) {
 		
-		log.debug("사용자 번호11111 :  {}", userNo);
-		/*
+		
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("userNo", userNo);
+		paramMap.put("modifyUserNo", modifyUserNo);
 		paramMap.put("userName", userName);
 		paramMap.put("phone", phone);
 		paramMap.put("email", email);
@@ -355,12 +375,16 @@ public class AttendanceController {
 		paramMap.put("authLevel", authLevel);
 		
 		log.debug("paramMap 값 :  {} ", paramMap);
-		 */
 		
-		//int result = memberService.updateMemberAttendance(paramMap);
-		int result = 0;
+		int result = memberService.updateMemberAttendance(paramMap);
 		
-		return result;
+		redirectAttributes.addFlashAttribute("alertTitle", "회원정보 수정");
+		if(result > 0) {
+	        redirectAttributes.addFlashAttribute("message", "회원 정보가 성공적으로 수정되었습니다.");
+	    } else {
+	        redirectAttributes.addFlashAttribute("message", "회원 정보 수정에 실패했습니다.");
+	    }
+		return "redirect:/attendance/detailList.do";
 	}
 	
 	// 2.4 구성원 추가 ----------------------------------------------------

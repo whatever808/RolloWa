@@ -94,6 +94,10 @@ public class MemberDao {
 	public List<HashMap<String, Object>> selectMemberListSearch(Map<String, Object> paramMap) {
 		return sqlSessionTemplate.selectList("memberMapper.selectMemberListSearch", paramMap);
 	}
+	// 사용자 탈퇴
+	public int deleteMemberAttendance(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.update("memberMapper.deleteMemberAttendance", paramMap);
+	}
 	// 사용자 정보 수정
 	public int updateMemberAttendance(Map<String, Object> paramMap) {
 		return sqlSessionTemplate.update("memberMapper.updateMemberAttendance", paramMap);

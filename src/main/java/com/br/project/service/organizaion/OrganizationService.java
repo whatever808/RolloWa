@@ -10,6 +10,7 @@ import com.br.project.dao.organization.OrganizationDao;
 import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.dto.organization.OrganizationDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,6 +77,25 @@ public class OrganizationService {
         int employeeCount = organizationDao.countEmployeesInTeam(teamName);
         return employeeCount > 0;
     }
+
+    // 조직 관리 service
+	public void addDepartment(OrganizationDto organizationDto) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addTeam(OrganizationDto organizationDto) {
+		// TODO Auto-generated method stub
+		
+	}
+	public boolean deleteDepartment(String departmentCode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public boolean deleteTeam(String teamCode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
     
 	
 
