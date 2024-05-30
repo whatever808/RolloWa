@@ -213,7 +213,10 @@
 				date:  $("#date-select").val(),
 			}, $(".date-sales-table"));	
 			
-			drawSalesChart();	// 차트데이터 생성
+			drawSalesChart(ajaxSelectSalesListForChart({  // 차트생성
+				year: $("#year-select").val(),
+				chart: 'year',
+			}), 'year');
 			
 		});
 		
@@ -324,6 +327,7 @@
 		google.charts.setOnLoadCallback(drawChart);
 		
 		function drawChart(){
+			console.log("chartData : ", chartData);
 			// 차트 데이터 설정 (컬럼명, 셀값)
 			data = new google.visualization.DataTable();
 			data.addColumn('string', '기간');
