@@ -522,17 +522,18 @@ $(document).ready(function(){
      
     <script>
     	
-    	$(document).ready(function(){
+    document.querySelector("#myForm").addEventListener("submit", function(event){
     	
-    		$("#insertBtn").on("click", function(){
-	    		$(".namecheck").each(function(){
-		    		if($(this).val() == ""){
-		    			alert("승인자를 선택해주세요.");
-		    			return false;
-		    		}
-	    		})	    	
-    		})
-    	})
+		$("#insertBtn").on("click", function(){
+    		$(".namecheck").each(function(){
+	    		if($(this).val() == ""){
+	    			alert("승인자를 선택해주세요.");
+	    			return false;
+	    		}
+    		})	    	
+		})
+		
+		})
     	
     </script>
    

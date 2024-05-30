@@ -2189,6 +2189,13 @@
           OR (FIRST_APPROVAL_DATE IS NOT NULL AND MIDDLE_APPROVAL = #{userName} AND MIDDLE_APPROVAL_DATE IS NULL)
           OR (MIDDLE_APPROVAL_DATE IS NOT NULL AND FINAL_APPROVAL = #{userName} AND FINAL_APPROVAL_DATE IS NULL)
       )
+      <if test="keyword != null and !keyword.equals('') ">
+       AND (PAYMENT_WRITER LIKE '%' || #{keyword} || '%'
+        OR regist_date LIKE '%' || #{keyword} || '%'
+        OR TITLE LIKE '%' || #{keyword} || '%'
+        OR DEPARTMENT LIKE '%' || #{keyword} || '%'
+        )
+      </if>
 	</select>
 	
 	<select id="noApprovalSign" resultMap="payResult">
@@ -2424,11 +2431,227 @@
 					 by APPROVAL_NO desc
 	</select>
 	
+	<select id="myRejectApCount" resultType="_int">
+		 SELECT COUNT(*)
+    FROM approval A
+    WHERE A.STATUS = 'Y'
+      AND (
+          (FIRST_APPROVAL = #{userName} AND FIRST_SIGN LIKE '%반려%')
+          OR (MIDDLE_APPROVAL = #{userName} AND MIDDLE_SIGN LIKE '%반려%')
+          OR (FINAL_APPROVAL = #{userName} AND FINAL_SIGN LIKE '%반려%')
+      )
+      <if test="keyword != null and !keyword.equals('') ">
+       AND (PAYMENT_WRITER LIKE '%' || #{keyword} || '%'
+        OR regist_date LIKE '%' || #{keyword} || '%'
+        OR TITLE LIKE '%' || #{keyword} || '%'
+        OR DEPARTMENT LIKE '%' || #{keyword} || '%'
+        )
+      </if>
+	</select>
 	
+		<select id="myRejectApList" resultType="map">
+			select 
+			      APPROVAL_NO
+			    , case when document_type = 'C' then '출장보고서'
+			           when document_type = 'H' then '휴직신청서'
+			           when document_type = 'T' then '퇴직신청서'
+			           when document_type = 'B' then '비품신청서'
+			           when document_type = 'J' then '지출결의서'
+			           when document_type = 'G' then '기안서'
+			           when document_type = 'M' then '매출보고서'
+			      else '휴가신청서'
+				   end document_type
+				   , DOCUMENT_NUMBER
+				   , DEPARTMENT
+				   , PAYMENT_WRITER
+				   , PAYMENT_WRITER_NO
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
+				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
+				           END) DOCUMENT_STATUS
+				   ,(SELECT count(*)
+				        FROM SALES_REPORT S
+				      WHERE A.DOCUMENT_NUMBER = S.SALES_NO
+				        AND A.document_type = 'G'
+				        AND S.STATUS = 'Y'
+				    )SALES_STATUS
+				    , (SELECT count(*)
+				        FROM DRAFT_REPORT D
+				        WHERE A.DOCUMENT_NUMBER = D.DRAFT_NO
+				         AND A.document_type = 'J'
+				         AND D.STATUS = 'Y'
+				     ) DRAFT_STATUS
+				    , (SELECT count(*)
+				        FROM BUSINESSTRIP_REPORT B
+				        WHERE A.DOCUMENT_NUMBER = B.BUSINESS_NO
+				        AND A.document_type = 'C'
+				        AND B.STATUS = 'Y'
+				     ) BUSINESSTRIP_STATUS
+				     , to_char(regist_date, 'YYYY-MM-DD') regist_date
+				     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+				     , PAYMENT_STATUS
+				     , TITLE
+		from approval A
+    join member m on( USER_NO =  PAYMENT_WRITER_NO)
+		WHERE A.STATUS = 'Y'
+      AND (
+          (FIRST_APPROVAL = #{userName} AND FIRST_SIGN LIKE '%반려%')
+          OR (MIDDLE_APPROVAL = #{userName} AND MIDDLE_SIGN LIKE '%반려%')
+          OR (FINAL_APPROVAL = #{userName} AND FINAL_SIGN LIKE '%반려%')
+      )
+			<if test="keyword != null and !keyword.equals('') ">
+       AND (PAYMENT_WRITER LIKE '%' || #{keyword} || '%'
+        OR regist_date LIKE '%' || #{keyword} || '%'
+        OR TITLE LIKE '%' || #{keyword} || '%'
+        OR DEPARTMENT LIKE '%' || #{keyword} || '%'
+        )
+      </if>
+      	order
+					 by APPROVAL_NO desc
+	</select>
 	
+	<select id="myFinishApCount" resultType="_int">
+		 SELECT COUNT(*)
+    FROM approval A
+    WHERE A.STATUS = 'Y'
+      AND (
+          (FIRST_APPROVAL = #{userName} AND FIRST_SIGN not LIKE '%반려%' and FIRST_SIGN is not null)
+          OR (MIDDLE_APPROVAL = #{userName} AND MIDDLE_SIGN not LIKE '%반려%' and MIDDLE_SIGN is not null)
+          OR (FINAL_APPROVAL = #{userName} AND FINAL_SIGN not LIKE '%반려%' and FINAL_SIGN is not null)
+      )
+      <if test="keyword != null and !keyword.equals('') ">
+       AND (PAYMENT_WRITER LIKE '%' || #{keyword} || '%'
+        OR regist_date LIKE '%' || #{keyword} || '%'
+        OR TITLE LIKE '%' || #{keyword} || '%'
+        OR DEPARTMENT LIKE '%' || #{keyword} || '%'
+        )
+      </if>
+	</select>
 	
+	<select id="myFinishApList" resultType="map">
+			select 
+			      APPROVAL_NO
+			    , case when document_type = 'C' then '출장보고서'
+			           when document_type = 'H' then '휴직신청서'
+			           when document_type = 'T' then '퇴직신청서'
+			           when document_type = 'B' then '비품신청서'
+			           when document_type = 'J' then '지출결의서'
+			           when document_type = 'G' then '기안서'
+			           when document_type = 'M' then '매출보고서'
+			      else '휴가신청서'
+				   end document_type
+				   , DOCUMENT_NUMBER
+				   , DEPARTMENT
+				   , PAYMENT_WRITER
+				   , PAYMENT_WRITER_NO
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
+				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
+				           END) DOCUMENT_STATUS
+				   ,(SELECT count(*)
+				        FROM SALES_REPORT S
+				      WHERE A.DOCUMENT_NUMBER = S.SALES_NO
+				        AND A.document_type = 'G'
+				        AND S.STATUS = 'Y'
+				    )SALES_STATUS
+				    , (SELECT count(*)
+				        FROM DRAFT_REPORT D
+				        WHERE A.DOCUMENT_NUMBER = D.DRAFT_NO
+				         AND A.document_type = 'J'
+				         AND D.STATUS = 'Y'
+				     ) DRAFT_STATUS
+				    , (SELECT count(*)
+				        FROM BUSINESSTRIP_REPORT B
+				        WHERE A.DOCUMENT_NUMBER = B.BUSINESS_NO
+				        AND A.document_type = 'C'
+				        AND B.STATUS = 'Y'
+				     ) BUSINESSTRIP_STATUS
+				     , to_char(regist_date, 'YYYY-MM-DD') regist_date
+				     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+				     , PAYMENT_STATUS
+				     , TITLE
+		from approval A
+		WHERE A.STATUS = 'Y'
+      AND (
+          (FIRST_APPROVAL = #{userName} AND FIRST_SIGN not LIKE '%반려%' and FIRST_SIGN is not null)
+          OR (MIDDLE_APPROVAL = #{userName} AND MIDDLE_SIGN not LIKE '%반려%' and MIDDLE_SIGN is not null)
+          OR (FINAL_APPROVAL = #{userName} AND FINAL_SIGN not LIKE '%반려%' and FINAL_SIGN is not null)
+      		)
+     <if test="keyword != null and !keyword.equals('') ">
+       AND (PAYMENT_WRITER LIKE '%' || #{keyword} || '%'
+        OR regist_date LIKE '%' || #{keyword} || '%'
+        OR TITLE LIKE '%' || #{keyword} || '%'
+        OR DEPARTMENT LIKE '%' || #{keyword} || '%'
+        )
+     </if>
+				order
+					 by APPROVAL_NO desc
+	</select>
 	
-	
+	<select id="noApprovalSignRe" resultType="map">
+			select 
+			      APPROVAL_NO
+			    , case when document_type = 'C' then '출장보고서'
+			           when document_type = 'H' then '휴직신청서'
+			           when document_type = 'T' then '퇴직신청서'
+			           when document_type = 'B' then '비품신청서'
+			           when document_type = 'J' then '지출결의서'
+			           when document_type = 'G' then '기안서'
+			           when document_type = 'M' then '매출보고서'
+			      else '휴가신청서'
+				   end document_type
+				   , DOCUMENT_NUMBER
+				   , DEPARTMENT
+				   , PAYMENT_WRITER
+				   , PAYMENT_WRITER_NO
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
+				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
+				           END) DOCUMENT_STATUS
+				   ,(SELECT count(*)
+				        FROM SALES_REPORT S
+				      WHERE A.DOCUMENT_NUMBER = S.SALES_NO
+				        AND A.document_type = 'G'
+				        AND S.STATUS = 'Y'
+				    )SALES_STATUS
+				    , (SELECT count(*)
+				        FROM DRAFT_REPORT D
+				        WHERE A.DOCUMENT_NUMBER = D.DRAFT_NO
+				         AND A.document_type = 'J'
+				         AND D.STATUS = 'Y'
+				     ) DRAFT_STATUS
+				    , (SELECT count(*)
+				        FROM BUSINESSTRIP_REPORT B
+				        WHERE A.DOCUMENT_NUMBER = B.BUSINESS_NO
+				        AND A.document_type = 'C'
+				        AND B.STATUS = 'Y'
+				     ) BUSINESSTRIP_STATUS
+				     , to_char(regist_date, 'YYYY-MM-DD') regist_date
+				     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+				     , PAYMENT_STATUS
+				     , TITLE
+		from approval A
+    join member m on( USER_NO =  PAYMENT_WRITER_NO)
+		WHERE A.STATUS = 'Y'
+				AND DOCUMENT_STATUS IN ('I', 'D')
+      AND (
+          (FIRST_APPROVAL = #{userName} AND FIRST_APPROVAL_DATE IS NULL)
+          OR (FIRST_APPROVAL_DATE IS NOT NULL AND MIDDLE_APPROVAL = #{userName} AND MIDDLE_APPROVAL_DATE IS NULL)
+          OR (MIDDLE_APPROVAL_DATE IS NOT NULL AND FINAL_APPROVAL = #{userName} AND FINAL_APPROVAL_DATE IS NULL)
+      )
+      <if test="keyword != null and !keyword.equals('') ">
+       AND (PAYMENT_WRITER LIKE '%' || #{keyword} || '%'
+        OR regist_date LIKE '%' || #{keyword} || '%'
+        OR TITLE LIKE '%' || #{keyword} || '%'
+        OR DEPARTMENT LIKE '%' || #{keyword} || '%'
+        )
+      </if>
+		 order
+			  by APPROVAL_NO desc
+	</select>
 
 	
 	

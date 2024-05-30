@@ -518,7 +518,7 @@ $(document).ready(function(){
      
     <script>
     	
-    	$(document).ready(function(){
+    document.querySelector("#myForm").addEventListener("submit", function(event){
     	
     		$("#insertBtn").on("click", function(){
 	    		$(".namecheck").each(function(){
@@ -528,7 +528,8 @@ $(document).ready(function(){
 		    		}
 	    		})	    	
     		})
-    	})
+    		
+    })
     	
     </script>
    

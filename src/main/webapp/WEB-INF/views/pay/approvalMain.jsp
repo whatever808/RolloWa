@@ -3101,7 +3101,6 @@ $(document).on('click', '.page-linkc', function(event) {
 	          	<div class="containeres">
 						    <!-- Top Menu -->
 						    <div class="top-menu">
-						    		<a href="${contextPath}/payment/payment.page">결제페이지확인</a>
 						        <a href="${contextPath}/pay/writerForm.page?writer=b">
 						        <div class="top-menu-item">
 						        <div>

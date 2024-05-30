@@ -514,6 +514,21 @@ public class PayService {
 	
 	
 	
+	public int myRejectApCount(Map<String, Object> map) {
+		return payDao.myRejectApCount(map);
+	}
+	public List<Map<String, Object>> myRejectApList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.myRejectApList(map, pi);
+	}
 	
+	public int myFinishApCount(Map<String, Object> map) {
+		return payDao.myFinishApCount(map);
+	}
+	public List<Map<String, Object>> myFinishApList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.myFinishApList(map, pi);
+	}
 	
+	public List<Map<String, Object>> noApprovalSignRe(String userName, PageInfoDto pi){
+		return payDao.noApprovalSignRe(userName, pi);
+	}
 }

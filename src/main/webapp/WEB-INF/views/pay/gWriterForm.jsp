@@ -508,6 +508,7 @@ $(document).ready(function(){
    
     <script>
 	 		document.querySelector("#myForm").addEventListener("submit", function(event){
+	 			
  					let itemArr = [];
  					let countArr = [];
  					let salesArr = [];

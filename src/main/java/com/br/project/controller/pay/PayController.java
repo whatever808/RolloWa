@@ -1626,11 +1626,111 @@ public class PayController {
 	}
 	
 	
+	//승인자의 반려함
+	@RequestMapping("/rejectApprovalList.page")
+	public String rejectApprovalList(@RequestParam(value="page", defaultValue="1") int currentPage
+							, HttpSession session, Model model) {
+		
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userName", userName);
+		mapUserMember.put("userNo", userNo);
+		
+		int myAllRejectApCount = payService.myRejectApCount(mapUserMember);
+		
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(myAllRejectApCount, currentPage, 5, 10);
+
+		List<Map<String, Object>> list = payService.myRejectApList(mapUserMember, pi);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("userName", userName);
+		
+		return "pay/rejectMyAp";
+	}
 	
+	//승인자의 결재승인함
+	@RequestMapping("/finishApprovalList.page")
+	public String finishApprovalList(@RequestParam(value="page", defaultValue="1") int currentPage
+							, HttpSession session, Model model) {
+		
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userName", userName);
+		mapUserMember.put("userNo", userNo);
+		
+		int myAllRejectApCount = payService.myFinishApCount(mapUserMember);
+		
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(myAllRejectApCount, currentPage, 5, 10);
+
+		List<Map<String, Object>> list = payService.myFinishApList(mapUserMember, pi);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("userName", userName);
+		
+		return "pay/finishMyAp";
+	}
 	
+	// 승인자 차례의 미결재함
+	@RequestMapping("/noApprovalList.page")
+	public String noApprovalList(@RequestParam(value="page", defaultValue="1") int currentPage
+							, HttpSession session, Model model) {
+		
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		
+		int noApprovalSignCountRe = payService.noApprovalSignCount(userName);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(noApprovalSignCountRe, currentPage, 5, 10);
+		
+		List<Map<String, Object>> list = payService.noApprovalSignRe(userName, pi);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("userName", userName);
+		
+		
+		return "pay/noMyAp";
+	}
 	
-	
-	
+	//반려함 전체검색 조회
+	@ResponseBody
+	@GetMapping("/ajaxMyRejectSearchApproval.do")
+	public Map<String, Object> ajaxMyRejectSearchApproval(@RequestParam (value="page", defaultValue="1") int currentPage, String keyword
+											, HttpSession session) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userName", userName);
+		mapUserMember.put("keyword", keyword);
+		
+		int myAllRejectApCount = payService.myRejectApCount(mapUserMember);
+		
+		PageInfoDto pi =  pagingUtil.getPageInfoDto(myAllRejectApCount, currentPage, 5, 10);
+
+		List<Map<String, Object>> list = payService.myRejectApList(mapUserMember, pi);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
+		map.put("userName", userName);
+		
+		return map;
+	}
+		
+		
+		
+		
+		
+		
+	}
 	
 	
 	
