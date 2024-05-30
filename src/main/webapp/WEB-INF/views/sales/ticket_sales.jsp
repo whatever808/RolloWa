@@ -132,15 +132,10 @@
             <!-- main bottom start (chart) -->
             <div class="main-bottom">
             	
-                <div class="chart-left h-5 w-5" id="sales-chart-div" style="border: 1px solid tomato; width: 800px; height: 500px;">
+                <div class="sales-chart d-flex justify-content-center" id="sales-chart-div" style="border: 1px solid tomato;">
 
                 </div>
-
-                <div class="chart-right h-5 w-5" style="border: 1px solid tomato; height: 100px;">
-
-                </div>
-                    
-
+                
             </div>
             <!-- main bottom end (chart) -->
         
@@ -217,6 +212,8 @@
 				month: $("#month-select").val(),
 				date:  $("#date-select").val(),
 			}, $(".date-sales-table"));	
+			
+			drawSalesChart();	// 차트데이터 생성
 			
 		});
 		
@@ -315,53 +312,71 @@
 	
 	// 차트 관련 ==================================================================================================
 	$(document).ready(function(){
-		drawChart();
+		drawSalesChart(ajaxSelectSalesListForChart({	
+			year: $("#year-select").val(),
+			chart: 'year',
+		}), 'year');
 	});
 	
 	// 매출금액별 차트
-	function drawChart(){
+	function drawSalesChart(chartData, chartType, month){
 		google.charts.load('current', {'packages':['corechart']});
 		google.charts.setOnLoadCallback(drawChart);
-
+		
 		function drawChart(){
-			// 매출 데이터
-			let chartData = ajaxSelectSalesListForChart({	
-				year: $("#year-select").val(),
-				chart: 'year',
-			});
-			
-			console.log("chart : ", chartData.length);
-			console.log("chart : ", chartData);
-			
 			// 차트 데이터 설정 (컬럼명, 셀값)
-			let data = new google.visualization.DataTable();
+			data = new google.visualization.DataTable();
 			data.addColumn('string', '기간');
-			data.addColumn('number', '일반이용권 총매출');
-			data.addColumn('number', '정기이용권 총매출');
-			data.addColumn('number', '일반이용권 평균매출');
-			data.addColumn('number', '정기이용권 평균매출');
+			data.addColumn('number', chartType == 'year' ? '일반이용권 월별 매출' : '일반이용권 일별 매출');
+			data.addColumn('number', chartType == 'year' ? '정기이용권 월별 매출' : '정기이용권 일별 매출');
+			data.addColumn('number', chartType == 'year' ? '일반이용권 연평균 매출' : '일반이용권 월평균 매출');
+			data.addColumn('number', chartType == 'year' ? '정기이용권 연평균 매출' : '정기이용권 월평균 매출');			
 			for(let i=0 ; i<chartData.length ; i+=2){
 				nSales = chartData[i];
 				sSales = chartData[i+1];
-				data.addRow([nSales.period, nSales.sumSales, sSales.sumSales, nSales.avgSales, sSales.avgSales]);
+				data.addRow([nSales.period + (chartType == 'year' ? '월' : '일'), nSales.sumSales, sSales.sumSales, nSales.yearAvgSales, sSales.yearAvgSales]);
 			}
 			
 			// 차트 옵션 설정 (제목, 범례 등)
 			let options = {
-					title : '이용권별 매출',
+					title: (chartType == 'year') ? '연간 이용권 매출' : month + '월 이용권 매출',
+					colors: ['#FF9090', '#E8DB6B', '#FF0000', '#875E00'],
+					animation:{	
+						startup:true,
+						duration: 1000,
+						easing: 'out',
+					},
+					width: 1000,
+					height: 400,
 					vAxis: {title: '매출액 (단위 : 원)'},
-					hAxis: {title: '기간'},
+					hAxis: {title: ''},
 					seriesType: 'bars',
 					series: {
 						2: {type: 'line'},
 						3: {type: 'line'},
-					
 					}
 			};
 			
 			// 차트 그리기
-			let chart = new google.visualization.ComboChart(document.getElementById('sales-chart-div'));
+			chart = new google.visualization.ComboChart(document.getElementById('sales-chart-div'));
 			chart.draw(data, options);
+			
+			// 연간 매출차트일 경우에만 부여될 이벤트
+			if(chartType == 'year'){
+				google.visualization.events.addListener(chart, 'select', selectHandler);
+			}
+		}
+		
+		function selectHandler(e){
+			let selectedItem = chart.getSelection()[0];
+			let selectedValue = data.getValue(selectedItem.row, 0);
+			let month = selectedValue.replace('월', '');
+
+			drawSalesChart(ajaxSelectSalesListForChart({
+				year: $("#year-select").val(),
+				chart: 'month',
+				month: month,
+			}), 'month', month);
 		}
 	}
 	

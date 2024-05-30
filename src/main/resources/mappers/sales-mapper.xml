@@ -3,7 +3,7 @@
 
 <mapper namespace="salesMapper">
   
-  <!-- 이용권 종류별 매출현황 및 매출건수 -->
+  <!-- 연|월|일 이용권 매출조회 -->
   <select id="selectTicketSalesForTable" parameterType="hashmap" resultType="map">
   	SELECT 
   		   TO_CHAR(PAYMENT_DATE, 'YYYY') "year"
@@ -15,7 +15,14 @@
           </if>
 	      ,SUM(ORDER_PAYMENT) "sumSales"
 	      ,SUM(TICKET_CTN) "sumTicket"
-	      ,AVG(ORDER_PAYMENT) "avgSales"
+	      <choose>
+	      	<when test='"".equals(month) and "".equals(date)'>
+	      	  ,SUM(ORDER_PAYMENT) / 12 "avgSales"
+	      	</when>
+	      	<otherwise>
+	      	  ,AVG(ORDER_PAYMENT) "avgSales"
+	      	</otherwise>
+	      </choose>
 	      ,AVG(TICKET_CTN) "avgTicket"
 	      ,MAX(ORDER_PAYMENT) "maxSales"
 	      ,MAX(TICKET_CTN) "maxTicket"
@@ -57,13 +64,29 @@
           , COALESCE(T2.CODE_NAME, T1.CODE_NAME) "ticketType"
           , COALESCE(T2.SUM_PRICE, 0) "sumSales"
           , (
-			        SELECT CASE WHEN #{year} = EXTRACT(YEAR FROM SYSDATE) THEN SUM(ORDER_PAYMENT)/EXTRACT(MONTH FROM SYSDATE)
-			                    ELSE SUM(ORDER_PAYMENT)/12
-			               END
-			          FROM TICKET_ORDER
-			         WHERE EXTRACT(YEAR FROM PAYMENT_DATE) = #{year}
-			           AND ORDER_STATUS = 2
-			       ) "yearAvg"
+              SELECT 
+              		<choose>
+              		  <when test='"year".equals(chart)'>
+              		  	CASE WHEN #{year} = EXTRACT(YEAR FROM SYSDATE) THEN SUM(TOD.TICKET_PRICE * TOD.TICKET_CTN * (1 - NVL(TOD.DISCOUNT, 0))) / EXTRACT(MONTH FROM SYSDATE)
+                          	 ELSE SUM(ORDER_PAYMENT)/12 
+                     	END 
+              		  </when>
+              		  <when test='"month".equals(chart)'>
+              		  	AVG(TOD.TICKET_PRICE * TOD.TICKET_CTN * (1 - NVL(TOD.DISCOUNT, 0)))
+              		  </when>
+              		</choose>
+                FROM TB_GROUP G
+                LEFT JOIN TICKET_ORDER_DETAIL TOD ON (G.CODE = TOD.TICKET_TYPE) 
+                LEFT JOIN TICKET_ORDER O ON (TOD.ORDER_NO = O.ORDER_NO)
+               WHERE GROUP_CODE LIKE 'TICK%'
+                 AND EXTRACT(YEAR FROM O.PAYMENT_DATE) = #{year}
+                 <if test='"month".equals(chart)'>
+                 	AND EXTRACT(MONTH FROM O.PAYMENT_DATE) = #{month}
+                 </if>
+                 AND G.CODE = T1.CODE
+               GROUP 
+                  BY G.CODE, G.CODE_NAME
+            ) "yearAvgSales"
 	  FROM (
 	        SELECT *
 	          FROM 
@@ -91,14 +114,14 @@
 	   LEFT JOIN 
 	   	   (
 	          SELECT 
-	          			 <choose>
-	          			 	<when test='"year".equals(chart)'>
-	          			 		MONTH
-	          			 	</when>
-	          			 	<when test='"month".equals(chart)'>
-	          			 		DT
-	          			 	</when>
-	          			 </choose>
+          			 <choose>
+          			 	<when test='"year".equals(chart)'>
+          			 		MONTH
+          			 	</when>
+          			 	<when test='"month".equals(chart)'>
+          			 		DT
+          			 	</when>
+          			 </choose>
 	          			,CODE, CODE_NAME, SUM(PRICE) SUM_PRICE, AVG(PRICE) AVG_PRICE
 	            FROM (
 	                  SELECT  G.CODE, G.CODE_NAME
@@ -146,7 +169,7 @@
 	 ORDER BY "period", "ticketCode"
   </select>
   
-  <!-- 년/월별 평균매출 조회 -->
+  <!-- 년|월별 평균매출 조회 -->
   <select id="selectAvgTicketSales" parameterType="hashmap" resultType="map">
   	SELECT ROUND(AVG(ORDER_PAYMENT), 2)
 	  FROM TICKET_ORDER
