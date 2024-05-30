@@ -504,6 +504,7 @@ $(document).ready(function(){
                       method:"get",
                       data:"userId=${ loginMember.userNo }",
                       success:function(memInfo){
+                    	  console.log(memInfo);
                         // 직급이 부장 or 사장일 경우에만 공지사항 관리자 메뉴 노출
                         if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
                           $(".board-publisher").removeClass("d-none");
