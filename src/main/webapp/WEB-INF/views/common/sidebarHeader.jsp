@@ -607,7 +607,7 @@ $(document).ready(function(){
                     </button>
                     <div class="collapse" id="approval-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="${contextPath}/pay/paymain.page"
+                            <li><a href="${contextPath}/pay/approvalMain.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재Home</a></li>
                             <li><a href="#"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재함</a>

@@ -49,6 +49,7 @@
 		<mapper resource="mappers/reservation-mapper.xml" />
 		<mapper resource="mappers/chat-mapper.xml" />
 		<mapper resource="mappers/facility/store-mapper.xml" />
+		<mapper resource="mappers/payment-mapper.xml" />
 		<mapper resource="mappers/sales-mapper.xml" />
 	</mappers>
 

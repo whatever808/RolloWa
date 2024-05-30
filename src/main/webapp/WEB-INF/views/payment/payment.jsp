@@ -6,24 +6,27 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
 <title>결제</title>
 
 <!-- 사인관련 스크립트 -->
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
-<!-- ------------ -->
-<link href="${contextPath}/resources/css/mainPage/mainPage.css"
-	rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+
+<link href="${contextPath}/resources/css/mainPage/mainPage.css" rel="stylesheet">
 
 <!-- 모달 관련 -->
 <script src="${contextPath}/resources/js/iziModal.min.js"></script>
-<link rel="stylesheet"
-	href="${contextPath}/resources/css/iziModal.min.css">
+<link rel="stylesheet" href="${contextPath}/resources/css/iziModal.min.css">
 
 <!-- 포트원 결제 -->
 <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+  
+<link href="${contextPath}/resources/css/mainPage/mainPage.css" rel="stylesheet">
+
 <style>
+
 /* Container styling */
 .container {
 	width: 90%;
@@ -466,208 +469,228 @@ img {
 </head>
 <body>
 
-	<script>
-		$(document)
-				.ready(
-						function() {
-							let sum1 = 0;
-							let sum2 = 0;
 
-							function updateTotal() {
-								let price1 = parseInt($(
-										"#adult-own-price1 span").text()) || 0;
-								let price2 = parseInt($(
-										"#adult-own-price2 span").text()) || 0;
-								let total = price1 + price2;
-								$("#total").text(total + "원");
-							}
+<script>
+$(document).ready(function() {
+    let sum1 = 0;
+    let sum2 = 0;
 
-							// 청소년 티켓 증가 버튼 클릭
-							$("#teen-increase")
-									.on(
-											"click",
-											function() {
-												sum1 += 1;
-												$("#teens").val(sum1);
-												let found = false;
-												$(".ticket-table tr")
-														.each(
-																function() {
-																	if ($(this)
-																			.find(
-																					"td#ticketName")
-																			.text() == "일반 이용권") {
-																		found = true;
-																		let newQuantity = sum1;
-																		$(this)
-																				.find(
-																						"#adult-companion")
-																				.val(
-																						newQuantity);
-																		$(this)
-																				.find(
-																						"#adult-own-price1 span")
-																				.text(
-																						newQuantity * 20000);
-																		updateTotal();
-																	}
-																});
-
-												if (!found) {
-													let tr = "<tr>"
-															+ "<td id='ticketName'>일반 이용권</td>"
-															+ "<td>"
-															+ "<div class='quantity-controls'>"
-															+ "<input type='number' id='adult-companion' value='1' min='0' readonly>"
-															+ "</div>"
-															+ "</td>"
-															+ "<td id='adult-own-price1'><span>21000</span>원</td>"
-															+ "</tr>";
-													$(".ticket-table").append(
-															tr);
-													updateTotal();
-												}
-											});
-
-							// 청소년 티켓 감소 버튼 클릭
-							$("#teen-decrease")
-									.on(
-											"click",
-											function() {
-												if (sum1 > 0) {
-													sum1 -= 1;
-													$("#teens").val(sum1);
-													$(".ticket-table tr")
-															.each(
-																	function() {
-																		if ($(
-																				this)
-																				.find(
-																						"td#ticketName")
-																				.text() == "일반 이용권") {
-																			let newQuantity = sum1;
-																			if (newQuantity > 0) {
-																				$(
-																						this)
-																						.find(
-																								"#adult-companion")
-																						.val(
-																								newQuantity);
-																				$(
-																						this)
-																						.find(
-																								"#adult-own-price1 span")
-																						.text(
-																								newQuantity * 20000);
-																			} else {
-																				$(
-																						this)
-																						.remove();
-																			}
-																			updateTotal();
-																		}
-																	});
-												}
-											});
-
-							// 어린이 티켓 증가 버튼 클릭
-							$("#child-increase")
-									.on(
-											"click",
-											function() {
-												sum2 += 1;
-												$("#children").val(sum2);
-												let found = false;
-												$(".ticket-table tr")
-														.each(
-																function() {
-																	if ($(this)
-																			.find(
-																					"td#ticketName2")
-																			.text() == "정기 이용권") {
-																		found = true;
-																		let newQuantity = sum2;
-																		$(this)
-																				.find(
-																						"#adult-own")
-																				.val(
-																						newQuantity);
-																		$(this)
-																				.find(
-																						"#adult-own-price2 span")
-																				.text(
-																						newQuantity * 20000);
-																		updateTotal();
-																	}
-																});
-
-												if (!found) {
-													let tr = "<tr>"
-															+ "<td id='ticketName2'>정기 이용권</td>"
-															+ "<td>"
-															+ "<div class='quantity-controls'>"
-															+ "<input type='number' id='adult-own' value='1' min='0' readonly>"
-															+ "</div>"
-															+ "</td>"
-															+ "<td id='adult-own-price2'><span>21000</span>원</td>"
-															+ "</tr>";
-													$(".ticket-table").append(
-															tr);
-													updateTotal();
-												}
-											});
-
-							// 어린이 티켓 감소 버튼 클릭
-							$("#child-decrease")
-									.on(
-											"click",
-											function() {
-												if (sum2 > 0) {
-													sum2 -= 1;
-													$("#children").val(sum2);
-													$(".ticket-table tr")
-															.each(
-																	function() {
-																		if ($(
-																				this)
-																				.find(
-																						"td#ticketName2")
-																				.text() == "정기 이용권") {
-																			let newQuantity = sum2;
-																			if (newQuantity > 0) {
-																				$(
-																						this)
-																						.find(
-																								"#adult-own")
-																						.val(
-																								newQuantity);
-																				$(
-																						this)
-																						.find(
-																								"#adult-own-price2 span")
-																						.text(
-																								newQuantity * 20000);
-																			} else {
-																				$(
-																						this)
-																						.remove();
-																			}
-																			updateTotal();
-																		}
-																	});
-												}
-											});
-
-							// 페이지 로드 시 총 금액 업데이트
-							updateTotal();
-						});
-	</script>
+    function updateTotal() {
+        let price1 = parseInt($("#adult-own-price1 span").text()) || 0;
+        let price2 = parseInt($("#adult-own-price2 span").text()) || 0;
+        let total = price1 + price2;
+        let totalComma = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        $("#total").text(totalComma + "원");
+    }
 
 
+    $("#teen-increase").on("click", function() {
+        sum1 += 1;
+        $("#teens").val(sum1);
+        let found = false;
+        $(".ticket-table tr").each(function() {
+            if ($(this).find("td#ticketName").text() == "일반 이용권") {
+                found = true;
+                let newQuantity = sum1;
+                $(this).find("#adult-companion").val(newQuantity);
+                $(this).find("#adult-own-price1 span").text(newQuantity * 21000);
+                updateTotal();
+            }
+        });
+        
+        
 
+        if (!found) {
+            let tr = "<tr>" +
+                     "<td id='ticketName'>일반 이용권</td>" +
+                     "<td>" +
+                         "<div class='quantity-controls'>" +
+                             "<input type='number' id='adult-companion' value='1' min='0' readonly>" +
+                         "</div>" +
+                     "</td>" +
+                     "<td id='adult-own-price1'><span>21000</span>원</td>" +
+                     "</tr>";
+            $(".ticket-table").append(tr);
+            updateTotal();
+        }
+    });
 
+    
+    $("#teen-decrease").on("click", function() {
+        if (sum1 > 0) {
+            sum1 -= 1;
+            $("#teens").val(sum1);
+            $(".ticket-table tr").each(function() {
+                if ($(this).find("td#ticketName").text() == "일반 이용권") {
+                    let newQuantity = sum1;
+                    if (newQuantity > 0) {
+                        $(this).find("#adult-companion").val(newQuantity);
+                        $(this).find("#adult-own-price1 span").text(newQuantity * 21000);
+                    } else {
+                        $(this).remove();
+                    }
+                    updateTotal();
+                }
+            });
+        }
+    });
 
-	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
+   
+    $("#child-increase").on("click", function() {
+        sum2 += 1;
+        $("#children").val(sum2);
+        let found = false;
+        $(".ticket-table tr").each(function() {
+            if ($(this).find("td#ticketName2").text() == "정기 이용권") {
+                found = true;
+                let newQuantity = sum2;
+                $(this).find("#adult-own").val(newQuantity);
+                $(this).find("#adult-own-price2 span").text(newQuantity * 21000);
+                updateTotal();
+            }
+        });
+        
+        
+
+        if (!found) {
+            let tr = "<tr>" +
+                     "<td id='ticketName2'>정기 이용권</td>" +
+                     "<td>" +
+                         "<div class='quantity-controls'>" +
+                             "<input type='number' id='adult-own' value='1' min='0' readonly>" +
+                         "</div>" +
+                     "</td>" +
+                     "<td id='adult-own-price2'><span>150000</span>원</td>" +
+                     "</tr>";
+            $(".ticket-table").append(tr);
+            updateTotal();
+        }
+    });
+
+   
+    $("#child-decrease").on("click", function() {
+        if (sum2 > 0) {
+            sum2 -= 1;
+            $("#children").val(sum2);
+            $(".ticket-table tr").each(function() {
+                if ($(this).find("td#ticketName2").text() == "정기 이용권") {
+                    let newQuantity = sum2;
+                    if (newQuantity > 0) {
+                        $(this).find("#adult-own").val(newQuantity);
+                        $(this).find("#adult-own-price2 span").text(newQuantity * 21000);
+                    } else {
+                        $(this).remove();
+                    }
+                    updateTotal();
+                }
+            });
+            
+        }
+    });
+
+    updateTotal();
+});
+
+</script>
+
+<script>
+
+var IMP = window.IMP;
+
+//구매자 정보
+$(document).ready(function() {
+	$("#payment").on("click", function () {
+	
+		kakaoPay();
+     
+	});
+});
+
+function kakaoPay() {
+	
+	let ticket = [];
+	if($("#ticketName").text().trim != ""){
+		ticket.push($("#ticketName").text());
+	}
+	
+	if($("#ticketName2").text().trim != ""){
+		ticket.push($("#ticketName2").text());
+	}
+	
+	let ticketPrice = [];
+	
+	if($("#adult-own-price1").text().trim != ""){
+		ticketPrice.push($("#adult-own-price1").text());
+	}
+	
+	if($("#adult-own-price2").text().trim != ""){
+		ticketPrice.push($("#adult-own-price2").text());
+	}	
+	
+	
+	
+	if(ticket[0] != null)
+	
+	
+	console.log(ticket);
+	console.log(ticketPrice);
+	
+	
+	var today = new Date();
+	var hours = today.getHours(); // 시
+	var minutes = today.getMinutes();  // 분
+	var seconds = today.getSeconds();  // 초
+	var milliseconds = today.getMilliseconds();
+	var makeMerchantUid = hours + minutes + seconds + milliseconds;
+	
+if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확인하기
+	/*
+   //const emoticonName = document.getElementById('title').innerText
+
+   IMP.init("imp37456887"); // 가맹점 식별코드
+   
+   IMP.request_pay({
+       pg: 'kakaopay.TC0ONETIME', // PG사 코드표에서 선택
+       pay_method: 'card', // 결제 방식
+       merchant_uid: "IMP" + makeMerchantUid, // 결제 고유 번호
+       name: , // 제품명
+       amount: 1, // 가격
+       //구매자 정보 ↓
+       buyer_email: '${member.EMAIL}',
+       buyer_name: '${member.USER_NAME}',
+       buyer_tel : '${member.PHONE}',
+       // buyer_addr : '서울특별시 강남구 삼성동',
+       // buyer_postcode : '123-456'
+   }, async function (rsp) { // callback
+       if (rsp.success) { //결제 성공시
+           console.log(rsp);
+		
+           //결제 성공시 프로젝트 DB저장 요청 에이작스
+           
+           if (response.status == 200) { // DB저장 성공시
+               alert('결제 완료!')
+               window.location.reload();
+           } else { // 결제완료 후 DB저장 실패시
+               alert(`error:[${response.status}]\n결제요청이 승인된 경우 관리자에게 문의바랍니다.`);
+               // DB저장 실패시 status에 따라 추가적인 작업 가능성
+           }
+           
+           
+       } else if (rsp.success == false) { // 결제 실패시
+           alert(rsp.error_msg)
+       }
+   
+   
+   });
+   */
+}else{
+		return false;
+}
+
+}
+</script>
+
+	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 
 	<!-- content 추가 -->
 	<div class="content p-4">
@@ -819,7 +842,6 @@ img {
 
 
 	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />
-
 
 </body>
 </html>

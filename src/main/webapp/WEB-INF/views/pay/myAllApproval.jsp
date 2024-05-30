@@ -102,97 +102,97 @@
 			cursor: pointer;
 		}
 		/* 기본 스타일 설정 */
-.custom-select {
-    width: 84px; /* 원하는 너비로 설정 */
-    padding: 6px; /* 내측 여백 */
-    border: 1px solid #ccc; /* 테두리 색상 */
-    border-radius: 5px; /* 모서리 둥글게 */
-    background-color: #f9f9f9; /* 배경 색상 */
-    font-size: 16px; /* 글꼴 크기 */
-    color: #333; /* 글꼴 색상 */
-    -webkit-appearance: none; /* 기본 스타일 제거 (웹킷 브라우저) */
-    -moz-appearance: none; /* 기본 스타일 제거 (모질라 브라우저) */
-    appearance: none; /* 기본 스타일 제거 (기타 브라우저) */
-    cursor: pointer; /* 커서 스타일 */
-}
-
-/* 옵션 스타일 설정 */
-.custom-select option {
-    padding: 10px; /* 내측 여백 */
-    background-color: #fff; /* 배경 색상 */
-    color: #333; /* 글꼴 색상 */
-}
-
-/* 포커스 및 호버 스타일 설정 */
-.custom-select:focus {
-    border-color: #007bff; /* 포커스 시 테두리 색상 */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 포커스 시 그림자 */
-    outline: none; /* 포커스 시 외곽선 제거 */
-}
-
-.custom-select option:hover {
-    background-color: #007bff; /* 호버 시 배경 색상 */
-    color: #fff; /* 호버 시 글꼴 색상 */
-}
-
-/* 화살표 추가를 위한 스타일 설정 */
-.custom-select-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-.custom-select::after {
-    content: '▼'; /* 화살표 모양 (유니코드 화살표 사용) */
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    pointer-events: none; /* 화살표 클릭 불가능하게 설정 */
-    color: #333; /* 화살표 색상 */
-}
-.search-container {
-    display: flex;
-    align-items: center;
-}
-
-.search-input {
-    width: 300px;
-    padding: 10px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-right: none;
-    border-radius: 4px 0 0 4px;
-    outline: none;
-}
-
-.search-input:focus {
-    border-color: #007BFF;
-}
-
-.search-button {
-    padding: 11px 20px;
-    font-size: 11px;
-    color: #fff;
-    background-color: #007BFF;
-    border: 2px solid #007BFF;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.search-button:hover {
-    background-color: #0056b3;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.search-button:active {
-    background-color: #003f7f;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.pagination li{padding: 6px 12px;}
-.pagination a : hover{
-background-color : #FEEFAD
-};
+		.custom-select {
+		    width: 84px; /* 원하는 너비로 설정 */
+		    padding: 6px; /* 내측 여백 */
+		    border: 1px solid #ccc; /* 테두리 색상 */
+		    border-radius: 5px; /* 모서리 둥글게 */
+		    background-color: #f9f9f9; /* 배경 색상 */
+		    font-size: 16px; /* 글꼴 크기 */
+		    color: #333; /* 글꼴 색상 */
+		    -webkit-appearance: none; /* 기본 스타일 제거 (웹킷 브라우저) */
+		    -moz-appearance: none; /* 기본 스타일 제거 (모질라 브라우저) */
+		    appearance: none; /* 기본 스타일 제거 (기타 브라우저) */
+		    cursor: pointer; /* 커서 스타일 */
+		}
+		
+		/* 옵션 스타일 설정 */
+		.custom-select option {
+		    padding: 10px; /* 내측 여백 */
+		    background-color: #fff; /* 배경 색상 */
+		    color: #333; /* 글꼴 색상 */
+		}
+		
+		/* 포커스 및 호버 스타일 설정 */
+		.custom-select:focus {
+		    border-color: #007bff; /* 포커스 시 테두리 색상 */
+		    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 포커스 시 그림자 */
+		    outline: none; /* 포커스 시 외곽선 제거 */
+		}
+		
+		.custom-select option:hover {
+		    background-color: #007bff; /* 호버 시 배경 색상 */
+		    color: #fff; /* 호버 시 글꼴 색상 */
+		}
+		
+		/* 화살표 추가를 위한 스타일 설정 */
+		.custom-select-wrapper {
+		    position: relative;
+		    display: inline-block;
+		}
+		
+		.custom-select::after {
+		    content: '▼'; /* 화살표 모양 (유니코드 화살표 사용) */
+		    position: absolute;
+		    top: 50%;
+		    right: 10px;
+		    transform: translateY(-50%);
+		    pointer-events: none; /* 화살표 클릭 불가능하게 설정 */
+		    color: #333; /* 화살표 색상 */
+		}
+		.search-container {
+		    display: flex;
+		    align-items: center;
+		}
+		
+		.search-input {
+		    width: 300px;
+		    padding: 10px;
+		    font-size: 16px;
+		    border: 2px solid #ccc;
+		    border-right: none;
+		    border-radius: 4px 0 0 4px;
+		    outline: none;
+		}
+		
+		.search-input:focus {
+		    border-color: #007BFF;
+		}
+		
+		.search-button {
+		    padding: 11px 20px;
+		    font-size: 11px;
+		    color: #fff;
+		    background-color: #007BFF;
+		    border: 2px solid #007BFF;
+		    border-radius: 0 4px 4px 0;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+		}
+		
+		.search-button:hover {
+		    background-color: #0056b3;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+		
+		.search-button:active {
+		    background-color: #003f7f;
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+		.pagination li{padding: 6px 12px;}
+		.pagination a : hover{
+		background-color : #FEEFAD
+		};
 </style>
 </head>
 <body>
@@ -224,6 +224,7 @@ $(document).ready(function() {
         $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
         $("#btnSearch").val("");
         $("#btnSearch").val("ALL");
+        $("#searchInput").val("");
         loadPageAll(1);
     });
 });
@@ -318,6 +319,7 @@ $(document).ready(function() {
         $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
         $("#btnSearch").val("");
         $("#btnSearch").val("Y");
+        $("#searchInput").val("");
     		loadPageCompletes(1);
     });
 });
@@ -341,8 +343,9 @@ function loadPageCompletes(page) {
             var tbody = $('#tStatus');
             tbody.empty();
             if(response.list.length != 0){
-							response.list.forEach(function(item) {
-					  console.log(item);
+						response.list.forEach(function(item) {
+							
+					  console.log(item.FINAL_APPROVAL_DATE);
 					  var documentStatusClass = '';
 					  if (item.DOCUMENT_STATUS === '반려') {
 					      documentStatusClass = 'rejected';
@@ -413,6 +416,7 @@ $(document).ready(function() {
         $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
         $("#btnSearch").val("");
         $("#btnSearch").val("D");
+        $("#searchInput").val("");
         loadPageWait(1);
     });
 });
@@ -506,6 +510,7 @@ $(document).ready(function() {
         
         $("#btnSearch").val("");
         $("#btnSearch").val("N");
+        $("#searchInput").val("");
         
         loadPageReject(1);
     });
@@ -614,6 +619,7 @@ $(document).ready(function() {
     $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
     $("#btnSearch").val("");
     $("#btnSearch").val("I");
+    $("#searchInput").val("");
     loadPageProgresses(1);
 });
 
@@ -742,7 +748,8 @@ $(document).on('click', '.pages-linki', function(e) {
 									if(Array.isArray(response.list) && response.list.length > 0){
 							
 										response.list.forEach(function(item) {
-		                console.log(item);
+											
+		                console.log(item.FINAL_APPROVAL_DATE);
 		                var documentStatusClass = '';
 		                if (item.DOCUMENT_STATUS === '반려') {
 		                    documentStatusClass = 'rejected';
@@ -768,7 +775,7 @@ $(document).on('click', '.pages-linki', function(e) {
 							                '<td>' + item.PAYMENT_WRITER + '</td>' +
 							                '<td>' + item.DEPARTMENT + '</td>' +
 							                '<td>' + item.REGIST_DATE + '</td>' +
-							                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
+							                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? null : item.FINAL_APPROVAL_DATE) + '</td>' +
 							                '</tr>';
 
 		                tbody.append(row);
@@ -858,19 +865,19 @@ $(document).on('click', '.pages-linki', function(e) {
 							        </thead>
 							        <tbody id="tStatus">
 							        		<c:forEach var="i" items="${ list }">							        		
-							          <tr onclick="location.href='${contextPath}/pay/detail.do?approvalNo=${ i.APPROVAL_NO  }&documentNo=${ i.DOCUMENT_NUMBER }&documentType=${ i.DOCUMENT_TYPE }&payWriter=${ i.PAYMENT_WRITER  }&payWriterNo=${ i.PAYMENT_WRITER_NO }';">
-							                <td><span class="badge">${ i.DOCUMENT_STATUS }</span></td>
-							                <td>${ i.TITLE }
-							                		${ i.SALES_STATUS + i.DRAFT_STATUS + i.BUSINESSTRIP_STATUS == 1 ? '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">
-				                             <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>
-				                             </svg>' : ""}
-							                </td>
-							                <td>${ i.DOCUMENT_TYPE }</td>
-							                <td>${ i.PAYMENT_WRITER }</td>
-							                <td>${ i.DEPARTMENT }</td>
-							                <td>${ i.REGIST_DATE }</td>
-							                <td>${ i.FINAL_APPROVAL_DATE == "" ? "-" : i.FINAL_APPROVAL_DATE}</td>
-							            </tr>
+								          	<tr onclick="location.href='${contextPath}/pay/detail.do?approvalNo=${ i.APPROVAL_NO  }&documentNo=${ i.DOCUMENT_NUMBER }&documentType=${ i.DOCUMENT_TYPE }&payWriter=${ i.PAYMENT_WRITER  }&payWriterNo=${ i.PAYMENT_WRITER_NO }';">
+								                <td><span class="badge">${ i.DOCUMENT_STATUS }</span></td>
+								                <td>${ i.TITLE }
+								                		${ i.SALES_STATUS + i.DRAFT_STATUS + i.BUSINESSTRIP_STATUS == 1 ? '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">
+					                             <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>
+					                             </svg>' : ""}
+								                </td>
+								                <td>${ i.DOCUMENT_TYPE }</td>
+								                <td>${ i.PAYMENT_WRITER }</td>
+								                <td>${ i.DEPARTMENT }</td>
+								                <td>${ i.REGIST_DATE }</td>
+								                <td>${ i.FINAL_APPROVAL_DATE == null ? "-" : i.FINAL_APPROVAL_DATE}</td>
+								            </tr>
 							            </c:forEach>
 							        </tbody>
 							    </table>
