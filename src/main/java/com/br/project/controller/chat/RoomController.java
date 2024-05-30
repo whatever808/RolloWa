@@ -118,7 +118,7 @@ public class RoomController {
 	}
 	
 	// 채팅방의 채팅 메세지 조회
-	@GetMapping(value="/messages", produces="application/json; chartset=urf-8")
+	@GetMapping(value="/messages", produces="application/json; charset=utf-8")
 	@ResponseBody
 	public List<ChatMessageDto> selectChatMsg(String roomNo) {
 		List<ChatMessageDto> msgList = new ArrayList<>();
@@ -129,10 +129,10 @@ public class RoomController {
 		return msgList;
 	}
 	
-	// 채팅방 접속 시간 update
-	@PostMapping(value="/inDate")
+	// 채팅방에서 나간 시간 update
+	@PostMapping("/inDate")
 	@ResponseBody
-	public String updateChatInDate(Map<String, String> map) {
+	public String updateChatInDate(@RequestParam Map<String, String> map) {
 		int result = 0;
 		
 		if(map.get("roomNo") != null && map.get("userNo") != null) {
@@ -147,7 +147,7 @@ public class RoomController {
 	}
 	
 	// 채팅방의 읽지 않은 메세지 갯수 조회
-	@GetMapping(value="/messages/unread")
+	@GetMapping("/messages/unread")
 	@ResponseBody
 	public String selectUnreadMsg(@RequestParam Map<String, String> map) {
 		int unreadMsgCount = 0;

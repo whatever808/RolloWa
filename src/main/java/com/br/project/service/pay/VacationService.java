@@ -85,7 +85,6 @@ public class VacationService {
 				result *= attachDao.insertBoardAttachment(att);
 			}
 		}
-		
 		return result;
 	}
 
@@ -104,5 +103,35 @@ public class VacationService {
 		attachDao.deleteBoardAttachment(fileNo);
 	}
 
+	/**
+	 * @param vacaNo
+	 * @return
+	 */
+	public int deleteRcequest(String vacaNo) {
+		return vacationDao.deleteRcequest(vacaNo);
+	}
+
+	/**
+	 * @param vacation
+	 * @return
+	 */
+	public List<VacationDto> searchOld(VacationDto vacation) {
+		return vacationDao.searchOld(vacation);
+	}
+
+	/**
+	 * @param vacation
+	 * @return
+	 */
+	public int RRequest(VacationDto vacation) {
+		return vacationDao.RRequest(vacation);
+	}
+
+	/**
+	 * @return
+	 */
+	public int updateYearLabor() {
+		return vacationDao.updateYearLabor();
+	}
 	
 }

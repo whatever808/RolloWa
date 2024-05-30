@@ -112,18 +112,15 @@ h4, h5{
     justify-content: space-around;
 }
 
-/* ------------- 일정 ------------- */
-.today-schedule{
+/* ------------- 접속자 ------------- */
+.login-user-list-div{
     background-color: #fff8e3;
     border-radius: 9px;
     padding: 15px;
     margin-bottom: 30px;
-    height: 500px;
+    height: 700px;
     overflow-x: auto;
     overflow-y: auto;
-}
-.schedule:hover{
-		cursor: pointer;
 }
 .schedule-color{
 		display: inline-block;
@@ -131,9 +128,7 @@ h4, h5{
 		height: 15px;
 		border-radius: 100px;
 }
-.schedule-title{
-		font-size: 17px;
-}
+
 
 /* ------------- 근태현황 ------------- */
 .my-attend{
@@ -174,16 +169,6 @@ h4, h5{
     align-items: center;
     font-size: 25px;
     font-weight: bold;
-}
-
-/* ------------- 알림목록 ------------- */
-.alert-list-div{
-    display: flex;
-    flex-direction: column;
-    background-color: #fff8e3;
-    border-radius: 9px;
-    padding: 15px;
-    margin-bottom: 30px;
 }
 
 /* ------------- 공지목록 ------------- */
@@ -228,4 +213,37 @@ h4, h5{
 		height: 20px;
 		border-radius: 100px;
 }
-		
+
+/* ------------- 캘린더 ------------- */
+.calendar-div{
+    display: flex;
+    flex-direction: column;
+    background-color: #fff8e3;
+    border-radius: 9px;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+#calendar{
+		height: 500px;
+}
+
+/* ------------- 기웅 추가 알림 -----------*/
+.alram-div {
+	width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+	
+.alram-btn {
+	box-shadow: none;
+}	
+
+.alram_el {
+	display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alram_date {
+	margin-right: 10px;
+}

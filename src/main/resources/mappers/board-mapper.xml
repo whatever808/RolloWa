@@ -36,7 +36,7 @@
 		  from tb_board
 		  left outer join member on (user_no = tb_board.modify_emp)
 		 <choose>
-		 	<when test="status != null and !status.equals('')">
+		 	<when test='status != null and !status.equals("")'>
 		 		<where>
 		 			tb_board.status = #{status}
 		 		</where>
@@ -47,40 +47,40 @@
 		 		</where>
 		 	</otherwise>
 		 </choose>
-		 <if test="category != null and !category.equals('')">
+		 <if test='category != null and !category.equals("")'>
 			<choose>
-				<when test="category.equals('normal')">
+				<when test='category.equals("normal")'>
 					and category is null
 				</when>
-				<when test="category.equals('department') and department.equals('')">
+				<when test='category.equals("department") and department.equals("")'>
 					and category is not null
 				</when>
-				<when test="category.equals('department') and !department.equals('')">
+				<when test='category.equals("department") and !department.equals("")'>
 					and category = #{department}
 				</when>
 			</choose>
 		</if>
-		<if test="(condition != null and keyword != null) and (!condition.equals('') and !keyword.equals(''))">
+		<if test='(condition != null and keyword != null) and (!condition.equals("") and !keyword.equals(""))'>
 			<choose>
-				<when test="(condition.equals('') or condition.equals('all')) and !keyword.equals('')">
+				<when test='condition.equals("all") and !keyword.equals("")'>
 					and 
 						(	title like 	 		'%' || #{keyword} || '%'
 				 		 or text_content like 	'%' || #{keyword} || '%'
 				 		 or user_name like 		'%' || #{keyword} || '%'
 				 		 )
 				</when>
-				<when test="condition.equals('title') and !keyword.equals('')">
+				<when test='condition.equals("title") and !keyword.equals("")'>
 					and title like 	 			'%' || #{keyword} || '%'
 				</when>
-				<when test="condition.equals('content') and !keyword.equals('')">
+				<when test='condition.equals("content") and !keyword.equals("")'>
 					and text_content like 		'%' || #{keyword} || '%'
 				</when>
-				<when test="condition.equals('writer') and !keyword.equals('')">
+				<when test='condition.equals("writer") and !keyword.equals("")'>
 					and user_name like 		 	'%' || #{keyword} || '%'
 				</when>
 			</choose>
 		</if>
-		<if test="userNo != null and !userNo.equals('')">
+		<if test='userNo != null and !userNo.equals("")'>
 			and (tb_board.regist_emp = #{userNo} or tb_board.modify_emp = #{userNo})
 		</if>
 	</select>
@@ -88,74 +88,74 @@
 	<!-- 공지사항 목록조회 -->
 	<select id="selectBoardList" parameterType="hashmap" resultMap="boardResultMap">
 		select
-					 board_no
-					,title
-					,profile_url
-					,user_no			"modify_emp"
-					,user_name 			"writer_name"
-					,to_char(tb_board.modify_date, 'YYYY-MM-DD') "modify_date"
-					,read_count
-					,code_name 			"category"
-					,(
-						 select count(*) totalAttachments
-						   from attachment
-						  where status 		= #{status}
-						    and ref_type 		= 'BD'
-						    and ref_no 		= tb_board.board_no
-						) "attachment_yn"
-			from tb_board
-			left outer join member     on (user_no = regist_emp)
-			left outer join tb_group   on (
-                                 		 group_code like 'DEPT%' 
-                                 		 and code = category
-                                 		 )
-			left outer join attachment on (ref_no = board_no)
+				 board_no
+				,title
+				,profile_url
+				,user_no			"modify_emp"
+				,user_name 			"writer_name"
+				,to_char(tb_board.modify_date, 'YYYY-MM-DD') "modify_date"
+				,read_count
+				,code_name 			"category"
+				,(
+					 select count(*) totalAttachments
+					   from attachment
+					  where status 		= #{status}
+					    and ref_type 		= 'BD'
+					    and ref_no 		= tb_board.board_no
+					) "attachment_yn"
+		from tb_board
+		left outer join member     on (user_no = regist_emp)
+		left outer join tb_group   on (
+	                               		 group_code like 'DEPT%' 
+	                               		 and code = category
+	                               		 )
+		left outer join attachment on (ref_no = board_no)
      <choose>
-		 	<when test="status != null and !status.equals('')">
-		 		<where>
-		 			tb_board.status = #{status}
-		 		</where>
-		 	</when>
-		 	<otherwise>
-		 		<where>
-		 			tb_board.status != 'N'
-		 		</where>
-		 	</otherwise>
-	  </choose> 
-     <if test="category != null and !category.equals('')">
+	 	<when test='status != null and !status.equals("")'>
+	 		<where>
+	 			tb_board.status = #{status}
+	 		</where>
+	 	</when>
+	 	<otherwise>
+	 		<where>
+	 			tb_board.status != 'N'
+	 		</where>
+	 	</otherwise>
+  </choose> 
+     <if test='category != null and !category.equals("")'>
 			<choose>
-				<when test="category.equals('normal')">
+				<when test='category.equals("normal")'>
 					and category is null
 				</when>
-				<when test="category.equals('department') and department.equals('')">
+				<when test='category.equals("department") and department.equals("")'>
 					and category is not null
 				</when>
-				<when test="category.equals('department') and !department.equals('')">
+				<when test='category.equals("department") and !department.equals("")'>
 					and category = #{department}
 				</when>
 			</choose>
 		</if>
-		<if test="(condition != null and keyword != null) and (!condition.equals('') and !keyword.equals(''))">
+		<if test='(condition != null and keyword != null) and (!condition.equals("") and !keyword.equals(""))'>
 			<choose>
-				<when test="(condition.equals('') or condition.equals('all')) and !keyword.equals('')">
+				<when test='condition.equals("all") and !keyword.equals("")'>
 					and 
 							(	title like 	 		'%' || #{keyword} || '%'
 					 		 or text_content like 	'%' || #{keyword} || '%'
 					 		 or user_name like 		'%' || #{keyword} || '%'
 					 		 )
 				</when>
-				<when test="condition.equals('title') and !keyword.equals('')">
+				<when test='condition.equals("title") and !keyword.equals("")'>
 					and title like 			'%' || #{keyword} || '%'
 				</when>
-				<when test="condition.equals('content') and !keyword.equals('')">
+				<when test='condition.equals("content") and !keyword.equals("")'>
 					and text_content like 	'%' || #{keyword} || '%'
 				</when>
-				<when test="condition.equals('writer') and !keyword.equals('')">
+				<when test='condition.equals("writer") and !keyword.equals("")'>
 					and user_name like 		 '%' || #{keyword} || '%'
 				</when>
 			</choose>
 		</if>
-		<if test="userNo != null and !userNo.equals('')">
+		<if test='userNo != null and !userNo.equals("")'>
 			and (tb_board.regist_emp = #{userNo} or tb_board.modify_emp = #{userNo})
 		</if>
      order by tb_board.modify_date desc
@@ -258,7 +258,7 @@
 		update tb_board
 		   set status   = #{status}
 		   		,modify_date = sysdate
-		<if test="no != null and !no.equals('')">
+		<if test='no != null and !no.equals("")'>
 			<where>
 				board_no = #{no}
 			</where>

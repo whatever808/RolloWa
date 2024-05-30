@@ -132,6 +132,9 @@
     padding: 1px;
     background-clip: content-box;
 	}
+	.fc-toolbar-title{
+		font-size: 2.5em !important;
+	}
 </style>
 </head>
 <body>
@@ -313,7 +316,7 @@
 					})
 				</script>
         <!-- 컨텐츠 영역 -->
-       <div class="content" style="max-width: 1120px; padding: 30px;">
+       <div class="content" style="max-width: 1500px; padding: 30px;">
             <!-- 캘린더 영역 -->
             <div class="calender-area radious10 line-shadow "><div id="calendar"></div></div>
         </div>

@@ -109,7 +109,7 @@
               <c:forEach var="t" items="${teams}">
 			    <div class="pretty p-default p-round p-smooth p-plain">
 			    	<c:choose>
-			    		<c:when test="${t.userNo eq 1051 }">
+			    		<c:when test="${t.userNo eq loginMember.userNo }">
 				        <input type="checkbox" name="coworker" value="${t.userNo}" checked>
 			    		</c:when>
 			    		<c:otherwise>
@@ -168,7 +168,7 @@
               <div class="enroll marginR30"><button type="submit" class="btn btn-outline-primary" onclick="return checkDate();">등록</button></div>
           </form>
           </fieldset>
-        <script>
+        <script>        
     		function checkDate(){
     			
     			let date2 = $('#currentDate2').val()+ " " + $('#currentTime2').val();
@@ -178,6 +178,22 @@
 		        console.log(checkDate);
 		        console.log(checkTime);
 		        if(checkDate && checkTime){
+		        	// [기웅] 일정 등록 시 알림
+		        	var teamMemberList = new Array();
+		        	
+		        	$('input:checkbox[name=coworker]').each(function (index) {
+								if($(this).is(":checked")==true){
+									if($(this).val() != ${loginMember.userNo}) {
+										teamMemberList.push($(this).val());
+									}
+						    }
+							})
+		        	stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
+																																		, flag: '2'
+																																		, teamMemberList: teamMemberList
+																																		, url: "${path}/calendar/pCalendar.page"}));
+		        	// [기웅]
+		        	
 		        	return true;
 		        }else {
 		        	redAlert('일정 수정','날짜 및 시간을 확인 해 주세요.');
