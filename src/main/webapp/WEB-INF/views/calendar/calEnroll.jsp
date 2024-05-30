@@ -169,16 +169,15 @@
           </form>
           </fieldset>
         <script>        
-    		function checkDate(){
+    		function 
+(){
     			
     			let date2 = $('#currentDate2').val()+ " " + $('#currentTime2').val();
     			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();
     			let checkDate =  new Date(date2) >= new Date(date1);
     			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
-		        console.log(checkDate);
-		        console.log(checkTime);
 		        if(checkDate && checkTime){
-		        	// [기웅] 일정 등록 시 알림
+		        	// ----------------[기웅] 일정 등록 시 알림----------------------------------------
 		        	var teamMemberList = new Array();
 		        	
 		        	$('input:checkbox[name=coworker]').each(function (index) {
@@ -188,11 +187,12 @@
 									}
 						    }
 							})
+							
 		        	stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
 																																		, flag: '2'
 																																		, teamMemberList: teamMemberList
 																																		, url: "${path}/calendar/pCalendar.page"}));
-		        	// [기웅]
+		        	//---------------- [기웅]-----------------------------------------------------
 		        	
 		        	return true;
 		        }else {
