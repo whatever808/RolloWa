@@ -44,6 +44,26 @@ public class NotificationService {
 	// 알림 전송 이력 저장
 	public int insertNotificationSend(Map<String, Object> map) {
 		return nDao.insertNotificationSend(map);
+	}
+
+	// 회원에게 전달된 알림 중 확인하지 않은 알림 조회
+	public List<NotificationDto> selectNotification(String userNo) {
+		return nDao.selectNotification(userNo);
+	}
+
+	// 회원에게 전달된 최신 알림의 확인 날짜 update
+	public int updateLatestCheckDate(Map<String, String> map) {
+		return nDao.updateLatestCheckDate(map);
+	}
+
+	// 회원에게 전달된 공지 알림 확인 날짜 update
+	public int updateNoticeCheckDate(Map<String, String> map) {
+		return nDao.updateNoticeCheckDate(map);
+	}
+
+	// 회원에게 전달된 일정 알림 확인 날짜 모두 update
+	public int updateCallendarCheckDate(Map<String, String> map) {
+		return nDao.updateCallendarCheckDate(map);
 	}	
 	
 }

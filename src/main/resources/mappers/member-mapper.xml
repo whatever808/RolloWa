@@ -71,8 +71,8 @@
 	    , TRUNC((SYSDATE - ENROLL_DATE) + 1) AS SERVICE_DATE
 	from member M
 	where 
-	user_id = 'user01'
-	and status = 'Y';
+	user_id = #{userId}
+	and status = 'Y'
 	</select>
 	
 	<!-- 회원 이름 찾기 -->

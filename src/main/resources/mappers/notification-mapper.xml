@@ -10,6 +10,18 @@
 		<result column="noti_enroll_user_no" property="enrollUserNo"/>
 		<result column="noti_modify_user_no" property="modifyUserNo"/>
 	</resultMap>
+	
+	<resultMap type="NotificationSendDto" id="notificationSendResult">
+		<id column="NSEND_NO" property="nsendNo"/>
+		<result column="NOTI_URL" property="notiURL"/>
+		<result column="NOTI_CHECK_DATE" property="notiCheckDate"/>
+		<result column="NOTI_SEND_DATE" property="notiSendDate"/>
+		<result column="STATUS" property="status"/>
+		<result column="RECEIVE_USER_NO" property="receiveUserNo"/>
+		<result column="SEND_USER_NO" property="sendUserNo"/>
+		<result column="SEND_USER_NAME" property="sendUserName"/>
+		<result column="TYPE" property="type"/>
+	</resultMap>
 
 	<!-- 알림 전체 갯수 조회 -->
 	<select id="selectNotiListCount" resultType="_int">
@@ -90,6 +102,7 @@
 				nsend_no
 				, noti_url
 				, noti_check_date
+				, type
 				, receive_user_no
 				, send_user_no
 			)
@@ -98,9 +111,70 @@
 				seq_nsno.nextval
 				, #{ url }
 				, null
+				, #{ type }
 				, #{ receiveUserNo }
 				, #{ sendUserNo }
 			)
 	</insert>
 	
+	<!-- 로그인한 회원이 받은 알림 중 읽지 않은 알림 조회 -->
+	<select id="selectNotification" resultMap="notificationSendResult">
+		select 
+		    nsend_no
+		    , noti_url
+		    , (select user_name from member where user_no = send_user_no) as send_user_name
+		    , to_char(noti_send_date, 'yyyy-mm-dd HH24:MI') as noti_send_date
+		    , user_name
+		    , code_name
+		    , type
+		from noti_send no, member m, tb_group g
+		where no.receive_user_no = user_no
+		and g.code = m.position_code
+		and g.group_code = 'POSI01'
+		and user_no = #{ userNo }
+		and noti_check_date is null
+		and no.status = 'Y'
+		order by noti_send_date desc
+	</select>
+	
+	<!-- 로그인한 회원이 받은 알림의 최신 알림 확인 날짜 update -->
+	<update id="updateLatestCheckDate">
+	update
+	    noti_send
+	set
+	    noti_check_date = sysdate
+	where status = 'Y'
+	and nsend_no = (
+	    select nsend_no
+	    from (
+	        select nsend_no, rownum
+	        from noti_send
+	        where receive_user_no = #{ userNo }
+	        order by noti_send_date desc
+	        )
+	    where rownum = 1
+	    )
+	</update>
+	
+	<!-- 회원이 클릭한 공지사항 알림 확인 날짜 update -->
+	<update id="updateNoticeCheckDate">
+	update
+	    noti_send
+	set
+	    noti_check_date = sysdate
+	where status = 'Y'
+	and nsend_no = #{ nsendNo }
+	</update>
+	
+	<!-- 회원의 일정 알림 날짜 모두 update -->
+	<update id="updateCallendarCheckDate">
+	update
+	    noti_send
+	set
+	    noti_check_date = sysdate
+	where status = 'Y'
+	and receive_user_no = #{ userNo }
+	and noti_check_date is null
+	and type = 'C'
+	</update>
 </mapper>

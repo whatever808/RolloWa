@@ -1,5 +1,6 @@
 package com.br.project.controller.chat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 
 import com.br.project.dto.chat.ChatMessageDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.dto.notification.NotificationSendDto;
 import com.br.project.service.chat.ChatService;
 import com.br.project.service.member.MemberService;
 import com.br.project.service.notification.NotificationService;
@@ -58,8 +60,8 @@ public class ChatController {
     public int insertChatMsg(Map<String, Object> map) {
     	ChatMessageDto chatMsg = ChatMessageDto.builder()
 				.msgContent((String)map.get("msgContent"))
-				.chatRoomNo((int)(map.get("roomNo")))
-				.userNo((int)(map.get("userNo")))
+				.chatRoomNo(Integer.parseInt(String.valueOf(map.get("roomNo"))))
+				.userNo(Integer.parseInt(String.valueOf(map.get("userNo"))))
 				.build();
 
     	return chatService.insertChatMsg(chatMsg);
@@ -70,11 +72,10 @@ public class ChatController {
     public void alram(String json) {
     	try {
 			Map<String, Object> map = jsonToMap(json);
-			log.debug("map : {}", map);
 			
 			if(map.get("flag").equals("1")) {
 				// 공지사항 알림일 경우
-				
+				map.put("type", "N");
 				// 결과 저장
 				int result = 0;
 				
@@ -99,6 +100,7 @@ public class ChatController {
 				}
 			} else if (map.get("flag").equals("2")) {
 				// 일정 알림일 경우
+				map.put("type", "C");
 				
 				int result = 0;
 				// 팀코드 리스트에 담기
@@ -136,16 +138,16 @@ public class ChatController {
 			Map<String, Object> map = jsonToMap(json);
 			String partUserName = memberService.selectUserName((String)map.get("partUserNo"));
 			
-			map.put("msgContent", map.get("name") + "님이 " + partUserName + "님을 채팅방에 초대하였습니다.");
+			map.put("msgContent", map.get("userName") + "님이 " + partUserName + "님을 채팅방에 초대하였습니다.");
 			
 			// flag 번호 부여
-			map.put("flagNo", "0");
+			map.put("flag", "0");
 			
 			int result = insertChatMsg(map);
 			
 			if (result > 0) {
 				log.debug("초대 메세지 전송 성공");
-				template.convertAndSend("/topic/chat/alram", map);
+				template.convertAndSend("/topic/chat/alram", mapToJson(map));
 			} else {
 				log.debug("채팅 메세지 저장 중 오류 발생");
 			}

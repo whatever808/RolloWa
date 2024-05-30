@@ -45,10 +45,10 @@
 
                      <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0" style="height: 100%;">
 
-                         <h5 class="font-weight-bold mb-3 text-center text-lg-start" style="margin-top: 10px;">Member
+                         <h5 class="font-weight-bold mb-3 text-center text-lg-start" style="margin-top: 10px; margin-left: 20px;">Member
                          </h5>
                          <div class="msg_btn_wrapper btn_wrapper">
-                             <button data-izimodal-open="#people_list" class="btn1 forget_btn"><i
+                             <button data-izimodal-open="#people_list" class="btn1 forget_btn people_list_btn"><i
                                      class="fa-solid fa-comment"></i></button>
                          </div>
 
@@ -69,7 +69,7 @@
 
                          <div class="chatting_history">
                              <ul class="list-unstyled chat_msg_list">
-                                 <!-- 채팅 메세지 구역 -->
+                                 <!-- 채팅 메세지 구역 -->                              
                              </ul>
                          </div>
 
@@ -82,9 +82,6 @@
 
              </div>
          </section>
-     </div>
-     <div>
-     	<button type="button" onclick="test();">테스트 하기</button>
      </div>
     </main>
     <script src="${ contextPath }/resources/js/common/bootstrap.bundle.min.js"></script>
@@ -104,6 +101,22 @@
         for (let i = 0; i < $(".chat_room").length; i++) {
             chatRoomArr[i] = 0;
         }
+        
+      	// 채팅방 버튼 스타일
+      	$(".msg_open_btn").on("mouseenter", function() {
+      		$(".msg_open_btn>i").addClass("fa-beat");
+      	})
+      	$(".msg_open_btn").on("mouseleave", function() {
+      		$(".msg_open_btn>i").removeClass("fa-beat");
+      	})
+      	
+      	// 채팅방 버튼 스타일
+		  	$(".msg_close_btn").on("mouseenter", function() {
+		  		$(".msg_close_btn>i").addClass("fa-beat");
+		  	})
+		  	$(".msg_close_btn").on("mouseleave", function() {
+		  		$(".msg_close_btn>i").removeClass("fa-beat");
+		  	})
 
         // 채팅방 열기 버튼
         $(".msg_open_btn").on("click", function () {
@@ -134,6 +147,7 @@
         	// 채팅 메세지 구역 초기화
         	$(".chat_msg_list").empty();
         	$(".sendBtn_ul").empty();
+        	$(".sendBtn_ul").next().detach();
         	
         	// 메신저 닫았음을 표시
         	subRoomNo = 0;
@@ -172,7 +186,6 @@
 	        theme: 'light', //Theme of the modal, can be empty or "light".
 	        padding: '15px', // content안의 padding
 	        radius: 10, // 모달 외각의 선 둥글기
-	        group: 'name111',
 	        loop: true,
 	        arrowKeys: true,
 	        navigateCaption: true,
@@ -184,7 +197,7 @@
     	 // 채팅 - 전체 사원 조회
 			 // 사원 목록 구역
 			 const $deptListWrapper = $(".dept_list_wrapper");
-       $(".msg_btn_wrapper").on("click", function() {
+       $(".people_list_btn").on("click", function() {
 	    	  $.ajax({
 	       		url: '${contextPath}/member/select.do'
 	       		, method: 'get'
@@ -299,7 +312,7 @@
 	    			var chatRoomVal = "<li class='p-2 border-bottom chat_room' onclick='selectChatMsg(" + chatRoomList[i].chatRoomNo + ")'>";
 	       	  chatRoomVal += "<a href='#!' class='d-flex justify-content-between'>";
 	       	  chatRoomVal += "<div class='d-flex flex-row'>";
-	       	  chatRoomVal += "<img style='height: 70px;' src='" + participantsList[0].profileURL + "'";
+	       	  chatRoomVal += "<img style='height: 70px;' src='${contextPath}" + participantsList[0].profileURL + "'";
 	       	  chatRoomVal += "class='rounded-circle d-flex align-self-center me-3 shadow-1-strong'";
 	       	  chatRoomVal += "width='60'>";
 	       	  chatRoomVal += "<div class='pt-1'>";
@@ -416,7 +429,8 @@
    					// 1-2. 채팅방 참여인원 생성
  			    	$(".list-group-item").each(function(index, el) {
  			    		var partUserNo = $(el).children().children().val();
- 			    		if($(el).children().children().is(':checked')) {    			
+ 			    		if($(el).children().children().is(':checked')) {  
+ 			    			$(el).children().children().prop("checked", false);
  			    			// 1-2-1. 체크된 회원 채팅방 참여
  			    			$.ajax({
  			    				url: "${contextPath}/chat/participants"
@@ -437,6 +451,8 @@
  		 				     																							, roomNo: roomNo
  		 				     																							, partUserNo : partUserNo
 		 				     																							, userNo: '${loginMember.userNo}'}));
+ 			    						// 모달창 닫기
+ 		 			    				$('#people_list').iziModal('close');
  			    					}
  			    				}
  			    				, error: function() {
@@ -483,7 +499,7 @@
 																												, sendDate: sendDate
 																												, profileURL: '${loginMember.profileURL}'}));
     	// 채팅 메세지 화면에 출력
-    	chatTextDisplay(1, '${loginMember.userName}', dateFormat(new Date()) , $chatArea.val(), '$(loginMbmer.profileURL)')
+    	chatTextDisplay(1, '${loginMember.userName}', dateFormat(new Date()) , $chatArea.val(), '${loginMember.profileURL}')
     	
 			// 채팅 메세지 보내고 스크롤 이동
 			$(".chatting_history").animate({scrollTop:'10000'}, '500');
@@ -507,14 +523,14 @@
 				chatText += "<p class='mb-0'>" + msgContent + "</p>";
 				chatText += "</div>";
 				chatText += "</div>";
-				chatText += "<img src='" + profileURL + "' alt='avatar'";
+				chatText += "<img src='${contextPath}" + profileURL + "' alt='avatar'";
 				chatText += " class='rounded-circle d-flex align-self-start ms-3 shadow-1-strong'";
 				chatText += "width='60'>";
 				chatText += "</li>";
 			} else if (flag == 2) {
 				// 보낸 사람이 내가 아닐 때
 				chatText += "<li class='d-flex justify-content-between mb-4'>";
- 				chatText += "<img src='" + profileURL + "'";
+ 				chatText += "<img src='${contextPath}" + profileURL + "'";
  				chatText += "alt='profile image'";
  				chatText += "class='rounded-circle d-flex align-self-start me-3 shadow-1-strong'";
  				chatText += "width='60'>";
@@ -579,6 +595,24 @@
 		// 채팅방 초대 알림 수신 시
 		function receiveInviteMsg(msgBody) {
 			selectChatRoom();
+		}
+		
+		// 알림의 확인 날짜 update
+		function updateCheckDate() {
+			$.ajax({
+				url: "${contextPath}/notification/checkDate"
+				, method: "post"
+				, data: {userNo: ${loginMember.userNo}}
+				, async: false
+				, success: function(result) {
+					if(result > 0) {
+						console.log("알림 조회 시간 update 성공");
+					}
+				}
+				, error: function() {
+					console.log("알림 조회 시간 update ajax 실패");
+				}
+			})
 		}
 
 		// 날짜 형식 바꾸기

@@ -44,4 +44,20 @@ public class NotificationDao {
 	public int insertNotificationSend(Map<String, Object> map) {
 		return sqlSessionTemplate.insert("notificationMapper.insertNotificationSend", map);
 	}
+
+	public List<NotificationDto> selectNotification(String userNo) {
+		return sqlSessionTemplate.selectList("notificationMapper.selectNotification", userNo);
+	}
+
+	public int updateLatestCheckDate(Map<String, String> map) {
+		return sqlSessionTemplate.update("notificationMapper.updateLatestCheckDate", map);
+	}
+
+	public int updateNoticeCheckDate(Map<String, String> map) {
+		return sqlSessionTemplate.update("notificationMapper.updateNoticeCheckDate", map);
+	}
+
+	public int updateCallendarCheckDate(Map<String, String> map) {
+		return sqlSessionTemplate.update("notificationMapper.updateCallendarCheckDate", map);
+	}
 }

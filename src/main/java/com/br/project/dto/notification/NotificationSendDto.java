@@ -19,4 +19,7 @@ public class NotificationSendDto {
 	private String status;
 	private String receiveUserNo;
 	private String sendUserNo;
+	
+	private String type;
+	private String sendUserName;
 }

@@ -625,16 +625,17 @@ $(document).ready(function(){
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-                        Account
+                        계정 관리
                     </button>
                     <div class="collapse" id="account-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li><a href="${ contextPath }/member/mypage.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">My Page</a>
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">마이페이지</a>
                             </li>
                             <li><a href="${ contextPath }/notification/list.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
                             </li>
+
                             <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
                                     out</a></li>
                                     
@@ -666,8 +667,6 @@ $(document).ready(function(){
 					
 					// 수신한 메세지 개수
 					var msgCount = 0;
-					
-					
 					
 					$(document).ready(function() {
 						// 새로고침 감지
@@ -711,32 +710,39 @@ $(document).ready(function(){
 					    	
 					    	if(msgBody.flag == 0) {
 					    		// 채팅방 초대 알림인 경우
-					    		receiveInviteMsg(msgBody)
-					    		
-					    	} else if (msgBody.flag == 1) {
-					    		// 공지사항 등록 알림인 경우
+					    		if(msgBody.userNo != ${loginMember.userNo}) {
+					    			receiveInviteMsg(msgBody);
+					    		}
+					    	} else {
+					    		// 공지사항, 일정 등록 알림인 경우
 					    		for (var i = 0; i < msgBody.teamMemberList.length; i++) {
 					    			if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
 							    		$("#alram").iziModal('open');
 							    		$("#alram_btn").on("click", function() {
+							    			// 알림의 noti_check_date update
+				    						$.ajax({
+													url: "${contextPath}/notification/checkDate"
+													, method: "post"
+													, data: {userNo: ${loginMember.userNo}}
+													, async: false
+													, success: function(result) {
+														if(result > 0) {
+															console.log("알림 조회 시간 update 성공");
+														}
+													}
+													, error: function() {
+														console.log("알림 조회 시간 update ajax 실패");
+													}
+												})
+							    			
 							    			location.href = msgBody.url;
 							    		})
+							    		
+							    		// 읽지 않은 알림 조회 후 알림 목록에 추가 및 읽지 않은 알림 표시
+							    		selectAlram();
 					    			}
 					    		}
-					    	} else if (msgBody.flag == 2) {
-					    		// 부서 내 일정 등록 알림인 경우
-					    		for (var i = 0; i < msgBody.teamMemberList.length; i++) {
-					    			if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
-					    				$("#alram").iziModal('open');
-							    		$("#alram_btn").on("click", function() {
-							    			location.href = msgBody.url;
-							    		})
-					    			}
-					    		}
-					    	} else if (msgBody.flag == 3) {
-					    		// 결재 등록 알림인 경우
-					    		
-					    	}
+					    	} 
 					    })
 					    
 						})
@@ -751,7 +757,7 @@ $(document).ready(function(){
 						, radius: '2'
 						, arrowKeys: 'false'
 						, navigateCaption: 'false'
-						//, timeout: '3000'
+						, timeout: '3000'
 						, timeoutProgressbar: 'true'
 						, timeoutProgressbarColor: '#FFFFFF'
 						, pauseOnHover: 'true'

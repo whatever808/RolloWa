@@ -118,7 +118,7 @@ public class RoomController {
 	}
 	
 	// 채팅방의 채팅 메세지 조회
-	@GetMapping(value="/messages", produces="application/json; chartset=urf-8")
+	@GetMapping(value="/messages", produces="application/json; charset=utf-8")
 	@ResponseBody
 	public List<ChatMessageDto> selectChatMsg(String roomNo) {
 		List<ChatMessageDto> msgList = new ArrayList<>();
