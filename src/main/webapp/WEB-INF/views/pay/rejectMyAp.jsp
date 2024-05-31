@@ -175,14 +175,16 @@
 		}
 		
 		.search-button22 {
-		    padding: 11px 20px;
+		    padding: 5px 14px;
 		    font-size: 11px;
 		    color: #fff;
 		    background-color: #ff9800;
-   			border: 2px solid #ff9800;
-		    border-radius: 0 4px 4px 0;
+		    border: 2px solid #ff9800;
+		    border-radius: 3px;
 		    cursor: pointer;
 		    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+		    height: 49px;
+   			width: 61px;
 		}
 		
 		.search-button22:hover {
@@ -270,10 +272,10 @@ $(document).ready(function(){
 
 
 
-$(document).on('keyup', '#search', function(e) {
+$(document).on('keyup', '#searches', function(e) {
 	
 		if(e.key == "Enter"){
-			 loadPageReject(1);
+			 loadPageMyReject(1);
 		}
    
 });
@@ -281,47 +283,47 @@ $(document).on('keyup', '#search', function(e) {
 
 $(document).on('click', '#searchBtn', function(e) {
 	
-		loadPageReject(1);
+	loadPageMyReject(1);
 	
 });
 
 
 
 
-$(document).on('click', '.pages-linkr', function(e) {
+$(document).on('click', '.pages-link', function(e) {
     e.preventDefault();
     var page = parseInt($(this).data('page'));
     if (page > 0) {
-        loadPageSearch(page);
+    	loadPageMyReject(page);
     }
 });
 
-function loadPageReject(page) {
+function loadPageMyReject(page) {
 	
     $.ajax({
         url: "${contextPath}/pay/ajaxMyRejectSearchApproval.do", 
         method: 'GET',
         data: { 
         	page: page,
-        	keyword: $("#search").val()
+        	keyword: $("#searches").val()
         },
         success: function(response) {
           console.log(response);
-
+					
           var tbody = $('#tStatus');
           tbody.empty();
         
           if(Array.isArray(response.list) && response.list.length > 0){
 		
-				response.list.forEach(function(item) {
-	        console.log(item);
-	      
+					response.list.forEach(function(item) {
+		        console.log(item);
+		        
 	        var attachmentIcon = '';
 	        if (item.SALES_STATUS + item.DRAFT_STATUS + item.BUSINESSTRIP_STATUS > 0) {
 	            attachmentIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
 	                             '<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>' +
 	                             '</svg>';
-	        }
+		      }
 	
 	        var row = '<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.APPROVAL_NO  + '&documentNo=' + item.DOCUMENT_NUMBER + '&documentType=' + item.DOCUMENT_TYPE + '&payWriter=' + item.PAYMENT_WRITER + '&payWriterNo=' + item.PAYMENT_WRITER_NO + '">' +
 		                '<td><span class="badge rejected">' + item.DOCUMENT_STATUS + '</span></td>' +
@@ -338,13 +340,13 @@ function loadPageReject(page) {
 					var ul = $('.pagination');
 					ul.empty(); 
 
-					ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + (response.pi.currentPage == 1 ? 0 : response.pi.currentPage - 1) + '">◁</a></li>');
+					ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-link" data-page="' + (response.pi.currentPage == 1 ? 0 : response.pi.currentPage - 1) + '">◁</a></li>');
 					
 					for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-					    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + p + '">' + p + '</a></li>');
+					    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-link" data-page="' + p + '">' + p + '</a></li>');
 					}
 
-					ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
+					ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-link" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
 					
 					}else {
 						 var row = '<tr>' +
@@ -389,11 +391,13 @@ function loadPageReject(page) {
 							<div class="content2">
 							   <h2>${ userName }님의 반려함</h2>
 							    <div class="d-flex justify-content-between align-items-center mb-3">
-											 <div class="search-container">
-									        <form class="search-form">
-									            <input type="text" class="search-input" id="search" placeholder="검색어를 입력하세요...">
-									            <button type="submit" class="search-button22" id="searchBtn">검색</button>
-									        </form>
+											<div class="search-container">
+							            <input type="text" class="search-input" id="searches" placeholder="검색어를 입력하세요...">
+							            <button type="button" class="search-button22" id="searchBtn">
+							            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+													  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+													</svg>
+							            </button>
 									    </div>
 									</div>
 							    <table class="table table-striped task-table" id="data-table">
@@ -430,13 +434,13 @@ function loadPageReject(page) {
 							    <div id="cen_bottom_pagging">
 											<div id="pagin_form">
 												<ul class="pagination">
-					               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage-1}">◁</a></li>
+					               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/rejectApprovalList.page?page=${pi.currentPage-1}">◁</a></li>
 					      
 										      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-										       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/myAllApproval.page?page=${p}">${ p }</a></li>
+										       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/rejectApprovalList.page?page=${p}">${ p }</a></li>
 										      </c:forEach>
 					      
-										      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage+1}">▷</a></li>
+										      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/rejectApprovalList.page?page=${pi.currentPage+1}">▷</a></li>
 										   </ul>
 						          </div>
 					        </div>

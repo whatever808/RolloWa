@@ -468,13 +468,22 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.myFinishApList", map, rowbounds);
 	}
 	
-	public List<Map<String, Object>> noApprovalSignRe(String userName, PageInfoDto pi){
+	public List<Map<String, Object>> noApprovalSignRe(Map<String, Object> map, PageInfoDto pi){
 		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
-		return sqlSessionTemplate.selectList("payMapper.noApprovalSignRe", userName, rowbounds);
+		return sqlSessionTemplate.selectList("payMapper.noApprovalSignRe", map, rowbounds);
 	}
 	
 	
 	public int fixInsert(Map<String, Object> map) {
 		return sqlSessionTemplate.insert("payMapper.fixInsert", map);
+	}
+	
+	
+	public int noApprovalkeywordSignCount(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.noApprovalkeywordSignCount", map);
+	}
+	
+	public int noApprovalSignCountToday(String userName) {
+		return sqlSessionTemplate.selectOne("payMapper.noApprovalSignCountToday", userName);
 	}
 }

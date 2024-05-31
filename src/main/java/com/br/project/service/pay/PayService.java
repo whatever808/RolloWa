@@ -528,8 +528,8 @@ public class PayService {
 		return payDao.myFinishApList(map, pi);
 	}
 	
-	public List<Map<String, Object>> noApprovalSignRe(String userName, PageInfoDto pi){
-		return payDao.noApprovalSignRe(userName, pi);
+	public List<Map<String, Object>> noApprovalSignRe(Map<String, Object> map, PageInfoDto pi){
+		return payDao.noApprovalSignRe(map, pi);
 	}
 	
 	
@@ -545,5 +545,13 @@ public class PayService {
 		}
 		
 		return result;
+	}
+	
+	public int noApprovalkeywordSignCount(Map<String, Object> map) {
+		return payDao.noApprovalkeywordSignCount(map);
+	}
+	
+	public int noApprovalSignCountToday(String userName) {
+		return payDao.noApprovalSignCountToday(userName);
 	}
 }

@@ -299,18 +299,20 @@ $(document).on("click", "#rejectBtn", function(){
                      <th>가격</th>
                      <th colspan="2">비고</th>
                  </tr>
-								<c:forEach var="i" begin="0" end="${list.size() - 1}">
-									<c:if test="${list[i].PRODUCT_NAME != null and !list[i].PRODUCT_NAME.equals('')}">
-								    <tr>
-								        <td>${list[i].PRODUCT_NAME}</td>
-								        <td>${list[i].PRODUCT_SIZE}</td>
-								        <td>${list[i].QUANTITY}</td>
-								        <td>${list[i].UNIT_PRICE}</td>
-								        <td>${list[i].PRICE}</td>
-								        <td>${list[i].NOTE}</td>
-								    </tr> 
-								   </c:if>			
-								</c:forEach>
+                 
+								 <c:forEach var="i" begin="0" end="${ list.size() - 1 }">
+		                <c:if test="${ list.get(0).PRODUCT_NAME != null and list.get(i).PRODUCT_NAME != ''}">
+		                  		<tr>
+		                      	<td>${ list.get(i).PRODUCT_NAME }</td>
+		                       	<td>${ list.get(i).PRODUCT_SIZE }</td>
+		                       	<td>${ list.get(i).QUANTITY }</td>
+		                       	<td>${ list.get(i).UNIT_PRICE }</td>
+		                       	<td>${ list.get(i).PRICE }</td>
+		                       	<td>${ list.get(i).NOTE }</td>
+		                  		</tr>
+		                </c:if>
+                 </c:forEach>
+                 
                   <tr>
 	                    <th colspan="3">합계</th>
 	                    <td colspan="3">${list.get(0).TOTAL_SUM}</td>

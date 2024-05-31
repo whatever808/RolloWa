@@ -193,10 +193,105 @@
 		.pagination a : hover{
 		background-color : #FEEFAD
 		};
+		
+		.search-container {
+		    display: flex;
+		    align-items: center;
+		}
+		
+		.search-input {
+		    width: 300px;
+		    padding: 10px;
+		    font-size: 16px;
+		    border: 2px solid #ccc;
+		    border-right: none;
+		    border-radius: 4px 0 0 4px;
+		    outline: none;
+		}
+		#search{
+		height: 63px;
+		height: 63px;
+    border-radius: 0px;
+    }
+		
+		.search-input:focus {
+		    border-color: #007BFF;
+		}
+		
+		.search-button22 {
+		    padding: 5px 14px;
+		    font-size: 11px;
+		    color: #fff;
+		    background-color: #f44336;
+		    border: 2px solid #f44336;
+		    border-radius: 3px;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+		    height: 49px;
+    		width: 61px;
+		}
+		
+		.search-button22:hover {
+		    background-color: #f44336ba;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		    
+		}
+		
+		.search-button22:active {
+		    background-color: #f44336ba;
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+		
+		.pagination li{padding: 6px 12px;}
+		.pagination a : hover{
+		background-color : #FEEFAD
+		};
+		
+		body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.search-form {
+    display: flex;
+    width: 100%;
+    height: 63px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 20px;
+    border: 2px solid #ddd;
+    border-radius: 10px 0 0 10px;
+    outline: none;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    border-color: #007bff;
+}
 </style>
 </head>
 <body>
-
 
 <script>
 $(document).ready(function(){
@@ -216,600 +311,112 @@ $(document).ready(function(){
 </script>
 
 <script>
-$(document).ready(function() {
+
+$(document).on('keyup', '#searches', function(e) {
 	
-    $('#all').on('click', function() {
-    		$(".filter-buttons button").css("background-color", "rgb(0, 123, 255)").css("color", "white");
+	if(e.key == "Enter"){
+		loadPageMyFinish(1);
+	}
 
-        $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
-        $("#btnSearch").val("");
-        $("#btnSearch").val("ALL");
-        $("#searchInput").val("");
-        loadPageAll(1);
-    });
 });
 
 
-$(document).on('click', '.pages-linka', function(e) {
-    e.preventDefault();
-    var page = parseInt($(this).data('page'));
-    if (page > 0) {
-        loadPageSearch(page);
-    }
+$(document).on('click', '#searchBtn', function(e) {
+
+	loadPageMyFinish(1);
+
 });
 
-function loadPageAll(page) {
-    $.ajax({
-        url: "${contextPath}/pay/ajaxMyReAllApproval.page", // 실제 URL로 변경
-        method: 'GET',
-        data: { page: page },
-        success: function(response) {
-            console.log(response);
 
-            var tbody = $('#tStatus');
-            tbody.empty();
 
-            if(response.list.length != 0){
-								response.list.forEach(function(item) {
-						  console.log(item);
-						  var documentStatusClass = '';
-						  if (item.DOCUMENT_STATUS === '반려') {
-						      documentStatusClass = 'rejected';
-						  } else if (item.DOCUMENT_STATUS === '완료') {
-						      documentStatusClass = 'completed';
-						  } else if (item.DOCUMENT_STATUS === '진행') {
-						      documentStatusClass = 'progresses';
-						  } else if (item.DOCUMENT_STATUS === '대기') {
-						      documentStatusClass = 'pending';
-						  }
-						
-						  var attachmentIcon = '';
-						  if (item.SALES_STATUS + item.DRAFT_STATUS + item.BUSINESSTRIP_STATUS > 0) {
-						      attachmentIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
-						                       '<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>' +
-						                       '</svg>';
-						  }
-						
-						  var row = '<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.APPROVAL_NO  + '&documentNo=' + item.DOCUMENT_NUMBER + '&documentType=' + item.DOCUMENT_TYPE + '&payWriter=' + item.PAYMENT_WRITER + '&payWriterNo=' + item.PAYMENT_WRITER_NO + '">' +
-			                '<td><span class="badge ' + documentStatusClass + '">' + item.DOCUMENT_STATUS + '</span></td>' +
-			                '<td>' + item.TITLE + attachmentIcon + '</td>' +
-			                '<td>' + item.DOCUMENT_TYPE + '</td>' +
-			                '<td>' + item.PAYMENT_WRITER + '</td>' +
-			                '<td>' + item.DEPARTMENT + '</td>' +
-			                '<td>' + item.REGIST_DATE + '</td>' +
-			                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
-			                '</tr>';
-						
-						  tbody.append(row);
-						       });
-								
-								var ul = $('.pagination');
-								ul.empty(); 
 
-								ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-linka" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
-
-								for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-								    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-linka" data-page="' + p + '">' + p + '</a></li>');
-								}
-
-								ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linka" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
-					}else {
-						var row = '<tr>' +
-               '<td>존재하는 게시글이 없습니다.</td>' +
-               '</tr>';
-					 tbody.append(row);
-					 var ul = $('.pagination');
-					 ul.empty();
-					}
-            
-            
-        }
-    });
+$(document).on('click', '.pages-link', function(e) {
+e.preventDefault();
+var page = parseInt($(this).data('page'));
+if (page > 0) {
+	loadPageMyFinish(page);
 }
-
-		
-</script>
-
-<script>
-$(document).ready(function() {
-    // 'wait' 버튼 클릭 시 데이터 로드
-    $('#completes').on('click', function() {
-    		$(".filter-buttons button").css("background-color", "rgb(0, 123, 255)").css("color", "white");
-
-        $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
-        $("#btnSearch").val("");
-        $("#btnSearch").val("Y");
-        $("#searchInput").val("");
-    		loadPageCompletes(1);
-    });
 });
 
-$(document).on('click', '.pages-linkc', function(e) {
-    e.preventDefault();
-    var page = parseInt($(this).data('page'));
-    if (page > 0) {
-        loadPageSearch(page);
-    }
-});
+function loadPageMyFinish(page) {
 
-function loadPageCompletes(page) {
-    $.ajax({
-        url: "${contextPath}/pay/ajaxMyCompleteApproval.page", // 실제 URL로 변경
-        method: 'GET',
-        data: { page: page },
-        success: function(response) {
-            console.log(response);
+$.ajax({
+    url: "${contextPath}/pay/ajaxMyFinishSearchApproval.do", 
+    method: 'GET',
+    data: { 
+    	page: page,
+    	keyword: $("#searches").val()
+    },
+    success: function(response) {
+      console.log(response);
 
-            var tbody = $('#tStatus');
-            tbody.empty();
-            if(response.list.length != 0){
-						response.list.forEach(function(item) {
-							
-					  console.log(item.FINAL_APPROVAL_DATE);
-					  var documentStatusClass = '';
-					  if (item.DOCUMENT_STATUS === '반려') {
-					      documentStatusClass = 'rejected';
-					  } else if (item.DOCUMENT_STATUS === '완료') {
-					      documentStatusClass = 'completed';
-					  } else if (item.DOCUMENT_STATUS === '진행') {
-					      documentStatusClass = 'progresses';
-					  } else if (item.DOCUMENT_STATUS === '대기') {
-					      documentStatusClass = 'pending';
-					  }
-					
-					  var attachmentIcon = '';
-					  if (item.SALES_STATUS + item.DRAFT_STATUS + item.BUSINESSTRIP_STATUS > 0) {
-					      attachmentIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
-					                       '<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>' +
-					                       '</svg>';
-					  }
-					
-					  var row = '<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.APPROVAL_NO  + '&documentNo=' + item.DOCUMENT_NUMBER + '&documentType=' + item.DOCUMENT_TYPE + '&payWriter=' + item.PAYMENT_WRITER + '&payWriterNo=' + item.PAYMENT_WRITER_NO + '">' +
-		                '<td><span class="badge ' + documentStatusClass + '">' + item.DOCUMENT_STATUS + '</span></td>' +
-		                '<td>' + item.TITLE + attachmentIcon + '</td>' +
-		                '<td>' + item.DOCUMENT_TYPE + '</td>' +
-		                '<td>' + item.PAYMENT_WRITER + '</td>' +
-		                '<td>' + item.DEPARTMENT + '</td>' +
-		                '<td>' + item.REGIST_DATE + '</td>' +
-		                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
-		                '</tr>';
-					
-					  tbody.append(row);
-					       });
-							
-							var ul = $('.pagination');
-							ul.empty(); 
-
-							ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-linkc" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
-
-							for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-							    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-linkc" data-page="' + p + '">' + p + '</a></li>');
-							}
-
-							ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linkw" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
-				}else {
-					 var row = '<tr>' +
-               '<td colspan="7">존재하는 게시글이 없습니다.</td>' +
-               '</tr>';
-					 tbody.append(row);
-					 var ul = $('.pagination');
-					 ul.empty();
-				}
-            
-            
+      var tbody = $('#tStatus');
+      tbody.empty();
+    
+      if(Array.isArray(response.list) && response.list.length > 0){
+	
+			response.list.forEach(function(item) {
+        console.log(item);
+        
+        var documentStatusClass = '';
+        
+			  if (item.DOCUMENT_STATUS === '완료') {
+			      documentStatusClass = 'completes';
+			  } else if (item.DOCUMENT_STATUS === '진행') {
+			      documentStatusClass = 'progresses';
+			  }
+		  
+        var attachmentIcon = '';
+        if (item.SALES_STATUS + item.DRAFT_STATUS + item.BUSINESSTRIP_STATUS > 0) {
+            attachmentIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
+                             '<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>' +
+                             '</svg>';
         }
-    });
-}
 
-		
-</script>
-
-
-
-
-<script>
-$(document).ready(function() {
-    // 'wait' 버튼 클릭 시 데이터 로드
-    $('#wait').on('click', function() {
-    		$(".filter-buttons button").css("background-color", "rgb(0, 123, 255)").css("color", "white");
-
-        $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
-        $("#btnSearch").val("");
-        $("#btnSearch").val("D");
-        $("#searchInput").val("");
-        loadPageWait(1);
-    });
-});
-
-$(document).on('click', '.pages-linkw', function(e) {
-    e.preventDefault();
-    var page = parseInt($(this).data('page'));
-    if (page > 0) {
-        loadPageSearch(page);
-    }
-});
-
-function loadPageWait(page) {
-    $.ajax({
-        url: "${contextPath}/pay/ajaxmyWaitApproval.page", // 실제 URL로 변경
-        method: 'GET',
-        data: { page: page },
-        success: function(response) {
-            console.log(response.pi);
-
-            var tbody = $('#tStatus');
-            tbody.empty();
-
-            if(response.list.length != 0){
-								response.list.forEach(function(item) {
-				    console.log(item);
-				    var documentStatusClass = '';
-				    if (item.DOCUMENT_STATUS === '반려') {
-				        documentStatusClass = 'rejected';
-				    } else if (item.DOCUMENT_STATUS === '완료') {
-				        documentStatusClass = 'completed';
-				    } else if (item.DOCUMENT_STATUS === '진행') {
-				        documentStatusClass = 'progresses';
-				    } else if (item.DOCUMENT_STATUS === '대기') {
-				        documentStatusClass = 'pending';
-				    }
-				
-				    var attachmentIcon = '';
-				    if (item.SALES_STATUS + item.DRAFT_STATUS + item.BUSINESSTRIP_STATUS > 0) {
-				        attachmentIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
-				                         '<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>' +
-				                         '</svg>';
-				    }
-				
-				    var row = '<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.APPROVAL_NO  + '&documentNo=' + item.DOCUMENT_NUMBER + '&documentType=' + item.DOCUMENT_TYPE + '&payWriter=' + item.PAYMENT_WRITER + '&payWriterNo=' + item.PAYMENT_WRITER_NO + '">' +
+        var row = '<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.APPROVAL_NO  + '&documentNo=' + item.DOCUMENT_NUMBER + '&documentType=' + item.DOCUMENT_TYPE + '&payWriter=' + item.PAYMENT_WRITER + '&payWriterNo=' + item.PAYMENT_WRITER_NO + '">' +
 	                '<td><span class="badge ' + documentStatusClass + '">' + item.DOCUMENT_STATUS + '</span></td>' +
 	                '<td>' + item.TITLE + attachmentIcon + '</td>' +
 	                '<td>' + item.DOCUMENT_TYPE + '</td>' +
 	                '<td>' + item.PAYMENT_WRITER + '</td>' +
 	                '<td>' + item.DEPARTMENT + '</td>' +
 	                '<td>' + item.REGIST_DATE + '</td>' +
-	                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
+	                '<td>' + (item.DOCUMENT_STATUS == '완료' ? item.FINAL_APPROVAL_DATE : "-") + '</td>' +
 	                '</tr>';
-				
-				    tbody.append(row);
-					 });
-								
-								var ul = $('.pagination');
-								ul.empty(); 
-								
-								ul.append('<li class="page-item ' + ((response.pi.currentPage == 1 ) ? 'disabled' : '') + '"><a class="pages-linkw" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
 
-								for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-								    ul.append('<li class="page-item ' + ((response.pi.currentPage == p) ? 'disabled' : '') + '"><a class="pages-linkw" data-page="' + p + '">' + p + '</a></li>');
-								}
-
-								ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linkw" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
-								}else {
-									 var row = '<tr>' +
-				               '<td colspan="7">존재하는 게시글이 없습니다.</td>' +
-				               '</tr>';
-									 tbody.append(row);
-									 var ul = $('.pagination');
-									 ul.empty();
-								}
-            
-        }
-    });
-}
-
-		
-</script>
-
-<script>
-$(document).ready(function() {
-    // 'wait' 버튼 클릭 시 데이터 로드
-    $('#reject').on('click', function() {
-    		$(".filter-buttons button").css("background-color", "rgb(0, 123, 255)").css("color", "white");
-
-        $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
-        
-        $("#btnSearch").val("");
-        $("#btnSearch").val("N");
-        $("#searchInput").val("");
-        
-        loadPageReject(1);
-    });
-});
-
-
-$(document).on('click', '.pages-linkr', function(e) {
-    e.preventDefault();
-    var page = parseInt($(this).data('page'));
-    if (page > 0) {
-        loadPageSearch(page);
-    }
-});
-
-
-
-
-		function loadPageReject(page) {
-			
-		    $.ajax({
-		        url: "${contextPath}/pay/ajaxMyRejectApproval.page", 
-		        method: 'GET',
-		        data: { page: page },
-		        success: function(response) {
-            console.log(response);
-
-            var tbody = $('#tStatus');
-            tbody.empty();
-          
-            if(Array.isArray(response.list) && response.list.length > 0){
-				
-						response.list.forEach(function(item) {
-			        console.log(item);
-			        var documentStatusClass = '';
-			        if (item.DOCUMENT_STATUS === '반려') {
-			            documentStatusClass = 'rejected';
-			        } else if (item.DOCUMENT_STATUS === '완료') {
-			            documentStatusClass = 'completed';
-			        } else if (item.DOCUMENT_STATUS === '진행') {
-			            documentStatusClass = 'progresses';
-			        } else if (item.DOCUMENT_STATUS === '대기') {
-			            documentStatusClass = 'pending';
-			        }
-			
-			        var attachmentIcon = '';
-			        if (item.SALES_STATUS + item.DRAFT_STATUS + item.BUSINESSTRIP_STATUS > 0) {
-			            attachmentIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
-			                             '<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>' +
-			                             '</svg>';
-			        }
-			
-			        var row = '<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.APPROVAL_NO  + '&documentNo=' + item.DOCUMENT_NUMBER + '&documentType=' + item.DOCUMENT_TYPE + '&payWriter=' + item.PAYMENT_WRITER + '&payWriterNo=' + item.PAYMENT_WRITER_NO + '">' +
-				                '<td><span class="badge ' + documentStatusClass + '">' + item.DOCUMENT_STATUS + '</span></td>' +
-				                '<td>' + item.TITLE + attachmentIcon + '</td>' +
-				                '<td>' + item.DOCUMENT_TYPE + '</td>' +
-				                '<td>' + item.PAYMENT_WRITER + '</td>' +
-				                '<td>' + item.DEPARTMENT + '</td>' +
-				                '<td>' + item.REGIST_DATE + '</td>' +
-				                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
-				                '</tr>';
-			
-	       			 tbody.append(row);
-			        });
-							var ul = $('.pagination');
-							ul.empty(); 
-	
-							ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + (response.pi.currentPage == 1 ? 0 : response.pi.currentPage - 1) + '">◁</a></li>');
-							
-							for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-							    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + p + '">' + p + '</a></li>');
-							}
-	
-							ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linkr" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
-							
-							}else {
-								 var row = '<tr>' +
-	                       '<td colspan="7">존재하는 게시글이 없습니다.</td>' +
-	                       '</tr>';
-								 tbody.append(row);
-								 var ul = $('.pagination');
-								 ul.empty();
-							}
-      
-	          },
-	          error: function(xhr, status, error) {
-	              console.log("AJAX request failed");
-	          }
+  			 tbody.append(row);
         });
-		            
-            
-           
-            
-      }
-    
-</script>
+				var ul = $('.pagination');
+				ul.empty(); 
 
+				ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-link" data-page="' + (response.pi.currentPage == 1 ? 0 : response.pi.currentPage - 1) + '">◁</a></li>');
+				
+				for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
+				    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-link" data-page="' + p + '">' + p + '</a></li>');
+				}
 
-<script>
+				ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-link" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
+				
+				}else {
+					 var row = '<tr>' +
+                  '<td colspan="7">존재하는 게시글이 없습니다.</td>' +
+                  '</tr>';
+					 tbody.append(row);
+					 var ul = $('.pagination');
+					 ul.empty();
+				}
 
-$(document).ready(function() {
-	
-  $('#progresses').on('click', function() {
-	  
-    $(".filter-buttons button").css("background-color", "rgb(0, 123, 255)").css("color", "white");
-
-    $(".filter-buttons button").not(this).css("background-color", "rgb(248, 249, 250)").css("color", "rgb(0, 123, 255)");
-    $("#btnSearch").val("");
-    $("#btnSearch").val("I");
-    $("#searchInput").val("");
-    loadPageProgresses(1);
-});
-
-});
-
-
-$(document).on('click', '.pages-linkp', function(e) {
-    e.preventDefault();
-    var page = parseInt($(this).data('page'));
-    if (page > 0) {
-        loadPageSearch(page);
-    }
-});
-
-function loadPageProgresses(page) {
-	
-    $.ajax({
-        url: "${contextPath}/pay/ajaxMyProgressesApproval.page",
-        data: { page: page },
-        success: function(response) {
-            console.log(response);
-
-            var tbody = $('#tStatus');
-            tbody.empty();
-            
-						if(Array.isArray(response.list) && response.list.length > 0){
-							
-								response.list.forEach(function(item) {
-                console.log(item);
-                var documentStatusClass = '';
-                if (item.DOCUMENT_STATUS === '반려') {
-                    documentStatusClass = 'rejected';
-                } else if (item.DOCUMENT_STATUS === '완료') {
-                    documentStatusClass = 'completed';
-                } else if (item.DOCUMENT_STATUS === '진행') {
-                    documentStatusClass = 'progresses';
-                } else if (item.DOCUMENT_STATUS === '대기') {
-                    documentStatusClass = 'pending';
-                }
-
-                var attachmentIcon = '';
-                if (item.SALES_STATUS + item.DRAFT_STATUS + item.BUSINESSTRIP_STATUS > 0) {
-                    attachmentIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
-                                     '<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>' +
-                                     '</svg>';
-                }
-
-                var row = '<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.APPROVAL_NO  + '&documentNo=' + item.DOCUMENT_NUMBER + '&documentType=' + item.DOCUMENT_TYPE + '&payWriter=' + item.PAYMENT_WRITER + '&payWriterNo=' + item.PAYMENT_WRITER_NO + '">' +
-					                '<td><span class="badge ' + documentStatusClass + '">' + item.DOCUMENT_STATUS + '</span></td>' +
-					                '<td>' + item.TITLE + attachmentIcon + '</td>' +
-					                '<td>' + item.DOCUMENT_TYPE + '</td>' +
-					                '<td>' + item.PAYMENT_WRITER + '</td>' +
-					                '<td>' + item.DEPARTMENT + '</td>' +
-					                '<td>' + item.REGIST_DATE + '</td>' +
-					                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
-					                '</tr>';
-
-                tbody.append(row);
-				        });
-								var ul = $('.pagination');
-								ul.empty(); 
-
-								ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-linkp" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
-
-								for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-								    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-linkp" data-page="' + p + '">' + p + '</a></li>');
-								}
-
-								ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linkp" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
-								
-								}else {
-									 var row = '<tr>' +
-	                           '<td colspan="7">존재하는 게시글이 없습니다.</td>' +
-	                           '</tr>';
-									 tbody.append(row);
-									 var ul = $('.pagination');
-									 ul.empty();
-								}
-	            
-            
-        }
-    });
+     },
+     error: function(xhr, status, error) {
+         console.log("AJAX request failed");
+     }
+  });
+        
+      
+     
+      
 }
+
 </script>
-
-<script>
-
-$(document).ready(function() {
-	
-    $('#searchInput').on('keyup', function() {
-    	if (event.key === 'Enter') {
-    		 loadPageSearch(1);
-      }
-    });
-		
-});
-
-$(document).on('click', '.pages-linki', function(e) {
-    e.preventDefault();
-    var page = parseInt($(this).data('page'));
-    if (page > 0) {
-        loadPageSearch(page);
-    }
-});
-	
-
-	 function loadPageSearch(page) {
-	        var option = $("#select_search").val();
-	        var statusType = $("#btnSearch").val();
-					var keyword = $("#searchInput").val();
-	        
-	        $.ajax({
-	            url: "${contextPath}/pay/ajaxMyApprovalSearch.do",      
-	            data: {
-	            		statusType: statusType,
-	                option: option,
-	                keyword : keyword,
-	                page:page
-	            },
-	            success: function(response) {
-		            console.log(response);
-		
-		            var tbody = $('#tStatus');
-		            tbody.empty();
-            
-									if(Array.isArray(response.list) && response.list.length > 0){
-							
-										response.list.forEach(function(item) {
-											
-		                console.log(item.FINAL_APPROVAL_DATE);
-		                var documentStatusClass = '';
-		                if (item.DOCUMENT_STATUS === '반려') {
-		                    documentStatusClass = 'rejected';
-		                } else if (item.DOCUMENT_STATUS === '완료') {
-		                    documentStatusClass = 'completed';
-		                } else if (item.DOCUMENT_STATUS === '진행') {
-		                    documentStatusClass = 'progresses';
-		                } else if (item.DOCUMENT_STATUS === '대기') {
-		                    documentStatusClass = 'pending';
-		                }
-
-		                var attachmentIcon = '';
-		                if (item.SALES_STATUS + item.DRAFT_STATUS + item.BUSINESSTRIP_STATUS > 0) {
-		                    attachmentIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">' +
-		                                     '<path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>' +
-		                                     '</svg>';
-		                }
-
-		                var row = '<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.APPROVAL_NO  + '&documentNo=' + item.DOCUMENT_NUMBER + '&documentType=' + item.DOCUMENT_TYPE + '&payWriter=' + item.PAYMENT_WRITER + '&payWriterNo=' + item.PAYMENT_WRITER_NO + '">' +
-							                '<td><span class="badge ' + documentStatusClass + '">' + item.DOCUMENT_STATUS + '</span></td>' +
-							                '<td>' + item.TITLE + attachmentIcon + '</td>' +
-							                '<td>' + item.DOCUMENT_TYPE + '</td>' +
-							                '<td>' + item.PAYMENT_WRITER + '</td>' +
-							                '<td>' + item.DEPARTMENT + '</td>' +
-							                '<td>' + item.REGIST_DATE + '</td>' +
-							                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? null : item.FINAL_APPROVAL_DATE) + '</td>' +
-							                '</tr>';
-
-		                tbody.append(row);
-						        });
-										var ul = $('.pagination');
-										ul.empty(); 
-
-										ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-linki" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
-
-										for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-										    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-linki" data-page="' + p + '">' + p + '</a></li>');
-										}
-
-										ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-linki" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
-										
-										}else {
-											 var row = '<tr>' +
-			                           '<td colspan="7">존재하는 게시글이 없습니다.</td>' +
-			                           '</tr>';
-											 tbody.append(row);
-											 var ul = $('.pagination');
-											 ul.empty();
-										}
-		          },
-		          error: function(xhr, status, error) {
-		              console.log("AJAX request failed");
-		          } 
-	        });
-	        
-	  }
-</script>
-
-
-
 		<main style="display: flex;">
 				<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 	        <!-- content 추가 -->
@@ -821,14 +428,16 @@ $(document).on('click', '.pages-linki', function(e) {
 							
 							<div class="content2">
 							   <h2>${ userName }님의 승인함</h2>
-							    <div class="d-flex justify-content-between align-items-center mb-3">
-											<div>
-							             <div class="search-container">
-											        <input type="text" id="searchInput" placeholder="검색어를 입력하세요" class="search-input">
-											    </div>
-							        </div>
-							    </div>
-							    
+							   <div class="d-flex justify-content-between align-items-center mb-3">
+											 <div class="search-container">
+							            <input type="text" class="search-input" id="searches" placeholder="검색어를 입력하세요...">
+							            <button type="button" class="search-button22" id="searchBtn">
+							            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+													  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+													</svg>
+							            </button>
+									    </div>
+									</div>
 							    <table class="table table-striped task-table" id="data-table">
 							        <thead>
 							            <tr>
@@ -863,13 +472,13 @@ $(document).on('click', '.pages-linki', function(e) {
 							    <div id="cen_bottom_pagging">
 											<div id="pagin_form">
 												<ul class="pagination">
-					               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage-1}">◁</a></li>
+					               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/finishApprovalList.page?page=${pi.currentPage-1}">◁</a></li>
 					      
 										      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-										       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/myAllApproval.page?page=${p}">${ p }</a></li>
+										       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/finishApprovalList.page?page=${p}">${ p }</a></li>
 										      </c:forEach>
 					      
-										      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage+1}">▷</a></li>
+										      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/finishApprovalList.page?page=${pi.currentPage+1}">▷</a></li>
 										   </ul>
 						          </div>
 					        </div>
