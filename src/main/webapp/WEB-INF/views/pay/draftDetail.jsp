@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <!-- 모달 관련 -->
     <script src="${contextPath}/resources/js/iziModal.min.js"></script>
     <link rel="stylesheet" href="${contextPath}/resources/css/iziModal.min.css">
@@ -54,6 +54,8 @@ $(document).ready(function(){
 	    	        const image = canvas.toDataURL();
 	    	        
 	    	        var approvalName = "${list.get(0).FIRST_APPROVAL == userName ? 1 : list.get(0).MIDDLE_APPROVAL == userName ? 2 : list.get(0).FINAL_APPROVAL == userName ? 3 : 0}" 
+	    	        let productAmountArr = [];
+	    	        let productNameArr = [];
 	    	        
 	    	        $.ajax({
 	    	        	url:"${contextPath}/pay/ajaxSign.do",
@@ -62,7 +64,11 @@ $(document).ready(function(){
 	    	        		dataUrl:data,
 	    	        		signName:"${userName}",
 	    	        		approvalNo:"${list.get(0).APPROVAL_NO}",
-	    	        		approvalSignNo:approvalName
+	    	        		approvalSignNo:approvalName,
+	    	        		deptType:"Fix",
+	    	        		fixName:productNameArr,
+	    	        		fixAmount:productAmountArr
+	    	        
 	    	        	},
 	    	        	success:function(response){
 	    	        		

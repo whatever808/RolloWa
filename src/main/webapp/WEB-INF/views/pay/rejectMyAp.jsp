@@ -430,21 +430,25 @@ function loadPageMyReject(page) {
 							            </c:forEach>
 							        </tbody>
 							    </table>
-							    
-							    <div id="cen_bottom_pagging">
-											<div id="pagin_form">
-												<ul class="pagination">
-					               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/rejectApprovalList.page?page=${pi.currentPage-1}">◁</a></li>
-					      
-										      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-										       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/rejectApprovalList.page?page=${p}">${ p }</a></li>
-										      </c:forEach>
-					      
-										      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/rejectApprovalList.page?page=${pi.currentPage+1}">▷</a></li>
-										   </ul>
-						          </div>
-					        </div>
-					        
+							    <c:choose>
+							    <c:when test="${ list != null }">
+								    <div id="cen_bottom_pagging">
+												<div id="pagin_form">
+													<ul class="pagination">
+						               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/rejectApprovalList.page?page=${pi.currentPage-1}">◁</a></li>
+						      
+											      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+											       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/rejectApprovalList.page?page=${p}">${ p }</a></li>
+											      </c:forEach>
+						      
+											      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/rejectApprovalList.page?page=${pi.currentPage+1}">▷</a></li>
+											   </ul>
+							          </div>
+						        </div>
+					        </c:when>
+						        <otherwise>
+						        </otherwise>
+					        </c:choose>
 							</div>
 						</div>
 					</div>
