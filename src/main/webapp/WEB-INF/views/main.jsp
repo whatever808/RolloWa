@@ -59,7 +59,7 @@
             <div class="container">
                 <span class="error animated tada" id="msg"></span>
                 <form action="${ contextPath }/member/login.do" method="post" name="form1" class="box" onsubmit="return checkStuff()">
-                    <h4>회사 이름</h4>
+                    <h4>RolloWa</h4>
                     <h5>Sign in to your account.</h5>
                     <input type="text" name="userId" placeholder="user id" autocomplete="off">
                     <i class="typcn typcn-eye" id="eye"></i>

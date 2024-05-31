@@ -1,5 +1,6 @@
 package com.br.project.controller.calendar;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dto.calendar.CalendarDto;
 import com.br.project.dto.common.GroupDto;
@@ -117,8 +119,7 @@ public class CalendarController {
 			if(m.getUserNo() == member.getUserNo()) {
 				teams.add(0, teams.remove(i));
 			}
-		}
-		
+		}		
 		mv.addObject("teams", teams)
 		.addObject("group", group)
 		.setViewName("calendar/calEnroll");
@@ -135,11 +136,17 @@ public class CalendarController {
 	 * @return 
 	 */
 	@PostMapping("/calEnroll.do")
-	public ModelAndView insertCal(CalendarDto calendar
+	public String insertCal(CalendarDto calendar
 							, String[] date, String[] time
 							, HttpSession session
-							, ModelAndView mv) {
-
+							, RedirectAttributes redirectAttribute) {
+		
+		/* 알림 전송을 위한 코드 추가 [기웅] */
+		List<String> teamMemberList = new ArrayList<>();
+		for(int i = 0; i < calendar.getCoworker().size(); i++) {
+			teamMemberList.add(calendar.getCoworker().get(i).getUserNo());
+		}
+		/* =========== */
 		calendar.setCalSort("D");			
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
@@ -148,17 +155,26 @@ public class CalendarController {
 		calendar.setEmp(String.valueOf(member.getUserNo()));
 		
 		int result = calService.insertCal(calendar);
-		
+		redirectAttribute.addFlashAttribute("alertTitle", "일정 등록 서비스");
 		if(result > 0 ) {
-			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.")
+			redirectAttribute.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
+			redirectAttribute.addFlashAttribute("modalColor", "G");
+			redirectAttribute.addFlashAttribute("teamMemberList", teamMemberList);
+			//redirectAttribute.addFlashAttribute("flag", "Y");
+			
+			return "redirect:pCalendar.page";
+			/*mv.addObject("alertMsg", "성공적으로 등록 되었습니다.")
 			  .addObject("modalColor", "G")
-			  .setViewName("redirect:pCalendar.page");
+			  .setViewName("redirect:pCalendar.page");*/
 		}else {
-			mv.addObject("alertMsg", "다시 시도해 주세요.")
+			redirectAttribute.addFlashAttribute("alertMsg", "다시 시도해 주세요.");
+			redirectAttribute.addFlashAttribute("modalColor", "R");
+			
+			return "redirect:calEnroll.page";
+			/*mv.addObject("alertMsg", "다시 시도해 주세요.")
 			  .addObject("modalColor", "R")
-			  .setViewName("redirect:calEnroll.page");
+			  .setViewName("redirect:calEnroll.page");*/
 		}
-		return mv;
 	}
 	
 	/**
