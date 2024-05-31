@@ -201,37 +201,4 @@ public class ReservationController {
 		return mv;
 	}
 	
-	// 비품 추가
-    @PostMapping("/equipment")
-    @ResponseBody
-    public Map<String, Object> insertEquipment(@RequestBody Map<String, Object> equipmentData) {
-        String equipmentName = (String) equipmentData.get("equipmentName");
-        Map<String, Object> response = new HashMap<>();
-        int success = reservationService.insertEquipment(equipmentName);
-        response.put("success", success);
-        return response;
-    }
-
-    // 비품 삭제
-    @DeleteMapping("/equipment")
-    @ResponseBody
-    public Map<String, Object> deleteEquipment(@RequestBody Map<String, Object> equipmentData) {
-        List<Integer> ids = (List<Integer>) equipmentData.get("ids");
-        Map<String, Object> response = new HashMap<>();
-        int success = reservationService.deleteEquipment(ids);
-        response.put("success", success);
-        return response;
-    }
-
-    // 비품 업데이트
-    @PutMapping("/equipment")
-    @ResponseBody
-    public Map<String, Object> updateEquipment(@RequestBody List<Map<String, Object>> equipmentList) {
-        Map<String, Object> response = new HashMap<>();
-        int success = reservationService.updateEquipment(equipmentList);
-        response.put("success", success);
-        return response;
-    }
-	
-	
 }

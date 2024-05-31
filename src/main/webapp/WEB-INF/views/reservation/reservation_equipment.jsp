@@ -94,10 +94,8 @@
         <div class="div_1">
             <div class="div_btn">
                 <h2>
-                    <button class="btn btn-warning">되돌리기</button>
                     <button class="btn btn-success" onclick="insertEquipment()">비품 추가</button>
                     <button class="btn btn-danger" onclick="deleteEquipment()">비품 삭제</button>
-                    <button class="btn btn-primary btn_save" onclick="updateEquipment()">저장</button>
                 </h2>
             </div>
             <h4>전체 ${list.size()}개</h4>
@@ -117,12 +115,12 @@
             <c:choose>
                 <c:when test="${not empty list}">
                     <c:forEach var="item" items="${list}" varStatus="status">
-                        <tr onclick="toggleCheckbox(this);">
-                            <td>
+                        <tr>
+                            <td onclick="toggleCheckbox(this);">
                                 <input type="checkbox" class="equipment-checkbox" onclick="event.stopPropagation(); checkToggle();">
                             </td>
                             <td>${status.index + 1}</td>
-                            <td><input type="text" value="${item.equipmentName}"></td>
+                            <td>${item.equipmentName}</td>
                             <td>
                                 <fmt:formatDate value="${item.registDate}" pattern="yyyy년 MM월 dd일" />
                             </td>
@@ -138,8 +136,7 @@
         </table>
 
 		<script>
-	    // Function to insert equipment
-	    function insertEquipment() {
+		    function insertEquipment() {
 	        var equipmentName = prompt("비품명을 입력하세요:");
 	        if (equipmentName) {
 	            var data = { equipmentName: equipmentName };
@@ -194,12 +191,6 @@
 	        } else {
 	            alert('삭제할 비품을 선택하세요.');
 	        }
-	    }
-	
-	    // Function to undo changes
-	    function undoChanges() {
-	        // Implement your logic for undoing changes here
-	        alert('되돌리기 기능은 아직 구현되지 않았습니다.');
 	    }
 	
 	    // Function to update equipment
