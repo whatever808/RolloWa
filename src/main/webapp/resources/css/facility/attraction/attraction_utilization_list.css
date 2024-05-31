@@ -1,7 +1,14 @@
-/* ------------- location select ------------- */
-.location-select{
-	text-align: center;
+/* ------------- select filter div ------------- */
+.select-filter-div{
 	margin-top: 50px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.select-filter-div>select{
+	width: 20%;
+	text-align: center;
+	border: 1px solid lightgray;
 }
 
 /* ------------- statics list div ------------- */

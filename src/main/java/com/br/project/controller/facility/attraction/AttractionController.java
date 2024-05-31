@@ -5,10 +5,12 @@ import static com.br.project.controller.common.CommonController.getParameterMap;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -222,10 +224,19 @@ public class AttractionController {
 	 * @method : 어트랙션 이용률 관리페이지
 	 */
 	@RequestMapping("/utilization.do")
-	public String showAttractionUtilizationPage() {
+	public String showAttractionUtilizationPage(Model model) {
+		model.addAttribute("locationList", locationService.selectLocationList());
 		return "facility/attraction/attraction_utilization_list";
 	}
 	
+	/**
+	 * @method : 연간, 월간, 일간 어트랙션 이용률 리스트
+	 */
+	@RequestMapping(value="/utilization/list.ajax", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public List<Map<String, Object>> ajaxSelectAttractionUtilizationList(HttpServletRequest request){
+		return attractionService.selectAttractionUtilizationList(getParameterMap(request));
+	}
 	
 	
 }

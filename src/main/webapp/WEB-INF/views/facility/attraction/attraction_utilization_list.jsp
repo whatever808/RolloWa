@@ -18,22 +18,29 @@
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
 		<!-- content 추가 -->
-  	<div class="content p-5">
+  		<div class="content p-5">
 	  
-	  <h1 class="page-title">어트랙션 이용률</h1>
+	  	<h1 class="page-title">어트랙션 이용률</h1>
 		
-		<!-- location select start -->
-		<select class="location-select form-control py-2" style="width: 150px;">
-			<option>전체</option>
-			<option>언더우드</option>
-			<option>언더우드</option>
-			<option>지하나라</option>
-		</select>
-		<!-- location select end -->
+		<!-- select filter div start -->
+		<div class="select-filter-div">
+			<select class="form-control" id="location-select">
+				<option>전체</option>
+				<c:forEach var="location" items="${ locationList }">
+					<option value="${ location.locationNo }">${ location.locationName }</option>
+				</c:forEach>
+			</select>
+		
+			<select class="form-control" id="year-select"></select>
+			
+			<select class="form-control" id="month-select"></select>
+			
+			<select class="form-control" id="date-select"></select>
+		</div>
+		<!-- select filter div end -->
 		
 		<!-- statics list div start -->
 		<div class="statics-list-div">
-			
 			<!-- statics list start -->
 			<table class="table text-center">
 				<thead>
@@ -58,10 +65,10 @@
 			<!-- statics list end -->
 			
 		</div>
-    <!-- statics list div end -->
+    	<!-- statics list div end -->
   
-  </div>
-  <!-- content 끝 -->
+    </div>
+    <!-- content 끝 -->
 	
 	<!-- chat floating -->
 	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />
@@ -132,11 +139,42 @@
 			
 			$("#date-select").children("option").each(function(){
 				$(this).val() == oldDate && $(this).attr("selected", true);
-			})
+			});
 		});
+	});
+	
+	// 어트랙션 이용률 조회 관련 ============================================================================
+	$(document).ready(function(){
 		
+		ajaxSelectAttractionUtilizationList();
 		
 	});
+	
+	function ajaxSelectAttractionUtilizationList(){
+		console.log("이용률");
+		let $location = $("#location-select").val();
+		let $year = $("#year-select").val();
+		let $month = $("#month-select").val();
+		let $date = $("#date-select").val();
+		
+		$.ajax({
+			url: "${ contextPath }/attraction/utilization/list.ajax",
+			method: "get",
+			data: {
+				location: $location,
+				year: $year,
+				month: $month,
+				date: $date,
+			},
+			sucess:function(list){
+				console.log("list", list);
+			},error:function(){
+				console.log("ATTRACTION UTILIZATION LIST AJAX FAILED");
+			},complete:function(){
+				console.log("AJAX DONE");
+			}
+		});
+	}
 </script>
 
 </html>
