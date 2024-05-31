@@ -335,7 +335,7 @@
 	   	}
 	   	
 			function allDate(e){
-				console.log($(e).children('input').is(':checked'));
+				//console.log($(e).children('input').is(':checked'));
 				
 				const offset = new Date().getTimezoneOffset() * 60000;
 				const today = new Date(Date.now() - offset);
@@ -365,7 +365,8 @@
    		/* document 후 실행 될 함수 */
 			$(document).ready(function(){
 				addEvent(null);
-
+				console.log("ready 함수 실행됨");
+				
 				$('.member-search-area .line-cirecle').click(function(){
 					addEvent($(this).next().val());
 				})
@@ -387,7 +388,7 @@
 						<c:when test="${loginMember.userNo eq t.userNo}">
 							<div class="mydiv-area display-item-center">
 								<div class="line-cirecle display-item-center line-shadow">
-									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
+									<img src="${path}${t.profileURL}" class="rounded" style="overflow:hidden;" >
 									<span class="img_postion">${t.userName}</span>
 								</div>
 								<input type="hidden" value="${t.userNo}">
@@ -396,7 +397,7 @@
 						<c:otherwise>
 							<div class="memebrdiv-area display-item-center">
 								<div class="line-cirecle display-item-center line-shadow">
-									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
+									<img src="${path}${t.profileURL}" class="rounded" style="overflow:hidden;" >
 									<span class="img_postion">${t.userName}</span>
 								</div>
 								<input type="hidden" value="${t.userNo}">

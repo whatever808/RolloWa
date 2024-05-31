@@ -154,7 +154,6 @@ public class MemberController {
 	@ResponseBody
 	public String ajaxUpdateProfile(MultipartFile uploadFile, HttpSession session
 							, HttpServletRequest request) {
-		log.debug("{}", uploadFile);
 		MemberDto member = new MemberDto();
 		// 로그인한 회원 정보 확인
 		if(session.getAttribute("loginMember") != null) {
@@ -292,11 +291,21 @@ public class MemberController {
 	/* ======================================= "가림" 구역 ======================================= */
 	@RequestMapping("/memInfo.do")
 	@ResponseBody
-	public MemberDto selectMemInfo(HttpSession session){
-		return memberService.selectMember((MemberDto)(session.getAttribute("loginMember")));
+	public Map<String, Object> selectMemInfo(HttpSession session){
+		return memberService.selectMemberForMainPage((MemberDto)(session.getAttribute("loginMember")));
 	}
 	/* ======================================= "가림" 구역 ======================================= */
 	
+	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 start ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+	// 사이드바(구성원 관리) 관리자만 표시 하기
+	@RequestMapping("/selectAuthLevel.do")
+	@ResponseBody
+	public Map<String, Object> selectAuthLevel(@RequestParam("userNo") int userNo) {
+		//log.debug("출력 : {}", userNo);
+		
+		return memberService.selectAuthLevel(userNo);
+	}
+	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 
 
 

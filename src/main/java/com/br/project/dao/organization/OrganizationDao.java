@@ -76,9 +76,17 @@ public class OrganizationDao {
 	}
 
 	// 급여 상세조회 dao
-	public List<MemberDto> selectAccountDetail(int userNo) {
-		return sqlSessionTemplate.selectList("organizationMapper.selectAccountDetail", userNo);
+	public List<MemberDto> selectAccountDetail() {
+		return sqlSessionTemplate.selectList("organizationMapper.selectAccountDetail");
 	}
+
+	/* 수정중 */
+    public int countEmployeesInDepartment(String departmentName) {
+        return sqlSessionTemplate.selectOne("organization.countEmployeesInDepartment", departmentName);
+    }
+    public int countEmployeesInTeam(String teamName) {
+        return sqlSessionTemplate.selectOne("organization.countEmployeesInTeam", teamName);
+    }
 
 	
 	

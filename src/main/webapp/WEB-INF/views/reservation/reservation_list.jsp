@@ -61,6 +61,9 @@
     .date{
         font-size: 20px !important;
     }
+    .table_time {
+    	width: 1000px;
+    }
     .td_noSelect{
         user-select: none;
     }
@@ -252,6 +255,26 @@
 				}
 			})
 		}
+     	
+		document.addEventListener("DOMContentLoaded", function() {
+            const trElements = document.querySelectorAll('.tr_cursor'); // 클릭할 tr 요소를 선택합니다.
+        	const userName = "${loginMember.userName}";
+        	const userId = "${loginMember.userId}";
+        	const modal_date = document.getElementById('currentDate').value;
+        	
+            trElements.forEach(function(trElement) {
+                trElement.addEventListener('click', function() {
+                    const equipmentName = trElement.querySelector('td:nth-child(2) h6').textContent; // 클릭한 tr 요소에서 비품명을 가져옵니다.
+                    
+                    console.log("선택한 날짜 : ", document.getElementById('currentDate').value);
+                    
+                    document.getElementById('userName').textContent = userName + "(" + userId + ")";
+                    document.getElementById('selectedEquipmentName').textContent = equipmentName;
+                    document.getElementById('modal_date').textContent = document.getElementById('currentDate').value;
+
+                });
+            });
+        });
         
 		</script>
 
@@ -264,14 +287,13 @@
                             <h3>비품명</h3>
                         </th>
                         <td>
-                            <input type="text" placeholder="비품명을 입력하세요.">
+                            <input type="text" id="searchInput" placeholder="비품명을 입력하세요." onkeyup="searchEquipment()">
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2">
                             <div class="div_searchBtn">
-                                <button type="reset" class="btn btn-outline-primary"><h6>초기화</h6></button>
-                                <button type="submit" class="btn btn-primary"><h6>검색</h6></button>
+                                <button type="reset" class="btn btn-outline-primary" onclick="reload();"><h6>초기화</h6></button>
                             </div>
                         </td>
                     </tr>
@@ -284,56 +306,19 @@
             <table class="table_count">
                 <tr>
                     <td class="td_left"><h4>전체 ${ listCount }개</h4></td>
-                    <td class="td_right">
-                        <input type="checkbox" id="checkEquipment" name="checkEquipment" class="form-check-input">
-                        <label for="checkEquipment">
-                            <h4>사용불가 제외</h4>
-                        </label>
-                    </td>
                 </tr>
             </table>
         </div>
         
-        <!-- 모달창 스크립트 -->
-        <script>
-        document.addEventListener("DOMContentLoaded", function() {
-			// console.log("loginMember: ", MemberDto(userNo=1109, userName=박호중, userId=user60, 
-			// userPwd=$2a$10$PWYc/G1CPm2svFw4HehFXuDjDWYHyc7h.1Lee.XB9hTZrGkdBqk4., phone=null, 
-			// postCode=null, address=null, detailAddress=null, totalAddress=null, bankAccount=null, bank=null, email=null, 
-			// profileURL=null, countFail=0, enrollDate=null, enrollUserNo=0, modifyDate=null, modifyUserNo=0, status=null, 
-			// vacationCount=0, authLevel=0, salary=0, teamCode=C, positionCode=C, position=null));
-            const trElements = document.querySelectorAll('.tr_cursor'); // 클릭할 tr 요소를 선택합니다.
-        	const userName = "${loginMember.userName}";
-        	const userId = "${loginMember.userId}";
-        	//const userDepartment = "${loginMember.teamCode}";
-        	
-            trElements.forEach(function(trElement) {
-                trElement.addEventListener('click', function() {
-                    const equipmentName = trElement.querySelector('td:nth-child(2) h6').textContent; // 클릭한 tr 요소에서 비품명을 가져옵니다.
-                    
-                    document.getElementById('userName').textContent = userName + "(" + userId + ")";
-                    document.getElementById('selectedEquipmentName').textContent = equipmentName;
-                    
-                    //const department = userDepartment === 'C' ? 'C이다' : '아니다';
-                    //document.getElementById('department').textContent = department;
-
-                });
-            });
-        });
-        </script>
-
         <!-- 비품 예약 모달창 -->
+        <form id="modalForm" method="post">
+        
         <div id="modal_reserve">
             <div class="div_modal">
                 <table class="table-bordered table_modal">
                     <tr>
                         <th><h5>예약자</h5></th>
                         <td><h5 id="userName"></h5></td>
-                    </tr>
-                    
-                    <tr>
-                        <th><h5>부서명</h5></th>
-                        <td><h5 id="department"></h5></td>
                     </tr>
 
                     <tr>
@@ -343,11 +328,7 @@
 
                     <tr>
                         <th><h5>예약일</h5></th>
-                        <td>
-                            <h5>
-                                <input type="date" class="date" id="modal_date">
-                            </h5>
-                        </td>
+                        <td><h5 id="modal_date"></h5></td>
                     </tr>
 
                     <tr>
@@ -382,32 +363,31 @@
                                         <option value="11:30:00">오전 11:30</option>
                                         <option value="12:00:00">오후 12:00</option>
                                         <option value="12:30:00">오후 12:30</option>
-                                        <option value="13:00:00">오후 01:00</option>
-                                        <option value="13:30:00">오후 01:30</option>
-                                        <option value="14:00:00">오후 02:00</option>
-                                        <option value="14:30:00">오후 02:30</option>
-                                        <option value="15:00:00">오후 03:00</option>
-                                        <option value="15:30:00">오후 03:30</option>
-                                        <option value="16:00:00">오후 04:00</option>
-                                        <option value="16:30:00">오후 04:30</option>
-                                        <option value="17:00:00">오후 05:00</option>
-                                        <option value="17:30:00">오후 05:30</option>
-                                        <option value="18:00:00">오후 06:00</option>
-                                        <option value="18:30:00">오후 06:30</option>
-                                        <option value="19:00:00">오후 07:00</option>
-                                        <option value="19:30:00">오후 07:30</option>
-                                        <option value="20:00:00">오후 08:00</option>
-                                        <option value="20:30:00">오후 08:30</option>
-                                        <option value="21:00:00">오후 09:00</option>
-                                        <option value="21:30:00">오후 09:30</option>
-                                        <option value="22:00:00">오후 10:00</option>
-                                        <option value="22:30:00">오후 10:30</option>
-                                        <option value="23:00:00">오후 11:00</option>
-                                        <option value="23:30:00">오후 11:30</option>						
+                                        <option value="13:00:00">오후 13:00</option>
+                                        <option value="13:30:00">오후 13:30</option>
+                                        <option value="14:00:00">오후 14:00</option>
+                                        <option value="14:30:00">오후 14:30</option>
+                                        <option value="15:00:00">오후 15:00</option>
+                                        <option value="15:30:00">오후 15:30</option>
+                                        <option value="16:00:00">오후 16:00</option>
+                                        <option value="16:30:00">오후 16:30</option>
+                                        <option value="17:00:00">오후 17:00</option>
+                                        <option value="17:30:00">오후 17:30</option>
+                                        <option value="18:00:00">오후 18:00</option>
+                                        <option value="18:30:00">오후 18:30</option>
+                                        <option value="19:00:00">오후 19:00</option>
+                                        <option value="19:30:00">오후 19:30</option>
+                                        <option value="20:00:00">오후 20:00</option>
+                                        <option value="20:30:00">오후 20:30</option>
+                                        <option value="21:00:00">오후 21:00</option>
+                                        <option value="21:30:00">오후 21:30</option>
+                                        <option value="22:00:00">오후 22:00</option>
+                                        <option value="22:30:00">오후 22:30</option>
+                                        <option value="23:00:00">오후 23:00</option>
+                                        <option value="23:30:00">오후 23:30</option>						
                                     </select>
                                 <h6 class="h6_separator">~</h6>
                                     <select id="end" class="select-box form-control" style="width:125px;">
-                                        <option value="00:00:00">오전 00:00</option>
                                         <option value="00:30:00">오전 00:30</option>
                                         <option value="01:00:00">오전 01:00</option>
                                         <option value="01:30:00">오전 01:30</option>
@@ -433,41 +413,40 @@
                                         <option value="11:30:00">오전 11:30</option>
                                         <option value="12:00:00">오후 12:00</option>
                                         <option value="12:30:00">오후 12:30</option>
-                                        <option value="13:00:00">오후 01:00</option>
-                                        <option value="13:30:00">오후 01:30</option>
-                                        <option value="14:00:00">오후 02:00</option>
-                                        <option value="14:30:00">오후 02:30</option>
-                                        <option value="15:00:00">오후 03:00</option>
-                                        <option value="15:30:00">오후 03:30</option>
-                                        <option value="16:00:00">오후 04:00</option>
-                                        <option value="16:30:00">오후 04:30</option>
-                                        <option value="17:00:00">오후 05:00</option>
-                                        <option value="17:30:00">오후 05:30</option>
-                                        <option value="18:00:00">오후 06:00</option>
-                                        <option value="18:30:00">오후 06:30</option>
-                                        <option value="19:00:00">오후 07:00</option>
-                                        <option value="19:30:00">오후 07:30</option>
-                                        <option value="20:00:00">오후 08:00</option>
-                                        <option value="20:30:00">오후 08:30</option>
-                                        <option value="21:00:00">오후 09:00</option>
-                                        <option value="21:30:00">오후 09:30</option>
-                                        <option value="22:00:00">오후 10:00</option>
-                                        <option value="22:30:00">오후 10:30</option>
-                                        <option value="23:00:00">오후 11:00</option>
-                                        <option value="23:30:00">오후 11:30</option>					
+                                        <option value="13:00:00">오후 13:00</option>
+                                        <option value="13:30:00">오후 13:30</option>
+                                        <option value="14:00:00">오후 14:00</option>
+                                        <option value="14:30:00">오후 14:30</option>
+                                        <option value="15:00:00">오후 15:00</option>
+                                        <option value="15:30:00">오후 15:30</option>
+                                        <option value="16:00:00">오후 16:00</option>
+                                        <option value="16:30:00">오후 16:30</option>
+                                        <option value="17:00:00">오후 17:00</option>
+                                        <option value="17:30:00">오후 17:30</option>
+                                        <option value="18:00:00">오후 18:00</option>
+                                        <option value="18:30:00">오후 18:30</option>
+                                        <option value="19:00:00">오후 19:00</option>
+                                        <option value="19:30:00">오후 19:30</option>
+                                        <option value="20:00:00">오후 20:00</option>
+                                        <option value="20:30:00">오후 20:30</option>
+                                        <option value="21:00:00">오후 21:00</option>
+                                        <option value="21:30:00">오후 21:30</option>
+                                        <option value="22:00:00">오후 22:00</option>
+                                        <option value="22:30:00">오후 22:30</option>
+                                        <option value="23:00:00">오후 23:00</option>
+                                        <option value="23:30:00">오후 23:30</option>
+                                        <option value="23:59:59">오전 00:00</option>			
                                     </select>
                                 </div>
                             </h6>
                         </td>
                     </tr>
 
-
-
                     <tr>
-                        <th><h5>메모</h5></th>
+                        <th><h5>내용</h5></th>
                         <td>
                             <h5>
-                                <input type="text" placeholder="내용을 입력하세요.">
+                                <input id="content" type="text" placeholder="내용을 입력하세요." required>
                             </h5>
                         </td>
                     </tr>
@@ -475,8 +454,8 @@
                     <tr>
                         <td colspan="2">
                             <div class="div_searchBtn">
-                                <button class="btn btn-outline-primary button-close" data-izimodal-close=""><h6>닫기</h6></a></button>
-                                <button type="submit" class="btn btn-primary"><h6>예약하기</h6></button>
+                                <button class="btn btn-outline-primary button-close"><h6>닫기</h6></a></button>
+                                <button type="submit" class="btn btn-primary" onclick="reserveSubmit();"><h6>예약하기</h6></button>
                             </div>
                         </td>
                     </tr>
@@ -484,22 +463,158 @@
                 </table>
             </div>
         </div>
+		</form>
         
-
+		<script>
+	    function reserveSubmit() {
+	        
+	    	const userNo = "${loginMember.userNo}";
+	        const equipmentName = document.getElementById('selectedEquipmentName').textContent;
+	        const reserveDate = document.getElementById('modal_date').textContent;
+	        const startTime = document.getElementById('start').value;
+	        const endTime = document.getElementById('end').value;
+	        const content = document.getElementById('content').value;
+	        
+	        console.log("사용자번호: ", userNo);
+	        console.log("비품명: ", equipmentName);
+	        console.log("예약일: ", reserveDate);
+	        console.log("예약 시간: ", startTime + " ~ " + endTime);
+	        console.log("내용: ", content);
+	        
+	        if (startTime >= endTime) {
+	            //console.log("예약을 실패했습니다. 시작 시간이 종료 시간과 같거나 더 늦습니다.");
+	            alert("예약을 실패했습니다. 시작 시간이 종료 시간과 같거나 더 늦습니다.")
+	            return;
+	        }
+	        
+	        const formData = new FormData();
+	        formData.append('userNo', "${loginMember.userNo}");
+	        formData.append('equipmentName', document.getElementById('selectedEquipmentName').textContent);
+	        formData.append('reserveDate', document.getElementById('modal_date').textContent);
+	        formData.append('startTime', document.getElementById('start').value);
+	        formData.append('endTime', document.getElementById('end').value);
+	        formData.append('content', document.getElementById('content').value);
+	
+	        $.ajax({
+	            type: "POST",
+	            url: "${contextPath}/reservation/reserve.do",
+	            data: formData,
+	            processData: false,
+	            contentType: false,
+	            success: function(response) {
+	            	if(response.success == false){
+	                	console.log("예약이 실패되었습니다. 다른 직원이 예약중인 시간입니다.");
+	                	alert("예약이 실패되었습니다. 다른 직원이 예약한 시간입니다.")
+	            	} else{
+	                	console.log("예약이 성공적으로 완료되었습니다.");
+	                	alert("예약이 성공적으로 완료되었습니다.");
+	                	$('#modal_reserve').iziModal('close');
+	                	location.reload();
+	            	}
+	            },
+	            error: function(xhr, status, error) {
+	                console.error("오류가 발생했습니다:", error);
+	            }
+	        });
+	    }
+		</script>
 
             <!-- 모달창 -->
             <script>
-                $('#modal_reserve').iziModal({
-                    title: '<h4>비품예약</h4>',
-                    subtitle: '',
-                    headerColor: ' rgb(255,247,208)', 
-                    theme:'light',
-                    padding: '15px',
-                    radius: 10, 
-                    zindex:	300,
-                    focusInput:	true,
-                    restoreDefaultContent: false, 
-                });
+            let equipmentName = '';
+            
+            $('#modal_reserve').iziModal({
+                title: '<h4>비품예약</h4>',
+                subtitle: '',
+                headerColor: ' rgb(255,247,208)', 
+                theme:'light',
+                padding: '15px',
+                radius: 10, 
+                zindex:	300,
+                focusInput:	true,
+                restoreDefaultContent: false,
+                onOpening: function(modal){
+		            // 모달 열릴 때 실행할 함수
+		            
+		            console.log('모달이 열립니다.');
+		            let userNo = "${ loginMember.userNo }";
+		            let userName = "${ loginMember.userName }";
+		            let userId = "${ loginMember.userId }";
+                	let equipmentName = $('#selectedEquipmentName').text();
+		            let currentDate = document.getElementById('currentDate').value;
+		            
+		            $('#userName').html('<span>' + userName + '</span><span>(' + userId + ')</span>');
+		            $('#selectedEquipmentName').text(equipmentName);
+		            $('#modal_date').text(currentDate);
+		            
+		        },
+                onClosing: function(modal) {
+                    // 모달이 닫힐 때 실행할 작업
+                    console.log('모달이 닫힙니다.');
+                }
+            });
+         	// 비품 검색 테이블의 각 행에 대한 클릭 이벤트 설정
+            $('.tr_cursor').on('click', function() {
+                // 클릭된 행에서 비품명 가져오기
+                let equipmentName = $(this).find('td:nth-child(2) h6').text();
+
+                // 가져온 비품명을 모달에 표시
+                $('#selectedEquipmentName').text(equipmentName);
+            });
+            
+            
+            function searchEquipment() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("searchInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementsByClassName("table_time")[0];
+                tr = table.getElementsByTagName("tr");
+
+                var found = false; // found 변수를 정의하고 초기화합니다.
+
+                for (i = 1; i < tr.length; i++) { // 첫 번째 행을 건너뛰고 두 번째 행부터 시작합니다.
+                    td = tr[i].getElementsByTagName("td")[1]; // 비품명이 들어있는 열(2번째 열)
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            found = true; // 일치하는 항목이 있음을 표시합니다.
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+
+                // 이전에 추가된 메시지가 있다면 제거합니다.
+                var existingMessage = table.querySelector('.noResultMessage');
+                if (existingMessage) {
+                    existingMessage.parentNode.removeChild(existingMessage);
+                }
+
+                if (!found) {
+                    var noResultRow = document.createElement('tr');
+                    var noResultCell = document.createElement('td');
+                    noResultCell.colSpan = "50";
+                    noResultCell.innerText = "조회된 비품이 없습니다.";
+                    noResultCell.className = 'noResultMessage'; // 클래스를 추가하여 메시지를 식별합니다.
+                    noResultRow.appendChild(noResultCell);
+                    table.appendChild(noResultRow); // tbody가 아닌 table에 추가합니다.
+                }
+            }
+			
+			// 검색 시 엔터키 사용 안되게하기
+	        function handleKeyPress(event) {
+	            if (event.keyCode === 13) {
+	                event.preventDefault();
+	                searchEquipment();
+	            }
+	        }
+			// 초기화
+	        function reload() {
+	        	let input = document.getElementById("searchInput");
+	        	$('#modal_reserve').iziModal('close');
+	            searchEquipment();
+	        }
             </script>
 
             <!-- 비품 테이블-->
@@ -535,349 +650,64 @@
                     </tr>
                     
                     <c:choose>
-                    	<c:when test="${ not empty list }">
-                    		<c:forEach var="e" items="${list}" varStatus="loop">
-							    <tr data-izimodal-open="#modal_reserve" class="tr_cursor">
-							        <!-- 비품 정보 표시 -->
-							        <td><h6>${loop.index + 1}</h6></td>
-							        <td><h6>${e.equipmentName}</h6></td>
-							        
-							        <!-- 비품 예약 확인 -->
-							        <c:set var="reservationFound" value="false"/>
-							        <c:forEach var="r" items="${reservationList}">
-							            <c:if test="${e.code eq r.equipmentCode}">
-							                <c:set var="reservationFound" value="true"/>
-							                <!-- 날짜 형식 : 2024-05-05 00:00:00.0 -->
-							                
-							                <!-- 시작 시간까지 채우기 -->
-							                <c:forEach begin="1" end="${fn:substring(r.reserveStart, 11, 13)*2}" varStatus="loop">
-						                    	<td></td>
-							                </c:forEach>
-							                
-							                <!-- 예약한 시간 채우기(시간) -->
-							                <c:forEach begin="1" end="${(fn:substring(r.reserveEnd, 11, 13)- fn:substring(r.reserveStart, 11, 13))*2}" varStatus="loop">
-							                    <td class="td_reserve"></td>
-							                </c:forEach>
-							                
-							                <!-- 예약한 시간 채우기(분) -->
-							                <c:forEach begin="1" end="${fn:substring(r.reserveStart, 14, 16)}" varStatus="loop">
-							                    <c:if test="${loop.index == 1}">
-							                        <td class="td_reserve"></td>
-							                    </c:if>
-							                </c:forEach>
-							                
-							                <!-- 나머지 시간 매꾸기 -->
-							                <c:forEach begin="1" end="${ 48-fn:substring(r.reserveStart, 11, 13)*2
-							                                                -(fn:substring(r.reserveEnd, 11, 13)- fn:substring(r.reserveStart, 11, 13))*2
-							                                                -(fn:substring(r.reserveStart, 14, 16)/30)
-							                                                }" varStatus="loop">
-							                    <td></td>
-							                </c:forEach>
-							            </c:if>
-							        </c:forEach>
-							        
-							        <!-- 예약이 없는 경우 -->
-							        <c:if test="${not reservationFound}">
-							            <c:forEach begin="1" end="48">
-							                <td></td>
-							            </c:forEach>
-							        </c:if>
-							    </tr>
-							</c:forEach>
+					    <c:when test="${not empty list}">
+					        <c:forEach var="e" items="${list}" varStatus="loop">
+					            <tr data-izimodal-open="#modal_reserve" class="tr_cursor" data-equipment-name="${e.equipmentName}">
+					                <!-- 비품 정보 표시 -->
+					                <td><h6>${loop.index + 1}</h6></td>
+					                <td><h6>${e.equipmentName}</h6></td>
+					                
+					                <!-- 시간표 셀 채우기 -->
+					                <c:forEach var="timeSlot" begin="1" end="48">
+					                    <c:set var="reserved" value="false" />
+					                    <!-- 예약된 시간 확인 -->
+					                    <c:forEach var="r" items="${reservationList}">
+					                        <c:if test="${e.code eq r.equipmentCode}">
+					                            <!-- 시간 계산 -->
+					                            <c:set var="startHour" value="${fn:substring(r.reserveStart, 11, 13)}" />
+					                            <c:set var="startMinute" value="${fn:substring(r.reserveStart, 14, 16)}" />
+					                            <c:set var="endHour" value="${fn:substring(r.reserveEnd, 11, 13)}" />
+					                            <c:set var="endMinute" value="${fn:substring(r.reserveEnd, 14, 16)}" />
+					                            <c:set var="startSlot" value="${startHour * 2 + (startMinute / 30)}" />
+					                            <!-- 예약 종료 시간이 23:59:59인 경우 48로 설정 -->
+					                            <c:if test="${endHour eq '23' and endMinute eq '59'}">
+					                                <c:set var="endSlot" value="48" />
+					                            </c:if>
+					                            <c:if test="${not (endHour eq '23' and endMinute eq '59')}">
+					                                <c:set var="endSlot" value="${endHour * 2 + (endMinute / 30)}" />
+					                            </c:if>
+					                            <!-- 시작 시간과 종료 시간 비교 -->
+					                            <c:if test="${timeSlot > startSlot and timeSlot <= endSlot}">
+					                                <!-- 해당 시간대에 예약이 있는 경우 -->
+					                                <c:set var="reserved" value="true" />
+					                                <!-- 색상 변경 또는 다른 표시 방법을 여기에 추가 -->
+					                            </c:if>
+					                        </c:if>
+					                    </c:forEach>
+					                    <!-- 예약된 시간이 있는 경우 -->
+					                    <c:if test="${reserved}">
+					                        <!-- 예약이 있는 경우에 대한 표시를 여기에 추가 -->
+					                        <td class="td_reserve"></td>
+					                    </c:if>
+					                    <!-- 예약된 시간이 없는 경우 -->
+					                    <c:if test="${not reserved}">
+					                        <!-- 예약이 없는 경우에 대한 표시를 여기에 추가 -->
+					                        <td></td>
+					                    </c:if>
+					                </c:forEach>
+					            </tr>
+					        </c:forEach>
 					    </c:when>
-					    
-				    	<c:otherwise>
+					    <c:otherwise>
 					        <tr>
-					            <td colspan="26">조회된 비품이 없습니다.</td>
+					            <td colspan="48">조회된 비품이 없습니다.</td>
 					        </tr>
 					    </c:otherwise>
 					</c:choose>
 
-                    <tr data-izimodal-open="#modal_reserve" class="tr_cursor">
-                        <td><h6>2</h6></td>
-                        <td><h6>회의실2번입니다.</h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td colspan="3" class="td_reserve"><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                    </tr>
-
-                    <tr data-izimodal-open="#modal_reserve" class="tr_cursor">
-                        <td><h6>3</h6></td>
-                        <td><h6>회의실3번입니다.</h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                    </tr>
-
-                    <tr>
-                        <td><h6>3</h6></td>
-                        <td><h6>회의실3번입니다.</h6></td>
-                        <td colspan="48" class="td_limit"><h6>사용불가</h6></td>
-                    </tr>
-
-                    <tr data-izimodal-open="#modal_reserve" class="tr_cursor">
-                        <td><h6>3</h6></td>
-                        <td><h6>회의실3번입니다.</h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                    </tr>
-
-                    <tr data-izimodal-open="#modal_reserve" class="tr_cursor">
-                        <td><h6>3</h6></td>
-                        <td><h6>회의실3번입니다.</h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td colspan="2" class="td_reserve"><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                    </tr>
-
-                    <tr data-izimodal-open="#modal_reserve" class="tr_cursor">
-                        <td><h6>3</h6></td>
-                        <td><h6>회의실3번입니다.</h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td class="td_reserve"><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                        <td><h6></h6></td>
-                    </tr>
                 </table>
             </div>
-
-            <!--페이징 처리 start-->
-            <div class="div_page">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
-                    <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
-                </ul>
-            </div>
-            <!--페이징 처리 end-->
-	
-	
-		<!-- ------------ -->
+			<!-- ------------ -->
 	
 	<!-- 사이드바 푸터 영역 -->
 	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>

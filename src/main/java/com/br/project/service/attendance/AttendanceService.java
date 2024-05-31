@@ -41,7 +41,6 @@ public class AttendanceService {
 	public List<AttendanceDto> selectAttendanceCount(String selectedDate) {
 		return attendanceDao.selectAttendanceCount(selectedDate);
 	}
-	
 	/* ======================================= "가림" 구역 ======================================= */
 	/**
 	 * 해당날짜 휴가인 사원 리스트조회

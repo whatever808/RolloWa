@@ -3,12 +3,14 @@ package com.br.project.service.organizaion;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.br.project.dao.organization.OrganizationDao;
 import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.dto.organization.OrganizationDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrganizationService {
 	
+	@Autowired
 	private final OrganizationDao organizationDao;
 
 	public int selectOrganizationListCount() {
@@ -59,11 +62,41 @@ public class OrganizationService {
 	public List<MemberDto> selectAccountList(Map<String, Object> paramMap) {
 		return organizationDao.selectAccountList(paramMap);
 	}
-
-	public List<MemberDto> selectAccountDetail(int userNo) {
-		return organizationDao.selectAccountDetail(userNo);
+	// 급여 조회 상세페이지
+	public List<MemberDto> selectAccountDetail( ) {
+		return organizationDao.selectAccountDetail();
 	}
 
+	
+	// 수정중
+	public boolean hasEmployeesInDepartment(String departmentName) {
+		int employeeCount = organizationDao.countEmployeesInDepartment(departmentName);
+        return employeeCount > 0;
+    }
+    public boolean hasEmployeesInTeam(String teamName) {
+        int employeeCount = organizationDao.countEmployeesInTeam(teamName);
+        return employeeCount > 0;
+    }
+
+    // 조직 관리 service
+	public void addDepartment(OrganizationDto organizationDto) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addTeam(OrganizationDto organizationDto) {
+		// TODO Auto-generated method stub
+		
+	}
+	public boolean deleteDepartment(String departmentCode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public boolean deleteTeam(String teamCode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+    
 	
 
 }

@@ -53,7 +53,7 @@ $(document).ready(function(){
 	    			for(let i=0; i<plength; i++){
 	    				productAmountArr.push("${list.get(i).QUANTITY}");
 	    			}
-	    			
+	    			//var formdata = $("#form").sereailize();
 	    			var data = signature.toDataURL("image/png");
 	    	    const image = canvas.toDataURL();
 	    	        
@@ -69,7 +69,7 @@ $(document).ready(function(){
 	    	        		approvalSignNo:approvalName,
 	    	        		deptType:"Fix",
 	    	        		fixName:productNameArr,
-	    	        		fixAmount:productAmountArr,
+	    	        		fixAmount:productAmountArr
 	    	        	},
 	    	        	success:function(response){
 	    	        		

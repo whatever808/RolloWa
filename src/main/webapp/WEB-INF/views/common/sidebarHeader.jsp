@@ -141,11 +141,14 @@
             position: fixed;
             right: 80px;
             bottom: 30px;
-            display: none;
+            opacity: 0;
             flex-direction: column;
             overflow: auto;
             overflow-x: none;
-            z-index: 100;
+            z-index: -1;
+            transition-property: opacity;
+            transition-duration: 0.3s;
+            background: #eee;
         }
 
         .people_list {
@@ -154,14 +157,21 @@
             overflow-x: hidden;
         }
 
-
         /* 채팅방 리스트 */
+        .chat_room {
+        	border-radius: 5px;
+        }
+        
         .chat_room:hover {
             background-color: #eeeeee;
         }
 
         .chat_room_active {
             background-color: #dddddd;
+        }
+        
+        .selected {
+        	background-color: #eeeeee;
         }
 
         .card-body {
@@ -172,7 +182,6 @@
 
         /* 인물 목록 */
         .people_list {
-            /* display: none; */
             display: flex;
             flex-direction: column;
         }
@@ -269,7 +278,6 @@
 
         /* 채팅방 */
         .chatting {
-            /* display: none; */
             display: block;
         }
 
@@ -292,6 +300,15 @@
         }
 
         /* 채팅방 스타일 끝 */
+        
+        /* 채팅 메세지 스타일 */
+        .fromMe {
+        	background-color: #fff8e3;
+    			color: #444444;
+        }
+        
+        /* 채팅 메세지 스타일 끝 */
+        
     </style>
 <style>
 #main_logo span:hover {
@@ -505,7 +522,7 @@ $(document).ready(function(){
               </script>
               <!-- ======================================= "가림" 구역 end ======================================= -->
 
-                <!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
+				<!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#org-collapse" aria-expanded="false">
@@ -519,14 +536,39 @@ $(document).ready(function(){
                             <li>
                             	<a href="${ contextPath }/organization/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
                             </li>
-                            <li>
+                            <li class="onlyManagerShow">
                             	<a href="${ contextPath }/organization/manager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
                             </li>
                         </ul>
                     </div>
                 </li>
                 
-                <li class="mb-1">
+                <script>
+                $(document).ready(function(){
+                    $.ajax({
+                        url:"${ contextPath }/member/selectAuthLevel.do",
+                        method:"GET",
+                        data:{ userNo: "${ loginMember.userNo }" },
+                        dataType: "json",
+                        success:function(result){
+                        	//console.log("통신 성공");
+                        	//console.log("result : ", result);
+                        	let authLevel = result.authLevel;
+                        	if (authLevel == 1 || authLevel == 2) {
+                        		$('.onlyManagerShow').show();
+                        		//console.log("구성원 보임 성공");
+                        	} else {
+                        		$('.onlyManagerShow').hide();
+                        		//console.log("구성원 안 보임 성공");
+                        	}
+                        }, error:function(){
+                        	//console.log("통신 실패");
+                        }
+                      })
+                  })
+                </script>
+                
+                <li class="mb-1 onlyManagerShow">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                         data-bs-toggle="collapse" data-bs-target="#mem-collapse" aria-expanded="false">
                         구성원 관리
@@ -540,7 +582,7 @@ $(document).ready(function(){
                             	<a href="${ contextPath }/attendance/accountList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/attendance" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 상세 조회</a>
+                            	<a href="${ contextPath }/attendance/detailList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 조회</a>
                             </li>
                             <li>
                             	<a href="${ contextPath }/attendance/signup.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">구성원 추가</a>
@@ -560,10 +602,10 @@ $(document).ready(function(){
                             	<a href="${ contextPath }/reservation/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 예약</a>
                             </li>
                             <li>
-                            	<a href="${ contextPath }/reservation/myList.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">내 예약 조회</a>
+                            	<a href="${ contextPath }/reservation/my.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">내 예약 조회</a>
                             </li>
-                            <li>
-                            	<a href="${ contextPath }/reservation/reManager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 관리</a>
+                            <li class="onlyManagerShow">
+                            	<a href="${ contextPath }/reservation/equipment.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 관리</a>
                             </li>
                         </ul>
                     </div>
@@ -687,17 +729,12 @@ $(document).ready(function(){
                             <li><a href="${ contextPath }/member/mypage.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">마이페이지</a>
                             </li>
-                            <li><a href="${ contextPath }/notification/list.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
-                            </li>
-
-                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
-                                    out</a></li>
-                                    
-                               <li>
-                               <a href="${ contextPath }/payment/payment.page" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                               Payment</a>
-                               </li>       
+                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">로그아웃</a>
+                            </li>       
+                            <li>
+                            <a href="${ contextPath }/payment/payment.page" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                            Payment</a>
+                            </li>       
                         </ul>
                     </div>
                 </li>
@@ -735,6 +772,9 @@ $(document).ready(function(){
 						// 채팅용 웹소켓 연결
 						chatting = new SockJS("${contextPath}/chatting");
 						stompClient = Stomp.over(chatting);
+					  /*stompClient.debug = function(str) {
+						    // append the debug log
+						};*/
 			    	stompClient.connect({}, function(frame) {
 							// 구독 중인 채팅방 목록 조회
 					    $.ajax({
@@ -747,7 +787,7 @@ $(document).ready(function(){
 					    			stompClient.subscribe("/topic/chat/room/" + result[i].chatRoomNo, function(msg) {
 					    				// 메세지 수신 처리
 					    				receiveMsg(msg);
-					    			})
+					    			}, { id: "room" + result[i].chatRoomNo})
 					    		}
 					    		selectChatRoom();
 					    	}
@@ -761,12 +801,16 @@ $(document).ready(function(){
 					    	// 문자열을 json으로 변환
 					    	const msgBody = JSON.parse(msg.body);
 					    	
-					    	console.log(msgBody);
-					    	
 					    	if(msgBody.flag == 0) {
 					    		// 채팅방 초대 알림인 경우
 					    		if(msgBody.userNo != ${loginMember.userNo}) {
+					    			// 메세지 수신 => 채팅방 목록 새로고침
 					    			receiveInviteMsg(msgBody);
+					    			// 초대 받은 채팅방 구독
+					    			stompClient.subscribe("/topic/chat/room/" + msgBody.roomNo, function(msg) {
+					    				// 메세지 수신 처리
+					    				receiveMsg(msg);
+					    			})
 					    		}
 					    	} else {
 					    		// 공지사항, 일정 등록 알림인 경우
@@ -802,7 +846,7 @@ $(document).ready(function(){
 					    
 						})
 					})
-					
+										
 					// 알림 스타일
 					$("#alram").iziModal({
 						title: '<h6>부서 알림 서비스</h6>'

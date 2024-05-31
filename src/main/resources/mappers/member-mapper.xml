@@ -196,6 +196,17 @@
 		and team_code = #{teamCode}
 		and group_code = 'DEPT01'
 	</select>
+	
+	<select id="selectAnuual" 
+	resultMap="memberResult">
+		select 
+			VACATION_COUNT ,USING_DTAE
+		from 
+			Member
+		where 
+			user_NO = #{userNo}
+	</select>
+	
  <!-- ================== 이예찬 ========================== -->
  
  <!-- ======================================= "가림" 구역 ======================================= -->
@@ -233,5 +244,143 @@
  </select>
  
  <!-- ======================================= "가림" 구역 ======================================= -->
+ 
+	 <!-- ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 start ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆-->
+	 <!-- 사이드바(구성원 관리) 관리자만 표시 하기 -->
+	<select id="selectAuthLevel" parameterType="MemberDto" resultType="map">
+		select auth_level AS "authLevel"
+		  from member
+		 where user_no = #{ userNo }
+	</select>
+	
+	<!-- 회원 정보 전체 조회  -->
+	<select id="selectMemberAll" resultMap="memberResult">
+	SELECT USER_NO , USER_NAME , USER_ID , USER_PWD , PHONE , POST_CODE, ADDRESS, DETAIL_ADDRESS, TOTAL_ADDRESS , BANK_ACCOUNT , BANK , EMAIL , PROFILE_URL , COUNT_FAIL , VACATION_COUNT , AUTH_LEVEL , SALARY , TEAM_CODE , POSITION_CODE 
+     ,(SELECT CODE_NAME 
+         FROM TB_GROUP 
+         WHERE GROUP_CODE LIKE 'DEPT%' 
+         AND CODE = (SELECT UPPER_CODE 
+                 FROM TB_GROUP 
+                 WHERE GROUP_CODE LIKE 'TEAM%' 
+                 AND CODE = MEMBER.TEAM_CODE)) AS DEPARTMENT
+     , (SELECT CODE_NAME 
+        FROM TB_GROUP
+        WHERE GROUP_CODE LIKE 'TEAM%' AND CODE = TEAM_CODE) AS TEAM
+     , (SELECT CODE_NAME 
+          FROM TB_GROUP
+          WHERE GROUP_CODE LIKE 'POSI%' AND CODE = POSITION_CODE) AS POSITION
+		FROM MEMBER 
+        WHERE STATUS = 'Y'
+        ORDER BY USER_NO ASC
+	</select>
+	
+	<!-- 회원 정보 전체 검색 조회 -->
+	<select id="selectMemberListSearch" resultMap="memberResult">
+	SELECT USER_NO, USER_NAME
+          , USER_ID, PHONE, POST_CODE, ADDRESS, DETAIL_ADDRESS, TOTAL_ADDRESS 
+       	  , BANK_ACCOUNT, BANK, EMAIL
+          , PROFILE_URL
+          , COUNT_FAIL, VACATION_COUNT,  AUTH_LEVEL, SALARY, TEAM_CODE, POSITION_CODE
+          , (SELECT CODE_NAME 
+             FROM TB_GROUP 
+             WHERE GROUP_CODE LIKE 'DEPT%' 
+             AND CODE = (SELECT UPPER_CODE 
+                         FROM TB_GROUP 
+                         WHERE GROUP_CODE LIKE 'TEAM%' 
+                         AND CODE = MEMBER.TEAM_CODE)) AS DEPARTMENT
+          , (SELECT CODE_NAME 
+             FROM TB_GROUP
+             WHERE GROUP_CODE LIKE 'TEAM%' 
+             AND CODE = TEAM_CODE) AS TEAM 
+          , (SELECT CODE_NAME 
+             FROM TB_GROUP
+             WHERE GROUP_CODE LIKE 'POSI%' 
+             AND CODE = POSITION_CODE) AS POSITION
+	 	FROM MEMBER 
+       WHERE STATUS = 'Y'
+   		 AND USER_NAME LIKE '%' || #{ name } || '%'
+   		 AND (SELECT CODE_NAME 
+             FROM TB_GROUP 
+             WHERE GROUP_CODE LIKE 'DEPT%' 
+             AND CODE = (SELECT UPPER_CODE 
+                         FROM TB_GROUP 
+                         WHERE GROUP_CODE LIKE 'TEAM%' 
+                         AND CODE = MEMBER.TEAM_CODE)) LIKE '%' || #{ department } || '%'
+   		 AND (SELECT CODE_NAME 
+          	 FROM TB_GROUP
+          	 WHERE GROUP_CODE LIKE 'TEAM%' 
+           	 AND CODE = MEMBER.TEAM_CODE) LIKE '%' || #{ team } || '%'
+         AND (SELECT CODE_NAME
+          	 FROM TB_GROUP
+          	 WHERE GROUP_CODE LIKE 'POSI%' 
+           	 AND CODE = MEMBER.POSITION_CODE) LIKE '%' || #{ position } || '%'
+	   ORDER BY USER_NO ASC
+	</select>
+	
+	<!-- userNo값으로 회원 정보 조회  -->
+	<select id="selectMemberInfo" resultMap="memberResult">
+	SELECT USER_NO , USER_NAME , USER_ID , USER_PWD , PHONE , POST_CODE, ADDRESS, DETAIL_ADDRESS, TOTAL_ADDRESS , BANK_ACCOUNT , BANK , EMAIL , PROFILE_URL , COUNT_FAIL , VACATION_COUNT , AUTH_LEVEL , SALARY , TEAM_CODE , POSITION_CODE 
+     ,(SELECT CODE_NAME 
+         FROM TB_GROUP 
+         WHERE GROUP_CODE LIKE 'DEPT%' 
+         AND CODE = (SELECT UPPER_CODE 
+                 FROM TB_GROUP 
+                 WHERE GROUP_CODE LIKE 'TEAM%' 
+                 AND CODE = MEMBER.TEAM_CODE)) AS DEPARTMENT
+     , (SELECT CODE_NAME 
+        FROM TB_GROUP
+        WHERE GROUP_CODE LIKE 'TEAM%' AND CODE = TEAM_CODE) AS TEAM
+     , (SELECT CODE_NAME 
+          FROM TB_GROUP
+          WHERE GROUP_CODE LIKE 'POSI%' AND CODE = POSITION_CODE) AS POSITION
+		FROM MEMBER
+		WHERE 
+		USER_NO = #{ userNo }
+		AND STATUS = 'Y' 
+	</select>
+
+	<!-- 사용자 급여정보 수정하기 -->
+	<update id="updateSalary">
+		UPDATE MEMBER
+		   SET SALARY = #{ salary }
+		     , BANK = #{ bank }
+		     , BANK_ACCOUNT = #{ bankAccount }
+		 WHERE USER_NO = #{ userNo }
+	</update>
+	
+	<!-- 사용자 탈퇴 -->
+	<update id="deleteMemberAttendance" parameterType="map">
+		UPDATE MEMBER
+		   SET STATUS = 'N',
+			   MODIFY_DATE = SYSDATE,
+			   MODIFY_USER_NO = #{modifyUserNo}
+		 WHERE USER_NO = #{userNo}
+	</update>
+	
+	<!-- 사용자 정보 수정하기 -->
+	<update id="updateMemberAttendance" parameterType="map">
+		UPDATE MEMBER
+			SET USER_NAME = #{userName},
+			    POST_CODE = #{postCode},
+			    ADDRESS = #{address},
+			    DETAIL_ADDRESS = #{detailAddress},
+			    TOTAL_ADDRESS = #{totalAddress},
+			    EMAIL = #{email},
+			    PHONE = #{phone},
+			    TEAM_CODE = (SELECT CODE
+			                 FROM TB_GROUP
+			                 WHERE CODE_NAME = #{team}
+			                   AND GROUP_CODE LIKE 'TEAM%'),
+			    POSITION_CODE = (SELECT CODE
+			                     FROM TB_GROUP
+			                     WHERE CODE_NAME = #{position}
+			                       AND GROUP_CODE LIKE 'POSI%'),
+			    MODIFY_DATE = SYSDATE,
+			    MODIFY_USER_NO = #{modifyUserNo}
+			WHERE USER_NO = #{userNo}
+	</update>
+	
+ 	<!-- ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆-->
+ 
  
 </mapper>

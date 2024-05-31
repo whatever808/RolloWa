@@ -1,5 +1,6 @@
 package com.br.project.service.member;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +72,46 @@ public class MemberService {
 		return memberDao.selectMemberForMainPage(member);
 	}
 
-
-	
 	/* ======================================= "가림" 구역 ======================================= */
+	
+	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 start ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+	// 사이드바(구성원 관리) 관리자만 표시 하기
+	public Map<String, Object> selectAuthLevel(int userNo) {
+		return memberDao.selectAuthLevel(userNo);
+	}
+	// 사용자 정보 조회하기
+	public MemberDto selectMemberInfo(int userNo) {
+		return memberDao.selectMemberInfo(userNo);
+	}
+	// 사용자 급여 정보 수정하기
+	public int updateSalary(Map<String, Object> paramMap) {
+		return memberDao.updateSalary(paramMap);
+	}
+	// 사용자 전체 리스트 조회
+	public List<HashMap<String, Object>> selectMemberAll() {
+		return memberDao.selectMemberAll();
+	}
+	// 사용자 전체 리스트 검색 조회
+	public List<HashMap<String, Object>> selectMemberListSearch(Map<String, Object> paramMap) {
+		return memberDao.selectMemberListSearch(paramMap);
+	}
+
+	// 사용자 탈퇴
+	public int deleteMemberAttendance(Map<String, Object> paramMap) {
+		return memberDao.deleteMemberAttendance(paramMap);
+	}
+	// 사용자 정보 수정
+	public int updateMemberAttendance(Map<String, Object> paramMap) {
+		return memberDao.updateMemberAttendance(paramMap);
+	}
+
+	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+	
+	/* ======================================= "예찬" 구역 ======================================= */
+	
+	public MemberDto selectAnuual(int userNo) {
+		return memberDao.selectAnuual(userNo);
+	}
+	
+	/* ======================================= "예찬" 구역 ======================================= */
 }

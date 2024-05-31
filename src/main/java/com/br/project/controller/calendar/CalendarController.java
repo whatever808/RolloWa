@@ -1,5 +1,6 @@
 package com.br.project.controller.calendar;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.br.project.dto.calendar.CalendarDto;
 import com.br.project.dto.common.GroupDto;
@@ -22,6 +24,7 @@ import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.calendar.CalendarService;
 import com.br.project.service.common.department.DepartmentService;
+import com.br.project.service.notification.NotificationService;
 import com.br.project.service.pay.VacationService;
 import com.br.project.util.PagingUtil;
 
@@ -36,6 +39,7 @@ public class CalendarController {
 	private final CalendarService calService;
 	private final DepartmentService dService;
 	private final VacationService vService;
+	private final NotificationService nService;
 
 	/**
 	 * 일정 캘린더를 이동 하면서 부서 내부에 팀원 과 부서 카테고리를 조회해서 가져오는 매서드
@@ -117,8 +121,7 @@ public class CalendarController {
 			if(m.getUserNo() == member.getUserNo()) {
 				teams.add(0, teams.remove(i));
 			}
-		}
-		
+		}		
 		mv.addObject("teams", teams)
 		.addObject("group", group)
 		.setViewName("calendar/calEnroll");
@@ -135,11 +138,13 @@ public class CalendarController {
 	 * @return 
 	 */
 	@PostMapping("/calEnroll.do")
-	public ModelAndView insertCal(CalendarDto calendar
+	public String insertCal(CalendarDto calendar
 							, String[] date, String[] time
 							, HttpSession session
-							, ModelAndView mv) {
-
+							, RedirectAttributes redirectAttribute
+							, String url) {
+		
+		
 		calendar.setCalSort("D");			
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
@@ -148,17 +153,35 @@ public class CalendarController {
 		calendar.setEmp(String.valueOf(member.getUserNo()));
 		
 		int result = calService.insertCal(calendar);
-		
+		redirectAttribute.addFlashAttribute("alertTitle", "일정 등록 서비스");
 		if(result > 0 ) {
-			mv.addObject("alertMsg", "성공적으로 등록 되었습니다.")
-			  .addObject("modalColor", "G")
-			  .setViewName("redirect:pCalendar.page");
+			redirectAttribute.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
+			redirectAttribute.addFlashAttribute("modalColor", "G");
+			
+			/* 알림 전송을 위한 코드 추가 [기웅] */
+			Map<String, Object> map = new HashMap<>();
+			map.put("url", url);
+			map.put("sendUserNo", member.getUserNo());
+			map.put("type", "C");
+			
+			int alramResult = 0;
+			for(int i = 0; i < calendar.getCoworker().size(); i++) {
+				map.put("receiveUserNo", calendar.getCoworker().get(i).getUserNo());
+				
+				alramResult += nService.insertNotificationSend(map);
+			}
+			
+			if(alramResult == calendar.getCoworker().size()) {
+				log.debug("알림 전송 성공");
+			}
+			
+			return "redirect:pCalendar.page";
 		}else {
-			mv.addObject("alertMsg", "다시 시도해 주세요.")
-			  .addObject("modalColor", "R")
-			  .setViewName("redirect:calEnroll.page");
+			redirectAttribute.addFlashAttribute("alertMsg", "다시 시도해 주세요.");
+			redirectAttribute.addFlashAttribute("modalColor", "R");
+			
+			return "redirect:calEnroll.page";
 		}
-		return mv;
 	}
 	
 	/**

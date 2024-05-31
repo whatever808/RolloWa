@@ -18,6 +18,8 @@
         padding: 20px;
     }
     
+    
+    
     </style>
 </head>
 <body>
@@ -31,91 +33,116 @@
 	    <hr>
 	    
 		<!-- ------------ -->
-	
-		<!--날짜, 오늘 선택-->
-            <div class="select_date">
-                <h3>
-                    <div class="arrow">◀</div>
-                    2024년 5월
-                    <div class="arrow">▶</div>
-                </h3>
-                <button class="btn btn-outline-primary today_btn"><h6>이번달</h6></button>
-            </div>
 
-            <!-- 직원 정보 -->
-            <table class="table table-responsive">
-                <tr>
-                    <th colspan="4">
-                        <c:choose>
-			            	<c:when test="${ not empty m.profileUrl }">
-				                <img src="${ m.profileUrl }" class="profile_img" onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
-			            	</c:when>
-			            	<c:otherwise>
-				                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">
-			            	</c:otherwise>
-			            </c:choose>
-                    </th>
-                </tr>
+        <!-- 직원 정보 -->
+        <table class="table table-responsive table-bordered line-shadow table_1">
+            <tr>
+                <th colspan="4">
+                    <c:choose>
+		            	<c:when test="${ not empty m.profileURL }">
+			                <img src="${ m.profileURL }" class="profile_img" onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
+		            	</c:when>
+		            	<c:otherwise>
+			                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">
+		            	</c:otherwise>
+		            </c:choose>
+                </th>
+            </tr>
 
-                <tr>
-                    <td><h3>이름</h3></td>
-                    <td>
-                        <input type="text" value="${ user.name }">
-                    </td>
-                    <td><h3>아이디</h3></td>
-                    <td>
-                        <input type="text" value="${ user.userId }">
-                    </td>
-                    
-                </tr>
+            <tr>
+                <td class="td_1"><h3>이름</h3></td>
+                <td class="td_2"><h3>${ m.userName }</h3></td>
+                
+                <td class="td_1"><h3>아이디</h3></td>
+                <td class="td_2"><h3>${ m.userId }</h3></td>
+                
+            </tr>
 
-                <tr>
-                    <td><h3>총 근무시간</h3></td>
-                    <td>
-                        <input type="text" value="184 시간">
-                    </td>
+            <tr>
+                <td class="td_1"><h3>부서명</h3></td>
+                <td class="td_2"><h3>${ m.department }</h3></td>
+                
+                <td class="td_1"><h3>팀명</h3></td>
+                <td class="td_2"><h3>${ m.team }</h3></td>
+            </tr>
+            
+            <tr>
+            	<td class="td_1"><h3>직급</h3></td>
+                <td class="td_2"><h3>${ m.position }</h3></td>
+                
+                <td class="td_1"><h3>시급</h3></td>
+                <td>
+                    <h3><input type="text" value="${ m.salary }" id="salary" class="inputFont"></h3>
+                </td>
+            </tr>
+            
+            <tr>
+            	<td class="td_1"><h3>은행</h3></td>
+                <td class="td_2">
+					<h3>
+						<select name="bank" class="form-select" id="bank">
+							<option value="">은행 선택</option>
+							<option value="농협은행">농협은행</option>
+							<option value="국민은행">국민은행</option>
+							<option value="신한은행">신한은행</option>
+							<option value="우리은행">우리은행</option>
+						</select>
+					</h3>
+                </td>
+                
+                <script>
+		        let b = { bank: "${ m.bank }" };
+		        let bankSelect = document.getElementById('bank');
 
-                    <td><h3>시급</h3></td>
-                    <td>
-                        <input type="text" value="10,000">
-                    </td>
-                </tr>
-
-                <tr>
-                    <td><h3>부서명</h3></td>
-                    <td class="td_2">
-                        <select name="department" id="department" class="form-control">
-                            <option value="">전체 부서</option>
-                            <option value="">마케팅부</option>
-                            <option value="">부서2</option>
-                            <option value="">부서3</option>
-                        </select>
-                    </td>
-                    <td><h3>팀명</h3></td>
-                    <td class="td_2">
-                        <select name="" id="" class="form-control">
-                            <option value="">마케팅1팀</option>
-                            <option value="">마케팅2팀</option>
-                            <option value="">마케팅3팀</option>
-                        </select>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td><h3>지급총액</h3></td>
-                    <td>
-                        <input type="text" value="1,840,000">
-                    </td>
-                </tr>
-
-            </table>
+		        if (b.bank) {
+		            bankSelect.value = b.bank;
+		        } else {
+		            bankSelect.value = "";
+		        }
+			    </script>
+                
+                
+                
+                <td class="td_1"><h3>계좌번호</h3></td>
+				<td class="td_2">
+					<h3><input type="text" value="${ m.bankAccount }" id="bankAccount" class="inputFont"></h3>
+				</td>
+			</tr>
+        </table>
 
 
-            <div class="btn_center">
-                <button class="btn btn-outline-primary" type="reset"><h5>뒤로가기</h5></button>
-                <button class="btn btn-primary"><h5>저장</h5></button>
-            </div>
-	
+        <div class="btn_center">
+            <button class="btn btn-outline-primary" type="button" onclick="location.href='${contextPath}/attendance/accountList.do'"><h5>뒤로가기</h5></button>
+            <button class="btn btn-primary" onclick="accountSave();"><h5>저장</h5></button>
+        </div>
+        
+        <script>
+        function accountSave() {
+        	let userNo = ${ m.userNo };
+        	let salary = document.getElementById('salary').value;
+        	let bank = document.getElementById('bank').value;
+        	let bankAccount = document.getElementById('bankAccount').value;
+			$.ajax({
+				url:"${ contextPath }/attendance/accountDetailSave.do",
+				type:"GET",
+				data:{
+					userNo: userNo
+					, salary: salary
+					, bank: bank
+					, bankAccount: bankAccount
+				},
+				success: function(data){	
+					//console.log("통신 성공");
+					alert("급여 수정을 하였습니다.")
+				    
+				}, error: function(){
+					//console.log("통신 실패");
+					alert("급여 수정에 실패하였습니다.")
+				}
+			})
+		}
+        </script>
+		
 	
 		<!-- ------------ -->
 	

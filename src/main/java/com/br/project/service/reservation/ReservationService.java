@@ -31,7 +31,33 @@ public class ReservationService {
 	public List<HashMap<String, Object>> selectReservationState(Map<String, Object> paramMap) {
 		return reservationDao.selectReservationState(paramMap);
 	}
-
 	
+	// 1. 먼저 예약 가능한지 시간 체크하기
+	public int selectTimeCheck(Map<String, Object> paramMap) {
+		return reservationDao.selectTimeCheck(paramMap);
+	}
+	// 2. 예약 하기
+	public int insertReservation(Map<String, Object> paramMap) {
+		return reservationDao.insertReservation(paramMap);
+	}
+
+    // 3. 내 예약 조회
+    public List<HashMap<String, Object>> selectMyReservation(Map<String, Object> paramMap){
+    	return reservationDao.selectMyReservation(paramMap);
+    }
+    // 4. 예약 취소
+	public int updateReservation(Map<String, Object> params) {
+		return reservationDao.updateReservation(params);
+	}
+	// 비품 추가,삭제,수정 관련
+	public int insertEquipment(String equipmentName) {
+		return reservationDao.insertEquipment(equipmentName);
+	}
+	public int deleteEquipment(List<Integer> ids) {
+		return reservationDao.deleteEquipment(ids);
+	}
+	public int updateEquipment(List<Map<String, Object>> equipmentList) {
+		return reservationDao.updateEquipment(equipmentList);
+	}
 	
 }

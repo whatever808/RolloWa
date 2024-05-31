@@ -32,13 +32,14 @@
 	<select id="selectEquipmentList" resultType="hashmap">
 		SELECT CODE AS "code"
         	 , CODE_NAME AS "equipmentName"
+        	 , REGIST_DATE AS "registDate"
 		  FROM TB_GROUP
 		 WHERE GROUP_CODE LIKE 'EQPT%'
            AND STATUS = 'Y'
          ORDER BY TO_NUMBER(CODE) ASC
 	</select>
 
-	<!-- 비품 예약 상태 -->
+	<!-- 비품 예약 상태 조회-->
 	<select id="selectReservationState" resultType="hashmap">
     <![CDATA[
         SELECT RESERVE_NO as "reserveNo"
@@ -48,19 +49,80 @@
              , USER_NO as "userNo"
              , EQUIPMENT_CODE as "equipmentCode"
           FROM RESERVATION
-         WHERE (RESERVE_START >= TO_DATE(#{selectedDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+         WHERE ((RESERVE_START >= TO_DATE(#{selectedDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
             AND RESERVE_START <= TO_DATE(#{selectedDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
             OR (RESERVE_END >= TO_DATE(#{selectedDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
             AND RESERVE_END <= TO_DATE(#{selectedDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
             OR (RESERVE_START < TO_DATE(#{selectedDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
-            AND RESERVE_END > TO_DATE(#{selectedDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
+            AND RESERVE_END > TO_DATE(#{selectedDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')))
+            AND STATUS = 'Y'
     ]]>
-</select>
-
-
-
-
-
-
+	</select>
+	
+	<!-- 1. 예약 가능한지 시간 체크 -->
+	<select id="selectTimeCheck" resultType="_int">
+	    <![CDATA[
+	    SELECT COUNT(*)
+	    FROM RESERVATION
+	    WHERE EQUIPMENT_CODE = (SELECT CODE FROM TB_GROUP WHERE CODE_NAME = #{equipmentName})
+	    AND (
+	        (RESERVE_START >= TO_DATE(#{reserveDate} || ' ' || #{startTime}, 'YYYY-MM-DD HH24:MI:SS') AND RESERVE_START < TO_DATE(#{reserveDate} || ' ' || #{endTime}, 'YYYY-MM-DD HH24:MI:SS'))
+	        OR
+	        (RESERVE_END > TO_DATE(#{reserveDate} || ' ' || #{startTime}, 'YYYY-MM-DD HH24:MI:SS') AND RESERVE_END <= TO_DATE(#{reserveDate} || ' ' || #{endTime}, 'YYYY-MM-DD HH24:MI:SS'))
+	        OR
+	        (RESERVE_START < TO_DATE(#{reserveDate} || ' ' || #{startTime}, 'YYYY-MM-DD HH24:MI:SS') AND RESERVE_END > TO_DATE(#{reserveDate} || ' ' || #{endTime}, 'YYYY-MM-DD HH24:MI:SS'))
+	    )
+	    AND STATUS = 'Y'
+	    ]]>
+	</select>
+	
+	<!-- 2. 예약 하기 -->
+	<insert id="insertReservation" parameterType="map">
+    INSERT INTO
+    	   RESERVATION (
+    	   RESERVE_NO
+    	 , RESERVE_MEMO
+    	 , RESERVE_START
+    	 , RESERVE_END
+    	 , USER_NO
+    	 , EQUIPMENT_CODE
+    	 )
+    SELECT SEQ_RNO.NEXTVAL
+    	 , #{content}
+    	 , TO_DATE(#{reserveDate} || ' ' || #{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+    	 , TO_DATE(#{reserveDate} || ' ' || #{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+    	 , #{userNo}
+    	 , CODE
+      FROM TB_GROUP
+     WHERE GROUP_CODE LIKE 'EQPT%'
+       AND CODE_NAME = #{equipmentName}
+</insert>
+	
+	<!-- 내가 예약한 정보 조회 -->
+	<select id="selectMyReservation" resultType="hashmap">
+	<![CDATA[
+		SELECT RESERVE_NO AS "reservationNo"
+			 , RESERVE_MEMO AS "content"
+			 , RESERVE_START AS "startTime"
+			 , RESERVE_END AS "endTime"
+			 , (SELECT CODE_NAME FROM TB_GROUP WHERE CODE = EQUIPMENT_CODE) AS "equipmentName"
+		  FROM RESERVATION
+		 WHERE RESERVE_START > SYSDATE - INTERVAL '30' DAY
+		   AND USER_NO = #{ userNo}
+		   AND STATUS = 'Y'
+		 ORDER BY RESERVE_END DESC, RESERVE_START DESC
+	   ]]>
+	</select>
+	
+	<!-- 내가 예약한 비품 취소 -->
+	<update id="updateReservation" parameterType="map">
+		UPDATE RESERVATION
+		   SET STATUS = 'N'
+		 WHERE RESERVE_NO IN
+		 <foreach item="item" index="index" collection="reservationNo" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+	</update>
+	
 
 </mapper>

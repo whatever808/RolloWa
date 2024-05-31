@@ -3,42 +3,190 @@
 
 <mapper namespace="salesMapper">
   
-  <!-- 이용권 종류별 매출현황 및 매출건수 -->
-  <select id="selectTicketSalesByTicketType" resultType="map" parameterType="hashmap">
+  <!-- 연|월|일 이용권 매출조회 -->
+  <select id="selectTicketSalesForTable" parameterType="hashmap" resultType="map">
   	SELECT 
-	       (SELECT CODE_NAME
-	          FROM TB_GROUP
-	         WHERE GROUP_CODE LIKE 'TICK%'
-	           AND CODE = TICKET_TYPE
-	       ) "ticketType"
+  		   TO_CHAR(PAYMENT_DATE, 'YYYY') "year"
+  		  <if test='month != null and !month.equals("")'>
+          	,TO_CHAR(PAYMENT_DATE, 'MM') "month"
+          </if>
+          <if test='date != null and !date.equals("")'>
+          	,TO_CHAR(PAYMENT_DATE, 'DD') "date"
+          </if>
 	      ,SUM(ORDER_PAYMENT) "sumSales"
 	      ,SUM(TICKET_CTN) "sumTicket"
-	      ,AVG(ORDER_PAYMENT) "avgSales"
+	      <choose>
+	      	<when test='"".equals(month) and "".equals(date)'>
+	      	  ,SUM(ORDER_PAYMENT) / 12 "avgSales"
+	      	</when>
+	      	<otherwise>
+	      	  ,AVG(ORDER_PAYMENT) "avgSales"
+	      	</otherwise>
+	      </choose>
 	      ,AVG(TICKET_CTN) "avgTicket"
 	      ,MAX(ORDER_PAYMENT) "maxSales"
 	      ,MAX(TICKET_CTN) "maxTicket"
 	      ,MIN(ORDER_PAYMENT) "minSales"
 	      ,MIN(TICKET_CTN) "minTicket"
-	  FROM TICKET_ORDER, TICKET_ORDER_DETAIL
-	 WHERE TICKET_ORDER.ORDER_NO = TICKET_ORDER_DETAIL.ORDER_NO
+	  FROM TB_GROUP G, TICKET_ORDER_DETAIL TOD, TICKET_ORDER O
+	 WHERE G.GROUP_CODE LIKE 'TICK%' AND G.CODE = TOD.TICKET_TYPE
+	   AND TOD.ORDER_NO = O.ORDER_NO	   
 	   AND ORDER_STATUS = 2
-	   AND TO_CHAR(PAYMENT_DATE, 'YYYY') = #{year}
+	   AND TO_CHAR(O.PAYMENT_DATE, 'YYYY') = #{year}
 	   <if test='month != null and !month.equals("")'>
-	   	AND TO_CHAR(PAYMENT_DATE, 'MM') = #{month}
+	   	AND TO_CHAR(O.PAYMENT_DATE, 'MM') = #{month}
 	   </if>
 	   <if test='date != null and !date.equals("")'>
-	   	AND TO_CHAR(PAYMENT_DATE, 'DD') = #{date}
+	   	AND TO_CHAR(O.PAYMENT_DATE, 'DD') = #{date}
 	   </if>
-	 GROUP BY TICKET_ORDER_DETAIL.TICKET_TYPE
+	 GROUP 
+	 	BY TO_CHAR(O.PAYMENT_DATE, 'YYYY') 
+	 	  <if test='month != null and !month.equals("")'>
+          	,TO_CHAR(O.PAYMENT_DATE, 'MM') 
+          </if>
+          <if test='date != null and !date.equals("")'>
+          	,TO_CHAR(O.PAYMENT_DATE, 'DD') 
+          </if>
   </select>
   
-  <!-- 결제수단별 매출비율 -->
+  <!-- 이용권 종류별 매출조회(차트용) -->
+  <select id="selectTicketSalesForChart" parameterType="hashmap" resultType="map">
+  	SELECT 
+  		  	<choose>
+  		  		<when test='"year".equals(chart)'>
+  		  			COALESCE(T2.MONTH, T1.LV) "period"
+  		  		</when>
+  		  		<when test='"month".equals(chart)'>
+  		  			COALESCE(T2.DT, T1.LV) "period"
+  		  		</when>
+  		  	</choose>
+          , COALESCE(T2.CODE, T1.CODE) "ticketCode"
+          , COALESCE(T2.CODE_NAME, T1.CODE_NAME) "ticketType"
+          , COALESCE(T2.SUM_PRICE, 0) "sumSales"
+          , (
+              SELECT 
+              		<choose>
+              		  <when test='"year".equals(chart)'>
+              		  	CASE WHEN #{year} = EXTRACT(YEAR FROM SYSDATE) THEN SUM(TOD.TICKET_PRICE * TOD.TICKET_CTN * (1 - NVL(TOD.DISCOUNT, 0))) / EXTRACT(MONTH FROM SYSDATE)
+                          	 ELSE SUM(ORDER_PAYMENT)/12 
+                     	END 
+              		  </when>
+              		  <when test='"month".equals(chart)'>
+              		  	AVG(TOD.TICKET_PRICE * TOD.TICKET_CTN * (1 - NVL(TOD.DISCOUNT, 0)))
+              		  </when>
+              		</choose>
+                FROM TB_GROUP G
+                LEFT JOIN TICKET_ORDER_DETAIL TOD ON (G.CODE = TOD.TICKET_TYPE) 
+                LEFT JOIN TICKET_ORDER O ON (TOD.ORDER_NO = O.ORDER_NO)
+               WHERE GROUP_CODE LIKE 'TICK%'
+                 AND EXTRACT(YEAR FROM O.PAYMENT_DATE) = #{year}
+                 <if test='"month".equals(chart)'>
+                 	AND EXTRACT(MONTH FROM O.PAYMENT_DATE) = #{month}
+                 </if>
+                 AND G.CODE = T1.CODE
+               GROUP 
+                  BY G.CODE, G.CODE_NAME
+            ) "yearAvgSales"
+	  FROM (
+	        SELECT *
+	          FROM 
+	             (SELECT LPAD(LEVEL, 2, 0) LV
+	               FROM DUAL
+	      		 <choose>
+	      		 	<when test='"year".equals(chart)'>
+	      		 		CONNECT
+			                 BY LEVEL &lt;= CASE  WHEN #{year} = TO_CHAR(SYSDATE, 'YYYY') THEN TO_NUMBER(TO_CHAR(SYSDATE, 'MM'))
+			                                      ELSE 12
+			                                END
+	      		 	</when>
+	      		 	<when test='"month".equals(chart)'>
+	      		 		CONNECT
+                             BY LEVEL &lt;= CASE  WHEN #{year} || #{month} = TO_CHAR(SYSDATE, 'YYYYMM') THEN TO_NUMBER(TO_CHAR(SYSDATE, 'DD'))
+                                                  ELSE EXTRACT(DAY FROM LAST_DAY(#{year} || #{month} || '01'))
+                                            END
+	      		 	</when>
+	      		 </choose>
+	            ),
+	            (SELECT CODE, CODE_NAME
+	               FROM TB_GROUP
+	              WHERE GROUP_CODE LIKE 'TICK%')
+	        ) T1
+	   LEFT JOIN 
+	   	   (
+	          SELECT 
+          			 <choose>
+          			 	<when test='"year".equals(chart)'>
+          			 		MONTH
+          			 	</when>
+          			 	<when test='"month".equals(chart)'>
+          			 		DT
+          			 	</when>
+          			 </choose>
+	          			,CODE, CODE_NAME, SUM(PRICE) SUM_PRICE, AVG(PRICE) AVG_PRICE
+	            FROM (
+	                  SELECT  G.CODE, G.CODE_NAME
+                             ,TOD.TICKET_CTN, TOD.TICKET_PRICE * TOD.TICKET_CTN * (1-NVL(TOD.DISCOUNT, 0)) PRICE
+                             ,TO_CHAR(O.PAYMENT_DATE, 'MM') MONTH
+                             <if test='"month".equals(chart)'>
+                             	,TO_CHAR(O.PAYMENT_DATE, 'DD') DT
+                             </if>
+	                   FROM TB_GROUP G
+	                   JOIN TICKET_ORDER_DETAIL TOD ON (G.CODE = TOD.TICKET_TYPE)
+	                   JOIN TICKET_ORDER O ON (TOD.ORDER_NO = O.ORDER_NO AND O.ORDER_STATUS = 2)
+	                  WHERE GROUP_CODE LIKE 'TICK%'
+	                    AND TO_CHAR(O.PAYMENT_DATE, 'YYYY') = #{year}
+	                    <if test='"month".equals(chart)'>
+                             	AND TO_CHAR(O.PAYMENT_DATE, 'MM') = #{month}
+                      </if>
+	                  )
+	          GROUP 
+	          	<choose>
+	          		<when test='"year".equals(chart)'>
+	          			BY MONTH, CODE, CODE_NAME
+	          		</when>
+	          		<when test='"month".equals(chart)'>
+	          			BY DT, CODE, CODE_NAME
+	          		</when>
+	          	</choose>
+	          ORDER
+	             <choose>
+	          		<when test='"year".equals(chart)'>
+	          			BY MONTH, CODE_NAME
+	          		</when>
+	          		<when test='"month".equals(chart)'>
+	          			BY DT, CODE_NAME
+	          		</when>
+	          	</choose>
+	       ) T2 
+	 	<choose>
+	 		<when test='"year".equals(chart)'>
+	 			ON (T1.LV = T2.MONTH AND T1.CODE = T2.CODE )
+	 		</when>
+	 		<when test='"month".equals(chart)'>
+	 			ON (T1.LV = T2.DT AND T1.CODE = T2.CODE )
+	 		</when>
+	 	</choose>
+	 ORDER BY "period", "ticketCode"
+  </select>
+  
+  <!-- 년|월별 평균매출 조회 -->
+  <select id="selectAvgTicketSales" parameterType="hashmap" resultType="map">
+  	SELECT ROUND(AVG(ORDER_PAYMENT), 2)
+	  FROM TICKET_ORDER
+	 WHERE ORDER_STATUS = 2
+	   AND TO_CHAR(PAYMENT_DATE, 'YYYY') = #{year}
+	   <if test='!"".equals(month)'>
+	   	AND TO_CHAR(PAYMENT_DATE, 'MM') = #{month}
+	   </if>
+  </select>
+  
+  <!-- 결제수단별 매출비율(수정) -->
   <select id="selectTicketSalesPercentByPaymentMethod" parameterType="hashmap" resultType="map">
   	SELECT 
           PAYMENT_METHOD
         ,(COUNT(ORDER_NO) / (SELECT COUNT(*) 
                                FROM TICKET_ORDER 
-                              WHERE TO_CHAR(PAYMENT_DATE, 'YYYY') = 2024))  "percent"
+                              WHERE TO_CHAR(PAYMENT_DATE, 'YYYY') = #{year}))  "percent"
 	  FROM TICKET_ORDER
 	 WHERE TO_CHAR(PAYMENT_DATE, 'YYYY') = #{year}
        <if test='month != null and !month.equals("")'>

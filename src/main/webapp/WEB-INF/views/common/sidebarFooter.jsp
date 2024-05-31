@@ -38,7 +38,7 @@
      </div>
 
      <div class="msgbox">
-         <section style="background-color: #eee; height: 100%;">
+         <section style="height: 100%;">
              <div class="container" style="padding-top: 10px; height: 100%;">
 
                  <div class="row" style="height: 100%;">
@@ -121,7 +121,7 @@
         // 채팅방 열기 버튼
         $(".msg_open_btn").on("click", function () {
         	// 스타일 조정
-        	btnControl(".msg_open_btn", ".msg_close_btn", "flex");
+        	btnControl(".msg_open_btn", ".msg_close_btn", 1, 100);
           
           // 페이지 새로고침 시에만 채팅방 목록 조회
           if (subRoomNo == -1) {
@@ -139,10 +139,15 @@
         // 채팅방 닫기 버튼
         $(".msg_close_btn").on("click", function () {
         	// 스타일 조정
-        	btnControl(".msg_close_btn", ".msg_open_btn", "none");
+        	btnControl(".msg_close_btn", ".msg_open_btn", 0, -1);
         	
         	// 채팅방 닫았을 경우 내가 열어놨던 채팅방의 채팅방 나간 시간 update
         	updateOutDate(subRoomNo);
+        	
+        	// 채팅방 선택 표시 초기화
+					$(".chat_room").each(function(index, el) {
+						$(el).removeClass("selected");
+					})
         	
         	// 채팅 메세지 구역 초기화
         	$(".chat_msg_list").empty();
@@ -202,6 +207,8 @@
 	       		url: '${contextPath}/member/select.do'
 	       		, method: 'get'
 	       		, success: function(map) {
+	       			// 부서 영역 초기화
+	       			$deptListWrapper.empty();
 	       			for(let i = 0; i < map.deptList.length; i++) {
 	       				var deptText = "<div class='d-inline-flex gap-1 dept_list'>";
 	      		          deptText += "<button class='btn1 forget_btn dept' type='button' data-bs-toggle='collapse'";   			
@@ -309,12 +316,12 @@
 	   		  , data: {roomNo : chatRoomList[i].chatRoomNo}
 	   		  , success: function(participantsList) {
 	   			  if (participantsList.length > 0) {
-	    			var chatRoomVal = "<li class='p-2 border-bottom chat_room' onclick='selectChatMsg(" + chatRoomList[i].chatRoomNo + ")'>";
+	    			var chatRoomVal = "<li class='p-2 border-bottom chat_room chat_room_" + chatRoomList[i].chatRoomNo + "' onclick='selectChatMsg(event, " + chatRoomList[i].chatRoomNo + ")'>";
 	       	  chatRoomVal += "<a href='#!' class='d-flex justify-content-between'>";
 	       	  chatRoomVal += "<div class='d-flex flex-row'>";
 	       	  chatRoomVal += "<img style='height: 70px;' src='${contextPath}" + participantsList[0].profileURL + "'";
 	       	  chatRoomVal += "class='rounded-circle d-flex align-self-center me-3 shadow-1-strong'";
-	       	  chatRoomVal += "width='60'>";
+	       	  chatRoomVal += "width='60' style='height: 70px'>";
 	       	  chatRoomVal += "<div class='pt-1'>";
 	       	  chatRoomVal += "<p class='fw-bold mb-0'>";
 	       	  for(var j = 0; j < (participantsList.length > 2 ? 2 : participantsList.length ); j++) {
@@ -330,8 +337,8 @@
 	       	  // 읽지 않은 메세지가 존재할 경우
 	       	  if (selectUnreadMsg(chatRoomNo) > 0) {
 	       		  
-	       		  // 처음 페이지를 새로고침해서 페이지를 열지 않은 경우만 실행
-	       		  if(subRoomNo == -1) {
+	       		  // 처음 페이지를 새로고침해서 메신저를 열지 않은 경우 or 메신저를 닫아놓은 경우만 실행
+	       		  if(subRoomNo == -1 || subRoomNo == 0) {
 	       			  // 기존 알림 제거
 								$(".chat_alram").children().empty();
 								// 메신저 아이콘에 알림 표시 추가
@@ -362,7 +369,14 @@
     }
 	
 		// 채팅방 메세지 이력 가져오기
-		function selectChatMsg(chatRoomNo) {
+		function selectChatMsg(event, chatRoomNo) {
+			// 내가 선택한 채팅방 색깔 바꾸기
+			$(".chat_room").each(function(index, el) {
+				$(el).removeClass("selected");
+			})
+			$(".chat_room_" + chatRoomNo).addClass("selected");
+			
+			
 			// 채팅방 알림 제거
 			$("#chat_room_info" + chatRoomNo).children($("p")).next().empty();
 			
@@ -403,7 +417,7 @@
 	 			sendBtn += "</li>";
 	 			sendBtn += "<button type='button' class='btn1 forget_btn btn-rounded float-end' onclick='sendMsg(" + chatRoomNo + ");'>Send</button>";
 	 			sendBtn += "</ul>";
-	 			sendBtn += "<button type='button' class='btn1 forget_btn'>quit</button>";
+	 			sendBtn += "<button type='button' class='btn1 forget_btn' onclick='quitChat(" + chatRoomNo + ");'>quit</button>";
 	 			
 	 			$chatSendBox.html("");
 	 			$chatSendBox.append(sendBtn);
@@ -439,20 +453,31 @@
  			    									, chatRoomNo: roomNo}
  			    				, success: function(result) {
  			    					if(result == "SUCCESS") {
+ 			    						// 현재 열어놓은 채팅방이 있다면 해당 채팅방의 나간 시간 update
+ 			    						// 채팅방을 닫아놨거나, 아예 열지 않은 경우를 제외하고
+						          if(subRoomNo != -1 && subRoomNo != 0) {
+						        	  // 열어놓은 채팅방의 나간 시간 update
+						        	  updateOutDate(subRoomNo);
+						          } 
+ 			    						
  			    						// 1-2-2. 채팅방 구독
  		 			    				stompClient.subscribe("/topic/chat/room/" + roomNo, function(msg) {
  		 			    					receiveMsg(msg);
- 		 			    				})
+ 		 			    				}, { id: "room" + roomNo})
  		 			    				// 1-2-3. 채팅방 목록 새로고침
  			    						selectChatRoom();
  		 			    				
  		 			    				// 1-2-4. 입장 메세지 발송
+ 		 			    				// 메세지 발송 시간
+ 		 			    				var sendDate = dateFormat(new Date());
  		 				     			stompClient.send("/app/chat/invite", {}, JSON.stringify({userName: '${loginMember.userName}'
  		 				     																							, roomNo: roomNo
  		 				     																							, partUserNo : partUserNo
+ 		 				     																							, sendDate: sendDate
 		 				     																							, userNo: '${loginMember.userNo}'}));
  			    						// 모달창 닫기
  		 			    				$('#people_list').iziModal('close');
+ 			    						
  			    					}
  			    				}
  			    				, error: function() {
@@ -499,7 +524,7 @@
 																												, sendDate: sendDate
 																												, profileURL: '${loginMember.profileURL}'}));
     	// 채팅 메세지 화면에 출력
-    	chatTextDisplay(1, '${loginMember.userName}', dateFormat(new Date()) , $chatArea.val(), '${loginMember.profileURL}')
+    	chatTextDisplay(1, '${loginMember.userName}', sendDate , $chatArea.val(), '${loginMember.profileURL}')
     	
 			// 채팅 메세지 보내고 스크롤 이동
 			$(".chatting_history").animate({scrollTop:'10000'}, '500');
@@ -509,12 +534,17 @@
 		
 		// 채팅 메세지 출력
 		function chatTextDisplay(flag, userName, sendDate, msgContent, profileURL) {
+			// 데이터베이스로부터 가져온 메세지가 아닐 경우 월-일 시:분 추출
+			if(sendDate.length > 18) {
+				sendDate = sendDate.substring(5, 16);
+			}
+			
 			// 사용자에게 보여질 요소
 			var chatText = "";
 			if (flag == 1) {
 				// 보낸 사람이 나일 때
 				chatText += "<li class='d-flex justify-content-between mb-4'>";
-				chatText += "<div class='card w-100'>";
+				chatText += "<div class='card w-100 fromMe'>";
 				chatText += "<div class='card-header d-flex justify-content-between p-3'>";
 				chatText += "<p class='fw-bold mb-0'>" + userName + "</p>";
 				chatText += "<p class='text-muted small mb-0'><i class='far fa-clock'></i>" + sendDate + "</p>";
@@ -525,7 +555,7 @@
 				chatText += "</div>";
 				chatText += "<img src='${contextPath}" + profileURL + "' alt='avatar'";
 				chatText += " class='rounded-circle d-flex align-self-start ms-3 shadow-1-strong'";
-				chatText += "width='60'>";
+				chatText += "width='60' style='height: 70px'>";
 				chatText += "</li>";
 			} else if (flag == 2) {
 				// 보낸 사람이 내가 아닐 때
@@ -533,8 +563,8 @@
  				chatText += "<img src='${contextPath}" + profileURL + "'";
  				chatText += "alt='profile image'";
  				chatText += "class='rounded-circle d-flex align-self-start me-3 shadow-1-strong'";
- 				chatText += "width='60'>";
- 				chatText += "<div class='card' style='width:450px;'>";
+ 				chatText += "width='60' style='height: 70px'>";
+ 				chatText += "<div class='card' style='width:100%;'>";
  				chatText += "<div class='card-header d-flex justify-content-between p-3'>";
  				chatText += "<p class='fw-bold mb-0'>" + userName + "</p>";
  				chatText += "<p class='text-muted small mb-0'><i class='far fa-clock'></i>" + sendDate + "</p>";
@@ -554,6 +584,7 @@
 		function receiveMsg(msg) {
 			// 문자열 json으로 변환
 			const chatBody = JSON.parse(msg.body);
+			console.log(chatBody);
 				
 			// 알림 표시 구역
 			const $chatRoomInfo = $(".chat_room_list").find($("#chat_room_info" + chatBody.roomNo)).children($("p"));
@@ -578,7 +609,6 @@
    				$(".chatting_history").animate({scrollTop:'10000'}, '500');
 				}
 			} else {
-				console.log("메신저 닫아놨을 경우 알림 표시 실행됨");
 				// 메세지가 수신된 채팅방을 열어 놓지 않은 경우 채팅방 목록에 알림 표시
 				// 만약 이미 알림이 표시되지 않은 경우에만 알림 표시
 				if($chatRoomInfo.next().length == 0) {
@@ -595,6 +625,51 @@
 		// 채팅방 초대 알림 수신 시
 		function receiveInviteMsg(msgBody) {
 			selectChatRoom();
+		}
+		
+		// 채팅방 나가기
+		function quitChat(chatRoomNo) {
+			// 메세지 전송 시간
+	    var sendDate = dateFormat(new Date());
+			
+			// 채팅방 나가기 메세지 전송
+			stompClient.send("/app/chat/quit", {}, JSON.stringify({userName: '${loginMember.userName}'
+ 		 				     																							, roomNo: chatRoomNo
+ 		 				     																							, sendDate: sendDate
+		 				     																							, userNo: '${loginMember.userNo}'
+		 				     																							, profileURL: '${loginMember.profileURL}'}));
+
+			// 데이터베이스에서 사용자의 채팅방 참여 status를 'N'으로 변경
+			$.ajax({
+				url: "${contextPath}/chat/quit"
+				, method: "post"
+				, async: false
+				, data: {userNo: ${loginMember.userNo}
+									, roomNo: chatRoomNo}
+				, success: function(result) {
+					if (result > 0) {
+						console.log("status update 성공");
+					} else {
+						console.log("status update 실패");
+					}
+					
+				}
+				, error: function() {
+					console.log("채팅방 참여 status update ajax 실패");
+				}
+			})
+			
+			// 해당 채팅방 구독 끊기
+			stompClient.unsubscribe("room" + chatRoomNo);
+			
+			// 채팅방 목록 다시 조회
+			selectChatRoom();
+			
+			// 채팅 메세지 목록 초기화
+     	$(".chat_msg_list").empty();
+     	$(".sendBtn_ul").empty();
+     	$(".sendBtn_ul").next().detach();
+
 		}
 		
 		// 알림의 확인 날짜 update
@@ -629,14 +704,15 @@
 	        minute = minute >= 10 ? minute : '0' + minute;
 	        second = second >= 10 ? second : '0' + second;
 
-	        return /*date.getFullYear() + '-' + month + '-' + day + ' ' + */hour + ':' + minute/* + ':' + second*/;
+	        return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
 		}
 		
 		// 메신저 버튼 클릭 시 스타일 조정
-    function btnControl(none, block, style) {
+    function btnControl(none, block, opacity, z) {
     	$(block).css("display", "block");
       $(none).css("display", "none");
-      $(".msgbox").css("display", style);
+      $(".msgbox").css("opacity", opacity);
+      $(".msgbox").css("z-index", z);
     }
     
 </script>

@@ -87,6 +87,11 @@
       <div class="content" style="max-width: 1000px; padding: 30px;">
           <fieldset class="clander-add-area radious10 inner-line line-shadow">
           <form action="${path}/calendar/calEnroll.do" method="post"> 
+              <!-- 알림을 위한 추가 [기웅] -->
+              <input type="hidden" name="url" value="${path}/calendar/pCalendar.page">
+              <input type="hidden" name="flag" value="2">              
+              <!-- 알림을 위한 추가 [기웅] -->
+               
               <legend><h1 class="jua-regular">일정 추가</h1></legend>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div class="font-size25 jua-regular" id="categoryName">Category</div>
@@ -175,8 +180,6 @@
     			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();
     			let checkDate =  new Date(date2) >= new Date(date1);
     			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
-		        console.log(checkDate);
-		        console.log(checkTime);
 		        if(checkDate && checkTime){
 		        	// [기웅] 일정 등록 시 알림
 		        	var teamMemberList = new Array();
@@ -188,11 +191,11 @@
 									}
 						    }
 							})
+							
 		        	stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
 																																		, flag: '2'
 																																		, teamMemberList: teamMemberList
 																																		, url: "${path}/calendar/pCalendar.page"}));
-		        	// [기웅]
 		        	
 		        	return true;
 		        }else {

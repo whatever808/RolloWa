@@ -38,9 +38,12 @@ public class FileUtil {
 	 * @param category    : 저장할 파일의 유형
 	 */
 	public Map<String, String> fileUpload(MultipartFile uploadFile, String category) {
-		String filePath =  /*request.getServletContext().getRealPath("/") + */"/upload/" + category + new SimpleDateFormat("/yyyy/MM/dd").format(new Date());
+		String filePath = "/resources/images/" + category + "/";
+		File filePathDir = new File(session.getServletContext().getRealPath(filePath));
+		
+		//String filePath =  request.getServletContext().getRealPath("/upload/profileImages") + "upload/" + category + new SimpleDateFormat("/yyyy/MM/dd").format(new Date());
 		log.debug("filePath : {}", filePath);
-		File filePathDir = new File(filePath);
+		//File filePathDir = new File(filePath);
 		if(!filePathDir.exists()) {
 			filePathDir.mkdirs();
 		}
