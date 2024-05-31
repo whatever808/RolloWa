@@ -298,6 +298,45 @@
 		  AND GROUP_CODE LIKE 'TEAM%';
     </select>
 
+	<!-- 부서 추가 -->
+	<insert id="insertGroup">
+		 INSERT INTO 
+		 		TB_GROUP (GROUP_CODE, CODE, CODE_NAME, REGIST_DATE, MODIFY_DATE, STATUS, REGIST_EMP, MODIFY_EMP, UPPER_CODE)
+        VALUES (#{groupCode}, #{code}, #{codeName}, SYSDATE, SYSDATE, 'Y', #{registEmp}, #{modifyEmp}, #{upperCode})
+	</insert>
+	
+	<!-- 부서 변경 -->
+	<update id="reuseGroup">
+		UPDATE TB_GROUP
+		   SET CODE_NAME = #{codeName}, MODIFY_DATE = SYSDATE, STATUS = 'N', MODIFY_EMP = #{modifyEmp}
+		 WHERE CODE = #{code} AND STATUS = 'N'
+    </update>
+	
+	<!-- 부서 삭제 -->
+	<delete id="deleteDepartment">
+		DELETE FROM TB_GROUP WHERE CODE = #{departmentCode} AND GROUP_CODE = 'DEPT'
+    </delete>
+	
+	<!-- 팀 추가 -->
+	<insert id="insertTeam">
+		INSERT INTO TB_GROUP (GROUP_CODE, CODE, CODE_NAME, UPPER_CODE, REGIST_DATE, STATUS, REGIST_EMP)
+		VALUES ('TEAM', #{code}, #{codeName}, #{upperCode}, SYSDATE, 'Y', #{registEmp})
+    </insert>
+    
+	<!-- 팀 삭제 -->
+    <delete id="deleteTeam">
+		DELETE FROM TB_GROUP WHERE CODE = #{teamCode} AND GROUP_CODE = 'TEAM'
+    </delete>
+    
+	<!-- 팀 사용자 인원수 카운트 -->
+	<select id="countMembersByTeam" resultType="int">
+		SELECT COUNT(*) FROM MEMBER WHERE TEAM_CODE = #{teamCode} AND STATUS = 'Y'
+    </select>
+	
+	
+	
+	
+	
 	
 	
 </mapper>

@@ -348,6 +348,38 @@
 		 WHERE USER_NO = #{ userNo }
 	</update>
 	
+	<!-- 사용자 탈퇴 -->
+	<update id="deleteMemberAttendance" parameterType="map">
+		UPDATE MEMBER
+		   SET STATUS = 'N',
+			   MODIFY_DATE = SYSDATE,
+			   MODIFY_USER_NO = #{modifyUserNo}
+		 WHERE USER_NO = #{userNo}
+	</update>
+	
+	<!-- 사용자 정보 수정하기 -->
+	<update id="updateMemberAttendance" parameterType="map">
+		UPDATE MEMBER
+			SET USER_NAME = #{userName},
+			    POST_CODE = #{postCode},
+			    ADDRESS = #{address},
+			    DETAIL_ADDRESS = #{detailAddress},
+			    TOTAL_ADDRESS = #{totalAddress},
+			    EMAIL = #{email},
+			    PHONE = #{phone},
+			    TEAM_CODE = (SELECT CODE
+			                 FROM TB_GROUP
+			                 WHERE CODE_NAME = #{team}
+			                   AND GROUP_CODE LIKE 'TEAM%'),
+			    POSITION_CODE = (SELECT CODE
+			                     FROM TB_GROUP
+			                     WHERE CODE_NAME = #{position}
+			                       AND GROUP_CODE LIKE 'POSI%'),
+			    MODIFY_DATE = SYSDATE,
+			    MODIFY_USER_NO = #{modifyUserNo}
+			WHERE USER_NO = #{userNo}
+	</update>
+	
  	<!-- ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆-->
  
  

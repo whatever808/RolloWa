@@ -9,8 +9,10 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -182,13 +184,21 @@ public class ReservationController {
 	    }
 	}
 	
-	
-	
 	// 3.4 비품 관리
-	@GetMapping("/manager.do")
-	public String reservationManager() {
-		return "reservation/reservation_manager";
+	@GetMapping("/equipment.do")
+	public ModelAndView reservationEquipment(@RequestParam(value = "page", defaultValue = "1") int currentPage,
+			ModelAndView mv) {
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		// 비품 정보 가져오기
+		int listCount = reservationService.selectEquipmentListCount();
+		List<HashMap<String, Object>> list = reservationService.selectEquipmentList(paramMap);
+		
+		mv.addObject("list", list)
+		  .addObject("listCount", listCount)
+		  .setViewName("reservation/reservation_equipment");
+		
+		return mv;
 	}
-	
 	
 }

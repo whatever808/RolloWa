@@ -49,5 +49,15 @@ public class ReservationService {
 	public int updateReservation(Map<String, Object> params) {
 		return reservationDao.updateReservation(params);
 	}
+	// 비품 추가,삭제,수정 관련
+	public int insertEquipment(String equipmentName) {
+		return reservationDao.insertEquipment(equipmentName);
+	}
+	public int deleteEquipment(List<Integer> ids) {
+		return reservationDao.deleteEquipment(ids);
+	}
+	public int updateEquipment(List<Map<String, Object>> equipmentList) {
+		return reservationDao.updateEquipment(equipmentList);
+	}
 	
 }

@@ -46,6 +46,15 @@ public class ReservationDao {
 	public int updateReservation(Map<String, Object> params) {
 		return sqlSessionTemplate.update("reservationMapper.updateReservation", params);
 	}
+	public int insertEquipment(String equipmentName) {
+		return sqlSessionTemplate.insert("reservationMapper.insertEquipment", equipmentName);
+	}
+	public int deleteEquipment(List<Integer> ids) {
+		return sqlSessionTemplate.update("reservationMapper.insertEquipment", ids);
+	}
+	public int updateEquipment(List<Map<String, Object>> equipmentList) {
+		return sqlSessionTemplate.update("reservationMapper.updateEquipment", equipmentList);
+	}
 	
 	
 }
