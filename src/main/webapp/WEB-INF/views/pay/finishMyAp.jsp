@@ -451,6 +451,8 @@ $.ajax({
 							            </tr>
 							        </thead>
 							        <tbody id="tStatus">
+							        		<c:choose>
+							        		<c:when test="${ list != null and !list.isEmpty() }">
 							        		<c:forEach var="i" items="${ list }">							        		
 								          	<tr onclick="location.href='${contextPath}/pay/detail.do?approvalNo=${ i.APPROVAL_NO  }&documentNo=${ i.DOCUMENT_NUMBER }&documentType=${ i.DOCUMENT_TYPE }&payWriter=${ i.PAYMENT_WRITER  }&payWriterNo=${ i.PAYMENT_WRITER_NO }';">
 								                <td><span class="badge">${ i.DOCUMENT_STATUS }</span></td>
@@ -466,6 +468,13 @@ $.ajax({
 								                <td>${ i.FINAL_APPROVAL_DATE == null ? "-" : i.FINAL_APPROVAL_DATE}</td>
 								            </tr>
 							            </c:forEach>
+							            </c:when>
+							            <c:otherwise>
+							             	<tr>
+			                      	<td colspan="7">존재하는 게시글이 없습니다.</td>
+			                      </tr>
+							            </c:otherwise>
+							            </c:choose>
 							        </tbody>
 							    </table>
 							    
