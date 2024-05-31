@@ -43,17 +43,20 @@ $(document).ready(function(){
 	    } else {
 	    		if(confirm("정말로 승인을 하시겠습니까?")){
 	    			
-	    			let plength = "${list.size()}";
 	    			
 	    			let productNameArr = [];
-	    			for(let i=0; i<plength; i++){
+	    			for(let i=0; i<"${list.size()}"; i++){
 	    				productNameArr.push("${list.get(i).PRODUCT_NAME}");
 	    			}
+	    			
 	    			let productAmountArr = [];
-	    			for(let i=0; i<plength; i++){
+	    			for(let i=0; i<"${list.size()}"; i++){
 	    				productAmountArr.push("${list.get(i).QUANTITY}");
 	    			}
+	    			console.log("productNameArr :" + productNameArr);
+	    			console.log("productAmountArr :" + productAmountArr);
 	    			//var formdata = $("#form").sereailize();
+	    			
 	    			var data = signature.toDataURL("image/png");
 	    	    const image = canvas.toDataURL();
 	    	        

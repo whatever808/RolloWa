@@ -54,8 +54,6 @@ $(document).ready(function(){
 	    	        const image = canvas.toDataURL();
 	    	        
 	    	        var approvalName = "${list.get(0).FIRST_APPROVAL == userName ? 1 : list.get(0).MIDDLE_APPROVAL == userName ? 2 : list.get(0).FINAL_APPROVAL == userName ? 3 : 0}" 
-	    	        let productAmountArr = [];
-	    	        let productNameArr = [];
 	    	        
 	    	        $.ajax({
 	    	        	url:"${contextPath}/pay/ajaxSign.do",
@@ -65,10 +63,6 @@ $(document).ready(function(){
 	    	        		signName:"${userName}",
 	    	        		approvalNo:"${list.get(0).APPROVAL_NO}",
 	    	        		approvalSignNo:approvalName,
-	    	        		deptType:"Fix",
-	    	        		fixName:productNameArr,
-	    	        		fixAmount:productAmountArr
-	    	        
 	    	        	},
 	    	        	success:function(response){
 	    	        		

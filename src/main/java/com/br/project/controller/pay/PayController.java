@@ -1222,12 +1222,13 @@ public class PayController {
 	// 승인 싸인 저장하기 ajax
 	@ResponseBody
 	@PostMapping("/ajaxSign.do")
-	public Map<String, Object> ajaxSign(HttpServletRequest request
-									 // , @RequestParam(value="fixName[]") String[] fixName, @RequestParam(value="fixAmount[]") String[] fixAmount
+	public Map<String, Object> ajaxSign(@RequestParam Map<String, Object> map, HttpServletRequest request
+									  , @RequestParam(value="fixName[]", defaultValue="") String[] fixName, @RequestParam(value="fixAmount[]", defaultValue="") String[] fixAmount
 									  ) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map = CommonController.getParameterMap(request);
-		log.debug("map : {}", map);
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map = CommonController.getParameterMap(request);
+//		log.debug("map : {}", map);
+		
 		String dataUrl = (String)map.get("dataUrl");
 		
         map.put("fileName", dataUrl);
@@ -1240,28 +1241,28 @@ public class PayController {
 			sign = payService.ajaxSignSelect(map);
 		}
 		
-//		for(int i=0; i<fixName.length; i++) {
-//			
-//			log.debug("fixName : {}", fixName[i]);
-//			log.debug("fixAmount : {}", fixAmount[i]);
-//			
-//		}
-//		int resultFix = 0;
-//		 
-//		List<Map<String, Object>> list = new ArrayList<>();
-//		if(map.get("approvalSignNo").equals("3") && map.get("deptType") != null && map.get("deptType").equals("Fix")) {
-//			for(int i=0; i<fixName.length; i++) {
-//				if(fixName != null && fixName.length > 0) {
-//					Map<String, Object> maps = new HashMap<>();
-//					maps.put("fixName", fixName[i]);
-//					maps.put("fixAmount", fixAmount[i]);
-//					list.add(maps);					
-//				}
-//			}
-//			resultFix = payService.fixInsert(list);
-//		}
-//		
+		for(int i=0; i<fixName.length; i++) {
+			
+			log.debug("fixName : {}", fixName[i]);
+			log.debug("fixAmount : {}", fixAmount[i]);
+			
+		}
 		
+		 
+		List<Map<String, Object>> list = new ArrayList<>();
+		if(map.get("approvalSignNo").equals("3") && map.get("deptType") != null && map.get("deptType") != "" && map.get("deptType").equals("Fix")) {
+			for(int i=0; i<fixName.length; i++) {
+				if(fixName != null && fixName.length > 0) {
+					Map<String, Object> maps = new HashMap<>();
+					maps.put("fixName", fixName[i]);
+					maps.put("fixAmount", fixAmount[i]);
+					list.add(maps);					
+				}
+			}
+			
+		}
+		
+		int resultFix = payService.fixInsert(list);
 		
 		
 		
