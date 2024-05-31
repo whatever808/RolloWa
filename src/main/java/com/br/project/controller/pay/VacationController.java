@@ -23,6 +23,7 @@ import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.VacationDto;
 import com.br.project.service.common.department.DepartmentService;
+import com.br.project.service.member.MemberService;
 import com.br.project.service.pay.VacationService;
 import com.br.project.util.FileUtil;
 import com.br.project.util.PagingUtil;
@@ -36,6 +37,7 @@ public class VacationController {
 	private final VacationService vactService;
 	private final DepartmentService departService;
 	private final FileUtil fileUtil;
+	private final MemberService memberService;
 	
 	/**
 	 * 휴가 조회 및 신청을 할 수 있는 페이지
@@ -43,11 +45,15 @@ public class VacationController {
 	 * @return 휴가 카테고리 와 휴가 현황을 반환 
 	 */
 	@GetMapping("/vacation.page")
-	public void moveVacation(Model model) {
+	public void moveVacation(Model model, HttpSession session) {
 		Map<String, String> map = new HashMap<>();
 		map.put("code", "VACT01");
 		List<GroupDto> vactList = departService.selectDepartmentList(map);
+		
+		MemberDto member = memberService.selectAnuual(((MemberDto)session.getAttribute("loginMember")).getUserNo());
+		
 		model.addAttribute("vactList", vactList);
+		model.addAttribute("member", member);
 	}
 	
 

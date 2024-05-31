@@ -400,7 +400,7 @@
 						<c:when test="${loginMember.userNo eq t.userNo}">
 							<div class="mydiv-area display-item-center">
 								<div class="line-cirecle display-item-center line-shadow">
-									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
+									<img src="${path}${t.profileURL}" class="rounded" style="overflow:hidden;" >
 									<span class="img_postion">${t.userName}</span>
 								</div>
 								<input type="hidden" value="${t.userNo}">
@@ -409,7 +409,7 @@
 						<c:otherwise>
 							<div class="memebrdiv-area display-item-center">
 								<div class="line-cirecle display-item-center line-shadow">
-									<img src="${t.profileURL}" class="rounded" style="overflow:hidden;" >
+									<img src="${path}${t.profileURL}" class="rounded" style="overflow:hidden;" >
 									<span class="img_postion">${t.userName}</span>
 								</div>
 								<input type="hidden" value="${t.userNo}">

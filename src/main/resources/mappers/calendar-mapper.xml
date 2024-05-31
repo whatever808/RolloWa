@@ -22,11 +22,11 @@
 		<result column="USER_NO" property="userNo"/>
 	</collection>	
 </resultMap>
-<!-- 개인 및 부서 일정 조회 -->
+<!-- 부서 일정 조회 -->
 <select id="ajaxSelectPCalendar" 
 resultMap="calResultMap">
 select
-    CAL_NO, CAL_SORT, CAL_TITLE, CAL_CONTENT, START_DATE, END_DATE, CAL_PLACE, CAL_COLOR, calender.GROUP_CODE, member.user_NO, code_name, upper_code
+    CAL_NO, CAL_SORT, CAL_TITLE, CAL_CONTENT, START_DATE, END_DATE, CAL_PLACE, CAL_COLOR, calender.GROUP_CODE, co_worker.user_NO, code_name, upper_code
 from 
 	calender
 join 

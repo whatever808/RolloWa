@@ -95,7 +95,14 @@ public class MemberService {
 	public List<HashMap<String, Object>> selectMemberListSearch(Map<String, Object> paramMap) {
 		return memberDao.selectMemberListSearch(paramMap);
 	}
+
 	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 	
+	/* ======================================= "예찬" 구역 ======================================= */
 	
+	public MemberDto selectAnuual(int userNo) {
+		return memberDao.selectAnuual(userNo);
+	}
+	
+	/* ======================================= "예찬" 구역 ======================================= */
 }
