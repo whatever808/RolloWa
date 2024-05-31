@@ -642,28 +642,83 @@ $(document).ready(function(){
                 </li>
                 <!-- ======================================= calendar page ========================================= -->
   
-                <!-- 전자결재 -->
+							<!-- ------------------------------------------전자결재 Start------------------------------------------------------ -->
                 <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#approval-collapse" aria-expanded="false">
-                        전자결재
-                    </button>
-                    <div class="collapse" id="approval-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="${contextPath}/pay/approvalMain.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재Home</a></li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재함</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재작성하기</a>
-                            </li>
-                            <li><a href="${contextPath}/pay/myAllApproval.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">나의 결재함</a> 
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+						    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+						        data-bs-toggle="collapse" data-bs-target="#approval-collapse" aria-expanded="false">
+						        전자결재
+						    </button>
+						    <div class="collapse" id="approval-collapse">
+						        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+						            <li>
+						                <a href="${contextPath}/pay/approvalMain.page"
+						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재Home</a>
+						            </li>
+						            <li>
+						                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+						                    data-bs-toggle="collapse" data-bs-target="#approval-collapseApproval" aria-expanded="false">
+						                    결재함
+						                </button>
+						                <div class="collapse" id="approval-collapseApproval">
+						                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+						                        <li>
+						                            <a href="${contextPath}/pay/rejectApprovalList.page"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">반려함</a>
+						                        </li>
+						                        <li>
+						                            <a href="${contextPath}/pay/finishApprovalList.page"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">승인함</a>
+						                        </li>
+						                        <li>
+						                            <a href="${contextPath}/pay/noApprovalList.page"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">미결재함</a>
+						                        </li>
+						                    </ul>
+						                </div>
+						            </li>
+						            <li>
+						                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+						                    data-bs-toggle="collapse" data-bs-target="#approval-collapsewriter" aria-expanded="false">
+						                    결재작성
+						                </button>
+						                <div class="collapse" id="approval-collapsewriter">
+						                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+						                        <li>
+						                            <a  href="${contextPath}/pay/writerForm.page?writer=b"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품신청서</a>
+						                        </li>
+						                        <li>
+						                            <a href="${contextPath}/pay/writerForm.page?writer=m"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">매출보고서</a>
+						                        </li>
+						                        <li>
+						                            <a href="${contextPath}/pay/writerForm.page?writer=j"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">지출결의서</a>
+						                        </li>
+						                        <li>
+						                            <a href="${contextPath}/pay/writerForm.page?writer=g"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">기안서</a>
+						                        </li>
+						                        <li>
+						                            <a href="${contextPath}/pay/writerForm.page?writer=h"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">휴직신청서</a>
+						                        </li>
+						                        <li>
+						                            <a href="${ contextPath }/vacation/vacation.page"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">휴가신청서</a>
+						                        </li>
+						                        
+						                    </ul>
+						                </div>
+						            </li>
+						            <li>
+						                <a href="${contextPath}/pay/myAllApproval.page"
+						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">나의 결재함</a>
+						            </li>
+						        </ul>
+						    </div>
+							</li>
+							<!-- ------------------------------------------전자결재 End------------------------------------------------------ -->
                 <li class="border-top my-3"></li>
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"

@@ -79,7 +79,7 @@ $(document).ready(function(){
 	    			        		      $("#apDt1").append(response.sign[0].firstApDt);	
 	    	        		      	}
 	    	        		      	$("#approvalSt").empty();
-														$("#approvalSt").text("승인");
+														$("#approvalSt").text("진행");
 	    	        		    } else if (response.approvalSignNo == 2) {
 	    	        		    	$('#middleSign').children().remove();
 	    		        		    $("#apDt2").children().remove();
@@ -88,7 +88,7 @@ $(document).ready(function(){
 	    		        		      $("#apDt2").append(response.sign[0].middleApDt);	
 	            		      	}
 	    	        		      $("#approvalSt").empty();
-													$("#approvalSt").text("승인");
+													$("#approvalSt").text("진행");
 	    	        		    } else {
 	    	        		    	$('#finalSign').children().remove();
 	    	        		    	$("#apDt3").children().remove();
@@ -267,7 +267,7 @@ $(document).on("click", "#rejectBtn", function(){
                     <th>상태</th>
                     <td>${list.get(0).PAYMENT_STATUS}</td>
                     <th>승인상태</th>
-                    <td id="approvalSt">${list.get(0).DOCUMENT_STATUS == 'I' ? '진행중' : list.get(0).DOCUMENT_STATUS == 'N' ? '반려' : list.get(0).DOCUMENT_STATUS == 'D' ? "대기" : "완료" }
+                    <td id="approvalSt">${list.get(0).DOCUMENT_STATUS == 'I' ? '진행' : list.get(0).DOCUMENT_STATUS == 'N' ? '반려' : list.get(0).DOCUMENT_STATUS == 'D' ? "대기" : "완료" }
                     </td>
                     
                 </tr>
@@ -286,13 +286,18 @@ $(document).on("click", "#rejectBtn", function(){
                      <th>사용내역 및 용도</th>
                      <th>금액</th>
                  </tr>
-								 <c:forEach var="l" items="${list}">
-                   <tr>
-                       <td>${l.ACCOUNT}</td>
-                       <td>${l.CONTENT}</td>
-                       <td>${l.AMOUNT}</td>
-                   </tr> 			
-	                 </c:forEach>
+                 <input type="hidden" name="fileLength" value="${ list.size() }">
+                 
+	               <c:forEach var="i" begin="0" end="${ list.size() - 1 }">
+		                <c:if test="${ list.get(i).ACCOUNT != null and !list.get(i).ACCOUNT.equals('')}">
+		                  		<tr>
+		                      	<td>${ list.get(i).ACCOUNT }</td>
+		                       	<td>${ list.get(i).CONTENT }</td>
+		                       	<td>${ list.get(i).AMOUNT }</td>
+		                  </tr>
+		                </c:if>
+                 	</c:forEach>
+                 	
 	                  <tr>
 	                    <th colspan="2">합계</th>
 	                    <td colspan="4">${list.get(0).SUM}</td>
@@ -316,7 +321,6 @@ $(document).on("click", "#rejectBtn", function(){
             </table>
 					        </div>
 					      			<div id="modifybtn">
-					      					<button onclick="goBack()">뒤로 가기</button>
 					           			<button class="btn btn-warning" id="modifyWriter" type="submit" style="display: none;">수정</button>
 					          			<button class="btn btn-primary" onclick="submitbtn();" style="display: none;" id="aproS">완료</button>
 					          	</div>
@@ -370,171 +374,165 @@ $(document).on("click", "#rejectBtn", function(){
 			   
 		   })
 		   
-    </script>
-    <script>
-    $(document).ready(function() {
-        $("#deldo").on("click", function(){
-            var isDeletable = "${ not empty list && (list.get(0).DOCUMENT_STATUS == 'N' || list.get(0).DOCUMENT_STATUS == 'D') && userNo == list.get(0).PAYMENT_WRITER_NO }";
-            if(isDeletable == 'true') {
-            	
-                if(confirm("정말로 삭제하시겠습니까?")) {
-                    $.ajax({
-                        url: "${contextPath}/pay/ajaxApprovaldelete.do",
-                        type: "GET",
-                        data: {
-                            no: "${list.get(0).APPROVAL_NO}"
-                        },
-                        success: function(response) {
-                        	 if(response == "SUCCESS") {
-                                alert("삭제가 완료되었습니다.");
-                                location.href = document.referrer; 
-                             }
-                        },
-                        error: function() {
-                            console.log("ajax 통신 오류");
-                        }
-                    });
-                }
-                
-            } else {
-                alert("결재가 진행된 상태이므로 삭제가 불가능합니다.");
-            }
-        });
-    });
-    </script>
-		    
-		<script>
-				function submitbtn() {
+  	$(document).ready(function() {
+      $("#deldo").on("click", function(){
+          var isDeletable = "${ list.get(0).DOCUMENT_STATUS == 'D' && userNo == list.get(0).PAYMENT_WRITER_NO }";
+          if(isDeletable == 'true') {
+          	
+              if(confirm("정말로 삭제하시겠습니까?")) {
+                  $.ajax({
+                      url: "${contextPath}/pay/ajaxApprovaldelete.do",
+                      type: "GET",
+                      data: {
+                          no: "${list.get(0).APPROVAL_NO}"
+                      },
+                      success: function(response) {
+                      	 if(response == "SUCCESS") {
+                               alert("삭제가 완료되었습니다.");
+                               history.back();
+                               setTimeout(function() {
+                                   location.reload();
+                               }, 1); 
+                           } else {
+                               alert("삭제 실패");
+                           }
+                      },
+                      error: function() {
+                          console.log("ajax 통신 오류");
+                      }
+                  });
+              }
+              
+          } else {
+              alert("결재가 진행된 상태이므로 삭제가 불가능합니다.");
+          }
+      });
+  });
+  
+ 
+		   $(document).ready(function() {
+				  
+			    var approvalSt = $("#approvalSt").text().trim();
+			    var paymentWriterNo = "${list.get(0).PAYMENT_WRITER_NO}";
+			    var userName = "${userName}";
+			    
+			    // 수정 버튼 표시 여부 결정
+			    if (approvalSt === "완료" && paymentWriterNo === "${userNo}") {
+			    	  $("#modifyWriter").css("display", "none");
+			    } else {
+			        $("#modifyWriter").css("display", "block");
+			    }
+			    
+			    // 승인 상태에 따라 버튼 표시 여부 결정
+			    if (approvalSt !== "완료") {
+			        if ("${list.get(0).FIRST_APPROVAL}" === userName) {
+			            $(".suBtn").css("display", "block");
+			        } else if ("${list.get(0).MIDDLE_APPROVAL}" === userName && $("#img1").length) {
+			            // 첫 번째 승인자가 싸인을 한 경우에만 두 번째 승인자에게 버튼을 보여줌
+			            $(".suBtn").css("display", "block");
+			        } else if ("${list.get(0).FINAL_APPROVAL}" === userName && $("#img1").length && $("#img2").length) {
+			            // 첫 번째와 두 번째 승인자가 싸인을 한 경우에만 세 번째 승인자에게 버튼을 보여줌
+			            $(".suBtn").css("display", "block");
+			        }
+			    }
+			    
+			    // 반려 사유 버튼 표시 여부 결정
+			    if ("${list.get(0).CANCELLATION_CONTENT}" !== "" && paymentWriterNo === "${userNo}") {
+			        $("#rejectContentBtn").css("display", "block");
+			    }
+			    
+			    // 승인/반려 버튼 표시 여부 결정
+			    if ("${list.get(0).FIRST_APPROVAL}" === userName || "${list.get(0).MIDDLE_APPROVAL}" === userName || "${list.get(0).FINAL_APPROVAL}" === userName) {
+			        $("#aproS").css("display", "block");
+			    } else {
+			        $(".suBtn").css("display", "none"); 
+			    }
+			});
+		  
+			  function submitbtn() {
 				    if (confirm('결재을 완료하시겠습니까?')) {
-				        $(".rejects").each(function () {
-			            if ($(this).text() == '반려') {
-			                $(".suBtn").css("display", "none");
-			            }
-				        });
+				        var approvalSt = $("#approvalSt").text().trim();
+				        if (approvalSt == "반려" || approvalSt == "완료") {
+				            $(".suBtn").css("display", "none");
+				            if (approvalSt == "완료") {
+				                $("#modifyWriter").css("display", "none");
+				            }
+				        }
+				        
 				        alert("결재가 완료되었습니다.");
-				        location.href = document.referrer; 
+				        location.href = document.referrer;
 				    }
 				}
-		
-				function successbtn() {
-				    if (confirm("결재를 최종승인 하시겠습니까?")) {
-				        alert("최종승인이 완료되었습니다.");
-				    }
-				}
-    </script>
-		    
-	
+	  
+  
+     $('#modal3').iziModal({
+         title: '반려(철회)된 사유.',
+         headerColor: '#FEEFAD', // 헤더 색깔
+         theme: '', //Theme of the modal, can be empty or "light".
+         padding: '15px', // content안의 padding
+         radius: 10, // 모달 외각의 선 둥글기
         
-    <script>
-    $(document).ready(function() {
-    
-        if ("${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}") {
-            $("#modifyWriter").css("display", "block");
-        }
-        var srcValue1 = $("#img1").attr("src");
-        
-        if("${list.get(0).FIRST_APPROVAL}" == "${userName}"){
-        	$(".suBtn").css("display", "block");
-        }
-        if($("#img1").length &&"${list.get(0).MIDDLE_APPROVAL}" == "${userName}" && srcValue1 != ""){
-        	$(".suBtn").css("display", "block");
-        }
-        var srcValue2 = $("#img2").attr("src");
-        
-        if($("#img2").length && "${list.get(0).FINAL_APPROVAL}" == "${userName}" &&  srcValue2 != ""){
-        	$(".suBtn").css("display", "block");
-        }
-        
-        if("${list.get(0).FIRST_APPROVAL}" == "${userName}" ||
-         	 "${list.get(0).MIDDLE_APPROVAL}" == "${userName}" ||
-         	 "${list.get(0).FINAL_APPROVAL}" == "${userName}" ){
-         	$("#aproS").css("display", "block");
-     	  }	
-        
-        var content = "${list.get(0).CANCELLATION_CONTENT.trim()}";
-        if( content != "" && "${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}"){
-					$("#rejectContentBtn").css("display", "block");
-		    }	
-        	
-        
-    });
-    </script>
-        
-    <script>
-       $('#modal3').iziModal({
-           title: '반려(철회)된 사유.',
-           headerColor: '#FEEFAD', // 헤더 색깔
-           theme: '', //Theme of the modal, can be empty or "light".
-           padding: '15px', // content안의 padding
-           radius: 10, // 모달 외각의 선 둥글기
-          
-       });
-       
-       // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
-       $("#modal-test").on('click', function () {
+     });
+     
+     // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
+     $("#modal-test").on('click', function () {
 
-           $('#modal3').iziModal('open'); // 모달을 출현
+         $('#modal3').iziModal('open'); // 모달을 출현
 
-       });
-    </script>	    
-		
-		
-		<script>
-       $('#modal').iziModal({
-           title: '반려사유를 작성해주세요.',
-           headerColor: '#FEEFAD', // 헤더 색깔
-           theme: '', //Theme of the modal, can be empty or "light".
-           padding: '15px', // content안의 padding
-           radius: 10, // 모달 외각의 선 둥글기
-          
-       });
-       
-       // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
-       $("#modal-test").on('click', function () {
+     });
+     
+     $('#modal').iziModal({
+         title: '반려사유를 작성해주세요.',
+         headerColor: '#FEEFAD', // 헤더 색깔
+         theme: '', //Theme of the modal, can be empty or "light".
+         padding: '15px', // content안의 padding
+         radius: 10, // 모달 외각의 선 둥글기
+        
+     });
+     
+     // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
+     $("#modal-test").on('click', function () {
 
-           $('#modal').iziModal('open'); // 모달을 출현
+         $('#modal').iziModal('open'); // 모달을 출현
 
-       });
-    </script>	
-    
-    <script>
-       $('#modal2').iziModal({
-           title: '싸인',
-           headerColor: '#FEEFAD', // 헤더 색깔
-           theme: '', //Theme of the modal, can be empty or "light".
-           padding: '15px', // content안의 padding
-           radius: 10, // 모달 외각의 선 둥글기
-          
-       });
-       
-       // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
-       $("#modal-test").on('click', function () {
+     });
+     
+     
+     $('#modal2').iziModal({
+         title: '싸인',
+         headerColor: '#FEEFAD', // 헤더 색깔
+         theme: '', //Theme of the modal, can be empty or "light".
+         padding: '15px', // content안의 padding
+         radius: 10, // 모달 외각의 선 둥글기
+        
+     });
+     
+     // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
+     $("#modal-test").on('click', function () {
 
-           $('#modal2').iziModal('open'); // 모달을 출현
+         $('#modal2').iziModal('open'); // 모달을 출현
 
-       });
-    </script>	
-    
-    <script>
-    
-    $("#modifyWriter").on("click", function(){
-    	
-    	let writerNo = '${ not empty list and list.get(0).DOCUMENT_STATUS == "N" or list.get(0).DOCUMENT_STATUS == "D" and userNo == list.get(0).PAYMENT_WRITER_NO }';
-    	
-    	if(writerNo == "true"){
-	    	 	if(confirm('수정하시겠습니까?')){
-						alert("작성페이지로 이동합니다.");
-							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).DRAFT_NO} 
-																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
-																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
-																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
-																									 			+ "&report=j";
-	    		}
-    	}else{
-    		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
-    	}
-   
-    })
+     });
+ 
+     
+     
+     $("#modifyWriter").on("click", function(){
+     	
+     	let writerNo = "${ not empty list && (list.get(0).DOCUMENT_STATUS == 'N' || list.get(0).DOCUMENT_STATUS == 'D') && userNo == list.get(0).PAYMENT_WRITER_NO }";
+     	
+     	if(writerNo == "true"){
+ 	    	 	if(confirm('수정하시겠습니까?')){
+ 						alert("작성페이지로 이동합니다.");
+ 							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).DRAFT_NO} 
+ 																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
+ 																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
+ 																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
+ 																									 			+ "&report=j";
+ 	    		}
+     	}else{
+     		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
+     	}
+     });
     </script>
     
     

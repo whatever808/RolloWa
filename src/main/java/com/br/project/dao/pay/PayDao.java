@@ -448,5 +448,42 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.noApprovalSignSearchList", map, rowbounds);
 	}
 	
+	public int myRejectApCount(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.myRejectApCount", map);
+	}
 	
+	//내가 반려한 리스트 목록
+	public List<Map<String, Object>> myRejectApList(Map<String, Object> map, PageInfoDto pi){
+		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.myRejectApList", map, rowbounds);
+	}
+	
+	public int myFinishApCount(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.myFinishApCount", map);
+	}
+	
+	//내가 승인한 리스트 목록
+	public List<Map<String, Object>> myFinishApList(Map<String, Object> map, PageInfoDto pi){
+		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.myFinishApList", map, rowbounds);
+	}
+	
+	public List<Map<String, Object>> noApprovalSignRe(Map<String, Object> map, PageInfoDto pi){
+		RowBounds rowbounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.noApprovalSignRe", map, rowbounds);
+	}
+	
+	
+	public int fixInsert(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.fixInsert", map);
+	}
+	
+	
+	public int noApprovalkeywordSignCount(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.noApprovalkeywordSignCount", map);
+	}
+	
+	public int noApprovalSignCountToday(String userName) {
+		return sqlSessionTemplate.selectOne("payMapper.noApprovalSignCountToday", userName);
+	}
 }

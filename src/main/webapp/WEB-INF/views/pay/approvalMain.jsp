@@ -901,8 +901,27 @@
 		    appearance: none; /* 기본 스타일 제거 (기타 브라우저) */
 		    cursor: pointer; /* 커서 스타일 */
 		 }
-	<!----------->	
-		
+		 
+		 #svgContent{    
+			 display: flex;
+	    justify-content: flex-end;
+     }
+     
+     #round-button {
+		      background-color: #e99db2;
+			    border: none;
+			    color: white;
+			    padding: 2px 12px;
+			    text-align: center;
+			    text-decoration: none;
+			    display: inline-block;
+			    font-size: 16px;
+			    margin: 4px 2px;
+			    cursor: pointer;
+			    border-radius: 65px;
+		  }
+			<!----------->	
+				
 </style>
 </head>
 <body>
@@ -973,7 +992,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -1003,7 +1022,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : "-") + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        tbody.append(row);
@@ -1083,7 +1102,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -1115,7 +1134,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        tbody.append(row);
@@ -1229,7 +1248,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -1260,7 +1279,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        tbody.append(row);
@@ -1377,7 +1396,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -1409,7 +1428,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        tbody.append(row);
@@ -1533,7 +1552,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -1565,7 +1584,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        tbody.append(row);
@@ -1681,7 +1700,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -1713,7 +1732,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        tbody.append(row);
@@ -1821,7 +1840,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -1853,7 +1872,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        tbody.append(row);
@@ -1969,7 +1988,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -2001,7 +2020,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        tbody.append(row);
@@ -2124,7 +2143,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -2156,7 +2175,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        		tbody.append(row);
@@ -2270,7 +2289,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -2302,7 +2321,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        	tbody.append(row);
@@ -2421,7 +2440,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -2453,7 +2472,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        	tbody.append(row);
@@ -2571,7 +2590,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -2603,7 +2622,7 @@ $(document).on('click', '.page-linkc', function(event) {
                                   '<td>' + item.department + '</td>' +
                                   '<td>' + item.registDt + '</td>' +
                                   '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                                  '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                                   '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                                   '</tr>';
                            tbody.append(row);
@@ -2715,7 +2734,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -2747,7 +2766,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        	tbody.append(row);
@@ -2867,7 +2886,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -2899,7 +2918,7 @@ $(document).on('click', '.page-linkc', function(event) {
                               '<td>' + item.department + '</td>' +
                               '<td>' + item.registDt + '</td>' +
                               '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                              '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                              '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                               '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                               '</tr>';
                        	tbody.append(row);
@@ -3018,7 +3037,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        if (item.documentStatus === '반려') {
                            documentStatusClass = 'rejected';
                        } else if (item.documentStatus === '완료') {
-                           documentStatusClass = 'completed';
+                           documentStatusClass = 'completes';
                        } else if (item.documentStatus === '진행') {
                            documentStatusClass = 'progresses';
                        } else if (item.documentStatus === '대기') {
@@ -3050,7 +3069,7 @@ $(document).on('click', '.page-linkc', function(event) {
                                   '<td>' + item.department + '</td>' +
                                   '<td>' + item.registDt + '</td>' +
                                   '<td><span class="badge ' +  documentStatusClass + '">' + item.documentStatus + '</span></td>' +
-                                  '<td>' + (item.finalApproDt == null ? '-' : item.finalApproDt) + '</td>' +
+                                  '<td>' + (item.documentStatus == '완료' ? item.finalApproDt : '-') + '</td>' +
                                   '<td class="status" ' + statusColor + '>' + item.payStatus + '</td>' +
                                   '</tr>';
                            tbody.append(row);
@@ -3093,7 +3112,7 @@ $(document).on('click', '.page-linkc', function(event) {
   
 		
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
-		<main style="display: flex; overflow: hidden;">
+		<main style="display: flex;">
 	        <!-- content 추가 -->
 	        <div class="content p-4">
 	          <!-- 프로필 영역 -->
@@ -3101,7 +3120,6 @@ $(document).on('click', '.page-linkc', function(event) {
 	          	<div class="containeres">
 						    <!-- Top Menu -->
 						    <div class="top-menu">
-						    		<a href="${contextPath}/payment/payment.page">결제페이지확인</a>
 						        <a href="${contextPath}/pay/writerForm.page?writer=b">
 						        <div class="top-menu-item">
 						        <div>
@@ -3169,25 +3187,57 @@ $(document).on('click', '.page-linkc', function(event) {
 						
 						    <!-- Highlighted Boxes -->
 						    <div class="highlight-boxes">
+						    		<div class="highlight-box" id="noApprovalSignList">
+						            <div class="title"><h5>${ userName }님의 <br>미결재함</h5></div>
+						            <div class="count"><h5>${ noApprovalSignCount }건</h5><button id="round-button">TODAY ${ noApprovalSignCountToday }건</button></div>						            
+						            <div id="svgContent">
+						            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard2-check" viewBox="0 0 16 16">
+												  <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5z"/>
+												  <path d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z"/>
+												  <path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
+												</svg>
+												</div>
+										</div>
 						        <div class="highlight-box" id="7daysOuterList">
 						            <div class="title"><h5>${ userName }님의 <br>일주일 이상 지연된 <br>결재요청함</h5></div>
 						            <div class="count"><h5>${ mdCount }건</h5></div>
+						            <div id="svgContent">
+							            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard-minus" viewBox="0 0 16 16">
+													  <path fill-rule="evenodd" d="M5.5 9.5A.5.5 0 0 1 6 9h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5"/>
+													  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+													  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+													</svg>
+						            </div>
+						        </div>
+						        <div class="highlight-box" id="UserApprovalList">
+						            <div class="title"><h5>${ userName }님의 <br>결재 처리함</h5></div>
+						            <div class="count"><h5>${ slistCount }건</h5></div>
+						            <div id="svgContent">
+							            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard2" viewBox="0 0 16 16">
+													  <path d="M3.5 2a.5.5 0 0 0-.5.5v12a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-12a.5.5 0 0 0-.5-.5H12a.5.5 0 0 1 0-1h.5A1.5 1.5 0 0 1 14 2.5v12a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-12A1.5 1.5 0 0 1 3.5 1H4a.5.5 0 0 1 0 1z"/>
+													  <path d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5"/>
+													</svg>
+												</div>
 						        </div>
 						        <div class="highlight-box" id="UserAllList">
 						            <div class="title"><h5>${ userName }님의 <br>전체 결재 요청함</h5></div>
 						            <div class="count"><h5>${ ulistCount }건</h5></div>
-						        </div>
-						        <div class="highlight-box" id="UserApprovalList">
-						            <div class="title"><h5>${ userName }님의 <br>결재한 승인함</h5></div>
-						            <div class="count"><h5>${ slistCount }건</h5></div>
-						        </div>
-						        <div class="highlight-box" id="noApprovalSignList">
-						            <div class="title"><h5>${ userName }님의 <br>미결재함</h5></div>
-						            <div class="count"><h5>${ noApprovalSignCount }건</h5></div>
+						            <div id="svgContent">
+							            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard-plus-fill" viewBox="0 0 16 16">
+													  <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"/>
+													  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5zm4.5 6V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5a.5.5 0 0 1 1 0"/>
+													</svg>
+												</div>
 						        </div>
 						        <div class="highlight-box" id="AllList">
 						            <div class="title"><h5>전체결재함</h5></div>
 						            <div class="count"><h5>${ listCount }건</h5></div>
+						            <div id="svgContent">
+						            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+												  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+												  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+												</svg>
+												</div>
 						        </div>
 						    </div>
 						
@@ -3250,7 +3300,7 @@ $(document).on('click', '.page-linkc', function(event) {
                                             <td>${ l.department }</td>
                                             <td>${ l.registDt }</td>
                                             <td><span class="badge">${ l.documentStatus }</span></td>
-                                            <td>${ l.finalApproDt == null ?  "-" : l.finalApproDt }</td>
+                                            <td>${ l.documentStatus == '완료'  ?  l.finalApproDt : "-" }</td>
                                     				<td class="status">${ l.payStatus }</td>
                                         </tr>
                                     	</c:forEach>
