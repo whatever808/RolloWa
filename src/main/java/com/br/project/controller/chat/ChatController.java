@@ -103,25 +103,25 @@ public class ChatController {
 				}
 			} else if (map.get("flag").equals("2")) {
 				// 일정 알림일 경우
+				// CalendarController에서 알림 전송 정보 저장
 				map.put("type", "C");
-				log.debug("teamMemberList : {}", map.get("teamMemberList"));
 				int result = 0;
 				// 팀코드 리스트에 담기
-				List<String> teamCodeList = (List<String>)map.get("teamMemberList");
+				/*List<String> teamCodeList = (List<String>)map.get("teamMemberList");
 				
 				for(int i = 0; i < teamCodeList.size(); i++) {
 					map.put("receiveUserNo", teamCodeList.get(i));
 					
 					// url, type, recevieUserNo, sendUserNo
 					result += notificationService.insertNotificationSend(map);
-				}
+				}*/
 				
-				if (result == teamCodeList.size()) {
+				//if (result == teamCodeList.size()) {
 					template.convertAndSend("/topic/chat/alram", mapToJson(map));
-					log.debug("알림 전송 성공");
+					/*log.debug("알림 전송 성공");
 				} else {
 					log.debug("알림 저장 실패");
-				}
+				}*/
 				
 			}
 			

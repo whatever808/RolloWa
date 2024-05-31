@@ -142,15 +142,9 @@ public class CalendarController {
 							, String[] date, String[] time
 							, HttpSession session
 							, RedirectAttributes redirectAttribute
-							, Map<String, Object> map) {
-		log.debug("map: {}", map);
+							, String url) {
 		
-		/* 알림 전송을 위한 코드 추가 [기웅] */
-		List<String> teamMemberList = new ArrayList<>();
-		for(int i = 0; i < calendar.getCoworker().size(); i++) {
-			teamMemberList.add(calendar.getCoworker().get(i).getUserNo());
-		}
-		/* =========== */
+		
 		calendar.setCalSort("D");			
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
@@ -164,22 +158,29 @@ public class CalendarController {
 			redirectAttribute.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
 			redirectAttribute.addFlashAttribute("modalColor", "G");
 			
-			// 알림 전송 데이터 저장
-			redirectAttribute.addFlashAttribute("teamMemberList", teamMemberList);
-			//redirectAttribute.addFlashAttribute("flag", "Y");
+			/* 알림 전송을 위한 코드 추가 [기웅] */
+			Map<String, Object> map = new HashMap<>();
+			map.put("url", url);
+			map.put("sendUserNo", member.getUserNo());
+			map.put("type", "C");
+			
+			int alramResult = 0;
+			for(int i = 0; i < calendar.getCoworker().size(); i++) {
+				map.put("receiveUserNo", calendar.getCoworker().get(i).getUserNo());
+				
+				alramResult += nService.insertNotificationSend(map);
+			}
+			
+			if(alramResult == calendar.getCoworker().size()) {
+				log.debug("알림 전송 성공");
+			}
 			
 			return "redirect:pCalendar.page";
-			/*mv.addObject("alertMsg", "성공적으로 등록 되었습니다.")
-			  .addObject("modalColor", "G")
-			  .setViewName("redirect:pCalendar.page");*/
 		}else {
 			redirectAttribute.addFlashAttribute("alertMsg", "다시 시도해 주세요.");
 			redirectAttribute.addFlashAttribute("modalColor", "R");
 			
 			return "redirect:calEnroll.page";
-			/*mv.addObject("alertMsg", "다시 시도해 주세요.")
-			  .addObject("modalColor", "R")
-			  .setViewName("redirect:calEnroll.page");*/
 		}
 	}
 	
