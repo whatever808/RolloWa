@@ -211,6 +211,22 @@ a {
 .attach-put{
 	display:none;
 }
+.fa-plane:before{
+	color: skyblue;
+}
+.fa-bolt:before, .fa-zap:before{
+	color: #ffe200;
+}
+.fa-pills:before{
+	color: purple;
+}
+.fa-street-view:before{
+	color: coral;
+}
+.fa-earth-america:before, .fa-earth-americas:before, .fa-earth:before, .fa-globe-americas:before{
+	color: green;
+}
+
 </style>
 </head>
 <body>
@@ -267,7 +283,7 @@ a {
 				<div class="font-size25 jua-regular">결재 대기</div>
 				<div class="standby">
 				</div>
-
+				<br>
 				<div class="font-size25 jua-regular">철회</div>
 				<div class="retract">
 				</div>
@@ -671,7 +687,7 @@ a {
 			restoreDefaultContent : false,
 		});
 	</script>
-
+	
 	<!-- 철회 -->
 	<form id="retract_request">
 		<div class="Category">

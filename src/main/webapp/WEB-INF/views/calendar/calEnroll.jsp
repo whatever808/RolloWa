@@ -169,8 +169,7 @@
           </form>
           </fieldset>
         <script>        
-    		function 
-(){
+    		function checkDate(){
     			
     			let date2 = $('#currentDate2').val()+ " " + $('#currentTime2').val();
     			let date1 = $('#currentDate1').val()+ " " + $('#currentTime1').val();

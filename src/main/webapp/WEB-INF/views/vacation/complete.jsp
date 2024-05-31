@@ -103,7 +103,7 @@
 					<div class="size-fit">
 						<input type="date" id="currentDate1" class="date-area jua-regular">
 					</div>
-					<div><button type="button" onclick="ajaxSearchOld(1);" class="jua-regular btn btn-outline-secondary"> 검색 </button></div>
+					<div><button style="box-shadow: 1px 1px 1px 1px #8888887a;" type="button" onclick="ajaxSearchOld(1);" class="jua-regular btn btn-outline-secondary"> 검색 </button></div>
 				</form>
 				<div>
 					<table class="search-list table table-hover">
