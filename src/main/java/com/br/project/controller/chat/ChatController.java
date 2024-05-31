@@ -104,7 +104,7 @@ public class ChatController {
 			} else if (map.get("flag").equals("2")) {
 				// 일정 알림일 경우
 				map.put("type", "C");
-				
+				log.debug("teamMemberList : {}", map.get("teamMemberList"));
 				int result = 0;
 				// 팀코드 리스트에 담기
 				List<String> teamCodeList = (List<String>)map.get("teamMemberList");
@@ -112,6 +112,7 @@ public class ChatController {
 				for(int i = 0; i < teamCodeList.size(); i++) {
 					map.put("receiveUserNo", teamCodeList.get(i));
 					
+					// url, type, recevieUserNo, sendUserNo
 					result += notificationService.insertNotificationSend(map);
 				}
 				

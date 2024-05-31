@@ -87,6 +87,11 @@
       <div class="content" style="max-width: 1000px; padding: 30px;">
           <fieldset class="clander-add-area radious10 inner-line line-shadow">
           <form action="${path}/calendar/calEnroll.do" method="post"> 
+              <!-- 알림을 위한 추가 [기웅] -->
+              <input type="hidden" name="url" value="${path}/calendar/pCalendar.page">
+              <input type="hidden" name="flag" value="2">              
+              <!-- 알림을 위한 추가 [기웅] -->
+               
               <legend><h1 class="jua-regular">일정 추가</h1></legend>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div class="font-size25 jua-regular" id="categoryName">Category</div>

@@ -377,7 +377,8 @@
 			})
 			
 			// 일정 등록이 성공했을 경우
-			window.onload = function(){
+			/*window.onload =*/
+			setTimeout(function(){
 				console.log("onload 함수 실행됨");
 				if('${flag}' == 'Y') {
 					console.log("실행됨")
@@ -386,7 +387,7 @@
 																																								, teamMemberList: '${teamMemberList}'
 																																								, url: "${path}/calendar/pCalendar.page"}));
 				}
-			}
+			}, 1000)
 		</script>
 		<!-- 컨텐츠 영역 content-area -->
 		<div class="content" style="max-width: 1500px; padding: 30px;">

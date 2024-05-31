@@ -24,6 +24,7 @@ import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.calendar.CalendarService;
 import com.br.project.service.common.department.DepartmentService;
+import com.br.project.service.notification.NotificationService;
 import com.br.project.service.pay.VacationService;
 import com.br.project.util.PagingUtil;
 
@@ -38,6 +39,7 @@ public class CalendarController {
 	private final CalendarService calService;
 	private final DepartmentService dService;
 	private final VacationService vService;
+	private final NotificationService nService;
 
 	/**
 	 * 일정 캘린더를 이동 하면서 부서 내부에 팀원 과 부서 카테고리를 조회해서 가져오는 매서드
@@ -139,7 +141,9 @@ public class CalendarController {
 	public String insertCal(CalendarDto calendar
 							, String[] date, String[] time
 							, HttpSession session
-							, RedirectAttributes redirectAttribute) {
+							, RedirectAttributes redirectAttribute
+							, Map<String, Object> map) {
+		log.debug("map: {}", map);
 		
 		/* 알림 전송을 위한 코드 추가 [기웅] */
 		List<String> teamMemberList = new ArrayList<>();
@@ -159,6 +163,8 @@ public class CalendarController {
 		if(result > 0 ) {
 			redirectAttribute.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
 			redirectAttribute.addFlashAttribute("modalColor", "G");
+			
+			// 알림 전송 데이터 저장
 			redirectAttribute.addFlashAttribute("teamMemberList", teamMemberList);
 			//redirectAttribute.addFlashAttribute("flag", "Y");
 			
