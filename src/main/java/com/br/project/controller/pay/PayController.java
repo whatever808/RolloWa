@@ -480,7 +480,7 @@ public class PayController {
 	@PostMapping("/mReportInsert.do")
 	public String mReportInsert(@RequestParam("item") List<String> items,
 								@RequestParam("count") List<String> counts,
-								@RequestParam("sales") List<String> saleses,
+								@RequestParam("salesAmount") List<String> saleses,
 								@RequestParam Map<String, Object> map, 
 								RedirectAttributes redirectAttributes) {
 		
@@ -490,7 +490,6 @@ public class PayController {
 		for(int i=0; i<items.size(); i++) {
 			if(items.get(i) != null && !items.get(i).equals("")) {
 				Map<String, Object> maps = new HashMap<>();
-				maps.put("expendNo", map.get("expendNo"));
 				maps.put("item", items.get(i));
 				maps.put("count", counts.get(i));
 				maps.put("salesAmount", saleses.get(i));
@@ -945,7 +944,7 @@ public class PayController {
 			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
 		}
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 	}
 	
 	
@@ -1020,7 +1019,8 @@ public class PayController {
 								@RequestParam("price") List<String> prices,
 								@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes, 
 								List<MultipartFile> uploadFiles,  String[] delFileNo) {
-							
+		
+		//파일이 전부삭제될경우 => delFileNo 삭제된 수 == 
 		//삭제된파일이 null값일 경우
 		String[] delFileNoArr = delFileNo != null ? delFileNo : null;
 		
@@ -1175,7 +1175,7 @@ public class PayController {
 			redirectAttributes.addFlashAttribute("alertMsg", "게시글 수정이 완료되었습니다.");
 		}
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 	}
 	
 	@PostMapping("/bReportUpdate.do")
