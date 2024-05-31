@@ -480,29 +480,26 @@ $(document).ready(function(){
 										                    <td class="label">매출금액</td>
 										                </tr>
 										                <tr>
-		                                    <td class="value"><input type="text" class="item" name="item1"></td>
-		                                    <td class="value"><input type="number" class="count" min="1" name="count1"></td>
-		                                    <td class="value"><input type="text" class="sales_amount" name="sales2"></td>
+		                                    <td class="value"><input type="text" class="item" name="item"></td>
+		                                    <td class="value"><input type="number" class="count" min="1" name="count"></td>
+		                                    <td class="value"><input type="text" class="sales" name="salesAmount"></td>
 		                                </tr>
 		                                <tr>
-		                                    <td class="value"><input type="text" class="item" name="item2"></td>
-		                                    <td class="value"><input type="number" class="count" min="1" name="count2"></td>
-		                                    <td class="value"><input type="text" class="sales_amount" name="sales3"></td>
+		                                    <td class="value"><input type="text" class="item" name="item"></td>
+		                                    <td class="value"><input type="number" class="count" min="1" name="count"></td>
+		                                    <td class="value"><input type="text" class="sales" name="salesAmount"></td>
 		                                </tr>
 		                                <tr>
-		                                    <td class="value"><input type="text" class="item" name="item3"></td>
-		                                    <td class="value"><input type="number" class="count" min="1" name="count3"></td>
-		                                    <td class="value"><input type="text" class="sales_amount" name="sales4"></td>
+		                                    <td class="value"><input type="text" class="item" name="item"></td>
+		                                    <td class="value"><input type="number" class="count" min="1" name="count"></td>
+		                                    <td class="value"><input type="text" class="sales" name="salesAmount"></td>
 		                                </tr>
 		                                 <tr id="tr_input">
-                                    		<td><input type="text" class="item" name="item4"></td>
-                                    		<td><input type="number" class="count" min="1" name="count4"></td>
-                                    		<td><input type="text" class="sales_amount" name="sales5"></td>
+                                    		<td><input type="text" class="item" name="item"></td>
+                                    		<td><input type="number" class="count" min="1" name="count"></td>
+                                    		<td><input type="text" class="sales" name="salesAmount"></td>
                                			 </tr>
 										            </table>
-										            	<input type="hidden" name="items" id="items">
-	                            		<input type="hidden" name="counts" id="counts">
-	                            		<input type="hidden" name="salesAmounts" id="sales_amounts">
 										        </div>
 										
 										        <div id="btn_div">
@@ -590,9 +587,9 @@ $(document).ready(function(){
     		
     		
     		var result = "<tr>";
-    		result += "<td><input type='text' class='item'></td>";
-    		result += "<td><input type='number' class='count' min='1'></td>";
-    		result += "<td><input type='text' class='sales_amount'></td>";
+    		result += "<td><input type='text' class='item' name='item'></td>";
+    		result += "<td><input type='number' class='count' min='1' name='count'></td>";
+    		result += "<td><input type='text' class='sales_amount' name='salesAmount'></td>";
     		result += "</tr>";
         
        $("#tr_table").children().last().after(result);

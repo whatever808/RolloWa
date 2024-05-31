@@ -373,7 +373,6 @@
 			      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
 			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
 			      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
-			      , SALES_AMOUNT 
 			      , TITLE
 			      , SALES_DIVISION
 			      , MANAGER_NAME
@@ -382,6 +381,7 @@
 			      , REPORT_TYPE
 			      , ITEM
 			      , VOLUMES
+			      , SALES_AMOUNT
 				from approval a
 	      left join expenditure_report e on (document_number = expend_no)
 			  left join item i on (expend_no = report_no)
@@ -657,7 +657,7 @@
 		    VALUES
 		    (
 		      SEQ_APNO.NEXTVAL
-			  ,  SEQ_EXNO.currval
+			  , SEQ_EXNO.currval
 		    , 'M'
 		    , #{deptName}
 		    , #{writerName}
@@ -1642,7 +1642,7 @@
 				    values
 				    (
 				      #{reportNo}
-				    , #{reportType}
+				    , 'B'
 				    , #{pName}
 				    , #{size}
 				    , #{amount}
