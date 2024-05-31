@@ -792,7 +792,7 @@ $(document).ready(function(){
 					    
 						})
 					})
-					
+										
 					// 알림 스타일
 					$("#alram").iziModal({
 						title: '<h6>부서 알림 서비스</h6>'
