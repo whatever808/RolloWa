@@ -78,9 +78,6 @@ public class OrganizationInfoController {
 			search.put("team", "");
 		}
 		
-		//log.debug("◆◇◆◇◆◇◆◇◆ 직원 검색 ◆◇◆◇◆◇◆◇◆");
-		//log.debug(" search: {}", search);
-		
 		int listCount = organizationService.selectSearchListCount(search);
 		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
 		List<MemberDto> list = organizationService.selectSearchList(search, pi);
@@ -101,7 +98,6 @@ public class OrganizationInfoController {
 	@ResponseBody
 	@GetMapping("/department.do")
 	public List<GroupDto> selectDepartment() {
-		//log.debug("◆◇◆◇◆◇◆◇◆ 부서 조회 실행 ◆◇◆◇◆◇◆◇◆");
 
 		return organizationService.selectDepartment();
 	}
@@ -109,8 +105,6 @@ public class OrganizationInfoController {
 	@ResponseBody
 	@GetMapping("/team.do")
 	public List<GroupDto> selectTeam(@RequestParam("selectedDepartment") String selectedDepartment) {
-		//log.debug("◆◇◆◇◆◇◆◇◆ 팀 조회 실행 ◆◇◆◇◆◇◆◇◆");
-		
 		List<GroupDto> result = null;
 		
 		if(selectedDepartment.equals("전체 부서")) {
@@ -176,11 +170,14 @@ public class OrganizationInfoController {
 	@PostMapping("/deleteTeam.do")
     @ResponseBody
     public ResponseEntity<String> deleteTeam(@RequestParam String teamCode) {
-        boolean isDeleted = organizationService.deleteTeam(teamCode);
-        if (isDeleted) {
+        try {
+            boolean isDeleted = organizationService.deleteTeam(teamCode);
+            if (!isDeleted) {
+                throw new IllegalStateException("Cannot delete team with active members");
+            }
             return ResponseEntity.ok("Team deleted successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Cannot delete team with active members");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 	

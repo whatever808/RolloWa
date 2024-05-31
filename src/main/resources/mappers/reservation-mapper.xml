@@ -32,6 +32,7 @@
 	<select id="selectEquipmentList" resultType="hashmap">
 		SELECT CODE AS "code"
         	 , CODE_NAME AS "equipmentName"
+        	 , REGIST_DATE AS "registDate"
 		  FROM TB_GROUP
 		 WHERE GROUP_CODE LIKE 'EQPT%'
            AND STATUS = 'Y'

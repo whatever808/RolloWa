@@ -162,18 +162,6 @@
 		                </td>
 		            </tr>
 					
-		            <!-- 비밀번호 초기화 -->
-		            <tr>
-		                <th>
-		                    <label for="userPwd"><h5>비밀번호 초기화</h5></label>
-		                </th>
-		                <td class="td_common">
-		                	<h5>
-                               생각해보기
-							</h5>
-	                	</td>
-		            </tr>
-		            
 		            <!-- 주소 -->
 		            <tr>
 		                <th>

@@ -9,8 +9,10 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -182,13 +184,54 @@ public class ReservationController {
 	    }
 	}
 	
-	
-	
 	// 3.4 비품 관리
-	@GetMapping("/manager.do")
-	public String reservationManager() {
-		return "reservation/reservation_manager";
+	@GetMapping("/equipment.do")
+	public ModelAndView reservationEquipment(@RequestParam(value = "page", defaultValue = "1") int currentPage,
+			ModelAndView mv) {
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		// 비품 정보 가져오기
+		int listCount = reservationService.selectEquipmentListCount();
+		List<HashMap<String, Object>> list = reservationService.selectEquipmentList(paramMap);
+		
+		mv.addObject("list", list)
+		  .addObject("listCount", listCount)
+		  .setViewName("reservation/reservation_equipment");
+		
+		return mv;
 	}
+	
+	// 비품 추가
+    @PostMapping("/equipment")
+    @ResponseBody
+    public Map<String, Object> insertEquipment(@RequestBody Map<String, Object> equipmentData) {
+        String equipmentName = (String) equipmentData.get("equipmentName");
+        Map<String, Object> response = new HashMap<>();
+        int success = reservationService.insertEquipment(equipmentName);
+        response.put("success", success);
+        return response;
+    }
+
+    // 비품 삭제
+    @DeleteMapping("/equipment")
+    @ResponseBody
+    public Map<String, Object> deleteEquipment(@RequestBody Map<String, Object> equipmentData) {
+        List<Integer> ids = (List<Integer>) equipmentData.get("ids");
+        Map<String, Object> response = new HashMap<>();
+        int success = reservationService.deleteEquipment(ids);
+        response.put("success", success);
+        return response;
+    }
+
+    // 비품 업데이트
+    @PutMapping("/equipment")
+    @ResponseBody
+    public Map<String, Object> updateEquipment(@RequestBody List<Map<String, Object>> equipmentList) {
+        Map<String, Object> response = new HashMap<>();
+        int success = reservationService.updateEquipment(equipmentList);
+        response.put("success", success);
+        return response;
+    }
 	
 	
 }

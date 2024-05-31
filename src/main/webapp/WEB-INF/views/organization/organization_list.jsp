@@ -2,13 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
-<%
-	String department = (request.getAttribute("department") != null) ? request.getAttribute("department").toString() : "";
-	String team = (request.getAttribute("team") != null) ? request.getAttribute("team").toString() : "";
-	
-    System.out.println("부서명: " + department);
-    System.out.println("팀명: " + team);
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -81,144 +74,129 @@
 	    
 	    <!-- 검색 기능 : 부서, 팀 조회하기-->
 	    <script>
-			let departmentSelect = $("#department");
-			let teamSelect = $("#team");
-	 		
-			$(document).ready(function(){
-				
-				// 부서 조회 이동
-				selectDepartmentList();
-				
-				// 팀 조회 이동
-				selectTeamList();
-				if(""!="${department}" &&""!="${team}"){
-					let selectedDepartment = "${department}";
-					selectTeamList(selectedDepartment);
-				}
-				
-				// 자동 검색 실행
-                if ("${department}" !== "" || "${team}" !== "" || "${request.getParameter('phone')}" !== "" || "${request.getParameter('name')}" !== "") {
-                    search();
-                }
-				
-				
-	 		})
-	 		
-	 		// 부서조회
-	 		function selectDepartmentList(){
-				departmentSelect.empty();
-				departmentSelect.append($('<option>', {
-					value: "전체 부서",
-					text: "전체 부서"
-				}));
-				
-				$.ajax({
-			 		url:"${contextPath}/organization/department.do",
-			 		type:"GET",
-			 		/* async:"false", */
-			 		success: function(data){
-			 			
-			 			$.each(data, function(index, organizationDto) {
-			 			    $.each(organizationDto.groupList, function(index, groupDto) {
-			 			        departmentSelect.append($('<option>', {
-			 			            value: groupDto.codeName,
-			 			            text: groupDto.codeName
-						        	}));
-						    	});
-						    });
-			 			
-			 				if(${ not empty search }){
-			 					$("#search_Form #department").children("option").each(function(){
-						        	$(this).val() == "${ search.department }" && $(this).attr("selected", true);
-						        })
-			 				} 
-			 				
-			 		},
-			 		error: function(){
-			 			console.log("ajax 부서 조회 실패 입니다.")
-			 		}
-				});
-			}
-	 		
-	 		// 팀조회
-	 		function selectTeamList(){
-	 			
-	 			teamSelect.empty();
- 			 	teamSelect.append($('<option>', {
-		 	        value: "전체 팀",
-		 	        text: "전체 팀"
-		 	    }));
-	 			
-		 	    $.ajax({
-		 	        url:"${contextPath}/organization/team.do?selectedDepartment=" + departmentSelect.val(),
-		 	        type:"GET",
-		 	        /* async:"false", */
-		 	        success: function(data){
-		 	        	
-		 	            $.each(data, function(index, organizationDto) {
-		 	                $.each(organizationDto.groupList, function(index, groupDto) {
-		 	                    teamSelect.append($('<option>', {
-		 	                        value: groupDto.codeName,
-		 	                        text: groupDto.codeName
-		 	                    }));
-		 	                });
-		 	            });
-						if(${ not empty search }){
-		 					$("#search_Form #team").children("option").each(function(){
-					        	$(this).val() == "${ search.team }" && $(this).attr("selected", true);
-					        })
-		 				}
-		 	        },
-		 	        error: function(){
-		 	            console.log("ajax 팀 조회 실패 입니다.")
-		 	        }
-		 	    });
-			}
-	 		
-	 		// 부서를 선택했을 경우 실행될 function
-	 		departmentSelect.on("change", function() {
-	 			let selectedDepartment = $(this).val();
-				selectTeamList(selectedDepartment);
-	 		});
-	 		
-	 		
-	 		// 검색 이후 초기화 작동하도록 하기
-	 		$(document).ready(function(){
-	 		    $("#search_Form button[type=reset]").click(function() {
-	 		        $("#search_Form")[0].reset();
-	 		        
-	 		        $("#search_Form #department").val("전체 부서");
-	 		        $("#search_Form #team").val("전체 팀");
+	    let departmentSelect = $("#department");
+	    let teamSelect = $("#team");
+	    let initialDepartment = "${department}";
+	    let initialTeam = "${team}";
 
-	 		        return false;
-	 		    });
-	 		});
-	 		
-	 		
-	 		// 검색 버튼
-	 		function search(){
-		 		let department = $("#department").val();
-		 		let phone =  $("#phone").val();
-		 		let team = $("#team").val();
-		 	    let name = $("#name").val();
-		 	 
-	 			$.ajax({
-	 				url:"${contextPath}/organization/search.do",
-	 				type: "GET",
-	 				data: {
-	 		            department: department,
-	 		            phone: phone,
-	 		            team: team,
-	 		            name: name
-	 		        },
-					success: function(response) {
-	 		            console.log("검색 결과:", response);
-	 		        },
-	 		        error: function() {
-	 		            console.log("검색 요청 실패");
-	 		        }
-	 			})
-	 		}
+	    $(document).ready(function() {
+	        // 부서 조회
+	        selectDepartmentList();
+
+	        // 자동 검색 실행
+	        if (initialDepartment !== "" || initialTeam !== "" || "${request.getParameter('phone')}" !== "" || "${request.getParameter('name')}" !== "") {
+	            search();
+	        }
+
+	        // 검색 이후 초기화 작동하도록 하기
+	        $("#search_Form button[type=reset]").click(function() {
+	            $("#search_Form")[0].reset();
+
+	            $("#search_Form #department").val("전체 부서");
+	            $("#search_Form #team").val("전체 팀");
+
+	            return false;
+	        });
+	    });
+
+	    // 부서조회
+	    function selectDepartmentList() {
+	        departmentSelect.empty();
+	        departmentSelect.append($('<option>', {
+	            value: "전체 부서",
+	            text: "전체 부서"
+	        }));
+
+	        $.ajax({
+	            url: "${contextPath}/organization/department.do",
+	            type: "GET",
+	            success: function(data) {
+	                $.each(data, function(index, organizationDto) {
+	                    $.each(organizationDto.groupList, function(index, groupDto) {
+	                        departmentSelect.append($('<option>', {
+	                            value: groupDto.codeName,
+	                            text: groupDto.codeName
+	                        }));
+	                    });
+	                });
+
+	                if (initialDepartment !== "") {
+	                    $("#search_Form #department").val(initialDepartment);
+	                    selectTeamList(initialDepartment); // 초기 부서 선택 시 팀 목록 갱신
+	                } else {
+	                    selectTeamList("전체 부서"); // 초기 로드 시 전체 팀 목록 설정
+	                }
+	            },
+	            error: function() {
+	                console.log("ajax 부서 조회 실패 입니다.")
+	            }
+	        });
+	    }
+
+	    // 팀조회
+	    function selectTeamList(selectedDepartment) {
+	        teamSelect.empty();
+	        teamSelect.append($('<option>', {
+	            value: "전체 팀",
+	            text: "전체 팀"
+	        }));
+
+	        $.ajax({
+	            url: "${contextPath}/organization/team.do?selectedDepartment=" + selectedDepartment,
+	            type: "GET",
+	            success: function(data) {
+	                $.each(data, function(index, organizationDto) {
+	                    $.each(organizationDto.groupList, function(index, groupDto) {
+	                        teamSelect.append($('<option>', {
+	                            value: groupDto.codeName,
+	                            text: groupDto.codeName
+	                        }));
+	                    });
+	                });
+
+	                if (initialTeam !== "") {
+	                    $("#search_Form #team").val(initialTeam);
+	                    initialTeam = ""; // 초기 설정 후 값을 초기화하여 이후 선택 시 영향을 미치지 않도록 함
+	                } else {
+	                    $("#search_Form #team").val("전체 팀");
+	                }
+	            },
+	            error: function() {
+	                console.log("ajax 팀 조회 실패 입니다.")
+	            }
+	        });
+	    }
+
+	    // 부서를 선택했을 경우 실행될 function
+	    departmentSelect.on("change", function() {
+	        let selectedDepartment = $(this).val();
+	        selectTeamList(selectedDepartment);
+	    });
+
+	    // 검색 버튼
+	    function search() {
+	        let department = $("#department").val();
+	        let phone = $("#phone").val();
+	        let team = $("#team").val();
+	        let name = $("#name").val();
+
+	        $.ajax({
+	            url: "${contextPath}/organization/search.do",
+	            type: "GET",
+	            data: {
+	                department: department,
+	                phone: phone,
+	                team: team,
+	                name: name
+	            },
+	            success: function(response) {
+	                // 검색 결과 처리
+	            },
+	            error: function() {
+	                console.log("검색 요청 실패");
+	            }
+	        });
+	    }
 	    </script>
 
 
@@ -289,54 +267,65 @@
 	
 	    <!--페이징 처리 start-->
 		<div id="pagingArea" class="container">
-	        <ul class="pagination justify-content-center">
-	        	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
-	        		<a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${pi.currentPage-1}">Previous</a>
-        		</li>
-				
-				<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-					<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }">
-						<a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${p}">${ p }</a>
-					</li>
-				</c:forEach>
-				
-				<li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }">
-					<a class="page-link" href="${ contextPath }/organization/organization_list.do?page=${pi.currentPage+1}">Next</a>
-				</li> 
-	        </ul>
-	    </div>
-	    
-	    <c:if test="${ not empty search }">
-			<script>
-			     $(document).ready(function(){
-			        /* $("#search_Form #department").val("${ search.department }");
-			        $("#search_Form #department").children("option").each(function(){
-			        	$(this).val() == "${ search.department }" && $(this).attr("selected", true);
-			        })
-			        */
-			        $("#search_Form #team").val("${ search.team }");
-			        $("#search_Form #phone").val("${ search.phone }");
-			        $("#search_Form #name").val("${ search.name }");
-			        
-			        // 검색결과 페이지일 경우 페이징바 페이지 요청시 ==> <a> 기본이벤트 제거
-			        $("#pagingArea a").on("click", function(){
-						if($(this).text() == 'Previous'){
-							$("#search_Form input[name=page]").val("${pi.currentPage}" - 1);
-						}else if($(this).text() == 'Next' ){
-							$("#search_Form input[name=page]").val(Number("${pi.currentPage}") + 1);
-						}else{
-							$("#search_Form input[name=page]").val($(this).text());                   
-						}
-						$("#search_Form").submit();
-			           
-						return false;
-					})
-					
-				})
-			</script>
+		    <ul class="pagination justify-content-center">
+		        <!-- 처음 페이지로 이동 -->
+		        <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
+		            <a class="page-link" href="${ contextPath }/organization/list.do?page=1">처음</a>
+		        </li>
+		
+		        <!-- 이전 페이지로 이동 -->
+		        <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
+		            <a class="page-link" href="${ contextPath }/organization/list.do?page=${pi.currentPage-1}">◀</a>
+		        </li>
+		
+		        <!-- 페이지 번호 링크 -->
+		        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+		            <li class="page-item ${ pi.currentPage == p ? 'active' : '' }">
+		                <a class="page-link" href="${ contextPath }/organization/list.do?page=${p}">${ p }</a>
+		            </li>
+		        </c:forEach>
+		
+		        <!-- 다음 페이지로 이동 -->
+		        <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }">
+		            <a class="page-link" href="${ contextPath }/organization/list.do?page=${pi.currentPage+1}">▶</a>
+		        </li>
+		
+		        <!-- 끝 페이지로 이동 -->
+		        <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }">
+		            <a class="page-link" href="${ contextPath }/organization/list.do?page=${pi.maxPage}">끝</a>
+		        </li>
+		    </ul>
+		</div>
+		
+		<c:if test="${ not empty search }">
+		    <script>
+		        $(document).ready(function(){
+		            $("#search_Form #team").val("${ search.team }");
+		            $("#search_Form #phone").val("${ search.phone }");
+		            $("#search_Form #name").val("${ search.name }");
+		
+		            // 검색결과 페이지일 경우 페이징바 페이지 요청시 ==> <a> 기본이벤트 제거
+		            $("#pagingArea a").on("click", function(){
+		                if($(this).text() == '처음'){
+		                    $("#search_Form input[name=page]").val(1);
+		                } else if($(this).text() == '◀'){
+		                    $("#search_Form input[name=page]").val("${pi.currentPage}" - 1);
+		                } else if($(this).text() == '▶'){
+		                    $("#search_Form input[name=page]").val(Number("${pi.currentPage}") + 1);
+		                } else if($(this).text() == '끝'){
+		                    $("#search_Form input[name=page]").val("${pi.maxPage}");
+		                } else {
+		                    $("#search_Form input[name=page]").val($(this).text());                   
+		                }
+		                $("#search_Form").submit();
+		
+		                return false;
+		            })
+		        })
+		    </script>
 		</c:if>
-	     
-	    <!--페이징 처리 end-->
+		<!--페이징 처리 end-->
+
 		
 	</div>
 	<!-- 메인 영역 end-->
