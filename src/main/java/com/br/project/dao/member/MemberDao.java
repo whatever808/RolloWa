@@ -95,5 +95,15 @@ public class MemberDao {
 		return sqlSessionTemplate.selectList("memberMapper.selectMemberListSearch", paramMap);
 	}
 	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+	/* ======================================= "예찬" 구역 ======================================= */
+	/**
+	 * 회원의 연차 정보를 불러오는 dao
+	 * @param userNo {회원 고유 번호}
+	 * @return 연차 정보를 담고 있는 Dto객체
+	 */
+	public MemberDto selectAnuual(int userNo) {
+		return sqlSessionTemplate.selectOne("memberMapper.selectAnuual", userNo);
+	}
+	/* ======================================= "예찬" 구역 ======================================= */
 	
 }

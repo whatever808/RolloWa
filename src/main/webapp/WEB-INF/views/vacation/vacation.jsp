@@ -211,6 +211,22 @@ a {
 .attach-put{
 	display:none;
 }
+.fa-plane:before{
+	color: skyblue;
+}
+.fa-bolt:before, .fa-zap:before{
+	color: #ffe200;
+}
+.fa-pills:before{
+	color: purple;
+}
+.fa-street-view:before{
+	color: coral;
+}
+.fa-earth-america:before, .fa-earth-americas:before, .fa-earth:before, .fa-globe-americas:before{
+	color: green;
+}
+
 </style>
 </head>
 <body>
@@ -227,24 +243,25 @@ a {
 				</legend>
 
 				<div class="font-size25 jua-regular">연차 현황</div>
+				
 				<br>
 				<div class="vacation-area" id="vacation-area">
+				
 					<div class="line-border-square line-shadow">
-						연차<br> <br>15일
+						연차<br> <br>${member.vacationCount}일
 					</div>
 					<div class="line-border-square line-shadow">
-						소실<br> <br> <span class="RedContext">1일</span>
+						사용<br> <br> <span class="RedContext">${member.vaUsingDate}일</span>
 					</div>
 					<div class="line-border-square line-shadow">
-						사용<br> <br> <span class="RedContext">33일</span>
+						지급일<br> <br> <span class="gContext">${loginMember.vaGivenDate}일</span>
 					</div>
 					<div class="line-border-square line-shadow">
-						지급일<br> <br> <span class="gContext">3일</span>
+						근무 연수<br> <br>${loginMember.vaYearLabor }년
 					</div>
-					<div class="line-border-square line-shadow">
-						근무 연수<br> <br>3년
-					</div>
+					
 				</div>
+				
 				<br>
 				<div class="font-size25 jua-regular">휴가 신청</div>
 				<br>
@@ -266,7 +283,7 @@ a {
 				<div class="font-size25 jua-regular">결재 대기</div>
 				<div class="standby">
 				</div>
-
+				<br>
 				<div class="font-size25 jua-regular">철회</div>
 				<div class="retract">
 				</div>
@@ -670,7 +687,7 @@ a {
 			restoreDefaultContent : false,
 		});
 	</script>
-
+	
 	<!-- 철회 -->
 	<form id="retract_request">
 		<div class="Category">
