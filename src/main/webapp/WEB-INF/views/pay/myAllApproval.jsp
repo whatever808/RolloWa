@@ -76,7 +76,7 @@
     .pending {
         background-color: #e91e6387;
     }
-    .completes {
+    .completed {
         background-color: #F44336;
     }
     .progresses {
@@ -277,7 +277,7 @@ function loadPageAll(page) {
 			                '<td>' + item.PAYMENT_WRITER + '</td>' +
 			                '<td>' + item.DEPARTMENT + '</td>' +
 			                '<td>' + item.REGIST_DATE + '</td>' +
-			                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
+			                '<td>' + (item.DOCUMENT_STATUS == '완료' ? item.FINAL_APPROVAL_DATE : "-") + '</td>' +
 			                '</tr>';
 						
 						  tbody.append(row);
@@ -371,7 +371,7 @@ function loadPageCompletes(page) {
 		                '<td>' + item.PAYMENT_WRITER + '</td>' +
 		                '<td>' + item.DEPARTMENT + '</td>' +
 		                '<td>' + item.REGIST_DATE + '</td>' +
-		                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
+		                '<td>' + (item.DOCUMENT_STATUS == '완료' ? item.FINAL_APPROVAL_DATE : "-") + '</td>' +
 		                '</tr>';
 					
 					  tbody.append(row);
@@ -468,7 +468,7 @@ function loadPageWait(page) {
 	                '<td>' + item.PAYMENT_WRITER + '</td>' +
 	                '<td>' + item.DEPARTMENT + '</td>' +
 	                '<td>' + item.REGIST_DATE + '</td>' +
-	                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
+	                '<td>' + (item.DOCUMENT_STATUS == '완료' ? item.FINAL_APPROVAL_DATE : "-") + '</td>' +
 	                '</tr>';
 				
 				    tbody.append(row);
@@ -569,7 +569,7 @@ $(document).on('click', '.pages-linkr', function(e) {
 				                '<td>' + item.PAYMENT_WRITER + '</td>' +
 				                '<td>' + item.DEPARTMENT + '</td>' +
 				                '<td>' + item.REGIST_DATE + '</td>' +
-				                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
+				                '<td>' + (item.DOCUMENT_STATUS == '완료' ? item.FINAL_APPROVAL_DATE : "-") + '</td>' +
 				                '</tr>';
 			
 	       			 tbody.append(row);
@@ -674,7 +674,7 @@ function loadPageProgresses(page) {
 					                '<td>' + item.PAYMENT_WRITER + '</td>' +
 					                '<td>' + item.DEPARTMENT + '</td>' +
 					                '<td>' + item.REGIST_DATE + '</td>' +
-					                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? '-' : item.FINAL_APPROVAL_DATE) + '</td>' +
+					                '<td>' + (item.DOCUMENT_STATUS == '완료' ? item.FINAL_APPROVAL_DATE : "-") + '</td>' +
 					                '</tr>';
 
                 tbody.append(row);
@@ -775,7 +775,7 @@ $(document).on('click', '.pages-linki', function(e) {
 							                '<td>' + item.PAYMENT_WRITER + '</td>' +
 							                '<td>' + item.DEPARTMENT + '</td>' +
 							                '<td>' + item.REGIST_DATE + '</td>' +
-							                '<td>' + (item.FINAL_APPROVAL_DATE === '' ? null : item.FINAL_APPROVAL_DATE) + '</td>' +
+							                '<td>' + (item.DOCUMENT_STATUS == '완료' ? item.FINAL_APPROVAL_DATE : "-") + '</td>' +
 							                '</tr>';
 
 		                tbody.append(row);

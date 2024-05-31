@@ -456,24 +456,24 @@ $(document).ready(function(){
                                     	<td class="label">금액</td>
                                 	 </tr>
                                 	 <tr>
-	                                    <td class="value"><input type="text" name="account1"></td>
-	                                    <td class="value"><input type="text" name="usage1"></td>
-	                                    <td class="num value"><input type="text" name="price1"></td>
+	                                    <td class="value"><input type="text" name="account"></td>
+	                                    <td class="value"><input type="text" name="usage"></td>
+	                                    <td class="num value"><input type="text" name="price"></td>
 		                                </tr>
 		                                <tr>
-		                                    <td class="value"><input type="text" name="account2"></td>
-		                                    <td class="value"><input type="text" name="usage2"></td>
-		                                    <td class="num value"><input type="text" name="price2"></td>
+		                                    <td class="value"><input type="text" name="account"></td>
+		                                    <td class="value"><input type="text" name="usage"></td>
+		                                    <td class="num value"><input type="text" name="price"></td>
 		                                </tr>
 		                                <tr>
-		                                    <td class="value"><input type="text" name="account3"></td>
-		                                    <td class="value"><input type="text" name="usage3"></td>
-		                                    <td class="num value"><input type="text" name="price3"></td>
+		                                    <td class="value"><input type="text" name="account"></td>
+		                                    <td class="value"><input type="text" name="usage"></td>
+		                                    <td class="num value"><input type="text" name="price"></td>
 		                                </tr>
 		                                <tr>
-		                                   	<td class="value"><input type="text" name="account4"></td>
-		                                    <td class="value"><input type="text" name="usage4"></td>
-		                                    <td class="num value"><input type="text" name="price4"></td>
+		                                   	<td class="value"><input type="text" name="account"></td>
+		                                    <td class="value"><input type="text" name="usage"></td>
+		                                    <td class="num value"><input type="text" name="price"></td>
 		                                </tr>
 										            </table>
 										            <table class="content2">
@@ -539,56 +539,17 @@ $(document).ready(function(){
     </script>
    
     <script>
-	    	function submitbtn(){
-   					let itemArr = [];
-   					let countArr = [];
-   					let salesArr = [];
-   					//금액
-	    		$(".item").each(function(){
-					 		if($(this).val().trim() != ""){
-					 			itemArr.push($(this).val());
-							}
-	        })
-	        
-	        $("#items").val(itemArr);
-	     					
-	    					//수량
-	   			$(".count").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			countArr.push($(this).val());
-						}
-	         })
-	         $("#counts").val(countArr);
-	    					
-	   					// 매출금액
-	    		$(".sales_amount").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			salesArr.push($(this).val());
-						}
-	          })
-	         $("#sales_amounts").val(salesArr);	
-	
-	         if(confirm('정말로 제출하시겠습니까?')){
-	        	 if($(".sing_name").text() == ""){
-	        		 alert("승인자를 3차까지 선택해주세요.");
-	        	 }
-	         }
-	                
-	       }
-   	</script>
-    
-    <script>
     $(document).ready(function(){
     	
-    	let i = 40;
+    	
     	$(document).on("click", "#plus_btn", function () {
     		
     		let result = "<tr>";
-    		result += "<td><input type='text' name='account" + (i) + "'></td>";
-    		result += "<td><input type='text' name='usage" + (i) + "'></td>";
-    		result += "<td class='num'><input type='text' name='price" + (i) + "'></td>";
+    		result += "<td><input type='text' name='account'></td>";
+    		result += "<td><input type='text' name='usage'></td>";
+    		result += "<td class='num'><input type='text' name='price'></td>";
     		result += "</tr>";
-    		i++;
+    		
     		
        $("#tr_table").children().last().after(result);
        

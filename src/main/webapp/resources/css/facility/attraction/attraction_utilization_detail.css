@@ -1,0 +1,13 @@
+.chart-list-div{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid tomato;
+}
+
+.chart{
+	width: 80%;
+	height: 30%;
+	border: 1px solid blue;
+}

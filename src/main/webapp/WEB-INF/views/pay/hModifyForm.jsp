@@ -453,7 +453,7 @@ $(document).ready(function(){
                                     </tr>
 										                <tr>
 										                    <td class="label">제목</td>
-										                    <td class="value" colspan="4"><input type="text" name="title" value="${ list.get(0).RETIRE_TITLE }" required></td>
+										                    <td class="value" colspan="4"><input type="text" name="title" value="${ list.get(0).TITLE }" required></td>
 										                </tr>
 										            </table>
 										        </div>
@@ -461,7 +461,7 @@ $(document).ready(function(){
 										            <table id="tr_table">
 										               <tr>
                                     		<td class="label">성명</td>
-                                    		<td class="value"><input type="text" value="${userName}" value="${ list.get(0).PAYMENT_WRITER}" readonly></td>
+                                    		<td class="value"><input type="text" value="${userName}" value="${ list.get(0).PAYMENT_WRITER }" readonly></td>
 		                                </tr>
 		                                <tr>
 		                                    <td class="label">소속</td>
@@ -479,7 +479,7 @@ $(document).ready(function(){
 		                                    <td class="label">사유</td>
 		                                    <td class="value">
 		                                        <textarea id="" cols="30" rows="10" name="content" required>
-		                                        ${ list.get(0).RETIRE_CONTENT}
+		                                        ${ list.get(0).RETIRE_CONTENT.trim()}
 		                                        </textarea>
 		                                    </td>
 		                                </tr>

@@ -382,7 +382,7 @@ $(document).ready(function(){
             <div class="informations">
                 <!-- informations left area start -->
                 <div class="left_con">
-		                <form action="${contextPath}/pay/mReportInsert.do" method="post" id="myForm">
+		                <form action="${contextPath}/pay/mReportUpdate.do" method="post" id="myForm">
 		                   <input type="hidden" name="deptName" value="${member.get(0).teamName}">
                        <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
@@ -481,12 +481,15 @@ $(document).ready(function(){
 										                    <td class="label">수량</td>
 										                    <td class="label">매출금액</td>
 										                </tr>
+										                
 										                <c:forEach var="i" begin="0" end="${ list.size() - 1}">
+										                	<c:if test="${list.get(i).ITEM != null and !list.get(i).ITEM.equals('')}">
 		                                	<tr id="tr_input">
-		                                    <td><input type="text" name="item${i}" value="${list.get(i).ITEM}"></td>
-		                                    <td><input type="number" name="count${i}" min="1" value="${list.get(i).VOLUMES}"></td>
-		                                    <td><input type="text" name="sales${i}" value="${list.get(i).SALES_AMOUNT.toString().trim()}"></td>
+		                                    <td><input type="text" name="item" value="${list.get(i).ITEM}"></td>
+		                                    <td><input type="number" name="count" min="1" value="${list.get(i).VOLUMES}"></td>
+		                                    <td><input type="text" name="sales" value="${list.get(i).SALES_AMOUNT}"></td>
 		                                	</tr>
+		                                	</c:if>
 	                                	</c:forEach>
 										            </table>
 										            	<input type="hidden" name="items" id="items">
@@ -585,9 +588,9 @@ $(document).ready(function(){
     		
     		
     		var result = "<tr>";
-    		result += "<td><input type='text' class='item'></td>";
-    		result += "<td><input type='number' class='count' min='1'></td>";
-    		result += "<td><input type='text' class='sales_amount'></td>";
+    		result += "<td><input type='text' class='item' name='item'></td>";
+    		result += "<td><input type='number' class='count' min='1' name='count'></td>";
+    		result += "<td><input type='text' class='sales_amount' name='amount'></td>";
     		result += "</tr>";
         
        $("#tr_table").children().last().after(result);

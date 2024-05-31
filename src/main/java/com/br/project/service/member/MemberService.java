@@ -96,6 +96,15 @@ public class MemberService {
 		return memberDao.selectMemberListSearch(paramMap);
 	}
 
+	// 사용자 탈퇴
+	public int deleteMemberAttendance(Map<String, Object> paramMap) {
+		return memberDao.deleteMemberAttendance(paramMap);
+	}
+	// 사용자 정보 수정
+	public int updateMemberAttendance(Map<String, Object> paramMap) {
+		return memberDao.updateMemberAttendance(paramMap);
+	}
+
 	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 	
 	/* ======================================= "예찬" 구역 ======================================= */

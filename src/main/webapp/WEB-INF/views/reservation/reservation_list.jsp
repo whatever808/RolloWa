@@ -255,6 +255,26 @@
 				}
 			})
 		}
+     	
+		document.addEventListener("DOMContentLoaded", function() {
+            const trElements = document.querySelectorAll('.tr_cursor'); // 클릭할 tr 요소를 선택합니다.
+        	const userName = "${loginMember.userName}";
+        	const userId = "${loginMember.userId}";
+        	const modal_date = document.getElementById('currentDate').value;
+        	
+            trElements.forEach(function(trElement) {
+                trElement.addEventListener('click', function() {
+                    const equipmentName = trElement.querySelector('td:nth-child(2) h6').textContent; // 클릭한 tr 요소에서 비품명을 가져옵니다.
+                    
+                    console.log("선택한 날짜 : ", document.getElementById('currentDate').value);
+                    
+                    document.getElementById('userName').textContent = userName + "(" + userId + ")";
+                    document.getElementById('selectedEquipmentName').textContent = equipmentName;
+                    document.getElementById('modal_date').textContent = document.getElementById('currentDate').value;
+
+                });
+            });
+        });
         
 		</script>
 
@@ -286,39 +306,10 @@
             <table class="table_count">
                 <tr>
                     <td class="td_left"><h4>전체 ${ listCount }개</h4></td>
-                    <!-- <td class="td_right">
-                        <input type="checkbox" id="checkEquipment" name="checkEquipment" class="form-check-input">
-                        <label for="checkEquipment">
-                            <h4>사용불가 제외</h4>
-                        </label>
-                    </td> -->
                 </tr>
             </table>
         </div>
         
-        <!-- 모달창 스크립트 -->
-        <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const trElements = document.querySelectorAll('.tr_cursor'); // 클릭할 tr 요소를 선택합니다.
-        	const userName = "${loginMember.userName}";
-        	const userId = "${loginMember.userId}";
-        	const modal_date = document.getElementById('currentDate').value;
-        	
-            trElements.forEach(function(trElement) {
-                trElement.addEventListener('click', function() {
-                    const equipmentName = trElement.querySelector('td:nth-child(2) h6').textContent; // 클릭한 tr 요소에서 비품명을 가져옵니다.
-                    
-                    console.log("날짜자 : ", document.getElementById('currentDate').value);
-                    
-                    document.getElementById('userName').textContent = userName + "(" + userId + ")";
-                    document.getElementById('selectedEquipmentName').textContent = equipmentName;
-                    document.getElementById('modal_date').textContent = document.getElementById('currentDate').value;
-
-                });
-            });
-        });
-        </script>
-
         <!-- 비품 예약 모달창 -->
         <form id="modalForm" method="post">
         

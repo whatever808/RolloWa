@@ -78,7 +78,7 @@ public class MemberDao {
 	public Map<String, Object> selectAuthLevel(int userNo) {
 		return sqlSessionTemplate.selectOne("memberMapper.selectAuthLevel", userNo);
 	}
-	// 회원 정보 전체 조회하기
+	// 사용자 정보 전체 조회하기
 	public MemberDto selectMemberInfo(int userNo) {
 		return sqlSessionTemplate.selectOne("memberMapper.selectMemberInfo", userNo);
 	}
@@ -93,6 +93,14 @@ public class MemberDao {
 	// 사용자 전체 리스트 검색 조회
 	public List<HashMap<String, Object>> selectMemberListSearch(Map<String, Object> paramMap) {
 		return sqlSessionTemplate.selectList("memberMapper.selectMemberListSearch", paramMap);
+	}
+	// 사용자 탈퇴
+	public int deleteMemberAttendance(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.update("memberMapper.deleteMemberAttendance", paramMap);
+	}
+	// 사용자 정보 수정
+	public int updateMemberAttendance(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.update("memberMapper.updateMemberAttendance", paramMap);
 	}
 	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 	/* ======================================= "예찬" 구역 ======================================= */
