@@ -57,4 +57,11 @@ public class AttractionService {
 		return attractionDao.updateAttraction(params);
 	}
 	
+	/**
+	 * @param params : 연, 월, 일, 장소 정보
+	 * @return : 연간, 월간, 일간 어트랙션 이용률 리스트
+	 */
+	public List<Map<String, Object>> selectAttractionUtilizationList(HashMap<String, Object> params){
+		return attractionDao.selectAttractionUtilizationList(params);
+	}
 }

@@ -127,6 +127,7 @@
 	      , msg_content
 	      , user_no
 	      , cr_no
+	      , send_date
 	  )
   values
 	  (
@@ -134,13 +135,14 @@
 	      , #{ msgContent }
 	      , #{ userNo }
 	      , #{ chatRoomNo }
+	      , to_date(#{ sendDate }, 'YYYY-MM-DD HH24:MI:SS')
 	  )
   </insert>
   <!-- 채팅방 메세지 조회 -->
   <select id="selectChatMsg" resultMap="chatMsgResult">
 		<![CDATA[
 		select
-		    msg_no, msg_content, to_char(send_date, 'HH24:MI') as "send_date", user_name, user_no, profile_url
+		    msg_no, msg_content, to_char(send_date, 'MM-DD HH24:MI') as "send_date", user_name, user_no, profile_url
 		from
 		    (select
 		        msg_no, msg_content, send_date, user_name, cm.user_no, profile_url, rownum
@@ -185,9 +187,25 @@
 		    cp.cr_no = cm.cr_no
 		where
 		    cp.chat_user_no = #{ userNo }
+		and
+        cm.user_no != #{ userNo }   
     and
         cm.cr_no = #{ roomNo }
+    and
+        cp.status = 'Y'
 		and
 		   	cm.send_date > NVL(cp.chat_out_date, to_date('1000/01/01 00:00:00', 'YYYY/MM/DD HH24:MI:SS'))
   </select>
+  
+  <!-- 채팅방 나가기 -->
+  <update id="quitChat">
+  update 
+	    chatting_participation
+	set
+	    status = 'N'
+	where
+	    chat_user_no = #{ userNo }
+	and
+	    cr_no = #{ roomNo }
+  </update>
 </mapper>

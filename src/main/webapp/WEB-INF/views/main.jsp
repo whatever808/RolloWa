@@ -59,7 +59,7 @@
             <div class="container">
                 <span class="error animated tada" id="msg"></span>
                 <form action="${ contextPath }/member/login.do" method="post" name="form1" class="box" onsubmit="return checkStuff()">
-                    <h4>회사 이름</h4>
+                    <h4>RolloWa</h4>
                     <h5>Sign in to your account.</h5>
                     <input type="text" name="userId" placeholder="user id" autocomplete="off">
                     <i class="typcn typcn-eye" id="eye"></i>
@@ -213,7 +213,7 @@
 									, success: function(result) {
 										if(result.msg == 'SUCCESS') {
 											alertify.alert("비밀번호 변경", "임시 비밀번호는 다음과 같습니다. 로그인 후 비밀번호 변경해주세요.\n비밀번호 :" + result.newPwd);
-											console.log(result.newPwd);
+											$("#forget_pwd").iziModal("close");
 										} else if(result.msg == 'FAIL') {
 											alertify.alert("비밀번호 변경에 실패했습니다.");
 										}

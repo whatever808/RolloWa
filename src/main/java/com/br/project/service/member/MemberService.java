@@ -95,6 +95,7 @@ public class MemberService {
 	public List<HashMap<String, Object>> selectMemberListSearch(Map<String, Object> paramMap) {
 		return memberDao.selectMemberListSearch(paramMap);
 	}
+
 	// 사용자 탈퇴
 	public int deleteMemberAttendance(Map<String, Object> paramMap) {
 		return memberDao.deleteMemberAttendance(paramMap);
@@ -103,7 +104,14 @@ public class MemberService {
 	public int updateMemberAttendance(Map<String, Object> paramMap) {
 		return memberDao.updateMemberAttendance(paramMap);
 	}
+
 	// ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ 호관 end ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 	
+	/* ======================================= "예찬" 구역 ======================================= */
 	
+	public MemberDto selectAnuual(int userNo) {
+		return memberDao.selectAnuual(userNo);
+	}
+	
+	/* ======================================= "예찬" 구역 ======================================= */
 }

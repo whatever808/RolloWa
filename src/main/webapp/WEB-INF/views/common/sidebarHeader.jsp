@@ -141,11 +141,14 @@
             position: fixed;
             right: 80px;
             bottom: 30px;
-            display: none;
+            opacity: 0;
             flex-direction: column;
             overflow: auto;
             overflow-x: none;
-            z-index: 100;
+            z-index: -1;
+            transition-property: opacity;
+            transition-duration: 0.3s;
+            background: #eee;
         }
 
         .people_list {
@@ -154,14 +157,21 @@
             overflow-x: hidden;
         }
 
-
         /* 채팅방 리스트 */
+        .chat_room {
+        	border-radius: 5px;
+        }
+        
         .chat_room:hover {
             background-color: #eeeeee;
         }
 
         .chat_room_active {
             background-color: #dddddd;
+        }
+        
+        .selected {
+        	background-color: #eeeeee;
         }
 
         .card-body {
@@ -172,7 +182,6 @@
 
         /* 인물 목록 */
         .people_list {
-            /* display: none; */
             display: flex;
             flex-direction: column;
         }
@@ -269,7 +278,6 @@
 
         /* 채팅방 */
         .chatting {
-            /* display: none; */
             display: block;
         }
 
@@ -292,6 +300,15 @@
         }
 
         /* 채팅방 스타일 끝 */
+        
+        /* 채팅 메세지 스타일 */
+        .fromMe {
+        	background-color: #fff8e3;
+    			color: #444444;
+        }
+        
+        /* 채팅 메세지 스타일 끝 */
+        
     </style>
 <style>
 #main_logo span:hover {
@@ -624,28 +641,83 @@ $(document).ready(function(){
                 </li>
                 <!-- ======================================= calendar page ========================================= -->
   
-                <!-- 전자결재 -->
+							<!-- ------------------------------------------전자결재 Start------------------------------------------------------ -->
                 <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#approval-collapse" aria-expanded="false">
-                        전자결재
-                    </button>
-                    <div class="collapse" id="approval-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="${contextPath}/pay/approvalMain.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재Home</a></li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재함</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재작성하기</a>
-                            </li>
-                            <li><a href="${contextPath}/pay/myAllApproval.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">나의 결재함</a> 
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+						    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+						        data-bs-toggle="collapse" data-bs-target="#approval-collapse" aria-expanded="false">
+						        전자결재
+						    </button>
+						    <div class="collapse" id="approval-collapse">
+						        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+						            <li>
+						                <a href="${contextPath}/pay/approvalMain.page"
+						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재Home</a>
+						            </li>
+						            <li>
+						                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+						                    data-bs-toggle="collapse" data-bs-target="#approval-collapseApproval" aria-expanded="false">
+						                    결재함
+						                </button>
+						                <div class="collapse" id="approval-collapseApproval">
+						                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+						                        <li>
+						                            <a href="${contextPath}/pay/rejectApprovalList.page"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">반려함</a>
+						                        </li>
+						                        <li>
+						                            <a href="${contextPath}/pay/finishApprovalList.page"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">승인함</a>
+						                        </li>
+						                        <li>
+						                            <a href="${contextPath}/pay/noApprovalList.page"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">미결재함</a>
+						                        </li>
+						                    </ul>
+						                </div>
+						            </li>
+						            <li>
+						                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+						                    data-bs-toggle="collapse" data-bs-target="#approval-collapsewriter" aria-expanded="false">
+						                    결재작성
+						                </button>
+						                <div class="collapse" id="approval-collapsewriter">
+						                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+						                        <li>
+						                            <a  href="${contextPath}/pay/writerForm.page?writer=b"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품신청서</a>
+						                        </li>
+						                        <li>
+						                            <a href="${contextPath}/pay/writerForm.page?writer=m"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">매출보고서</a>
+						                        </li>
+						                        <li>
+						                            <a href="${contextPath}/pay/writerForm.page?writer=j"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">지출결의서</a>
+						                        </li>
+						                        <li>
+						                            <a href="${contextPath}/pay/writerForm.page?writer=g"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">기안서</a>
+						                        </li>
+						                        <li>
+						                            <a href="${contextPath}/pay/writerForm.page?writer=h"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">휴직신청서</a>
+						                        </li>
+						                        <li>
+						                            <a href="${ contextPath }/vacation/vacation.page"
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">휴가신청서</a>
+						                        </li>
+						                        
+						                    </ul>
+						                </div>
+						            </li>
+						            <li>
+						                <a href="${contextPath}/pay/myAllApproval.page"
+						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">나의 결재함</a>
+						            </li>
+						        </ul>
+						    </div>
+							</li>
+							<!-- ------------------------------------------전자결재 End------------------------------------------------------ -->
                 <li class="border-top my-3"></li>
                 <li class="mb-1">
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
@@ -657,17 +729,12 @@ $(document).ready(function(){
                             <li><a href="${ contextPath }/member/mypage.page"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">마이페이지</a>
                             </li>
-                            <li><a href="${ contextPath }/notification/list.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Notification</a>
-                            </li>
-
-                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
-                                    out</a></li>
-                                    
-                               <li>
-                               <a href="${ contextPath }/payment/payment.page" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                               Payment</a>
-                               </li>       
+                            <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">로그아웃</a>
+                            </li>       
+                            <li>
+                            <a href="${ contextPath }/payment/payment.page" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                            Payment</a>
+                            </li>       
                         </ul>
                     </div>
                 </li>
@@ -705,6 +772,9 @@ $(document).ready(function(){
 						// 채팅용 웹소켓 연결
 						chatting = new SockJS("${contextPath}/chatting");
 						stompClient = Stomp.over(chatting);
+					  stompClient.debug = function(str) {
+						    // append the debug log
+						};
 			    	stompClient.connect({}, function(frame) {
 							// 구독 중인 채팅방 목록 조회
 					    $.ajax({
@@ -717,7 +787,7 @@ $(document).ready(function(){
 					    			stompClient.subscribe("/topic/chat/room/" + result[i].chatRoomNo, function(msg) {
 					    				// 메세지 수신 처리
 					    				receiveMsg(msg);
-					    			})
+					    			}, { id: "room" + result[i].chatRoomNo})
 					    		}
 					    		selectChatRoom();
 					    	}
@@ -731,12 +801,16 @@ $(document).ready(function(){
 					    	// 문자열을 json으로 변환
 					    	const msgBody = JSON.parse(msg.body);
 					    	
-					    	console.log(msgBody);
-					    	
 					    	if(msgBody.flag == 0) {
 					    		// 채팅방 초대 알림인 경우
 					    		if(msgBody.userNo != ${loginMember.userNo}) {
+					    			// 메세지 수신 => 채팅방 목록 새로고침
 					    			receiveInviteMsg(msgBody);
+					    			// 초대 받은 채팅방 구독
+					    			stompClient.subscribe("/topic/chat/room/" + msgBody.roomNo, function(msg) {
+					    				// 메세지 수신 처리
+					    				receiveMsg(msg);
+					    			})
 					    		}
 					    	} else {
 					    		// 공지사항, 일정 등록 알림인 경우
@@ -772,7 +846,7 @@ $(document).ready(function(){
 					    
 						})
 					})
-					
+										
 					// 알림 스타일
 					$("#alram").iziModal({
 						title: '<h6>부서 알림 서비스</h6>'

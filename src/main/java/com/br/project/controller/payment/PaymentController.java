@@ -45,7 +45,7 @@ public class PaymentController {
 	 */
 	@ResponseBody
 	@PostMapping("/tossSimplePay.ajax")
-	public void ajaxTossSimplePay(@RequestBody HashMap<String,Object> param) {
+	public int ajaxTossSimplePay(@RequestBody HashMap<String,Object> param) {
 		
 		// 결제 상태 1:결제대기, 2:결제취소, 3:결제성공
 		if(param.get("status").equals("paid")) {
@@ -58,11 +58,17 @@ public class PaymentController {
 		
 		// 결제수단이 계좌이체일 경우 CS
 		if(param.get("pay_method").equals("trans")) {
-			
+			param.replace("pay_method", "CS");
+		}else if(param.get("pay_method").equals("card ")){
+			param.replace("pay_method", "CD");
 		}
 		
+		if(!param.get("paid_amount").equals("")) {
+			param.put("onePrice", Integer.parseInt((String)param.get("paid_amount"))
+								/Integer.parseInt((String)param.get("paid_amount")));
+		}
 		
-		int result = paymentService.ajaxTossSimplePay(param);
+		return paymentService.ajaxTossSimplePay(param);		
 	}
 	
 

@@ -23,7 +23,11 @@ public class PaymentDao {
 		return sqlSessionTemplate.insert("paymentMapper.ajaxTossSimplePay", params);
 	}
 	public int ajaxTossSimplePayDetail(HashMap<String, Object> params) {
-		return 0;
+		return sqlSessionTemplate.insert("paymentMapper.ajaxTossSimplePayDetail", params);
+	}
+
+	public Map<String, Object> selectValiation() {
+		return sqlSessionTemplate.selectOne("paymentMapper.selectValiation");
 	}
 
 }

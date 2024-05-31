@@ -461,28 +461,28 @@ $(document).ready(function(){
 	                                    <td class="label">비고</td>
                                 		</tr>
 										                <tr>
-	                                    <td class="value"><input type="text" class="text_1" name="pName1"></td>
-	                                    <td class="value"><input type="text" class="text_2" name="size1"></td>
-	                                    <td class="value"><input type="number"  min="1" class="text_3" name="amount1"></td>
-	                                    <td class="value"><input type="text" class="text_4" name="unitprice1"></td>
-	                                    <td class="value"><input type="text" class="text_5" name="price1"></td>
-	                                    <td class="value"><input type="text" class="text_6" name="etc1"></td>
+	                                    <td class="value"><input type="text" class="text_1" name="pName"></td>
+	                                    <td class="value"><input type="text" class="text_2" name="size"></td>
+	                                    <td class="value"><input type="number"  min="1" class="text_3" name="amount"></td>
+	                                    <td class="value"><input type="text" class="text_4" name="unitPrice"></td>
+	                                    <td class="value"><input type="text" class="text_5" name="price"></td>
+	                                    <td class="value"><input type="text" class="text_6" name="etc"></td>
 		                                </tr>
 		                                <tr>
-		                                    <td class="value"><input type="text" class="text_1" name="pName1"></td>
-		                                    <td class="value"><input type="text" class="text_2" name="size2"></td>
-		                                    <td class="value"><input type="number"  min="1" class="text_3" name="amount2"></td>
-		                                    <td class="value"><input type="text" class="text_4" name="unitprice2"></td>
-		                                    <td class="value"><input type="text" class="text_5" name="price2"></td>
-		                                    <td class="value"><input type="text" class="text_6" name="etc2"></td>
+		                                    <td class="value"><input type="text" class="text_1" name="pName"></td>
+		                                    <td class="value"><input type="text" class="text_2" name="size"></td>
+		                                    <td class="value"><input type="number"  min="1" class="text_3" name="amount"></td>
+		                                    <td class="value"><input type="text" class="text_4" name="unitPrice"></td>
+		                                    <td class="value"><input type="text" class="text_5" name="price"></td>
+		                                    <td class="value"><input type="text" class="text_6" name="etc"></td>
 		                                </tr>
 		                                <tr id="next_tr">
-		                                   	<td class="value"><input type="text" class="text_1" name="pName3"></td>
-		                                    <td class="value"><input type="text" class="text_2" name="size3"></td>
-		                                    <td class="value"><input type="number"  min="1" class="text_3" name="amount3"></td>
-		                                    <td class="value"><input type="text" class="text_4" name="unitprice3"></td>
-		                                    <td class="value"><input type="text" class="text_5" name="price3"></td>
-		                                    <td class="value"><input type="text" class="text_6" name="etc3"></td>
+		                                   	<td class="value"><input type="text" class="text_1" name="pName"></td>
+		                                    <td class="value"><input type="text" class="text_2" name="size"></td>
+		                                    <td class="value"><input type="number"  min="1" class="text_3" name="amount"></td>
+		                                    <td class="value"><input type="text" class="text_4" name="unitPrice"></td>
+		                                    <td class="value"><input type="text" class="text_5" name="price"></td>
+		                                    <td class="value"><input type="text" class="text_6" name="etc"></td>
 		                                </tr>
 										            </table>
 										            <table class="content2">
@@ -522,70 +522,32 @@ $(document).ready(function(){
      
     <script>
     	
-    	$(document).ready(function(){
+    document.querySelector("#myForm").addEventListener("submit", function(event){
     	
-    		$("#insertBtn").on("click", function(){
-	    		$(".namecheck").each(function(){
-		    		if($(this).val() == ""){
-		    			alert("승인자를 선택해주세요.");
-		    			return false;
-		    		}
-	    		})	    	
-    		})
-    	})
+		$("#insertBtn").on("click", function(){
+    		$(".namecheck").each(function(){
+	    		if($(this).val() == ""){
+	    			alert("승인자를 선택해주세요.");
+	    			return false;
+	    		}
+    		})	    	
+		})
+		
+		})
     	
     </script>
    
-    <script>
-	    	function submitbtn(){
-   					let itemArr = [];
-   					let countArr = [];
-   					let salesArr = [];
-   					//금액
-	    		$(".item").each(function(){
-					 		if($(this).val().trim() != ""){
-					 			itemArr.push($(this).val());
-							}
-	        })
-	        
-	        $("#items").val(itemArr);
-	     					
-	    					//수량
-	   			$(".count").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			countArr.push($(this).val());
-						}
-	         })
-	         $("#counts").val(countArr);
-	    					
-	   					// 매출금액
-	    		$(".sales_amount").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			salesArr.push($(this).val());
-						}
-	          })
-	         $("#sales_amounts").val(salesArr);	
-	
-	         if(confirm('정말로 제출하시겠습니까?')){
-	        	 if($(".sing_name").text() == ""){
-	        		 alert("승인자를 3차까지 선택해주세요.");
-	        	 }
-	         }
-	                
-	       }
-   	</script>
-    
     <script>
     $(document).ready(function(){
     		let i = 4;
     	$(document).on("click", "#plus_btn", function () {
     		var result = "<tr>";
-    		result += "<td><input type='text' class='text_1' name='pName" + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_2' name='size" + (i) +"'></td>";
-    		result += "<td><input type='number' min='1' class='text_3' name='amount"  + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_4' name='unitprice" + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_5' name='price" + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_6' name='etc" + (i) + "'></td>";
+    		result += "<td><input type='text' class='text_1' name='pName'></td>";
+    		result += "<td><input type='text' class='text_2' name='size'></td>";
+    		result += "<td><input type='number' min='1' class='text_3' name='amount'></td>";
+    		result += "<td><input type='text' class='text_4' name='unitPrice'></td>";
+    		result += "<td><input type='text' class='text_5' name='price'></td>";
+    		result += "<td><input type='text' class='text_6' name='etc'></td>";
     		result += "</tr>";
     		i++;
        $("#tr_table").children().last().after(result);

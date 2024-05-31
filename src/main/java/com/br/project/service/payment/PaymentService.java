@@ -29,4 +29,8 @@ public class PaymentService {
 		int outcome = paymentDao.ajaxTossSimplePayDetail(params);
 		return result * outcome;
 	}
+
+	public Map<String, Object> selectValiation() {
+		return paymentDao.selectValiation();
+	}
 }

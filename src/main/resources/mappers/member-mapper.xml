@@ -196,6 +196,17 @@
 		and team_code = #{teamCode}
 		and group_code = 'DEPT01'
 	</select>
+	
+	<select id="selectAnuual" 
+	resultMap="memberResult">
+		select 
+			VACATION_COUNT ,USING_DTAE
+		from 
+			Member
+		where 
+			user_NO = #{userNo}
+	</select>
+	
  <!-- ================== 이예찬 ========================== -->
  
  <!-- ======================================= "가림" 구역 ======================================= -->
