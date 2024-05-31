@@ -1,0 +1,22 @@
+/* ------------- select filter div ------------- */
+.select-filter-div{
+	margin-top: 50px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.select-filter-div>select{
+	width: 20%;
+	text-align: center;
+	border: 1px solid lightgray;
+}
+
+/* ------------- statics list div ------------- */
+.statics-list-div{
+	display: flex;
+	justicy-content: center;
+	align-items: center;
+	border: 1px solid tomato;
+	border-radius: 10px;
+	margin-top: 50px;
+}
