@@ -772,9 +772,9 @@ $(document).ready(function(){
 						// 채팅용 웹소켓 연결
 						chatting = new SockJS("${contextPath}/chatting");
 						stompClient = Stomp.over(chatting);
-					  stompClient.debug = function(str) {
+					  /*stompClient.debug = function(str) {
 						    // append the debug log
-						};
+						};*/
 			    	stompClient.connect({}, function(frame) {
 							// 구독 중인 채팅방 목록 조회
 					    $.ajax({

@@ -391,6 +391,7 @@ $(document).ready(function(){
                        <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
+                       <input type="hidden" name="draftNo" value="${list.get(0).DRAFT_NO}">
                        <input type="hidden" name="writerNo" value="${userNo}">
                        <input type="hidden" name="firstApproval" id="first_name" class="namecheck" value="${ list.get(0).FIRST_APPROVAL }">
 		                   <input type="hidden" name="middleApproval" id="middle_name" class="namecheck" value="${ list.get(0).MIDDLE_APPROVAL }">
