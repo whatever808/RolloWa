@@ -335,7 +335,7 @@
 	   	}
 	   	
 			function allDate(e){
-				console.log($(e).children('input').is(':checked'));
+				//console.log($(e).children('input').is(':checked'));
 				
 				const offset = new Date().getTimezoneOffset() * 60000;
 				const today = new Date(Date.now() - offset);
@@ -365,7 +365,8 @@
    		/* document 후 실행 될 함수 */
 			$(document).ready(function(){
 				addEvent(null);
-
+				console.log("ready 함수 실행됨");
+				
 				$('.member-search-area .line-cirecle').click(function(){
 					addEvent($(this).next().val());
 				})
@@ -374,6 +375,18 @@
 					allDate(this);
 				});
 			})
+			
+			// 일정 등록이 성공했을 경우
+			window.onload = function(){
+				console.log("onload 함수 실행됨");
+				if('${flag}' == 'Y') {
+					console.log("실행됨")
+					stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
+																																								, flag: '2'
+																																								, teamMemberList: '${teamMemberList}'
+																																								, url: "${path}/calendar/pCalendar.page"}));
+				}
+			}
 		</script>
 		<!-- 컨텐츠 영역 content-area -->
 		<div class="content" style="max-width: 1500px; padding: 30px;">
