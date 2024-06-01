@@ -148,6 +148,21 @@
 	.fc .fc-multimonth-title{
 		background: #f7efc9 !important;
 	}
+	.fc-daygrid-dot-event{
+    /* display: inline-flex; */
+    display: grid;
+   	justify-items: center;
+	}
+ 	.fc-daygrid-event-dot{
+    height: -webkit-fill-available;
+    width: 60%;
+    position: absolute;
+    padding: 10px;
+    border-radius: 50px;
+	}
+	.fc-daygrid-block-event{
+		border-radius: 50px;
+	}
 </style>
 </head>
 <body>
@@ -267,7 +282,7 @@
 									calendar.addEventSource(
 									 [{
 											  id:						e.calNO,
-												title:				e.group.upperCode + e.group.codeName,
+												title:				e.group.upperCode+ " " + e.group.codeName,
 												start: 				e.startDate,
 												end:					e.endDate,
 												color: 				e.color,

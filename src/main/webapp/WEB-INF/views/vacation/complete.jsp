@@ -85,7 +85,7 @@
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 		<!-- 컨텐츠 영역 -->
 		<div class="content-area">
-			<fieldset class="line-show radious10 inner-line">
+			<fieldset class="line-shadow radious10 inner-line">
 				<legend>
 					<h1 class="jua-regular">지난휴가</h1>
 				</legend>

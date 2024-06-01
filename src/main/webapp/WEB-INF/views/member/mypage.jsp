@@ -12,66 +12,47 @@
 <style>
 	/* mypage 추가 */
      .content {
-         height: 1200px;
-         width: 1000px;
-         margin: auto;
-         display: flex;
-         flex-direction: column;
-         justify-content: space-around;
-         border: 1px solid lightgray;
-         border-radius: 10px;
+         display: grid;
+         padding: 25px;
      }
-
+     .inner_line{
+     		padding: 10px;
+     		border: 1.5px solid rgb(0 0 0 / 31%);
+ 		    display: grid;
+    		align-content: space-evenly;
+     }
      .profile {
-         height: 30%;
-         display: flex;
-         justify-content: center;
      }
 
      .info {
-         height: 60%;
-         display: flex;
-         flex-direction: column;
-         justify-content: center;
+       padding: 20px;
      }
 
      .profile_box {
-         width: 80%;
-         display: flex;
-         justify-content: space-around;
+				width: 100%;
+		    display: grid;
+		    grid-template-columns: 35% 50%;;
+		    justify-items: center;
+		    align-items: center;
      }
 
      .profile_img {
-         width: 40%;
-         display: flex;
-         flex-direction: column;
-         justify-content: center;
+		    align-content: center;
      }
 
      .user_info {
-         width: 40%;
-         display: flex;
-         flex-direction: column;
-         justify-content: space-around;
+		    display: grid;
+		    align-items: center;
+		    gap: 30px;
      }
-
-     .dp_info,
-     .sd_info,
-     .co_info {
-         height: 35%;
-         display: flex;
-         flex-direction: column;
-         justify-content: center;
-     }
-
+     
      .img_wrapper {
-         height: 70%;
+
      }
 
      #profileImg {
          height: 280px;
          width: 280px;
-         border: 1px solid lightgray;
          border-radius: 50%;
      }
 
@@ -101,6 +82,7 @@
 <body>
 			<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 				<div class="content">
+					<div class="inner_line line-shadow radious10">
 	         <div class="profile">
 	             <div class="profile_box">
 	                 <div class="profile_img">
@@ -112,18 +94,19 @@
 	                 <div class="user_info">
 	                     <div class="dp_info">
 	                         <div class="info_wrapper">
-	                             <span><h6> 직급 : ${ memberInfo.position }</h6></span>
-	                             <span><h6> 팀 : ${ memberInfo.team }</h6></span>
+	                             <div class="jua-regular font-size20"> 직급 : ${ memberInfo.position }</div>
+	                             <div class="jua-regular font-size20"> 팀 : ${ memberInfo.team }</div>
 	                         </div>
 	                     </div>
 	                     <div class="sd_info">
 	                         <div class="info_wrapper">
-	                             <span><h6> 근속일수 : ${ memberInfo.serviceDate }</h6></span>
+	                             <div class="jua-regular font-size20"> 근속일수 : ${ memberInfo.serviceDate }</div>
 	                         </div>
 	                     </div>
 	                     <div class="co_info">
 	                         <div class="info_wrapper">
-	                             <h6><span> 출근시간 : ${ memberInfo.clockIn != '00:00:00' ? memberInfo.clockIn : '' }</span> | <span> 퇴근시간 : ${ memberInfo.clockOut != '00:00:00' ? memberInfo.clockOut : '' }</span></h6>
+	                             <div class="jua-regular font-size20"> 출근시간 : ${ memberInfo.clockIn != '00:00:00' ? memberInfo.clockIn : '' }</div>
+	                             <div class="jua-regular font-size20"> 퇴근시간 : ${ memberInfo.clockOut != '00:00:00' ? memberInfo.clockOut : '' }</div>
 	                         </div>
 	                     </div>
 	                 </div>
@@ -133,50 +116,50 @@
 	             <form action="${ contextPath }/member/updateInfo.do" method="post">
 	                 <table class="table table-striped">
 	                     <tr>
-	                         <th>아이디 : </th>
+	                         <th class="jua-regular font-size20" style="width: 180px;">아이디 : </th>
 	                         <td colspan="2"><input type="text" value="${ memberInfo.userId }" placeholder="기존 아이디" readonly></td>
 	                     </tr>
 	                     <tr>
-	                         <th>이름 : </th>
+	                         <th class="jua-regular font-size20">이름 : </th>
 	                         <td colspan="2"><input type="text" name="userName" value="${ memberInfo.userName }" placeholder="이름" required></td>
 	                     </tr>
 	                     <tr>
-	                         <th>핸드폰 번호 : </th>
+	                         <th class="jua-regular font-size20">핸드폰 번호 : </th>
 	                         <td><input type="text" name="phone" value="${ memberInfo.phone }" placeholder="전화번호" readonly></td>
 	                         <td><button type="button" class="btn btn-sm btn-outline-primary" onclick="phoneCertify();">인증</button></td>
 	                     </tr>
 	                     <tr>
-	                         <th>우편번호 : </th>
-	                         <td><input class="form-control" type="text" id="postCode" name="postNumber" value="${ memberInfo.postCode }"></td>
+	                         <th class="jua-regular font-size20">우편번호 : </th>
+	                         <td><input class="form-control" type="text" id="postCode" name="postNumber" value="${ memberInfo.postCode }" style="border-radius: 0;"></td>
 	                         <td><button type="button" class="btn btn-sm btn-outline-primary" onclick="findAddress();">주소 찾기</button></td>
 	
 	                     </tr>
 	                     <tr>
-	                         <th>주소 : </th>
-	                         <td colspan="2"><input type="text" id="address" name="address" value="${ memberInfo.address }"></td>
+	                         <th class="jua-regular font-size20">주소 : </th>
+	                         <td colspan="2"><input type="text" id="address" name="address" value="${ memberInfo.address }" style="width: 50%;"></td>
 	                     </tr>
 	                     <tr>
-	                         <th>상세주소 : </th>
-	                         <td colspan="2"><input type="text" id="detailAddress" name="detailAddress" value="${ memberInfo.detailAddress }"></td>
+	                         <th class="jua-regular font-size20">상세주소 : </th>
+	                         <td colspan="2"><input type="text" id="detailAddress" name="detailAddress" value="${ memberInfo.detailAddress }" style="width: 50%;"></td>
 	                     </tr>
 	                     <tr>
-	                         <th>이메일 : </th>
-	                         <td colspan="2"><input type="text" name="email" value="${ memberInfo.email }"></td>
+	                         <th class="jua-regular font-size20">이메일 : </th>
+	                         <td colspan="2"><input type="text" name="email" value="${ memberInfo.email }" style="width: 50%;"></td>
 	                     </tr>
 	                     <tr>
-	                         <th>
+	                         <th class="jua-regular font-size20">
 	                             월급 수령계좌 :
 	                         </th>
-	                         <td>
-	                             <select name="bank" class="form-select" aria-label="Default select example" id="bank_select">
-	                                 <option value="농협은행">농협은행</option>
-	                                 <option value="국민은행">국민은행</option>
-	                                 <option value="신한은행">신한은행</option>
-	                                 <option value="우리은행">우리은행</option>
-	                             </select>
-	                         </td>
-	                         <td>
-	                             <input type="text" name="bankAccount" value="${ memberInfo.bankAccount }" placeholder="계좌번호">
+	                         <td colspan=2>
+		                         <div style="display: flex; gap: 50px;">
+		                             <select class="jua-regular font-size20" name="bank" class="form-select" aria-label="Default select example" id="bank_select">
+		                                 <option value="농협은행">농협은행</option>
+		                                 <option value="국민은행">국민은행</option>
+		                                 <option value="신한은행">신한은행</option>
+		                                 <option value="우리은행">우리은행</option>
+		                             </select>
+		                             <input type="text" name="bankAccount" value="${ memberInfo.bankAccount }" placeholder="계좌번호" style="width: 30%;">
+		                         </div>
 	                         </td>
 	                     </tr>
 	                 </table>
@@ -188,6 +171,7 @@
 	                 </div>
 	             </form>
 	         </div>
+	     	</div>
 	     </div>
 	     <!-- Modal structure -->
 	     <div id="modify_pwd">
