@@ -1,10 +1,13 @@
 package com.br.project.dao.pay;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.dto.pay.VacationDto;
 
@@ -27,8 +30,8 @@ public class VacationDao {
 		return sqlSession.selectList("vacationMapper.selectRequest", userNo);
 	}
 
-	public int selectVacarionCount(int userNo) {
-		return sqlSession.selectOne("vacationMapper.selectVacarionCount", userNo);
+	public int selectVacarionCount(VacationDto vacation) {
+		return sqlSession.selectOne("vacationMapper.selectVacarionCount", vacation);
 	}
 
 	public int updateVacation(VacationDto vacationDto) {
@@ -39,8 +42,12 @@ public class VacationDao {
 		return sqlSession.update("vacationMapper.deleteRcequest", vacaNo);
 	}
 
-	public List<VacationDto> searchOld(VacationDto vacation) {
-		return sqlSession.selectList("vacationMapper.searchOld", vacation);
+	public List<VacationDto> searchOld(Map<String, Object> map) {
+		PageInfoDto page = (PageInfoDto)map.get("paging");
+		RowBounds row = new RowBounds(page.getListLimit()* (page.getCurrentPage()-1)
+									, page.getListLimit());
+		
+		return sqlSession.selectList("vacationMapper.searchOld", map.get("vacation"), row);
 	}
 
 	public int RRequest(VacationDto vacation) {

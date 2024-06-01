@@ -124,7 +124,7 @@
         .b-example-vr {
             flex-shrink: 0;
             width: 1.5rem;
-            height: 1200px;
+            height: 110em;
         }
 
         .content {

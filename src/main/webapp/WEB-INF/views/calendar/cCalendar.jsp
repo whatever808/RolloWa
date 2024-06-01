@@ -35,7 +35,10 @@
 		margin: 10px;
 		padding: 10px;
 	}
-	.calender-area {padding: 10px;}
+	.calender-area {
+		padding: 10px;
+    background: #f7efc9;
+		}
 	.mydiv-area {width: 20%; position: relative;}
 	.memebrdiv-area {
 		width: 125px;
@@ -87,8 +90,12 @@
     color: #ffffff !important;
     font-weight: bolder !important;
 	}
-	.fc-day-sat a {color: #007bff !important;}
-	.fc-day-sun a {color: #dc3545 !important;}
+	.fc-day-sat .fc-col-header-cell-cushion,
+	.fc-day-sat .fc-daygrid-day-number
+	{color: #007bff !important;}
+	.fc-day-sun .fc-col-header-cell-cushion,
+	 .fc-day-sun .fc-daygrid-day-number
+	{color: #dc3545 !important;}
 	.img_postion{
     position: absolute;
     font-weight: bolder;
@@ -110,10 +117,12 @@
 		text-align: center;
 	}
 	.fc .fc-daygrid-day.fc-day-today{
-		background-color: rgb(160 160 160 / 30%) !important;
+		background-color: rgb(0 0 0) !important;
+		border-radius: 10px !important;
 	}
 	.fc .fc-timegrid-col.fc-day-today{
-		background-color: rgb(160 160 160 / 30%) !important;
+		background-color: rgb(0 0 0) !important;
+		border-radius: 5px !important;
 	}
 	.fc-scroller.fc-scroller-liquid-absolute{
     overflow: hidden;
@@ -123,17 +132,21 @@
 		border: 0px; 
 	}
  	.fc-daygrid-day-frame.fc-scrollgrid-sync-inner{
-		background-color: rgb(200 200 200 / 20%) !important;
+		background-color: #fff !important;
     padding: 1px;
     background-clip: content-box;
+    border-radius: 15px !important;
 	}
 	td.fc-day.fc-timegrid-col{
-		background-color: rgb(200 200 200 / 20%) !important;
+		background-color: #fff !important;
     padding: 1px;
     background-clip: content-box;
 	}
-	.fc-toolbar-title{
-		font-size: 2.5em !important;
+	.fc .fc-multimonth-singlecol .fc-multimonth-daygrid-table, .fc .fc-multimonth-singlecol .fc-multimonth-header-table{
+	  background: #f7efc9 !important;
+	}
+	.fc .fc-multimonth-title{
+		background: #f7efc9 !important;
 	}
 </style>
 </head>

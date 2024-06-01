@@ -24,6 +24,8 @@
 		height: 15%;
 		padding: 10px;
 		display: flex;
+		gap: 25px;
+		background: rgb(247 239 201);
 	}
 	.move-month-area {
 		height: 9.5%;
@@ -39,7 +41,10 @@
 		margin: 10px;
 		padding: 10px;
 	}
-	.calender-area {padding: 10px;}
+	.calender-area {
+		padding: 10px;
+    background: #f7efc9;
+	}
 	.mydiv-area {width: 20%; position: relative;}
 	.memebrdiv-area {
 		width: 125px;
@@ -57,7 +62,6 @@
 		align-items: center;
 	}
 	.font-size25 {font-size: 25px;}
-	.member-search-area {gap: 25px;}
 	/* 모달 스타일 */
 	.Category, .Co-worker {
 		display: -webkit-box;
@@ -91,8 +95,12 @@
     color: #ffffff !important;
     font-weight: bolder !important;
 	}
-	.fc-day-sat a {color: #007bff !important;}
-	.fc-day-sun a {color: #dc3545 !important;}
+	.fc-day-sat .fc-col-header-cell-cushion,
+	.fc-day-sat .fc-daygrid-day-number
+	{color: #007bff !important;}
+	.fc-day-sun .fc-col-header-cell-cushion,
+	 .fc-day-sun .fc-daygrid-day-number
+	{color: #dc3545 !important;}
 	.img_postion{
     position: absolute;
     font-weight: bolder;
@@ -114,10 +122,12 @@
 		text-align: center;
 	}
 	.fc .fc-daygrid-day.fc-day-today{
-		background-color: rgb(160 160 160 / 30%) !important;
+		background-color: rgb(0 0 0) !important;
+		border-radius: 10px !important;
 	}
 	.fc .fc-timegrid-col.fc-day-today{
-		background-color: rgb(160 160 160 / 30%) !important;
+		background-color: rgb(0 0 0) !important;
+		border-radius: 5px !important;
 	}
 	.fc-scroller.fc-scroller-liquid-absolute{
     overflow: hidden;
@@ -127,14 +137,21 @@
 		border: 0px; 
 	}
  	.fc-daygrid-day-frame.fc-scrollgrid-sync-inner{
-		background-color: rgb(200 200 200 / 20%) !important;
+		background-color: #fff !important;
+    padding: 1px;
+    background-clip: content-box;
+    border-radius: 15px !important;
+	}
+	td.fc-day.fc-timegrid-col{
+		background-color: #fff !important;
     padding: 1px;
     background-clip: content-box;
 	}
-	td.fc-day.fc-timegrid-col{
-		background-color: rgb(200 200 200 / 20%) !important;
-    padding: 1px;
-    background-clip: content-box;
+	.fc .fc-multimonth-singlecol .fc-multimonth-daygrid-table, .fc .fc-multimonth-singlecol .fc-multimonth-header-table{
+	  background: #f7efc9 !important;
+	}
+	.fc .fc-multimonth-title{
+		background: #f7efc9 !important;
 	}
 </style>
 </head>
@@ -289,6 +306,7 @@
 										start: 				e.vacaStart,
 										end:					e.vacaEnd,
 										color: 				e.vacaColor,
+										allDay:       true,
 										extendedProps:{
 											status:			e.vacationApprorvalStatus,
 											}		 

@@ -66,8 +66,8 @@ public class VacationService {
 	 * @param userNo
 	 * @return
 	 */
-	public int selectVacarionCount(int userNo) {
-		return vacationDao.selectVacarionCount(userNo);
+	public int selectVacarionCount(VacationDto vacation) {
+		return vacationDao.selectVacarionCount(vacation);
 	}
 
 	/**
@@ -115,8 +115,8 @@ public class VacationService {
 	 * @param vacation
 	 * @return
 	 */
-	public List<VacationDto> searchOld(VacationDto vacation) {
-		return vacationDao.searchOld(vacation);
+	public List<VacationDto> searchOld(Map<String, Object> map) {
+		return vacationDao.searchOld(map);
 	}
 
 	/**

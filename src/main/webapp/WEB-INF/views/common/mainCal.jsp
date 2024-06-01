@@ -8,7 +8,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-		/* 캘린더 스타일  */
+	/* 캘린더 스타일  */
 	#calendar a {
 		color: rgb(130, 130, 130);
 		text-decoration-line: none;
@@ -20,8 +20,12 @@
     color: #ffffff !important;
     font-weight: bolder !important;
 	}
-	.fc-day-sat a {color: #007bff !important;}
-	.fc-day-sun a {color: #dc3545 !important;}
+	.fc-day-sat .fc-col-header-cell-cushion,
+	.fc-day-sat .fc-daygrid-day-number
+	{color: #007bff !important;}
+	.fc-day-sun .fc-col-header-cell-cushion,
+	 .fc-day-sun .fc-daygrid-day-number
+	{color: #dc3545 !important;}
 	.img_postion{
     position: absolute;
     font-weight: bolder;
@@ -32,21 +36,16 @@
 	.fc-event-time{
 		display: none;
 	}
-	.fc-toolbar-title{
-    padding: 5px !important;
-    border-radius: 20px !important;
-    background: black !important;
-    color: #ffffff !important;
-    width: 10em;
-	}
 	.fc-direction-ltr{
 		text-align: center;
 	}
 	.fc .fc-daygrid-day.fc-day-today{
-		background-color: rgb(160 160 160 / 30%) !important;
+		background-color: rgb(0 0 0) !important;
+		border-radius: 10px !important;
 	}
 	.fc .fc-timegrid-col.fc-day-today{
-		background-color: rgb(160 160 160 / 30%) !important;
+		background-color: rgb(0 0 0) !important;
+		border-radius: 5px !important;
 	}
 	.fc-scroller.fc-scroller-liquid-absolute{
     overflow: hidden;
@@ -56,14 +55,24 @@
 		border: 0px; 
 	}
  	.fc-daygrid-day-frame.fc-scrollgrid-sync-inner{
-		background-color: rgb(200 200 200 / 20%) !important;
+		background-color: #fff !important;
+    padding: 1px;
+    background-clip: content-box;
+    border-radius: 15px !important;
+	}
+	td.fc-day.fc-timegrid-col{
+		background-color: #fff !important;
     padding: 1px;
     background-clip: content-box;
 	}
-	td.fc-day.fc-timegrid-col{
-		background-color: rgb(200 200 200 / 20%) !important;
-    padding: 1px;
-    background-clip: content-box;
+	.fc .fc-multimonth-singlecol .fc-multimonth-daygrid-table, .fc .fc-multimonth-singlecol .fc-multimonth-header-table{
+	  background: #f7efc9 !important;
+	}
+	.fc .fc-multimonth-title{
+		background: #f7efc9 !important;
+	}
+	.fc .fc-toolbar-title{
+    font-size: 1.5em !important;
 	}
 </style>
 </head>
@@ -78,7 +87,7 @@
 				locale: 'ko',
 				buttonText:{prev:'◁',next:'▷',today: '오늘',year:'연도',month:'월',week:'주'
 				},
-				headerToolbar:{start: '',center: 'title',end: ''
+				headerToolbar:{start: 'title',center: '',end: ''
 			    },
 				views:{ month:{titleFormat:{year: '2-digit', month: 'short'} },
 				},
