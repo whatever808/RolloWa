@@ -25,7 +25,7 @@
 		<!-- select filter div start -->
 		<div class="select-filter-div">
 			<select class="form-control" id="location-select">
-				<option>전체</option>
+				<option value="">전체</option>
 				<c:forEach var="location" items="${ locationList }">
 					<option value="${ location.locationNo }">${ location.locationName }</option>
 				</c:forEach>
@@ -38,11 +38,12 @@
 			<select class="form-control" id="date-select"></select>
 		</div>
 		<!-- select filter div end -->
-		
+
 		<!-- statics list div start -->
 		<div class="statics-list-div">
+		
 			<!-- statics list start -->
-			<table class="table text-center">
+			<table class="table table-hover text-center">
 				<thead>
 					<tr>
 						<th>어트랙션</th>
@@ -52,20 +53,17 @@
 					</tr>
 				<thead>
 				
-				<tbody>
-					<tr>
-						<td>원더랜드</td>
-						<td>20.00%</td>
-						<td>20.00%</td>
-						<td>30.00%</td>
-					</tr>
-				</tbody>
+				<tbody id="utilization-list"></tbody>
+				
 			</table>
-			
 			<!-- statics list end -->
 			
-		</div>
+			</div>
     	<!-- statics list div end -->
+    	
+    	<nav class="d-flex justify-content-center">
+			  <ul class="pagination"></ul>
+			</nav>
   
     </div>
     <!-- content 끝 -->
@@ -86,11 +84,12 @@
 		for(let y=sysYear ; y>=2000 ; y--){
 			$("#year-select").append("<option value='" + y + "'>" + y + "년</option>");
 		}
+		
 		for(let m=1 ; m<=sysMonth ; m++){
-			$("#month-select").append("<option value='" + m + "'>" + m + "월</option>");
+			$("#month-select").append("<option value='" + ((m < 10) ? '0' + m : m ) + "'>" + m + "월</option>");
 		}
 		for(let d=1 ; d<=sysDate ; d++){
-			$("#date-select").append("<option value='" + d + "'>" + d + "일</option>");
+			$("#date-select").append("<option value='" + ((d < 10) ? '0' + d : d ) + "'>" + d + "일</option>");
 		}
 		
 		// 오늘날짜로 선택값 초기화 ====================================================================
@@ -112,12 +111,14 @@
 			$("#month-select").empty();
 			
 			for(let m=1 ; m<=month ; m++){
-				$("#month-select").append("<option value='" + m + "'>" + m + "월</option>");
+				$("#month-select").append("<option value='" + ((m < 10) ? '0' + m : m ) + "'>" + m + "월</option>");
 			}
 			
 			$("#month-select").children("option").each(function(){
 				$(this).val() == oldMonth && $(this).attr("selected", true);
 			});
+			
+			ajaxSelectAttractionUtilizationList();	// 이용률 리스트 조회
 			
 		});
 		
@@ -134,24 +135,32 @@
 			$("#date-select").empty();
 			
 			for(let d=1 ; d<=lastDate ; d++){
-				$("#date-select").append("<option value='" + d + "'>" + d + "일</option>");
+				$("#date-select").append("<option value='" + ((d < 10) ? '0' + d : d ) + "'>" + d + "일</option>");
 			}
 			
 			$("#date-select").children("option").each(function(){
 				$(this).val() == oldDate && $(this).attr("selected", true);
 			});
+			
+			ajaxSelectAttractionUtilizationList();	// 이용률 리스트 조회
+			
 		});
+		
+		// "일" 선택값이 바뀌었을 경우 ===================================================================================
+		$("#date-select").on("change", function(){
+			ajaxSelectAttractionUtilizationList();	// 이용률 리스트 조회
+		});
+		
 	});
 	
 	// 어트랙션 이용률 조회 관련 ============================================================================
 	$(document).ready(function(){
-		
 		ajaxSelectAttractionUtilizationList();
-		
 	});
 	
-	function ajaxSelectAttractionUtilizationList(){
-		console.log("이용률");
+	// 전체 어트랙션 연간, 월간, 일간 이용율 리스트 조회 AJAX
+	function ajaxSelectAttractionUtilizationList(pageNo){
+		let page = (pageNo == undefined) ? 1 : pageNo;
 		let $location = $("#location-select").val();
 		let $year = $("#year-select").val();
 		let $month = $("#month-select").val();
@@ -161,19 +170,64 @@
 			url: "${ contextPath }/attraction/utilization/list.ajax",
 			method: "get",
 			data: {
+				page: page,
 				location: $location,
 				year: $year,
 				month: $month,
 				date: $date,
 			},
-			sucess:function(list){
-				console.log("list", list);
+			success:function(response){
+				let list = response.usageList;
+				let pageInfo = response.pageInfo;
+				let listStr = "";
+				let pageStr = "";
+				
+				if(list.length == 0){
+					listStr += "<tr>";
+					listStr += 	"<td colspan='4'>조회된 내역이 없습니다.</td>";
+					listStr += "</tr>";
+				}else{
+					for(let i=0 ; i<list.length ; i++){
+						listStr += "<tr onclick='atrtUsageChart(" + list[i].attractionNo + ");'>";
+						listStr += 	"<td class='td1'>" + list[i].attractionName + "</td>";
+						listStr += 	"<td class='td2'>" + list[i].yearUsage + "%</td>";
+						listStr += 	"<td class='td3'>" + list[i].monthUsage + "%</td>";
+						listStr +=	"<td class='td4'>" + list[i].dailyUsage + "%</td>";
+						listStr += "<tr>";
+					}
+					
+					pageStr += "<li class='page-item " + (pageInfo.currentPage == 1 ? 'disabled' : '') + "'" + (pageInfo.currentPage != 1 ? "onclick='ajaxSelectAttractionUtilizationList(" + (pageInfo.currentPage - 1) + ");'" : "") + ">";
+					pageStr += 		"<span class='page-link'>" + "◁" + "</span>";
+					pageStr += "</li>";
+					
+					for(let p=pageInfo.startPage ; p<=pageInfo.endPage ; p++){
+						pageStr += "<li class='page-item " + (pageInfo.currentPage == p ? 'disabled' : '') + "' onclick='ajaxSelectAttractionUtilizationList(" + p + ");'>";
+						pageStr +=		"<span class='page-link'>" + p + "</span>";
+						pageStr += "</li>";
+					}
+					
+					pageStr += "<li class='page-item " + (pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '') + "'" + (pageInfo.currentPage != pageInfo.maxPage ? "onclick='ajaxSelectAttractionUtilizationList(" + (pageInfo.currentPage + 1) + ");'" : "") + ">";
+					pageStr += 		"<span class='page-link'>" + "▷" + "</span>";
+					pageStr += "</li>";
+				}
+				
+				$("#utilization-list").html(listStr);
+				$(".pagination").html(pageStr);
+				
 			},error:function(){
 				console.log("ATTRACTION UTILIZATION LIST AJAX FAILED");
-			},complete:function(){
-				console.log("AJAX DONE");
 			}
 		});
+	}
+	
+	// 지정 어트랙션 이용률 상세차트 페이지 이동
+	function atrtUsageChart(attractionNo){
+		let urlSearchParams = new URLSearchParams();
+		urlSearchParams.append("no", attractionNo);
+		urlSearchParams.append("year", $("#year-select").val());
+		urlSearchParams.append("month", $("#month-select").val());
+
+		location.href = "${ contextPath }/attraction/utilization/detail.page?" + urlSearchParams.toString();
 	}
 </script>
 

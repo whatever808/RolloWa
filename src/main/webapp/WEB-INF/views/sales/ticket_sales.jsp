@@ -327,7 +327,6 @@
 		google.charts.setOnLoadCallback(drawChart);
 		
 		function drawChart(){
-			console.log("chartData : ", chartData);
 			// 차트 데이터 설정 (컬럼명, 셀값)
 			data = new google.visualization.DataTable();
 			data.addColumn('string', '기간');

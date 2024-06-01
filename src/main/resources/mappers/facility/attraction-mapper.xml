@@ -8,15 +8,15 @@
 		select count(attraction_no) "totalAttractions"
 		  from tb_attraction
 		<where>
-			<if test="locations != null">
+			<if test='locations != null'>
 				<foreach item="location" collection="locations" open="and location in(" separator="," close=")">
 					#{location}
 				</foreach>
 			</if>
-			<if test="status != null and !status.equals('')">
+			<if test='status != null and !"".equals(status)'>
 				and tb_attraction.status = #{status}
 			</if>
-			<if test="keyword != null and !keyword.equals('')">
+			<if test='keyword != null and !"".equals(keyword)'>
 				and attraction_name like '%' || #{keyword} || '%'
 			</if>
 		</where>
@@ -46,15 +46,15 @@
 		 from tb_attraction
 		 join tb_location on (location = location_no)
 		 <where>
-			<if test="locations != null">
+			<if test='location != null'>
 				<foreach item="location" collection="locations" open="and location in(" separator="," close=")">
 					#{location}
 				</foreach>
 			</if>
-			<if test="status != null and !status.equals('')">
+			<if test='status != null and !"".equals(status)'>
 				and tb_attraction.status = #{status}
 			</if>
-			<if test="keyword != null and !keyword.equals('')">
+			<if test='keyword != null and !"".equals(keyword)'>
 				and attraction_name like '%' || #{keyword} || '%'
 			</if>
 		</where>
@@ -161,7 +161,14 @@
 		 where attraction_no = #{attractionNo}
 	</update>
 	
-	<!-- 연간, 월간, 일간 어트랙션 이용률 -->
+	<!-- 어트랙션 갯수조회(운영중, 운영중지) -->
+	<select id="selectUsingAttractionCount" resultType="_int">
+		select count(attraction_no)
+		  from tb_attraction
+		 where status in ('OPERATING', 'STOP')
+	</select>
+	
+	<!-- 연간, 월간, 일간 전체 어트랙션별 이용률 -->
 	<select id="selectAttractionUtilizationList" parameterType="hashmap" resultType="map">
 		SELECT A.ATTRACTION_NO "attractionNo"
 			  ,A.ATTRACTION_NAME "attractionName"
@@ -203,13 +210,62 @@
                                                                                     AND EXTRACT(DAY FROM VISIT_DATE) = #{date})
                         ) * 100, 'FM000.00') "dailyUsage"
   		  FROM TB_ATTRACTION A
-  		 WHERE A.STATUS IN ('OPERATION', 'STOP')
+  		 WHERE A.STATUS IN ('OPERATING', 'STOP')
   		 <if test='locationNo != null and "".equals(locationNo)'>
   		   AND A.LOCATION = #{locationNo}
   		 </if>
   		 ORDER
-  		 	BY A.ATTRACTION_NO
+  		 	BY "yearUsage" desc, "monthUsage" desc, "dailyUsage" desc
 	</select> 
 	
+	<!-- 어트랙션 상세 이용률(월간, 일간) -->
+	<select id="selectAttractionUtilization" parameterType="hashmap" resultType="map">
+		SELECT LPAD(L, 2, 0) L
+		     , TO_NUMBER(TO_CHAR(((SELECT COUNT(VISITOR_NO)
+		           				 					 FROM (SELECT DISTINCT TO_CHAR(V.VISIT_DATE, 'YYYYMMDD') VISIT_DATE, A.VISITOR_NO, A.ATTRACTION_NO 
+										                     FROM ATTRACTION_UTILIZATION A
+										                     JOIN VISITOR V ON (A.VISITOR_NO = V.VISITOR_NO)
+					                   					 )
+		           									WHERE EXTRACT(YEAR FROM TO_DATE(VISIT_DATE, 'YYYYMMDD')) = #{year}
+										           <choose>
+										           	 <when test='"".equals(month)'>
+											           	 AND EXTRACT(MONTH FROM TO_DATE(VISIT_DATE, 'YYYYMMDD')) = L
+											           </when>
+											           <otherwise>
+											             AND EXTRACT(MONTH FROM TO_DATE(VISIT_DATE, 'YYYYMMDD')) = #{month}
+											             AND EXTRACT(DAY FROM TO_DATE(VISIT_DATE, 'YYYYMMDD')) = L
+											           </otherwise>
+										           </choose>
+										               AND ATTRACTION_NO = #{no}
+									              ) / (SELECT DECODE(COUNT(VISITOR_NO), 0, 1, COUNT(VISITOR_NO))
+									               			 FROM VISITOR
+									              			WHERE EXTRACT(YEAR FROM VISIT_DATE) = #{year}
+											              <choose>
+											              	<when test='"".equals(month)'>
+											              		AND EXTRACT(MONTH FROM VISIT_DATE) = L
+											              	</when>
+											              	<otherwise>
+											              		AND EXTRACT(MONTH FROM VISIT_DATE) = #{month}
+											                	AND EXTRACT(DAY FROM VISIT_DATE) = L
+											              	</otherwise>
+											              </choose>
+		            								)) * 100, 'FM000.00')) "usage"
+		  FROM (
+		         SELECT LEVEL L
+		           FROM DUAL
+		         <choose>
+		         	 <when test='"".equals(month)'>
+			         	CONNECT BY LEVEL &lt;= CASE WHEN #{year} = TO_CHAR(SYSDATE, 'YYYY') THEN EXTRACT(MONTH FROM SYSDATE)
+			        												 			ELSE 12
+			        												 END
+			         </when>
+			         <otherwise>
+			        	CONNECT BY LEVEL &lt;= CASE WHEN #{year} || #{month} = TO_CHAR(SYSDATE, 'YYYYMM') THEN EXTRACT(DAY FROM SYSDATE)
+			        												 			ELSE EXTRACT(DAY FROM LAST_DAY(TO_DATE(#{year} || #{month} || '01', 'YYYYMMDD')))
+			        												 END
+			         </otherwise>
+		         </choose>
+		        )
+	</select>
 	
 </mapper>
