@@ -47,7 +47,7 @@ h4, h5{
     align-items: center;
     justify-content: space-between;
     margin-bottom: 30px;
-    background-color: #b2d4ff;
+   	background-color: #b2d4ff;
 }
 
 .date-time-div{
@@ -58,6 +58,7 @@ h4, h5{
     font-weight: bold;
     border-radius: 20px;
     padding: 10px;
+    white-space: nowrap;
 }
 
 .weather-div{

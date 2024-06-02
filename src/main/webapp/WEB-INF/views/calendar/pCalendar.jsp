@@ -25,7 +25,7 @@
 		padding: 10px;
 		display: flex;
 		gap: 25px;
-		background: rgb(247 239 201);
+		background: url(${path}/resources/images/rollowa.jpg);
 	}
 	.move-month-area {
 		height: 9.5%;
@@ -167,6 +167,9 @@
 	}
 	.fc-daygrid-block-event{
 		border-radius: 50px;
+	}
+	.member-search-area:hover :not(:hover){
+		opacity: 0.5;
 	}
 </style>
 </head>
@@ -422,7 +425,7 @@
 							<div class="mydiv-area display-item-center">
 								<div class="line-cirecle display-item-center line-shadow">
 									<img src="${path}${t.profileURL}" class="rounded" style="overflow:hidden;" >
-									<span class="img_postion">${t.userName}</span>
+									<span class="img_postion jua-regular">${t.userName}</span>
 								</div>
 								<input type="hidden" value="${t.userNo}">
 							</div>
@@ -431,7 +434,7 @@
 							<div class="memebrdiv-area display-item-center">
 								<div class="line-cirecle display-item-center line-shadow">
 									<img src="${path}${t.profileURL}" class="rounded" style="overflow:hidden;" >
-									<span class="img_postion">${t.userName}</span>
+									<span class="img_postion jua-regular">${t.userName}</span>
 								</div>
 								<input type="hidden" value="${t.userNo}">
 							</div>						

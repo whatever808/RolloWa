@@ -51,7 +51,6 @@
 			    width: 15px;
 			    height: 30px;
 			  }
-			  /* rgb(255, 247, 208) */
 			  ::-webkit-scrollbar-thumb {
 			    background: linear-gradient(180deg, rgb(255 255 255) , rgb(255, 247, 208) 30%, rgb(255 230 109) 50%, rgb(255, 247, 208) 70%, rgb(255 255 255) );
 			    border-radius: 20px;
@@ -334,7 +333,7 @@
   -webkit-font-smoothing: antialiased;
   animation: bounce 0.3s ease infinite alternate;
 }
-#main_logo span:{
+#main_logo span{
 	animation-delay: 0.1s;
 }
 #main_logo span{

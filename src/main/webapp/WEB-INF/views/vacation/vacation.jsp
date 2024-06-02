@@ -16,37 +16,20 @@
 	flex-direction: row;
 	box-sizing: border-box;
 }
-
-.line-shadow {
-	box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
-}
-
 .content-area {
 	width: 75%;
 	max-width: 1120px;
 	padding: 30px;
 }
-
-.radious10 {
-	border-radius: 10px;
-}
-
-.line-border-square {
-	border-radius: 10px;
-	width: 80px;
-	text-align: center;
-	padding: 5px;
-}
-
 .vacation-request>.line-border-square:hover {
 	cursor: pointer;
-	background-color: rgba(160, 160, 128, 0.2);
+  background-color: rgb(246 239 201 / 50%);
 }
 
 .vacation-area, .vacation-request{
    display: grid;
    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-   row-gap: 15px;
+   gap: 35px;
 }
 
 .s-wrap {
@@ -56,6 +39,7 @@
 	column-gap: 10px;
 	padding: 10px;
 	border-bottom: 2px solid rgb(160, 160, 160);
+  font-size: large;
 }
 
 .s-wrap>.inner-line {
@@ -73,41 +57,29 @@
 
 .standby *:hover, .retract *:hover {
 	cursor: pointer;
-	background-color: rgba(160, 160, 128, 0.2);
+	background-color: rgb(246 239 201 / 50%);
 }
 
 .RedContext {
 	color: #dc3545;
 	font-weight: bolder;
+  font-size: larger;
 }
 
 .gContext {
 	color: #28a745;
 	font-weight: bolder;
+  font-size: larger;
 }
 
 .content-area {
 	max-width: 1500px;
 }
 
-.Category, .Co-worker {
-	display: -webkit-box;
-	overflow-y: hidden;
+.Category{
+    display: flex;
+    justify-content: space-between;
 }
-
-.line-shadow {
-	box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
-}
-
-.line-cirecle-sm {
-	border-radius: 100%;
-	margin-left: 20px;
-	margin-bottom: 10px;
-	padding: 5px;
-	text-align: center;
-	height: fit-content;
-}
-
 #color-style {
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -149,15 +121,12 @@
 	height: 50px;
 }
 
-.border1 {
-	border: 1px solid;
-}
-
 .line-border-square {
-	border-radius: 10px;
-	width: 80px;
-	text-align: center;
-	padding: 5px;
+  border-radius: 10px;
+  width: -webkit-fill-available;
+  text-align: center;
+  padding: 25px;
+  font-size: larger;
 }
 
 .content-text-area {
@@ -270,6 +239,9 @@ a {
 #RR_modal{
    height: fit-content;
 }
+i{
+	font-size: xx-large;
+}
 </style>
 </head>
 <body>
@@ -292,16 +264,16 @@ a {
 				<div class="vacation-area" id="vacation-area">
 				
 					<div class="line-border-square line-shadow">
-						연차<br> <br>${member.vacationCount}일
+						연차<br>${member.vacationCount}일
 					</div>
 					<div class="line-border-square line-shadow">
-						사용<br> <br> <span class="RedContext">${member.vaUsingDate}일</span>
+						사용<br><span class="RedContext">${member.vaUsingDate}일</span>
 					</div>
 					<div class="line-border-square line-shadow">
-						지급일<br> <br> <span class="gContext">${loginMember.vaGivenDate}일</span>
+						지급일<br><span class="gContext">${loginMember.vaGivenDate}일</span>
 					</div>
 					<div class="line-border-square line-shadow">
-						근무 연수<br> <br>${loginMember.vaYearLabor }년
+						근무 연수<br>${loginMember.vaYearLabor }년
 					</div>
 					
 				</div>
@@ -313,10 +285,7 @@ a {
 					<c:forEach var="va" items="${vactList}">
 					<div class="line-border-square line-shadow">
 						<a href="#" onclick="selectModal('${va.code}')">
-							<div class="vaCode" data-code="${va.code}">
-								${va.codeName}
-								<br><br>
-							</div>
+							<div class="vaCode" data-code="${va.code}">${va.codeName}<br></div>
 						</a>
 					</div>
 					</c:forEach>
