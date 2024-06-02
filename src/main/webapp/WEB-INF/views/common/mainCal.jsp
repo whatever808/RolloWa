@@ -102,7 +102,6 @@
 				let arr = [];
 				arr.push(depart);
 				arr.push(company);
-				console.log("arr",arr);
 				
 				for(let list of arr) {
 					list.forEach((e) => {
