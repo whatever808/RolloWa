@@ -772,9 +772,13 @@ $(document).ready(function(){
 						// 채팅용 웹소켓 연결
 						chatting = new SockJS("${contextPath}/chatting");
 						stompClient = Stomp.over(chatting);
-					  /*stompClient.debug = function(str) {
+						
+						// Auto Reconnect
+						stompClient.reconnect_delay = 300000;
+						// 디버깅 방법 설정
+					  stompClient.debug = function(str) {
 						    // append the debug log
-						};*/
+						};
 			    	stompClient.connect({}, function(frame) {
 							// 구독 중인 채팅방 목록 조회
 					    $.ajax({
@@ -836,9 +840,10 @@ $(document).ready(function(){
 							    			
 							    			location.href = msgBody.url;
 							    		})
-							    		
 							    		// 읽지 않은 알림 조회 후 알림 목록에 추가 및 읽지 않은 알림 표시
-							    		selectAlram();
+							    		setTimeout(function() {
+							    			selectAlram();
+							    		}, 3000);
 					    			}
 					    		}
 					    	} 
