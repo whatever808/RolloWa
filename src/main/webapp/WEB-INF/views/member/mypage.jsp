@@ -147,13 +147,13 @@
 	                     </tr>
 	                     <tr>
 	                         <th>우편번호 : </th>
-	                         <td><input class="form-control" type="text" id="postCode" name="postNumber" value="${ memberInfo.postCode }"></td>
+	                         <td><input class="form-control" type="text" id="postCode" name="postNumber" value="${ memberInfo.postCode }" readonly></td>
 	                         <td><button type="button" class="btn btn-sm btn-outline-primary" onclick="findAddress();">주소 찾기</button></td>
 	
 	                     </tr>
 	                     <tr>
 	                         <th>주소 : </th>
-	                         <td colspan="2"><input type="text" id="address" name="address" value="${ memberInfo.address }"></td>
+	                         <td colspan="2"><input type="text" id="address" name="address" value="${ memberInfo.address }" readonly></td>
 	                     </tr>
 	                     <tr>
 	                         <th>상세주소 : </th>
