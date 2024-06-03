@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:set var="path" value="${ pageContext.request.contextPath }" />
@@ -8,141 +9,285 @@
 <meta charset="UTF-8">
 <title>회사 일정</title>
 <!-- fullcalendar -->
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<script
+	src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+	<!-- google calendar 연동 -->
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.13/index.global.min.js'></script>
 <style>
-	.out-line {
-		min-height: 800px;
-		width: 100%;
-		box-sizing: border-box;
-		display: flex;
-	}	
-	.member-search-area {
-		height: 15%;
-		padding: 10px;
-		display: flex;
-	}
-	.move-month-area {
-		height: 9.5%;
-		display: grid;
-		align-items: center;
-	}	
-	.month-area {
-		display: flex;
-		justify-content: center;
-	}
-	.month-area div {
-		font-size: 30px;
-		margin: 10px;
-		padding: 10px;
-	}
-	.calender-area {padding: 10px;}
-	.mydiv-area {width: 20%; position: relative;}
-	.memebrdiv-area {
-		width: 125px;
-		overflow-y: auto;
-		position: relative;
-	}
-	.line-cirecle {
-		height: fit-content;
-		width: 80px;
-		cursor: pointer;
-	}
-	.display-item-center {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-	.font-size25 {font-size: 25px;}
-	.member-search-area {margin-left: 30px; gap: 25px;}
-	/* 모달 스타일 */
-	.Category, .Co-worker {
-		display: -webkit-box;
-		overflow-y: hidden;
-	}
-	.date-time-area {
-		display: flex;
-		justify-content: space-evenly;
-		text-align: center;
-		width: 100%;
-	}
-	.date-area, .time-area {
-		width: 100%;
-		text-align: center;
-	}
-	.date-area {height: 30px;}
-	.time-area {height: 50px;}
-	.content-text-area {
-		width: 500px;
-		min-height: 120px;
-	}
-	/* 캘린더 스타일  */
-	#calendar a {
-		color: rgb(130, 130, 130);
-		text-decoration-line: none;
-	}
-	.fc-button-primary {
-		background-color: #000 !important;
-		border: 0 !important;
-		border-radius: 20px !important;
-    color: #ffffff !important;
-    font-weight: bolder !important;
-	}
-	.fc-day-sat a {color: #007bff !important;}
-	.fc-day-sun a {color: #dc3545 !important;}
-	.img_postion{
-    position: absolute;
-    font-weight: bolder;
-    color: black;
-    font-size: x-large;
-    top: 0px;
-	}
-	.fc-event-time{
-		display: none;
-	}
-	.fc-toolbar-title{
-    padding: 5px !important;
-    border-radius: 20px !important;
-    background: black !important;
-    color: #ffffff !important;
-    width: 10em;
-	}
-	.fc-direction-ltr{
-		text-align: center;
-	}
-	.fc .fc-daygrid-day.fc-day-today{
-		background-color: rgb(160 160 160 / 30%) !important;
-	}
-	.fc .fc-timegrid-col.fc-day-today{
-		background-color: rgb(160 160 160 / 30%) !important;
-	}
-	.fc-scroller.fc-scroller-liquid-absolute{
-    overflow: hidden;
-	}
-	.fc-theme-standard td, .fc-theme-standard th,
-	table.fc-scrollgrid.fc-scrollgrid-liquid, td{
-		border: 0px; 
-	}
- 	.fc-daygrid-day-frame.fc-scrollgrid-sync-inner{
-		background-color: rgb(200 200 200 / 20%) !important;
-    padding: 1px;
-    background-clip: content-box;
-	}
-	td.fc-day.fc-timegrid-col{
-		background-color: rgb(200 200 200 / 20%) !important;
-    padding: 1px;
-    background-clip: content-box;
-	}
-	.fc-toolbar-title{
-		font-size: 2.5em !important;
-	}
+.out-line {
+	min-height: 800px;
+	width: 100%;
+	box-sizing: border-box;
+	display: flex;
+}
+
+.member-search-area {
+	height: 15%;
+	padding: 10px;
+	display: flex;
+}
+
+.move-month-area {
+	height: 9.5%;
+	display: grid;
+	align-items: center;
+}
+
+.month-area {
+	display: flex;
+	justify-content: center;
+}
+
+.month-area div {
+	font-size: 30px;
+	margin: 10px;
+	padding: 10px;
+}
+
+.calender-area {
+	padding: 10px;
+	background: #f7efc9;
+}
+
+.mydiv-area {
+	width: 20%;
+	position: relative;
+}
+
+.memebrdiv-area {
+	width: 125px;
+	overflow-y: auto;
+	position: relative;
+}
+
+.line-cirecle {
+	height: fit-content;
+	width: 80px;
+	cursor: pointer;
+}
+
+.display-item-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.font-size25 {
+	font-size: 25px;
+}
+
+.member-search-area {
+	margin-left: 30px;
+	gap: 25px;
+}
+/* 모달 스타일 */
+.Category, .Co-worker {
+	display: -webkit-box;
+	overflow-y: hidden;
+}
+
+.date-time-area {
+	display: flex;
+	justify-content: space-evenly;
+	text-align: center;
+	width: 100%;
+}
+
+.date-area, .time-area {
+	width: 100%;
+	text-align: center;
+}
+
+.date-area {
+	height: 30px;
+}
+
+.time-area {
+	height: 50px;
+}
+
+.content-text-area {
+	width: 500px;
+	min-height: 120px;
+}
+/* 캘린더 스타일  */
+#calendar a {
+	color: rgb(130, 130, 130);
+	text-decoration-line: none;
+}
+
+.fc-button-primary {
+	background-color: #000 !important;
+	border: 0 !important;
+	border-radius: 20px !important;
+	color: #ffffff !important;
+	font-weight: bolder !important;
+}
+
+.fc-day-sat .fc-col-header-cell-cushion, .fc-day-sat .fc-daygrid-day-number
+	{
+	color: #007bff !important;
+}
+
+.fc-day-sun .fc-col-header-cell-cushion, .fc-day-sun .fc-daygrid-day-number
+	{
+	color: #dc3545 !important;
+}
+
+.img_postion {
+	position: absolute;
+	font-weight: bolder;
+	color: black;
+	font-size: x-large;
+	top: 0px;
+}
+
+.fc-event-time {
+	display: none;
+}
+
+.fc-toolbar-title {
+	padding: 5px !important;
+	border-radius: 20px !important;
+	background: black !important;
+	color: #ffffff !important;
+	width: 10em;
+}
+
+.fc-direction-ltr {
+	text-align: center;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+	background-color: rgb(0, 0, 0) !important;
+	border-radius: 10px !important;
+}
+
+.fc .fc-timegrid-col.fc-day-today {
+	background-color: rgb(0, 0, 0) !important;
+	border-radius: 5px !important;
+}
+
+.fc-scroller.fc-scroller-liquid-absolute {
+	overflow: hidden;
+}
+
+.fc-theme-standard td, .fc-theme-standard th, table.fc-scrollgrid.fc-scrollgrid-liquid,
+	td {
+	border: 0px;
+}
+
+.fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
+	background-color: #fff !important;
+	padding: 1px;
+	background-clip: content-box;
+	border-radius: 15px !important;
+}
+
+td.fc-day.fc-timegrid-col {
+	background-color: #fff !important;
+	padding: 1px;
+	background-clip: content-box;
+}
+
+.fc .fc-multimonth-singlecol .fc-multimonth-daygrid-table, .fc .fc-multimonth-singlecol .fc-multimonth-header-table
+	{
+	background: #f7efc9 !important;
+}
+
+.fc .fc-multimonth-title {
+	background: #f7efc9 !important;
+}
+
+.fc-daygrid-dot-event {
+	/* display: inline-flex; */
+	display: grid;
+	justify-items: center;
+}
+
+.fc-daygrid-event-dot {
+	height: -webkit-fill-available;
+	width: 60%;
+	position: absolute;
+	padding: 10px;
+	border-radius: 50px;
+}
+
+.fc-daygrid-block-event {
+	border-radius: 50px;
+}
+/* 직원 스타일 */
+.attraction {
+	margin-bottom: 50px;
+	border-radius: 10px;
+	padding: 30px 30px 0px 30px;
+	background: url(${path}/resources/images/rollowa.jpg);
+}
+
+.ho {
+	align-content: center;
+	border-radius: 10px;
+	padding: 30px;
+	margin-bottom: 10px;
+	margin-top: 5px;
+	white-space: nowrap;
+	margin-bottom: 30px;
+}
+
+.display_att {
+	display: flex;
+	justify-content: space-around;
+	gap: 50px;
+	cursor: pointer;
+}
+
+.display_att::-webkit-scrollbar {
+	height: 10px !important;
+}
+
+.blur_eve {
+	position: relative;
+}
+
+.detail {
+	position: absolute;
+	left: 70px;
+	top: 80px;
+	height: max-content;
+	width: max-content;
+	background: rgb(255, 255, 255);
+	padding: 6px 30px 1px 10px;
+	z-index: 10;
+	border-radius: 15px;
+	display: none;
+}
+
+.detail ul {
+	margin-right: 15px;
+	font-family: "Jua", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+}
+
+.detail li {
+	padding: 3px;
+}
+
+.ho:hover .detail {
+	display: block;
+}
+
+.display_att:hover :not(:hover) {
+	opacity: 0.5;
+}
 </style>
 </head>
 <body>
-	<body>
-    <div class="out-line">
-        <!-- 메뉴판 -->
-				<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
-			  <script>
+<body>
+	<div class="out-line">
+		<!-- 메뉴판 -->
+		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
+		<script>
 				// 캘린더 설정 및 선언
 				  let calendar;	
 				  function declareCalendar(){
@@ -151,6 +296,7 @@
 				  		calendar = new FullCalendar.Calendar(calendarEl, {
 				  			initialView: 'dayGridMonth',
 				  			locale: 'ko',
+						 	  googleCalendarApiKey: 'AIzaSyBEu59fao26o4oQSM2gXavGYR9eMTxd1nE',
 				  			customButtons: {
 				  				 enrollButton:{text: '일정 등록',click: function(){location.href="${path}/calendar/companyCalEnroll.page";}}
 				  			},
@@ -178,7 +324,15 @@
 				  			},
 				  			eventMouseLeave:function(info){
 				  				info.el.style.transform = '';
-				  			},	
+				  			},
+								events:{
+				                googleCalendarId :  'ko.south_korea.official#holiday@group.v.calendar.google.com',
+				                backgroundColor: 		'red',
+				                className:					'holliDay',
+				                extendedProps:{
+					                status: 					'N',
+               					},
+								}
 				  		})
 				  	})
 				  }	
@@ -254,7 +408,7 @@
 									calendar.addEventSource(
 									 [{
 											  id:						e.calNO,
-												title:				e.group.upperCode + e.group.codeName,
+												title:				e.group.upperCode+ " " + e.group.codeName,
 												start: 				e.startDate,
 												end:					e.endDate,
 												color: 				e.color,
@@ -315,101 +469,134 @@
 						
 					})
 				</script>
-        <!-- 컨텐츠 영역 -->
-       <div class="content" style="max-width: 1500px; padding: 30px;">
-            <!-- 캘린더 영역 -->
-            <div class="calender-area radious10 line-shadow "><div id="calendar"></div></div>
-        </div>
-    </div>
+
+		<!-- 컨텐츠 영역 -->
+		<div class="content" style="max-width: 1500px; padding: 30px;">
+			<!-- 부서별 정보 -->
+			<div class="attraction line-shadow ">
+				<div class="display_att">
+					<c:forEach var="d" items="${teamList}">
+					<div class="blur_eve">
+						<div class="line-shadow ho jua-regular"><div class="font-size25">${d.department}</div>
+							<div class="detail line-shadow">
+							<ul>
+								<c:forEach var="m" items="${d.member}">
+									<li>${m.teamCode}/ ${m.userName} / ${m.positionCode}</li>
+								</c:forEach>
+							</ul>
+							</div>
+						</div>
+					</div>
+					</c:forEach>
+				</div>
+			</div>
+
+			<!-- 캘린더 영역 -->
+			<div class="calender-area radious10 line-shadow ">
+				<div id="calendar"></div>
+			</div>
+		</div>
+	</div>
 
 
 	<!-- 상세보기 일정 모달 -->
 	<div id="cal_modal">
-	<form id='updateForm'>
-		<input type="hidden" name="calNO" required>
-		<div>
-			<div class="jua-regular">Title</div>
-			<div><input type="text" name="calTitle" style="width: 80%" required></div>
-		</div>
-		<br>
-		<div style="display: flex; justify-content: space-between; align-items: center">
-			<div class="jua-regular">Category</div>
-		</div>
-		
-		<div class="Category">
-			<c:forEach var="g" items="${group}">
-		    <div class="pretty p-default p-curve">
-		     	<input type="radio" name="groupCode" value="${g.code}">
-		       <div class="state p-success-o">
-		           <label>${g.codeName}</label>
-		       </div>
-		    </div>
-			</c:forEach>
-		</div>
-		<br>
-		<div>
-			<div class="jua-regular">Team</div>
-			<div><input type="text" name="team" style="width: 80%"></div>
-		</div>
-		
-		<br>
-		<div class="jua-regular">
-			Color <input type="color" name="color" id="color-style" style="width: 30px; height: 30px;">
-		</div>
-		<br>
-		<div style="display: flex; justify-content: space-between;">
-			<div class="jua-regular">All Day</div>
+		<form id='updateForm'>
+			<input type="hidden" name="calNO" required>
+			<div>
+				<div class="jua-regular">Title</div>
+				<div>
+					<input type="text" name="calTitle" style="width: 80%" required>
+				</div>
+			</div>
+			<br>
+			<div
+				style="display: flex; justify-content: space-between; align-items: center">
+				<div class="jua-regular">Category</div>
+			</div>
 
-		<div class="pretty p-switch all_day" id="allDate">
-				<input type="checkbox">
-				<div class="state p-success">
-					<label>종일</label>
-				</div> 
+			<div class="Category">
+				<c:forEach var="g" items="${group}">
+					<div class="pretty p-default p-curve">
+						<input type="radio" name="groupCode" value="${g.code}">
+						<div class="state p-success-o">
+							<label>${g.codeName}</label>
+						</div>
+					</div>
+				</c:forEach>
 			</div>
-		</div>
-		<br>
-		
-		<div class="date-time-area">
-			<div style="width: 40%;">
+			<br>
+			<div>
+				<div class="jua-regular">Team</div>
 				<div>
-					<input class="date-area jua-regular" type="date" id="currentDate1" name="date" required>
-				</div>
-				<br>
-				<div>
-					<input class="time-area jua-regular" type="time" id="currentTime1" name="time" required>
+					<input type="text" name="team" style="width: 80%">
 				</div>
 			</div>
-			<div style="place-self: center; font-size: xx-large;">~</div>
-			<div style="width: 40%;">
-				<div>
-					<input class="date-area jua-regular" type="date" id="currentDate2" name="date" required>
-				</div>
-				<br>
-				<div>
-					<input class="time-area jua-regular" type="time" id="currentTime2" name="time" required>
+
+			<br>
+			<div class="jua-regular">
+				Color <input type="color" name="color" id="color-style"
+					style="width: 30px; height: 30px;">
+			</div>
+			<br>
+			<div style="display: flex; justify-content: space-between;">
+				<div class="jua-regular">All Day</div>
+
+				<div class="pretty p-switch all_day" id="allDate">
+					<input type="checkbox">
+					<div class="state p-success">
+						<label>종일</label>
+					</div>
 				</div>
 			</div>
-		</div>
-		<br>
-		
-		<div class="jua-regular" >Content</div>
-		<div>
-			<textarea class="content-text-area" name="calContent"></textarea>
-		</div>
-		<br>
-		
-		<div class="jua-regular">Place</div>
-		<div class="Place">
-			<input style="width: 80%" type="text" name="place" required>
-		</div>
-		<br>
-		
-		<div align="end">
-			<button class="btn btn-outline-warning" type="button" onclick="checkDate();">수정</button>
-		</div>
-	</form>
+			<br>
+
+			<div class="date-time-area">
+				<div style="width: 40%;">
+					<div>
+						<input class="date-area jua-regular" type="date" id="currentDate1"
+							name="date" required>
+					</div>
+					<br>
+					<div>
+						<input class="time-area jua-regular" type="time" id="currentTime1"
+							name="time" required>
+					</div>
+				</div>
+				<div style="place-self: center; font-size: xx-large;">~</div>
+				<div style="width: 40%;">
+					<div>
+						<input class="date-area jua-regular" type="date" id="currentDate2"
+							name="date" required>
+					</div>
+					<br>
+					<div>
+						<input class="time-area jua-regular" type="time" id="currentTime2"
+							name="time" required>
+					</div>
+				</div>
+			</div>
+			<br>
+
+			<div class="jua-regular">Content</div>
+			<div>
+				<textarea class="content-text-area" name="calContent"></textarea>
+			</div>
+			<br>
+
+			<div class="jua-regular">Place</div>
+			<div class="Place">
+				<input style="width: 80%" type="text" name="place" required>
+			</div>
+			<br>
+
+			<div align="end">
+				<button class="btn btn-outline-warning" type="button"
+					onclick="checkDate();">수정</button>
+			</div>
+		</form>
 	</div>
-	
+
 	<!-- 모달 스크립트문 -->
 	<script>
 	     $('#cal_modal').iziModal({
@@ -421,7 +608,7 @@
 	     restoreDefaultContent: true, 
 		  });      
 	</script>
-	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
+	<jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp" />
 </body>
 </body>
 </html>

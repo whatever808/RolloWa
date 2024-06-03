@@ -24,6 +24,7 @@ import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
 import com.br.project.service.calendar.CalendarService;
 import com.br.project.service.common.department.DepartmentService;
+import com.br.project.service.notification.NotificationService;
 import com.br.project.service.pay.VacationService;
 import com.br.project.util.PagingUtil;
 
@@ -38,6 +39,7 @@ public class CalendarController {
 	private final CalendarService calService;
 	private final DepartmentService dService;
 	private final VacationService vService;
+	private final NotificationService nService;
 
 	/**
 	 * 일정 캘린더를 이동 하면서 부서 내부에 팀원 과 부서 카테고리를 조회해서 가져오는 매서드
@@ -139,14 +141,10 @@ public class CalendarController {
 	public String insertCal(CalendarDto calendar
 							, String[] date, String[] time
 							, HttpSession session
-							, RedirectAttributes redirectAttribute) {
+							, RedirectAttributes redirectAttribute
+							, String url) {
 		
-		/* 알림 전송을 위한 코드 추가 [기웅] */
-		List<String> teamMemberList = new ArrayList<>();
-		for(int i = 0; i < calendar.getCoworker().size(); i++) {
-			teamMemberList.add(calendar.getCoworker().get(i).getUserNo());
-		}
-		/* =========== */
+		
 		calendar.setCalSort("D");			
 		calendar.setStartDate(date[0]+ " " + time[0]);
 		calendar.setEndDate(date[1] + " " + time[1]);
@@ -159,21 +157,34 @@ public class CalendarController {
 		if(result > 0 ) {
 			redirectAttribute.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
 			redirectAttribute.addFlashAttribute("modalColor", "G");
-			redirectAttribute.addFlashAttribute("teamMemberList", teamMemberList);
-			//redirectAttribute.addFlashAttribute("flag", "Y");
+			
+			/* 알림 전송을 위한 코드 추가 [기웅] */
+			Map<String, Object> map = new HashMap<>();
+			map.put("url", url);
+			map.put("sendUserNo", member.getUserNo());
+			map.put("type", "C");
+			
+			int alramResult = 0;
+			for(int i = 0; i < calendar.getCoworker().size(); i++) {
+				// 알림을 보낸 사원을 제외한 다른 사원들에게만 알림 발송
+				if( Integer.parseInt(calendar.getCoworker().get(i).getUserNo()) == member.getUserNo()) {
+					continue;
+				}
+				map.put("receiveUserNo", calendar.getCoworker().get(i).getUserNo());
+				
+				alramResult += nService.insertNotificationSend(map);
+			}
+			
+			if(alramResult == calendar.getCoworker().size()) {
+				log.debug("알림 전송 성공");
+			}
 			
 			return "redirect:pCalendar.page";
-			/*mv.addObject("alertMsg", "성공적으로 등록 되었습니다.")
-			  .addObject("modalColor", "G")
-			  .setViewName("redirect:pCalendar.page");*/
 		}else {
 			redirectAttribute.addFlashAttribute("alertMsg", "다시 시도해 주세요.");
 			redirectAttribute.addFlashAttribute("modalColor", "R");
 			
 			return "redirect:calEnroll.page";
-			/*mv.addObject("alertMsg", "다시 시도해 주세요.")
-			  .addObject("modalColor", "R")
-			  .setViewName("redirect:calEnroll.page");*/
 		}
 	}
 	
@@ -210,8 +221,10 @@ public class CalendarController {
 		Map<String, String> map = new HashMap<>();
 		map.put("code", "CALD02");
 		List<GroupDto> group = dService.selectDepartmentList(map);	
+		List<Map<String, Object>> teamList = dService.selectTeam();
 		
 		mv.addObject("group", group)
+		  .addObject("teamList", teamList)
 		  .setViewName("calendar/cCalendar");
 		
 		return mv;

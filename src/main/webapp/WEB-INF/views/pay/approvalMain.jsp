@@ -57,7 +57,7 @@
     flex-direction: column;
     justify-content: space-evenly;
 }
-.top-menu-item:hover{background-color: #feefad5c;}
+.top-menu-item:hover{background-color: rgb(255, 236, 241);}
 
 /* Highlighted Boxes */
 .highlight-boxes {
@@ -999,10 +999,10 @@ $(document).on('click', '.page-linkc', function(event) {
                            documentStatusClass = 'pending';
                        }
                        
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -1110,10 +1110,10 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -1175,7 +1175,7 @@ $(document).on('click', '.page-linkc', function(event) {
 <script> 
 	
 	$(document).on('click', '#7daysOuterList', function() {
-			$(".highlight-box").css("background-color", "#feefad");
+			$(".highlight-box").css("background-color", "rgb(255 236 241)");
 
 	    $(".highlight-box").not(this).css("background-color", "#ffffff");
         load7DaysTableData(1);
@@ -1225,7 +1225,6 @@ $(document).on('click', '.page-linkc', function(event) {
 											                '<option value="J" ' + (conditions == 'J' ? 'selected': '') + '>지출결의서</option>' + 
 											                '<option value="G" ' + (conditions == 'G' ? 'selected': '') + '>기안서</option>' + 
 											                '<option value="H" ' + (conditions == 'H' ? 'selected': '') + '>휴직신청서</option>' + 
-											                '<option value="V" ' + (conditions == 'V' ? 'selected': '') + '>휴가신청서</option>' + 
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -1255,10 +1254,10 @@ $(document).on('click', '.page-linkc', function(event) {
                            documentStatusClass = 'pending';
                        }
                        
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -1373,7 +1372,6 @@ $(document).on('click', '.page-linkc', function(event) {
 											                '<option value="J"' + (conditions === 'J' ? ' selected' : '') + '>지출결의서</option>' + 
 											                '<option value="G"' + (conditions === 'G' ? ' selected' : '') + '>기안서</option>' + 
 											                '<option value="H"' + (conditions === 'H' ? ' selected' : '') + '>휴직신청서</option>' + 
-											                '<option value="V"' + (conditions === 'V' ? ' selected' : '') + '>휴가신청서</option>' + 
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -1404,10 +1402,10 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -1529,7 +1527,6 @@ $(document).on('click', '.page-linkc', function(event) {
 											                '<option value="J">지출결의서</option>' + 
 											                '<option value="G">기안서</option>' + 
 											                '<option value="H">휴직신청서</option>' + 
-											                '<option value="V">휴가신청서</option>' + 
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -1560,10 +1557,10 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -1629,14 +1626,14 @@ $(document).on('click', '.page-linkc', function(event) {
 	
 	$(document).on('click', '#AllList', function() {
 		
-			 $(".highlight-box").css("background-color", "#feefad");
+			 $(".highlight-box").css("background-color", "rgb(255 236 241)");
 		   $(".highlight-box").not(this).css("background-color", "#ffffff");
 		   $(".custom-selectall").val("전체");
 			 $(".custom-selectall2").val("기안자");
         loadAllTableData(1);
 	});
 	
-	$(document).on('click', '.page-link', function(event) {
+	$(document).on('click', '.page-linkd', function(event) {
 	    event.preventDefault();
 	    var page = $(this).data('page');
 	    if (page) {
@@ -1678,7 +1675,6 @@ $(document).on('click', '.page-linkc', function(event) {
 											                '<option value="J">지출결의서</option>' + 
 											                '<option value="G">기안서</option>' + 
 											                '<option value="H">휴직신청서</option>' + 
-											                '<option value="V">휴가신청서</option>' + 
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -1708,10 +1704,10 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -1745,13 +1741,13 @@ $(document).on('click', '.page-linkc', function(event) {
 										var ul = $('.pagination');
 										ul.empty(); 
 					
-										ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="page-link" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
+										ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="page-linkd" data-page="' + (response.pi.currentPage - 1) + '">◁</a></li>');
 					
 										for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-										    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="page-link" data-page="' + p + '">' + p + '</a></li>');
+										    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="page-linkd" data-page="' + p + '">' + p + '</a></li>');
 										}
 					
-										ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="page-link" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
+										ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="page-linkd" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
 							}else {
 								 var row = '<tr>' +
 					       '<td colspan="9">존재하는 게시글이 없습니다.</td>' +
@@ -1770,7 +1766,7 @@ $(document).on('click', '.page-linkc', function(event) {
   <script> 
 	
 	$(document).on('click', '#UserAllList', function() {
-			 $(".highlight-box").css("background-color", "#feefad");
+			 $(".highlight-box").css("background-color", "rgb(255 236 241)");
 		   $(".highlight-box").not(this).css("background-color", "#ffffff");
 		   $(".custom-selectall").val("전체");
 			 $(".custom-selectall2").val("기안자");
@@ -1818,7 +1814,6 @@ $(document).on('click', '.page-linkc', function(event) {
 											                '<option value="J">지출결의서</option>' + 
 											                '<option value="G">기안서</option>' + 
 											                '<option value="H">휴직신청서</option>' + 
-											                '<option value="V">휴가신청서</option>' + 
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -1848,10 +1843,10 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -1965,7 +1960,6 @@ $(document).on('click', '.page-linkc', function(event) {
 											                '<option value="J"' + (conditions === 'J' ? 'selected' : '') + '>지출결의서</option>' + 
 											                '<option value="G"' + (conditions === 'G' ? 'selected' : '') + '>기안서</option>' + 
 											                '<option value="H"' + (conditions === 'H' ? 'selected' : '') + '>휴직신청서</option>' + 
-											                '<option value="V"' + (conditions === 'V' ? 'selected' : '') + '>휴가신청서</option>' + 
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -1996,10 +1990,10 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -2120,7 +2114,6 @@ $(document).on('click', '.page-linkc', function(event) {
 										                '<option value="J">지출결의서</option>' + 
 										                '<option value="G">기안서</option>' + 
 										                '<option value="H">휴직신청서</option>' + 
-										                '<option value="V">휴가신청서</option>' + 
 										            '</select>' + 
 										        '</div>' + 
 										    '</div>' + 
@@ -2151,13 +2144,12 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
-                       
 
                        var attachmentIcon = '';
                        if (item.salesStatus + item.draftStatus + item.businessStatus > 0) {
@@ -2221,7 +2213,7 @@ $(document).on('click', '.page-linkc', function(event) {
 	$(document).on('click', '#UserApprovalList', function() {
 				$(".custom-selectall").val("전체");
 				$(".custom-selectall2").val("기안자");
-		 		$(".highlight-box").css("background-color", "#feefad");
+		 		$(".highlight-box").css("background-color", "rgb(255 236 241)");
 		  	$(".highlight-box").not(this).css("background-color", "#ffffff");
         loadUserApprovalTableData(1);
 	});
@@ -2266,8 +2258,7 @@ $(document).on('click', '.page-linkc', function(event) {
 											                '<option value="M">매출보고서</option>' + 
 											                '<option value="J">지출결의서</option>' + 
 											                '<option value="G">기안서</option>' + 
-											                '<option value="H">휴직신청서</option>' + 
-											                '<option value="V">휴가신청서</option>' + 
+											                '<option value="H">휴직신청서</option>' +  
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -2297,10 +2288,10 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -2417,7 +2408,6 @@ $(document).on('click', '.page-linkc', function(event) {
 											                '<option value="J" ' + (conditions == 'J' ? 'selected': '') +'>지출결의서</option>' + 
 											                '<option value="G" ' + (conditions == 'G' ? 'selected': '') +'>기안서</option>' + 
 											                '<option value="H" ' + (conditions == 'H' ? 'selected': '') +'>휴직신청서</option>' + 
-											                '<option value="V" ' + (conditions == 'V' ? 'selected': '') +'>휴가신청서</option>' + 
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -2448,10 +2438,10 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -2567,7 +2557,6 @@ $(document).on('click', '.page-linkc', function(event) {
 											                '<option value="J">지출결의서</option>' + 
 											                '<option value="G">기안서</option>' + 
 											                '<option value="H">휴직신청서</option>' + 
-											                '<option value="V">휴가신청서</option>' + 
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -2598,10 +2587,10 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -2666,7 +2655,7 @@ $(document).on('click', '.page-linkc', function(event) {
 <script> 
 	
 	$(document).on('click', '#noApprovalSignList', function() {
-		 		$(".highlight-box").css("background-color", "#feefad");
+		 		$(".highlight-box").css("background-color", "rgb(255 236 241)");
 		  	$(".highlight-box").not(this).css("background-color", "#ffffff");
 		  	$(".custom-selectall").val("전체");
 				$(".custom-selectall2").val("기안자");
@@ -2712,7 +2701,6 @@ $(document).on('click', '.page-linkc', function(event) {
 											                '<option value="J">지출결의서</option>' + 
 											                '<option value="G">기안서</option>' + 
 											                '<option value="H">휴직신청서</option>' + 
-											                '<option value="V">휴가신청서</option>' + 
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -2742,10 +2730,10 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -2863,7 +2851,6 @@ $(document).on('click', '.page-linkc', function(event) {
 											                '<option value="J" ' + (conditions == 'J' ? 'selected': '') +'>지출결의서</option>' + 
 											                '<option value="G" ' + (conditions == 'G' ? 'selected': '') +'>기안서</option>' + 
 											                '<option value="H" ' + (conditions == 'H' ? 'selected': '') +'>휴직신청서</option>' + 
-											                '<option value="V" ' + (conditions == 'V' ? 'selected': '') +'>휴가신청서</option>' + 
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -2894,10 +2881,10 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -3014,7 +3001,6 @@ $(document).on('click', '.page-linkc', function(event) {
 											                '<option value="J">지출결의서</option>' + 
 											                '<option value="G">기안서</option>' + 
 											                '<option value="H">휴직신청서</option>' + 
-											                '<option value="V">휴가신청서</option>' + 
 											            '</select>' + 
 											        '</div>' + 
 											    '</div>' + 
@@ -3045,10 +3031,10 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
                        
 
-                       var statusColor = '';
-                       if (item.status == '긴급') {
+                       var statusColor = "";
+                       if (item.payStatus == "긴급") {
                            statusColor = 'style="color: red;"';
-                       } else if (item.status == '보통') {
+                       } else if (item.payStatus == "보통") {
                            statusColor = 'style="color: rgb(49, 106, 153);"';
                        }
                        
@@ -3112,11 +3098,10 @@ $(document).on('click', '.page-linkc', function(event) {
   
 		
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
-		<main style="display: flex;">
+	
 	        <!-- content 추가 -->
 	        <div class="content p-4">
 	          <!-- 프로필 영역 -->
-	          <div class="informations">
 	          	<div class="containeres">
 						    <!-- Top Menu -->
 						    <div class="top-menu">
@@ -3199,7 +3184,7 @@ $(document).on('click', '.page-linkc', function(event) {
 												</div>
 										</div>
 						        <div class="highlight-box" id="7daysOuterList">
-						            <div class="title"><h5>${ userName }님의 <br>일주일 이상 지연된 <br>결재요청함</h5></div>
+						            <div class="title"><h5>${ userName }님의 <br>일주일 이상 지연된 <br>결재 요청함</h5></div>
 						            <div class="count"><h5>${ mdCount }건</h5></div>
 						            <div id="svgContent">
 							            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard-minus" viewBox="0 0 16 16">
@@ -3230,7 +3215,7 @@ $(document).on('click', '.page-linkc', function(event) {
 												</div>
 						        </div>
 						        <div class="highlight-box" id="AllList">
-						            <div class="title"><h5>전체결재함</h5></div>
+						            <div class="title"><h5>전체 결재함</h5></div>
 						            <div class="count"><h5>${ listCount }건</h5></div>
 						            <div id="svgContent">
 						            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
@@ -3260,7 +3245,6 @@ $(document).on('click', '.page-linkc', function(event) {
                                          <option value="J">지출결의서</option>
                                          <option value="G">기안서</option>
                                          <option value="H">휴직신청서</option>
-                                         <option value="V">휴가신청서</option>
 	                                     </select>
 												        		</div>
 												        </div>
@@ -3310,13 +3294,13 @@ $(document).on('click', '.page-linkc', function(event) {
 												    <div id="cen_bottom_pagging">
 																<div id="pagin_form">
 																	<ul class="pagination">
-										               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalMain.page?page=${pi.currentPage-1}">◁</a></li>
+										               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a  href="${ contextPath }/pay/approvalMain.page?page=${pi.currentPage-1}">◁</a></li>
 										      
 															      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-															       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalMain.page?page=${p}">${ p }</a></li>
+															       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a  href="${ contextPath }/pay/approvalMain.page?page=${p}">${ p }</a></li>
 															      </c:forEach>
 										      
-															      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/approvalMain.page?page=${pi.currentPage+1}">▷</a></li>
+															      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a  href="${ contextPath }/pay/approvalMain.page?page=${pi.currentPage+1}">▷</a></li>
 															   </ul>
 											          </div>
 										        </div>
@@ -3344,6 +3328,6 @@ $(document).on('click', '.page-linkc', function(event) {
 					</div>
 	        <!-- content 끝 -->
         <jsp:include page="/WEB-INF/views/common/sidebarFooter.jsp"/>
-    </main>
+    
 </body>
 </html>

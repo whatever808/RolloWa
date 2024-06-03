@@ -234,8 +234,38 @@ public class AttractionController {
 	 */
 	@RequestMapping(value="/utilization/list.ajax", produces="application/json; charset=utf-8")
 	@ResponseBody
-	public List<Map<String, Object>> ajaxSelectAttractionUtilizationList(HttpServletRequest request){
-		return attractionService.selectAttractionUtilizationList(getParameterMap(request));
+	public Map<String, Object> ajaxSelectAttractionUtilizationList(HttpServletRequest request){
+		HashMap<String, Object> params = getParameterMap(request);
+		PageInfoDto pageInfo = pagingUtil.getPageInfoDto(attractionService.selectUsingAttractionCount(params), Integer.parseInt(request.getParameter("page")), 5, 10);
+		List<Map<String, Object>> usageList = attractionService.selectAttractionUtilizationList(params, pageInfo);
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("pageInfo", pageInfo);
+		response.put("usageList", usageList);
+		
+		return response;
+	}
+	
+	/**
+	 * @method : 어트랙션 이용률 상세조회 페이지
+	 */
+	@RequestMapping("/utilization/detail.page")
+	public String showAttractionUtilizationPage(HttpServletRequest request) {
+		HashMap<String, Object> params = getParameterMap(request);
+		for(String key : params.keySet()) {
+			request.setAttribute(key, params.get(key));
+		}
+		request.setAttribute("attraction", attractionService.selectAttraction(getParameterMap(request)));
+		return "/facility/attraction/attraction_utilization_detail";
+	}
+	
+	/**
+	 * @method : 월별 or 일별 어트랙션 이용률
+	 */
+	@RequestMapping(value="/utilization/detail.ajax", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public List<Map<String, Object>> ajaxSelectAttractionUtilization(HttpServletRequest request){
+		return attractionService.selectAttractionUtilization(getParameterMap(request));
 	}
 	
 	

@@ -61,13 +61,29 @@ public class AttractionDao {
 	}
 	
 	/**
+	 * @return : 어트랙션 갯수 조회 (운영중, 운영중지)
+	 */
+	public int selectUsingAttractionCount(HashMap<String, Object> params) {
+		return sqlSessionTemplate.selectOne("attractionMapper.selectUsingAttractionCount", params);
+	}
+	
+	/**
 	 * @param params : 연, 월, 일, 장소 정보
 	 * @return : 연간, 월간, 일간 어트랙션 이용률 리스트
 	 */
-	public List<Map<String, Object>> selectAttractionUtilizationList(HashMap<String, Object> params){
-		return sqlSessionTemplate.selectList("attractionMapper.selectAttractionUtilizationList", params);
+	public List<Map<String, Object>> selectAttractionUtilizationList(HashMap<String, Object> params, PageInfoDto pageInfo){
+		RowBounds rowBounds = new RowBounds((pageInfo.getCurrentPage() - 1) * pageInfo.getListLimit(),
+											pageInfo.getListLimit());
+		return sqlSessionTemplate.selectList("attractionMapper.selectAttractionUtilizationList", params, rowBounds);
 	}
 	
+	/**
+	 * @param params : 연, [월], 차트타입, 어트랙션번호
+	 * @return : 월별 or 일별 어트랙션 이용률
+	 */
+	public List<Map<String, Object>> selectAttractionUtilization(HashMap<String, Object> params){
+		return sqlSessionTemplate.selectList("attractionMapper.selectAttractionUtilization", params);
+	}
 	
 	
 	

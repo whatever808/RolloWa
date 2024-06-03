@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>지난 휴가</title>
+<title>휴가 결재</title>
 <style>
 .out-line {
 	min-height: 800px;
@@ -74,6 +74,9 @@
 .spaceNO{
     white-space: nowrap;
 }
+#RR_modal{
+   height: fit-content;
+}
 </style>
 </head>
 <body>
@@ -82,9 +85,9 @@
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 		<!-- 컨텐츠 영역 -->
 		<div class="content-area">
-			<fieldset class="line-show radious10 inner-line">
+			<fieldset class="line-shadow radious10 inner-line">
 				<legend>
-					<h1 class="jua-regular">지난휴가</h1>
+					<h1 class="jua-regular">휴가 결재</h1>
 				</legend>
 				<br>
 				<br>
@@ -98,12 +101,8 @@
 						</c:forEach>
 						</select>
 					</div>
-					
-					<div class="font-size25 jua-regular spaceNO">날짜</div>
-					<div class="size-fit">
-						<input type="date" id="currentDate1" class="date-area jua-regular">
-					</div>
-					<div><button style="box-shadow: 1px 1px 1px 1px #8888887a;" type="button" onclick="ajaxSearchOld(1);" class="jua-regular btn btn-outline-secondary"> 검색 </button></div>
+				
+				<div><button style="box-shadow: 1px 1px 1px 1px #8888887a;" type="button" onclick="ajaxSearchOld(1);" class="jua-regular btn btn-outline-dark"> 검색 </button></div>
 				</form>
 				<div>
 					<table class="search-list table table-hover">
@@ -113,7 +112,6 @@
 								<th class="font-size20 jua-regular spaceNO">Color</th>
 								<th class="font-size20 jua-regular spaceNO">Category</th>
 								<th class="font-size20 jua-regular spaceNO">Date</th>
-								<th class="font-size20 jua-regular spaceNO">Using</th>
 								<th class="font-size20 jua-regular spaceNO">Del</th>
 							</tr>
 						</thead>
@@ -133,10 +131,10 @@
 			<div>
 				<br>
 				<div style="text-align: center;" class="font-size20 jua-regular">
-				정말로 삭제 하시겠습니까? 삭제 후 첨부파일 data를 복구 할 수 없습니다.
+				반려 하시겠습니까? 이유를 적어 주세요.
 				</div>
 				<br>
-				<div class="jua-regular">철회 사유</div>
+				<div class="jua-regular">반려 사유</div>
 				<textarea name="RRequestComent" style="width: -webkit-fill-available;"></textarea>
 				<input type="hidden" name="vacaNO">
 			</div>
@@ -154,20 +152,12 @@
 			zindex : 300,
 			focusInput : true,
 		});
-	
-		function current(){
-			const offset = new Date().getTimezoneOffset() * 60000;
-			const today = new Date(Date.now() - offset);
-			let dateData = today.toISOString().slice(0, 10);
-			document.getElementById('currentDate1').value = dateData;
-		}
 		
 		function ajaxSearchOld(page){
 			$.ajax({
 				url:'${path}/vacation/searchOld.ajax',
 				type:'post',
 				data:'vacaGroupCode='+$('select').val()
-							+'&vacaStart=' + document.getElementById('currentDate1').value 
 							+ '&page='+ page,
 				success:function(map){
 					console.log(map);
@@ -215,7 +205,7 @@
 				case 'B': string = '반차'; break;
 				case 'C': string = '병가'; break;
 				case 'G': string = '소집일'; break;
-				default : String = '기타'			
+				default: string = '기타';			
 			}
 			return string;
 		}
@@ -228,16 +218,13 @@
 					tableEl += '<tr><td>'
 									+ e.vacaNO
 									+ '</td>'
-									+ '<td class="spaceNO"><input type="color" value="' + e.vacaColor + '" id="color-style" style="width: 35px; height: 15px;" onclick="return false"></td>'
+									+ '<td class="spaceNO"><input type="color" value="' + e.vacaColor + '" id="color-style" style="width: 35px; height: 35px; cursor: auto;" onclick="return false"></td>'
 									+ '<td class="spaceNO">'
 									+ codeName(e.vacaGroupCode)
 									+ '</td>'
-									+ '<td class="spaceNO">'
+									+ '<td class="spaceNO" style="font-size: larger;">'
 									+ e.vacaStart.slice(0,10) +' ~ '+ e.vacaEnd.slice(0,10)
 									+ '</td>'
-									+ '<td><div class="fontRed">- '
-									+ ((new Date(e.vacaEnd.slice(0,10)) - new Date(e.vacaStart.slice(0,10))) / (1000 * 60 * 60 * 24) +1)
-									+ '</div></td>'
 									+ '<td><button class="btn btn-outline-danger" onclick="deleteCheck('+ e.vacaNO +');">철회</button></td>'
 									+ '</tr>'
 				})
@@ -282,7 +269,6 @@
 		};
 		
 		$(document).ready(function(){
-			current();
 			ajaxSearchOld(1);
 			
 		})

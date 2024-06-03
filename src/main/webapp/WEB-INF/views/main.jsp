@@ -47,8 +47,20 @@
 				    <link rel="stylesheet" href="${ contextPath }/resources/css/common/mdb.min.css" />
 				    <link href="${ contextPath }/resources/css/login.css" rel="stylesheet">
 				    <script src="${ contextPath }/resources/js/login.js"></script>
+				    <style>
+					    .container {
+			    	    background: white;
+					    }
+				    	.backGround{
+				    		  opacity: 0.3;
+    							width: 100%;	   
+ 							    height: -webkit-fill-available; 		
+				    	}
+				    </style>
+				    
         </head>
         <body id="particles-js">
+        		<img class="backGround" src="${contextPath}/resources/images/rollowa.jpg">
 	        <c:if test="${ alertMsg != null }" >
 						<script>
 							alertify.alert('${alertTitle}','${alertMsg}');
@@ -81,6 +93,8 @@
                 </form>
                 <!--<a href="#" class="dnthave">Don’t have an account? Sign up</a>-->
             </div>
+            
+            
             <!-- 아이디 찾기 modal -->
             <div id="forget_id" class="modal_frame">
                 <!-- Modal content -->
@@ -111,6 +125,7 @@
                 </div>
             </div>
         </div>
+        
         <script>
             // 1. 해당 아이디의 모달 등록이 필요함
             $('#forget_id').iziModal({

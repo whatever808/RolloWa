@@ -451,6 +451,8 @@ $.ajax({
 							            </tr>
 							        </thead>
 							        <tbody id="tStatus">
+							        		<c:choose>
+							        		<c:when test="${ list != null and !list.isEmpty() }">
 							        		<c:forEach var="i" items="${ list }">							        		
 								          	<tr onclick="location.href='${contextPath}/pay/detail.do?approvalNo=${ i.APPROVAL_NO  }&documentNo=${ i.DOCUMENT_NUMBER }&documentType=${ i.DOCUMENT_TYPE }&payWriter=${ i.PAYMENT_WRITER  }&payWriterNo=${ i.PAYMENT_WRITER_NO }';">
 								                <td><span class="badge">${ i.DOCUMENT_STATUS }</span></td>
@@ -466,23 +468,34 @@ $.ajax({
 								                <td>${ i.FINAL_APPROVAL_DATE == null ? "-" : i.FINAL_APPROVAL_DATE}</td>
 								            </tr>
 							            </c:forEach>
+							            </c:when>
+							            <c:otherwise>
+							             	<tr>
+			                      	<td colspan="7">존재하는 게시글이 없습니다.</td>
+			                      </tr>
+							            </c:otherwise>
+							            </c:choose>
 							        </tbody>
 							    </table>
-							    
-							    <div id="cen_bottom_pagging">
-											<div id="pagin_form">
-												<ul class="pagination">
-					               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/finishApprovalList.page?page=${pi.currentPage-1}">◁</a></li>
-					      
-										      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-										       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/finishApprovalList.page?page=${p}">${ p }</a></li>
-										      </c:forEach>
-					      
-										      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/finishApprovalList.page?page=${pi.currentPage+1}">▷</a></li>
-										   </ul>
-						          </div>
-					        </div>
-					        
+							    <c:choose>
+								    <c:when test="${ list != null && !list.isEmpty() }">
+								    <div id="cen_bottom_pagging">
+												<div id="pagin_form">
+													<ul class="pagination">
+						               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a href="${ contextPath }/pay/finishApprovalList.page?page=${pi.currentPage-1}">◁</a></li>
+						      
+											      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+											       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a href="${ contextPath }/pay/finishApprovalList.page?page=${p}">${ p }</a></li>
+											      </c:forEach>
+						      
+											      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a href="${ contextPath }/pay/finishApprovalList.page?page=${pi.currentPage+1}">▷</a></li>
+											   </ul>
+							          </div>
+						        </div>
+						        </c:when>
+						        <c:otherwise>
+						        </c:otherwise>
+					        </c:choose>
 							</div>
 						</div>
 					</div>

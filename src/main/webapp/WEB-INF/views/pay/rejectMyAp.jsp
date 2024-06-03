@@ -413,38 +413,53 @@ function loadPageMyReject(page) {
 							            </tr>
 							        </thead>
 							        <tbody id="tStatus">
-							        		<c:forEach var="i" items="${ list }">							        		
-								          	<tr onclick="location.href='${contextPath}/pay/detail.do?approvalNo=${ i.APPROVAL_NO  }&documentNo=${ i.DOCUMENT_NUMBER }&documentType=${ i.DOCUMENT_TYPE }&payWriter=${ i.PAYMENT_WRITER  }&payWriterNo=${ i.PAYMENT_WRITER_NO }';">
-								                <td><span class="badge">${ i.DOCUMENT_STATUS }</span></td>
-								                <td>${ i.TITLE }
-								                		${ i.SALES_STATUS + i.DRAFT_STATUS + i.BUSINESSTRIP_STATUS == 1 ? '<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">
-					                             <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>
-					                             </svg>' : ""}
-								                </td>
-								                <td>${ i.DOCUMENT_TYPE }</td>
-								                <td>${ i.PAYMENT_WRITER }</td>
-								                <td>${ i.DEPARTMENT }</td>
-								                <td>${ i.REGIST_DATE }</td>
-								                <td>${ i.FINAL_APPROVAL_DATE == null ? "-" : i.FINAL_APPROVAL_DATE}</td>
-								            </tr>
-							            </c:forEach>
+							        		<c:choose>
+												    <c:when test="${ list != null and !list.isEmpty() }">
+												        <c:forEach var="i" items="${ list }">
+												            <tr onclick="location.href='${contextPath}/pay/detail.do?approvalNo=${ i.APPROVAL_NO }&documentNo=${ i.DOCUMENT_NUMBER }&documentType=${ i.DOCUMENT_TYPE }&payWriter=${ i.PAYMENT_WRITER }&payWriterNo=${ i.PAYMENT_WRITER_NO }';">
+												                <td><span class="badge">${ i.DOCUMENT_STATUS }</span></td>
+												                <td>${ i.TITLE }
+												                    <c:if test="${ i.SALES_STATUS + i.DRAFT_STATUS + i.BUSINESSTRIP_STATUS == 1 }">
+												                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16" style="color: black;">
+												                            <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z"/>
+												                        </svg>
+												                    </c:if>
+												                </td>
+												                <td>${ i.DOCUMENT_TYPE }</td>
+												                <td>${ i.PAYMENT_WRITER }</td>
+												                <td>${ i.DEPARTMENT }</td>
+												                <td>${ i.REGIST_DATE }</td>
+												                <td>${ i.FINAL_APPROVAL_DATE == null ? "-" : i.FINAL_APPROVAL_DATE}</td>
+												            </tr>
+												        </c:forEach>
+												    </c:when>
+												    <c:otherwise>
+												        <tr>
+												            <td colspan="7">존재하는 게시글이 없습니다.</td>
+												        </tr>
+												    </c:otherwise>
+												</c:choose>
 							        </tbody>
 							    </table>
-							    
-							    <div id="cen_bottom_pagging">
-											<div id="pagin_form">
-												<ul class="pagination">
-					               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/rejectApprovalList.page?page=${pi.currentPage-1}">◁</a></li>
-					      
-										      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-										       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/rejectApprovalList.page?page=${p}">${ p }</a></li>
-										      </c:forEach>
-					      
-										      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/rejectApprovalList.page?page=${pi.currentPage+1}">▷</a></li>
-										   </ul>
-						          </div>
-					        </div>
-					        
+							    <c:choose>
+								    <c:when test="${ list != null && !list.isEmpty()}">
+									    <div id="cen_bottom_pagging">
+													<div id="pagin_form">
+														<ul class="pagination">
+							               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a  href="${ contextPath }/pay/rejectApprovalList.page?page=${pi.currentPage-1}">◁</a></li>
+							      
+												      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+												       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a href="${ contextPath }/pay/rejectApprovalList.page?page=${p}">${ p }</a></li>
+												      </c:forEach>
+							      
+												      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a  href="${ contextPath }/pay/rejectApprovalList.page?page=${pi.currentPage+1}">▷</a></li>
+												   </ul>
+								          </div>
+							        </div>
+					          </c:when>
+						        <c:otherwise>
+						        </c:otherwise>
+					        </c:choose>
 							</div>
 						</div>
 					</div>

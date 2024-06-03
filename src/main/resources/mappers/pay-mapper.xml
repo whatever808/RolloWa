@@ -373,7 +373,6 @@
 			      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
 			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
 			      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
-			      , SALES_AMOUNT 
 			      , TITLE
 			      , SALES_DIVISION
 			      , MANAGER_NAME
@@ -382,6 +381,7 @@
 			      , REPORT_TYPE
 			      , ITEM
 			      , VOLUMES
+			      , SALES_AMOUNT
 				from approval a
 	      left join expenditure_report e on (document_number = expend_no)
 			  left join item i on (expend_no = report_no)
@@ -657,7 +657,7 @@
 		    VALUES
 		    (
 		      SEQ_APNO.NEXTVAL
-			  ,  SEQ_EXNO.currval
+			  , SEQ_EXNO.currval
 		    , 'M'
 		    , #{deptName}
 		    , #{writerName}
@@ -796,14 +796,22 @@
 	   </insert>
 	   
 	   <update id="updateApproval">
-	   		update APPROVAL
-	   		   set PAYMENT_STATUS = #{status}
-	   		     , TITLE = #{title}
-	   		     , FIRST_APPROVAL = #{firstApproval}
-	   		     , MIDDLE_APPROVAL = #{middleApproval} 
-	   		     , FINAL_APPROVAL = #{finalApproval}
-	   		     , MODIFY_DATE = #{writerDate}
-	   		 where APPROVAL_NO = #{approvalNo}
+	   		UPDATE APPROVAL
+				   SET PAYMENT_STATUS = #{status}
+				     , TITLE = #{title}
+				     , FIRST_APPROVAL = #{firstApproval}
+				     , MIDDLE_APPROVAL = #{middleApproval}
+				     , FINAL_APPROVAL = #{finalApproval}
+				     , MODIFY_DATE = #{writerDate}
+				     , FIRST_SIGN = NULL
+				     , MIDDLE_SIGN = NULL
+				     , FINAL_SIGN = NULL
+				     , FIRST_APPROVAL_DATE = NULL
+				     , MIDDLE_APPROVAL_DATE = NULL
+				     , FINAL_APPROVAL_DATE = NULL
+				     , CANCELLATION_CONTENT = NULL
+				     , DOCUMENT_STATUS = 'D'
+				 WHERE APPROVAL_NO = #{approvalNo}
 	   </update>
 	   
 	   <insert id="gReportInsert">
@@ -889,7 +897,7 @@
                 APPROVAL_NO
               , DOCUMENT_NUMBER
 				      , DEPARTMENT
-				      , to_char(REGIST_DATE, 'YYYY"년 "MM"월 "DD"일"') REGIST_DATE
+				      , to_char(REGIST_DATE, 'YYYY-MM-DD') REGIST_DATE
 				      , PAYMENT_WRITER
 				      , PAYMENT_WRITER_NO
 				      , PAYMENT_STATUS
@@ -901,7 +909,7 @@
 				      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
 				      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
 				      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
-				      , S.SALES_NO
+				      , SALES_NO
 				      , to_char(EFFECTIVE_DATE, 'YYYY-MM-DD') EFFECTIVE_DATE
               , COOPERATION_DEPARTMENT
               , TITLE
@@ -914,9 +922,8 @@
           from approval ap
           join SALES_REPORT s on (SALES_NO = DOCUMENT_NUMBER)
           join ATTACHMENT at on (ref_no = SALES_NO)
-          where ref_type = #{refType}
+          where ref_type = 'PG'
           and ap.STATUS = 'Y'
-          and at.STATUS = 'Y'
           and REF_NO = #{documentNo}
           and DOCUMENT_NUMBER = #{documentNo}
           and APPROVAL_NO = #{approvalNo}
@@ -1642,7 +1649,7 @@
 				    values
 				    (
 				      #{reportNo}
-				    , #{reportType}
+				    , 'B'
 				    , #{pName}
 				    , #{size}
 				    , #{amount}
@@ -2707,6 +2714,44 @@
           OR (MIDDLE_APPROVAL_DATE IS NOT NULL AND FINAL_APPROVAL = #{userName} AND FINAL_APPROVAL_DATE IS NULL AND TO_DATE(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') = TO_DATE(SYSDATE, 'YYYY-MM-DD'))
       )
 	</select>
+	
+		<select id="fileStatus" resultType="_int">
+			select count(*)
+			  from ATTACHMENT
+			where REF_NO = #{salesNo}
+			  and REF_TYPE = 'PG'
+		</select>
+		
+		<insert id="gReportAttachUpdate">
+	   		insert 
+	   				into ATTACHMENT
+	   				(
+	   				  FILE_NO
+	   				, ORIGIN_NAME
+	   				, ATTACH_PATH
+	   				, MODIFY_NAME
+	   				, REF_TYPE
+	   				, REF_NO
+	   				)
+	   				values
+	   				(
+	   				  SEQ_ANO.nextval
+	   				, #{originalName}
+	   				, #{filePath}
+	   				, #{filesystemName}
+	   				, #{RefType}
+	   				, #{salesNo}
+	   				)
+	   </insert>
+	   
+	 <update id="updateGReport">
+	 	update SALES_REPORT
+	 	   set EFFECTIVE_DATE = #{dateStart}
+				 , COOPERATION_DEPARTMENT = #{depWith}
+				 , CONTENT = #{content}
+				 , STATUS = #{fileStatus}
+	 	  where SALES_NO = #{salesNo}
+	 </update>
 	
 	
 	

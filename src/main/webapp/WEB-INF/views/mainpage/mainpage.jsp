@@ -20,6 +20,12 @@
 	<!-- side bar -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
+	<style>
+		.weather-clock-div{
+			background: url(${contextPath}/resources/images/rollowa.jpg);
+		}
+	</style> 
+	
 	<!-- content 추가 -->
 	<div class="content">
 
@@ -533,7 +539,6 @@
   	$(document).ready(function() {
   		selectAlram();
   	})
-  	
   	// 읽지 않은 알림 조회
   	function selectAlram() {
 	  	$.ajax({
@@ -584,10 +589,13 @@
 	  			}
   		})
 		}
+
   	// 알림 버튼 클릭 시 알림 조회
   	$(".alram-btn").on("click", function() {
 			// 알림 아이콘 표시 제거
 			$(".alram-btn>i").removeClass("fa-bounce");
+			//알림 조회
+			selectAlram();
 			// 모달창 열기
 			$("#alram_list").iziModal('open');
   	})

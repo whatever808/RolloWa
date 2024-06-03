@@ -280,12 +280,12 @@
 			$('select[name=heightLimitRange]').children().eq(0).attr('selected', true);
 			$('textarea[name=attractionIntro]').val('');
 		});
-			
+		*/
 		// 목록가기 버튼 클릭시, 관리목록페이지로 이동 ===================================================================================
 		$("#back-manage-list").on("click", function(){
 			location.href = "${ contextPath }/attraction/manage/list.do";
 		});
-		*/
+		
 	});
 	
 	// 구글맵 관련 ============================================================================================================

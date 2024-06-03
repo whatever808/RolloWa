@@ -4,6 +4,7 @@ package com.br.project.controller.pay;
 
 
 import java.io.File;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +35,6 @@ import com.br.project.dto.pay.SignDto;
 import com.br.project.service.pay.PayService;
 import com.br.project.util.FileUtil;
 import com.br.project.util.PagingUtil;
-import com.google.common.collect.Maps;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -84,7 +84,7 @@ public class PayController {
 		
 		int noApprovalSignCount = payService.noApprovalSignCount(userName);
 		Date now = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
 		String formatedNow = sdf.format(now);
 		
 		
@@ -480,7 +480,7 @@ public class PayController {
 	@PostMapping("/mReportInsert.do")
 	public String mReportInsert(@RequestParam("item") List<String> items,
 								@RequestParam("count") List<String> counts,
-								@RequestParam("sales") List<String> saleses,
+								@RequestParam("salesAmount") List<String> saleses,
 								@RequestParam Map<String, Object> map, 
 								RedirectAttributes redirectAttributes) {
 		
@@ -490,7 +490,6 @@ public class PayController {
 		for(int i=0; i<items.size(); i++) {
 			if(items.get(i) != null && !items.get(i).equals("")) {
 				Map<String, Object> maps = new HashMap<>();
-				maps.put("expendNo", map.get("expendNo"));
 				maps.put("item", items.get(i));
 				maps.put("count", counts.get(i));
 				maps.put("salesAmount", saleses.get(i));
@@ -500,10 +499,12 @@ public class PayController {
 		
 		int result = payService.mReportInsert(map, list);
 		
-		
+		redirectAttributes.addFlashAttribute("alertTitle", "게시글 등록 서비스");
 		if(result == list.size()) {
-			redirectAttributes.addFlashAttribute("alertTitle", "게시글등록");
-			redirectAttributes.addFlashAttribute("alertMsg", "등록이 성공적으로 완료되었습니다.");
+			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
+			redirectAttributes.addFlashAttribute("modalColor", "G");
+		}else {
+			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
 		}
 		
 		
@@ -547,6 +548,10 @@ public class PayController {
 		List<Map<String, Object>> listH = payService.retireModify(map);
 		//비품
 		List<Map<String, Object>> listB = payService.fixDetail(map);
+		//기안서
+		map.put("refType", "PG");
+		List<Map<String, Object>> listG = payService.salesDetail(map);
+		
 		//-------------------------------------
 		
 		//로그인한 유저의 팀이름, 부서, 팀명, 직급
@@ -683,6 +688,7 @@ public class PayController {
 			model.addAttribute("fileList", fileList);
 			
 			return "pay/jModifyForm";
+			
 		}else if(map.get("report").equals("h")){
 			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
 			model.addAttribute("member", member);
@@ -693,6 +699,7 @@ public class PayController {
 			model.addAttribute("list", listH);
 			
 			return "pay/hModifyForm";
+			
 		}else if(map.get("report").equals("b")){
 			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
 			model.addAttribute("member", member);
@@ -703,9 +710,24 @@ public class PayController {
 			model.addAttribute("list", listB);
 			
 			return "pay/bModifyForm";
+		}else {
+			//기안서
+			//에디터
+			String content = payService.contentSelect(map);
+			
+			model.addAttribute("member", member);
+			model.addAttribute("userName", userName);
+			model.addAttribute("userNo", userNo);
+			model.addAttribute("teamNames", teamNames);
+			model.addAttribute("content", content);			
+			
+			model.addAttribute("list", listG);
+			log.debug("gModifyFormList : {}", listG);
+			
+			return "pay/gModifyForm";
 		}
 		
-		return "pay/mWriterForm";
+		
 		
 	}
 	
@@ -784,10 +806,13 @@ public class PayController {
 	@PostMapping("/mReportUpdate.do")
 	public String mReportUpdate(@RequestParam("item") List<String> items,
 								@RequestParam("count") List<String> counts,
-								@RequestParam("sales") List<String> saleses,
+								@RequestParam("salesAmount") List<String> sales,
 								@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes) { 
 		
-		
+		log.debug("mReportUpdate : {}", map);
+		log.debug("items : {}", items);
+		log.debug("counts : {}", counts);
+		log.debug("sales : {}", sales);
 		List<Map<String, Object>> list = new ArrayList<>();
 		
 			for(int i=0; i<items.size(); i++) {
@@ -796,25 +821,60 @@ public class PayController {
 					maps.put("expendNo", map.get("expendNo"));
 					maps.put("item", items.get(i));
 					maps.put("count", counts.get(i));
-					maps.put("salesAmount", saleses.get(i));
+					maps.put("salesAmount", sales.get(i));
 					list.add(maps);
 				}
 		}
 		
 		
-		for(int i = 0; i < list.size(); i++) {
-			log.debug("list : {}", list.get(i));
+		int result = payService.mReportUpdate(map, list);
+		
+		redirectAttributes.addFlashAttribute("alertTitle", "게시글 수정 서비스");
+		if(result == list.size()) {
+			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
+			redirectAttributes.addFlashAttribute("modalColor", "G");
+		}else {
+			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
 		}
 		
-		int newlist = payService.mReportUpdate(map, list);
 		
-		if(newlist == list.size()) {
-			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 수정되었습니다.");
-		}
+		return "redirect:/pay/approvalMain.page";
+		
+	}
 	
+	@PostMapping("/gReportUpdate.do")
+	public String gReportUpdate(@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes
+							  , List<MultipartFile> uploadFiles,  String[] delFileNo) { 
+		
+		List<Map<String, Object>> attachList = new ArrayList<>();
+		
+		for(MultipartFile uploadFile : uploadFiles) {
+			if(uploadFile != null && !uploadFile.isEmpty()) {
+				Map<String, String> fileMap = fileUtil.fileUpload(uploadFile, "approval");
+				Map<String, Object> file = new HashMap<>();
+				file.put("filePath", fileMap.get("filePath"));
+				file.put("filesystemName", fileMap.get("filesystemName"));
+				file.put("originalName", fileMap.get("originalName"));
+				file.put("RefType", "PG");
+				file.put("salesNo", map.get("salesNo"));
+				
+				attachList.add(file);
+			}
+		}
+		
+		int result = payService.gReportUpdate(map, attachList, delFileNo);
+		
+		redirectAttributes.addFlashAttribute("alertTitle", "게시글 수정 서비스");
+		if(result == 1 && uploadFiles.isEmpty() || result == attachList.size() && !uploadFiles.isEmpty()) {
+			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
+			redirectAttributes.addFlashAttribute("modalColor", "G");
+		}else {
+			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
+		}
 		
 		
-		return "redirect:/pay/paymain.page";
+		
+		return "redirect:/pay/approvalMain.page";
 		
 	}
 	
@@ -848,16 +908,20 @@ public class PayController {
 		
 		int result = payService.gReportInsert(map, attachList);
 		
-		redirectAttributes.addFlashAttribute("alertTitle", "결재 등록 서비스");
+		
+		redirectAttributes.addFlashAttribute("alertTitle", "게시글 등록 서비스");
 		if(attachList.isEmpty() && result == 1 || !attachList.isEmpty() && result == attachList.size()) {
-			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
+			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
+			redirectAttributes.addFlashAttribute("modalColor", "G");
 		}else {
 			for(Map<String, Object> at : attachList) {
 				new File(at.get("filePath") + "/" + at.get("filesystemName")).delete();			
 			}
-			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 실패하였습니다.");
-			redirectAttributes.addFlashAttribute("historyBackYN", "Y");
+			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
+			
 		}
+		
+		
 		
 		
 		return "redirect:/pay/approvalMain.page";
@@ -900,8 +964,8 @@ public class PayController {
 	public String bReportInsert(@RequestParam("pName") List<String> pNames,
 							    @RequestParam("size") List<String> sizes,
 							    @RequestParam("amount") List<Integer> amounts,
-							    @RequestParam("unitPrice") List<Integer> unitPrices,
-							    @RequestParam("price") List<Integer> prices,
+							    @RequestParam("unitPrice") List<String> unitPrices,
+							    @RequestParam("price") List<String> prices,
 							    @RequestParam("etc") List<String> etcs,
 							    @RequestParam Map<String, Object> map,
 							    Model model,
@@ -926,9 +990,12 @@ public class PayController {
 		
 		int result = payService.bReportInsert(map, list);
 		
-		redirectAttributes.addFlashAttribute("alertTitle", "비품신청서");
-		if(result == list.size()) {
-			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
+		redirectAttributes.addFlashAttribute("alertTitle", "게시글 등록 서비스");
+		if(result > 0) {
+			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
+			redirectAttributes.addFlashAttribute("modalColor", "G");
+		}else {
+			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
 		}
 		
 		return "redirect:/pay/approvalMain.page";
@@ -940,12 +1007,15 @@ public class PayController {
 		
 		int result = payService.hReportInsert(map);
 		
-		redirectAttributes.addFlashAttribute("alertTitle", "휴가신청서");
+		redirectAttributes.addFlashAttribute("alertTitle", "게시글 등록 서비스");
 		if(result == 2) {
-			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
+			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
+			redirectAttributes.addFlashAttribute("modalColor", "G");
+		}else {
+			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
 		}
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 	}
 	
 	
@@ -992,21 +1062,16 @@ public class PayController {
 		}
 		
 		int result = payService.jReportInsert(map, itemList, attachList);
-		log.debug("result : {}", result);
-		log.debug("itemSize : {}", itemList.size());
-		log.debug("attachSize : {}", attachList.size());
 		
-				
-		redirectAttributes.addFlashAttribute("alertTitle", "지출결의서");
-		if(result == itemList.size() && attachList.isEmpty() || result == attachList.size() * itemList.size() && !attachList.isEmpty()) {
-			redirectAttributes.addFlashAttribute("alertMsg", "게시글등록에 성공하였습니다.");
-			
+		redirectAttributes.addFlashAttribute("alertTitle", "게시글 등록 서비스");
+		if(result > 0 && attachList.isEmpty() || result == attachList.size() && !attachList.isEmpty()) {
+			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
+			redirectAttributes.addFlashAttribute("modalColor", "G");
 		}else {
-			//실패시 파일삭제
 			for(Map<String, Object> at : attachList) {
 				new File( at.get("filePath") + "/" + at.get("filesystemName")).delete();
 			}
-			
+			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
 		}
 		
 		return "redirect:/pay/approvalMain.page";
@@ -1020,7 +1085,8 @@ public class PayController {
 								@RequestParam("price") List<String> prices,
 								@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes, 
 								List<MultipartFile> uploadFiles,  String[] delFileNo) {
-							
+		
+		//파일이 전부삭제될경우 => delFileNo 삭제된 수 == 
 		//삭제된파일이 null값일 경우
 		String[] delFileNoArr = delFileNo != null ? delFileNo : null;
 		
@@ -1070,6 +1136,18 @@ public class PayController {
 		}
 		
 		int result = payService.jReportUpdate(map, itemList, fileList, delFileNo);
+		
+		redirectAttributes.addFlashAttribute("alertTitle", "게시글 수정 서비스");
+		if(result > 0 && fileList.isEmpty() || result == fileList.size() * itemList.size()  && !fileList.isEmpty()) {
+			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
+			redirectAttributes.addFlashAttribute("modalColor", "G");
+		}else {
+			for(Map<String, Object> at : fileList) {
+				new File( at.get("filePath") + "/" + at.get("filesystemName")).delete();
+			}
+			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
+		}
+		
 
 		return "redirect:/pay/approvalMain.page";
 		
@@ -1170,20 +1248,23 @@ public class PayController {
 		
 		int result = payService.hReportUpdate(map);
 		
-		redirectAttributes.addFlashAttribute("alertTitle", "휴직신청서");
+		redirectAttributes.addFlashAttribute("alertTitle", "게시글 수정 서비스");
 		if(result == 2) {
-			redirectAttributes.addFlashAttribute("alertMsg", "게시글 수정이 완료되었습니다.");
+			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
+			redirectAttributes.addFlashAttribute("modalColor", "G");
+		}else {
+			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
 		}
 		
-		return "redirect:/pay/paymain.page";
+		return "redirect:/pay/approvalMain.page";
 	}
 	
 	@PostMapping("/bReportUpdate.do")
 	public String bReportUpdate(@RequestParam("pName") List<String> pNames,
 							    @RequestParam("size") List<String> sizes,
 							    @RequestParam("amount") List<Integer> amounts,
-							    @RequestParam("unitPrice") List<Integer> unitPrices,
-							    @RequestParam("price") List<Integer> prices,
+							    @RequestParam("unitPrice") List<String> unitPrices,
+							    @RequestParam("price") List<String> prices,
 							    @RequestParam("etc") List<String> etcs,
 							    @RequestParam Map<String, Object> map,
 							    Model model,
@@ -1210,10 +1291,15 @@ public class PayController {
 			
 			int result = payService.bReportUpdate(map, list);
 			
-			redirectAttributes.addFlashAttribute("alertTitle", "비품신청서");
-			if(result == list.size()) {
-				redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록에 성공하였습니다.");
+			
+			redirectAttributes.addFlashAttribute("alertTitle", "게시글 수정 서비스");
+			if(result > 0) {
+				redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
+				redirectAttributes.addFlashAttribute("modalColor", "G");
+			}else {
+				redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
 			}
+			
 			
 			return "redirect:/pay/approvalMain.page";
 		
@@ -1221,10 +1307,19 @@ public class PayController {
 	
 	// 승인 싸인 저장하기 ajax
 	@ResponseBody
-	@PostMapping("/ajaxSign.do")
-	public Map<String, Object> ajaxSign(@RequestParam Map<String, Object> map, HttpServletRequest request
-									  , @RequestParam(value="fixName[]") String[] fixName, @RequestParam(value="fixAmount[]") String[] fixAmount) {
-		log.debug("map : {}", map);
+	@PostMapping(value="/ajaxSign.do", produces = "application/json; charset=UTF-8")
+	public Map<String, Object> ajaxSign(@RequestParam Map<String, Object> map,
+										@RequestParam(value="productName") List<String> productName,
+										@RequestParam(value="productAmount") List<String> productAmount) {
+		
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map = CommonController.getParameterMap(request);
+//		log.debug("map : {}", map);
+		log.debug("mapSign : {}", map);
+		for(int i=0; i<productName.size(); i++) {
+			log.debug("productName : {}", productName.get(i));
+			log.debug("productAmount : {}", productAmount.get(i));			
+		}
 		String dataUrl = (String)map.get("dataUrl");
 		
         map.put("fileName", dataUrl);
@@ -1236,33 +1331,35 @@ public class PayController {
 		if(result > 0) {
 			sign = payService.ajaxSignSelect(map);
 		}
-		
-		for(int i=0; i<fixName.length; i++) {
-			
-			log.debug("fixName : {}", fixName[i]);
-			log.debug("fixAmount : {}", fixAmount[i]);
-			
-		}
-		int resultFix = 0;
-		 
+		/*
 		List<Map<String, Object>> list = new ArrayList<>();
-		if(map.get("approvalSignNo").equals("3") && map.get("deptType") != null && map.get("deptType").equals("Fix")) {
-			for(int i=0; i<fixName.length; i++) {
-				if(fixName != null && fixName.length > 0) {
-					Map<String, Object> maps = new HashMap<>();
-					maps.put("fixName", fixName[i]);
-					maps.put("fixAmount", fixAmount[i]);
-					list.add(maps);					
-				}
-			}
-			resultFix = payService.fixInsert(list);
+		if("3".equals(map.get("approvalSignNo")) && "Fix".equals(map.get("deptType")) && !fix.isEmpty()) {
+			for (String f : fix) {
+	            try {
+	                String decodedString = URLDecoder.decode(f, "UTF-8");
+	                String[] pairs = decodedString.split("&");
+	                String[] pair = decodedString.split("=");
+	                Map<String, Object> productMap = new HashMap<>();
+	                for (int i=0; i<pairs.length; i++) {
+	                    productMap.put("fixName", pairs[i]);
+	                    productMap.put("fixAmount", pairs[i]);
+	                }
+	                
+	                list.add(productMap);
+	            } catch (Exception e) {
+	                log.error("Error decoding fix parameter: " + f, e);
+	            }
+	        }
 		}
+		*/
 		
 		
 		
+		//int resultFix = payService.fixInsert(list);
 		
 		
-		log.debug("resultFix : {}", resultFix);
+		
+		//log.debug("resultFix : {}", resultFix);
 		
 		Map<String, Object> maps = new HashMap<>();
 		maps.put("sign", sign);

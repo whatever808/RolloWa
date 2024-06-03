@@ -391,10 +391,11 @@ $(document).ready(function(){
                        <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
+                       <input type="hidden" name="draftNo" value="${list.get(0).DRAFT_NO}">
                        <input type="hidden" name="writerNo" value="${userNo}">
-                       <input type="hidden" name="firstApproval" id="first_name" class="namecheck" value="${ list.get(0).FIRST_APPROVAL }">
-		                   <input type="hidden" name="middleApproval" id="middle_name" class="namecheck" value="${ list.get(0).MIDDLE_APPROVAL }">
-		                   <input type="hidden" name="finalApproval" id="last_name" class="namecheck" value="${ list.get(0).FINAL_APPROVAL }"> 
+                       <input type="hidden" name="firstApproval" id="first_name" class="hiddenSignName" value="${ list.get(0).FIRST_APPROVAL }">
+		                   <input type="hidden" name="middleApproval" id="middle_name" class="hiddenSignName" value="${ list.get(0).MIDDLE_APPROVAL }">
+		                   <input type="hidden" name="finalApproval" id="last_name" class="hiddenSignName" value="${ list.get(0).FINAL_APPROVAL }"> 
 											 <input type="hidden" name="payWriter" value="${list.get(0).PAYMENT_WRITER}">
                        <input type="hidden" name="payWriterNo" value="${list.get(0).PAYMENT_WRITER_NO}">
                        <input type="hidden" name="fileLength" value="${ fileList.size() }">
@@ -463,7 +464,7 @@ $(document).ready(function(){
 		                               		<tr>
 		                                   		<td><input type="text" name="account" value="${ list.get(i).ACCOUNT }"></td>
 		                                    	<td><input type="text" name="usage" value="${ list.get(i).CONTENT }"></td>
-		                                    	<td class="num"><input type="text" name="price"  value="${ list.get(i).AMOUNT }"></td>
+		                                    	<td class="num"><input type="text" class="price" name="price"  value="${ list.get(i).AMOUNT }" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')"></td>
 		                                	</tr>
 		                                </c:if>
 		                              	</c:forEach>
@@ -471,25 +472,29 @@ $(document).ready(function(){
 										            <table class="content2">
 		                                  <tr>
 			                                    <td class="label">합계</td>
-			                                    <td><input type="text" name="totalPrice" value="${ list.get(0).SUM }"></td>
+			                                    <td><input type="text" name="totalPrice" value="${ list.get(0).SUM }" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')"></td>
 			                                </tr>
 			                                <tr>
 			                                    <td class="label">부가가치세</td>
-			                                    <td><input type="text" name="vat" value="${ list.get(0).VAT }"></td>
+			                                    <td><input type="text" name="vat" value="${ list.get(0).VAT }" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')"></td>
 			                                </tr>
 			                                <tr>
 			                                    <td class="label">총 지출 합계</td>
-			                                    <td><input type="text" name="totalExpendPrice"  value="${ list.get(0).TOTAL_SUM }"></td>
+			                                    <td><input type="text" name="totalExpendPrice"  value="${ list.get(0).TOTAL_SUM }" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')"></td>
 			                                </tr>
 			                                <c:if test="${ not empty list }">
 		                                	<tr id="trFile">
 			                                  <td class="label">기존첨부파일</td> 
 			                                  <td colspan="2">
-			                                   <!-- 기존의 첨부파일 목록들 -->
 					                            		<c:forEach var="at" items="${ fileList }">
 					                            			<div class="attach">
 					                            				<a href="${contextPath}${at.ATTACH_PATH}/${at.MODIFY_NAME}" download="${at.ORIGIN_NAME}">${at.ORIGIN_NAME}</a>
-					                            				<span class="origin_del" data-fileno="${ at.FILE_NO }">x</span>
+					                            				<span class="origin_del" data-fileno="${ at.FILE_NO }">
+						                            				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
+																									  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+																									  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+																								</svg>
+					                            				</span>
 					                            			</div>
 					                            		</c:forEach>
 			                                  </td>
@@ -506,7 +511,6 @@ $(document).ready(function(){
 										
 										        <div id="btn_div">
 										           <button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
-                            	 <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
                             	 <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
 										        </div>
 										    </div>
@@ -518,11 +522,25 @@ $(document).ready(function(){
             </div>
         </div>
         
+     <script>
+    	$(document).ready(function(){
+    		
+    		$("input[name='totalPrice']").val($("input[name='totalPrice']").val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    		$("input[name='vat']").val($("input[name='vat']").val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    		$("input[name='totalExpendPrice']").val($("input[name='totalExpendPrice']").val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    		
+    		
+    		$(".price").each(function(){
+    			$(this).val($(this).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    		})
+    		
+    	})
+    </script>
+        
     <c:if test="${ not empty list }">
     <script>
     	$(document).ready(function(){
     			$("#status").val("${list.get(0).PAYMENT_STATUS}");
-    			$("#sales").val("${list.get(0).SALES_DIVISION}")
     	})
     </script>
     </c:if>
@@ -574,77 +592,46 @@ $(document).ready(function(){
        })
        </script>
      
+    
     <script>
-    	
-    	$(document).ready(function(){
-    	
-    		$("#insertBtn").on("click", function(){
-	    		$(".namecheck").each(function(){
-		    		if($(this).val() == ""){
-		    			alert("승인자를 선택해주세요.");
-		    			return false;
-		    		}
-	    		})	    	
-    		})
-    	})
-    	
+        document.querySelector("#myForm").addEventListener("submit", function(event) {
+            if (confirm('정말로 제출하시겠습니까?')) {
+                let valid = true;
+                
+                $(".hiddenSignName").each(function() {
+                    if ($(this).val() == "null" || $(this).val() == "") {
+                        alert("승인자를 3차까지 선택해주세요.");
+                        event.preventDefault();
+                        valid = false;
+                        return false; // .each 루프 중지
+                    }
+                });
+                
+                if (!valid) {
+                    event.preventDefault(); // 폼 제출 막기
+                }
+            } else {
+                event.preventDefault(); // 확인 메시지에서 취소를 선택한 경우 폼 제출 막기
+            }
+        });
     </script>
-   
-    <script>
-	    	function submitbtn(){
-   					let itemArr = [];
-   					let countArr = [];
-   					let salesArr = [];
-   					//금액
-	    		$(".item").each(function(){
-					 		if($(this).val().trim() != ""){
-					 			itemArr.push($(this).val());
-							}
-	        })
-	        
-	        $("#items").val(itemArr);
-	     					
-	    					//수량
-	   			$(".count").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			countArr.push($(this).val());
-						}
-	         })
-	         $("#counts").val(countArr);
-	    					
-	   					// 매출금액
-	    		$(".sales_amount").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			salesArr.push($(this).val());
-						}
-	          })
-	         $("#sales_amounts").val(salesArr);	
-	
-	         if(confirm('정말로 제출하시겠습니까?')){
-	        	 if($(".sing_name").text() == ""){
-	        		 alert("승인자를 3차까지 선택해주세요.");
-	        	 }
-	         }
-	                
-	       }
+    
+   <script>
+		$(document).ready(function() {
+        $(document).on("click", "#plus_btn", function () {
+            let result = "<tr>";
+            result += "<td><input type='text' name='account'></td>";
+            result += "<td><input type='text' name='usage'></td>";
+            result += '<td class="num"><input type="text" name="price" oninput="this.value = this.value.replace(/[^0-9]/g, \'\').replace(/\\d(?=(?:\\d{3})+$)/g, \'$&,\')"></td>';
+            result += "</tr>";
+
+            $("#tr_table").append(result);
+        });
+    });
    	</script>
     
     <script>
     $(document).ready(function(){
-    	
-    	$(document).on("click", "#plus_btn", function () {
-    		
-    		let result = "<tr>";
-    		result += "<td><input type='text' name='account'></td>";
-    		result += "<td><input type='text' name='usage'></td>";
-    		result += "<td class='num'><input type='text' name='price'></td>";
-    		result += "</tr>";
-    		
-       $("#tr_table").children().last().after(result);
-       
-       
-    	});
-    	
     	
     	$(document).on("click", "#del_btn", function () {
     	    //$("#tr_table tr:last-child").remove();

@@ -77,7 +77,6 @@
          margin-left: 30px;
      }
  </style>
-
 </head>
 <body>
   <div class="out-line">
@@ -87,6 +86,11 @@
       <div class="content" style="max-width: 1000px; padding: 30px;">
           <fieldset class="clander-add-area radious10 inner-line line-shadow">
           <form action="${path}/calendar/calEnroll.do" method="post"> 
+              <!-- 알림을 위한 추가 [기웅] -->
+              <input type="hidden" name="url" value="${path}/calendar/pCalendar.page">
+              <input type="hidden" name="flag" value="2">              
+              <!-- 알림을 위한 추가 [기웅] -->
+               
               <legend><h1 class="jua-regular">일정 추가</h1></legend>
               <div style="display: flex; justify-content: space-between; align-items: center;">
                   <div class="font-size25 jua-regular" id="categoryName">Category</div>
@@ -177,20 +181,24 @@
     			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
 		        if(checkDate && checkTime){
 		        	// [기웅] 일정 등록 시 알림
-		        	/*var teamMemberList = new Array();
+		        	console.log($.trim($("#title").val()));
+		        	if($.trim($("#title").val()).length > 0) {
+		        		var teamMemberList = new Array();
 		        	
-		        	$('input:checkbox[name=coworker]').each(function (index) {
-								if($(this).is(":checked")==true){
-									if($(this).val() != ${loginMember.userNo}) {
-										teamMemberList.push($(this).val());
-									}
-						    }
-							})
-							
-		        	stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
-																																		, flag: '2'
-																																		, teamMemberList: teamMemberList
-																																		, url: "${path}/calendar/pCalendar.page"}));*/
+			        	$('input:checkbox[name=coworker]').each(function (index) {
+									if($(this).is(":checked")==true){
+										if($(this).val() != ${loginMember.userNo}) {
+											teamMemberList.push($(this).val());
+										}
+							    }
+								})
+								
+			        	stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
+																																			, flag: '2'
+																																			, teamMemberList: teamMemberList
+																																			, url: "${path}/calendar/pCalendar.page"}));
+		        	}
+		        	
 		        	
 		        	return true;
 		        }else {

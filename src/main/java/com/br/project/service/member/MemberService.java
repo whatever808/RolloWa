@@ -64,6 +64,12 @@ public class MemberService {
 	public List<String> selectTeamMember(Map<String, Object> map) {
 		return memberDao.selectTeamMember(map);
 	}
+	
+	// 이름으로 사원 검색
+	public List<MemberDto> searchMember(Map<String, String> map) {
+		return memberDao.searchMember(map);
+	}
+	
 	/* ======================================= "가림" 구역 ======================================= */
 	/**
 	 * 메인페이지용 회원 정보 조회

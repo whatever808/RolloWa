@@ -392,9 +392,9 @@ $(document).ready(function(){
                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
                        <input type="hidden" name="writerNo" value="${userNo}">
-                       <input type="hidden" name="firstApproval">
-											 <input type="hidden" name="middleApproval">
-											 <input type="hidden" name="finalApproval">
+                       <input type="hidden" name="firstApproval" class="hiddenSignName">
+											 <input type="hidden" name="middleApproval" class="hiddenSignName">
+											 <input type="hidden" name="finalApproval" class="hiddenSignName">
 											 <input type="hidden" name="distinguish" value="H">
 		                   <div class="document">
 										        <h1 class="title2">휴직신청서</h1>
@@ -495,88 +495,31 @@ $(document).ready(function(){
     </script>
     </c:if>
      
-    <script>
-    	
-    	$(document).ready(function(){
-    	
-    		$("#insertBtn").on("click", function(){
-	    		$(".namecheck").each(function(){
-		    		if($(this).val() == ""){
-		    			alert("승인자를 선택해주세요.");
-		    			return false;
-		    		}
-	    		})	    	
-    		})
-    	})
-    	
-    </script>
    
     <script>
-	    	function submitbtn(){
-   					let itemArr = [];
-   					let countArr = [];
-   					let salesArr = [];
-   					//금액
-	    		$(".item").each(function(){
-					 		if($(this).val().trim() != ""){
-					 			itemArr.push($(this).val());
-							}
-	        })
-	        
-	        $("#items").val(itemArr);
-	     					
-	    					//수량
-	   			$(".count").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			countArr.push($(this).val());
-						}
-	         })
-	         $("#counts").val(countArr);
-	    					
-	   					// 매출금액
-	    		$(".sales_amount").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			salesArr.push($(this).val());
-						}
-	          })
-	         $("#sales_amounts").val(salesArr);	
-	
-	         if(confirm('정말로 제출하시겠습니까?')){
-	        	 if($(".sing_name").text() == ""){
-	        		 alert("승인자를 3차까지 선택해주세요.");
-	        	 }
-	         }
-	                
-	       }
-   	</script>
-    
-    <script>
-    $(document).ready(function(){
-    		let i = 4;
-    	$(document).on("click", "#plus_btn", function () {
-    		var result = "<tr>";
-    		result += "<td><input type='text' class='text_1' name='pName" + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_2' name='size" + (i) +"'></td>";
-    		result += "<td><input type='number' min='1' class='text_3' name='amount"  + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_4' name='unitprice" + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_5' name='price" + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_6' name='etc" + (i) + "'></td>";
-    		result += "</tr>";
-    		i++;
-       $("#tr_table").children().last().after(result);
-       
-       
-    	});
-    	
-    	
-    	$(document).on("click", "#del_btn", function () {
-    	    //$("#tr_table tr:last-child").remove();
-    	    $("#tr_table").children("tr").last().remove();
-    	});
-    
-    	
-    })
+        document.querySelector("#myForm").addEventListener("submit", function(event) {
+            if (confirm('정말로 제출하시겠습니까?')) {
+                let valid = true;
+                
+                $(".hiddenSignName").each(function() {
+                    if ($(this).val() == "null" || $(this).val() == "") {
+                        alert("승인자를 3차까지 선택해주세요.");
+                        event.preventDefault();
+                        valid = false;
+                        return false; // .each 루프 중지
+                    }
+                });
+                
+                if (!valid) {
+                    event.preventDefault(); // 폼 제출 막기
+                }
+            } else {
+                event.preventDefault(); // 확인 메시지에서 취소를 선택한 경우 폼 제출 막기
+            }
+        });
     </script>
+    
+   
         
      <script>
         $('#modal').iziModal({

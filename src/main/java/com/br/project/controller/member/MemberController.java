@@ -174,7 +174,7 @@ public class MemberController {
 								.refType("M")
 								.refNo(String.valueOf(member.getUserNo()))
 								.build();
-		member.setProfileURL(att.getAttachPath() + "/" + att.getModifyName());
+		member.setProfileURL(att.getAttachPath() + att.getModifyName());
 		
 		int result = memberService.updateProfile(member, att);
 		
@@ -285,8 +285,16 @@ public class MemberController {
 		return memberService.selectAllMember();
 	}
 	
-	// 채팅 - 전체 부서&팀&사원 조회
-	@GetMapping("/selectMember.do")
+	// 채팅 - 이름으로 사원 검색
+	@GetMapping(value = "/search")
+	@ResponseBody
+	public List<MemberDto> search(String keyword, HttpSession session) {
+		MemberDto loginMember = (MemberDto)session.getAttribute("loginMember");
+		Map<String, String> map = new HashMap<>();
+		map.put("keyword", keyword);
+		map.put("userNo", String.valueOf(loginMember.getUserNo()));
+		return memberService.searchMember(map);
+	}
 
 	/* ======================================= "가림" 구역 ======================================= */
 	@RequestMapping("/memInfo.do")

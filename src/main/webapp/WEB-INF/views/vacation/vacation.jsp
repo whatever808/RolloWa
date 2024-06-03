@@ -16,37 +16,20 @@
 	flex-direction: row;
 	box-sizing: border-box;
 }
-
-.line-shadow {
-	box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
-}
-
 .content-area {
 	width: 75%;
 	max-width: 1120px;
 	padding: 30px;
 }
-
-.radious10 {
-	border-radius: 10px;
-}
-
-.line-border-square {
-	border-radius: 10px;
-	width: 80px;
-	text-align: center;
-	padding: 5px;
-}
-
 .vacation-request>.line-border-square:hover {
 	cursor: pointer;
-	background-color: rgba(160, 160, 128, 0.2);
+  background-color: rgb(246 239 201 / 50%);
 }
 
 .vacation-area, .vacation-request{
    display: grid;
    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-   row-gap: 15px;
+   gap: 35px;
 }
 
 .s-wrap {
@@ -56,6 +39,7 @@
 	column-gap: 10px;
 	padding: 10px;
 	border-bottom: 2px solid rgb(160, 160, 160);
+  font-size: large;
 }
 
 .s-wrap>.inner-line {
@@ -73,41 +57,29 @@
 
 .standby *:hover, .retract *:hover {
 	cursor: pointer;
-	background-color: rgba(160, 160, 128, 0.2);
+	background-color: rgb(246 239 201 / 50%);
 }
 
 .RedContext {
 	color: #dc3545;
 	font-weight: bolder;
+  font-size: larger;
 }
 
 .gContext {
 	color: #28a745;
 	font-weight: bolder;
+  font-size: larger;
 }
 
 .content-area {
 	max-width: 1500px;
 }
 
-.Category, .Co-worker {
-	display: -webkit-box;
-	overflow-y: hidden;
+.Category{
+    display: flex;
+    justify-content: space-between;
 }
-
-.line-shadow {
-	box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
-}
-
-.line-cirecle-sm {
-	border-radius: 100%;
-	margin-left: 20px;
-	margin-bottom: 10px;
-	padding: 5px;
-	text-align: center;
-	height: fit-content;
-}
-
 #color-style {
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -149,15 +121,12 @@
 	height: 50px;
 }
 
-.border1 {
-	border: 1px solid;
-}
-
 .line-border-square {
-	border-radius: 10px;
-	width: 80px;
-	text-align: center;
-	padding: 5px;
+  border-radius: 10px;
+  width: -webkit-fill-available;
+  text-align: center;
+  padding: 25px;
+  font-size: larger;
 }
 
 .content-text-area {
@@ -204,6 +173,8 @@
 a {
 	color: rgb(2, 2, 2)!important;
 	text-decoration: unset;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .info{
 	display: none;
@@ -227,6 +198,50 @@ a {
 	color: green;
 }
 
+.size-fit {
+	display: contents;
+}
+
+.search-date {
+	display: flex;
+	gap: 30px;
+	align-items
+}
+
+.search-list {
+	width: 100%;
+	padding: 10px;
+}
+
+.search-list * {
+	padding: 5px;
+	text-align: center;
+}
+
+.inner-line {
+	padding: 30px;
+}
+
+.inner-line>div {
+	margin: 10px;
+}
+
+.fontRed {
+	color: red;
+}
+
+.jua_font {
+	font-family: "Jua", sans-serif;
+}
+.spaceNO{
+    white-space: nowrap;
+}
+#RR_modal{
+   height: fit-content;
+}
+i{
+	font-size: xx-large;
+}
 </style>
 </head>
 <body>
@@ -235,6 +250,7 @@ a {
 		<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 		<!-- 컨텐츠 영역 -->
 		<div class="content-area">
+		<!-- 휴가 신청 영역 -->
 			<fieldset class="line-shadow radious10 inner-line"
 				style="padding: 30px">
 				<legend
@@ -248,16 +264,16 @@ a {
 				<div class="vacation-area" id="vacation-area">
 				
 					<div class="line-border-square line-shadow">
-						연차<br> <br>${member.vacationCount}일
+						연차<br>${member.vacationCount}일
 					</div>
 					<div class="line-border-square line-shadow">
-						사용<br> <br> <span class="RedContext">${member.vaUsingDate}일</span>
+						사용<br><span class="RedContext">${member.vaUsingDate}일</span>
 					</div>
 					<div class="line-border-square line-shadow">
-						지급일<br> <br> <span class="gContext">${loginMember.vaGivenDate}일</span>
+						지급일<br><span class="gContext">${loginMember.vaGivenDate}일</span>
 					</div>
 					<div class="line-border-square line-shadow">
-						근무 연수<br> <br>${loginMember.vaYearLabor }년
+						근무 연수<br>${loginMember.vaYearLabor }년
 					</div>
 					
 				</div>
@@ -265,15 +281,11 @@ a {
 				<br>
 				<div class="font-size25 jua-regular">휴가 신청</div>
 				<br>
-				<!--  data-izimodal-open="#vact_${va.code}" -->
 				<div class="vacation-request">
 					<c:forEach var="va" items="${vactList}">
 					<div class="line-border-square line-shadow">
 						<a href="#" onclick="selectModal('${va.code}')">
-							<div class="vaCode" data-code="${va.code}">
-								${va.codeName}
-								<br><br>
-							</div>
+							<div class="vaCode" data-code="${va.code}">${va.codeName}<br></div>
 						</a>
 					</div>
 					</c:forEach>
@@ -288,8 +300,207 @@ a {
 				<div class="retract">
 				</div>
 			</fieldset>
+			<!-- 휴가 신청 영역 -->
+			<br>
+			<br>
+			<br>
+			<!-- 지난 휴가 영역 -->
+			<fieldset class="line-shadow radious10 inner-line">
+				<legend>
+					<h1 class="jua-regular">지난휴가</h1>
+				</legend>
+				<br>
+				<br>
+				<form class="search-date">
+					<div class="font-size25 jua-regular spaceNO">검색</div>
+					<div>
+						<select style="border: 0px;" class="jua-regular" name="code">
+							<option value="all">All</option>
+						<c:forEach var="c" items="${vactList}">
+							<option value="${c.code}">${c.codeName}</option>							
+						</c:forEach>
+						</select>
+					</div>
+				
+					<div><button style="box-shadow: 1px 1px 1px 1px #8888887a;" type="button" onclick="ajaxSearchOld(1);" class="jua-regular btn btn-outline-dark"> 검색 </button></div>
+				</form>
+				<div>
+					<table class="search-list table table-hover">
+						<thead>
+							<tr>
+								<th class="font-size20 jua-regular spaceNO">No</th>
+								<th class="font-size20 jua-regular spaceNO">Color</th>
+								<th class="font-size20 jua-regular spaceNO">Category</th>
+								<th class="font-size20 jua-regular spaceNO">Date</th>
+								<th class="font-size20 jua-regular spaceNO">Using</th>
+								<th class="font-size20 jua-regular spaceNO">Refusal</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+				<div align="end">
+					<ul class="pagination"></ul>
+				</div>
+			</fieldset>
+			
 		</div>
 	</div>
+	
+	<form id="RR_modal">
+		<div style="display:flex">
+			<div>
+				<br>
+				<div style="text-align: center;" class="font-size20 jua-regular">
+				정말로 삭제 하시겠습니까? 삭제 후 첨부파일 data를 복구 할 수 없습니다.
+				</div>
+				<br>
+				<div class="jua-regular">철회 사유</div>
+				<textarea name="RRequestComent" style="width: -webkit-fill-available;"></textarea>
+				<input type="hidden" name="vacaNO">
+			</div>
+		</div>
+		<div style="text-align: end;"><button type="button" class="btn btn-outline-danger" onclick="RRequest(this);">신청</button></div>
+	</form>
+	
+	<!-- 지난 휴가 -->
+		<script>
+		$('#RR_modal').iziModal({
+			headerColor : '#dc3545',
+			theme : 'light',
+			padding : '15px',
+			radius : 10,
+			zindex : 300,
+			focusInput : true,
+		});
+		
+		function ajaxSearchOld(page){
+			$.ajax({
+				url:'${path}/vacation/searchOld.ajax',
+				type:'post',
+				data:'vacaGroupCode='+$('select').val()
+							+ '&page='+ page,
+				success:function(map){
+					console.log(map);
+					
+					creatTable(map.list);
+					creatPaging(map.paging);
+				},
+				error:function(){
+					console.log('list select fail');
+				}
+			})
+		}
+		
+		function deleteCheck(num){
+			$(document).on('opening', '#RR_modal', function (e) {
+			   $(this).find('input[name="vacaNO"]').val(num);
+			});
+			$('#RR_modal').iziModal('setTitle', num);
+			$('#RR_modal').iziModal('open');
+		}
+		
+		function RRequest(t){
+			$.ajax({
+				url:'${path}/vacation/RRequest.ajax',
+				type:'post',
+				data:'vacaNO='+$('#RR_modal').find('input[name="vacaNO"]').val()
+							+'&RRequestComent='+$('#RR_modal').find('textarea').val(),
+				success:function(e){
+					if(e > 0){
+						greenAlert('철회 요청', '철회가 신청 되었습니다.');
+						$('#RR_modal').iziModal('close');
+					}else{
+						redAlert('철회 요청', '관리자를 호출 해 주세요');
+					}
+					ajaxSearchOld(1);
+				}
+			})
+			
+		}
+		
+		function codeName(code){
+			let string = '';
+			switch (code){
+				case 'A': string = '연차'; break;
+				case 'B': string = '반차'; break;
+				case 'C': string = '병가'; break;
+				case 'G': string = '소집일'; break;
+				default: string = '기타';			
+			}
+			return string;
+		}
+		
+		function creatTable(list) {
+			$('tbody>tr').remove();
+			let tableEl = '';
+			if (list.length != 0) {
+				list.forEach((e) => {
+					tableEl += '<tr><td>'
+									+ e.vacaNO
+									+ '</td>'
+									+ '<td class="spaceNO"><input type="color" value="' + e.vacaColor + '" id="color-style" style="width: 35px; height: 35px; cursor: auto;" onclick="return false"></td>'
+									+ '<td class="spaceNO">'
+									+ codeName(e.vacaGroupCode)
+									+ '</td>'
+									+ '<td class="spaceNO" style="font-size: larger;">'
+									+ e.vacaStart.slice(0,10) +' ~ '+ e.vacaEnd.slice(0,10)
+									+ '</td>'
+									+ '<td><div class="fontRed">- '
+									+ ((new Date(e.vacaEnd.slice(0,10)) - new Date(e.vacaStart.slice(0,10))) / (1000 * 60 * 60 * 24) +1)
+									+ '</div></td>'
+									+ '<td><button class="btn btn-outline-danger" onclick="deleteCheck('+ e.vacaNO +');">철회</button></td>'
+									+ '</tr>'
+				})
+			} else {
+				tableEl += '<tr><td colspan="6">조회 되는 일정이 없습니다.</td>'
+			}
+			$('tbody').append(tableEl);
+		};
+		
+		function creatPaging(paging) {
+			$('.pagination>li').remove();
+			let page = '';
+
+			if (paging.currentPage == 1) {
+				page += '<li class="page-item disabled"><a class="page-link">◁</a></li>';
+			} else {
+				page += '<li class="page-item"><a class="page-link" onclick="ajaxSearchOld('
+						+ (paging.currentPage - 1) + ');">◁</a></li>';
+			}
+
+			for (let i = paging.startPage; i <= paging.endPage; i++) {
+				if (paging.currentPage == i) {
+					page += '<li class="page-item active"><a class="page-link">'
+							+ i + '</a></li>';
+				} else if (i <= paging.maxPage) {
+					page += '<li class="page-item"><a class="page-link" onclick="ajaxSearchOld('
+							+ i + ');">' + i + '</a></li>';
+				} else {
+					page += '<li class="page-item disabled"><a class="page-link">'
+							+ i + '</a></li>';
+				}
+			}
+
+			if (paging.currentPage >= paging.maxPage) {
+				page += '<li class="page-item disabled"><a class="page-link">▷</a></li>';
+			} else {
+				page += '<li class="page-item"><a class="page-link" onclick="ajaxSearchOld('
+						+ (Number(paging.currentPage) + 1)
+						+ ');">▷</a></li>';
+			}
+			$('.pagination').append(page);
+		};
+		
+		$(document).ready(function(){
+			ajaxSearchOld(1);
+			
+		})
+	</script>
+	
+	
+	<!-- 휴가 신청  -->
 	<!-- 아이콘 삽입  -->
 	<script>
 		function insertIcon(){
@@ -327,8 +538,10 @@ a {
 			$(document).on('opening', '#vact_' + c , function (e) {
 			    $(this).find('.code').val(c)
 			});
+			
 			$('#vact_' + c).iziModal('open');
 		}
+		
 	
 		function insertVact(e){			
 			const file_input = $(e).parents('form').find('input[name=files]').get()[0];
@@ -341,12 +554,20 @@ a {
 				contentType:false,
 				//enctype: 'multipart/form-data',
 				success:function(r){
-					console.log(r);
 					if(r > 0){
 						greenAlert('휴가신청', '신청 되었습니다.');
 					}else {
 						redAlert('휴가신청', '정상적으로 처리 되지않습니다. 관리자를 호출 해 주세요.');
 					}
+					
+					let modal_select = '#'+$(e).parents()[3].id;
+					$(document).on('closing', modal_select , function (e) {
+					    $(modal_select).find('textarea').val('');
+					});
+					
+					$(modal_select).iziModal('close');
+					
+					selectRequest();
 				},
 				error:function(){
 					console.log('휴가신청 오류');
@@ -665,13 +886,10 @@ a {
 				style="resize: none; height: 200px;"></textarea>
 		</div>
 		<br>
-		<div class="myfile">
-			<div class="jua-regular">Submit</div>
-			<input type="file" style="width: 71%;" name="files" accept="image/*" multiple>
-		</div>
+		<div class="myfile"></div>
 		<br>
 		<div class="download" style="overflow: hidden;"></div>
-		<div align="end">
+		<div align="end" style="margin-top: 10px;">
 			<button type="button" class="btn btn-outline-warning" onclick="updateRequest(this);">수정</button>
 		</div>
 	</form>
@@ -722,7 +940,7 @@ a {
 		<br>
 		<div class="download" style="overflow: hidden;"></div>
 		<br>
-		<div align="end">
+		<div align="end" style="margin-top: 10px;">
 			<button type="button" class="btn btn-outline-danger" onclick="delecteRequest(this);">삭제</button>
 		</div>
 	</form>
@@ -738,18 +956,6 @@ a {
 			restoreDefaultContent : false,
 		});
 		
-		function codeName(code){
-			let string = '';
-			switch (code){
-				case 'A': string = '연차'; break;
-				case 'B': string = '반차'; break;
-				case 'C': string = '병가'; break;
-				case 'G': string = '소집일'; break;
-				default : String = '기타'			
-			}
-			return string;
-		}
-		
 		function updateRequest(button){
 			
 			$.ajax({
@@ -762,9 +968,11 @@ a {
 				success:function(result){
 					if(result>0){
 						greenAlert('휴가 수정', '휴가 정정이 완료 되었습니다.');
+						
+						$('#standby_request').find('input[name="files"]').val('');
 						$('#standby_request').iziModal('close');
 						$('#retract_request').iziModal('close');
-						selectRequest()
+						selectRequest();
 					}else {
 						redAlert('휴가 수정', '관리자를 호출 해 주세요');
 					}
@@ -790,7 +998,7 @@ a {
 						greenAlert('휴가 삭제', '휴가 삭제가 완료 되었습니다.');
 						$('#standby_request').iziModal('close');
 						$('#retract_request').iziModal('close');
-						selectRequest()
+						selectRequest();
 					}else {
 						redAlert('휴가 삭제', '관리자를 호출 해 주세요');
 					}
@@ -801,8 +1009,8 @@ a {
 		
 		function selectRequest(){
 			
-			$('.standby *').remove();
-			$('.retract *').remove();
+			$('.standby').empty();
+			$('.retract').empty();
 			
 			$.ajax({
 				url:'${path}/vacation/request.ajax',
@@ -871,32 +1079,42 @@ a {
 		
 		function onpening(num, event){
 			let check_modal = (( num == 0) ?'#retract_request' :'#standby_request');
-
-				$(document).on('opening', check_modal, function (e) {
-					
-					$(this).eq(0).find('input[name=vacaNO]').val(event.children[0].dataset.num);
-					$(this).eq(0).find('input[name=vacaGroupCode]').val(event.children[0].dataset.code);
-					let arr = $(this).eq(0).find('input.date-area').get();
-					arr[0].value = event.children[0].dataset.start.slice(0,10);
-					arr[1].value = event.children[0].dataset.end.slice(0,10);
-					
-					let coment = event.children[0].dataset.coment;
-					let str = (coment == 'null') ? '내용이 없습니다.':coment;
-					$(this).eq(0).find('textarea').val(str);
-					
-					const $download = $(event).children('.attach-put');
-					$(".download *").remove();
-					for(let i =0; i<$download.length; i +=3 ){
-					$(".download").append('<a href="${path}'+ $download[i].value +"/"+ $download[i+2].value
-																			+'" download="'+$download[i+1].value+'">'+$download[i+1].value+'</a><br>')
-					}
-				});
+			
+			$(document).on('opening', check_modal, function (e) {
+				
+				$(this).eq(0).find('input[name=vacaNO]').val(event.children[0].dataset.num);
+				$(this).eq(0).find('input[name=vacaGroupCode]').val(event.children[0].dataset.code);
+				let arr = $(this).eq(0).find('input.date-area').get();
+				arr[0].value = event.children[0].dataset.start.slice(0,10);
+				arr[1].value = event.children[0].dataset.end.slice(0,10);
+				
+				let coment = event.children[0].dataset.coment;
+				let str = (coment == 'null') ? '내용이 없습니다.':coment;
+				$(this).eq(0).find('textarea').val(str);
+				
+				const $download = $(event).children('.attach-put');
+				$(".download *").remove();
+				for(let i =0; i<$download.length; i +=3 ){
+				$(".download").append('<a href="${path}'+ $download[i].value +"/"+ $download[i+2].value
+																		+'" download="'+$download[i+1].value+'">'+$download[i+1].value+'</a><br>');
+				}
+			})
+			
+			if(event.children[0].dataset.code != 'A' && event.children[0].dataset.code != 'B'){
+				let fileHtml = '<div class="jua-regular">Submit</div><input type="file" style="width: 71%;" name="files" accept="image/*" multiple>';
+				$('#standby_request').find('.myfile').append(fileHtml);
+			}
 			
 			$(check_modal).iziModal('setTitle', codeName(event.children[0].dataset.code) + (num == 0 ? ' 철회':' 대기중'));
 			$(check_modal).iziModal('open');
 			
 		}
-
+		
+		
+		$(document).on('closing', '#standby_request', function (e) {
+			$('#standby_request').find('.myfile').empty()	;
+		})
+		
 		$(document).ready(function() {
 			currentTime();
 			insertIcon();
