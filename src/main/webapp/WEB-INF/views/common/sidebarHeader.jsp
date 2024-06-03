@@ -774,7 +774,7 @@ $(document).ready(function(){
 					// 수신한 메세지 개수
 					var msgCount = 0;
 					
-					$(document).ready(function() {						
+					$(document).ready(function() {
 						// 새로고침 감지
 						window.addEventListener('beforeunload', (event) => {
 							// 메신저를 아예 열지 않았거나 채팅방을 닫아놨을 경우를 제외하고 실행
@@ -881,7 +881,9 @@ $(document).ready(function(){
 						, pauseOnHover: 'true'
 					})
 					
-					
+					/* ========================== "가림" 구역 ========================== */
+						 loginLogout = new SockJS("${contextPath}/onoff");
+					/* ========================== "가림" 구역 ========================== */
 				</script>
 </body>
 </html>

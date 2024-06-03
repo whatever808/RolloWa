@@ -88,10 +88,8 @@
 
                 <!-- login user list (main-left-bottom)-->
                 <div class="login-user-list-div">
-                    <h5 class="fw-bold text-end mb-4"></h5>
-                    <div class="login-user-list">
-	                    <!-- 부서 일정 목록영역 -->
-                    </div>
+                    <h5 class="fw-bold text-end mb-4">현재접속자</h5>
+                    <div class="login-user-list"></div>
                 </div>
                 <!-- login user list (main-left-bottom)-->
                 
@@ -621,6 +619,43 @@
   		})
   	}
   	
+  	// 접속자 관련 (웹소켓) =====================================================================================
+  	loginLogout.onmessage = loginLogoutMsg;
+		loginLogout.onclose = loginLogoutClose;
+  	
+		function loginLogoutMsg(event){
+			// 로그인일 경우 : [login] [사원번호][프로파일URL][이름/직급/소속팀명]
+			// 로그아웃 경우 : [logout][사원번호]
+			let loginMember = event.data.split("|");
+			let userNo = loginMember[1];
+			let type = function(){
+				//(loginMember[0] == 'login') ? true : false;
+			}
+
+			if(type){
+				$(".login-user-list").children(".login-user").each(function(){
+					$(this).children("[name=userNo]").val() == 
+				});
+				let add  = "<div class='login-user d-flex align-items-center'>";
+						add +=		"<input type='hidden' name='userNo' value='" + loginMember[1] + "'>";
+						add += 		"<img class='login-user-list-profile me-2' src='${ contextPath }" + loginMember[2] + "' alt='user profile image'>";
+						add += 		"<span class='login-user-list-member-info'>" + loginMember[3] + "</span>";
+						add += "</div>";
+				$(".login-user-list").append($(add));
+			}else{
+				console.log("logout");
+				$(".login-user-list").children(".login-user").each(function(){
+					$(this).children("[name=userNo]").val() == userNo && $(this).remove();
+				});
+			}
+			
+			console.log("웹소켓 : ", event.data);
+			
+		}
+		
+		function loginLogoutClose(){
+			
+		}
   	
 </script>
 
