@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.member.MemberDto;
+import com.br.project.dto.organization.OrganizationDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -80,13 +81,18 @@ public class OrganizationDao {
 		return sqlSessionTemplate.selectList("organizationMapper.selectAccountDetail");
 	}
 
-	/* 수정중 */
+	// 수정중
     public int countEmployeesInDepartment(String departmentName) {
         return sqlSessionTemplate.selectOne("organization.countEmployeesInDepartment", departmentName);
     }
     public int countEmployeesInTeam(String teamName) {
         return sqlSessionTemplate.selectOne("organization.countEmployeesInTeam", teamName);
     }
+
+    //  부서 추가
+	public int insertDepartment(String deptName) {
+		return sqlSessionTemplate.insert("organization.insertDepartment", deptName);
+	}
 
 	
 	

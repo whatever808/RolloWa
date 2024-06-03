@@ -374,7 +374,7 @@
 		                <td class="checkbox_flex">
 		                    <input type="checkbox" id="authLevelCheckbox" name="authLevel" class="form-check-input">
 							<input type="hidden" name="authLevel" id="authLevel" value="3">
-	                        <h5>계정을 관리자로 설정합니다.</h5>
+	                        <h5>관리자로 설정합니다.</h5>
 		                </td>
 		            </tr>
 		            

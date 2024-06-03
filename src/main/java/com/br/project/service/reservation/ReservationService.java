@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.br.project.dao.reservation.ReservationDao;
+import com.br.project.dto.common.PageInfoDto;
 import com.br.project.dto.reservation.ReservationDto;
 
 import lombok.RequiredArgsConstructor;
@@ -42,22 +43,26 @@ public class ReservationService {
 	}
 
     // 3. 내 예약 조회
-    public List<HashMap<String, Object>> selectMyReservation(Map<String, Object> paramMap){
-    	return reservationDao.selectMyReservation(paramMap);
+    public List<HashMap<String, Object>> selectMyReservation(PageInfoDto pi, int userNo) {
+        return reservationDao.selectMyReservation(pi, userNo);
     }
     // 4. 예약 취소
 	public int updateReservation(Map<String, Object> params) {
 		return reservationDao.updateReservation(params);
 	}
 	// 비품 추가,삭제,수정 관련
-	public int insertEquipment(String equipmentName) {
-		return reservationDao.insertEquipment(equipmentName);
+	public int insertEquipment(Map<String, Object> paramMap) {
+		return reservationDao.insertEquipment(paramMap);
 	}
 	public int deleteEquipment(List<Integer> ids) {
 		return reservationDao.deleteEquipment(ids);
 	}
-	public int updateEquipment(List<Map<String, Object>> equipmentList) {
-		return reservationDao.updateEquipment(equipmentList);
+	public int updateEquipment(Map<String, Object> paramMap) {
+		return reservationDao.updateEquipment(paramMap);
+	}
+	// 내 예약 수 조회 (페이징처리)
+	public int selectMyReservationCount(int userNo) {
+		return reservationDao.selectMyReservationCount(userNo);
 	}
 	
 }

@@ -358,7 +358,6 @@ public class AttendanceController {
 			@RequestParam("authLevel") int authLevel,
 			RedirectAttributes redirectAttributes) {
 		
-		
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("userNo", userNo);
 		paramMap.put("modifyUserNo", modifyUserNo);
@@ -368,7 +367,11 @@ public class AttendanceController {
 		paramMap.put("postCode", postCode);
 		paramMap.put("address", address);
 		paramMap.put("detailAddress", detailAddress);
-		paramMap.put("totalAddress", '('+ postCode +')' + ' ' + address + ' ' + detailAddress);
+		if(address == null && detailAddress ==  null) {
+			paramMap.put("totalAddress", null);
+		} else {
+			paramMap.put("totalAddress", '('+ postCode +')' + ' ' + address + ' ' + detailAddress);
+		}
 		paramMap.put("department", department);
 		paramMap.put("team", team);
 		paramMap.put("position", position);
