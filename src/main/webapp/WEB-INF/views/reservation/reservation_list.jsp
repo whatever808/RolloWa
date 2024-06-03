@@ -633,7 +633,7 @@
                     <tr class="tr_time">
                         <th class="th_white"><h6>번호</h6></th>
                         <th class="th_name"><h6>비품명</h6></th>
-                        <th colspan="2"><h6>00</h6></th>
+                        <th colspan="2"><h6>00</h6></th>	
                         <th colspan="2"><h6>01</h6></th>
                         <th colspan="2"><h6>02</h6></th>
                         <th colspan="2"><h6>03</h6></th>

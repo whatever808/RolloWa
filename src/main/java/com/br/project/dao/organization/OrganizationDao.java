@@ -83,15 +83,15 @@ public class OrganizationDao {
 
 	// 수정중
     public int countEmployeesInDepartment(String departmentName) {
-        return sqlSessionTemplate.selectOne("organization.countEmployeesInDepartment", departmentName);
+        return sqlSessionTemplate.selectOne("organizationMapper.countEmployeesInDepartment", departmentName);
     }
     public int countEmployeesInTeam(String teamName) {
-        return sqlSessionTemplate.selectOne("organization.countEmployeesInTeam", teamName);
+        return sqlSessionTemplate.selectOne("organizationMapper.countEmployeesInTeam", teamName);
     }
 
     //  부서 추가
 	public int insertDepartment(String deptName) {
-		return sqlSessionTemplate.insert("organization.insertDepartment", deptName);
+		return sqlSessionTemplate.insert("organizationMapper.insertDepartment", deptName);
 	}
 
 	

@@ -33,12 +33,14 @@
         <ul class="tree">
           <li>
             <span class="level1">대표이사</span>
-            <button id="addDepartmentBtn" class="btn btn-success">부서 추가</button>
+            <button id="addDepartmentBtn" class="btn btn-success add_department">부서 추가</button>
             <ul id="departmentList">
                 <c:set var="prevDept" value="" />
                 <c:forEach var="d" items="${dept}">
                     <c:if test="${d.dept ne prevDept}">
                         <li>
+                        	<button class="btn btn-danger delete_department" id="deleteTeamBtn">부서 삭제</button>
+	                        <button class="btn btn-success add_team" onclick="addTeamBtn">팀 추가</button>
                             <span class="level2">${d.dept}</span>
                             <ul>
                                 <c:forEach var="team" items="${dept}">
