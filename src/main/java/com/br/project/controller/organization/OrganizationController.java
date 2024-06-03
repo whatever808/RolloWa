@@ -1,5 +1,6 @@
 package com.br.project.controller.organization;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -141,11 +142,22 @@ public class OrganizationController {
 	// 부서 추가
 	@PostMapping("/insertDepartment.do")
     @ResponseBody
-    public int insertDepartment(@RequestBody Map<String, String> payload) {
-        String deptName = payload.get("dept");
-        log.debug("받은 부서명 : {}", deptName);
+    public int insertDepartment(@RequestBody Map<String, Object> payload) {
+		String deptName = (String) payload.get("dept");
+        Object userNoObj = payload.get("userNo");
+        String userNo;
+
+        if (userNoObj instanceof Integer) {
+            userNo = String.valueOf(userNoObj);
+        } else {
+            userNo = (String) userNoObj;
+        }
         
-        int result = organizationService.insertDepartment(deptName);
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("userNo", userNo);
+		paramMap.put("deptName", deptName);
+        
+        int result = organizationService.insertDepartment(paramMap);
         if (result > 0) {
             log.debug("부서 추가 성공");
         } else {
@@ -154,8 +166,38 @@ public class OrganizationController {
         return result;
     }
 	
-	
-	
+	// 팀 추가
+	@PostMapping("/insertTeam.do")
+    @ResponseBody
+    public int insertTeam(@RequestBody Map<String, String> payload) {
+		String deptCode = (String) payload.get("deptCode");
+        String teamName = (String) payload.get("teamName");
+        Object userNoObj = payload.get("userNo");
+        String userNo;
+        
+        log.debug("deptCode값 : {}", deptCode);
+        log.debug("teamName값 : {}", teamName);
+        
+        if (userNoObj instanceof Integer) {
+            userNo = String.valueOf(userNoObj);
+        } else {
+            userNo = (String) userNoObj;
+        }
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("userNo", userNo);
+        paramMap.put("deptCode", deptCode);
+        paramMap.put("teamName", teamName);
+
+        //int result = organizationService.insertTeam(paramMap);
+        int result = 0;
+        if (result > 0) {
+            log.debug("팀 추가 성공");
+        } else {
+            log.debug("팀 추가 실패");
+        }
+        return result;
+	}	
 	
 	
 	

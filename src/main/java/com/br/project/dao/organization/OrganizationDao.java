@@ -89,11 +89,15 @@ public class OrganizationDao {
         return sqlSessionTemplate.selectOne("organizationMapper.countEmployeesInTeam", teamName);
     }
 
+    // 조직 관리 Dao ------------------------------------------------------
     //  부서 추가
-	public int insertDepartment(String deptName) {
-		return sqlSessionTemplate.insert("organizationMapper.insertDepartment", deptName);
+    public int insertDepartment(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.insert("organizationMapper.insertDepartment", paramMap);
+	}
+	// 팀 추가
+	public int insertTeam(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.insert("organizationMapper.insertTeam", paramMap);
 	}
 
-	
 	
 }
