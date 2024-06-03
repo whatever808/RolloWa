@@ -22,7 +22,10 @@
     <link href="${contextPath}/resources/css/pay/writer.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/pay/writer2.css" rel="stylesheet">
     
-  
+      <!-- TinyMCE 에디터 CDN 연결 -->
+	   <script src="https://cdn.tiny.cloud/1/kv8msifnng66ha7xgul5sc6cehyxcp480zm27swyti7b7u38/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+	   <!-- TinyMCE 관련 스크립트 -->
+	   <script src="${ contextPath }/resources/js/board/editor.js"></script>
    	
 <style>
 
@@ -106,7 +109,8 @@ ul {
     background: none;
     z-index: 5;
 }
-
+.origin_del{cursor: pointer; font-size: 20px;}
+.attach a{color: black;}
 
 </style>
 
@@ -327,15 +331,6 @@ $(document).ready(function(){
          		</c:forEach> 															               
          </ul>
      </li>
-      <li><span class="deptDiv">인사부</span>
-         <ul>
-            <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
-             	<c:if test="${ teamNames.get(i).DEPT_NAME eq '인사부' }">
-                  	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
-                  </c:if>
-         		</c:forEach> 															               
-         </ul>
-     </li>
       <li><span class="deptDiv">운영부</span>
          <ul>
             <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
@@ -395,21 +390,20 @@ $(document).ready(function(){
             <div class="informations">
                 <!-- informations left area start -->
                 <div class="left_con">
-		                <form action="${contextPath}/pay/hReportUpdate.do" method="post" id="myForm">
+		                <form action="${contextPath}/pay/gReportUpdate.do" method="post" id="myForm" enctype="multipart/form-data">
 		                   <input type="hidden" name="deptName" value="${member.get(0).teamName}">
                        <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
-                       <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
+                       <input type="hidden" name="draftNo" value="${list.get(0).APPROVAL_NO}">
                        <input type="hidden" name="writerNo" value="${userNo}">
-                       <input type="hidden" name="firstApproval" value="${ list.get(0).FIRST_APPROVAL }" class="hiddenSignName">
-											 <input type="hidden" name="middleApproval" value="${ list.get(0).MIDDLE_APPROVAL }" class="hiddenSignName">
-											 <input type="hidden" name="finalApproval" value="${ list.get(0).FINAL_APPROVAL }" class="hiddenSignName">
-											 <input type="hidden" name="distinguish" value="H">
-											 <input type="hidden" name="writerNo" value="${ list.get(0).PAYMENT_WRITER_NO}">                                                                                                              
-                      	<input type="hidden" name="retireNo" value="${ list.get(0).RETIRE_NO}">                                                                                                              
-                       <input type="hidden" name="approvalNo" value="${ list.get(0).APPROVAL_NO}">
+                       <input type="hidden" name="salesNo" value="${list.get(0).SALES_NO}">
+                       <input type="hidden" name="firstApproval" id="first_name" class="hiddenSignName" value="${ list.get(0).FIRST_APPROVAL }">
+		                   <input type="hidden" name="middleApproval" id="middle_name" class="hiddenSignName" value="${ list.get(0).MIDDLE_APPROVAL }">
+		                   <input type="hidden" name="finalApproval" id="last_name" class="hiddenSignName" value="${ list.get(0).FINAL_APPROVAL }"> 
+											 <input type="hidden" name="payWriter" value="${list.get(0).PAYMENT_WRITER}">
+                       <input type="hidden" name="payWriterNo" value="${list.get(0).PAYMENT_WRITER_NO}">
 		                   <div class="document">
-										        <h1 class="title2">휴직신청서</h1>
+										        <h1 class="title2">기안서</h1>
 										
 										        <div class="header2">
 										            <table>
@@ -460,34 +454,48 @@ $(document).ready(function(){
 										        <div class="content2">
 										            <table id="tr_table">
 										               <tr>
-                                    		<td class="label">성명</td>
-                                    		<td class="value"><input type="text" value="${userName}" value="${ list.get(0).PAYMENT_WRITER }" readonly></td>
-		                                </tr>
-		                                <tr>
-		                                    <td class="label">소속</td>
-		                                    <td class="value"><input type="text" value="${ list.get(0).DEPARTMENT}" readonly></td>
-		                                </tr>
-		                                <tr>
-		                                    <td class="label">기간</td>
-		                                    <td id="date_td" class="value">
-		                                    	<input type="date" value="" name="startDate" value="${list.get(0).START_PERIOD}" required> ─ 
-		                                    	<input type="date" value="" name="endDate" value="${list.get(0).LAST_PERIOD}" required>
+                                    	<td class="label">시행일자</td>
+                                    	<td class="value"><input type="date" name="dateStart" required></td>
+                                    	<td class="label">협조부서</td>
+                                    	<td class="value"><input type="text" name="depWith" value="${ list.get(0).COOPERATION_DEPARTMENT }" required></td>
+                               		 </tr>
+			                             <tr>
+	                                    <td colspan="4" class="value" class="value">
+	                                        <textarea class="form-control" name="content" id="editor" required>${ content }</textarea>
+	                                    </td>
+			                             </tr>
+			                             <tr>
+	                                    <c:choose>
+	                                    <c:when test="${ not empty list }">
+	                                    <td class="label">기존첨부파일</td>
+		                                    <td colspan="3">
+			                                    <c:forEach var="at" items="${ list }">
+				                                  	<div class="attach">
+					                                    <a href="${ contextPath }${ at.ATTACH_PATH }/${ at.MODIFY_NAME }" download="${ at.ORIGIN_NAME }">${ at.ORIGIN_NAME }</a>
+					                                    <span class="origin_del" data-fileno="${ at.FILE_NO }">
+					                                    	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
+																								  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+																								  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+																								</svg>
+																							</span>
+					                                  </div>	                                    
+			                                    </c:forEach>
 		                                    </td>
-		                                    
-		                                </tr>
-		                                <tr>
-		                                    <td class="label">사유</td>
-		                                    <td class="value">
-		                                        <textarea id="" cols="30" rows="10" name="content" required>
-		                                        ${ list.get(0).RETIRE_CONTENT.trim()}
-		                                        </textarea>
-		                                    </td>
-		                                </tr>
+	                                    </c:when>
+	                                    <c:otherwise>
+	                                    </c:otherwise>
+	                                    </c:choose>
+		                               </tr>
+		                               <tr>
+		                               		<td class="label">첨부파일</td>
+	                                    <td colspan="3"><input type="file" name="uploadFiles" required multiple></td>
+		                               </tr>
 										            </table>
 										        </div>
 										
 										        <div id="btn_div">
-										           <button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
+										           <button class="btn btn-primary" id="insertBtn" type="submit">제출</button>
+                            	 <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
 										        </div>
 										    </div>
 										                        
@@ -498,16 +506,30 @@ $(document).ready(function(){
             </div>
         </div>
         
+    <script>
+    	$(document).on("click", ".origin_del", function(){
+    		
+    		let inputEl = document.createElement("input");
+    		inputEl.value=$(this).data("fileno");
+    		inputEl.name="delFileNo";
+    		inputEl.type="hidden";
+    		
+    		$(".header2").append(inputEl);
+    	
+    		$(this).closest(".attach").remove();
+    		// CSS 선택자와 일치하는 가장 가까운(closest) 상위 조상 요소를 찾아서 반환
+    	})
+    </script>
+        
     <c:if test="${ not empty list }">
     <script>
     	$(document).ready(function(){
     			$("#status").val("${list.get(0).PAYMENT_STATUS}");
-    			$("#sales").val("${list.get(0).SALES_DIVISION}")
     	})
     </script>
     </c:if>
      
-   
+    
     <script>
         document.querySelector("#myForm").addEventListener("submit", function(event) {
             if (confirm('정말로 제출하시겠습니까?')) {
@@ -530,8 +552,21 @@ $(document).ready(function(){
             }
         });
     </script>
+   
+   
+   
+   
+   
+    <script>
     
+    	$(document).on("click", "#del_btn", function () {
+    	    //$("#tr_table tr:last-child").remove();
+    	    $("#tr_table").children("tr").last().remove();
+    	});
     
+    	
+    })
+    </script>
         
      <script>
         $('#modal').iziModal({

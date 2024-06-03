@@ -171,7 +171,7 @@ public class PayDao {
 	}
 	//insert
 	public int updateInsertItems(Map<String, Object> item) {
-		return sqlSessionTemplate.update("payMapper.updateInsertItems", item);
+		return sqlSessionTemplate.insert("payMapper.updateInsertItems", item);
 	}
 	
 	public int updateApproval(Map<String, Object> map) {
@@ -486,4 +486,19 @@ public class PayDao {
 	public int noApprovalSignCountToday(String userName) {
 		return sqlSessionTemplate.selectOne("payMapper.noApprovalSignCountToday", userName);
 	}
+	//기안서 첨부파일 등록
+	public int gReportAttachUpdate(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.gReportAttachUpdate", map);
+	}
+	
+	//파일여부있는확인
+	public int fileStatus(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.fileStatus", map);
+	}
+	
+	//결재공통테이블 등록
+	public int updateGReport(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.updateGReport", map);
+	}
+	
 }

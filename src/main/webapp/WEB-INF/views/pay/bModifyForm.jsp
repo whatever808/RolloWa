@@ -402,9 +402,9 @@ $(document).ready(function(){
                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
                        <input type="hidden" name="writerNo" value="${userNo}">
-                      <input type="hidden" name="firstApproval" value="${ list.get(0).FIRST_APPROVAL }">
-											 <input type="hidden" name="middleApproval" value="${ list.get(0).MIDDLE_APPROVAL }">
-											 <input type="hidden" name="finalApproval" value="${ list.get(0).FINAL_APPROVAL }">
+                      <input type="hidden" name="firstApproval" value="${ list.get(0).FIRST_APPROVAL }" class="hiddenSignName">
+											 <input type="hidden" name="middleApproval" value="${ list.get(0).MIDDLE_APPROVAL }" class="hiddenSignName">
+											 <input type="hidden" name="finalApproval" value="${ list.get(0).FINAL_APPROVAL }" class="hiddenSignName">
 											 <input type="hidden" name="payWriter" value="${list.get(0).PAYMENT_WRITER}">
                        <input type="hidden" name="payWriterNo" value="${list.get(0).PAYMENT_WRITER_NO}">
 		                   <div class="document">
@@ -476,9 +476,9 @@ $(document).ready(function(){
 			                                    <td><input type="text" class="text_1" name="pName" value="${list.get(i).PRODUCT_NAME}"></td>
 			                                    <td><input type="text" class="text_2" name="size" value="${list.get(i).PRODUCT_SIZE}"></td>
 			                                    <td><input type="number"  min="1" class="text_3" name="amount" value="${list.get(i).QUANTITY}"></td>
-			                                    <td><input type="text" class="text_4" name="unitPrice" value="${list.get(i).UNIT_PRICE}"></td>
-			                                    <td><input type="text" class="text_5" name="price" value="${list.get(i).PRICE}"></td>
-			                                    <td><input type="text" class="text_6" name="etc" value="${list.get(i).NOTE}"></td>
+			                                    <td><input type="text" class="unitprice" name="unitPrice" value="${list.get(i).UNIT_PRICE}" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')"></td>
+			                                    <td><input type="text" class="price" name="price" value="${list.get(i).PRICE}" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')"></td>
+			                                    <td><input type="text" class="etc" name="etc" value="${list.get(i).NOTE}"></td>
 			                                </tr>
 																		   </c:if>			
 																		</c:forEach>
@@ -486,7 +486,7 @@ $(document).ready(function(){
 										            <table class="content2">
 		                                <tr>
 		                                    <td class="label">합계</td>
-		                                    <td><input type="text" name="totalSum" value="${ list.get(0).TOTAL_SUM }" required></td>
+		                                    <td><input type="text" name="totalSum" value="${ list.get(0).TOTAL_SUM }" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')" required></td>
 		                                </tr>
 		                                <tr>
 		                                    <td class="label">기타</td>
@@ -497,7 +497,6 @@ $(document).ready(function(){
 										
 										        <div id="btn_div">
 										           <button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
-                            	 <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
                             	 <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
 										        </div>
 										    </div>
@@ -517,43 +516,66 @@ $(document).ready(function(){
     	})
     </script>
     </c:if>
-     
+    
     <script>
-    	
-    document.querySelector("#myForm").addEventListener("submit", function(event){
-    	
-    		$("#insertBtn").on("click", function(){
-	    		$(".namecheck").each(function(){
-		    		if($(this).val() == ""){
-		    			alert("승인자를 선택해주세요.");
-		    			return false;
-		    		}
-	    		})	    	
+    	$(document).ready(function(){
+    		
+    		$(".unitprice").each(function(){
+    			$(this).val($(this).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     		})
     		
-    })
-    	
+    		$(".price").each(function(){
+    			$(this).val($(this).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    		})
+    		
+    		
+    		$("input[name='totalSum']").val($("input[name='totalSum']").val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+
+    	})
+    
+    
+    </script>
+     
+    <script>
+        document.querySelector("#myForm").addEventListener("submit", function(event) {
+            if (confirm('정말로 제출하시겠습니까?')) {
+                let valid = true;
+                
+                $(".hiddenSignName").each(function() {
+                    if ($(this).val() == "null" || $(this).val() == "") {
+                        alert("승인자를 3차까지 선택해주세요.");
+                        event.preventDefault();
+                        valid = false;
+                        return false; // .each 루프 중지
+                    }
+                });
+                
+                if (!valid) {
+                    event.preventDefault(); // 폼 제출 막기
+                }
+            } else {
+                event.preventDefault(); // 확인 메시지에서 취소를 선택한 경우 폼 제출 막기
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $(document).on("click", "#plus_btn", function () {
+                var result = "<tr>";
+		                result += "<td><input type='text' class='text_1' name='pName'></td>";
+		                result += "<td><input type='text' class='text_2' name='size'></td>";
+		                result += "<td><input type='number' min='1' class='text_3' name='amount'></td>";
+		                result += '<td><input type="text" class="text_4" name="unitPrice" oninput="this.value = this.value.replace(/[^0-9]/g, \'\').replace(/\\d(?=(?:\\d{3})+$)/g, \'$&,\')"></td>';
+		                result += '<td><input type="text" class="text_5" name="price" oninput="this.value = this.value.replace(/[^0-9]/g, \'\').replace(/\\d(?=(?:\\d{3})+$)/g, \'$&,\')"></td>';
+		                result += "<td><input type='text' class='text_6' name='etc'></td>";
+		                result += "</tr>";
+                $("#tr_table").append(result);
+            });
+        });
     </script>
    
     <script>
     $(document).ready(function(){
-    	
-    	$(document).on("click", "#plus_btn", function () {
-    		var result = "<tr>";
-    		result += "<td><input type='text' class='text_1' name='pName'></td>";
-    		result += "<td><input type='text' class='text_2' name='size'></td>";
-    		result += "<td><input type='number' min='1' class='text_3' name='amount'></td>";
-    		result += "<td><input type='text' class='text_4' name='unitPrice'></td>";
-    		result += "<td><input type='text' class='text_5' name='price'></td>";
-    		result += "<td><input type='text' class='text_6' name='etc'></td>";
-    		result += "</tr>";
-    		
-    		
-       $("#tr_table").children().last().after(result);
-       
-       
-    	});
-    	
     	
     	$(document).on("click", "#del_btn", function () {
     	    //$("#tr_table tr:last-child").remove();

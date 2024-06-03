@@ -394,9 +394,9 @@ $(document).ready(function(){
                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
                        <input type="hidden" name="writerNo" value="${userNo}">
-                       <input type="hidden" name="firstApproval">
-											 <input type="hidden" name="middleApproval">
-											 <input type="hidden" name="finalApproval">
+                       <input type="hidden" name="firstApproval" class="hiddenSignName">
+											 <input type="hidden" name="middleApproval" class="hiddenSignName">
+											 <input type="hidden" name="finalApproval" class="hiddenSignName">
 		                   <div class="document">
 										        <h1 class="title2">비품 신청서</h1>
 										
@@ -461,34 +461,34 @@ $(document).ready(function(){
 	                                    <td class="label">비고</td>
                                 		</tr>
 										                <tr>
-	                                    <td class="value"><input type="text" class="text_1" name="pName"></td>
-	                                    <td class="value"><input type="text" class="text_2" name="size"></td>
-	                                    <td class="value"><input type="number"  min="1" class="text_3" name="amount"></td>
-	                                    <td class="value"><input type="text" class="text_4" name="unitPrice"></td>
-	                                    <td class="value"><input type="text" class="text_5" name="price"></td>
-	                                    <td class="value"><input type="text" class="text_6" name="etc"></td>
+	                                    <td class="value"><input type="text" name="pName" required></td>
+	                                    <td class="value"><input type="text" name="size"></td>
+	                                    <td class="value"><input type="number"  min="1" name="amount" required></td>
+	                                    <td class="value"><input type="text" name="unitPrice" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')" required></td>
+	                                    <td class="value"><input type="text" name="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')" required></td>
+	                                    <td class="value"><input type="text" name="etc"></td>
 		                                </tr>
 		                                <tr>
-		                                    <td class="value"><input type="text" class="text_1" name="pName"></td>
-		                                    <td class="value"><input type="text" class="text_2" name="size"></td>
-		                                    <td class="value"><input type="number"  min="1" class="text_3" name="amount"></td>
-		                                    <td class="value"><input type="text" class="text_4" name="unitPrice"></td>
-		                                    <td class="value"><input type="text" class="text_5" name="price"></td>
-		                                    <td class="value"><input type="text" class="text_6" name="etc"></td>
+		                                    <td class="value"><input type="text" name="pName"></td>
+		                                    <td class="value"><input type="text" name="size"></td>
+		                                    <td class="value"><input type="number"  min="1" name="amount"></td>
+		                                    <td class="value"><input type="text" name="unitPrice" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')"></td>
+		                                    <td class="value"><input type="text" name="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')"></td>
+		                                    <td class="value"><input type="text" name="etc"></td>
 		                                </tr>
 		                                <tr id="next_tr">
-		                                   	<td class="value"><input type="text" class="text_1" name="pName"></td>
-		                                    <td class="value"><input type="text" class="text_2" name="size"></td>
-		                                    <td class="value"><input type="number"  min="1" class="text_3" name="amount"></td>
-		                                    <td class="value"><input type="text" class="text_4" name="unitPrice"></td>
-		                                    <td class="value"><input type="text" class="text_5" name="price"></td>
-		                                    <td class="value"><input type="text" class="text_6" name="etc"></td>
+		                                   	<td class="value"><input type="text" name="pName"></td>
+		                                    <td class="value"><input type="text" name="size"></td>
+		                                    <td class="value"><input type="number"  min="1" name="amount"></td>
+		                                    <td class="value"><input type="text" name="unitPrice" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')"></td>
+		                                    <td class="value"><input type="text" name="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')"></td>
+		                                    <td class="value"><input type="text" name="etc"></td>
 		                                </tr>
 										            </table>
 										            <table class="content2">
 		                                <tr>
 		                                    <td class="label">합계</td>
-		                                    <td><input type="text" name="totalSum" required></td>
+		                                    <td><input type="text" name="totalSum" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')" required></td>
 		                                </tr>
 		                                <tr>
 		                                    <td class="label">기타</td>
@@ -499,13 +499,10 @@ $(document).ready(function(){
 										
 										        <div id="btn_div">
 										           <button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
-                            	 <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
                             	 <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
 										        </div>
 										    </div>
-										                        
-                        
-                        
+										               
                     </form>
                 </div>
             </div>
@@ -520,41 +517,48 @@ $(document).ready(function(){
     </script>
     </c:if>
      
-    <script>
-    	
-    document.querySelector("#myForm").addEventListener("submit", function(event){
-    	
-		$("#insertBtn").on("click", function(){
-    		$(".namecheck").each(function(){
-	    		if($(this).val() == ""){
-	    			alert("승인자를 선택해주세요.");
-	    			return false;
-	    		}
-    		})	    	
-		})
-		
-		})
-    	
+   <script>
+        document.querySelector("#myForm").addEventListener("submit", function(event) {
+            if (confirm('정말로 제출하시겠습니까?')) {
+                let valid = true;
+                
+                $(".hiddenSignName").each(function() {
+                    if ($(this).val() == "null" || $(this).val() == "") {
+                        alert("승인자를 3차까지 선택해주세요.");
+                        event.preventDefault();
+                        valid = false;
+                        return false; // .each 루프 중지
+                    }
+                });
+                
+                if (!valid) {
+                    event.preventDefault(); // 폼 제출 막기
+                }
+            } else {
+                event.preventDefault(); // 확인 메시지에서 취소를 선택한 경우 폼 제출 막기
+            }
+        });
     </script>
+    
+     <script>
+        $(document).ready(function() {
+            $(document).on("click", "#plus_btn", function () {
+                var result = "<tr>";
+                result += "<td><input type='text' class='text_1' name='pName'></td>";
+                result += "<td><input type='text' class='text_2' name='size'></td>";
+                result += "<td><input type='number' min='1' class='text_3' name='amount'></td>";
+                result += '<td><input type="text" class="text_4" name="unitPrice" oninput="this.value = this.value.replace(/[^0-9]/g, \'\').replace(/\\d(?=(?:\\d{3})+$)/g, \'$&,\')"></td>';
+                result += '<td><input type="text" class="text_5" name="price" oninput="this.value = this.value.replace(/[^0-9]/g, \'\').replace(/\\d(?=(?:\\d{3})+$)/g, \'$&,\')"></td>';
+                result += "<td><input type='text' class='text_6' name='etc'></td>";
+                result += "</tr>";
+                $("#tr_table").append(result);
+            });
+        });
+    </script>
+    
    
     <script>
     $(document).ready(function(){
-    		let i = 4;
-    	$(document).on("click", "#plus_btn", function () {
-    		var result = "<tr>";
-    		result += "<td><input type='text' class='text_1' name='pName'></td>";
-    		result += "<td><input type='text' class='text_2' name='size'></td>";
-    		result += "<td><input type='number' min='1' class='text_3' name='amount'></td>";
-    		result += "<td><input type='text' class='text_4' name='unitPrice'></td>";
-    		result += "<td><input type='text' class='text_5' name='price'></td>";
-    		result += "<td><input type='text' class='text_6' name='etc'></td>";
-    		result += "</tr>";
-    		i++;
-       $("#tr_table").children().last().after(result);
-       
-       
-    	});
-    	
     	
     	$(document).on("click", "#del_btn", function () {
     	    //$("#tr_table tr:last-child").remove();

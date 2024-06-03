@@ -479,7 +479,7 @@ $.ajax({
 							        </tbody>
 							    </table>
 							    <c:choose>
-								    <c:when test="${ list != null }">
+								    <c:when test="${ list != null && !list.isEmpty() }">
 								    <div id="cen_bottom_pagging">
 												<div id="pagin_form">
 													<ul class="pagination">
@@ -494,8 +494,8 @@ $.ajax({
 							          </div>
 						        </div>
 						        </c:when>
-						        <otherwise>
-						        </otherwise>
+						        <c:otherwise>
+						        </c:otherwise>
 					        </c:choose>
 							</div>
 						</div>

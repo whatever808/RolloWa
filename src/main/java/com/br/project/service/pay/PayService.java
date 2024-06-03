@@ -186,7 +186,7 @@ public class PayService {
 		
 		//2-2.품목공동테이블 등록
 		int result1 = 1;
-			if(!list.isEmpty() && result4 == 1) {
+			if(!list.isEmpty() || list != null) {
 				result1 = 0;
 				for (Map<String, Object> item : list) { 
 					result1 += payDao.updateInsertItems(item);
@@ -195,7 +195,7 @@ public class PayService {
 		//3.결재이력공동테이블 등록
 	    int result3 = payDao.updateApproval(map);
 			
-		return result1 * result2 * result3;
+		return result1;
 	}
 	
 	
@@ -412,7 +412,7 @@ public class PayService {
 		//4.결재공동테이블 업데이트 approval
 		int result4 = payDao.updateApproval(map);
 		
-		return result1 * result2 * result3 * result4;
+		return result3;
 	}
 	
 	
@@ -554,4 +554,38 @@ public class PayService {
 	public int noApprovalSignCountToday(String userName) {
 		return payDao.noApprovalSignCountToday(userName);
 	}
+	
+	
+	//기안서 업데이트
+	public int gReportUpdate(Map<String, Object> map, List<Map<String, Object>> attachList, String[] delFileNo) {
+		
+		int result1 = payDao.updateApproval(map);
+		
+		int result2 = 1;
+		if(delFileNo != null) {
+			result2 = payDao.deleteAttachment(delFileNo);
+		}
+		
+		int result3 = 1;
+		if(attachList != null || !attachList.isEmpty()) {
+			result3 = 0;
+			for(Map<String, Object> at : attachList) {
+				result3 += payDao.gReportAttachUpdate(at);
+			}
+		}
+		
+		int result4 = payDao.fileStatus(map);
+		
+		int result5 = 1;
+		if(result4 > 0) {
+			map.put("fileStatus", "Y");
+			result5 = payDao.updateGReport(map);
+		}else {
+			map.put("fileStatus", "N");
+			result5 = payDao.updateGReport(map);
+		}
+		
+		return result1 * result2 * result3 * result5;
+	}
+	
 }

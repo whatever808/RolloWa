@@ -29,5 +29,29 @@ public class PaymentDao {
 	public Map<String, Object> selectValiation() {
 		return sqlSessionTemplate.selectOne("paymentMapper.selectValiation");
 	}
+	
+	
+	//이문희 일반 Ticket_order
+	public int insertAjaxkakaoPayCommon(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("paymentMapper.insertAjaxkakaoPayCommon", map);
+	}
+	
+	//이문희 일반 Ticket_dorder_dtail
+	public int insertKakaoPayDetailCommon(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("paymentMapper.insertKakaoPayDetailCommon", map);
+	}
+	
+	//이문희 정기 Ticket_order
+	public int insertAjaxkakaoPayRoutine(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("paymentMapper.insertAjaxkakaoPayRoutine", map);
+	}
+	
+	//이문희 정기 Ticket_dorder_dtail
+	public int insertKakaoPayDetailrRoutine(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("paymentMapper.insertKakaoPayDetailrRoutine", map);
+	}
+	
+	
+		
 
 }
