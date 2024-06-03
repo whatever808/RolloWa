@@ -138,6 +138,7 @@
 	         <div class="board-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
 	             <ul class="pagination">
 	             
+
 		            <!-- Previous -->
 					      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
 							    onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '' }">

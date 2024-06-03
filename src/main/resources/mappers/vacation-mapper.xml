@@ -40,7 +40,7 @@ resultMap="vacaResultMap">
 from 
     vacation
 join 
-    tb_group on (CODE = vacation.GROUP_CODE and tb_group.GROUP_CODE = 'CALD03')
+    tb_group on (CODE = vacation.GROUP_CODE and tb_group.GROUP_CODE = 'VACT01')
 join
     Member on (USER_NO = vacation.MODIFY_EMP)
 where 
@@ -124,11 +124,14 @@ select count(*)
 from 
 	vacation
 where 
-	REGIST_EMP = #{userNo}
+	REGIST_EMP = #{member.userNo}
 and 
 	STATUS = 'Y'
 and 
 	APPORVAL_STATUS = 'Y'
+<if test="!vacaGroupCode.equals('all')">
+	and GROUP_CODE = #{vacaGroupCode}
+</if>
 </select>
 
 <select id="searchOld"
@@ -144,13 +147,9 @@ where STATUS = 'Y'
 <if test="!vacaGroupCode.equals('all')">
 	and GROUP_CODE = #{vacaGroupCode}
 </if>
-<![CDATA[
-and to_char(VACATION_STRAT, 'YYYY-MM-DD') <= #{vacaStart}
-and to_char(VACATION_END,   'YYYY-MM-DD') >= #{vacaStart}
 and REGIST_EMP = #{member.userNo}
 and APPORVAL_STATUS = 'Y'
 order by VACATION_NO desc
-]]>
 </select>
 
 	<update id="deleteRcequest">

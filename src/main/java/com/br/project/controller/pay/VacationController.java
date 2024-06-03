@@ -189,11 +189,15 @@ public class VacationController {
 		int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
 		vacation.setMember(MemberDto.builder().userNo(userNo).build());
 		Map<String, Object> map = new HashMap<>();
-		int listCount = vactService.selectVacarionCount(vacation.getMember().getUserNo());
+		int listCount = vactService.selectVacarionCount(vacation);
 		PageInfoDto paging = new PagingUtil().getPageInfoDto(listCount, page, 5, 5);
-		List<VacationDto> list = vactService.searchOld(vacation);
-		map.put("list", list);
+		
+		map.put("vacation", vacation);
 		map.put("paging", paging);
+		List<VacationDto> list = vactService.searchOld(map);
+		
+		
+		map.put("list", list);
 		return map;
 	}
 	

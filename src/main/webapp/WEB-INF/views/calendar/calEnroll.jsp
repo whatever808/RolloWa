@@ -77,7 +77,6 @@
          margin-left: 30px;
      }
  </style>
-
 </head>
 <body>
   <div class="out-line">
@@ -182,20 +181,24 @@
     			let checkTime = (new Date(date2).getTime() - new Date(date1).getTime())/60000 >= 30;
 		        if(checkDate && checkTime){
 		        	// [기웅] 일정 등록 시 알림
-		        	var teamMemberList = new Array();
+		        	console.log($.trim($("#title").val()));
+		        	if($.trim($("#title").val()).length > 0) {
+		        		var teamMemberList = new Array();
 		        	
-		        	$('input:checkbox[name=coworker]').each(function (index) {
-								if($(this).is(":checked")==true){
-									if($(this).val() != ${loginMember.userNo}) {
-										teamMemberList.push($(this).val());
-									}
-						    }
-							})
-							
-		        	stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
-																																		, flag: '2'
-																																		, teamMemberList: teamMemberList
-																																		, url: "${path}/calendar/pCalendar.page"}));
+			        	$('input:checkbox[name=coworker]').each(function (index) {
+									if($(this).is(":checked")==true){
+										if($(this).val() != ${loginMember.userNo}) {
+											teamMemberList.push($(this).val());
+										}
+							    }
+								})
+								
+			        	stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
+																																			, flag: '2'
+																																			, teamMemberList: teamMemberList
+																																			, url: "${path}/calendar/pCalendar.page"}));
+		        	}
+		        	
 		        	
 		        	return true;
 		        }else {

@@ -12,7 +12,8 @@
 
 <!-- fullcalendar -->
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
-
+<!-- google calendar 연동 -->
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.13/index.global.min.js'></script>
 <style>
 	.out-line {
 		min-height: 800px;
@@ -24,6 +25,8 @@
 		height: 15%;
 		padding: 10px;
 		display: flex;
+		gap: 25px;
+		background: url(${path}/resources/images/rollowa.jpg);
 	}
 	.move-month-area {
 		height: 9.5%;
@@ -39,7 +42,10 @@
 		margin: 10px;
 		padding: 10px;
 	}
-	.calender-area {padding: 10px;}
+	.calender-area {
+		padding: 10px;
+    background: #f7efc9;
+	}
 	.mydiv-area {width: 20%; position: relative;}
 	.memebrdiv-area {
 		width: 125px;
@@ -57,7 +63,6 @@
 		align-items: center;
 	}
 	.font-size25 {font-size: 25px;}
-	.member-search-area {gap: 25px;}
 	/* 모달 스타일 */
 	.Category, .Co-worker {
 		display: -webkit-box;
@@ -91,8 +96,12 @@
     color: #ffffff !important;
     font-weight: bolder !important;
 	}
-	.fc-day-sat a {color: #007bff !important;}
-	.fc-day-sun a {color: #dc3545 !important;}
+	.fc-day-sat .fc-col-header-cell-cushion,
+	.fc-day-sat .fc-daygrid-day-number
+	{color: #007bff !important;}
+	.fc-day-sun .fc-col-header-cell-cushion,
+	 .fc-day-sun .fc-daygrid-day-number
+	{color: #dc3545 !important;}
 	.img_postion{
     position: absolute;
     font-weight: bolder;
@@ -114,10 +123,12 @@
 		text-align: center;
 	}
 	.fc .fc-daygrid-day.fc-day-today{
-		background-color: rgb(160 160 160 / 30%) !important;
+		background-color: rgb(0 0 0) !important;
+		border-radius: 10px !important;
 	}
 	.fc .fc-timegrid-col.fc-day-today{
-		background-color: rgb(160 160 160 / 30%) !important;
+		background-color: rgb(0 0 0) !important;
+		border-radius: 5px !important;
 	}
 	.fc-scroller.fc-scroller-liquid-absolute{
     overflow: hidden;
@@ -127,14 +138,39 @@
 		border: 0px; 
 	}
  	.fc-daygrid-day-frame.fc-scrollgrid-sync-inner{
-		background-color: rgb(200 200 200 / 20%) !important;
+		background-color: #fff !important;
+    padding: 1px;
+    background-clip: content-box;
+    border-radius: 15px !important;
+	}
+	td.fc-day.fc-timegrid-col{
+		background-color: #fff !important;
     padding: 1px;
     background-clip: content-box;
 	}
-	td.fc-day.fc-timegrid-col{
-		background-color: rgb(200 200 200 / 20%) !important;
-    padding: 1px;
-    background-clip: content-box;
+	.fc .fc-multimonth-singlecol .fc-multimonth-daygrid-table, .fc .fc-multimonth-singlecol .fc-multimonth-header-table{
+	  background: #f7efc9 !important;
+	}
+	.fc .fc-multimonth-title{
+		background: #f7efc9 !important;
+	}
+	.fc-daygrid-dot-event{
+    /* display: inline-flex; */
+    display: grid;
+   	justify-items: center;
+	}
+ 	.fc-daygrid-event-dot{
+    height: -webkit-fill-available;
+    width: 60%;
+    position: absolute;
+    padding: 10px;
+    border-radius: 50px;
+	}
+	.fc-daygrid-block-event{
+		border-radius: 50px;
+	}
+	.member-search-area:hover :not(:hover){
+		opacity: 0.5;
 	}
 </style>
 </head>
@@ -151,26 +187,27 @@
 					calendar = new FullCalendar.Calendar(calendarEl, {
 						initialView: 'dayGridMonth',
 						locale: 'ko',
+		        //height: '700px',
+				 	  googleCalendarApiKey: 'AIzaSyBEu59fao26o4oQSM2gXavGYR9eMTxd1nE',
 						customButtons: {
 							 enrollButton:{text: '일정 등록',click: function(){location.href="${path}/calendar/calEnroll.page";}}
 						},
 						buttonText:{prev:'◁',next:'▷',today: '오늘',year:'연도',month:'월',week:'주'
 						},
 						headerToolbar:{start: 'prev today enrollButton',
-									   center: 'title',
-									   end: 'multiMonthYear dayGridMonth timeGridWeek next'
+									   				center: 'title',
+									   				end: 'multiMonthYear dayGridMonth timeGridWeek next'
 					    },
 						views:{year: {titleFormat:{year: '2-digit'}, multiMonthMaxColumns: 1},
 						  	   month:{titleFormat:{year: '2-digit', month: 'short'} },
-							   week: {titleFormat:{year: '2-digit'} },
-							   day:  {titleFormat:{month: 'short', day:'2-digit'}}
+							   		week: {titleFormat:{year: '2-digit'} },
+							   		day:  {titleFormat:{month: 'short', day:'2-digit'}}
 						},
 						buttonIcons: false,
 						navLinks: true,
 						slotMinTime: "06:00:00",
 						timeZone: 'Asia/Seoul',
-						eventClick:function(info){	
-							//console.log(info.event.extendedProps.extendeProps);
+						eventClick:function(info){
 							modalOn(info);
 						},
 						eventMouseEnter:function(info){
@@ -179,7 +216,15 @@
 						},
 						eventMouseLeave:function(info){
 							info.el.style.transform = '';
-						},	
+						},
+						events:{
+                googleCalendarId :  'ko.south_korea.official#holiday@group.v.calendar.google.com',
+                backgroundColor: 		'red',
+                className:					'holliDay',
+                extendedProps:{
+	                status: 					'N',
+               	},
+            }
 					});
 				});					
 			}
@@ -242,6 +287,8 @@
 	     	 	$('#cal_modal').iziModal('setSubtitle', info.event.id);  
 	     	 	$('#cal_modal').iziModal('setTitle', info.event.title);  
 	  			$('#cal_modal').iziModal('open');
+			  }else {
+				  return false;
 			  }// if End
 			}
 		  
@@ -266,7 +313,7 @@
 							 calendar.addEventSource(
 							 [{
 									  id:						e.calNO,
-										title:				e.group.upperCode + e.group.codeName,
+										title:				e.group.upperCode + " " + e.group.codeName,
 										start: 				e.startDate,
 										end:					e.endDate,
 										color: 				e.color,
@@ -285,10 +332,11 @@
 							 calendar.addEventSource(
 							 [{
 									  id:						e.vacaNO,
-										title:				e.group.upperCode + e.member.userName,
+										title:				e.group.upperCode+ " " + e.member.userName,
 										start: 				e.vacaStart,
 										end:					e.vacaEnd,
 										color: 				e.vacaColor,
+										allDay:       true,
 										extendedProps:{
 											status:			e.vacationApprorvalStatus,
 											}		 
@@ -311,10 +359,8 @@
 				  data: $('#updateForm').serialize(),
 				  success:function(result){
 						if(result > 0){
-							 //alertify.alert('일정 수정','성공적으로 갱신 되었습니다.');
 							 greenAlert('일정 수정','성공적으로 갱신 되었습니다.');
 						} else {
-							 //alertify.alert('일정 수정','관리자를 호출해 주세요.');
 							redAlert('일정 수정','관리자를 호출해 주세요.');
 						}
 					  
@@ -335,7 +381,6 @@
 	   	}
 	   	
 			function allDate(e){
-				//console.log($(e).children('input').is(':checked'));
 				
 				const offset = new Date().getTimezoneOffset() * 60000;
 				const today = new Date(Date.now() - offset);
@@ -389,7 +434,7 @@
 							<div class="mydiv-area display-item-center">
 								<div class="line-cirecle display-item-center line-shadow">
 									<img src="${path}${t.profileURL}" class="rounded" style="overflow:hidden;" >
-									<span class="img_postion">${t.userName}</span>
+									<span class="img_postion jua-regular">${t.userName}</span>
 								</div>
 								<input type="hidden" value="${t.userNo}">
 							</div>
@@ -398,7 +443,7 @@
 							<div class="memebrdiv-area display-item-center">
 								<div class="line-cirecle display-item-center line-shadow">
 									<img src="${path}${t.profileURL}" class="rounded" style="overflow:hidden;" >
-									<span class="img_postion">${t.userName}</span>
+									<span class="img_postion jua-regular">${t.userName}</span>
 								</div>
 								<input type="hidden" value="${t.userNo}">
 							</div>						
@@ -406,7 +451,6 @@
 					</c:choose>
 				</c:forEach>
 			</div>
-			
 			<br> <br>
 			<!-- 캘린더 영역 -->
 			<div class="calender-area radious10 line-shadow "><div id="calendar"></div></div>

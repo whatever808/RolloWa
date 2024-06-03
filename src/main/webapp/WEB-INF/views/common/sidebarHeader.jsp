@@ -47,6 +47,21 @@
     <link rel="stylesheet" href="${ contextPath }/resources/css/common.css">
     <link rel="stylesheet" href="${ contextPath }/resources/css/common/mdb.min.css" />
     <style>
+   		  ::-webkit-scrollbar {
+			    width: 15px;
+			    height: 30px;
+			  }
+			  ::-webkit-scrollbar-thumb {
+			    background: linear-gradient(180deg, rgb(255 255 255) , rgb(255, 247, 208) 30%, rgb(255 230 109) 50%, rgb(255, 247, 208) 70%, rgb(255 255 255) );
+			    border-radius: 20px;
+			    background-clip: padding-box;
+			    border: 2px solid transparent;
+			  }
+			  ::-webkit-scrollbar-track {
+			    background-color: rgb(256, 256, 256, 0.4);
+			    border-radius: 20px;
+			    box-shadow: inset 0px 0px 5px white;
+			  }
         .b-example-divider {
             width: 100%;
             height: 3rem;
@@ -124,7 +139,7 @@
         .b-example-vr {
             flex-shrink: 0;
             width: 1.5rem;
-            height: 1200px;
+            height: 110em;
         }
 
         .content {
@@ -212,7 +227,7 @@
         }
 
         .team {
-            height: 30px;
+            /* height: 30px; */
             font-size: 15px;
             padding: 0;
             margin: 10px;
@@ -291,7 +306,7 @@
         .chatting_history {
             height: 80%;
             overflow: auto;
-            overflow-x: none;
+            padding : 10px;
         }
 
         .msg_send_box {
@@ -318,7 +333,7 @@
   -webkit-font-smoothing: antialiased;
   animation: bounce 0.3s ease infinite alternate;
 }
-#main_logo span:{
+#main_logo span{
 	animation-delay: 0.1s;
 }
 #main_logo span{
@@ -732,7 +747,7 @@ $(document).ready(function(){
                             <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">로그아웃</a>
                             </li>       
                             <li>
-                            <a href="${ contextPath }/payment/payment.page" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                            <a href="${ contextPath }/payment/payment.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
                             Payment</a>
                             </li>       
                         </ul>
@@ -772,9 +787,13 @@ $(document).ready(function(){
 						// 채팅용 웹소켓 연결
 						chatting = new SockJS("${contextPath}/chatting");
 						stompClient = Stomp.over(chatting);
-					  /*stompClient.debug = function(str) {
+						
+						// Auto Reconnect
+						stompClient.reconnect_delay = 300000;
+						// 디버깅 방법 설정
+					  stompClient.debug = function(str) {
 						    // append the debug log
-						};*/
+						};
 			    	stompClient.connect({}, function(frame) {
 							// 구독 중인 채팅방 목록 조회
 					    $.ajax({
@@ -836,9 +855,10 @@ $(document).ready(function(){
 							    			
 							    			location.href = msgBody.url;
 							    		})
-							    		
 							    		// 읽지 않은 알림 조회 후 알림 목록에 추가 및 읽지 않은 알림 표시
-							    		selectAlram();
+							    		setTimeout(function() {
+							    			selectAlram();
+							    		}, 3000);
 					    			}
 					    		}
 					    	} 

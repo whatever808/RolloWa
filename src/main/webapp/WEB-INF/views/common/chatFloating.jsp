@@ -297,7 +297,7 @@
                                   class="fa-solid fa-comment"></i></button>
                       </div>
 
-                      <div class="card" style="margin-top: 10px; overflow: auto;
+                      <div class="card scrollbar" style="margin-top: 10px; overflow: auto;
                       height: 750px;">
                             <div class="card-body">
 

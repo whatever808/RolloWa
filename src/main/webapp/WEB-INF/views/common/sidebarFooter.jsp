@@ -7,6 +7,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+  .iziModal-header-title{
+  	font-family: "Jua", sans-serif !important;
+  	font-size: 20px !important;
+  }
+</style>
 </head>
 <body>
 		 <div class="msg_open_btn">
@@ -67,7 +73,7 @@
 
                      <div class="col-md-6 col-lg-7 col-xl-8 chatting_box">
 
-                         <div class="chatting_history">
+                         <div class="chatting_history scrollbar">
                              <ul class="list-unstyled chat_msg_list">
                                  <!-- 채팅 메세지 구역 -->                              
                              </ul>

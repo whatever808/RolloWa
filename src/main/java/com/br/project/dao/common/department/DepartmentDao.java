@@ -25,6 +25,9 @@ public class DepartmentDao {
 	public List<GroupDto> selectDepartmentList(Map<String, String> map){
 		return sqlSessionTemplate.selectList("departmentMapper.selectDepartmentList", map);
 	}
+	public List<Map<String, Object>> selectTeam() {
+		return sqlSessionTemplate.selectList("departmentMapper.selectTeam");
+	}
 	
 	/* ================================================= "가림" 구역 start ================================================= */
 	/**
@@ -34,6 +37,7 @@ public class DepartmentDao {
 	public GroupDto selectUppderCode(HashMap<String, Object> params) {
 		return sqlSessionTemplate.selectOne("departmentMapper.selectUppderCode", params);
 	}
+
 	/* ================================================= "가림" 구역 end ================================================= */
 	
 	/* ================================================= "기웅" 구역 start ================================================= */
