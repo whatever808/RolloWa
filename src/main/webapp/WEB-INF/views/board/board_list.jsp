@@ -141,7 +141,7 @@
             <!-- Previous -->
 			      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
 					    onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '' }">
-			      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
+			      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">◁</span>
 			      </li>
 				    
 				    <!-- Page -->
@@ -155,7 +155,7 @@
 				    <!-- Next -->
 				    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
 				    	  onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxBoardList();' : ''}">
-				      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
+				      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">▷</span>
 				    </li>
 				    
 				  </ul>

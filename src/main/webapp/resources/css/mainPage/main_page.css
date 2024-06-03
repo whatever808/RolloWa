@@ -8,8 +8,9 @@
     padding: 30px;
 }
 .main-content{
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 25% 75%;
+    gap: 20px;
 }
 .main-content-left{
     display: flex;
@@ -17,9 +18,9 @@
     width: 23%;
 }
 .main-content-right{
-    display: flex;
-    flex-direction: column;
-    width: 75%;
+    display: grid;
+    gap: 30px;
+    align-items: baseline;
 }
 
 .profile-attend-div, .weather-clock-div{
@@ -46,7 +47,7 @@ h4, h5{
     align-items: center;
     justify-content: space-between;
     margin-bottom: 30px;
-    background-color: #b2d4ff;
+   	background-color: #b2d4ff;
 }
 
 .date-time-div{
@@ -57,6 +58,7 @@ h4, h5{
     font-weight: bold;
     border-radius: 20px;
     padding: 10px;
+    white-space: nowrap;
 }
 
 .weather-div{
@@ -111,14 +113,17 @@ h4, h5{
     flex-direction: column;
     justify-content: space-around;
 }
+.mian-content-left{
+	  display: grid;
+    align-content: space-between;
+}
 
 /* ------------- 접속자 ------------- */
 .login-user-list-div{
     background-color: #fff8e3;
     border-radius: 9px;
     padding: 15px;
-    margin-bottom: 30px;
-    height: 700px;
+    height: 55em;
     overflow-x: auto;
     overflow-y: auto;
 }
@@ -135,29 +140,31 @@ h4, h5{
     background-color: #fff8e3;
     border-radius: 9px;
     padding: 15px;
-    margin-bottom: 30px;
     width: 100%;
     display: flex;
     flex-direction: column;
 }
 
 .my-attend-content{
-    display: flex;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 25% 75%;
 }
 .my-attend-select-div{
-    width: 20%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: space-around;
+    align-items: center;
 }
 .my-attend-info-div{
     width: 80%;
     display: flex;
     justify-content: space-evenly;
+    flex-direction: row;
+    overflow: hidden;
 }
 .my-attend-select-div>select{
-    width: 150px;
+    width: 80%;
 }
 .attend-info{
     width: 80px;
@@ -178,7 +185,6 @@ h4, h5{
     background-color: #fff8e3;
     border-radius: 9px;
     padding: 15px;
-    margin-bottom: 30px;
 }
 .notice-category{
 		display: flex;
@@ -220,13 +226,8 @@ h4, h5{
     flex-direction: column;
     background-color: #fff8e3;
     border-radius: 9px;
-    padding: 15px;
-    margin-bottom: 30px;
+    padding: 10px;
 }
-#calendar{
-		height: 500px;
-}
-
 /* ------------- 기웅 추가 알림 -----------*/
 .alram-div {
 	width: 100%;

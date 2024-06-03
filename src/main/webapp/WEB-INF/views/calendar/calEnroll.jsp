@@ -77,7 +77,6 @@
          margin-left: 30px;
      }
  </style>
-
 </head>
 <body>
   <div class="out-line">

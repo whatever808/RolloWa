@@ -20,6 +20,12 @@
 	<!-- side bar -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
+	<style>
+		.weather-clock-div{
+			background: url(${contextPath}/resources/images/rollowa.jpg);
+		}
+	</style> 
+	
 	<!-- content 추가 -->
 	<div class="content">
 

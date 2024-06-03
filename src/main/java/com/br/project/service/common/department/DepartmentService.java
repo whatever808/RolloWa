@@ -31,6 +31,15 @@ public class DepartmentService {
 		return departmentDao.selectDepartmentList(map);
 	}
 	
+	/**
+	 * 부서별 팀과 팀원들을 조회 해오는 쿼리
+	 * @dpcks
+	 * @return
+	 */
+	public List<Map<String, Object>> selectTeam() {
+		return departmentDao.selectTeam();
+	}
+	
 	/* ================================================= "가림" 구역 start ================================================= */
 	/**
 	 * @param params : [상위코드 그룹코드], [하위코드 그룹코드], [하위코드 코드]

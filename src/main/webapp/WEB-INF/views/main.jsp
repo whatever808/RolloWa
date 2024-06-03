@@ -47,8 +47,20 @@
 				    <link rel="stylesheet" href="${ contextPath }/resources/css/common/mdb.min.css" />
 				    <link href="${ contextPath }/resources/css/login.css" rel="stylesheet">
 				    <script src="${ contextPath }/resources/js/login.js"></script>
+				    <style>
+					    .container {
+			    	    background: white;
+					    }
+				    	.backGround{
+				    		  opacity: 0.3;
+    							width: 100%;	   
+ 							    height: -webkit-fill-available; 		
+				    	}
+				    </style>
+				    
         </head>
         <body id="particles-js">
+        		<img class="backGround" src="${contextPath}/resources/images/rollowa.jpg">
 	        <c:if test="${ alertMsg != null }" >
 						<script>
 							alertify.alert('${alertTitle}','${alertMsg}');

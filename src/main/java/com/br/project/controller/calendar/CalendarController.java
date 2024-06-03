@@ -221,8 +221,10 @@ public class CalendarController {
 		Map<String, String> map = new HashMap<>();
 		map.put("code", "CALD02");
 		List<GroupDto> group = dService.selectDepartmentList(map);	
+		List<Map<String, Object>> teamList = dService.selectTeam();
 		
 		mv.addObject("group", group)
+		  .addObject("teamList", teamList)
 		  .setViewName("calendar/cCalendar");
 		
 		return mv;
