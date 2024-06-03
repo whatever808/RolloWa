@@ -39,8 +39,9 @@
                 <c:forEach var="d" items="${dept}">
                     <c:if test="${d.dept ne prevDept}">
                         <li>
+                        	<input type="hidden" class="code" value="${d.code}">
                         	<button class="btn btn-danger delete_department" id="deleteTeamBtn">부서 삭제</button>
-	                        <button class="btn btn-success add_team" onclick="addTeamBtn">팀 추가</button>
+	                        <button class="btn btn-success add_team">팀 추가</button>
                             <span class="level2">${d.dept}</span>
                             <ul>
                                 <c:forEach var="team" items="${dept}">
@@ -71,6 +72,9 @@
                 $('.tree > li > ul').css('flex-wrap', 'wrap');
             }
 
+            let userNo = ${ loginMember.userNo };
+            
+            // 부서 추가
             $('#addDepartmentBtn').click(function() {
                 var deptName = prompt('부서명을 입력하세요:');
                 console.log("deptName값 : ", deptName);
@@ -80,7 +84,8 @@
                         type: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify({ 
-                        	dept: deptName 
+                        	dept: deptName,
+                        	userNo: userNo
                        	}),
                         success: function(response) {
                             console.log("통신 성공");
@@ -91,6 +96,7 @@
                             } else {
                                 alert('부서 추가에 실패했습니다.');
                             }
+                            location.reload();
                         }, 
                         error: function(xhr, status, error) {
                             console.log("통신 실패");
@@ -98,6 +104,43 @@
                     });
                 }
             });
+            
+            // 팀 추가
+            $(document).on('click', '.add_team', function() {
+                var deptCode = $(this).closest('li').data('code');
+                var teamName = prompt('팀명을 입력하세요:');
+                console.log("teamName값 : ", teamName);
+                if (teamName) {
+                    $.ajax({
+                        url: '${contextPath}/organization/insertTeam.do',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ 
+                        	deptCode: deptCode,
+                            teamName: teamName,
+                            userNo: userNo
+                        }),
+                        success: function(response) {
+                            console.log("통신 성공");
+                            if (response) {
+                                $('button[data-dept="' + deptName + '"]').siblings('ul').append(
+                                    '<li><span class="level3">' + teamName + '</span></li>'
+                                );
+                            } else {
+                                alert('팀 추가에 실패했습니다.');
+                            }
+                            location.reload();
+                        }, 
+                        error: function(xhr, status, error) {
+                            console.log("통신 실패");
+                        }
+                    });
+                }
+            });
+            
+            
+            
+            
         });
         </script>
         
