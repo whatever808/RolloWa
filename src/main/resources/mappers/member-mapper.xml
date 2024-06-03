@@ -182,7 +182,16 @@
 	
 	<!-- 이름으로 사원 검색 -->
 	<select id="searchMember" resultMap="memberResult">
-	
+	select
+	    user_no, user_name
+	    , (select code_name from tb_group g where group_code = 'POSI01' and g.code = position_code) as position
+	    , (select code_name from tb_group g where group_code = 'TEAM01' and g.code = team_code) as team
+	from 
+	    member
+	where
+	    user_name like '%${ keyword }%'
+	and
+	    user_no != #{ userNo }
 	</select>
 	
  <!-- ================== 이예찬 ========================== -->

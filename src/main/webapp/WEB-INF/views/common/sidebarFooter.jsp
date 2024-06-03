@@ -266,6 +266,12 @@
 	       			console.log("부서 조회 ajax 통신 실패")
 	       		}
 	       	})
+       })
+       
+       // 사원 이름으로 검색
+       $("#name_search").keypress(function() {
+    	   searchName($("#name_search").val());
+    	   $("#name_search").val("");
        })       
     })
     
@@ -697,16 +703,38 @@
 		}
 		
 		// 이름으로 사원 검색
-		function searchName() {
-			const keyword = $("#name_search").val();
-			
+		function searchName(keyword) {			
 			$.ajax({
 				url: "${contextPath}/member/search"
 				, method: "get"
 				, data: {keyword: keyword}
-				, success: function() {
-					
-				} error: function() {
+				, success: function(memberList) {					
+					memberText += "</div>";
+					$(".dept_list_wrapper").empty();
+					var memberText = "<ul>";
+					if(memberList.length != 0) {
+  					// 조회된 사원이 있을 시		  			
+ 		  			for(let k = 0; k < memberList.length; k++) {
+	  					memberText += "<li class='list-group-item'>";
+	  					memberText += "<div class='pretty p-icon p-smooth'>";
+	  					memberText += "<input type='checkbox' value='" + memberList[k].userNo + "'/>";
+	  					memberText += "<div class='state p-success'>";
+	  					memberText += "<i class='icon fa fa-check'></i>"
+	  					memberText += "<label>" + memberList[k].team + " " + memberList[k].position + " " + memberList[k].userName + "</label>";
+	  					memberText += "</div>";
+	  					memberText += "</div>";
+	  					memberText += "</li>";
+	  				}
+  				} else {
+  					// 조회된 사원이 없을 시
+  					memberText += "<li class='list-group-item'>";
+  					memberText += "<label>조회된 사원이 없습니다.</label>";
+  					memberText += "</li>";
+  				}
+	  			memberText += "</ul>";
+					$(".dept_list_wrapper").append(memberText);
+				}
+				, error: function() {
 					console.log("사원 검색 ajax 통신 실패");
 				}
 			})
