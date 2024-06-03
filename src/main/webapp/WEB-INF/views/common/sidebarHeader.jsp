@@ -747,8 +747,7 @@ $(document).ready(function(){
                             <li><a href="${ contextPath }/member/logout.do" onclick="closeSocket();" class="link-body-emphasis d-inline-flex text-decoration-none rounded">로그아웃</a>
                             </li>       
                             <li>
-                            <a href="${ contextPath }/payment/payment.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
-                            Payment</a>
+                            <a href="${ contextPath }/payment/payment.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">이용권 결제</a>
                             </li>       
                         </ul>
                     </div>

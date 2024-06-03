@@ -64,8 +64,10 @@ public class PaymentController {
 		}
 		
 		if(!param.get("paid_amount").equals("")) {
-			param.put("onePrice", Integer.parseInt((String)param.get("paid_amount"))
-								/Integer.parseInt((String)param.get("paid_amount")));
+			int amount = Integer.parseInt(String.valueOf(param.get("paid_amount")));
+			int count =  Integer.parseInt(String.valueOf(param.get("buyer_count")));
+			
+			param.put("onePrice", Math.ceil(amount/count));
 		}
 		
 		return paymentService.ajaxTossSimplePay(param);		

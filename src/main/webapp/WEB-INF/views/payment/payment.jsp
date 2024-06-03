@@ -1053,10 +1053,12 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
 								discount: 		'0.2',
 							}),
 							success:function(redata){
+								//console.log(redata);
+								
 								if(redata > 0){
 									greenAlert('결제', '결제가 성공 했습니다.');
 								}else {
-									redAlert('결제', '결제가 실패 했습니다.' + response.error_msg);
+									redAlert('결제', '결제가 실패 했습니다.');
 								}
 							},
 							error:function(){

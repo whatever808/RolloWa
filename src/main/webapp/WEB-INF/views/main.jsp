@@ -93,6 +93,8 @@
                 </form>
                 <!--<a href="#" class="dnthave">Don’t have an account? Sign up</a>-->
             </div>
+            
+            
             <!-- 아이디 찾기 modal -->
             <div id="forget_id" class="modal_frame">
                 <!-- Modal content -->
@@ -123,6 +125,7 @@
                 </div>
             </div>
         </div>
+        
         <script>
             // 1. 해당 아이디의 모달 등록이 필요함
             $('#forget_id').iziModal({
