@@ -98,6 +98,10 @@ public class OrganizationDao {
 	public int insertTeam(Map<String, Object> paramMap) {
 		return sqlSessionTemplate.insert("organizationMapper.insertTeam", paramMap);
 	}
+	// 팀 삭제
+	public int deleteTeam(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.update("organizationMapper.deleteTeam", paramMap);
+	}
 
 	
 }

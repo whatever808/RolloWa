@@ -87,6 +87,10 @@ public class OrganizationService {
 	public int insertTeam(Map<String, Object> paramMap) {
 		return organizationDao.insertTeam(paramMap);
 	}
+	// 팀 삭제
+	public int deleteTeam(Map<String, Object> paramMap) {
+		return organizationDao.deleteTeam(paramMap);
+	}
 
 	
 

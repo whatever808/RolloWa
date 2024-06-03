@@ -189,16 +189,38 @@ public class OrganizationController {
         paramMap.put("deptCode", deptCode);
         paramMap.put("teamName", teamName);
 
-        //int result = organizationService.insertTeam(paramMap);
-        int result = 0;
+        int result = organizationService.insertTeam(paramMap);
         if (result > 0) {
             log.debug("팀 추가 성공");
         } else {
             log.debug("팀 추가 실패");
         }
         return result;
-	}	
+	}
 	
+	// 팀 삭제 메서드
+    @PostMapping("/deleteTeam.do")
+    @ResponseBody
+    public boolean deleteTeam(@RequestBody Map<String, Object> payload) {
+        String deptCode = (String) payload.get("deptCode");
+        String teamName = (String) payload.get("teamName");
+        Object userNoObj = payload.get("userNo");
+        String userNo;
+
+        if (userNoObj instanceof Integer) {
+            userNo = String.valueOf(userNoObj);
+        } else {
+            userNo = (String) userNoObj;
+        }
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("userNo", userNo);
+        paramMap.put("deptCode", deptCode);
+        paramMap.put("teamName", teamName);
+
+        int result = organizationService.deleteTeam(paramMap);
+        return result > 0;
+    }
 	
 	
 	

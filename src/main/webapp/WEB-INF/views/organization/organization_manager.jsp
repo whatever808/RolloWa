@@ -50,6 +50,7 @@
                                             <c:if test="${not empty team.team}">
                                                 <li>
                                                     <span class="level3">${team.team}</span>
+                                                    <button class="btn btn-danger delete_team"">팀 삭제</button>
                                                 </li>
                                             </c:if>
                                         </ul>
@@ -107,7 +108,7 @@
             
             // 팀 추가
             $(document).on('click', '.add_team', function() {
-                var deptCode = $(this).closest('li').data('code');
+                var deptCode = $(this).siblings('.code').val();
                 var teamName = prompt('팀명을 입력하세요:');
                 console.log("teamName값 : ", teamName);
                 if (teamName) {
@@ -123,7 +124,7 @@
                         success: function(response) {
                             console.log("통신 성공");
                             if (response) {
-                                $('button[data-dept="' + deptName + '"]').siblings('ul').append(
+                                $('button[data-dept="' + deptCode + '"]').siblings('ul').append(
                                     '<li><span class="level3">' + teamName + '</span></li>'
                                 );
                             } else {
@@ -139,6 +140,38 @@
             });
             
             
+            // 팀 삭제
+         // 팀 삭제
+            $(document).on('click', '.delete_team', function() {
+                var teamName = $(this).siblings('.level3').text();
+                var deptCode = $(this).closest('li').parent().siblings('.code').val();
+                console.log("삭제할 팀명: ", teamName);
+                console.log("부서 코드: ", deptCode);
+
+                if (confirm('정말로 이 팀을 삭제하시겠습니까?')) {
+                    $.ajax({
+                        url: '${contextPath}/organization/deleteTeam.do',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ 
+                            deptCode: deptCode,
+                            teamName: teamName,
+                            userNo: userNo
+                        }),
+                        success: function(response) {
+                            console.log("팀 삭제 통신 성공");
+                            if (response) {
+                                location.reload(); // 페이지 새로고침
+                            } else {
+                                alert('팀 삭제에 실패했습니다.');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.log("통신 실패");
+                        }
+                    });
+                }
+            });
             
             
         });
