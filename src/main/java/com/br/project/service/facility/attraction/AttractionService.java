@@ -60,8 +60,8 @@ public class AttractionService {
 	/**
 	 * @return : 어트랙션 갯수 조회 (운영중, 운영중지)
 	 */
-	public int selectUsingAttractionCount() {
-		return attractionDao.selectUsingAttractionCount();
+	public int selectUsingAttractionCount(HashMap<String, Object> params) {
+		return attractionDao.selectUsingAttractionCount(params);
 	}
 	
 	/**

@@ -162,10 +162,13 @@
 	</update>
 	
 	<!-- 어트랙션 갯수조회(운영중, 운영중지) -->
-	<select id="selectUsingAttractionCount" resultType="_int">
+	<select id="selectUsingAttractionCount" parameterType="hashmap" resultType="_int">
 		select count(attraction_no)
 		  from tb_attraction
 		 where status in ('OPERATING', 'STOP')
+		 <if test='location != null and !"".equals(location)'>
+		 		and location = #{location}
+		 </if>
 	</select>
 	
 	<!-- 연간, 월간, 일간 전체 어트랙션별 이용률 -->
@@ -211,8 +214,8 @@
                         ) * 100, 'FM000.00') "dailyUsage"
   		  FROM TB_ATTRACTION A
   		 WHERE A.STATUS IN ('OPERATING', 'STOP')
-  		 <if test='locationNo != null and "".equals(locationNo)'>
-  		   AND A.LOCATION = #{locationNo}
+  		 <if test='location != null and !"".equals(location)'>
+  		   AND A.LOCATION = #{location}
   		 </if>
   		 ORDER
   		 	BY "yearUsage" desc, "monthUsage" desc, "dailyUsage" desc

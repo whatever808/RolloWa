@@ -156,6 +156,10 @@
 	// 어트랙션 이용률 조회 관련 ============================================================================
 	$(document).ready(function(){
 		ajaxSelectAttractionUtilizationList();
+		
+		$("#location-select").on("change", function(){
+			ajaxSelectAttractionUtilizationList();
+		});
 	});
 	
 	// 전체 어트랙션 연간, 월간, 일간 이용율 리스트 조회 AJAX
@@ -212,6 +216,7 @@
 				}
 				
 				$("#utilization-list").html(listStr);
+				console.log(pageStr);
 				$(".pagination").html(pageStr);
 				
 			},error:function(){

@@ -19,7 +19,6 @@
 	align-items: flex-start;
 	border-radius: 10px;
 	margin-top: 100px;
-	height: 750px;
 }
 tbody>tr:hover{
 	cursor: pointer;

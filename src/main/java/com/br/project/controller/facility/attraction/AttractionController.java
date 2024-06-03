@@ -235,8 +235,9 @@ public class AttractionController {
 	@RequestMapping(value="/utilization/list.ajax", produces="application/json; charset=utf-8")
 	@ResponseBody
 	public Map<String, Object> ajaxSelectAttractionUtilizationList(HttpServletRequest request){
-		PageInfoDto pageInfo = pagingUtil.getPageInfoDto(attractionService.selectUsingAttractionCount(), Integer.parseInt(request.getParameter("page")), 5, 10);
-		List<Map<String, Object>> usageList = attractionService.selectAttractionUtilizationList(getParameterMap(request), pageInfo);
+		HashMap<String, Object> params = getParameterMap(request);
+		PageInfoDto pageInfo = pagingUtil.getPageInfoDto(attractionService.selectUsingAttractionCount(params), Integer.parseInt(request.getParameter("page")), 5, 10);
+		List<Map<String, Object>> usageList = attractionService.selectAttractionUtilizationList(params, pageInfo);
 		
 		Map<String, Object> response = new HashMap<>();
 		response.put("pageInfo", pageInfo);

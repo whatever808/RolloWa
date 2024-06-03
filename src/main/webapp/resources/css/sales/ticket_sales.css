@@ -72,6 +72,7 @@ button{
 	width: 150px;
 }
 .main-bottom{
+	width: 100%;
   border: 1px solid lightgray;
   border-radius: 10px;
   height: 600px;
@@ -81,7 +82,7 @@ button{
 }
 
 #sales-chart-div{
-	width: 100%;
+	width: 99%;
 	height: 100%
 }
 
