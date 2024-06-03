@@ -30,8 +30,8 @@
          <div class="m_content_style">
              <div class="people_list">
                  <div class="search_bar form-outline" data-mdb-input-init style="margin-top: 15px;">
-                     <input type="text" id="form12" class="form-control" />
-                     <label class="form-label" for="form12">인물 검색</label>
+                     <input type="text" id="name_search" class="form-control"/>
+                     <label class="form-label" for="name_search">인물 검색</label>
                  </div>
                  <div class="btn_wrapper">
                      <button type="button" class="btn1 forget_btn" onclick="createChatRoom();">채팅하기</button>
@@ -692,6 +692,22 @@
 				}
 				, error: function() {
 					console.log("알림 조회 시간 update ajax 실패");
+				}
+			})
+		}
+		
+		// 이름으로 사원 검색
+		function searchName() {
+			const keyword = $("#name_search").val();
+			
+			$.ajax({
+				url: "${contextPath}/member/search"
+				, method: "get"
+				, data: {keyword: keyword}
+				, success: function() {
+					
+				} error: function() {
+					console.log("사원 검색 ajax 통신 실패");
 				}
 			})
 		}

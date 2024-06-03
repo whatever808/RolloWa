@@ -180,6 +180,10 @@
     		chat_user_no != #{ userNo }
 	</select>
 	
+	<!-- 이름으로 사원 검색 -->
+	<select id="searchMember" resultMap="memberResult">
+	
+	</select>
 	
  <!-- ================== 이예찬 ========================== -->
  <!-- 이예찬 : Member 캘린더 위의 동료 선택 창에 필요한 데이터 조회 쿼리 -->
