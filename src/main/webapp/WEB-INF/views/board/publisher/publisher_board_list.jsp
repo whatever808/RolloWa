@@ -24,7 +24,7 @@
 		 <!-- about category start  -->
 	     <div id="filter-category">
 	     	 <!-- board category start -->
-		     <select id="category" name="category" class="board-category form-select" onchange="ajaxBoardList();" style="width:200px;">
+		     <select id="category" name="category" class="board-category form-select text-center" onchange="ajaxBoardList();" style="width:200px;">
 		         <option value="normal">일반공지사항</option>
 		         <option value="department" data-department="${ filter.department }">부서공지사항</option>
 		     </select>
@@ -37,7 +37,7 @@
 	     	 <!-- search form start-->
 		     <div id="search-form" class="input-group">
 		     	<!-- search condition start -->
-			    <select id="condition" class="search-condition form-select">
+			    <select id="condition" class="search-condition form-select text-center">
 			       <option value="">전체</option>
 			       <option value="title">제목</option>
 			       <option value="content">내용</option>
@@ -80,15 +80,15 @@
 	         <table class="table table-hover">
 	             <thead class="table-light">
 	                 <tr>
-                 		 <th>
+                 		 <th class='td1'>
                		 		<input type="checkbox" id="del-all-boards">
                  		 </th>
-	                     <th>부서</th>
-	                     <th>제목</th>
-	                     <th>작성자</th>
-	                     <th>작성일</th>
-	                     <th>조회수</th>
-	                     <th>첨부파일</th>
+                     <th class='td2'>부서</th>
+                     <th class='td3'>제목</th>
+                     <th class='td4'>작성자</th>
+                     <th class='td5'>작성일</th>
+                     <th class='td6'>조회수</th>
+                     <th class='td7'>첨부파일</th>
 	                 </tr>
 	             </thead>
 	             <tbody id="boardList">
@@ -109,7 +109,7 @@
 			                      <td>
 			                     		<c:choose>
 			                     			<c:when test="${ not empty board.profileURL }">
-			                     				<img src="${ board.profileURL }" alt="profile image" class="board-writer-profile">
+			                     				<img src="${ contextPath }${ board.profileURL }" alt="profile image" class="board-writer-profile">
 			                     			</c:when>
 			                     			<c:otherwise>
 			                     				<img src="${ contextPath }/resources/images/defaultProfile.png" alt="profile image" class="board-writer-profile">
@@ -137,11 +137,14 @@
 	             </tfoot>
 	         </table>
 	         <!-- board list table end -->
-	
-	         <!-- pagination start -->
-	         <div class="board-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
-	             <ul class="pagination">
-	             
+	 
+	     </div>
+	     <!-- board list end-->
+	     
+	     <!-- pagination start -->
+       <div class="board-list-pagination d-flex justify-content-center align-items-center mt-5 ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
+           <ul class="pagination">
+           
             <!-- Previous -->
 			      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
 					    onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '' }">
@@ -161,12 +164,10 @@
 				    	  onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxBoardList();' : ''}">
 				      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">▷</span>
 				    </li>
-				    
-				  </ul>
-	         </div>
-	         <!-- pagination end -->
-	     </div>
-	     <!-- board list end-->
+	    
+	  		</ul>
+       </div>
+       <!-- pagination end -->
 	
 	 </div>
 	 <!-- content 끝 -->
@@ -289,7 +290,7 @@
 						list += 	"<td class='board-title' onclick='showDetail(" + boardList[i].boardNo + ", " + boardList[i].modifyEmp + ")'>" + boardList[i].title + "</td>";
 						list += 	"<td>";
 						list += 		"<img src='" + (boardList[i].profileURL == null ? "${ contextPath }/resources/images/defaultProfile.png"
-																					 					: boardList[i].profileURL) + "' alt ='profile image' class='board-writer-profile'>" 
+																					 															: "${ contextPath }" + boardList[i].profileURL) + "' alt ='profile image' class='board-writer-profile'>" 
 						list += 		"<span>" + boardList[i].writerName + "</span>";
 						list += 	"</td>";
 						list += 	"<td>" + boardList[i].modifyDate + "</td>";
@@ -298,10 +299,12 @@
 						list += "</tr>";
 					}
 					
+					$(".board-list-pagination").removeClass("d-none");
+					
 					// 생성할 페이징바 태그 문자열
 					pagination += "<li id='ajax' class='page-item " + (pageInfo.currentPage == 1 ? 'disabled ' : ' ' ) + "'" +
 												"onclick='" + (pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '') + "'>";
-					pagination +=	   "<span class='page-link' data-pageno='" + (pageInfo.currentPage - 1) + "'>Previous</span>";
+					pagination +=	   "<span class='page-link' data-pageno='" + (pageInfo.currentPage - 1) + "'>◁</span>";
 					pagination += "</li>";
 					
 					for(let page=pageInfo.startPage ; page<=pageInfo.endPage ; page++){
@@ -313,7 +316,7 @@
 					
 					pagination += "<li class='page-item " + (pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '') + "' " +
 											"onclick='" + (pageInfo.currentPage != pageInfo.maxPage ? 'ajaxBoardList();' : '') + "'>";
-					pagination += 		"<span class='page-link' data-pageno='" + (pageInfo.currentPage + 1) + "'>Next</span>";
+					pagination += 		"<span class='page-link' data-pageno='" + (pageInfo.currentPage + 1) + "'>▷</span>";
 					pagination += "</li>";
 				}
 		

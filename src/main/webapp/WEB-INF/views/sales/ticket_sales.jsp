@@ -10,6 +10,7 @@
 	
 	<!-- 이용권 매출관리 스타일 -->
 	<link href="${ contextPath }/resources/css/sales/ticket_sales.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
 
 	<!-- Google Chart API -->
 	<script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -37,26 +38,26 @@
                 <div class="filter-div year-filter-div">
 
                     <!-- year select -->
-                    <select class="filter-select form-control py-2 fw-bold" id="year-select"></select> 
+                    <select class="filter-select form-control form-select py-2 fw-bold" id="year-select"></select> 
 
                     <!-- year sales info -->
                     <div class="filter-table year-sales-table">
                        
-                        <div class="d-flex mb-2 justify-content-between">
+                        <div class="d-flex mb-2">
                             <b class="filter-table-title">총 매출액</b>
-                            <span class="filter-table-content sum-sales">2000</span>
+                            <span class="filter-table-content sum-sales"></span>
                         </div>
-                        <div class="d-flex mb-2 justify-content-between">
+                        <div class="d-flex mb-2">
                             <b class="filter-table-title">평균 매출액</b>
-                            <span class="filter-table-content avg-sales">2000</span>
+                            <span class="filter-table-content avg-sales"></span>
                         </div>
-                        <div class="d-flex mb-2 justify-content-between">
+                        <div class="d-flex mb-2">
                             <b class="filter-table-title">최고 매출액</b>
-                            <span class="filter-table-content max-sales">2000</span>
+                            <span class="filter-table-content max-sales"></span>
                         </div>
-                        <div class="d-flex mb-2 justify-content-between">
+                        <div class="d-flex mb-2">
                             <b class="filter-table-title">최저 매출액</b>
-                            <span class="filter-table-content min-sales">2000</span>
+                            <span class="filter-table-content min-sales"></span>
                         </div>
                         
                     </div>
@@ -68,26 +69,26 @@
                 <div class="filter-div year-filter-div">
 
                     <!-- month select -->
-                    <select class="filter-select form-control py-2 fw-bold" id="month-select"></select> 
+                    <select class="filter-select form-control form-select py-2 fw-bold" id="month-select"></select> 
 
                     <!-- month sales info -->
                     <div class="filter-table month-sales-table">
                         
-                        <div class="d-flex mb-2 justify-content-between">
+                        <div class="d-flex mb-2">
                             <b class="filter-table-title">총 매출액</b>
-                            <span class="filter-table-content sum-sales">2000</span>
+                            <span class="filter-table-content sum-sales"></span>
                         </div>
-                        <div class="d-flex mb-2 justify-content-between">
+                        <div class="d-flex mb-2">
                             <b class="filter-table-title">평균 매출액</b>
-                            <span class="filter-table-content avg-sales">2000</span>
+                            <span class="filter-table-content avg-sales"></span>
                         </div>
-                        <div class="d-flex mb-2 justify-content-between">
+                        <div class="d-flex mb-2">
                             <b class="filter-table-title">최고 매출액</b>
-                            <span class="filter-table-content max-sales">2000</span>
+                            <span class="filter-table-content max-sales"></span>
                         </div>
-                        <div class="d-flex mb-2 justify-content-between">
+                        <div class="d-flex mb-2">
                             <b class="filter-table-title">최저 매출액</b>
-                            <span class="filter-table-content min-sales">2000</span>
+                            <span class="filter-table-content min-sales"></span>
                         </div>
                         
                     </div>
@@ -99,26 +100,26 @@
                 <div class="filter-div day-filter-div">
 
                     <!-- date select -->
-                    <select class="filter-select form-control py-2 fw-bold" id="date-select"></select> 
+                    <select class="filter-select form-control form-select py-2 fw-bold" id="date-select"></select> 
 
                     <!-- date sales info -->
                     <div class="filter-table date-sales-table">
                         
-                        <div class="d-flex mb-2 justify-content-between">
+                        <div class="d-flex mb-2">
                             <b class="filter-table-title">총 매출액</b>
-                            <span class="filter-table-content sum-sales">2000</span>
+                            <span class="filter-table-content sum-sales"></span>
                         </div>
-                        <div class="d-flex mb-2 justify-content-between">
+                        <div class="d-flex mb-2">
                             <b class="filter-table-title">평균 매출액</b>
-                            <span class="filter-table-content avg-sales">2000</span>
+                            <span class="filter-table-content avg-sales"></span>
                         </div>
-                        <div class="d-flex mb-2 justify-content-between">
+                        <div class="d-flex mb-2">
                             <b class="filter-table-title">최고 매출액</b>
-                            <span class="filter-table-content max-sales">2000</span>
+                            <span class="filter-table-content max-sales"></span>
                         </div>
-                        <div class="d-flex mb-2 justify-content-between">
+                        <div class="d-flex mb-2">
                             <b class="filter-table-title">최저 매출액</b>
-                            <span class="filter-table-content min-sales">2000</span>
+                            <span class="filter-table-content min-sales"></span>
                         </div>
                         
                     </div>
@@ -130,11 +131,10 @@
             <!-- main top end(filter) -->
 
             <!-- main bottom start (chart) -->
-            <div class="main-bottom">
+            <button type="button" class="btn btn-secondary mb-3 py-2.5 fs-6 fw-bold d-none" id="showMonthlyChart">월별 차트</button>
+            <div class="main-bottom d-flex flex-direction-column">
             	
-                <div class="sales-chart d-flex justify-content-center" id="sales-chart-div" style="border: 1px solid tomato;">
-
-                </div>
+                <div class="sales-chart d-flex justify-content-center" id="sales-chart-div"></div>
                 
             </div>
             <!-- main bottom end (chart) -->
@@ -304,7 +304,7 @@
 				}
 			
 				table.find('.sum-sales').text(sumSales.toLocaleString());
-				table.find('.avg-sales').text(Number(avgSales.toFixed(2)).toLocaleString());
+				table.find('.avg-sales').text(avgSales.toLocaleString());
 				table.find('.max-sales').text(maxSales.toLocaleString());
 				table.find('.min-sales').text(minSales.toLocaleString());
 			},error: function(){
@@ -315,10 +315,21 @@
 	
 	// 차트 관련 ==================================================================================================
 	$(document).ready(function(){
+		// 월별 차트 생성 (default)
 		drawSalesChart(ajaxSelectSalesListForChart({	
 			year: $("#year-select").val(),
 			chart: 'year',
 		}), 'year');
+		
+		// 일별 차트에서 월별 차트로 이동
+		$("#showMonthlyChart").on("click", function(){
+			drawSalesChart(ajaxSelectSalesListForChart({	
+				year: $("#year-select").val(),
+				chart: 'year',
+			}), 'year');
+			
+			$(this).addClass('d-none');
+		});h
 	});
 	
 	// 매출금액별 차트
@@ -327,7 +338,6 @@
 		google.charts.setOnLoadCallback(drawChart);
 		
 		function drawChart(){
-			console.log("chartData : ", chartData);
 			// 차트 데이터 설정 (컬럼명, 셀값)
 			data = new google.visualization.DataTable();
 			data.addColumn('string', '기간');
@@ -344,15 +354,21 @@
 			// 차트 옵션 설정 (제목, 범례 등)
 			let options = {
 					title: (chartType == 'year') ? '연간 이용권 매출' : month + '월 이용권 매출',
-					colors: ['#FF9090', '#E8DB6B', '#FF0000', '#875E00'],
-					animation:{	
+					colors: ['#FFA7A7', '#FFDD73', '#FFA7A7', '#FFDD73'],
+					legend: { 
+						position: 'bottom', 
+						alignment: 'end', 
+					},
+					animation:{
 						startup:true,
 						duration: 1000,
 						easing: 'out',
 					},
-					width: 1000,
-					height: 400,
-					vAxis: {title: '매출액 (단위 : 원)'},
+					vAxis: {
+						title: '매출액 (단위 : 천원)',
+						minValue: 0,
+						maxValue: 18000
+					},
 					hAxis: {title: ''},
 					seriesType: 'bars',
 					series: {
@@ -375,12 +391,14 @@
 			let selectedItem = chart.getSelection()[0];
 			let selectedValue = data.getValue(selectedItem.row, 0);
 			let month = selectedValue.replace('월', '');
-
+			
 			drawSalesChart(ajaxSelectSalesListForChart({
 				year: $("#year-select").val(),
 				chart: 'month',
 				month: month,
 			}), 'month', month);
+			
+			$("#showMonthlyChart").removeClass('d-none');
 		}
 	}
 	
@@ -403,7 +421,6 @@
 		
 		return chartData;
 	}
-	
 	
 </script>
 

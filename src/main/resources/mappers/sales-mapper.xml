@@ -14,39 +14,44 @@
           	,TO_CHAR(PAYMENT_DATE, 'DD') "date"
           </if>
 	      ,SUM(ORDER_PAYMENT) "sumSales"
-	      ,SUM(TICKET_CTN) "sumTicket"
 	      <choose>
 	      	<when test='"".equals(month) and "".equals(date)'>
-	      	  ,SUM(ORDER_PAYMENT) / 12 "avgSales"
+	      		,CASE WHEN #{year} = EXTRACT(YEAR FROM SYSDATE) THEN ROUND(SUM(ORDER_PAYMENT) / EXTRACT(MONTH FROM SYSDATE))
+	      	  		  ELSE ROUND(SUM(ORDER_PAYMENT) / 12)
+	      	   END "avgSales"
+	      	</when>
+	      	<when test='!"".equals(month) and "".equals(date)'>
+	      		,CASE WHEN #{year} || #{month} = TO_CHAR(SYSDATE, 'YYYYMM') THEN ROUND(SUM(ORDER_PAYMENT) / EXTRACT(DAY FROM SYSDATE))
+	      				  ELSE ROUND(SUM(ORDER_PAYMENT) / EXTRACT(DAY FROM LAST_DAY(#{year} || #{month} || '01')))
+	      		 END "avgSales"
 	      	</when>
 	      	<otherwise>
-	      	  ,AVG(ORDER_PAYMENT) "avgSales"
+	      	  ,ROUND(AVG(ORDER_PAYMENT)) "avgSales"
 	      	</otherwise>
 	      </choose>
-	      ,AVG(TICKET_CTN) "avgTicket"
 	      ,MAX(ORDER_PAYMENT) "maxSales"
-	      ,MAX(TICKET_CTN) "maxTicket"
 	      ,MIN(ORDER_PAYMENT) "minSales"
-	      ,MIN(TICKET_CTN) "minTicket"
-	  FROM TB_GROUP G, TICKET_ORDER_DETAIL TOD, TICKET_ORDER O
-	 WHERE G.GROUP_CODE LIKE 'TICK%' AND G.CODE = TOD.TICKET_TYPE
-	   AND TOD.ORDER_NO = O.ORDER_NO	   
-	   AND ORDER_STATUS = 2
-	   AND TO_CHAR(O.PAYMENT_DATE, 'YYYY') = #{year}
+	  FROM (
+	        SELECT DISTINCT ORDER_NO, PAYMENT_DATE, ORDER_PAYMENT
+	          FROM TICKET_ORDER_DETAIL TOD
+	          JOIN TICKET_ORDER O USING(ORDER_NO)
+	         WHERE O.ORDER_STATUS = 2
+	  		 )
+	 WHERE TO_CHAR(PAYMENT_DATE, 'YYYY') = #{year}
 	   <if test='month != null and !month.equals("")'>
-	   	AND TO_CHAR(O.PAYMENT_DATE, 'MM') = #{month}
+	   	AND TO_CHAR(PAYMENT_DATE, 'MM') = #{month}
 	   </if>
 	   <if test='date != null and !date.equals("")'>
-	   	AND TO_CHAR(O.PAYMENT_DATE, 'DD') = #{date}
+	   	AND TO_CHAR(PAYMENT_DATE, 'DD') = #{date}
 	   </if>
 	 GROUP 
-	 	BY TO_CHAR(O.PAYMENT_DATE, 'YYYY') 
+	 		BY TO_CHAR(PAYMENT_DATE, 'YYYY') 
 	 	  <if test='month != null and !month.equals("")'>
-          	,TO_CHAR(O.PAYMENT_DATE, 'MM') 
-          </if>
-          <if test='date != null and !date.equals("")'>
-          	,TO_CHAR(O.PAYMENT_DATE, 'DD') 
-          </if>
+      	,TO_CHAR(PAYMENT_DATE, 'MM') 
+      </if>
+      <if test='date != null and !date.equals("")'>
+      	,TO_CHAR(PAYMENT_DATE, 'DD') 
+      </if>
   </select>
   
   <!-- 이용권 종류별 매출조회(차트용) -->
@@ -67,8 +72,8 @@
               SELECT 
               		<choose>
               		  <when test='"year".equals(chart)'>
-              		  	CASE WHEN #{year} = EXTRACT(YEAR FROM SYSDATE) THEN SUM(TOD.TICKET_PRICE * TOD.TICKET_CTN * (1 - NVL(TOD.DISCOUNT, 0))) / EXTRACT(MONTH FROM SYSDATE)
-                          	 ELSE SUM(ORDER_PAYMENT)/12 
+              		  	CASE WHEN #{year} = EXTRACT(YEAR FROM SYSDATE) THEN SUM(TICKET_PRICE * TICKET_CTN * (1 - NVL(DISCOUNT, 0))) / EXTRACT(MONTH FROM SYSDATE)
+                           ELSE SUM(TICKET_PRICE * TICKET_CTN * (1 - NVL(DISCOUNT, 0))) / 12 
                      	END 
               		  </when>
               		  <when test='"month".equals(chart)'>
@@ -77,7 +82,7 @@
               		</choose>
                 FROM TB_GROUP G
                 LEFT JOIN TICKET_ORDER_DETAIL TOD ON (G.CODE = TOD.TICKET_TYPE) 
-                LEFT JOIN TICKET_ORDER O ON (TOD.ORDER_NO = O.ORDER_NO)
+                LEFT JOIN TICKET_ORDER O ON (TOD.ORDER_NO = O.ORDER_NO AND O.ORDER_STATUS = 2)
                WHERE GROUP_CODE LIKE 'TICK%'
                  AND EXTRACT(YEAR FROM O.PAYMENT_DATE) = #{year}
                  <if test='"month".equals(chart)'>

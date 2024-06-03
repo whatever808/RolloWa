@@ -49,18 +49,31 @@ thead{
   font-size: 16px;
   font-weight: 400;
   text-align: center;
+  vertical-align: middle;
 }
-
+thead th{
+	font-weight: bold !important;
+	font-size: 16px !important;
+	vertical-align: middle;
+	background-color: #FFF29E !important;
+}
+tbody>tr{
+	line-height: 250% !important;
+}
+td{
+	vertical-align: middle;
+	text-align: center;
+	
+}
 .attraction-list{
   text-align: center;
 }
 
 .attraction-name{
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
   margin-bottom: 0;
-  text-align: center;
+  text-align: center;  
   width: 20%;
 }
 .attraction-location{

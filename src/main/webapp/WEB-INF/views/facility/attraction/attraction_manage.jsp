@@ -65,7 +65,7 @@
            <!-- attraction list table start-->
            <table class="table table-hover bg-white">
                <thead>
-                 <tr>
+                 <tr class='text-center' style="align: center;">
                    <th class='attraction-name'>기구명</th>
                    <th class='attraction-location'>위치</th>
                    <th class='attraction-customer-limit'>최대수용인원</th>
@@ -73,14 +73,14 @@
                    <th class='attraction-height-limit'>키제한</th>
                    <th class='attraction-status'>
                    	 <!-- attraction status start -->
-				     <select class="attraction-status-select form-select d-inline-block">
-				         <option value="">전체</option>
-				         <option value="PENDING">운영예정</option>
-				         <option value="OPERATING">운영중</option>
-				         <option value="STOP">운영중지</option>
-				         <option value="CLOSED">운영종료</option>
-				     </select>
-				     <!-- attraction status end -->
+								     <select class="attraction-status-select form-select d-inline-block text-center">
+								         <option value="">전체</option>
+								         <option value="PENDING">운영예정</option>
+								         <option value="OPERATING">운영중</option>
+								         <option value="STOP">운영중지</option>
+								         <option value="CLOSED">운영종료</option>
+								     </select>
+								     <!-- attraction status end -->
                    </th>
                    <th class='attraction-regist-emp'>등록자</th>
                    <th class='attraction-modify-emp'>수정자</th>
@@ -141,22 +141,22 @@
 	             
 	             	<!-- Previous -->
 					      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
-							  onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '' }">
-					      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
+							  				onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '' }">
+					      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">◁</span>
 					      </li>
 				    
 						    <!-- Page -->
 						    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
 							    <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
-							    	onclick="${ pageInfo.currentPage != page ? 'ajaxAttractionList();' : '' }">
+							    				onclick="${ pageInfo.currentPage != page ? 'ajaxAttractionList();' : '' }">
 							    	<span class="page-link" data-pageno="${ page }">${ page }</span>
 							    </li>
 						    </c:forEach>
 				    
 						    <!-- Next -->
 						    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
-						    	onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : ''}">
-						      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
+						    		onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : ''}">
+						      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">▷</span>
 						    </li>
 						    
 				  		</ul>
@@ -297,7 +297,7 @@
 					// 생성할 페이징바 태그 문자열
 					pagination += "<li id='ajax' class='page-item " + (pageInfo.currentPage == 1 ? 'disabled ' : ' ' ) + "'" +
 												"onclick='" + (pageInfo.currentPage != 1 ? 'ajaxAttractionList();' : '') + "'>";
-					pagination +=	   "<span class='page-link' data-pageno='" + (pageInfo.getCurrentPage - 1) + "'>Previous</span>";
+					pagination +=	   "<span class='page-link' data-pageno='" + (pageInfo.currentPage - 1) + "'>◁</span>";
 					pagination += "</li>";
 					
 					for(let page=pageInfo.startPage ; page<=pageInfo.endPage ; page++){
@@ -309,7 +309,7 @@
 					
 					pagination += "<li class='page-item " + (pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '') + "' " +
 											 "onclick='" + (pageInfo.currentPage != pageInfo.maxPage ? 'ajaxAttractionList();' : '') + "'>";
-					pagination += 		"<span class='page-link' data-pageno='" + (pageInfo.currentPage + 1) + "'>Next</span>";
+					pagination += 		"<span class='page-link' data-pageno='" + (pageInfo.currentPage + 1) + "'>▷</span>";
 					pagination += "</li>";
 				}
 		
@@ -354,11 +354,15 @@
 			let longitude = parseFloat(location.longitude);
 			let mapMark = location.mapMark;
 			
+			let normalIcon = 'https://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Ball-Azure-icon.png';
+ 			let selectedIcon = 'https://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Ball-Right-Pink-icon.png';
+			
 			// 마커생성 및 설정
 			const marker = new google.maps.Marker({
 				position: { lat: latitude, lng: longitude },
 				label: locationName,
 				map: map,
+				icon: normalIcon,
 			});
 			bounds.extend(marker.position);	// 마커의 위치 정보를 넘겨줌
 	
@@ -366,17 +370,15 @@
 			marker.addListener("click", function(){
 				map.panTo(marker.position);				// 마커를 클릭했을 때, 마커가 있는 위치로 지도의 중심이 이동
 				
-				let flag = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-				
 				// 조회요청시 전달될 위치값 설정
-				if(marker.getIcon() == flag){
-					marker.setIcon('');
+				if(marker.getIcon() == selectedIcon){
+					marker.setIcon(normalIcon);
 					$(".search-location-list").children("input").each(function(){
 						$(this).attr("location-name") == marker.label && $(this).remove();
 					});
 					ajaxAttractionList();
 				} else{
-					marker.setIcon(flag);
+					marker.setIcon(selectedIcon);
 					$(".search-location-list").append("<input type='hidden' class='search-location' location-name='" + locationName + "' value='" + locationNo + "'>");
 					ajaxAttractionList();
 				}
