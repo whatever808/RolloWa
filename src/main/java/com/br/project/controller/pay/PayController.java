@@ -1309,8 +1309,8 @@ public class PayController {
 	@ResponseBody
 	@PostMapping(value="/ajaxSign.do", produces = "application/json; charset=UTF-8")
 	public Map<String, Object> ajaxSign(@RequestParam Map<String, Object> map,
-										@RequestParam(value="productName") List<String> productName,
-										@RequestParam(value="productAmount") List<String> productAmount) {
+										@RequestParam(value="productName", defaultValue="") List<String> productName,
+										@RequestParam(value="productAmount",  defaultValue="") List<String> productAmount) {
 		
 //		Map<String, Object> map = new HashMap<String, Object>();
 //		map = CommonController.getParameterMap(request);
