@@ -30,8 +30,8 @@
          <div class="m_content_style">
              <div class="people_list">
                  <div class="search_bar form-outline" data-mdb-input-init style="margin-top: 15px;">
-                     <input type="text" id="form12" class="form-control" />
-                     <label class="form-label" for="form12">인물 검색</label>
+                     <input type="text" id="name_search" class="form-control"/>
+                     <label class="form-label" for="name_search">인물 검색</label>
                  </div>
                  <div class="btn_wrapper">
                      <button type="button" class="btn1 forget_btn" onclick="createChatRoom();">채팅하기</button>
@@ -266,6 +266,12 @@
 	       			console.log("부서 조회 ajax 통신 실패")
 	       		}
 	       	})
+       })
+       
+       // 사원 이름으로 검색
+       $("#name_search").keypress(function() {
+    	   searchName($("#name_search").val());
+    	   $("#name_search").val("");
        })       
     })
     
@@ -692,6 +698,44 @@
 				}
 				, error: function() {
 					console.log("알림 조회 시간 update ajax 실패");
+				}
+			})
+		}
+		
+		// 이름으로 사원 검색
+		function searchName(keyword) {			
+			$.ajax({
+				url: "${contextPath}/member/search"
+				, method: "get"
+				, data: {keyword: keyword}
+				, success: function(memberList) {					
+					memberText += "</div>";
+					$(".dept_list_wrapper").empty();
+					var memberText = "<ul>";
+					if(memberList.length != 0) {
+  					// 조회된 사원이 있을 시		  			
+ 		  			for(let k = 0; k < memberList.length; k++) {
+	  					memberText += "<li class='list-group-item'>";
+	  					memberText += "<div class='pretty p-icon p-smooth'>";
+	  					memberText += "<input type='checkbox' value='" + memberList[k].userNo + "'/>";
+	  					memberText += "<div class='state p-success'>";
+	  					memberText += "<i class='icon fa fa-check'></i>"
+	  					memberText += "<label>" + memberList[k].team + " " + memberList[k].position + " " + memberList[k].userName + "</label>";
+	  					memberText += "</div>";
+	  					memberText += "</div>";
+	  					memberText += "</li>";
+	  				}
+  				} else {
+  					// 조회된 사원이 없을 시
+  					memberText += "<li class='list-group-item'>";
+  					memberText += "<label>조회된 사원이 없습니다.</label>";
+  					memberText += "</li>";
+  				}
+	  			memberText += "</ul>";
+					$(".dept_list_wrapper").append(memberText);
+				}
+				, error: function() {
+					console.log("사원 검색 ajax 통신 실패");
 				}
 			})
 		}
