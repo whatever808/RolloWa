@@ -25,6 +25,7 @@
   
 <link href="${contextPath}/resources/css/mainPage/mainPage.css" rel="stylesheet">
 
+
 <style>
 
 /* Container styling */
@@ -803,38 +804,26 @@ $(document).ready(function() {
 </script>
 
 <script>
-
 var IMP = window.IMP;
 
-//구매자 정보
-$(document).ready(function() {
-	$("#payment").on("click", function () {
+$(document).ready(function(){
 	
-		kakaoPay();
-     
-	});
+$("#payment").on("click", function () {
+	if($(".ticket-table tbody tr").length > 0){
+		kakaoPay();			
+	}else{
+		alert("이용권을 선택해주세요.");
+	}
 });
 
+})
+
+//구매자 정보
+
+
+
+
 function kakaoPay() {
-	
-
-	let ticket = [];
-	if ($("#ticketName").text().trim() != "") {
-	    ticket.push($("#ticketName").text().trim());
-	}
-
-	if ($("#ticketName2").text().trim() != "") {
-	    ticket.push($("#ticketName2").text().trim());
-	}
-
-	let tickets = "";
-	if (ticket.length > 0) {
-	    tickets = ticket.join(",");
-	}
-	
-	console.log("Tickets: ", tickets);
-	console.log("Ticket Prices: ", ticketPrices);
-	
 	
 	var today = new Date();
 	var hours = today.getHours(); // 시
@@ -845,9 +834,21 @@ function kakaoPay() {
 	
 if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확인하기
 		
-		console.log($("#total").text());
-   //const emoticonName = document.getElementById('title').innerText
+	
+		var ticketType;
+		if ($(".ticket-table tbody").find("#ticketName").length > 0  && $(".ticket-table tbody").find("#ticketName2").length == 0) {
+		    ticketType = "일반이용권";
+		} else if ($(".ticket-table tbody").find("#ticketName2").length > 0 && $(".ticket-table tbody").find("#ticketName").length == 0) {
+		    ticketType = "정기이용권";
+		} else if ($(".ticket-table tbody tr").length == 2) {
+		    ticketType = "일반이용권,정기이용권";
+		}
 
+   //const emoticonName = document.getElementById('title').innerText
+	 let userEmail = '${member.EMAIL}';
+	 let userName = '${member.USER_NAME}';
+	 let userPhone = '${member.PHONE}';
+	 
    IMP.init("imp37456887"); // 가맹점 식별코드
    
    IMP.request_pay({
@@ -855,12 +856,12 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
        pg: 'kakaopay.TC0ONETIME', // PG사 코드표에서 선택
        pay_method: 'card', // 결제 방식
        merchant_uid: "IMP" + makeMerchantUid, // 결제 고유 번호
-       name: "tickets", // 제품명
+       name: ticketType, // 제품명
        amount: $("#total").text(), // 가격
        //구매자 정보 ↓
-       buyer_email: '${member.EMAIL}',
-       buyer_name: '${member.USER_NAME}',
-       buyer_tel : '${member.PHONE}'
+       buyer_email: userEmail,
+       buyer_name: userName,
+       buyer_tel : userPhone
        // buyer_addr : '서울특별시 강남구 삼성동',
        // buyer_postcode : '123-456'
        
@@ -868,15 +869,49 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
 	   
        if (rsp.success) { //결제 성공시
            console.log(rsp);
+       
+       
+       	$.ajax({
+       		url:"${contextPath}/payment/ajaxkakaoPayment.do",
+       		type:"post",
+       		data:{
+       			orderPayment: $("#total").text(), 
+	     			orderStatus : "2",
+	     			customerId : "${member.USER_NO}",
+	     			paymentMethod : "CD", 
+	     			ticketType1 : $("#ticketName").text(),
+	     			ticketType2 : $("#ticketName2").text(),
+	     			ticketPrice1 : $("#adult-own-price1 span").text(),
+	     			ticketPrice2 : $("#adult-own-price2 span").text(),
+	     			ticketCtn1 : $("#adult-companion").val(),
+	     			ticketCtn2 : $("#adult-own").val(),
+	     			startDate1 : $(".commonDate").val(),
+	     			startDate2 : $(".RoutineDate").val(),
+	     			endDate1 : $(".commonDate").val(),
+	     			endDate2 : $(".RoutineDate").val(),
+	     			discount :  $("#discounts").val()
+       		},
+       		success:function(response){
+       			
+       			console.log("전달 여부 :" + response);
+       		//결제 성공시
+       		/*
+  	        if (response.status == 200) { // DB저장 성공시
+  	        	
+  	            alert('결제 완료!')
+  	            window.location.reload();
+  	        } else { // 결제완료 후 DB저장 실패시
+  	            alert(`error:[${response.status}]\n결제요청이 승인된 경우 관리자에게 문의바랍니다.`);
+  	            // DB저장 실패시 status에 따라 추가적인 작업 가능성
+  	        }
+       		*/
+       		},
+       		error:function(){
+       			
+       		}
+       		
+       	})
 		
-           //결제 성공시
-           if (response.status == 200) { // DB저장 성공시
-               alert('결제 완료!')
-               window.location.reload();
-           } else { // 결제완료 후 DB저장 실패시
-               alert(`error:[${response.status}]\n결제요청이 승인된 경우 관리자에게 문의바랍니다.`);
-               // DB저장 실패시 status에 따라 추가적인 작업 가능성
-           }
            
        } else if (rsp.success == false) { // 결제 실패시
            alert(rsp.error_msg)
@@ -922,7 +957,7 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
 							<div
 								style="display: flex; justify-content: space-between; margin-top: 12px;">
 								<div align="left">
-									<input id="one_date" style="margin-bottom: 10px;" type="date">
+									<input id="one_date" class="commonDate" style="margin-bottom: 10px;" type="date">
 								</div>
 								<div class="quantity-controls">
 									<button class="quantity-btn" id="teen-decrease">−</button>
@@ -943,11 +978,12 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
 									<br> 가격 : <b>20,000원</b><br> 30일 <br> <span
 										style="color: red;">직원 할인가 : 20%</span>
 								</div>
+								<input type="hidden" id="discounts" value="0.2">
 							</div>
 							<div
 								style="display: flex; justify-content: space-between; margin-top: 12px;">
 								<div align="left">
-									<input id="any_date" style="margin-bottom: 10px;" type="date">
+									<input id="any_date" class="RoutineDate" style="margin-bottom: 10px;" type="date">
 								</div>
 
 								<div class="quantity-controls">
@@ -979,7 +1015,7 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
 							</h6>
 						</div>
 						<div style="display: flex; justify-content: flex-end; gap: 10px;">
-							<button class="purchase-kakao" onclick="" id="payment">
+							<button class="purchase-kakao" onclick="" id="payment" type="button">
 								<h5>카카오</h5>
 							</button>
 

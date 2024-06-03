@@ -387,10 +387,11 @@ $(document).ready(function(){
                        <input type="hidden" name="approvalNo" value="${list.get(0).APPROVAL_NO}">
                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
+                       <input type="hidden" name="expendNo" value="${list.get(0).EXPEND_NO}">
                        <input type="hidden" name="writerNo" value="${userNo}">
-                       <input type="hidden" name="firstApproval" id="first_name" class="namecheck" value="${ list.get(0).FIRST_APPROVAL }">
-		                   <input type="hidden" name="middleApproval" id="middle_name" class="namecheck" value="${ list.get(0).MIDDLE_APPROVAL }">
-		                   <input type="hidden" name="finalApproval" id="last_name" class="namecheck" value="${ list.get(0).FINAL_APPROVAL }">
+                       <input type="hidden" name="firstApproval" id="first_name" class="hiddenSignName" value="${ list.get(0).FIRST_APPROVAL }">
+		                   <input type="hidden" name="middleApproval" id="middle_name" class="hiddenSignName" value="${ list.get(0).MIDDLE_APPROVAL }">
+		                   <input type="hidden" name="finalApproval" id="last_name" class="hiddenSignName" value="${ list.get(0).FINAL_APPROVAL }">
 		                   <input type="hidden" name="payWriter" value="${list.get(0).PAYMENT_WRITER}">
                        <input type="hidden" name="payWriterNo" value="${list.get(0).PAYMENT_WRITER_NO}">
 		                   <div class="document">
@@ -464,7 +465,7 @@ $(document).ready(function(){
 										                <tr>
 										                    <td class="label">총매출금액(VAT별도)</td>
 										                    <td class="value" colspan="2">
-										                    	<input type="text" name="totalSales" value="${ list.get(0).TOTAL_SALES.toString().trim() }" required>
+										                    	<input type="text" name="totalSales" value="${ list.get(0).TOTAL_SALES.toString().trim() }" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')" required>
 										                    </td>
 										                </tr>
 										                <tr>
@@ -487,19 +488,15 @@ $(document).ready(function(){
 		                                	<tr id="tr_input">
 		                                    <td><input type="text" name="item" value="${list.get(i).ITEM}"></td>
 		                                    <td><input type="number" name="count" min="1" value="${list.get(i).VOLUMES}"></td>
-		                                    <td><input type="text" name="sales" value="${list.get(i).SALES_AMOUNT}"></td>
+		                                    <td><input type="text" name="salesAmount" class="sales_amount" value="${list.get(i).SALES_AMOUNT}" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/\d(?=(?:\d{3})+$)/g, '$&,')"></td>
 		                                	</tr>
 		                                	</c:if>
 	                                	</c:forEach>
 										            </table>
-										            	<input type="hidden" name="items" id="items">
-	                            		<input type="hidden" name="counts" id="counts">
-	                            		<input type="hidden" name="salesAmounts" id="sales_amounts">
 										        </div>
 										
 										        <div id="btn_div">
 										           <button class="btn btn-primary" id="insertBtn" type="submit" onclick="submitbtn();">제출</button>
-                            	 <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
                             	 <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
 										        </div>
 										    </div>
@@ -510,7 +507,18 @@ $(document).ready(function(){
                 </div>
             </div>
         </div>
-        
+    <script>
+    $(document).ready(function(){
+		
+		$("input[name='totalSales']").val($("input[name='totalSales']").val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+		
+		$(".sales_amount").each(function(){
+			$(this).val($(this).val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+		})
+		
+	})
+    
+    </script>
     <c:if test="${ not empty list }">
     <script>
     	$(document).ready(function(){
@@ -526,60 +534,29 @@ $(document).ready(function(){
     	})
     </script>
      
+    
     <script>
-    	
-    	$(document).ready(function(){
-    	
-    		$("#insertBtn").on("click", function(){
-	    		$(".namecheck").each(function(){
-		    		if($(this).val() == ""){
-		    			alert("승인자를 선택해주세요.");
-		    			return false;
-		    		}
-	    		})	    	
-    		})
-    	})
-    	
+        document.querySelector("#myForm").addEventListener("submit", function(event) {
+            if (confirm('정말로 제출하시겠습니까?')) {
+                let valid = true;
+                
+                $(".hiddenSignName").each(function() {
+                    if ($(this).val() == "null" || $(this).val() == "") {
+                        alert("승인자를 3차까지 선택해주세요.");
+                        event.preventDefault();
+                        valid = false;
+                        return false; // .each 루프 중지
+                    }
+                });
+                
+                if (!valid) {
+                    event.preventDefault(); // 폼 제출 막기
+                }
+            } else {
+                event.preventDefault(); // 확인 메시지에서 취소를 선택한 경우 폼 제출 막기
+            }
+        });
     </script>
-   
-    <script>
-	    	function submitbtn(){
-   					let itemArr = [];
-   					let countArr = [];
-   					let salesArr = [];
-   					//금액
-	    		$(".item").each(function(){
-					 		if($(this).val().trim() != ""){
-					 			itemArr.push($(this).val());
-							}
-	        })
-	        
-	        $("#items").val(itemArr);
-	     					
-	    					//수량
-	   			$(".count").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			countArr.push($(this).val());
-						}
-	         })
-	         $("#counts").val(countArr);
-	    					
-	   					// 매출금액
-	    		$(".sales_amount").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			salesArr.push($(this).val());
-						}
-	          })
-	         $("#sales_amounts").val(salesArr);	
-	
-	         if(confirm('정말로 제출하시겠습니까?')){
-	        	 if($(".sing_name").text() == ""){
-	        		 alert("승인자를 3차까지 선택해주세요.");
-	        	 }
-	         }
-	                
-	       }
-   	</script>
     
     <script>
     $(document).ready(function(){
@@ -588,10 +565,10 @@ $(document).ready(function(){
     		
     		
     		var result = "<tr>";
-    		result += "<td><input type='text' class='item' name='item'></td>";
-    		result += "<td><input type='number' class='count' min='1' name='count'></td>";
-    		result += "<td><input type='text' class='sales_amount' name='amount'></td>";
-    		result += "</tr>";
+		    		result += "<td><input type='text' class='item' name='item'></td>";
+		    		result += "<td><input type='number' class='count' min='1' name='count'></td>";
+		    		result += "<td><input type='text' class='sales_amount' name='salesAmount' oninput=\"this.value = this.value.replace(/[^0-9]/g, '').replace(/\\B(?=(\\d{3})+(?!\\d))/g, ',')\"></td>";
+		    		result += "</tr>";
         
        $("#tr_table").children().last().after(result);
        

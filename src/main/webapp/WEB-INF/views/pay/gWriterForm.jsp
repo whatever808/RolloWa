@@ -395,9 +395,9 @@ $(document).ready(function(){
                        <input type="hidden" name="reportNo" value="${list.get(0).REPORT_NO}">
                        <input type="hidden" name="reportType" value="${list.get(0).REPORT_TYPE}">
                        <input type="hidden" name="writerNo" value="${userNo}">
-                       <input type="hidden" name="firstApproval">
-											 <input type="hidden" name="middleApproval">
-											 <input type="hidden" name="finalApproval">
+                       <input type="hidden" name="firstApproval" class="hiddenSignName">
+											 <input type="hidden" name="middleApproval" class="hiddenSignName">
+											 <input type="hidden" name="finalApproval" class="hiddenSignName">
 		                   <div class="document">
 										        <h1 class="title2">기안서</h1>
 										
@@ -453,7 +453,7 @@ $(document).ready(function(){
                                     	<td class="label">시행일자</td>
                                     	<td class="value"><input type="date" name="dateStart" required></td>
                                     	<td class="label">협조부서</td>
-                                    	<td class="value"><input type="text" name="depWith"></td>
+                                    	<td class="value"><input type="text" name="depWith" required></td>
                                		 </tr>
 			                             <tr>
 	                                    <td colspan="4" class="value" class="value">
@@ -462,14 +462,13 @@ $(document).ready(function(){
 			                             </tr>
 		                               <tr>
 	                                    <td class="label">파일첨부</td>
-	                                    <td colspan="3"><input type="file" name="uploadFiles" multiple></td>
+	                                    <td colspan="3"><input type="file" name="uploadFiles" required multiple></td>
 		                               </tr>
 										            </table>
 										        </div>
 										
 										        <div id="btn_div">
 										           <button class="btn btn-primary" id="insertBtn" type="submit">제출</button>
-                            	 <button class="btn btn-warning" onclick="alert('저장이 완료되었습니다.');">저장</button>
                             	 <button type="reset" class="btn btn-danger" id="reset_btn">초기화</button>
 										        </div>
 										    </div>
@@ -505,67 +504,36 @@ $(document).ready(function(){
     	})
     	
     </script>
-   
-    <script>
-	 		document.querySelector("#myForm").addEventListener("submit", function(event){
-	 			
- 					let itemArr = [];
- 					let countArr = [];
- 					let salesArr = [];
-   					//금액
-	    		$(".item").each(function(){
-					 		if($(this).val().trim() != ""){
-					 			itemArr.push($(this).val());
-							}
-	        })
-	        
-	        $("#items").val(itemArr);
-	     					
-	    					//수량
-	   			$(".count").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			countArr.push($(this).val());
-						}
-	         })
-	         $("#counts").val(countArr);
-	    					
-	   					// 매출금액
-	    		$(".sales_amount").each(function(){
-				 		if($(this).val().trim() != ""){
-				 			salesArr.push($(this).val());
-						}
-	          })
-	         $("#sales_amounts").val(salesArr);	
-	
-	         if(confirm('정말로 제출하시겠습니까?')){
-	        	 if($(".sing_name").text() == ""){
-	        		 alert("승인자를 3차까지 선택해주세요.");
-	        			 event.preventDefault();
-	        	 }
-	         }
-	                
-	      })
-   	</script>
     
     <script>
-    $(document).ready(function(){
-    		let i = 4;
-    	$(document).on("click", "#plus_btn", function () {
-    		var result = "<tr>";
-    		result += "<td><input type='text' class='text_1' name='pName" + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_2' name='size" + (i) +"'></td>";
-    		result += "<td><input type='number' min='1' class='text_3' name='amount"  + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_4' name='unitprice" + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_5' name='price" + (i) + "'></td>";
-    		result += "<td><input type='text' class='text_6' name='etc" + (i) + "'></td>";
-    		result += "</tr>";
-    		i++;
-       $("#tr_table").children().last().after(result);
-       
-       
-    	});
-    	
-    	
+        document.querySelector("#myForm").addEventListener("submit", function(event) {
+            if (confirm('정말로 제출하시겠습니까?')) {
+                let valid = true;
+                
+                $(".hiddenSignName").each(function() {
+                    if ($(this).val() == "null" || $(this).val() == "") {
+                        alert("승인자를 3차까지 선택해주세요.");
+                        event.preventDefault();
+                        valid = false;
+                        return false; // .each 루프 중지
+                    }
+                });
+                
+                if (!valid) {
+                    event.preventDefault(); // 폼 제출 막기
+                }
+            } else {
+                event.preventDefault(); // 확인 메시지에서 취소를 선택한 경우 폼 제출 막기
+            }
+        });
+    </script>
+   
+   
+   
+   
+   
+    <script>
+    
     	$(document).on("click", "#del_btn", function () {
     	    //$("#tr_table tr:last-child").remove();
     	    $("#tr_table").children("tr").last().remove();
