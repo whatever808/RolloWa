@@ -11,6 +11,8 @@
 <!-- fullcalendar -->
 <script
 	src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+	<!-- google calendar 연동 -->
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.13/index.global.min.js'></script>
 <style>
 .out-line {
 	min-height: 800px;
@@ -294,6 +296,7 @@ td.fc-day.fc-timegrid-col {
 				  		calendar = new FullCalendar.Calendar(calendarEl, {
 				  			initialView: 'dayGridMonth',
 				  			locale: 'ko',
+						 	  googleCalendarApiKey: 'AIzaSyBEu59fao26o4oQSM2gXavGYR9eMTxd1nE',
 				  			customButtons: {
 				  				 enrollButton:{text: '일정 등록',click: function(){location.href="${path}/calendar/companyCalEnroll.page";}}
 				  			},
@@ -321,7 +324,15 @@ td.fc-day.fc-timegrid-col {
 				  			},
 				  			eventMouseLeave:function(info){
 				  				info.el.style.transform = '';
-				  			},	
+				  			},
+								events:{
+				                googleCalendarId :  'ko.south_korea.official#holiday@group.v.calendar.google.com',
+				                backgroundColor: 		'red',
+				                className:					'holliDay',
+				                extendedProps:{
+					                status: 					'N',
+               					},
+								}
 				  		})
 				  	})
 				  }	

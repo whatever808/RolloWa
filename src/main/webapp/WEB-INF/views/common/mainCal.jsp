@@ -7,6 +7,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<!-- google calendar 연동 -->
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.13/index.global.min.js'></script>
 <style>
 	/* 캘린더 스타일  */
 	#calendar a {
@@ -100,6 +102,7 @@
 			calendar = new FullCalendar.Calendar(calendarEl, {
 				initialView: 'dayGridMonth',
 				locale: 'ko',
+		 	  googleCalendarApiKey: 'AIzaSyBEu59fao26o4oQSM2gXavGYR9eMTxd1nE',
 				buttonText:{prev:'◁',next:'▷',today: '오늘',year:'연도',month:'월',week:'주'
 				},
 				headerToolbar:{start: 'title',center: '',end: ''
@@ -109,6 +112,14 @@
 				buttonIcons: false,
 				slotMinTime: "06:00:00",
 				timeZone: 'Asia/Seoul',
+				events:{
+	                googleCalendarId :  'ko.south_korea.official#holiday@group.v.calendar.google.com',
+	                backgroundColor: 		'red',
+	                className:					'holliDay',
+	                extendedProps:{
+		                status: 					'N',
+       						},
+				}
 			});
 		});					
 	}
