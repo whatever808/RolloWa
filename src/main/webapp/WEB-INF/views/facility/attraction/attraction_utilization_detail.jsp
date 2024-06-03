@@ -32,7 +32,7 @@
   		<div class="chart-list-div">
   			
   			<div class="chart-div">
-  				<select class="select form-control py-2 fw-bold" id="year-select"></select>
+  				<select class="select form-control form-select py-2 fw-bold" id="year-select"></select>
   			
 	  			<!-- monthly chart start -->
 	  			<div class="chart" id="monthly-chart"></div>
@@ -40,7 +40,7 @@
   			</div>
 				
 				<div class="chart-div">
-					<select class="select form-control py-2 fw-bold" id="month-select"></select>
+					<select class="select form-control form-select py-2 fw-bold" id="month-select"></select>
 				
 					<!-- daily chart start -->
 	  			<div class="chart" id="daily-chart"></div>

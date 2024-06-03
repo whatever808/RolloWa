@@ -24,18 +24,18 @@
 		
 		<!-- select filter div start -->
 		<div class="select-filter-div">
-			<select class="form-control" id="location-select">
+			<select class="form-control form-select" id="location-select">
 				<option value="">전체</option>
 				<c:forEach var="location" items="${ locationList }">
 					<option value="${ location.locationNo }">${ location.locationName }</option>
 				</c:forEach>
 			</select>
 		
-			<select class="form-control" id="year-select"></select>
+			<select class="form-control form-select" id="year-select"></select>
 			
-			<select class="form-control" id="month-select"></select>
+			<select class="form-control forms-select" id="month-select"></select>
 			
-			<select class="form-control" id="date-select"></select>
+			<select class="form-control form-select" id="date-select"></select>
 		</div>
 		<!-- select filter div end -->
 
