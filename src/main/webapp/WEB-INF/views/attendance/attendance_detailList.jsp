@@ -312,13 +312,14 @@
 								<input type="hidden" name="userNo" value="${m.userNo}">
 								<td>
 									<c:choose>
-										<c:when test="${ not empty m.profileURL }">
-											<img src="${ m.profileURL }" class="profile_img">
-										</c:when>
-										<c:otherwise>
-											<img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">
-										</c:otherwise>
-									</c:choose>
+							            <c:when test="${ not empty m.profileURL }">
+							                <img src="${ m.profileURL }" class="profile_img" onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
+							            </c:when>
+							            <c:otherwise>
+							                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">
+							            </c:otherwise>
+							        </c:choose>
+									
 								</td>
 								<td>${ m.userName }</td>
 								<td>${ m.userId }</td>

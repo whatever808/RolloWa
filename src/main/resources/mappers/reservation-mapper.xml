@@ -27,7 +27,7 @@
 		 WHERE GROUP_CODE LIKE 'EQPT%'
            AND STATUS = 'Y'
 	</select>
-
+	
 	<!-- 비품 출력 -->
 	<select id="selectEquipmentList" resultType="hashmap">
 		SELECT CODE AS "code"
@@ -59,7 +59,7 @@
     ]]>
 	</select>
 	
-	<!-- 1. 예약 가능한지 시간 체크 -->
+	<!-- 예약 가능한지 시간 체크 -->
 	<select id="selectTimeCheck" resultType="_int">
 	    <![CDATA[
 	    SELECT COUNT(*)
@@ -76,7 +76,7 @@
 	    ]]>
 	</select>
 	
-	<!-- 2. 예약 하기 -->
+	<!-- 예약 하기 -->
 	<insert id="insertReservation" parameterType="map">
     INSERT INTO
     	   RESERVATION (
@@ -96,7 +96,15 @@
       FROM TB_GROUP
      WHERE GROUP_CODE LIKE 'EQPT%'
        AND CODE_NAME = #{equipmentName}
-</insert>
+	</insert>
+	
+	<!-- 내 예약 카운트  -->
+	<select id="selectMyReservationCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM RESERVATION
+		 WHERE STATUS = 'Y'
+           AND USER_NO = #{ userNo }
+	</select>
 	
 	<!-- 내가 예약한 정보 조회 -->
 	<select id="selectMyReservation" resultType="hashmap">
@@ -107,8 +115,7 @@
 			 , RESERVE_END AS "endTime"
 			 , (SELECT CODE_NAME FROM TB_GROUP WHERE CODE = EQUIPMENT_CODE) AS "equipmentName"
 		  FROM RESERVATION
-		 WHERE RESERVE_START > SYSDATE - INTERVAL '30' DAY
-		   AND USER_NO = #{ userNo}
+		 WHERE USER_NO = #{ userNo }
 		   AND STATUS = 'Y'
 		 ORDER BY RESERVE_END DESC, RESERVE_START DESC
 	   ]]>
@@ -123,6 +130,31 @@
 	        #{item}
 	    </foreach>
 	</update>
+	
+	<!-- 비품 추가,수정, 삭제 -->
+	<insert id="insertEquipment">
+	    INSERT INTO TB_GROUP (GROUP_CODE, CODE, CODE_NAME, REGIST_DATE, REGIST_EMP, MODIFY_EMP)
+	    VALUES ('EQPT01', SEQ_ENO.NEXTVAL, #{equipmentName}, SYSDATE, #{registEmp}, #{registEmp})
+	</insert>
+	<update id="deleteEquipment" parameterType="list">
+	    UPDATE TB_GROUP
+	    SET STATUS = 'N'
+	    WHERE CODE IN
+	    <foreach item="item" collection="list" open="(" separator="," close=")">
+	        #{item, jdbcType=VARCHAR}
+	    </foreach>
+	      AND GROUP_CODE LIKE 'EQPT%'
+	</update>
+	<update id="updateEquipment">
+		UPDATE TB_GROUP
+	        SET CODE_NAME = #{equipmentName},
+	            MODIFY_DATE = SYSDATE,
+	            MODIFY_EMP = #{modifyEmp}
+	        WHERE CODE = #{id}
+	          AND GROUP_CODE LIKE 'EQPT%'
+    </update>
+	
+
 	
 
 </mapper>

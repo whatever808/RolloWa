@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class OrganizationInfoController {
+public class OrganizationController {
 
 	private final OrganizationService organizationService;
 	private final PagingUtil pagingUtil;
@@ -139,47 +139,21 @@ public class OrganizationInfoController {
 	// 3. 조직 관리 -------------------------------------------------------------
 	
 	// 부서 추가
-	@PostMapping("/addDepartment.do")
+	@PostMapping("/insertDepartment.do")
     @ResponseBody
-    public ResponseEntity<String> addDepartment(@RequestBody OrganizationDto organizationDto) {
-        organizationService.addDepartment(organizationDto);
-        return ResponseEntity.ok("Department added successfully");
-    }
-	
-	// 팀 추가
-	@PostMapping("/addTeam.do")
-    @ResponseBody
-    public ResponseEntity<String> addTeam(@RequestBody OrganizationDto organizationDto) {
-        organizationService.addTeam(organizationDto);
-        return ResponseEntity.ok("Team added successfully");
-    }
-	
-	// 부서 삭제
-	@PostMapping("/deleteDepartment.do")
-    @ResponseBody
-    public ResponseEntity<String> deleteDepartment(@RequestParam String departmentCode) {
-        boolean isDeleted = organizationService.deleteDepartment(departmentCode);
-        if (isDeleted) {
-            return ResponseEntity.ok("Department deleted successfully");
+    public int insertDepartment(@RequestBody Map<String, String> payload) {
+        String deptName = payload.get("dept");
+        log.debug("받은 부서명 : {}", deptName);
+        
+        int result = organizationService.insertDepartment(deptName);
+        if (result > 0) {
+            log.debug("부서 추가 성공");
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Cannot delete department with active members");
+            log.debug("부서 추가 실패");
         }
+        return result;
     }
 	
-	// 팀 삭제
-	@PostMapping("/deleteTeam.do")
-    @ResponseBody
-    public ResponseEntity<String> deleteTeam(@RequestParam String teamCode) {
-        try {
-            boolean isDeleted = organizationService.deleteTeam(teamCode);
-            if (!isDeleted) {
-                throw new IllegalStateException("Cannot delete team with active members");
-            }
-            return ResponseEntity.ok("Team deleted successfully");
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
-    }
 	
 	
 	

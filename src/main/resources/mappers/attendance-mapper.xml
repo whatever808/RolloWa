@@ -68,83 +68,66 @@
 
 	<!-- 출결 조회 -->
 	<select id="selectAttendanceList" resultType="hashmap">
-		SELECT
-		M.USER_NO,
-		M.PROFILE_URL AS "profileURL",
-		M.USER_NAME AS "userName",
-		D1.CODE_NAME AS "dept",
-		D2.CODE_NAME AS "team",
-		(SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE =
-		M.POSITION_CODE) AS "posi",
-		A.CLOCK_IN AS "todayIn",
-		A.CLOCK_OUT AS "todayOut",
-		A.REQUEST_DETAIL AS "requestDetail"
-		FROM
-		MEMBER M
-		JOIN
-		TB_GROUP D2 ON M.TEAM_CODE = D2.CODE
-		LEFT JOIN
-		TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
-		LEFT JOIN
-		ATTENDANCE A ON M.USER_NO = A.USER_NO
-		AND TO_CHAR(A.CLOCK_IN, 'yyyymmdd') = #{selectedDate}
-
-		WHERE D1.STATUS = 'Y'
-		AND D2.STATUS = 'Y'
-		AND D1.CODE_NAME LIKE '%' || #{department} || '%'
-		AND D2.CODE_NAME LIKE '%' || #{team} || '%'
-		AND (
-		(#{attendanceStatus} = '결근' AND A.REQUEST_DETAIL IS NULL)
-		OR
-		(#{attendanceStatus} IS NULL AND A.REQUEST_DETAIL IS NULL)
-		OR
-		(A.REQUEST_DETAIL LIKE '%' || #{attendanceStatus} || '%')
-		)
-		AND M.USER_NAME LIKE '%' || #{name} || '%'
-		ORDER BY
-		M.USER_NO ASC
+		SELECT M.USER_NO
+			 , M.PROFILE_URL AS "profileURL"
+			 , M.USER_NAME AS "userName"
+			 , D1.CODE_NAME AS "dept"
+			 , D2.CODE_NAME AS "team"
+			 , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE LIKE 'POSI%' AND CODE =
+				M.POSITION_CODE) AS "posi"
+				, A.CLOCK_IN AS "todayIn"
+				, A.CLOCK_OUT AS "todayOut"
+				, A.REQUEST_DETAIL AS "requestDetail"
+		  FROM MEMBER M
+		  JOIN TB_GROUP D2 ON M.TEAM_CODE = D2.CODE
+	 LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
+	 LEFT JOIN ATTENDANCE A ON M.USER_NO = A.USER_NO
+		   AND TO_CHAR(A.CLOCK_IN, 'yyyymmdd') = #{selectedDate}
+  		 WHERE D1.STATUS = 'Y'
+		   AND D2.STATUS = 'Y'
+		   AND D1.CODE_NAME LIKE '%' || #{department} || '%'
+		   AND D2.CODE_NAME LIKE '%' || #{team} || '%'
+		   AND (
+		       (#{attendanceStatus} = '결근' AND A.REQUEST_DETAIL IS NULL)
+		        OR
+		 	   (#{attendanceStatus} IS NULL AND A.REQUEST_DETAIL IS NULL)
+				OR
+			   (A.REQUEST_DETAIL LIKE '%' || #{attendanceStatus} || '%')
+				)
+		   AND M.USER_NAME LIKE '%' || #{name} || '%'
+		   AND M.STATUS = 'Y'
+		 ORDER BY M.USER_NO ASC
 	</select>
 
 	<!-- 출결 개수 조회(출근|결근|퇴근|조퇴|휴가) -->
 	<select id="selectAttendanceCount" resultMap="attendanceList">
-		SELECT
-		SUM(CASE WHEN attendanceStatus = '출근' THEN 1 ELSE 0 END) AS a,
-		SUM(CASE WHEN attendanceStatus = '결근' THEN 1 ELSE 0 END) AS b,
-		SUM(CASE WHEN attendanceStatus = '퇴근' THEN 1 ELSE 0 END) AS c,
-		SUM(CASE WHEN attendanceStatus = '조퇴' THEN 1 ELSE 0 END) AS d,
-		SUM(CASE WHEN attendanceStatus = '휴가' THEN 1 ELSE 0 END) AS e
-		FROM (
-		SELECT
-		CASE
-		WHEN A.CLOCK_IN IS NOT NULL THEN
-		CASE
-		WHEN A.REQUEST_DETAIL LIKE '%출근%' THEN '출근'
-		WHEN A.REQUEST_DETAIL LIKE '%퇴근%' THEN '퇴근'
-		WHEN A.REQUEST_DETAIL LIKE '%조퇴%' THEN '조퇴'
-		WHEN A.REQUEST_DETAIL LIKE '%휴가%' THEN '휴가'
-		ELSE '결근'
-		END
-		ELSE '결근'
-		END AS attendanceStatus
-		FROM
-		MEMBER M
-		JOIN
-		TB_GROUP D2 ON M.TEAM_CODE = D2.CODE
-		LEFT JOIN
-		TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
-		LEFT JOIN
-		ATTENDANCE A ON M.USER_NO = A.USER_NO
-		AND TO_CHAR(A.CLOCK_IN, 'yyyy-mm-dd') = #{ selectedDate }
-		WHERE
-		D1.STATUS = 'Y'
-		AND D2.STATUS = 'Y')
+		SELECT SUM(CASE WHEN attendanceStatus = '출근' THEN 1 ELSE 0 END) AS a
+			 , SUM(CASE WHEN attendanceStatus = '결근' THEN 1 ELSE 0 END) AS b
+			 , SUM(CASE WHEN attendanceStatus = '퇴근' THEN 1 ELSE 0 END) AS c
+			 , SUM(CASE WHEN attendanceStatus = '조퇴' THEN 1 ELSE 0 END) AS d
+			 , SUM(CASE WHEN attendanceStatus = '휴가' THEN 1 ELSE 0 END) AS e
+		  FROM (SELECT CASE	WHEN A.CLOCK_IN IS NOT NULL 
+		  		THEN CASE
+				WHEN A.REQUEST_DETAIL LIKE '%출근%' THEN '출근'
+				WHEN A.REQUEST_DETAIL LIKE '%퇴근%' THEN '퇴근'
+				WHEN A.REQUEST_DETAIL LIKE '%조퇴%' THEN '조퇴'
+				WHEN A.REQUEST_DETAIL LIKE '%휴가%' THEN '휴가'
+				ELSE '결근' END
+				ELSE '결근' END AS attendanceStatus
+		  		FROM MEMBER M
+		  		JOIN TB_GROUP D2 ON M.TEAM_CODE = D2.CODE
+		  		LEFT JOIN TB_GROUP D1 ON D2.UPPER_CODE = D1.CODE AND D1.GROUP_CODE LIKE 'DEPT%'
+		  		LEFT JOIN ATTENDANCE A ON M.USER_NO = A.USER_NO
+		  		AND TO_CHAR(A.CLOCK_IN, 'yyyy-mm-dd') = #{ selectedDate }
+		  		WHERE D1.STATUS = 'Y'
+		  		AND D2.STATUS = 'Y')
 	</select>
 
 	<!-- 아이디 중복체크 -->
 	<select id="selectUserIdCount" resultType="_int">
-		select count(*)
-		from member
-		where user_id = #{checkId}
+		SELECT COUNT(*)
+		  FROM MEMBER
+		 WHERE USER_ID = #{checkId}
 	</select>
 
 	<!-- 회원 가입 : 사번,이름,아이디,비밀번호,생성한관리자번호,관리자권한여부,팀코드,직급 -->
@@ -179,11 +162,11 @@
 	<!-- 출결 상태 조회 -->
 	<select id="selectStatus" resultMap="attendanceList">
 		SELECT USER_NO
-		, CLOCK_IN
-		, CLOCK_OUT
-		, REQUEST_DETAIL
-		FROM ATTENDANCE
-		WHERE TRUNC(CLOCK_IN) = TRUNC(SYSDATE-7)
+			 , CLOCK_IN
+			 , CLOCK_OUT
+			 , REQUEST_DETAIL
+		  FROM ATTENDANCE
+		 WHERE TRUNC(CLOCK_IN) = TRUNC(SYSDATE-7)
 	</select>
 	
 	<!--  -->

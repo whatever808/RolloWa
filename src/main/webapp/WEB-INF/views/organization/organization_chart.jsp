@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1.1 조직도</title>
+    <title>조직도</title>
 
     <!-- 조직도 참고 사이트
        https://www.cssscript.com/clean-tree-diagram/
@@ -51,7 +51,11 @@
 				                <c:forEach var="team" items="${dept}">
 				                    <c:if test="${d.dept eq team.dept}">
 					                    <ul>
-					                        <li><a href="${contextPath}/organization/search.do?page=1&department=${team.dept}&team=${team.team}&phone=&name="><span class="level3">${team.team}</span></a></li>
+					                        <c:if test="${not empty team.team}">
+	                                            <li>
+	                                                <a href="${contextPath}/organization/search.do?page=1&department=${team.dept}&team=${team.team}&phone=&name="><span class="level3">${team.team}</span></a>
+	                                            </li>
+	                                        </c:if>
 				                        </ul>
 				                    </c:if>
 				                </c:forEach>

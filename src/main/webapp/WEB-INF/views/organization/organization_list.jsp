@@ -44,7 +44,7 @@
 	                <!-- 검색 메뉴 2 : 전화번호 -->
 	                <th>전화번호</th>
 	                <td>
-	                    <input type="text" id="phone" name="phone" class="form-control" placeholder="전화번호를 입력하세요.(숫자만 입력)">
+	                    <input type="text" id="phone" name="phone" class="form-control" placeholder="전화번호를 입력하세요.">
 	                </td>
 	            </tr>
 	            <tr class="tr_search">
@@ -57,7 +57,7 @@
 	                <!-- 검색 메뉴 4 : 이름 -->
 	                <th>이름</th>
 	                <td>
-	                    <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하세요.(한글만 입력)">
+	                    <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하세요.">
 	                </td>
 	            </tr>
 	            <tr>
@@ -199,21 +199,6 @@
 	    }
 	    </script>
 
-
-	
-	    <script>
-	        /* 전화번호 : 숫자만 입력되고 나머지 글자는 공백으로 변환 */
-	        $("#search_Form input[name=phone]").on("keyup", function(){
-	            let regExp = $(this).val().replace(/[^\d]+/g, '');
-	            $(this).val(regExp);
-	        })
-	
-	        /* 이름 : 한글만 입력되고 나머지 글자는 공백으로 변환 */
-	        $("#search_Form input[name=name]").on("keyup", function(){
-	            let regExp = $(this).val().replace(/[^가-힣ㄱ-ㅎ]+/g, '');
-	            $(this).val(regExp);
-	        })
-	    </script>
 	    
 	    <!-- 전체 인원수 -->
 	    <h5 class="employee_count">전체 ${ listCount }명</h5>

@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3.1 비품 예약</title>
+    <title>비품 예약</title>
 
 	<style>
     .main_content{
@@ -202,81 +202,88 @@
 		</div>
 		
 		<!-- 날짜 관련 js -->
-		<script>
-		// 페이지 로드시 오늘 날짜 표시하기 
+        <script>
+        // 페이지 로드시 오늘 날짜 표시하기 
         window.onload = function() {
-        	todayDate();
-        }
-		
-        let currentDate = new Date(); // 다음값 : Tue May 21 2024 13:16:45 GMT+0900 (한국 표준시)
-        
-		let currentYear = currentDate.getFullYear(); // 2024
-		let currentMonth = currentDate.getMonth() + 1; // 5
-		let currentDay = currentDate.getDate(); // 일
-		
-		// 오늘 날짜로 설정하기 (2024-05-11 형식)
-        function todayDate(){
-			
-			// 날짜 형식 2024-05로 설정
-			let currentMonthString = currentYear + '-' + (currentMonth < 10 ? '0' : '') + currentMonth + '-' + (currentDay < 10 ? '0' : '') + currentDay;
-			
-			document.getElementById('currentDate').value = currentMonthString;
-        }
-        
-     	// 날짜 변경 함수
-		function changeDate(number) {
-			let currentDateInput = document.getElementById('currentDate').value;
-			
-			currentDate = new Date(currentDateInput);
-	        newDate = new Date(currentDate);
-	        newDate.setDate(currentDate.getDate() + number);
-			
-			let newYear = newDate.getFullYear();
-			let newMonth = newDate.getMonth() + 1;
-			let newDay = newDate.getDate();
-			let selectedDate = newYear + '-' + (newMonth < 10 ? '0' : '') + newMonth + '-' + (newDay < 10 ? '0' : '') + newDay;
-			
-			document.getElementById('currentDate').value = selectedDate;
-			console.log("현재 날짜 : ", selectedDate);
-			
-			$.ajax({
-				url:"${ contextPath }/reservation/search.do",
-				type:"GET",
-				data:{ 
-					selectedDate: selectedDate,
-				},
-				success: function(data){	
-					//console.log("통신 성공");
-					
-					$(".table_time tbody").html($(data).find(".table_time tbody").html());
-					
-				}, error: function(){
-					//console.log("통신 실패");
-				}
-			})
-		}
-     	
-		document.addEventListener("DOMContentLoaded", function() {
-            const trElements = document.querySelectorAll('.tr_cursor'); // 클릭할 tr 요소를 선택합니다.
-        	const userName = "${loginMember.userName}";
-        	const userId = "${loginMember.userId}";
-        	const modal_date = document.getElementById('currentDate').value;
-        	
-            trElements.forEach(function(trElement) {
-                trElement.addEventListener('click', function() {
-                    const equipmentName = trElement.querySelector('td:nth-child(2) h6').textContent; // 클릭한 tr 요소에서 비품명을 가져옵니다.
-                    
-                    console.log("선택한 날짜 : ", document.getElementById('currentDate').value);
-                    
-                    document.getElementById('userName').textContent = userName + "(" + userId + ")";
-                    document.getElementById('selectedEquipmentName').textContent = equipmentName;
-                    document.getElementById('modal_date').textContent = document.getElementById('currentDate').value;
+        	const urlParams = new URLSearchParams(window.location.search);
+            const selectedDate = urlParams.get('selectedDate');
 
-                });
-            });
-        });
+            if (selectedDate) {
+                document.getElementById('currentDate').value = selectedDate;
+            } else {
+                todayDate();
+            }
+
+            disablePastDates();
+        }
         
-		</script>
+        let currentDate = new Date(); 
+        
+        let currentYear = currentDate.getFullYear(); 
+        let currentMonth = currentDate.getMonth() + 1; 
+        let currentDay = currentDate.getDate(); 
+        
+        // 오늘 날짜로 설정하기 (2024-05-11 형식)
+        function todayDate(){
+            let currentMonthString = currentYear + '-' + (currentMonth < 10 ? '0' : '') + currentMonth + '-' + (currentDay < 10 ? '0' : '') + currentDay;
+            document.getElementById('currentDate').value = currentMonthString;
+        }
+        
+        // 날짜 변경 함수
+        function changeDate(number) {
+            let currentDateInput = document.getElementById('currentDate').value;
+            
+            currentDate = new Date(currentDateInput);
+            newDate = new Date(currentDate);
+            newDate.setDate(currentDate.getDate() + number);
+            
+            let newYear = newDate.getFullYear();
+            let newMonth = newDate.getMonth() + 1;
+            let newDay = newDate.getDate();
+            let selectedDate = newYear + '-' + (newMonth < 10 ? '0' : '') + newMonth + '-' + (newDay < 10 ? '0' : '') + newDay;
+            
+            document.getElementById('currentDate').value = selectedDate;
+            console.log("현재 날짜 : ", selectedDate);
+            
+            $.ajax({
+                url:"${contextPath}/reservation/search.do",
+                type:"GET",
+                data:{ 
+                    selectedDate: selectedDate,
+                },
+                success: function(data){    
+                    $(".table_time tbody").html($(data).find(".table_time tbody").html());
+                    $('.tr_cursor').on('click', function() {
+                        let equipmentName = $(this).find('td:nth-child(2) h6').text();
+                        $('#selectedEquipmentName').text(equipmentName);
+                    });
+                    disablePastDates();  // 날짜 변경 후 오늘 이전 날짜 비활성화
+                }, 
+                error: function(){
+                    console.error("통신 실패");
+                }
+            });
+        }
+
+        // 오늘 이전 날짜의 행을 비활성화하는 함수
+        function disablePastDates() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            document.querySelectorAll('.tr_cursor').forEach(row => {
+                const rowDate = new Date(document.getElementById('currentDate').value);
+                rowDate.setHours(0, 0, 0, 0);
+                
+                if (rowDate < today) {
+                    row.style.pointerEvents = 'none'; // 클릭 비활성화
+                    row.style.backgroundColor = '#f0f0f0'; // 시각적 비활성화 표시 (선택 사항)
+                } else {
+                    row.style.pointerEvents = 'auto'; // 클릭 활성화
+                    row.style.backgroundColor = ''; // 원래 색상으로 복구 (선택 사항)
+                }
+            });
+        }
+        </script>
 
         <!-- 비품명 검색 -->
         <div class="div_search">
@@ -288,13 +295,6 @@
                         </th>
                         <td>
                             <input type="text" id="searchInput" placeholder="비품명을 입력하세요." onkeyup="searchEquipment()">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <div class="div_searchBtn">
-                                <button type="reset" class="btn btn-outline-primary" onclick="reload();"><h6>초기화</h6></button>
-                            </div>
                         </td>
                     </tr>
                 </table>
@@ -454,7 +454,7 @@
                     <tr>
                         <td colspan="2">
                             <div class="div_searchBtn">
-                                <button class="btn btn-outline-primary button-close"><h6>닫기</h6></a></button>
+                                <!-- <button class="btn btn-outline-primary button-close"><h6>닫기</h6></a></button> -->
                                 <button type="submit" class="btn btn-primary" onclick="reserveSubmit();"><h6>예약하기</h6></button>
                             </div>
                         </td>
@@ -509,7 +509,12 @@
 	                	console.log("예약이 성공적으로 완료되었습니다.");
 	                	alert("예약이 성공적으로 완료되었습니다.");
 	                	$('#modal_reserve').iziModal('close');
-	                	location.reload();
+	                	//location.reload();
+	                	
+	                	const currentDate = document.getElementById('currentDate').value;
+	                    const url = new URL(window.location);
+	                    url.searchParams.set('selectedDate', currentDate);
+	                    window.location.href = url.toString();
 	            	}
 	            },
 	            error: function(xhr, status, error) {
@@ -521,46 +526,51 @@
 
             <!-- 모달창 -->
             <script>
-            let equipmentName = '';
-            
-            $('#modal_reserve').iziModal({
-                title: '<h4>비품예약</h4>',
-                subtitle: '',
-                headerColor: ' rgb(255,247,208)', 
-                theme:'light',
-                padding: '15px',
-                radius: 10, 
-                zindex:	300,
-                focusInput:	true,
-                restoreDefaultContent: false,
-                onOpening: function(modal){
-		            // 모달 열릴 때 실행할 함수
-		            
-		            console.log('모달이 열립니다.');
-		            let userNo = "${ loginMember.userNo }";
-		            let userName = "${ loginMember.userName }";
-		            let userId = "${ loginMember.userId }";
-                	let equipmentName = $('#selectedEquipmentName').text();
-		            let currentDate = document.getElementById('currentDate').value;
-		            
-		            $('#userName').html('<span>' + userName + '</span><span>(' + userId + ')</span>');
-		            $('#selectedEquipmentName').text(equipmentName);
-		            $('#modal_date').text(currentDate);
-		            
-		        },
-                onClosing: function(modal) {
-                    // 모달이 닫힐 때 실행할 작업
-                    console.log('모달이 닫힙니다.');
-                }
-            });
-         	// 비품 검색 테이블의 각 행에 대한 클릭 이벤트 설정
-            $('.tr_cursor').on('click', function() {
-                // 클릭된 행에서 비품명 가져오기
-                let equipmentName = $(this).find('td:nth-child(2) h6').text();
+            $(document).ready(function(){
+            	
+            	$('#modal_reserve').iziModal({
+                    title: '<h4>비품예약</h4>',
+                    subtitle: '',
+                    headerColor: ' rgb(255,247,208)', 
+                    theme:'light',
+                    padding: '15px',
+                    radius: 10, 
+                    zindex:	300,
+                    focusInput:	true,
+                    restoreDefaultContent: false,
+                    onOpening: function(modal){
+    		            // 모달 열릴 때 실행할 함수
+    		            
+    		            console.log('모달이 열립니다.');
+    		            var userNo = "${ loginMember.userNo }";
+    		            var userName = "${ loginMember.userName }";
+    		            var userId = "${ loginMember.userId }";
+                    	var equipmentName = $('#selectedEquipmentName').text();
+    		            var currentDate = document.getElementById('currentDate').value;
+    		            
+    		            $('#userName').html('<span>' + userName + '</span><span>(' + userId + ')</span>');
+    		            $('#selectedEquipmentName').text(equipmentName);
+    		            $('#modal_date').text(currentDate);
+    		            
+    		        },
+                    onClosing: function(modal) {
+                        // 모달이 닫힐 때 실행할 작업
+                        console.log('모달이 닫힙니다.');
+                    }
+                });
+             	// 비품 검색 테이블의 각 행에 대한 클릭 이벤트 설정
+                $('.tr_cursor').on('click', function() {
+                    // 클릭된 행에서 비품명 가져오기
+                    let equipmentName = $(this).find('td:nth-child(2) h6').text();
 
-                // 가져온 비품명을 모달에 표시
-                $('#selectedEquipmentName').text(equipmentName);
-            });
+                    // 가져온 비품명을 모달에 표시
+                    $('#selectedEquipmentName').text(equipmentName);
+                });       		
+        		
+    		});
+    		
+    		
+            
             
             
             function searchEquipment() {
@@ -623,7 +633,7 @@
                     <tr class="tr_time">
                         <th class="th_white"><h6>번호</h6></th>
                         <th class="th_name"><h6>비품명</h6></th>
-                        <th colspan="2"><h6>00</h6></th>
+                        <th colspan="2"><h6>00</h6></th>	
                         <th colspan="2"><h6>01</h6></th>
                         <th colspan="2"><h6>02</h6></th>
                         <th colspan="2"><h6>03</h6></th>

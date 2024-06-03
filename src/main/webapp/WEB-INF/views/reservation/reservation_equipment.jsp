@@ -50,34 +50,6 @@
             cursor: pointer;
         }
     </style>
-
-    <script>
-        function toggle(source) {
-            checkboxes = document.querySelectorAll('.equipment-checkbox');
-            for (var i = 0; i < checkboxes.length; i++) {
-                checkboxes[i].checked = source.checked;
-            }
-        }
-
-        function checkToggle() {
-            var selectAll = document.getElementById('selectAll');
-            var checkboxes = document.querySelectorAll('.equipment-checkbox');
-            var allChecked = true;
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (!checkboxes[i].checked) {
-                    allChecked = false;
-                    break;
-                }
-            }
-            selectAll.checked = allChecked;
-        }
-
-        function toggleCheckbox(tr) {
-            var checkbox = tr.querySelector('.equipment-checkbox');
-            checkbox.checked = !checkbox.checked;
-            checkToggle();
-        }
-    </script>
 </head>
 <body>
 
@@ -104,6 +76,7 @@
         <table class="table table-bordered line-shadow">
             <tr>
                 <th class="th_1">    
+                    <input type="hidden" value="${ code }">
                     <input type="checkbox" id="selectAll" onclick="toggle(this);">
                     <label for="selectAll" style="cursor: pointer;">전체 선택</label>
                 </th>
@@ -115,7 +88,7 @@
             <c:choose>
                 <c:when test="${not empty list}">
                     <c:forEach var="item" items="${list}" varStatus="status">
-                        <tr>
+                        <tr data-id="${item.code}">
                             <td onclick="toggleCheckbox(this);">
                                 <input type="checkbox" class="equipment-checkbox" onclick="event.stopPropagation(); checkToggle();">
                             </td>
@@ -134,98 +107,121 @@
                 </c:otherwise>
             </c:choose>
         </table>
-
-		<script>
-		    function insertEquipment() {
-	        var equipmentName = prompt("비품명을 입력하세요:");
+        
+        <script>
+	    function toggle(source) {
+	        checkboxes = document.querySelectorAll('.equipment-checkbox');
+	        for (var i = 0; i < checkboxes.length; i++) {
+	            checkboxes[i].checked = source.checked;
+	        }
+	    }
+	
+	    function checkToggle() {
+	        var selectAll = document.getElementById('selectAll');
+	        var checkboxes = document.querySelectorAll('.equipment-checkbox');
+	        var allChecked = true;
+	        for (var i = 0; i < checkboxes.length; i++) {
+	            if (!checkboxes[i].checked) {
+	                allChecked = false;
+	                break;
+	            }
+	        }
+	        selectAll.checked = allChecked;
+	    }
+	
+	    function toggleCheckbox(tr) {
+	        var checkbox = tr.querySelector('.equipment-checkbox');
+	        checkbox.checked = !checkbox.checked;
+	        checkToggle();
+	    }
+	
+	    // 비품 추가, 수정, 삭제
+	    function insertEquipment() {
+	        var equipmentName = prompt("추가할 비품명을 입력하세요:");
 	        if (equipmentName) {
-	            var data = { equipmentName: equipmentName };
-	            fetch('${contextPath}/equipment', {
+	            fetch('${contextPath}/reservation/insert.do', {
 	                method: 'POST',
 	                headers: {
-	                    'Content-Type': 'application/json'
+	                    'Content-Type': 'application/x-www-form-urlencoded'
 	                },
-	                body: JSON.stringify(data)
-	            })
-	            .then(response => response.json())
-	            .then(result => {
-	                if (result.success) {
-	                    alert('비품이 추가되었습니다.');
+	                body: new URLSearchParams({
+	                    'equipmentName': equipmentName,
+	                    'registEmp': '${loginMember.userNo}'
+	                })
+	            }).then(response => {
+	                if (response.ok) {
+	                    alert(equipmentName + ' 비품을 추가 하였습니다.');
 	                    location.reload();
 	                } else {
 	                    alert('비품 추가에 실패했습니다.');
 	                }
-	            })
-	            .catch(error => console.error('Error:', error));
+	            });
 	        }
 	    }
 	
-	    // Function to delete equipment
 	    function deleteEquipment() {
-	        var selected = [];
-	        document.querySelectorAll('.equipment-checkbox:checked').forEach(checkbox => {
-	            var row = checkbox.closest('tr');
-	            var id = row.querySelector('td:nth-child(2)').innerText;
-	            selected.push(id);
+	        var selectedIds = [];
+	        document.querySelectorAll('.equipment-checkbox:checked').forEach(function(checkbox) {
+	            selectedIds.push(checkbox.closest('tr').dataset.id);
 	        });
 	
-	        if (selected.length > 0) {
-	            var data = { ids: selected };
-	            fetch('${contextPath}/equipment', {
-	                method: 'DELETE',
+	        if (selectedIds.length > 0) {
+	            fetch('${contextPath}/reservation/delete.do', {
+	                method: 'POST',
 	                headers: {
-	                    'Content-Type': 'application/json'
+	                    'Content-Type': 'application/x-www-form-urlencoded'
 	                },
-	                body: JSON.stringify(data)
-	            })
-	            .then(response => response.json())
-	            .then(result => {
-	                if (result.success) {
-	                    alert('비품이 삭제되었습니다.');
+	                body: new URLSearchParams({
+	                    'ids': selectedIds.join(',')
+	                })
+	            }).then(response => {
+	                if (response.ok) {
+	                    alert('비품을 삭제 하였습니다.');
 	                    location.reload();
 	                } else {
 	                    alert('비품 삭제에 실패했습니다.');
 	                }
-	            })
-	            .catch(error => console.error('Error:', error));
+	            });
 	        } else {
 	            alert('삭제할 비품을 선택하세요.');
 	        }
 	    }
 	
-	    // Function to update equipment
-	    function updateEquipment() {
-	        var equipmentList = [];
-	        document.querySelectorAll('tr').forEach(tr => {
-	            var checkbox = tr.querySelector('.equipment-checkbox');
-	            if (checkbox) {
-	                var id = tr.querySelector('td:nth-child(2)').innerText;
-	                var name = tr.querySelector('td:nth-child(3) input').value;
-	                equipmentList.push({ id: id, equipmentName: name });
+	    // 비품명 수정
+	    function editEquipment(tr) {
+	        var equipmentName = prompt("수정할 비품명을 입력하세요:", tr.cells[2].textContent);
+	        if (equipmentName) {
+	            var equipmentId = tr.dataset.id;
+	            fetch('${contextPath}/reservation/update.do', {
+	                method: 'POST',
+	                headers: {
+	                    'Content-Type': 'application/x-www-form-urlencoded'
+	                },
+	                body: new URLSearchParams({
+	                    'id': equipmentId,
+	                    'equipmentName': equipmentName,
+	                    'modifyEmp': ${loginMember.userNo}
+	                })
+	            }).then(response => {
+	                if (response.ok) {
+	                    alert('비품명을 수정 하였습니다.');
+	                    location.reload();
+	                } else {
+	                    alert('비품명 수정에 실패했습니다.');
+	                }
+	            });
+	        }
+	    }
+	
+	    document.querySelectorAll('tr[data-id]').forEach(function(tr) {
+	        tr.addEventListener('click', function(event) {
+	            if (event.target.tagName.toLowerCase() !== 'input') {
+	                editEquipment(tr);
 	            }
 	        });
-	
-	        var data = { equipmentList: equipmentList };
-	        fetch('${contextPath}/equipment', {
-	            method: 'PUT',
-	            headers: {
-	                'Content-Type': 'application/json'
-	            },
-	            body: JSON.stringify(data)
-	        })
-	        .then(response => response.json())
-	        .then(result => {
-	            if (result.success) {
-	                alert('비품이 저장되었습니다.');
-	                location.reload();
-	            } else {
-	                alert('비품 저장에 실패했습니다.');
-	            }
-	        })
-	        .catch(error => console.error('Error:', error));
-	    }
-		</script>
-		
+	    });
+	</script>
+
 
 
         <!-- ------------ -->

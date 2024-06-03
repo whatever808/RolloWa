@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2.1 출결 조회</title>
+    <title>출결 조회</title>
 
 	<!-- css -->
 	<link rel="stylesheet" href="${contextPath}/resources/css/attendance/attendance.css">
@@ -171,18 +171,15 @@
 					
 					// 검색한 사용자 수
 					let totalRows = $(data).find(".employee_info tbody > tr").length;
-					if (totalRows > 0) {
-					    let isEmptyMessage = $(data).find(".employee_info tbody > tr td[colspan='8']").text();
-					    if (isEmptyMessage == "조회된 직원이 없습니다.") {
-					        totalRows -= 1;
-					    } else {
-					        totalRows;
-					    }
-					} else {
-					    totalRows = 0; // 0 처리
-					}
-					$(".employee_count").text("전체 " + totalRows + "명");
 
+					if (totalRows > 0) {
+					    let isEmptyMessage = $(data).find(".employee_info tbody > tr td[colspan='8']").text().trim();
+					    if (isEmptyMessage === "조회된 직원이 없습니다.") {
+					        totalRows -=1;  // 값이 0인 경우 1를 뺍니다.
+					    }
+					}
+
+					$(".employee_count").text("전체 " + totalRows + "명");
 				}, error: function(){
 					//console.log("통신 실패");
 				}
@@ -287,7 +284,7 @@
 				<input type="hidden" name="selectedDate" id="selectedDate" value="${ selectedDate }">
 				<table class="table table_search">
 					<tr class="search_menu">
-						<!-- 전체 인원수 수정해야함-->
+						<!-- 전체 인원수 -->
 						<td>
 							<h5 class="employee_count">전체 ${ listCount }명</h5>
 						</td>

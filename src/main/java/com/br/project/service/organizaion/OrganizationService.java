@@ -79,9 +79,8 @@ public class OrganizationService {
     }
 
     // 조직 관리 service
-	public void addDepartment(OrganizationDto organizationDto) {
-		// TODO Auto-generated method stub
-		
+	public int insertDepartment(String deptName) {
+		return organizationDao.insertDepartment(deptName);
 	}
 
 	public void addTeam(OrganizationDto organizationDto) {
@@ -96,7 +95,6 @@ public class OrganizationService {
 		// TODO Auto-generated method stub
 		return false;
 	}
-    
 	
 
 }

@@ -2,13 +2,23 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="java.util.TimeZone" %>
+<%@ page import="java.util.Calendar" %>
+<%
+    // 대한민국 시간 설정
+    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul"));
+    java.util.Date currentDateKST = calendar.getTime();
+%>
+
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<c:set var="itemsPerPage" value="10"/>
+<c:set var="startNo" value="${listCount - (pi.currentPage - 1) * itemsPerPage}"/>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3.2 내 예약 조회</title>
+    <title>내 예약 조회</title>
 
 	<style>
     .main_content{
@@ -33,32 +43,12 @@
         justify-content: flex-end;
     }
 
-
-    .reservation_1,
-    .reservation_2,
-    .reservation_3,
-    .reservation_4{
-        color: white !important;
-    }
     .table th{
         background-color: gainsboro;
         text-align: center;
     }
     .table td{
         text-align: center;
-    }
-
-    .reservation_1{
-        background-color: green !important;
-    }
-    .reservation_2{
-        background-color: rgb(255, 30, 30) !important;
-    }
-    .reservation_3{
-        background-color: rgb(64, 196, 248) !important;
-    }
-    .reservation_4{
-        background-color: orange !important;
     }
 
     </style>
@@ -76,157 +66,212 @@
 		<!-- ------------ -->
 	
 		<div class="div_1">
-		<h4>전체 개</h4>
+		<h4 id="totalCount">전체 ${listCount}개</h4>
 			<div>
-				<!-- <button class="btn btn-outline-primary">예약 수정</button> -->
-				<button class="btn btn-primary" id="cancelReservationBtn">예약 취소</button>
+				<button class="btn btn-primary" id="cancelReservationBtn">예약 삭제</button>
 			</div>
 		</div>
 
-		<table class="table table-bordered line-shadow table_1 ">
-			<tr>
-				<th>
-					<input type="checkbox" id="selectAll" class="form-check-input">
-					<label for="selectAll">전체 선택</label>
-				</th>
-				<th>번호</th>
-				<th>비품명</th>
-				<th>날짜</th>
-				<th>예약 시간</th>
-				<th>반납 예정 시간</th>
-				<th>내용</th>
-			</tr>
-			<c:choose>
-				<c:when test="${ not empty reservationList }">
-					<c:forEach var="r" items="${reservationList}">
-					    <tr>
-					        <td class="checkbox-cell">
-							    <input type="checkbox" id="selectOne-${r.reservationNo}" class="form-check-input" data-reservation-no="${r.reservationNo}">
-							    <label for="selectOne-${r.reservationNo}">선택</label>
-							</td>
-					        <td>${r.reservationNo}</td>
-					        <td>${r.equipmentName}</td>
-					        <td><fmt:formatDate value="${r.startTime}" pattern="yyyy년 MM월 dd일(E)"/></td>
-					        <td><fmt:formatDate value="${r.startTime}" pattern="HH:mm"/></td>
-					        <td><fmt:formatDate value="${r.endTime}" pattern="HH:mm"/></td>
-					        <td>${r.content}</td>
-					    </tr>
-					</c:forEach>
-				</c:when>
-				<c:otherwise>
-		        	<tr>
-		        		<td colspan="8">조회된 예약이 없습니다.</td>
-		        	</tr>
-		        </c:otherwise>
-	        </c:choose>
-           </table>
-            
-            <script>
-            //console.log("user: ", ${loginMember.userNo});
-            $(document).ready(function() {
-	            $.ajax({
-		 	        url: "${contextPath}/reservation/my.do",
-		 	        type: "GET",
-					data:{ userNo: "${ loginMember.userNo }" },
-		 	        success: function(data){
-						//console.log("통신 성공");
-						
-						// 예약 정보 테이블에 출력
-						$(".table_1 tbody").html($(data).find(".table_1 tbody").html());
-						
-						// 번호 출력, 체크박스 표시 설정
-						$(".table_1 tbody tr").each(function(index) {
-		                    $(this).find('td:nth-child(2)').text(index);
+		<table class="table table-bordered line-shadow table_1">
+		    <thead>
+		        <tr>
+		            <th>
+		                <input type="checkbox" id="selectAll" class="form-check-input">
+		                <label for="selectAll">전체 선택</label>
+		            </th>
+		            <th>번호</th>
+		            <th>비품명</th>
+		            <th>날짜</th>
+		            <th>예약 시간</th>
+		            <th>반납 시간</th>
+		            <th>내용</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		        <c:choose>
+		            <c:when test="${not empty list}">
+		                <c:forEach var="r" items="${list}" varStatus="status">
+		                    <tr>
+		                        <c:set var="endTime" value="${r.endTime}" />
+		                        <c:set var="currentTime" value="<%= currentDateKST.getTime() %>" />
+		                        <c:set var="returnTime" value="${endTime.time}" />
+		                        <c:choose>
+		                            <c:when test="${returnTime >= currentTime}">
+		                                <td class="checkbox-cell">
+		                                    <input type="checkbox" id="selectOne-${r.reservationNo}" class="form-check-input selectOne" data-reservation-no="${r.reservationNo}">
+		                                    <label for="selectOne-${r.reservationNo}">선택</label>
+		                                </td>
+		                            </c:when>
+		                            <c:otherwise>
+		                                <td class="checkbox-cell"></td>
+		                            </c:otherwise>
+		                        </c:choose>
+		                        <td>${startNo - status.index}</td>
+		                        <td>${r.equipmentName}</td>
+		                        <td><fmt:formatDate value="${r.startTime}" pattern="yyyy년 MM월 dd일(E)"/></td>
+		                        <td><fmt:formatDate value="${r.startTime}" pattern="HH:mm"/></td>
+		                        <td><fmt:formatDate value="${r.endTime}" pattern="HH:mm"/></td>
+		                        <td>${r.content}</td>
+		                    </tr>
+		                </c:forEach>
+		            </c:when>
+		            <c:otherwise>
+		                <tr>
+		                    <td colspan="8">조회된 예약이 없습니다.</td>
+		                </tr>
+		            </c:otherwise>
+		        </c:choose>
+		    </tbody>
+		</table>
 		
-		                    var endTime = $(this).find('td:nth-child(5)').text();
-		                    var currentTime = new Date();
-		                    var returnTime = new Date(endTime.replace(/-/g, '/'));
+		<div id="pagingArea" class="container">
+		    <ul class="pagination justify-content-center">
+		        <!-- 처음 페이지로 이동 -->
+		        <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
+		            <a class="page-link" href="javascript:showlist(1);">처음</a>
+		        </li>
 		
-		                    if (returnTime < currentTime) {
-		                        $(this).find('.checkbox-cell').html('');
-		                    }
-		                });
-						
-						// 시간 데이터에서 .0 제거
-		                $(".table_1 tbody td:nth-child(4), .table_1 tbody td:nth-child(5)").each(function() {
-		                    var time = $(this).text();
-		                    time = time.split(".")[0]; // 소수점 이하 부분 제거
-		                    $(this).text(time);
-		                });
-						
-						// 예약한 개수 출력
-		                var rowCount = $(".table_1 tbody tr").length;
-		                var lastRow = $(".table_1 tbody tr:last-child");
-
-		                // 마지막 행이 colspan을 사용하는지 확인
-		                var colspan = lastRow.find("td").attr("colspan");
-
-		                if (colspan) {
-		                    // colspan이 존재하면 rowCount에서 2를 뺌
-		                    rowCount -= 2;
-		                } else {
-		                    // 그렇지 않으면 rowCount에서 1을 뺌
-		                    rowCount -= 1;
+		        <!-- 이전 페이지로 이동 -->
+		        <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }">
+		            <a class="page-link" href="javascript:showlist(${pi.currentPage-1});">◀</a>
+		        </li>
+		
+		        <!-- 페이지 번호 링크 -->
+		        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+		            <li class="page-item ${ pi.currentPage == p ? 'active' : '' }">
+		                <a class="page-link" href="javascript:showlist(${p});">${ p }</a>
+		            </li>
+		        </c:forEach>
+		
+		        <!-- 다음 페이지로 이동 -->
+		        <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }">
+		            <a class="page-link" href="javascript:showlist(${pi.currentPage+1});">▶</a>
+		        </li>
+		
+		        <!-- 끝 페이지로 이동 -->
+		        <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }">
+		            <a class="page-link" href="javascript:showlist(${pi.maxPage});">끝</a>
+		        </li>
+		    </ul>
+		</div>
+		
+		
+		<script>
+		window.onload = function(){
+		    showlist(${pi.currentPage});
+		}
+		
+		function showlist(page){
+		    $.ajax({
+		        url: "${contextPath}/reservation/my.do",
+		        type: "GET",
+		        data: { 
+		            userNo: "${loginMember.userNo}",
+		            page: page 
+		        },
+		        success: function(data) {
+		            var parser = new DOMParser();
+		            var doc = parser.parseFromString(data, 'text/html');
+		            
+		            var tableHtml = doc.querySelector('tbody').innerHTML;
+		            var pagingHtml = doc.querySelector('#pagingArea').innerHTML;
+		            var totalCount = doc.querySelector('#totalCount').innerText.match(/\d+/)[0];
+		
+		            $(".table_1 tbody").html(tableHtml);
+		            $("#pagingArea").html(pagingHtml);
+		            $("#totalCount").text(`전체 ${totalCount}개`);
+		
+		            // 페이지당 항목 수와 현재 페이지 번호를 이용하여 시작 번호 계산
+		            var itemsPerPage = 10;  // 한 페이지당 항목 수를 10으로 설정합니다.
+		            var totalItems = parseInt(totalCount); // 전체 항목 수를 가져옵니다.
+		            var startNo = totalItems - ((page - 1) * itemsPerPage);
+		
+		            // 번호 출력, 체크박스 표시 설정
+		            $(".table_1 tbody tr").each(function(index) {
+		                $(this).find('td:nth-child(2)').text(startNo - index);
+		
+		                var endTime = $(this).find('td:nth-child(5)').text();
+		                var currentTime = new Date();
+		                var returnTime = new Date(endTime.replace(/-/g, '/'));
+		
+		                if (returnTime < currentTime) {
+		                    $(this).find('.checkbox-cell').html('');
 		                }
+		            });
+		
+		            // 시간 데이터에서 .0 제거
+		            $(".table_1 tbody td:nth-child(4), .table_1 tbody td:nth-child(5)").each(function() {
+		                var time = $(this).text();
+		                time = time.split(".")[0]; // 소수점 이하 부분 제거
+		                $(this).text(time);
+		            });
 
-		                $("h4").html("전체 " + rowCount + "개");
-					    
-		 	        },
-		 	        error: function(){
-		 	            //console.log("통신 실패");
-		 	        }
-		 	    });
-            });
-         	// 전체 선택 체크박스 클릭 시
-            $(document).on('click', '#selectAll', function() {
-                var isChecked = $(this).prop('checked');
-                $('.table_1 tbody input[type="checkbox"]').prop('checked', isChecked);
-            });
+		            // 체크박스 기능 초기화
+		            initializeCheckboxes();
+		        }, 
+		        error: function() {
+		            alert('데이터를 불러오는 중 오류가 발생했습니다.');
+		        }
+		    });
+		}
 
-         	// 개별 체크박스 클릭 시
-            $(document).on('click', '.table_1 tbody input[type="checkbox"]', function() {
-                var totalCheckboxes = $('.table_1 tbody input[type="checkbox"]').length;
-                var checkedCheckboxes = $('.table_1 tbody input[type="checkbox"]:checked').length;
-                var isAllChecked = totalCheckboxes === checkedCheckboxes;
+		function initializeCheckboxes() {
+		    $('#selectAll').on('change', function() {
+		        var isChecked = $(this).is(':checked');
+		        $('.selectOne').prop('checked', isChecked);
+		    });
 
-                $('#selectAll').prop('checked', isAllChecked);
-            });
-         	
-         	// 예약 취소 버튼 클릭 시 예약 취소
-            $('#cancelReservationBtn').on('click', function() {
-                var selectedReservations = [];
-                $('.table_1 tbody input[type="checkbox"]:checked').each(function() {
-                    selectedReservations.push($(this).data('reservation-no'));
-                });
+		    $('.selectOne').on('change', function() {
+		        var totalCheckboxes = $('.selectOne').length;
+		        var checkedCheckboxes = $('.selectOne:checked').length;
+		        $('#selectAll').prop('checked', totalCheckboxes === checkedCheckboxes);
+		    });
+		}
+		document.getElementById('cancelReservationBtn').addEventListener('click', function() {
+		    var selectedReservations = [];
+		    document.querySelectorAll('.selectOne:checked').forEach(function(checkbox) {
+		        selectedReservations.push(checkbox.getAttribute('data-reservation-no'));
+		    });
 
-                if (selectedReservations.length > 0) {
-                    $.ajax({
-                        url: "${contextPath}/reservation/cancel.do",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify({ reservationNo: selectedReservations }),
-                        success: function(response) {
-                            // 성공적으로 예약 취소 처리 후 테이블 갱신
-                            if (response == "SUCCESS") {
-	                            alert('예약이 취소되었습니다.');
-	                            location.reload();
-                            } else {
-	                            alert('예약이 취소 실패!');
-                            	
-                            }
-                        },
-                        error: function() {
-                            alert('예약 취소에 실패했습니다.');
-                        }
-                    });
-                } else {
-                    alert('취소할 예약을 선택해주세요.');
-                }
-            });
-            
-            
-            
-            </script>
+		    if (selectedReservations.length == 0) {
+		        alert('삭제할 예약을 선택하세요.');
+		        return;
+		    }
+
+		    var confirmation = confirm('선택한 예약을 삭제하시겠습니까?');
+		    if (!confirmation) {
+		        return;
+		    }
+
+		    $.ajax({
+		        url: '${contextPath}/reservation/cancel.do',
+		        type: 'POST',
+		        contentType: 'application/json; charset=UTF-8',
+		        data: JSON.stringify({ reservationNo: selectedReservations }),
+		        success: function(response) {
+		            alert('선택한 예약이 삭제되었습니다.');
+		            location.reload();
+		        },
+		        error: function() {
+		            alert('예약 삭제 중 오류가 발생했습니다.');
+		        }
+		    });
+		});
+
+		function initializeCheckboxes() {
+		    $('#selectAll').on('change', function() {
+		        var isChecked = $(this).is(':checked');
+		        $('.selectOne').prop('checked', isChecked);
+		    });
+
+		    $('.selectOne').on('change', function() {
+		        var totalCheckboxes = $('.selectOne').length;
+		        var checkedCheckboxes = $('.selectOne:checked').length;
+		        $('#selectAll').prop('checked', totalCheckboxes === checkedCheckboxes);
+		    });
+		}
+		</script>
+
 	
 		<!-- ------------ -->
 	
