@@ -27,13 +27,13 @@
 		     <div id="search-form" class="input-group">
 		       	
 		      <!-- search keyword start -->
-			    <span class="form-outline" data-mdb-input-init>
+			    <span>
 			        <input type="search" id="keyword" class="form-control"placeholder="어트랙션명 검색" aria-label="게시글 검색"/>
 			    </span>
 			    <!-- search keyword end -->
 			    
 			    <!-- search button start -->
-			    <button id="search-btn" type="button" class="btn btn-secondary" onclick="searchValidation();" data-mdb-ripple-init>
+			    <button id="search-btn" type="button" class="btn btn-secondary" onclick="searchValidation();">
 			        <i class="fas fa-search"></i>
 			    </button>
 			    <!-- search button end -->
@@ -240,6 +240,7 @@
 			yellowAlert("어트랙션명을 입력해주세요.", "");
 			$("#keyword").select();
 		}else{
+			console.log("리셋");
 			// 1) 검색값 초기화 버튼 활성화
 			showResetBtn();
 			// 2) 검색어 앞뒤 공백 없애기
@@ -383,7 +384,7 @@
  			let mapMark = location.mapMark;
  			
  			let normalIcon = 'https://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Ball-Azure-icon.png';
- 			let selectedIcon = 'https://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Ball-Pink-Right-icon.png';
+ 			let selectedIcon = 'https://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Ball-Right-Pink-icon.png';
  			
  			// 마커생성 및 설정
  			const marker = new google.maps.Marker({

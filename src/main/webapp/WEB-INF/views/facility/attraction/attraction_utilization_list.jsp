@@ -18,9 +18,9 @@
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
 		<!-- content 추가 -->
-  		<div class="content p-5">
-	  
-	  	<h1 class="page-title">어트랙션 이용률</h1>
+ 		<div class="content p-5">
+  
+  	<h1 class="page-title">어트랙션 이용률</h1>
 		
 		<!-- select filter div start -->
 		<div class="select-filter-div">

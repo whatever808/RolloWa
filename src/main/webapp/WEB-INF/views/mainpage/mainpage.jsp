@@ -62,23 +62,23 @@
                     		<!-- 기웅 추가 -->
                     		<div class="alram-div"><button type="button" class="btn alram-btn" style="box-shadow: none;"><i class="fa-solid fa-bell fa-2x" style="color: #ff939e;"></i></button></div>
                     		<!-- 기웅 추가 -->
-                        <img src="${ contextPath }${ loginMember.profileURL } alt="user profile">
+                        <img src="${ contextPath }${ loginMember.profileURL }" alt="user profile">
 
-                        <h6 class="mt-3 fw-bold">${ loginMember.userName } / ${ loginMember.positionName } / ${ loginMember.teamName }</h6>
+                        <h5 class="mt-4 fw-bold">${ loginMember.userName } / ${ loginMember.positionName } / ${ loginMember.teamName }</h5>
                     </div>
 					
                     <div class="profile-attend pe-4">
-                        <div class="attend-button d-flex my-2">
+                        <div class="attend-button d-flex my-3">
                             <button class="work-on btn btn-outline-primary px-4 me-auto" data-attendanceno="">출근</button>
                             <label class="work-on-time attend-time"></label>
                         </div>
 
-                        <div class="attend-button d-flex my-2">
+                        <div class="attend-button d-flex my-3">
                             <button class="work-off btn btn-outline-danger px-4 me-auto disabled">퇴근</button>
                             <label class="work-off-time attend-time"></label>
                         </div>
 
-                        <div class="attend-button d-flex my-2">
+                        <div class="attend-button d-flex my-3">
                             <button class="leave-early btn btn-outline-warning px-4 me-auto disabled">조퇴</button>
                             <label class="leave-early-time attend-time"></label>
                         </div>

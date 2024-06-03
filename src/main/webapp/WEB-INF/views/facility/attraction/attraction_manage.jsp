@@ -16,7 +16,7 @@
 	<!-- side bar -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
-	<!-- content 추가 -->
+		<!-- content 추가 -->
   	<div class="content m-5">
 
      <h1 class="page-title">어트랙션 관리</h1>
@@ -27,13 +27,13 @@
 		     <div id="search-form" class="input-group">
 		       	
 		      <!-- search keyword start -->
-			    <span class="form-outline" data-mdb-input-init>
+			    <span>
 			        <input type="search" id="keyword" class="form-control"placeholder="어트랙션명 검색"/>
 			    </span>
 			    <!-- search keyword end -->
 			    
 			    <!-- search button start -->
-			    <button id="search-btn" type="button" class="btn btn-secondary" onclick="searchValidation();" data-mdb-ripple-init>
+			    <button id="search-btn" type="button" class="btn btn-secondary" onclick="searchValidation();">
 			        <i class="fas fa-search"></i>
 			    </button>
 			    <!-- search button end -->

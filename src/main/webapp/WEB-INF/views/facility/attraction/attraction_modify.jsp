@@ -59,7 +59,7 @@
 	
 	            <div class="field-group">
 	                <label for="capacity-limit" class="field-title">수용가능 인원</label><br>
-	                <select class="capacity-limit form-select" id="capacity-limit" name="customerLimit">
+	                <select class="capacity-limit form-select text-center" id="capacity-limit" name="customerLimit">
 	                    <c:forEach var="num" begin="0" end="1000">
 	                    	<option>${ num }</option>
 	                    </c:forEach>
