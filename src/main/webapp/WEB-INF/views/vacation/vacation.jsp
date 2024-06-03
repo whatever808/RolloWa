@@ -333,7 +333,7 @@ i{
 								<th class="font-size20 jua-regular spaceNO">Category</th>
 								<th class="font-size20 jua-regular spaceNO">Date</th>
 								<th class="font-size20 jua-regular spaceNO">Using</th>
-								<th class="font-size20 jua-regular spaceNO">Del</th>
+								<th class="font-size20 jua-regular spaceNO">Refusal</th>
 							</tr>
 						</thead>
 						<tbody>

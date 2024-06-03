@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>지난 휴가</title>
+<title>휴가 결재</title>
 <style>
 .out-line {
 	min-height: 800px;
@@ -102,7 +102,7 @@
 						</select>
 					</div>
 				
-					<div><button style="box-shadow: 1px 1px 1px 1px #8888887a;" type="button" onclick="ajaxSearchOld(1);" class="jua-regular btn btn-outline-dark"> 검색 </button></div>
+				<div><button style="box-shadow: 1px 1px 1px 1px #8888887a;" type="button" onclick="ajaxSearchOld(1);" class="jua-regular btn btn-outline-dark"> 검색 </button></div>
 				</form>
 				<div>
 					<table class="search-list table table-hover">
@@ -112,7 +112,6 @@
 								<th class="font-size20 jua-regular spaceNO">Color</th>
 								<th class="font-size20 jua-regular spaceNO">Category</th>
 								<th class="font-size20 jua-regular spaceNO">Date</th>
-								<th class="font-size20 jua-regular spaceNO">Using</th>
 								<th class="font-size20 jua-regular spaceNO">Del</th>
 							</tr>
 						</thead>
@@ -226,9 +225,6 @@
 									+ '<td class="spaceNO" style="font-size: larger;">'
 									+ e.vacaStart.slice(0,10) +' ~ '+ e.vacaEnd.slice(0,10)
 									+ '</td>'
-									+ '<td><div class="fontRed">- '
-									+ ((new Date(e.vacaEnd.slice(0,10)) - new Date(e.vacaStart.slice(0,10))) / (1000 * 60 * 60 * 24) +1)
-									+ '</div></td>'
 									+ '<td><button class="btn btn-outline-danger" onclick="deleteCheck('+ e.vacaNO +');">철회</button></td>'
 									+ '</tr>'
 				})

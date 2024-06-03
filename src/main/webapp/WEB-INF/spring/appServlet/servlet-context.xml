@@ -34,8 +34,7 @@
 	<interceptors>
 		<!-- 로그인 체크 인터셉터 -->
 		<interceptor>
-			<mapping path="/board/*" />
-      <mapping path="/calendar/*" />
+			<mapping path="*" />
 			<beans:bean class="com.br.project.interceptor.LoginCheckInterceptor" id="loginCheckInterceptor" />
 		</interceptor>
 		
