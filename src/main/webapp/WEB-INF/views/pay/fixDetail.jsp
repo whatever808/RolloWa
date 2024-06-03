@@ -88,7 +88,6 @@ $(document).ready(function(){
 	    		        		      $("#apDt2").append(response.sign[0].middleApDt);	
 	            		      	}
 	    	        		      $("#approvalSt").empty();
-													$("#approvalSt").text("진행");
 	    	        		    } else if(response.approvalSignNo == 3){
 	    	        		    	$('#finalSign').children().remove();
 	    	        		    	$("#apDt3").children().remove();
@@ -97,7 +96,6 @@ $(document).ready(function(){
 	    	        		        $("#apDt3").append(response.sign[0].finalApDt);	        		    		
 	    	        		    	}
 	    	        		    	$("#approvalSt").empty();
-	    										$("#approvalSt").text("승인");	
 	    	        		    }
 	    	        		}
 	    	              
@@ -139,7 +137,7 @@ $(document).on("click", "#rejectBtn", function(){
 				        	$("#apDt1").append(list[0].firstApDt);	
 		        	}
 					  $("#approvalSt").empty();
-						$("#approvalSt").text("반려");	
+						$("#approvalSt").text("진행");	
 							
 				  }else if(list[1].approvalSignNo == "2"){
 					  alert("반려가 완료되었습니다.");
@@ -149,8 +147,7 @@ $(document).on("click", "#rejectBtn", function(){
 						  if($("#apDt2").text() == ""){
 		        		$("#apDt2").append(list[0].middleApDt);	
 	    		  	}
-					  $("#approvalSt").empty();
-						$("#approvalSt").text("반려");	
+					  $("#approvalSt").empty();	
 							
 				  }else{
 					  alert("반려가 완료되었습니다.");
@@ -161,7 +158,6 @@ $(document).on("click", "#rejectBtn", function(){
 		        		$("#apDt3").append(list[0].finalApDt);	
 	    		  	}
 					  $("#approvalSt").empty();
-						$("#approvalSt").text("반려");	
 					 }
 				  $("#modal").iziModal('close');
 					  
@@ -319,7 +315,14 @@ $(document).on("click", "#rejectBtn", function(){
 					        </div>
 					      			<div id="modifybtn">
 					           			<button class="btn btn-warning" id="modifyWriter" type="submit" style="display: none;">수정</button>
-					          			<button class="btn btn-primary" onclick="submitbtn();" style="display: none;" id="aproS">완료</button>
+					           			<c:choose>
+						           			<c:when test="${ list.get(0).FINAL_APPROVAL == userName }">
+						          				<button class="btn btn-primary" onclick="submitbtn();" style="display: none;" class="aproS">완료</button>
+						          			</c:when>
+						          			<c:when test="${ list.get(0).FIRST_APPROVAL == userName || list.get(0).MIDDLE_APPROVAL == userName}">
+						          				<button class="btn btn-primary" style="display: none;" class="aproS">완료</button>
+						          			</c:when>
+					          			</c:choose>
 					          	</div>
 					          	<div style="display: flex; justify-content: flex-end;">
 					          			<button class="delete-buttons" id="deldo">삭제</button>
@@ -450,14 +453,14 @@ $(document).on("click", "#rejectBtn", function(){
    
 		   $(document).ready(function() {
 				  
-			    var approvalSt = $("#approvalSt").text().trim();
+			    var approvalSt = "${list.get(0).DOCUMENT_STATUS}"
 			    var paymentWriterNo = "${list.get(0).PAYMENT_WRITER_NO}";
 			    var userName = "${userName}";
 			    var userNo = "${userNo}";
 			    
 			 		// 수정 버튼 표시 여부 결정
 			    if (paymentWriterNo === userNo) {
-			        if (approvalSt === "완료") {
+			        if (approvalSt === "Y") {
 			            $("#modifyWriter").css("display", "none"); // 완료 상태면 수정 버튼 숨김
 			        } else {
 			            $("#modifyWriter").css("display", "block"); // 완료 상태가 아니면 수정 버튼 표시
@@ -468,7 +471,7 @@ $(document).on("click", "#rejectBtn", function(){
 			    
 			    
 			    // 승인 상태에 따라 버튼 표시 여부 결정
-			    if (approvalSt !== "완료") {
+			    if (approvalSt !== "D") {
 			        if ("${list.get(0).FIRST_APPROVAL}" === userName) {
 			            $(".suBtn").css("display", "block");
 			        } else if ("${list.get(0).MIDDLE_APPROVAL}" === userName && $("#img1").length) {
@@ -487,31 +490,28 @@ $(document).on("click", "#rejectBtn", function(){
 			    
 			    // 승인/반려 버튼 표시 여부 결정
 			    if ("${list.get(0).FIRST_APPROVAL}" === userName || "${list.get(0).MIDDLE_APPROVAL}" === userName || "${list.get(0).FINAL_APPROVAL}" === userName) {
-			        $("#aproS").css("display", "block");
+			        $(".aproS").css("display", "block");
 			    } else {
-			        $("#aproS").css("display", "none"); 
+			        $(".aproS").css("display", "none"); 
 			    }
 			});
-		  
+		  //3차승인자만 선택할수있는 완료버튼
 		   function submitbtn() {
 			    if (confirm('결재을 완료하시겠습니까?')) {
-			        alert("결재가 완료되었습니다.");
-			        location.href = document.referrer;
+			        if("${sign.get(0).firstSign}" == "반려" || "${sign.get(0).middleSign}" == "반려" || "${sign.get(0).finalSign}" == "반려"){
+			        	
+			        }
 			    }
 			}
 		  
 		  $(document).ready(function(){
 			  
-			  var approvalSt = $("#approvalSt").text().trim();
+			  var approvalSt = "${list.get(0).DOCUMENT_STATUS}";
 			  var paymentWriterNo = "${list.get(0).PAYMENT_WRITER_NO}";
-			  if (approvalSt == "완료") {
-          $("#aproS").css("display", "none");
+			  if (approvalSt == "Y" || approvalSt == "N") {
+          $(".aproS").css("display", "none");
+          $(".suBtn").css("display", "none");
 	      }
-			  if (approvalSt == "반려" || approvalSt == "완료") {
-		       $(".suBtn").css("display", "none");
-		    }
-			  
-			  
 		  })
 	  
     

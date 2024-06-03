@@ -675,21 +675,23 @@
    <!-- 반려 사유 update -->
    <insert id="ajaxUpdateReject">
 	   	update approval
-			   set document_status = 'N'
-			      , CANCELLATION_CONTENT = #{content}
+			   set CANCELLATION_CONTENT = #{content}
 			     <choose>
 				     	<when test="approvalSignNo == 1">
 				     	, FIRST_APPROVAL_DATE = SYSDATE
 				     	, FIRST_SIGN = '반려'
+				     	, document_status = 'Y'
 				     	</when>
 				     	<when test="approvalSignNo == 2">
 				     	, MIDDLE_APPROVAL_DATE = SYSDATE
 				     	, MIDDLE_SIGN = '반려'
+				     	, document_status = 'Y'
 				     	</when>
-				     	<otherwise>
+				     	<when test="approvalSignNo == 3">
 				     	, FINAL_APPROVAL_DATE = SYSDATE
 				     	, FINAL_SIGN = '반려'
-				     	</otherwise>
+				     	, document_status = 'Y'
+				     	</when>
 			     </choose>
 			 where approval_no = #{approvalNo}
    </insert>
@@ -1742,7 +1744,7 @@
 						<otherwise>
 						    FINAL_APPROVAL_DATE = SYSDATE
 							, FINAL_SIGN = #{fileName}
-							, DOCUMENT_STATUS = 'Y'
+							, DOCUMENT_STATUS = 'I'
 							, CANCELLATION_CONTENT = null
 						</otherwise>	   
 	  	   </choose>
