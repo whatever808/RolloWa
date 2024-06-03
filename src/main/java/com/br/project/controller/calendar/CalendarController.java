@@ -166,6 +166,10 @@ public class CalendarController {
 			
 			int alramResult = 0;
 			for(int i = 0; i < calendar.getCoworker().size(); i++) {
+				// 알림을 보낸 사원을 제외한 다른 사원들에게만 알림 발송
+				if( Integer.parseInt(calendar.getCoworker().get(i).getUserNo()) == member.getUserNo()) {
+					continue;
+				}
 				map.put("receiveUserNo", calendar.getCoworker().get(i).getUserNo());
 				
 				alramResult += nService.insertNotificationSend(map);

@@ -130,13 +130,13 @@
 	                     </tr>
 	                     <tr>
 	                         <th class="jua-regular font-size20">우편번호 : </th>
-	                         <td><input class="form-control" type="text" id="postCode" name="postNumber" value="${ memberInfo.postCode }" style="border-radius: 0;"></td>
+	                         <td><input class="form-control" type="text" id="postCode" name="postNumber" value="${ memberInfo.postCode }" style="border-radius: 0;" readonly></td>
 	                         <td><button type="button" class="btn btn-sm btn-outline-primary" onclick="findAddress();">주소 찾기</button></td>
 	
 	                     </tr>
 	                     <tr>
 	                         <th class="jua-regular font-size20">주소 : </th>
-	                         <td colspan="2"><input type="text" id="address" name="address" value="${ memberInfo.address }" style="width: 50%;"></td>
+	                         <td colspan="2"><input type="text" id="address" name="address" value="${ memberInfo.address }" style="width: 50%;" readonly></td>
 	                     </tr>
 	                     <tr>
 	                         <th class="jua-regular font-size20">상세주소 : </th>

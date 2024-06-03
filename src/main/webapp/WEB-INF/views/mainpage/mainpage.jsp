@@ -539,7 +539,6 @@
   	$(document).ready(function() {
   		selectAlram();
   	})
-  	
   	// 읽지 않은 알림 조회
   	function selectAlram() {
 	  	$.ajax({
@@ -590,10 +589,13 @@
 	  			}
   		})
 		}
+
   	// 알림 버튼 클릭 시 알림 조회
   	$(".alram-btn").on("click", function() {
 			// 알림 아이콘 표시 제거
 			$(".alram-btn>i").removeClass("fa-bounce");
+			//알림 조회
+			selectAlram();
 			// 모달창 열기
 			$("#alram_list").iziModal('open');
   	})
