@@ -87,7 +87,7 @@
 		<div class="content-area">
 			<fieldset class="line-shadow radious10 inner-line">
 				<legend>
-					<h1 class="jua-regular">지난휴가</h1>
+					<h1 class="jua-regular">휴가 결재</h1>
 				</legend>
 				<br>
 				<br>
@@ -131,10 +131,10 @@
 			<div>
 				<br>
 				<div style="text-align: center;" class="font-size20 jua-regular">
-				정말로 삭제 하시겠습니까? 삭제 후 첨부파일 data를 복구 할 수 없습니다.
+				반려 하시겠습니까? 이유를 적어 주세요.
 				</div>
 				<br>
-				<div class="jua-regular">철회 사유</div>
+				<div class="jua-regular">반려 사유</div>
 				<textarea name="RRequestComent" style="width: -webkit-fill-available;"></textarea>
 				<input type="hidden" name="vacaNO">
 			</div>
