@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.br.project.dao.pay.PayDao;
 import com.br.project.dto.common.PageInfoDto;
@@ -587,5 +589,11 @@ public class PayService {
 		
 		return result1 * result2 * result3 * result5;
 	}
+	
+	//최종승인완료
+	public int ajaxApprovalprocessing(Map<String, Object> map) {
+		return payDao.ajaxApprovalprocessing(map);
+	}
+	
 	
 }

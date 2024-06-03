@@ -665,7 +665,7 @@ $(document).ready(function(){
 						    <div class="collapse" id="approval-collapse">
 						        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 						            <li>
-						                <a href="${contextPath}/pay/approvalMain.page"
+						                <a href="${contextPath}/pay/noApprovalListMain.page"
 						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">관리자홈</a>
 						            </li>
 						            <li>

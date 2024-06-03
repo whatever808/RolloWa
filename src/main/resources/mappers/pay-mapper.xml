@@ -192,7 +192,7 @@
 		select count(*) count
 			from approval A
 			WHERE STATUS = 'Y'
-		    AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
+		    AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 			   and (
 		            FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null
 		         or MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null
@@ -680,17 +680,15 @@
 				     	<when test="approvalSignNo == 1">
 				     	, FIRST_APPROVAL_DATE = SYSDATE
 				     	, FIRST_SIGN = '반려'
-				     	, document_status = 'Y'
+				     	, document_status = 'I'
 				     	</when>
 				     	<when test="approvalSignNo == 2">
 				     	, MIDDLE_APPROVAL_DATE = SYSDATE
 				     	, MIDDLE_SIGN = '반려'
-				     	, document_status = 'Y'
 				     	</when>
 				     	<when test="approvalSignNo == 3">
 				     	, FINAL_APPROVAL_DATE = SYSDATE
 				     	, FINAL_SIGN = '반려'
-				     	, document_status = 'Y'
 				     	</when>
 			     </choose>
 			 where approval_no = #{approvalNo}
@@ -1738,13 +1736,11 @@
 						<when test="approvalSignNo == 2">
 							  MIDDLE_APPROVAL_DATE = SYSDATE
 							, MIDDLE_SIGN = #{fileName}
-							, DOCUMENT_STATUS = 'I'
 							, CANCELLATION_CONTENT = null
 						</when>
 						<otherwise>
 						    FINAL_APPROVAL_DATE = SYSDATE
 							, FINAL_SIGN = #{fileName}
-							, DOCUMENT_STATUS = 'I'
 							, CANCELLATION_CONTENT = null
 						</otherwise>	   
 	  	   </choose>
@@ -1828,7 +1824,7 @@
 		     		 count(*)
 				from approval A
 			 WHERE STATUS = 'Y'
-         AND DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
+         AND DOCUMENT_STATUS IN ('Y', 'N', 'I')
 				 AND (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null
       					or MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null
       					or FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is not null
@@ -1894,7 +1890,7 @@
 		<select id="approvalSelectCount" resultType="_int">
 			SELECT COUNT(*) count
 			  FROM APPROVAL A
-			 WHERE DOCUMENT_STATUS IN ('Y', 'N', 'I', 'D')
+			 WHERE DOCUMENT_STATUS IN ('Y', 'N', 'I')
 			   AND STATUS = 'Y'
 			    and (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is not null
       					or MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is not null
@@ -2753,6 +2749,12 @@
 				 , CONTENT = #{content}
 				 , STATUS = #{fileStatus}
 	 	  where SALES_NO = #{salesNo}
+	 </update>
+	 
+	 <update id="ajaxApprovalprocessing">
+	 	update approval
+		 	 set DOCUMENT_STATUS = #{status}
+	 	 where APPROVAL_NO = #{approvalNo}
 	 </update>
 	
 	

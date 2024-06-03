@@ -97,6 +97,7 @@ public class PayController {
 		model.addAttribute("noApprovalSignCount", String.valueOf(noApprovalSignCount));
 		model.addAttribute("noApprovalSignCountToday", String.valueOf(noApprovalSignCountToday));
 		model.addAttribute("userName", userName);
+		model.addAttribute("userNo", userNo);
 		model.addAttribute("today", formatedNow);
 		
 		return "pay/approvalMain";
@@ -1906,6 +1907,65 @@ public class PayController {
 		
 		return map;
 	}
+	//결재최종승인
+	@ResponseBody
+	@PostMapping("/ajaxApprovalprocessing.do")
+	public int ajaxApprovalprocessing(@RequestParam Map<String, Object> map) {
+		return payService.ajaxApprovalprocessing(map);
+	}
+	
+	// 승인자 차례의 미결재함
+	@RequestMapping("/noApprovalListMain.page")
+	public String noApprovalListMain(@RequestParam(value="page", defaultValue="1") int currentPage
+							, HttpSession session, Model model) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);
+		
+		int noApprovalSignCount = payService.noApprovalSignCount(userName);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(noApprovalSignCount, currentPage, 5, 10);
+		
+		List<PayDto> list = payService.noApprovalSign(userName, pi);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("userName", userName);
+		
+		//개시글총갯수
+		int listCount = payService.selectListCount();
+		
+		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payService.moreDateCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payService.successListCount(userName);
+		// 로그인한 사용자의 전체수신갯수
+		int ulistCount = payService.allUserCount(userName);
+		// 미결재함
+		
+		int noApprovalSignCountToday = payService.noApprovalSignCountToday(userName);
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+		String formatedNow = sdf.format(now);
+		
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("noApprovalSignCount", String.valueOf(noApprovalSignCount));
+		model.addAttribute("noApprovalSignCountToday", String.valueOf(noApprovalSignCountToday));
+		model.addAttribute("userName", userName);
+		model.addAttribute("userNo", userNo);
+		model.addAttribute("today", formatedNow);
+				
+		
+		
+		return "pay/approvalMain";
+	}
+	
 	
 
 

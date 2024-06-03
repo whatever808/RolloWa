@@ -501,4 +501,9 @@ public class PayDao {
 		return sqlSessionTemplate.update("payMapper.updateGReport", map);
 	}
 	
+	//최종승인완료
+	public int ajaxApprovalprocessing(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.ajaxApprovalprocessing", map);
+	}
+	
 }
