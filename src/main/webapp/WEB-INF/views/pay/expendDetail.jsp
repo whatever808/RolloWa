@@ -289,16 +289,18 @@ $(document).on("click", "#rejectBtn", function(){
 	                    <th >수량</th>
 	                    <th colspan="2">매출금액</th>
 	                </tr>
-                 	<c:forEach var="l" items="${list}">
+	                <c:if test="${ not empty list }">
+                 	<c:forEach var="i" begin="0" end="${ list.size() - 1}">
                      <tr>
-                         <td>${l.ITEM}</td>
-                         <td>${l.VOLUMES}</td>
-                         <td colspan="2">${l.SALES_AMOUNT}</td>
+                         <td>${list.get(i).ITEM}</td>
+                         <td>${list.get(i).VOLUMES}</td>
+                         <td colspan="2" class="sales_amount">${list.get(i).SALES_AMOUNT}</td>
                      </tr> 			
                    </c:forEach>
+                  </c:if>
                   <tr>
 	                    <th colspan="2">총매출금액(VAT별도)</th>
-	                    <td colspan="2">${ list.get(0).TOTAL_SALES }</td>
+	                    <td colspan="2" id="total_sales">${ list.get(0).TOTAL_SALES }</td>
 	                </tr>
             </table>
 					        </div>
@@ -309,6 +311,13 @@ $(document).on("click", "#rejectBtn", function(){
 					          	<div style="display: flex; justify-content: flex-end;">
 					          			<button class="delete-buttons" id="deldo">삭제</button>
 					          	</div>
+					          	<div>
+			           				<button id="historyBack" type="button" style="border: none; background-color: white;">
+				           			<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" style="color: #e99db2;" class="bi bi-arrow-left-square-fill" viewBox="0 0 16 16">
+												  <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1"/>
+												</svg>
+												</button>							        
+					        		</div>
 					 				</div> 
                 </div>
             </div>
@@ -347,6 +356,23 @@ $(document).on("click", "#rejectBtn", function(){
 		    </div>
 		    <!---------------------------------------------->
 		    
+		<script>
+			$(document).ready(function(){
+				$(".sales_amount").each(function(){
+					$(this).text($(this).text().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+				})
+				
+				$("#total_sales").text($("#total_sales").text().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+				
+			})
+		
+		</script>
+		<script>
+        $('#historyBack').on('click', function() {
+            window.history.back();
+        });
+   </script>  
+      
    <script>
 		   $(document).ready(function() {
 		   		if("${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}"){
@@ -370,10 +396,7 @@ $(document).on("click", "#rejectBtn", function(){
                         success: function(response) {
                         	 if(response == "SUCCESS") {
                                  alert("삭제가 완료되었습니다.");
-                                 history.back();
-                                 setTimeout(function() {
-                                     location.reload();
-                                 }, 1); 
+                                 location.href = document.referrer;
                              } else {
                                  alert("삭제 실패");
                              }
@@ -396,13 +419,19 @@ $(document).on("click", "#rejectBtn", function(){
 			    var approvalSt = $("#approvalSt").text().trim();
 			    var paymentWriterNo = "${list.get(0).PAYMENT_WRITER_NO}";
 			    var userName = "${userName}";
+			    var userNo = "${userNo}";
 			    
-			    // 수정 버튼 표시 여부 결정
-			    if (approvalSt === "완료" && paymentWriterNo === "${userNo}") {
-			    	  $("#modifyWriter").css("display", "none");
+			 		// 수정 버튼 표시 여부 결정
+			    if (paymentWriterNo === userNo) {
+			        if (approvalSt === "완료") {
+			            $("#modifyWriter").css("display", "none"); // 완료 상태면 수정 버튼 숨김
+			        } else {
+			            $("#modifyWriter").css("display", "block"); // 완료 상태가 아니면 수정 버튼 표시
+			        }
 			    } else {
-			        $("#modifyWriter").css("display", "block");
+			        $("#modifyWriter").css("display", "none"); // 작성자가 아니면 수정 버튼 숨김
 			    }
+			    
 			    
 			    // 승인 상태에 따라 버튼 표시 여부 결정
 			    if (approvalSt !== "완료") {
@@ -426,24 +455,30 @@ $(document).on("click", "#rejectBtn", function(){
 			    if ("${list.get(0).FIRST_APPROVAL}" === userName || "${list.get(0).MIDDLE_APPROVAL}" === userName || "${list.get(0).FINAL_APPROVAL}" === userName) {
 			        $("#aproS").css("display", "block");
 			    } else {
-			        $(".suBtn").css("display", "none"); 
+			        $("#aproS").css("display", "none"); 
 			    }
 			});
 		  
-			  function submitbtn() {
-				    if (confirm('결재을 완료하시겠습니까?')) {
-				        var approvalSt = $("#approvalSt").text().trim();
-				        if (approvalSt == "반려" || approvalSt == "완료") {
-				            $(".suBtn").css("display", "none");
-				            if (approvalSt == "완료") {
-				                $("#modifyWriter").css("display", "none");
-				            }
-				        }
-				        
-				        alert("결재가 완료되었습니다.");
-				        location.href = document.referrer;
-				    }
-				}
+		   function submitbtn() {
+			    if (confirm('결재을 완료하시겠습니까?')) {
+			        alert("결재가 완료되었습니다.");
+			        location.href = document.referrer;
+			    }
+			}
+		  
+		  $(document).ready(function(){
+			  
+			  var approvalSt = $("#approvalSt").text().trim();
+			  var paymentWriterNo = "${list.get(0).PAYMENT_WRITER_NO}";
+			  if (approvalSt == "완료") {
+          $("#aproS").css("display", "none");
+	      }
+			  if (approvalSt == "반려" || approvalSt == "완료") {
+		       $(".suBtn").css("display", "none");
+		    }
+			  
+			  
+		  })
 		  
 	  
     

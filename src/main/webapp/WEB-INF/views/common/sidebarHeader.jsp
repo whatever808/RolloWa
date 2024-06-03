@@ -666,22 +666,22 @@ $(document).ready(function(){
 						        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 						            <li>
 						                <a href="${contextPath}/pay/approvalMain.page"
-						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재Home</a>
+						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">관리자홈</a>
 						            </li>
 						            <li>
 						                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
 						                    data-bs-toggle="collapse" data-bs-target="#approval-collapseApproval" aria-expanded="false">
-						                    결재함
+						                    결재상신함
 						                </button>
 						                <div class="collapse" id="approval-collapseApproval">
 						                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 						                        <li>
 						                            <a href="${contextPath}/pay/rejectApprovalList.page"
-						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">반려함</a>
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재반려함</a>
 						                        </li>
 						                        <li>
 						                            <a href="${contextPath}/pay/finishApprovalList.page"
-						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">승인함</a>
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재승인함</a>
 						                        </li>
 						                        <li>
 						                            <a href="${contextPath}/pay/noApprovalList.page"
@@ -727,7 +727,7 @@ $(document).ready(function(){
 						            </li>
 						            <li>
 						                <a href="${contextPath}/pay/myAllApproval.page"
-						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">나의 결재함</a>
+						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">나의결재함</a>
 						            </li>
 						        </ul>
 						    </div>

@@ -43,33 +43,26 @@ $(document).ready(function(){
 	    } else {
 	    		if(confirm("정말로 승인을 하시겠습니까?")){
 	    			
-	    			let plength = "${list.size()}";
 	    			
-	    			let productNameArr = [];
-	    			for(let i=0; i<plength; i++){
-	    				productNameArr.push("${list.get(i).PRODUCT_NAME}");
-	    			}
-	    			let productAmountArr = [];
-	    			for(let i=0; i<plength; i++){
-	    				productAmountArr.push("${list.get(i).QUANTITY}");
-	    			}
-	    			//var formdata = $("#form").sereailize();
+	    			
 	    			var data = signature.toDataURL("image/png");
 	    	    const image = canvas.toDataURL();
 	    	        
 	    	    var approvalName = "${list.get(0).FIRST_APPROVAL == userName ? 1 : list.get(0).MIDDLE_APPROVAL == userName ? 2 : list.get(0).FINAL_APPROVAL == userName ? 3 : 0}" 
-	    	        
+	    	    var formData = $("#formFix").serialize();
+	    	    
 	    	        $.ajax({
 	    	        	url:"${contextPath}/pay/ajaxSign.do",
 	    	        	type:"post",
+	    	        	contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
 	    	        	data:{
 	    	        		dataUrl:data,
-	    	        		signName:"${userName}",
-	    	        		approvalNo:"${list.get(0).APPROVAL_NO}",
-	    	        		approvalSignNo:approvalName,
-	    	        		deptType:"Fix",
-	    	        		fixName:productNameArr,
-	    	        		fixAmount:productAmountArr
+	    	        		signName: "${userName}",
+	    	        		approvalNo: "${list.get(0).APPROVAL_NO}",
+	    	        		approvalSignNo: approvalName,
+	    	        		deptType: "Fix",
+	    	        		productName: $("input[name='productName']").val(),
+	    	        		productAmount:$("input[name='productAmount']").val()
 	    	        	},
 	    	        	success:function(response){
 	    	        		
@@ -96,10 +89,10 @@ $(document).ready(function(){
 	            		      	}
 	    	        		      $("#approvalSt").empty();
 													$("#approvalSt").text("진행");
-	    	        		    } else {
+	    	        		    } else if(response.approvalSignNo == 3){
 	    	        		    	$('#finalSign').children().remove();
 	    	        		    	$("#apDt3").children().remove();
-	    	        		      $('#finalSign').append('<img src="' + response.sign[0].finalSign + '" alt="Final Approval Signature">');
+		    	        		    $('#finalSign').append('<img src="' + response.sign[0].finalSign + '" alt="Final Approval Signature">');
 	    	        		    	if($("#apDt3").text() == ""){
 	    	        		        $("#apDt3").append(response.sign[0].finalApDt);	        		    		
 	    	        		    	}
@@ -145,8 +138,8 @@ $(document).on("click", "#rejectBtn", function(){
 						  if($("#apDt1").text() == ""){
 				        	$("#apDt1").append(list[0].firstApDt);	
 		        	}
-						  $("#approvalSt").empty();
-							$("#approvalSt").text("반려");	
+					  $("#approvalSt").empty();
+						$("#approvalSt").text("반려");	
 							
 				  }else if(list[1].approvalSignNo == "2"){
 					  alert("반려가 완료되었습니다.");
@@ -156,8 +149,8 @@ $(document).on("click", "#rejectBtn", function(){
 						  if($("#apDt2").text() == ""){
 		        		$("#apDt2").append(list[0].middleApDt);	
 	    		  	}
-						  $("#approvalSt").empty();
-							$("#approvalSt").text("반려");	
+					  $("#approvalSt").empty();
+						$("#approvalSt").text("반려");	
 							
 				  }else{
 					  alert("반려가 완료되었습니다.");
@@ -167,8 +160,8 @@ $(document).on("click", "#rejectBtn", function(){
 						  if($("#apDt3").text() == ""){
 		        		$("#apDt3").append(list[0].finalApDt);	
 	    		  	}
-						  $("#approvalSt").empty();
-							$("#approvalSt").text("반려");	
+					  $("#approvalSt").empty();
+						$("#approvalSt").text("반려");	
 					 }
 				  $("#modal").iziModal('close');
 					  
@@ -299,23 +292,24 @@ $(document).on("click", "#rejectBtn", function(){
                      <th>가격</th>
                      <th colspan="2">비고</th>
                  </tr>
-                 
 								 <c:forEach var="i" begin="0" end="${ list.size() - 1 }">
 		                <c:if test="${ list.get(0).PRODUCT_NAME != null and list.get(i).PRODUCT_NAME != ''}">
 		                  		<tr>
 		                      	<td>${ list.get(i).PRODUCT_NAME }</td>
-		                       	<td>${ list.get(i).PRODUCT_SIZE }</td>
+		                      	<input type="hidden" name="productName" value="${ list.get(i).PRODUCT_NAME }">
+		                       	<td>${ list.get(i).PRODUCT_SIZE == null ? "-" : list.get(i).PRODUCT_SIZE }</td>
 		                       	<td>${ list.get(i).QUANTITY }</td>
-		                       	<td>${ list.get(i).UNIT_PRICE }</td>
-		                       	<td>${ list.get(i).PRICE }</td>
-		                       	<td>${ list.get(i).NOTE }</td>
+		                       	<input type="hidden" name="productAmount" value="${ list.get(i).QUANTITY }">
+		                       	<td class="unit_price">${ list.get(i).UNIT_PRICE }</td>
+		                       	<td class="price">${ list.get(i).PRICE }</td>
+		                       	<td>${ list.get(i).NOTE == null ? "-" : list.get(i).NOTE }</td>
 		                  		</tr>
 		                </c:if>
                  </c:forEach>
                  
                   <tr>
 	                    <th colspan="3">합계</th>
-	                    <td colspan="3">${list.get(0).TOTAL_SUM}</td>
+	                    <td colspan="3" id="total_sum">${list.get(0).TOTAL_SUM}</td>
 	                </tr>
 	                <tr>
 		                  <th colspan="3">기타</th>
@@ -330,6 +324,13 @@ $(document).on("click", "#rejectBtn", function(){
 					          	<div style="display: flex; justify-content: flex-end;">
 					          			<button class="delete-buttons" id="deldo">삭제</button>
 					          	</div>
+					 				<div>
+			           			<button id="historyBack" type="button" style="border: none; background-color: white;">
+				           			<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" style="color: #e99db2;" class="bi bi-arrow-left-square-fill" viewBox="0 0 16 16">
+												  <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1"/>
+												</svg>
+											</button>							        
+					        </div>
 					 				</div> 
                 </div>
             </div>
@@ -367,8 +368,46 @@ $(document).on("click", "#rejectBtn", function(){
 		        </div>
 		    </div>
 		    <!---------------------------------------------->
-		    
+		<script>
+       $(document).ready(function() {
+           $(".unit_price, .price").each(function() {
+               let num = $(this).text();
+               let formattedNum = num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+               $(this).text(formattedNum);
+           });
+           
+           $("#total_sum").text($("#total_sum").text().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+       });
+		</script>
     <script>
+    $(document).ready(function() {
+        // 페이지가 로드될 때 sessionStorage에서 데이터 불러오기
+        if (sessionStorage.getItem('DATA')) {
+            $('#input_text').val(sessionStorage.getItem('DATA'));
+        }
+
+        // input_text의 값이 변경될 때마다 sessionStorage에 저장
+        $('#input_text').on('input', function() {
+            sessionStorage.setItem('DATA', $(this).val());
+        });
+
+        // 뒤로가기 버튼 클릭 시 이벤트
+        $('#historyBack').on('click', function() {
+            // 여기서는 페이지 이동을 위한 코드 추가 (예: window.history.back();)
+            window.history.back();
+        });
+    });
+
+    // 페이지가 다시 로드될 때 sessionStorage에서 데이터 불러오기
+    window.onpageshow = function(event) {
+        if (event.persisted || (window.performance && (window.performance.navigation.type == 1 || window.performance.navigation.type == 2))) {
+            if (sessionStorage.getItem('DATA')) {
+                $('#input_text').val(sessionStorage.getItem('DATA'));
+            }
+        }
+    };
+    		
+    
 		   $(document).ready(function() {
 		   		if("${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}"){
 		   			$(".delete-buttons").css("display", "block");
@@ -391,10 +430,7 @@ $(document).on("click", "#rejectBtn", function(){
                         success: function(response) {
                         	 if(response == "SUCCESS") {
                                  alert("삭제가 완료되었습니다.");
-                                 history.back();
-                                 setTimeout(function() {
-                                     location.reload();
-                                 }, 1); 
+                                 location.href = document.referrer;
                              } else {
                                  alert("삭제 실패");
                              }
@@ -417,13 +453,19 @@ $(document).on("click", "#rejectBtn", function(){
 			    var approvalSt = $("#approvalSt").text().trim();
 			    var paymentWriterNo = "${list.get(0).PAYMENT_WRITER_NO}";
 			    var userName = "${userName}";
+			    var userNo = "${userNo}";
 			    
-			    // 수정 버튼 표시 여부 결정
-			    if (approvalSt === "완료" && paymentWriterNo === "${userNo}") {
-			    	  $("#modifyWriter").css("display", "none");
+			 		// 수정 버튼 표시 여부 결정
+			    if (paymentWriterNo === userNo) {
+			        if (approvalSt === "완료") {
+			            $("#modifyWriter").css("display", "none"); // 완료 상태면 수정 버튼 숨김
+			        } else {
+			            $("#modifyWriter").css("display", "block"); // 완료 상태가 아니면 수정 버튼 표시
+			        }
 			    } else {
-			        $("#modifyWriter").css("display", "block");
+			        $("#modifyWriter").css("display", "none"); // 작성자가 아니면 수정 버튼 숨김
 			    }
+			    
 			    
 			    // 승인 상태에 따라 버튼 표시 여부 결정
 			    if (approvalSt !== "완료") {
@@ -447,24 +489,30 @@ $(document).on("click", "#rejectBtn", function(){
 			    if ("${list.get(0).FIRST_APPROVAL}" === userName || "${list.get(0).MIDDLE_APPROVAL}" === userName || "${list.get(0).FINAL_APPROVAL}" === userName) {
 			        $("#aproS").css("display", "block");
 			    } else {
-			        $(".suBtn").css("display", "none"); 
+			        $("#aproS").css("display", "none"); 
 			    }
 			});
 		  
-			  function submitbtn() {
-				    if (confirm('결재을 완료하시겠습니까?')) {
-				        var approvalSt = $("#approvalSt").text().trim();
-				        if (approvalSt == "반려" || approvalSt == "완료") {
-				            $(".suBtn").css("display", "none");
-				            if (approvalSt == "완료") {
-				                $("#modifyWriter").css("display", "none");
-				            }
-				        }
-				        
-				        alert("결재가 완료되었습니다.");
-				        location.href = document.referrer;
-				    }
-				}
+		   function submitbtn() {
+			    if (confirm('결재을 완료하시겠습니까?')) {
+			        alert("결재가 완료되었습니다.");
+			        location.href = document.referrer;
+			    }
+			}
+		  
+		  $(document).ready(function(){
+			  
+			  var approvalSt = $("#approvalSt").text().trim();
+			  var paymentWriterNo = "${list.get(0).PAYMENT_WRITER_NO}";
+			  if (approvalSt == "완료") {
+          $("#aproS").css("display", "none");
+	      }
+			  if (approvalSt == "반려" || approvalSt == "완료") {
+		       $(".suBtn").css("display", "none");
+		    }
+			  
+			  
+		  })
 	  
     
        $('#modal3').iziModal({

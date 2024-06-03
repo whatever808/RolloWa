@@ -33,4 +33,24 @@ public class PaymentService {
 	public Map<String, Object> selectValiation() {
 		return paymentDao.selectValiation();
 	}
+	
+	
+	
+	//이문희 일반 Ticket_order
+	public int insertAjaxkakaoPayCommon(Map<String, Object> map) {
+		int result1 = paymentDao.insertAjaxkakaoPayCommon(map);
+		int result2 = paymentDao.insertKakaoPayDetailCommon(map);
+		return result1 + result2;
+	}
+	
+	//이문희 정기 Ticket_order
+	public int insertAjaxkakaoPayRoutine(Map<String, Object> map) {
+		int result1 = paymentDao.insertAjaxkakaoPayRoutine(map);
+		int result2 = paymentDao.insertKakaoPayDetailrRoutine(map);
+		return result1 + result2;
+	}
+	
+
+	
+	
 }

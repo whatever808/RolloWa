@@ -5,6 +5,7 @@
 	<select id="userInformation" resultType="map">
 		SELECT
 					USER_ID
+				, USER_NO
 				,	USER_NAME
 			 	, EMAIL
 			 	, PHONE
@@ -55,5 +56,124 @@
  	  resultType="map">
  	  
  	  </select>
-	
+ 	  
+ 	  
+ 	  
+ 	  
+ 	  
+ 	  
+ 	  
+ 	  <!-- 이문희 -->
+ 	  <!--  일반이용권 결재 insert -->
+ 	  <insert id="insertAjaxkakaoPayCommon">
+ 	  	insert
+ 	  				into
+ 	  				TICKET_ORDER
+ 	  				(
+ 	  				ORDER_NO
+ 	  			, ORDER_DATE
+ 	  			, PAYMENT_DATE
+ 	  			, ORDER_PAYMENT
+ 	  			, ORDER_STATUS
+ 	  			, CUSTOMER_ID
+ 	  			, PAYMENT_METHOD
+ 	  				)
+ 	  				values
+ 	  				(
+ 	  				SEQ_TONO.nextval
+ 	  			, SYSDATE
+ 	  			, SYSDATE
+ 	  			, #{orderPayment}
+ 	  			, '2'
+ 	  			, #{customerId}
+ 	  			, 'CD'
+ 	  				)
+ 	  				
+ 	  </insert>
+ 	  
+ 	  <insert id="insertKakaoPayDetailCommon">
+ 	  	insert
+ 	  				into
+ 	  				TICKET_DORDER_DETAIL
+ 	  				(
+ 	  				ORDER_DETAIL_NO
+ 	  			,	ORDER_NO
+ 	  			, TICKET_TYPE
+ 	  			, TICKET_PRICE
+ 	  			, TICKET_SERIAL_NO
+ 	  			, TICKET_CTN
+ 	  			, START_DATE
+ 	  			, END_DATE
+ 	  			, DISCOUNT
+ 	  				)
+ 	  				values
+ 	  				(
+ 	  				SEQ_ODNO.nextval
+ 	  			,	SEQ_TONO.currval
+ 	  			,	#{ticketType}
+ 	  		  , #{ticketPrice}
+ 	  			, #{tickSerialNo}
+ 	  			, #{ticketCtn}
+ 	  			, #{startDate}
+ 	  			, #{endDate}
+ 	  			, #{discount}
+ 	  				)
+ 	  				
+ 	  </insert>
+ 	  <!--  정기이용권 결재 insert -->
+ 	  <insert id="insertAjaxkakaoPayRoutine">
+ 	  	insert
+ 	  				into
+ 	  				TICKET_ORDER
+ 	  				(
+ 	  				ORDER_NO
+ 	  			, ORDER_DATE
+ 	  			, PAYMENT_DATE
+ 	  			, ORDER_PAYMENT
+ 	  			, ORDER_STATUS
+ 	  			, CUSTOMER_ID
+ 	  			, PAYMENT_METHOD
+ 	  				)
+ 	  				values
+ 	  				(
+ 	  				SEQ_TONO.nextval
+ 	  			, SYSDATE
+ 	  			, SYSDATE
+ 	  			, #{orderPayment}
+ 	  			, '2'
+ 	  			, #{customerId}
+ 	  			, 'CD'
+ 	  				)
+ 	  </insert>
+ 	  
+ 	  <insert id="insertKakaoPayDetailrRoutine">
+ 	  	 	insert
+ 	  				into
+ 	  				TICKET_DORDER_DETAIL
+ 	  				(
+ 	  				ORDER_DETAIL_NO
+ 	  			,	ORDER_NO
+ 	  			, TICKET_TYPE
+ 	  			, TICKET_PRICE
+ 	  			, TICKET_SERIAL_NO
+ 	  			, TICKET_CTN
+ 	  			, START_DATE
+ 	  			, END_DATE
+ 	  			, DISCOUNT
+ 	  				)
+ 	  				values
+ 	  				(
+ 	  				SEQ_ODNO.nextval
+ 	  			,	SEQ_TONO.currval
+ 	  			,	#{ticketType}
+ 	  		  , #{ticketPrice}
+ 	  			, #{tickSerialNo}
+ 	  			, #{ticketCtn}
+ 	  			, #{startDate}
+ 	  			, #{endDate}
+ 	  			, #{discount}
+ 	  				)
+ 	  </insert>
+ 	  <!-- 이문희 -->
+		
 </mapper>
