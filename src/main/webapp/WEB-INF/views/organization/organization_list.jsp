@@ -223,7 +223,7 @@
 				            <td>
 					            <c:choose>
 					            	<c:when test="${ not empty m.profileUrl }">
-						                <img src="${ m.profileUrl }" class="profile_img" onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
+						                <img src="${contextPath}/${m.profileUrl}" class="profile_img">
 					            	</c:when>
 					            	<c:otherwise>
 						                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">

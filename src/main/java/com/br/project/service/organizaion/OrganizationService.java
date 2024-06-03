@@ -91,6 +91,10 @@ public class OrganizationService {
 	public int deleteTeam(Map<String, Object> paramMap) {
 		return organizationDao.deleteTeam(paramMap);
 	}
+	// 팀 사용자 인원수 카운트
+	public List<Map<String, Object>> countMember() {
+		return organizationDao.countMember();
+	}
 
 	
 

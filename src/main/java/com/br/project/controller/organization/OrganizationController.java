@@ -128,7 +128,7 @@ public class OrganizationController {
 	
 	
 	
-	// 1.3 조직관리(관리자 전용)
+	// 조직관리(관리자 전용)
 	@GetMapping("/manager.do")
 	public String manager(Model model) {
 		List<GroupDto> dept = organizationService.selectOrganizationChart();
@@ -198,14 +198,14 @@ public class OrganizationController {
         return result;
 	}
 	
-	// 팀 삭제 메서드
+	// 팀 삭제
     @PostMapping("/deleteTeam.do")
     @ResponseBody
     public boolean deleteTeam(@RequestBody Map<String, Object> payload) {
         String deptCode = (String) payload.get("deptCode");
         String teamName = (String) payload.get("teamName");
         Object userNoObj = payload.get("userNo");
-        String userNo;
+        String userNo = null;
 
         if (userNoObj instanceof Integer) {
             userNo = String.valueOf(userNoObj);
@@ -222,6 +222,12 @@ public class OrganizationController {
         return result > 0;
     }
 	
+    // 팀 사용자 인원수 카운트
+    @GetMapping("/countMembers.do")
+    @ResponseBody
+    public List<Map<String, Object>> countMembers() {
+        return organizationService.countMember();
+    }
 	
 	
 }

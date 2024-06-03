@@ -48,7 +48,7 @@
         margin-bottom: 50px;
     }
     .th_title{
-        background-color: aquamarine !important;
+        background-color: rgb(255,247,208);
         width: 170px;
         height: 60px;
         text-align: center;

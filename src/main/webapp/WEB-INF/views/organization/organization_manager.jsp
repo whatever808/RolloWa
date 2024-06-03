@@ -18,6 +18,9 @@
 	
 	
 	<style>
+	.btn:disabled {
+	    background-color: rgba(128, 128, 128, 0.5) !important; /* 회색 배경색에 투명도 50% 적용 */
+	}
 	</style>
 </head>
 <body>
@@ -47,13 +50,17 @@
                                 <c:forEach var="team" items="${dept}">
                                     <c:if test="${d.dept eq team.dept}">
                                         <ul>
-                                            <c:if test="${not empty team.team}">
-                                                <li>
-                                                    <span class="level3">${team.team}</span>
-                                                    <button class="btn btn-danger delete_team"">팀 삭제</button>
-                                                </li>
-                                            </c:if>
-                                        </ul>
+											<c:if test="${not empty team.team}">
+											    <li class="btn-container">
+											        <span class="level3">${team.team}</span>
+											        <button class="btn btn-danger delete_team" data-team="${team.team}" 
+											        	<c:if test="${team.memberCount > 0}">
+											        	disabled
+											        	</c:if>
+											        >팀 삭제</button>
+											    </li>
+											</c:if>
+											</ul>
                                     </c:if>
                                 </c:forEach>
                             </ul>
@@ -66,14 +73,46 @@
         </ul>
         
         <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtons = document.querySelectorAll('.delete_team[disabled]');
+
+            deleteButtons.forEach(function (button) {
+                const tooltip = button.nextElementSibling;
+
+                button.addEventListener('mouseover', function () {
+                    tooltip.style.display = 'block';
+                });
+
+                button.addEventListener('mouseout', function () {
+                    tooltip.style.display = 'none';
+                });
+            });
+        });
+        
         $(document).ready(function() {
             var treeItems = $('.tree > li > ul > li').length;
             if (treeItems > 1) {
                 $('.tree > li > ul').css('display', 'flex');
                 $('.tree > li > ul').css('flex-wrap', 'wrap');
             }
-
             let userNo = ${ loginMember.userNo };
+            
+         // 팀 사용자 인원수 카운트
+            $.ajax({
+                url: '${contextPath}/organization/countMembers.do',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    response.forEach(function(item) {
+                        if (item.MEMBER_COUNT > 0) {
+                            $('button[data-team="' + item.TEAM + '"]').prop('disabled', true);
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.log("통신 실패", error);
+                }
+            });
             
             // 부서 추가
             $('#addDepartmentBtn').click(function() {
@@ -141,10 +180,10 @@
             
             
             // 팀 삭제
-         // 팀 삭제
             $(document).on('click', '.delete_team', function() {
-                var teamName = $(this).siblings('.level3').text();
-                var deptCode = $(this).closest('li').parent().siblings('.code').val();
+                var teamName = $(this).closest('li').find('.level3').text().trim();
+                var deptCode = $(this).closest('ul').closest('li').find('.code').val();
+                
                 console.log("삭제할 팀명: ", teamName);
                 console.log("부서 코드: ", deptCode);
 
@@ -162,6 +201,7 @@
                             console.log("팀 삭제 통신 성공");
                             if (response) {
                                 location.reload(); // 페이지 새로고침
+                            	alert("팀을 삭제했습니다.")
                             } else {
                                 alert('팀 삭제에 실패했습니다.');
                             }
