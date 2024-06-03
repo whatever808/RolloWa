@@ -67,7 +67,7 @@
  	  <!--  일반이용권 결재 insert -->
  	  <insert id="insertAjaxkakaoPayCommon">
  	  	insert
- 	  				into
+ 	  				into 
  	  				TICKET_ORDER
  	  				(
  	  				ORDER_NO
@@ -93,8 +93,8 @@
  	  
  	  <insert id="insertKakaoPayDetailCommon">
  	  	insert
- 	  				into
- 	  				TICKET_DORDER_DETAIL
+ 	  				into 
+ 	  				TICKET_ORDER_DETAIL
  	  				(
  	  				ORDER_DETAIL_NO
  	  			,	ORDER_NO
@@ -123,7 +123,7 @@
  	  <!--  정기이용권 결재 insert -->
  	  <insert id="insertAjaxkakaoPayRoutine">
  	  	insert
- 	  				into
+ 	  				into 
  	  				TICKET_ORDER
  	  				(
  	  				ORDER_NO
@@ -147,9 +147,9 @@
  	  </insert>
  	  
  	  <insert id="insertKakaoPayDetailrRoutine">
- 	  	 	insert
- 	  				into
- 	  				TICKET_DORDER_DETAIL
+ 	  	 	insert 
+ 	  				into 
+ 	  				TICKET_ORDER_DETAIL
  	  				(
  	  				ORDER_DETAIL_NO
  	  			,	ORDER_NO
