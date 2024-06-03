@@ -46,7 +46,7 @@
 		 from tb_attraction
 		 join tb_location on (location = location_no)
 		 <where>
-			<if test='location != null'>
+			<if test='locations != null'>
 				<foreach item="location" collection="locations" open="and location in(" separator="," close=")">
 					#{location}
 				</foreach>

@@ -43,11 +43,18 @@
 
 /*------------- attraction list -------------*/
 thead>tr{
-    font-size: 16px;
-    font-weight: 400;
-    text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
 }
-
+thead th{
+	font-weight: bold !important;
+	font-size: 16px !important;
+	background-color: #FFF29E !important;
+}
+tbody>tr{
+	line-height: 250% !important;
+}
 .attraction-list{
     text-align: center;
 }

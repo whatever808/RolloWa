@@ -27,7 +27,7 @@
 		   <!-- about category start  -->
 	     <div id="filter-category">
 	     	 <!-- board category start -->
-		     <select id="category" name="category" class="board-category form-select" onchange="categoryChange(this);" style="width:200px;">
+		     <select id="category" name="category" class="board-category form-select text-center" onchange="categoryChange(this);" style="width:200px;">
 		         <option value="">전체공지사항</option>
 		         <option value="normal">일반공지사항</option>
 		         <option value="department">부서공지사항</option>
@@ -35,7 +35,7 @@
 		     <!-- board category end -->
 		     
 		     <!-- show when department board category was selected -->
-		     <select id="department" name="department" class="department-category form-select d-none" onchange="ajaxBoardList();">
+		     <select id="department" name="department" class="department-category form-select d-none text-center" onchange="ajaxBoardList();">
 		     	<option value="">전체</option>
 		     	<c:forEach var="department" items="${ departmentList }">
 		     		<option value="${ department.code }">${ department.codeName }</option>
@@ -49,7 +49,7 @@
 	     	 <!-- search form start-->
 		     <div id="search-form" class="input-group">
 		     	<!-- search condition start -->
-			    <select id="condition" class="search-condition form-select">
+			    <select id="condition" class="search-condition form-select text-center">
 			       <option value="all">전체</option>
 			       <option value="title">제목</option>
 			       <option value="content">내용</option>
@@ -110,12 +110,12 @@
 	                	<c:otherwise>
 	                		<c:forEach var="board" items="${ boardList }">
 	                 		<tr>
-	                      <td>${ board.category eq null ? "일반" : board.category }</td>
-	                      <td class="board-title" onclick="showDetail('${ board.boardNo }', '${ board.modifyEmp }');">${ board.title }</td>
-	                      <td>
+	                      <td class='td1'>${ board.category eq null ? "일반" : board.category }</td>
+	                      <td class="td2 board-title" onclick="showDetail('${ board.boardNo }', '${ board.modifyEmp }');">${ board.title }</td>
+	                      <td class='td3'>
 	                     		<c:choose>
 	                     			<c:when test="${ not empty board.profileURL }">
-	                     				<img src="${ board.profileURL }" alt="profile image" class="board-writer-profile">
+	                     				<img src="${ contextPath }${ board.profileURL }" alt="profile image" class="board-writer-profile">
 	                     			</c:when>
 	                     			<c:otherwise>
 	                     				<img src="${ contextPath }/resources/images/defaultProfile.png" alt="profile image" class="board-writer-profile">
@@ -123,9 +123,9 @@
 	                     		</c:choose>
 	                        <span>${ board.writerName }</span>
 	                      </td>
-	                      <td>${ board.modifyDate }</td>
-	                      <td>${ board.readCount }</td>
-	                      <td>${ board.attachmentYN != 0 ? "🗂️" : "" }</td>
+	                      <td class='td4'>${ board.modifyDate }</td>
+	                      <td class='td5'>${ board.readCount }</td>
+	                      <td class='td6'>${ board.attachmentYN != 0 ? "🗂️" : "" }</td>
 	                  	</tr>
 	                		</c:forEach>
 	                	</c:otherwise>
@@ -138,27 +138,27 @@
 	         <div class="board-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
 	             <ul class="pagination">
 	             
-            <!-- Previous -->
-			      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
-					    onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '' }">
-			      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">Previous</span>
-			      </li>
-				    
-				    <!-- Page -->
-				    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
-					    <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
-					    	  onclick="${ pageInfo.currentPage != page ? 'ajaxBoardList();' : '' }">
-					    	<span class="page-link" data-pageno="${ page }">${ page }</span>
-					    </li>
-				    </c:forEach>
-				    
-				    <!-- Next -->
-				    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
-				    	  onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxBoardList();' : ''}">
-				      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">Next</span>
-				    </li>
-				    
-				  </ul>
+		            <!-- Previous -->
+					      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
+							    onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '' }">
+					      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">◁</span>
+					      </li>
+						    
+						    <!-- Page -->
+						    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
+							    <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
+							    	  onclick="${ pageInfo.currentPage != page ? 'ajaxBoardList();' : '' }">
+							    	<span class="page-link" data-pageno="${ page }">${ page }</span>
+							    </li>
+						    </c:forEach>
+						    
+						    <!-- Next -->
+						    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
+						    	  onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxBoardList();' : ''}">
+						      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">▷</span>
+						    </li>
+						    
+						  </ul>
 	         </div>
 	         <!-- pagination end -->
 	     </div>
@@ -367,23 +367,25 @@
 					// 생성할 리스트 태그 문자열
 					for(let i=0 ; i<boardList.length ; i++){
 						list += "<tr>";
-						list += 	"<td>" + (boardList[i].category == null ? "일반" : boardList[i].category) + "</td>";
-						list += 	"<td class='board-title' onclick='showDetail(" + boardList[i].boardNo + ", " + boardList[i].modifyEmp + ")'>" + boardList[i].title + "</td>";
-						list += 	"<td>";
+						list += 	"<td class='td1'>" + (boardList[i].category == null ? "일반" : boardList[i].category) + "</td>";
+						list += 	"<td class='board-title td2' onclick='showDetail(" + boardList[i].boardNo + ", " + boardList[i].modifyEmp + ")'>" + boardList[i].title + "</td>";
+						list += 	"<td class='td3'>";
 						list += 		"<img src='" + (boardList[i].profileURL == null ? "${ contextPath }/resources/images/defaultProfile.png"
-																					 	: boardList[i].profileURL) + "' alt ='profile image' class='board-writer-profile'>" 
+																					 															: "${ contextPath }" + boardList[i].profileURL) + "' alt ='profile image' class='board-writer-profile'>" 
 						list += 		"<span>" + boardList[i].writerName + "</span>";
 						list += 	"</td>";
-						list += 	"<td>" + boardList[i].modifyDate + "</td>";
-						list += 	"<td>" + boardList[i].readCount + "</td>";
-						list += 	"<td>" + (boardList[i].attachmentYN != 0 ? "🗂️" : "") + "</td>";
+						list += 	"<td class='td4'>" + boardList[i].modifyDate + "</td>";
+						list += 	"<td class='td5'>" + boardList[i].readCount + "</td>";
+						list += 	"<td class='td6'>" + (boardList[i].attachmentYN != 0 ? "🗂️" : "") + "</td>";
 						list += "</tr>";
 					}
+					
+					$(".board-list-pagination").removeClass("d-none");
 					
 					// 생성할 페이징바 태그 문자열
 					pagination += "<li id='ajax' class='page-item " + (pageInfo.currentPage == 1 ? 'disabled ' : ' ' ) + "'" +
 												"onclick='" + (pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '') + "'>";
-					pagination +=	   "<span class='page-link' data-pageno='" + (pageInfo.currentPage - 1) + "'>Previous</span>";
+					pagination +=	   "<span class='page-link' data-pageno='" + (pageInfo.currentPage - 1) + "'>◁</span>";
 					pagination += "</li>";
 					
 					for(let page=pageInfo.startPage ; page<=pageInfo.endPage ; page++){
@@ -395,7 +397,7 @@
 					
 					pagination += "<li class='page-item " + (pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '') + "' " +
 											"onclick='" + (pageInfo.currentPage != pageInfo.maxPage ? 'ajaxBoardList();' : '') + "'>";
-					pagination += 		"<span class='page-link' data-pageno='" + (pageInfo.currentPage + 1) + "'>Next</span>";
+					pagination += 		"<span class='page-link' data-pageno='" + (pageInfo.currentPage + 1) + "'>▷</span>";
 					pagination += "</li>";
 				}
 		
