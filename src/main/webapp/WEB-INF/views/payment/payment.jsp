@@ -894,20 +894,19 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
        		success:function(response){
        			
        			console.log("전달 여부 :" + response);
-       		//결제 성공시
-       		/*
-  	        if (response.status == 200) { // DB저장 성공시
-  	        	
-  	            alert('결제 완료!')
+       			//결제 성공시
+       		
+  	        if (response == "SUCCESS") { // DB저장 성공시
+  	            alert('결제가 정상적으로 완료되었습니다. 이용해주셔서 감사합니다.');
   	            window.location.reload();
   	        } else { // 결제완료 후 DB저장 실패시
   	            alert(`error:[${response.status}]\n결제요청이 승인된 경우 관리자에게 문의바랍니다.`);
   	            // DB저장 실패시 status에 따라 추가적인 작업 가능성
   	        }
-       		*/
+       		
        		},
        		error:function(){
-       			
+       			console.log("ajax 통신 실패");
        		}
        		
        	})

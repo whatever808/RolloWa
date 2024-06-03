@@ -170,7 +170,7 @@
  	  			, #{tickSerialNo}
  	  			, #{ticketCtn}
  	  			, #{startDate}
- 	  			, #{endDate}
+ 	  			, TO_DATE(#{endDate}, 'YY/MM/DD') + 30
  	  			, #{discount}
  	  				)
  	  </insert>

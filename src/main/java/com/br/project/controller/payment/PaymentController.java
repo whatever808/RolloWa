@@ -128,13 +128,7 @@ public class PaymentController {
 	       result2 = paymentService.insertAjaxkakaoPayRoutine(maps2);
 	    }
 	    
-	    log.debug("maps1 : {}", maps1);
-		log.debug("maps2 : {}", maps2);
-		
-		
-		
-		
-		return "SUCCUSS";
+		return result1 + result2 == 4? "SUCCESS" : "FAIL";
 	}
 	
 
