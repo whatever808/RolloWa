@@ -883,7 +883,6 @@ if (confirm("구매 하시겠습니까?")) { // 구매 클릭시 한번 더 확�
 	     			ticketType2 : $("#ticketName2").text(),
 	     			ticketPrice1 : $("#adult-own-price1 span").text(),
 	     			ticketPrice2 : $("#adult-own-price2 span").text(),
-	     			//tickSerialNo : "SERIAL" + Math.random(),
 	     			ticketCtn1 : $("#adult-companion").val(),
 	     			ticketCtn2 : $("#adult-own").val(),
 	     			startDate1 : $(".commonDate").val(),
