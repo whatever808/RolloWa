@@ -62,7 +62,7 @@
                     		<!-- 기웅 추가 -->
                     		<div class="alram-div"><button type="button" class="btn alram-btn" style="box-shadow: none;"><i class="fa-solid fa-bell fa-2x" style="color: #ff939e;"></i></button></div>
                     		<!-- 기웅 추가 -->
-                        <img src="${ contextPath }${ loginMember.profileURL } alt="user profile">
+                        <img src="${ contextPath }${ loginMember.profileURL }" alt="user profile">
 
                         <h6 class="mt-3 fw-bold">${ loginMember.userName } / ${ loginMember.positionName } / ${ loginMember.teamName }</h6>
                     </div>
