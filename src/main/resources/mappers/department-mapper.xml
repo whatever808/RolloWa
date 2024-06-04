@@ -45,13 +45,12 @@
 		select
 		      d.code_name department 
 		     , t.code_name team
-		     , (select count(*) from member where t.code = TEAM_CODE group by(TEAM_CODE)) total
 		     , m.user_name
 		     , (select code_name from tb_group where code = m.position_code and group_code = 'POSI01') POSITION_CODE
 		     , (select code from tb_group where code = m.position_code and group_code = 'POSI01') code
 		from tb_group d
-		join (select * from tb_group where group_code = 'TEAM01') t on t.upper_code = d.code
-		join member m on ( team_code = t.code)
+		LEFT join (select * from tb_group where group_code = 'TEAM01') t on t.upper_code = d.code
+		LEFT join member m on ( team_code = t.code)
 		where d.group_code = 'DEPT01'
 		order by department desc, team, code desc
 	</select>

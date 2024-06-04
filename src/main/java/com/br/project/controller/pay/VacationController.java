@@ -101,7 +101,7 @@ public class VacationController {
 	@PostMapping(value="/request.ajax")
 	public List<VacationDto> selectRequest(HttpSession session){
 		int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
-		
+		List<VacationDto> list = vactService.selectRequest(userNo);
 		return vactService.selectRequest(userNo);
 	}
 	
@@ -224,4 +224,45 @@ public class VacationController {
 		}
 		return result;
 	}
+	
+	/**
+	 * 현재 관리자에게 결재를 요청한 게시글을 페이징을 통해 조회
+	 * @param page
+	 * @param session
+	 * @param vacation
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value="/vacationRequest.ajax")
+	public Map<String, Object> reQuest(@RequestParam(defaultValue = "1") int page
+										, HttpSession session
+										, VacationDto vacation){
+		int userNo = ((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		vacation.setMember(MemberDto.builder().userNo(userNo).build());
+		Map<String, Object> map = new HashMap<>();
+		int listCount = vactService.selectRefuseRequest(vacation);
+		PageInfoDto paging = new PagingUtil().getPageInfoDto(listCount, page, 5, 5);
+		
+		map.put("vacation", vacation);
+		map.put("paging", paging);
+		List<VacationDto> list = vactService.searchreQuest(map);
+		
+		map.put("list", list);
+		return map;
+	}
+	
+	@ResponseBody
+	@PostMapping(value="singRefuse.ajax")
+	public int singRefuse(VacationDto vacation) {
+		int result = vactService.singRefuse(vacation);
+		return result;
+	}
+	
+	@ResponseBody
+	@PostMapping(value="singConfirm.ajax")
+	public int singConfirm(VacationDto vacation) {
+		int result = vactService.singConfirm(vacation);
+		return result;
+	}
+	
 }

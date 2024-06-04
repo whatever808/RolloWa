@@ -17,6 +17,5 @@ import lombok.ToString;
 @ToString
 public class calDepartDto {
 	private String department;
-	private String total;
 	private List<MemberDto> member;
 }

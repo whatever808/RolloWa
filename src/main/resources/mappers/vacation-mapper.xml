@@ -102,7 +102,7 @@ from vacation v
 left join  attachment a on (VACATION_NO = REF_NO and REF_TYPE = 'VACT' and a.STATUS = 'Y')
 where REGIST_EMP = #{userNo}
 and v.STATUS = 'Y'
-and APPORVAL_STATUS in ('I', 'D', 'N')
+and APPORVAL_STATUS in ('N', 'R')
 order by VACATION_NO desc 
 </select>
 
@@ -166,6 +166,8 @@ order by VACATION_NO desc
 			vacation
 		set
 			R_REQUEST_COMMENT = #{RRequestComent}
+			, APPORVAL_STATUS = 'N'
+			, STATUS = 'R'
 		where
 			VACATION_NO = #{vacaNO}
 	</update>
@@ -182,6 +184,71 @@ order by VACATION_NO desc
 	update member
 	set VACATION_COUNT = VACATION_COUNT + #{vacationCount}
 	where user_no = #{userNo}
+	</update>
+	
+	<select id="selectRefuseRequest"
+	resultType="_int">
+		select 
+			count(*) 
+		from 
+			vacation
+		where 
+			APPORVAL_STATUS = 'N'
+		and 
+			status = 'Y'
+		<if test="!vacaGroupCode.equals('all')">
+		and GROUP_CODE = #{vacaGroupCode}
+		</if>
+		and 
+			SIGN_MEMBER = #{member.userNo}
+	</select>
+	
+	<select id="searchreQuest"
+	resultMap="vacaResultMap">
+select 
+    VACATION_NO
+    , VACATION_STRAT
+    , VACATION_END
+    , VACATION_COLOR
+    , R_REQUEST_COMMENT
+    , GROUP_CODE
+    , ORIGIN_NAME 
+    , MODIFY_NAME
+    , ATTACH_PATH 
+from 
+	vacation v
+left join  
+	attachment a on (VACATION_NO = REF_NO and REF_TYPE = 'VACT' and a.STATUS = 'Y')
+where 
+	SIGN_MEMBER = #{member.userNo}
+and 
+	v.STATUS = 'Y'
+and 
+	APPORVAL_STATUS = 'N'
+<if test="!vacaGroupCode.equals('all')">
+	and GROUP_CODE = #{vacaGroupCode}
+</if>
+order by 
+	VACATION_NO desc
+	</select>
+	
+	<update id="singRefuse">
+	update 
+		vacation
+	set 
+		APPORVAL_STATUS = 'R'
+	, RETRACT_COMMNET = #{RetractComent}
+	where 
+		VACATION_NO = #{vacaNO}
+	</update>
+	
+		<update id="singConfirm">
+	update 
+		vacation
+	set 
+		APPORVAL_STATUS = 'Y'
+	where 
+		VACATION_NO = #{vacaNO}
 	</update>
 
 </mapper>

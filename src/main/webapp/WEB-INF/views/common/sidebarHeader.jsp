@@ -649,7 +649,7 @@ $(document).ready(function(){
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">휴가</a>
                             </li>
                             <li><a href="${contextPath}/vacation/complete.page"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">지난 휴가</a>
+                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">휴가 결재</a>
                             </li>
                         </ul>
                     </div>
