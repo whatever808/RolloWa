@@ -789,6 +789,7 @@ $(document).ready(function(){
 						stompClient = Stomp.over(chatting);
 						
 						// Auto Reconnect
+						// 5분마다 재연결
 						stompClient.reconnect_delay = 300000;
 						// 디버깅 방법 설정
 					  stompClient.debug = function(str) {
@@ -829,7 +830,7 @@ $(document).ready(function(){
 					    			stompClient.subscribe("/topic/chat/room/" + msgBody.roomNo, function(msg) {
 					    				// 메세지 수신 처리
 					    				receiveMsg(msg);
-					    			})
+					    			}, { id: "room" + msgBody.roomNo})
 					    		}
 					    	} else {
 					    		// 공지사항, 일정 등록 알림인 경우
