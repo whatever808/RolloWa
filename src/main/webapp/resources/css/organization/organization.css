@@ -33,11 +33,10 @@
 }
 /* 가로줄 */
 .tree li:before {
-    outline: solid 1px lightgray; 
-    outline: solid 1px red; 
+    outline: solid 1px red;
     content: "";
-    left: 0px;
-    right: 0px;
+    left: 0;
+    right: 0;
     position: absolute;
     top: -.2em;
     z-index: -1;
@@ -80,7 +79,7 @@
     border-radius: .3em;
     display: inline-block;
     /* 가운데 em : 가로 개수조절 */
-	margin: 0 2em 2.3em;
+	margin: 0 2em 2.005em;
 	padding: 1em 1.5em;
 	position: relative;
 	width: 200px;
@@ -92,6 +91,9 @@
 .tree li:last-child:before {
 	right: 50%;
 }
+li:nth-child(4n):before{
+}
+
 .tree ul:before {
 	top: -1.8em;
 }
@@ -126,8 +128,6 @@ a:hover{
 	color: black !important;
 	margin: -0.45em 0 !important;
 }
-
-
 
 
 /* 2. 직원 검색 관련 css */

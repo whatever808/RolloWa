@@ -9,12 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>구성원 상세 조회</title>
 
-	<!-- 우편 api -->
-	<link rel='stylesheet' href='/stylesheets/style.css' />
-	<!-- jquery -->
-    <script type="text/javascript" src="/js/jquery-1.11.3.min.js"></script>
-    <script src="/javascript/popup_2.js"></script>
-
 	<style>
     .main_content{
     	width: 1200px !important;
@@ -63,6 +57,9 @@
     .div_common{
         display: flex;
     }
+    .div_common img{
+    	width: 300px;
+    }
     .h5_margin {
         margin-top: 20px;
     }
@@ -71,6 +68,9 @@
     }
     #sample6_address, #sample6_detailAddress{
     	width: 600px !important;
+    }
+    .btn_post{
+    	width: 100px !important;
     }
 
     /* 비밀번호 영역 */
@@ -92,6 +92,14 @@
     </style>
 </head>
 <body>
+
+	<!-- 로그인 체크 -->
+	<c:if test="${empty loginMember}">
+	    <script>
+	        alert("로그인 후 이용가능합니다.");
+	        window.location.href = "${pageContext.request.contextPath}/";
+	    </script>
+	</c:if>
 
 	<!-- 사이드바 해더 영역 -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
@@ -117,16 +125,13 @@
 		                    <div>
 		                        <div class="div_common">
 		                        	<c:choose>
-										<c:when test="${ not empty m.profileURL }">
-											<img src="${ m.profileURL }" class="profile_img"
-												onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
-										</c:when>
-										<c:otherwise>
-											<img
-												src="${ contextPath }/resources/images/defaultProfile.png"
-												class="profile_img">
-										</c:otherwise>
-									</c:choose>
+						            	<c:when test="${ not empty m.profileURL }">
+							                <img src="${contextPath}/${m.profileURL}" class="profile_img">
+						            	</c:when>
+						            	<c:otherwise>
+							                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">
+						            	</c:otherwise>
+						            </c:choose>
 		                        </div>
 		                    </div>
 		                </td>
@@ -170,7 +175,7 @@
 		                <td class="td_common">
 		                	<h5>
 								<input type="text" id="sample6_postcode" placeholder="우편번호 입력" value="${ m.postCode }">
-								<input onclick="sample6_execDaumPostcode()" class="btn btn-warning" value="우편번호 검색">
+								<input onclick="sample6_execDaumPostcode()" class="btn btn-warning btn_post" value="우편번호 검색">
 							</h5>
 	                	</td>
 	                	<td class="td_common">

@@ -131,6 +131,7 @@
 	 	   AND D1.CODE_NAME LIKE '%' || #{department} || '%'
 	 	   AND D2.CODE_NAME LIKE '%' || #{team} || '%'
 	 	   AND M.USER_NAME LIKE '%' || #{name} || '%'
+	 	   AND M.STATUS = 'Y'
 	 	 GROUP BY
 	 	 	   M.USER_NO
 	 	 	 , M.PROFILE_URL

@@ -108,7 +108,7 @@
 		                <td class="td_common">
 		                    <div>
 		                    	<div class="div_common">
-			                        <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력하세요." >
+			                        <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력하세요." required>
 				                    <h4>
 				                        <div id="nameCheck_result" class="nocheck"></div>
 				                    </h4>
@@ -125,7 +125,7 @@
 		                <td class="td_common">
 		                    <div>
 		                        <div class="div_common">
-		                            <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디을 입력하세요.">
+		                            <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디을 입력하세요." required>
 		                            <h4>
 		                                <div id="idCheck_result" class="nocheck"></div>
 		                            </h4>
@@ -143,7 +143,7 @@
 		                <td class="td_common">
 		                    <div>
 		                        <div class="div_common">
-		                            <input type="password" class="form-control" id="userPwd" name="userPwd" placeholder="비밀번호을 입력하세요.">
+		                            <input type="password" class="form-control" id="userPwd" name="userPwd" placeholder="비밀번호을 입력하세요." required>
 		                            <h4>
 		                                <div id="pwd_result" class="nocheck"></div>
 		                            </h4>
@@ -161,7 +161,7 @@
 		                <td class="td_common">
 		                    <div>
 		                        <div class="div_common">
-		                            <input type="password" class="form-control" id="userPwdck" name="userPwdck" placeholder="확인 비밀번호를 입력하세요.">
+		                            <input type="password" class="form-control" id="userPwdck" name="userPwdck" placeholder="확인 비밀번호를 입력하세요." required>
 		                            <h4>
 		                                <div id="pwdck_result" class="nocheck"></div>
 		                            </h4>
