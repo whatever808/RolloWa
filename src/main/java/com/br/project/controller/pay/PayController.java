@@ -214,6 +214,7 @@ public class PayController {
 						, HttpSession session) {
 		
 		//회원정보조회용
+		String approvalNo = (String)map.get("approvalNo");
 		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
 		String userName = payService.loginUserMember(userNo);
 		log.debug("map : {}", map);
@@ -246,9 +247,11 @@ public class PayController {
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("비품신청서")) {
 			List<Map<String, Object>> list = payService.fixDetail(map);
 			List<SignDto> sign = payService.ajaxSignSelect(map);
+			List<Map<String, Object>> refList = payService.refList(approvalNo);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
+			model.addAttribute("refList", refList);
 			model.addAttribute("sign", sign);
 			return "pay/fixDetail";
 			
@@ -675,6 +678,7 @@ public class PayController {
 			model.addAttribute("teamNames", teamNames);
 			//-------------------------------------
 			model.addAttribute("list", listM);
+			model.addAttribute("type", map.get("type"));
 			
 			return "pay/mModifyForm";
 			
@@ -688,6 +692,7 @@ public class PayController {
 			//-------------------------------------
 			model.addAttribute("list", listJ);
 			model.addAttribute("fileList", fileList);
+			model.addAttribute("type", map.get("type"));
 			
 			return "pay/jModifyForm";
 			
@@ -699,6 +704,7 @@ public class PayController {
 			model.addAttribute("teamNames", teamNames);
 			//-------------------------------------
 			model.addAttribute("list", listH);
+			model.addAttribute("type", map.get("type"));
 			
 			return "pay/hModifyForm";
 			
@@ -710,6 +716,7 @@ public class PayController {
 			model.addAttribute("teamNames", teamNames);
 			//-------------------------------------
 			model.addAttribute("list", listB);
+			model.addAttribute("type", map.get("type"));
 			
 			return "pay/bModifyForm";
 		}else {
@@ -724,6 +731,7 @@ public class PayController {
 			model.addAttribute("content", content);			
 			
 			model.addAttribute("list", listG);
+			model.addAttribute("type", map.get("type"));
 			log.debug("gModifyFormList : {}", listG);
 			
 			return "pay/gModifyForm";
@@ -970,6 +978,8 @@ public class PayController {
 							    @RequestParam("price") List<String> prices,
 							    @RequestParam("etc") List<String> etcs,
 							    @RequestParam Map<String, Object> map,
+							    @RequestParam(value="referrer", defaultValue="null") List<String> referrerNo,
+							    @RequestParam(value="referrerName", defaultValue="null") List<String> referrerName,
 							    Model model,
 							    RedirectAttributes redirectAttributes) {
 		
@@ -990,7 +1000,22 @@ public class PayController {
 		}
 		log.debug("품목 : {}", list);
 		
-		int result = payService.bReportInsert(map, list);
+		List<Map<String, Object>> referrerList = new ArrayList<>();
+		if(!referrerNo.equals("null")) {
+			for(int i=0; i<referrerNo.size(); i++) {
+				Map<String, Object> refMap = new HashMap<>();
+				refMap.put("writerNo", map.get("writerNo"));
+				refMap.put("refNo", referrerNo.get(i));
+				refMap.put("refName", referrerName.get(i));
+				referrerList.add(refMap);
+			}
+		}
+		
+		
+		log.debug("referrerNo : {}", referrerNo);
+		log.debug("referrerList : {}", referrerList);
+		
+		int result = payService.bReportInsert(map, list, referrerList);
 		
 		redirectAttributes.addFlashAttribute("alertTitle", "게시글 등록 서비스");
 		if(result > 0) {
@@ -1269,9 +1294,12 @@ public class PayController {
 							    @RequestParam("price") List<String> prices,
 							    @RequestParam("etc") List<String> etcs,
 							    @RequestParam Map<String, Object> map,
+							    @RequestParam(value="referrer", defaultValue="null") List<String> referrerNo,
+							    @RequestParam(value="referrerName", defaultValue="null") List<String> referrerName,
 							    Model model,
 							    RedirectAttributes redirectAttributes) {
 
+			String approvalNo = (String)map.get("approvalNo");
 			// 품목, 규격, 수량, 단가, 가격, 기타 
 			List<Map<String, Object>> list = new ArrayList<>();
 			
@@ -1289,9 +1317,23 @@ public class PayController {
 					
 				}
 			}
-			log.debug("품목 : {}", list);
 			
-			int result = payService.bReportUpdate(map, list);
+			List<Map<String, Object>> referrerList = new ArrayList<>();
+			if(referrerNo != null &&!referrerNo.equals("null")) {
+				for(int i=0; i<referrerNo.size(); i++) {
+					Map<String, Object> refMap = new HashMap<>();
+					refMap.put("approvalNo", map.get("approvalNo"));
+					refMap.put("writerNo", map.get("payWriterNo"));
+					refMap.put("refNo", referrerNo.get(i));
+					refMap.put("refName", referrerName.get(i));
+					referrerList.add(refMap);
+				}
+			}
+			
+			log.debug("품목 : {}", list);
+			log.debug("referrerList : {}", referrerList);
+			
+			int result = payService.bReportUpdate(map, list, referrerList, approvalNo);
 			
 			
 			redirectAttributes.addFlashAttribute("alertTitle", "게시글 수정 서비스");
@@ -1309,59 +1351,19 @@ public class PayController {
 	
 	// 승인 싸인 저장하기 ajax
 	@ResponseBody
-	@PostMapping(value="/ajaxSign.do", produces = "application/json; charset=UTF-8")
-	public Map<String, Object> ajaxSign(@RequestParam Map<String, Object> map,
-										@RequestParam(value="productName", defaultValue="") List<String> productName,
-										@RequestParam(value="productAmount",  defaultValue="") List<String> productAmount) {
+	@PostMapping(value="/ajaxSign.do")
+	public Map<String, Object> ajaxSign(@RequestParam Map<String, Object> map) {
 		
 //		Map<String, Object> map = new HashMap<String, Object>();
 //		map = CommonController.getParameterMap(request);
-//		log.debug("map : {}", map);
-		log.debug("mapSign : {}", map);
-		for(int i=0; i<productName.size(); i++) {
-			log.debug("productName : {}", productName.get(i));
-			log.debug("productAmount : {}", productAmount.get(i));			
-		}
-		String dataUrl = (String)map.get("dataUrl");
-		
-        map.put("fileName", dataUrl);
-		
+
+		log.debug("signMap : {}", map);
 		int result =  payService.ajaxSignUpdate(map);
-		log.debug("result : {}", result);
 		
 		List<SignDto> sign = new ArrayList<>();
 		if(result > 0) {
 			sign = payService.ajaxSignSelect(map);
 		}
-		/*
-		List<Map<String, Object>> list = new ArrayList<>();
-		if("3".equals(map.get("approvalSignNo")) && "Fix".equals(map.get("deptType")) && !fix.isEmpty()) {
-			for (String f : fix) {
-	            try {
-	                String decodedString = URLDecoder.decode(f, "UTF-8");
-	                String[] pairs = decodedString.split("&");
-	                String[] pair = decodedString.split("=");
-	                Map<String, Object> productMap = new HashMap<>();
-	                for (int i=0; i<pairs.length; i++) {
-	                    productMap.put("fixName", pairs[i]);
-	                    productMap.put("fixAmount", pairs[i]);
-	                }
-	                
-	                list.add(productMap);
-	            } catch (Exception e) {
-	                log.error("Error decoding fix parameter: " + f, e);
-	            }
-	        }
-		}
-		*/
-		
-		
-		
-		//int resultFix = payService.fixInsert(list);
-		
-		
-		
-		//log.debug("resultFix : {}", resultFix);
 		
 		Map<String, Object> maps = new HashMap<>();
 		maps.put("sign", sign);
@@ -2003,6 +2005,24 @@ public class PayController {
 		return payService.laterSearchDept(keyword);
 		
 	}
+	
+	
+	@RequestMapping("/myReferrer.page")
+	public String myReferrer(HttpSession session, Model model){
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		
+		List<Map<String, Object>> list = payService.myReferrer(userNo);
+		String userName = payService.loginUserMember(userNo);	
+		model.addAttribute("list", list);
+		model.addAttribute("userName",userName);
+		
+		return "pay/myReferrer";
+		
+	}
+	
+	
+	
 	
 	
 

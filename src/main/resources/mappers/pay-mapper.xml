@@ -382,6 +382,7 @@
 			      , ITEM
 			      , VOLUMES
 			      , SALES_AMOUNT
+			      , MODIFY_TYPE
 				from approval a
 	      left join expenditure_report e on (document_number = expend_no)
 			  left join item i on (expend_no = report_no)
@@ -681,15 +682,17 @@
 				     	<when test="approvalSignNo == 1">
 				     	, FIRST_APPROVAL_DATE = SYSDATE
 				     	, FIRST_SIGN = '반려'
-				     	, document_status = 'I'
+				     	, document_status = 'N'
 				     	</when>
 				     	<when test="approvalSignNo == 2">
 				     	, MIDDLE_APPROVAL_DATE = SYSDATE
 				     	, MIDDLE_SIGN = '반려'
+				     	, document_status = 'N'
 				     	</when>
 				     	<when test="approvalSignNo == 3">
 				     	, FINAL_APPROVAL_DATE = SYSDATE
 				     	, FINAL_SIGN = '반려'
+				     	, document_status = 'N'
 				     	</when>
 			     </choose>
 			 where approval_no = #{approvalNo}
@@ -812,6 +815,7 @@
 				     , FINAL_APPROVAL_DATE = NULL
 				     , CANCELLATION_CONTENT = NULL
 				     , DOCUMENT_STATUS = 'D'
+				     , MODIFY_TYPE = #{modifyType}
 				 WHERE APPROVAL_NO = #{approvalNo}
 	   </update>
 	   
@@ -920,6 +924,7 @@
               , MODIFY_NAME
               , ATTACH_PATH
               , REF_NO
+              , MODIFY_TYPE
           from approval ap
           join SALES_REPORT s on (SALES_NO = DOCUMENT_NUMBER)
           join ATTACHMENT at on (ref_no = SALES_NO)
@@ -1021,7 +1026,7 @@
    
    <select id="fixDetail" resultType="map">
 			select
-				    APPROVAL_NO
+				    	APPROVAL_NO
 				    , DOCUMENT_NUMBER
 				    , DOCUMENT_TYPE
 				    , DEPARTMENT
@@ -1049,6 +1054,7 @@
 				    , UNIT_PRICE
 				    , PRICE
 				    , NOTE
+				    , MODIFY_TYPE
 				from approval a
 				left join FIXTURES_REPORT  on ( DOCUMENT_NUMBER = FIX_NO )
 				left join item on ( FIX_NO = REPORT_NO )
@@ -1058,7 +1064,6 @@
 	         and REPORT_TYPE = 'B'
         	 AND DOCUMENT_TYPE = 'B'
 	         and PAYMENT_WRITER_NO = #{payWriterNo}
-	         and PAYMENT_WRITER = #{payWriter}
    </select>
    
    <insert id="hReportInsert">
@@ -1140,6 +1145,7 @@
             , RETIRE_CONTENT
             , r.STATUS
             , TITLE
+            , MODIFY_TYPE
 				from approval a
 				left join RETIRE_REPORT r on ( DOCUMENT_NUMBER = RETIRE_NO )
 				 where a.STATUS = 'Y'
@@ -1302,6 +1308,7 @@
 			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
 			      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
 						, to_char(A.REGIST_DATE, 'YYYY-MM-DD') REGIST_DATE
+						, MODIFY_TYPE
 				FROM approval A
 				JOIN DRAFT_REPORT DR ON (DOCUMENT_NUMBER = DRAFT_NO)
 				JOIN ITEM I ON (DRAFT_NO = REPORT_NO)
@@ -1731,18 +1738,18 @@
 	  	   <choose>
 						<when test="approvalSignNo == 1">
 						    FIRST_APPROVAL_DATE = SYSDATE
-							, FIRST_SIGN = #{fileName}
+							, FIRST_SIGN = #{dataUrl}
 							, DOCUMENT_STATUS = 'I'
 							, CANCELLATION_CONTENT = null
 						</when>
 						<when test="approvalSignNo == 2">
 							  MIDDLE_APPROVAL_DATE = SYSDATE
-							, MIDDLE_SIGN = #{fileName}
+							, MIDDLE_SIGN = #{dataUrl}
 							, CANCELLATION_CONTENT = null
 						</when>
 						<otherwise>
 						    FINAL_APPROVAL_DATE = SYSDATE
-							, FINAL_SIGN = #{fileName}
+							, FINAL_SIGN = #{dataUrl}
 							, CANCELLATION_CONTENT = null
 						</otherwise>	   
 	  	   </choose>
@@ -2783,10 +2790,112 @@
 	            OR CODE_NAME LIKE '%' || #{keyword} || '%'
 							)
    </select>
+   
+   <insert id="insertRefNo">
+   	 	INSERT
+   	 			INTO 
+   	 					RECIPIENT_REFERRER
+   	 					(
+   	 					REFER_NO
+   	 				,	DEF_NO
+   	 				, APPROVAL_WRITER_NO
+   	 				, REF_WRITER_NO
+   	 				, REF_WRITER_NAME
+   	 					)
+   	 					VALUES
+   	 					(
+   	 					SEQ_RECNO.NEXTVAL
+   	 				, SEQ_APNO.CURRVAL
+   	 				, #{writerNo}
+   	 				, #{refNo}
+   	 				, #{refName}
+   	 					)
+   </insert>
 
+	<select id="myReferrer" resultType="map">
+		select 
+			      APPROVAL_NO
+			    , case when document_type = 'C' then '출장보고서'
+			           when document_type = 'H' then '휴직신청서'
+			           when document_type = 'T' then '퇴직신청서'
+			           when document_type = 'B' then '비품신청서'
+			           when document_type = 'J' then '지출결의서'
+			           when document_type = 'G' then '기안서'
+			           when document_type = 'M' then '매출보고서'
+			      else '휴가신청서'
+				   end document_type
+				   , DOCUMENT_NUMBER
+				   , DEPARTMENT
+				   , PAYMENT_WRITER
+				   , PAYMENT_WRITER_NO
+				   , (CASE WHEN DOCUMENT_STATUS = 'Y' THEN '완료'
+				           WHEN DOCUMENT_STATUS = 'I' THEN '진행'
+				           WHEN DOCUMENT_STATUS = 'N' THEN '반려'
+				           WHEN DOCUMENT_STATUS = 'D' THEN '대기'
+				           END) DOCUMENT_STATUS
+				   ,(SELECT count(*)
+				        FROM SALES_REPORT S
+				      WHERE A.DOCUMENT_NUMBER = S.SALES_NO
+				        AND A.document_type = 'G'
+				        AND S.STATUS = 'Y'
+				    )SALES_STATUS
+				    , (SELECT count(*)
+				        FROM DRAFT_REPORT D
+				        WHERE A.DOCUMENT_NUMBER = D.DRAFT_NO
+				         AND A.document_type = 'J'
+				         AND D.STATUS = 'Y'
+				     ) DRAFT_STATUS
+				    , (SELECT count(*)
+				        FROM BUSINESSTRIP_REPORT B
+				        WHERE A.DOCUMENT_NUMBER = B.BUSINESS_NO
+				        AND A.document_type = 'C'
+				        AND B.STATUS = 'Y'
+				     ) BUSINESSTRIP_STATUS
+				     , to_char(regist_date, 'YYYY-MM-DD') regist_date
+				     , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+				     , PAYMENT_STATUS
+				     , TITLE
+				from approval A
+				WHERE A.STATUS = 'Y'
+          and APPROVAL_NO in (select DEF_NO
+	      							  				from RECIPIENT_REFERRER
+                               where REF_WRITER_NO = #{userNo})
+				order
+					 by APPROVAL_NO desc
+   </select>
+   
+   <select id="refList" resultType="map">
+   		select REF_WRITER_NAME
+			  from RECIPIENT_REFERRER
+			 where DEF_NO = #{approvalNo}
+   </select>
+   
+   <delete id="deleteRefNo">
+			 delete from RECIPIENT_REFERRER
+			  where DEF_NO = #{approvalNo} 
+		</delete>
+   
 	
-	
-	
+	 <insert id="updateInsertRefNo">
+   	 	INSERT
+   	 			INTO 
+   	 					RECIPIENT_REFERRER
+   	 					(
+   	 					REFER_NO
+   	 				,	DEF_NO
+   	 				, APPROVAL_WRITER_NO
+   	 				, REF_WRITER_NO
+   	 				, REF_WRITER_NAME
+   	 					)
+   	 					VALUES
+   	 					(
+   	 					SEQ_RECNO.NEXTVAL
+   	 				, #{approvalNo}
+   	 				, #{writerNo}
+   	 				, #{refNo}
+   	 				, #{refName}
+   	 					)
+   </insert>
 	
 		
 	 

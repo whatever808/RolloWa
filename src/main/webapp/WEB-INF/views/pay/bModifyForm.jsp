@@ -107,6 +107,68 @@ ul {
     z-index: 5;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #feefad;
+}
+.checkBox {
+    display: inline-block;
+    width: 20px;
+}
+.teamName, .userName {
+    padding-left: 10px;
+}
+#clickBox .userItem {
+    margin: 5px 0;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.removeName{cursor: pointer;}
+#okayBtn{
+		background-color: #fdeeac;
+    border-radius: 16px;
+    padding: 5px;
+    width: 63px;
+    margin: 10px;
+    border: none;
+}
+
+.input-container {
+    position: relative;
+    width: 200px;
+}
+
+.input-search {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    outline: none;
+}
+
+/* 포커스 시 스타일링 */
+.input-search:focus {
+    border-color: dodgerblue;
+    box-shadow: 0 0 5px dodgerblue;
+}
+#searchBox{
+		text-align: center;
+    margin: 30px;
+}
+#searchBox th td{text-align: center;}
+
 
 </style>
 
@@ -240,7 +302,8 @@ $(document).ready(function(){
 		})
 			
 		
-		$(document).on("keypress", "#userSearch", function(ev){
+		$(document).on("keyup", "#userSearch", function(ev){
+			
 			if(ev.key == 'Enter'){
 				if($(this).val().trim() == ""){
 					alert("다시입력해주세요");
@@ -253,7 +316,6 @@ $(document).ready(function(){
 							name:$("#userSearch").val()
 						},
 						success:function(result){
-							console.log(result);
 							 if(result.length == 0){
 								 alert("검색하신 이름은 존재하지 않습니다.");
 								 $("#userSearch").val("");
@@ -275,6 +337,7 @@ $(document).ready(function(){
 						}
 					})
 				}
+				
 			}
 		})
 		
@@ -327,15 +390,6 @@ $(document).ready(function(){
          		</c:forEach> 															               
          </ul>
      </li>
-      <li><span class="deptDiv">인사부</span>
-         <ul>
-            <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
-             	<c:if test="${ teamNames.get(i).DEPT_NAME eq '인사부' }">
-                  	<li class="teamN">${teamNames.get(i).TEAM_NAME}</li>
-                  </c:if>
-         		</c:forEach> 															               
-         </ul>
-     </li>
       <li><span class="deptDiv">운영부</span>
          <ul>
             <c:forEach var="i" begin="0" end="${ teamNames.size() - 1 }">
@@ -357,7 +411,6 @@ $(document).ready(function(){
     </ul>
 </div>
 <!-- 결재승인자 모달 end -->
-    
     
     <div class="user-list">
     	 <div class="actions">
@@ -387,7 +440,179 @@ $(document).ready(function(){
 		    </div>
 		</div>
       </div>
-	</div>			
+</div>	
+
+
+<div id="modal2">
+		<div id="title">
+			<input type="text" id="laterName" class="input-search" placeholder="검색하세요.">
+		</div>
+		<div id="searchBox">
+		
+		</div>
+		<div id="clickBox">
+			
+		</div>
+		<div style="display: flex; justify-content: flex-end;">
+			<button id="okayBtn">확인</button>
+		</div>
+</div>
+
+<script>
+$(document).on("click", "#okayBtn", function(){
+	
+    let no = $("#clickBox").find(".checkuserNumber");
+    let referrer = [];
+    for(let i = 0; i < no.length; i++){
+        referrer.push($(no[i]).val());
+    }
+    $("input[type='hidden'][name='referrer']").val(referrer);
+    
+    
+    let name = $("#clickBox").find(".userName");
+    let referrerNames = [];
+    for(let i = 0; i < name.length; i++){
+    	referrerNames.push($(name[i]).text());
+    }
+    $("input[type='hidden'][name='referrerName']").val(referrerNames);
+    
+    
+    let userNames = [];
+    $("#clickBox .userName").each(function() {
+        userNames.push($(this).text());
+    });
+    $("#referrerTd").empty();
+    $("#referrerTd").append(userNames.join(", "));
+    
+    $("#modal2").iziModal('close');
+});
+</script>
+
+
+
+
+   <script>
+        $(document).ready(function() {
+        	
+            $(document).on("keyup", "#laterName", function(ev) {
+                $("#searchBox").empty();
+                if (ev.key === "Enter") {
+                    let keyword = $("#laterName").val().trim();
+                    if (keyword) {
+                        $.ajax({
+                            url: "${contextPath}/pay/laterSearchDept.do",
+                            type: "get",
+                            data: { keyword: keyword },
+                            success: function(response) {
+                                let span = "";
+                                if (response.length > 0) {
+                                    span += "<table>";
+                                    span += "<tr><th>선택</th><th>팀 이름</th><th>직급</th><th>사용자 이름</th></tr>";
+                                    response.forEach(function(item) {
+                                        span += "<tr id='searchTr'>";
+                                        span += "<td><input type='checkbox' class='checkBox'></td>";
+                                        span += "<td class='teamName'>" + item.TEAM_NAME + "</td>";
+                                        span += "<td class='positionName'>" + item.POSITION_NAME + "</td>";
+                                        span += "<td class='userName'>" + item.USER_NAME + "</td>";
+                                        span += "<input type='hidden' class='userNumber' value='" + item.USER_NO + "'>";
+                                        span += "</tr>";
+                                    });
+                                    span += "</table>";
+                                    $("#searchBox").append(span);
+                                } else {
+                                    $("#searchBox").html("<span>검색한 사원은 존재하지 않습니다.</span>");
+                                   	$("##laterName").val();
+                                }
+                            },
+                            error: function() {
+                                console.log("ajax 통신 실패");
+                            }
+                        });
+                    }
+                }
+            });
+
+            $(document).on("change", ".checkBox", function() {
+                let $row = $(this).closest("tr");
+                let teamName = $row.find(".teamName").text();
+                let userName = $row.find(".userName").text();
+                let positionName = $row.find(".positionName").text();
+                let userNumber = $row.find(".userNumber").val();
+								console.log(teamName);
+								console.log(userName);
+								console.log(userNumber);
+                if ($(this).is(":checked")) {
+                    let duplicate = false;
+                    $("#clickBox .userNumber").each(function() {
+                        if ($(this).val() == userNumber) {
+                            duplicate = true;
+                            return false; // each문 종료
+                        }
+                    });
+                    if (duplicate) {
+                        alert("중복된 이름입니다.");
+                        $(this).prop("checked", false);
+                    } else {
+                    	let userItemHTML ='<div class="userItem">' +
+									                        '<span class="teamName">' + teamName + '</span>' +
+									                        '<span class="positionName">' + positionName + '</span>' +
+									                        '<span class="userName">' + userName + '</span>' +
+									                        '<input type="hidden" class="checkuserNumber" value="' + userNumber + '">' +
+									                        '<span class="removeName">' + 
+									                        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">' + 
+																					  '<path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>' + 
+																					  '<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>' + 
+																					'</svg>'
+								                        '</div>';
+                        $("#clickBox").append(userItemHTML);
+               
+                        
+                    }
+                } else {
+                    $("#clickBox .userNumber").each(function() {
+                        if ($(this).val() == userNumber) {
+                            $(this).closest(".userItem").remove();
+                        }
+                    });
+                }
+                
+                
+            });
+            
+            $(document).on("click", ".removeName", function() {
+                let $row = $(this).closest(".userItem");
+                let hiddenEl = $row.find(".checkuserNumber").val(); 
+                $row.remove();
+                
+                // 삭제된 사용자의 번호를 가진 행에서 체크박스를 해제
+                $("#searchBox tr").each(function() {
+                    let userNumber = $(this).find(".userNumber").val();
+                    if (hiddenEl === userNumber) {
+                        $(this).find(".checkBox").prop("checked", false);
+                        return false; // each 반복문 종료
+                    }
+                });
+            });
+            
+            $(document).on("change", ".checkBox", function() {
+                let $row = $(this).closest("tr");
+                let userNumber = $row.find(".userNumber").val();
+                
+                // 체크박스가 해제된 경우
+                if (!$(this).is(":checked")) {
+                    // 삭제된 사용자의 번호를 가진 행에서 체크박스 해제
+                    $("#clickBox .userItem").each(function() {
+                        if ($(this).find(".checkuserNumber").val() === userNumber) {
+                            $(this).remove();
+                            return false; // each 반복문 종료
+                        }
+                    });
+                }
+            });
+            
+            
+        });
+    </script>
 
        <!-- content 추가 -->
         <div class="content p-4">
@@ -407,6 +632,9 @@ $(document).ready(function(){
 											 <input type="hidden" name="finalApproval" value="${ list.get(0).FINAL_APPROVAL }" class="hiddenSignName">
 											 <input type="hidden" name="payWriter" value="${list.get(0).PAYMENT_WRITER}">
                        <input type="hidden" name="payWriterNo" value="${list.get(0).PAYMENT_WRITER_NO}">
+                       <input type="hidden" name="modifyType" value="${type}">
+											 <input type="hidden" name="referrer" value="">
+											 <input type="hidden" name="referrerName" value="">
 		                   <div class="document">
 										        <h1 class="title2">비품 신청서</h1>
 										
@@ -440,6 +668,20 @@ $(document).ready(function(){
 										                    <td class="value small sing_name" id="f_name">${ list.get(0).FIRST_APPROVAL }</td>
 										                    <td class="value small sing_name" id="m_name">${ list.get(0).MIDDLE_APPROVAL }</td>
 										                    <td class="value small sing_name" id="l_name">${ list.get(0).FINAL_APPROVAL }</td>
+										                </tr>
+										                <tr>
+										                    <td class="label">
+											                    수신참조
+											                    <button data-izimodal-open="#modal2" id="modal_btn">
+																					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
+																					  <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+																					  <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+																					</svg>
+	                                        </button>
+										                    </td>
+										                    <td  colspan="3" id="referrerTd">
+										                   
+										                    </td>
 										                </tr>
 										                <tr>
                                         <td class="label">상태</td>
@@ -571,20 +813,19 @@ $(document).ready(function(){
 		                result += "</tr>";
                 $("#tr_table").append(result);
             });
+            
+            $(document).on("click", "#del_btn", function () {
+                // 데이터 행이 있는 경우에만 삭제
+                if ($("#tr_table tr").length > 2) {
+                    $("#tr_table tr:last").remove();
+                } else {
+                    alert("삭제할 행이 없습니다.");
+                }
+            });
         });
     </script>
    
-    <script>
-    $(document).ready(function(){
-    	
-    	$(document).on("click", "#del_btn", function () {
-    	    //$("#tr_table tr:last-child").remove();
-    	    $("#tr_table").children("tr").last().remove();
-    	});
-    
-    	
-    })
-    </script>
+   
         
      <script>
         $('#modal').iziModal({
@@ -600,23 +841,16 @@ $(document).ready(function(){
         
     </script>                            
                
-    <script>
+   <script>
         $('#modal2').iziModal({
-            title: '결재선지정',
+        	title: '수신참조인',
             //subtitle: '수정도 가능합니다.',
             headerColor: '#FEEFAD', // 헤더 색깔
             theme: '', //Theme of the modal, can be empty or "light".
-            padding: '15px', // content안의 padding
+            //padding: '15px', // content안의 padding
             //radius: 10, // 모달 외각의 선 둥글기
-            width: '700px',
+            width: '500px',
            
-        });
-
-        // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
-        $("#modal-test").on('click', function () {
-            //event.preventDefault(); //위의 클릭 이벤트가 일어나는 동안 다른 이벤트가 발생하지 않도록해주는 명령어
-
-            $('#modal2').iziModal('open');
         });
     </script>
         

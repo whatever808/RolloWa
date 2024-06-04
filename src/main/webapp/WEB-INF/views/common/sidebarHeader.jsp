@@ -729,6 +729,10 @@ $(document).ready(function(){
 						                <a href="${contextPath}/pay/myAllApproval.page"
 						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재상신함</a>
 						            </li>
+						            <li>
+						                <a href="${contextPath}/pay/myReferrer.page"
+						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">수신함</a>
+						            </li>
 						        </ul>
 						    </div>
 							</li>

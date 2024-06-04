@@ -1866,7 +1866,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
 
                        var row = '';
-                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '&payWriterNo=' + item.payWriterNo + '">' +
                        				'<td>' + item.approvalNo + '</td>' +
                               '<td>' + item.title + attachmentIcon + '</td>' +
                               '<td>' + item.documentType + '</td>' +

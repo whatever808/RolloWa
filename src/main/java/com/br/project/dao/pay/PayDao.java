@@ -514,4 +514,25 @@ public class PayDao {
 		return sqlSessionTemplate.selectList("payMapper.laterSearchDept", keyword);
 	}
 	
+	public int insertRefNo(Map<String, Object> refNo) {
+		return sqlSessionTemplate.insert("payMapper.insertRefNo", refNo);
+	}
+	
+	public List<Map<String, Object>> myReferrer(int userNo){
+		return sqlSessionTemplate.selectList("payMapper.myReferrer", userNo);
+	}
+	
+	public List<Map<String, Object>> refList(String approvalNo){
+		return sqlSessionTemplate.selectList("payMapper.refList", approvalNo);
+	}
+	
+	public int deleteRefNo(String approvalNo) {
+		return sqlSessionTemplate.insert("payMapper.deleteRefNo", approvalNo);
+	}
+	
+	
+	public int updateInsertRefNo(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.updateInsertRefNo", map);
+	}
+	
 }
