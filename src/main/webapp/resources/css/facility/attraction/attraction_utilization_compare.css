@@ -1,0 +1,47 @@
+.go-list{
+	font-size: 20px;
+	color: black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-right: 20px;
+	padding-left: 20px;
+	background-color: #ffdd7391;
+	border-radius: 10px;
+	font-weight: bold;
+}
+
+/* ------------- chart div ------------- */
+.chart-list-div{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	margin-top: 10px;
+	height: 1200px;
+}
+.chart-div{
+	width: 100%;
+	height: 45%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 10px;
+	border: 1px solid lightgray;
+	box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
+  border-radius: 10px;
+}
+.select{
+	width: 200px !important;
+	text-align: center !important;
+	height: 10%;
+}
+.chart{
+	height: 100%;
+}
+
+text{
+	font-size: 18px !important;
+	font-family: "Do Hyeon" !important;
+	font-weight: 0 !important;
+}

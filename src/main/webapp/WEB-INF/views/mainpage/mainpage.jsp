@@ -383,7 +383,7 @@
 					let result = responseData.result;
 					if(result == 'SUCCESS'){
 						$(".total-vacation-count").text(responseData.attendInfo.vacationCount);
-						$(".used-vacation-count").text(responseData.attendInfo.usedVactionCount);
+						$(".used-vacation-count").text(responseData.attendInfo.usedVacationCount);
 						$(".left-vacation-count").text(responseData.attendInfo.vacationCount - responseData.attendInfo.usedVacationCount);
 						$(".leave-early-count").text(responseData.attendInfo.leaveEarlyCount);
 						$(".day-off-count").text(responseData.attendInfo.dayOffCount);

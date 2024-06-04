@@ -304,33 +304,33 @@
 	<!-- 근태관리 정보조회 -->
 	<select id="selectMemberAttend" parameterType="hashmap" resultType="map">
 		select
-					vacation_count "vacationCount"
-					,(
-						select count(user_no)
-						  from attendance
-						 where user_no = member.user_no
-						   and request_detail = '결근'
-						   and to_char(clock_out, 'YYYY') = #{year}
-						   and extract(month from clock_out) = extract(month from to_date(#{month}, 'MM'))
-					  ) "dayOffCount"
-					,(
-						select count(user_no)
-						  from attendance
-						 where user_no = member.user_no
-						   and request_detail = '조퇴'
-						   and to_char(clock_in, 'YYYY') = #{year}
-						   and extract(month from clock_in) = extract(month from to_date(#{month}, 'MM'))
-					  ) "leaveEarlyCount"
-					,(
-						select count(vacation_no)
+			 vacation_count "vacationCount"
+			,(
+				select count(user_no)
+				  from attendance
+				 where user_no = member.user_no
+				   and request_detail = '결근'
+				   and to_char(clock_out, 'YYYY') = #{year}
+				   and extract(month from clock_out) = extract(month from to_date(#{month}, 'MM'))
+			  ) "dayOffCount"
+			,(
+				select count(user_no)
+				  from attendance
+				 where user_no = member.user_no
+				   and request_detail = '조퇴'
+				   and to_char(clock_in, 'YYYY') = #{year}
+				   and extract(month from clock_in) = extract(month from to_date(#{month}, 'MM'))
+			  ) "leaveEarlyCount"
+			,case when #{year} = extract(year from sysdate) then to_number(using_dtae) 
+				  else (select count(vacation_no)
 						  from vacation
 						 where status = 'Y'
 						   and apporval_status = 'Y'
 						   and extract(year from vacation_strat) = #{year}
 						   and extract(year from vacation_end) = #{year}
 						   and (regist_emp = #{userNo}
-						    or modify_emp = #{userNo})
-					  ) "usedVacationCount"
+						    or modify_emp = #{userNo})) 
+		      end "usedVacationCount"
 		   from member
 		  where user_no = #{userNo}
   </select>
