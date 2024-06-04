@@ -286,6 +286,8 @@ public class AttractionController {
 			attractionList.add(attraction);
 		}
 		request.setAttribute("attractionList", attractionList);
+		request.setAttribute("year", request.getParameter("year"));
+		request.setAttribute("month", request.getParameter("month"));
 		return "facility/attraction/attraction_utilization_compare";
 	}
 	

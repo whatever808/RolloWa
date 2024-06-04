@@ -264,6 +264,8 @@
 		
 		// 비교하기 버튼 클릭시
 		$("#compare").on("click", function(){
+			$("#compareList").append("<input type='hidden' name='year' value='" + $("#year-select").val() + "'>");
+			$("#compareList").append("<input type='hidden' name='month' value='" + $("#month-select").val() + "'>");
 			$("#compareList").submit();
 		});
 	});

@@ -87,14 +87,14 @@
 			$("#date-select").append("<option value='" + ((d < 10) ? '0' + d : d ) + "'>" + d + "일</option>");
 		}
 		
-		/* 날짜 선택값 초기화 ====================================================================
+		// 날짜 선택값 초기화 ====================================================================
 		$("#year-select").children("option").each(function(){
 			$(this).val() == ${ year } && $(this).attr("selected", true);
 		});
 		$("#month-select").children("option").each(function(){
 			$(this).val() == ${ month } && $(this).attr("selected", true);
 		});
-		*/
+		
 		// "년" 선택값이 바뀌었을 경우 ==================================================================
 		$("#year-select").on("change", function(){
 			let month = ($(this).val() == sysYear) ? sysMonth : 12;
@@ -129,6 +129,90 @@
 		});
 	});
 	
+	(function(){
+		google.charts.load('current', {'packages':['corechart']});
+		google.charts.setOnLoadCallback(drawDefaultChart);
+		
+		drawDefaultChart();
+	}());
+	
+	// 디폴트 차트 생성 함수
+	function drawDefaultChart(){
+		// 차트 데이터 테이블
+		monthlyData = new google.visualization.DataTable();
+		dailyData = new google.visualization.DataTable();
+		console.log("데이타 먼스 : ", monthlyData);
+		console.log("데이타 데이 : ", dailyData);
+		
+		// 차트 컬럼
+		monthlyData.addColumn('string', '기간');
+		monthlyData.addColumn('number', '');
+		
+		dailyData.addColumn('string', '기간');
+		dailyData.addColumn('number', '');
+		
+		// 디폴트 데이터
+		monthlyData.addRow['', ''];
+		dailyData.addRow['', ''];
+		
+		// 차트 옵션값 지정
+		monthlyOptions = {
+      title: '',
+      colors: [''],
+      legend: 'none',
+      animation:{	
+				startup:true,
+				duration: 1000,
+				easing: 'out',
+			},
+			vAxis: {
+				title: '이용률 (단위 : %)',
+				minValue: 0,
+				maxValue: 100,
+			},
+			pointSize: 9,
+	    curveType: 'function',
+    }
+		
+		dailyOptions = {
+      title: '',
+      colors: [''],
+      legend: 'none',
+      animation:{	
+				startup:true,
+				duration: 1000,
+				easing: 'out',
+			},
+			vAxis: {
+				title: '이용률 (단위 : %)',
+				minValue: 0,
+				maxValue: 100,
+			},
+			pointSize: 9,
+	    curveType: '',
+    }
+		
+		monthlyChart = new google.visualization.LineChart(document.getElementById('monthly-chart'));
+		dailyChart = new google.visualization.LineChart(document.getElementById('daily-chart'));
+		
+		monthlyChart.draw(monthlyData, monthlyOptions);
+		dailyChart.draw(dailyData, dailyOptions);
+	}
+	
+	// 차트 그리기
+	function drawChart() {
+		console.log("data month : ", monthlyData);
+		console.log("data day : ", dailyData);
+			/* 차트 데이터 추가
+			for(let i=0 ; i<chartData.length ; i++){
+				data.addRow([chartData[i].L, chartData[i].usage]);
+		  }
+			  
+		  var chart = new google.visualization.LineChart(document.getElementById(areaId));
+		  chart.draw(data, options);
+		  */
+		}
+	
 	// 차트 데이터 조회
 	function ajaxSelectAttractionUtilization(type, attractionNo, attractionName){
 		let $year = $("#year-select").val();
@@ -137,6 +221,7 @@
 		$.ajax({
 			url: "${ contextPath }/attraction/utilization/detail.ajax",
 			method: "get",
+			async: false,
 			data: {
 				no: attractionNo,
 				year: $year,
@@ -145,9 +230,11 @@
 			success: function(chartData){
 				console.log("chartData : ", chartData);
 				if(type == 'year'){
-					drawUtilizationChart(attractionName, chartData, 'monthly-chart');	
+					// drawUtilizationChart(attractionName, chartData, 'monthly-chart');	
+					drawChart();
 				}else{
-					drawUtilizationChart(attractionName, chartData, 'daily-chart');					
+					// drawUtilizationChart(attractionName, chartData, 'daily-chart');
+					drawChart();
 				}
 			},error: function(){
 				console.log("SELECT ATTRACTION UTILIZATION LIST TO COMPARE FAILED");
@@ -155,28 +242,31 @@
 		});
 	}
 	
-	// 차트 생성
+	/* 차트 생성
 	function drawUtilizationChart(attractionName, chartData, areaId){
-		  google.charts.load('current', {'packages':['corechart']});
+			google.charts.load('current', {'packages':['corechart']});
 		  google.charts.setOnLoadCallback(drawChart);
-
+		  
 		  function drawChart() {
-			// 차트 데이터 설정 (컬럼명, 셀값)
-			var data = new google.visualization.DataTable();
-			// data.addColumn('string', '어트랙션');
-			data.addColumn('string', '기간');
-			data.addColumn('number', '이용률');
-
-			for(let i=0 ; i<chartData.length ; i++){
-				data.addRow([chartData[i].L, chartData[i].usage]);
-		    }
+			  let data = new google.visualization.DataTable();
+				// 첫 그래프 생성시에만 컬럼 생성
+				if(data.getNumberOfColumns() == 0){
+					console.log("생성");
+					data.addColumn('string', '기간');
+					data.addColumn('number', attractionName + '이용률');
+				}
+				
+				// 차트 데이터 추가
+				for(let i=0 ; i<chartData.length ; i++){
+					data.addRow([chartData[i].L, chartData[i].usage]);
+			  }
 					
 		    var options = {
-		        title: (areaId == 'monthly-chart') ? '${ attraction.attractionName } 월별 이용률'
-		        								   : '${ attraction.attractionName } 일별 이용률',
-		        colors: (areaId == 'monthly-chart') ? ['#FFA7A7'] : ['#FFDD73'],
-		        legend: '',
-		        animation:{	
+		      title: (areaId == 'monthly-chart') ? '${ attraction.attractionName } 월별 이용률'
+		        								   							 : '${ attraction.attractionName } 일별 이용률',
+		      colors: (areaId == 'monthly-chart') ? ['#FFA7A7'] : ['#FFDD73'],
+		      legend: '',
+		      animation:{	
 					startup:true,
 					duration: 1000,
 					easing: 'out',
@@ -188,13 +278,13 @@
 				},
 				pointSize: 9,
 		        curveType: areaId == 'monthly-chart' ? 'function' : '',
-		     };
+		    };
 			      
-			 var chart = new google.visualization.LineChart(document.getElementById(areaId));
-			     chart.draw(data, options);
-			 }
+			  var chart = new google.visualization.LineChart(document.getElementById(areaId));
+			  chart.draw(data, options);
+			}
 	}
-	/* 	
+	 	
 	$(document).ready(function(){
 		ajaxSelectAttractionUtilization('year');
 		ajaxSelectAttractionUtilization('month');
