@@ -129,13 +129,13 @@ h4, h5{
     overflow-y: auto;
 }
 .login-user-list-profile{
-		width: 25px; 
-		height: 25px; 
-		border-radius: 100px;
+	width: 25px; 
+	height: 25px; 
+	border-radius: 100px;
 }
 .login-user-list-member-info{
-		float: right; 
-		font-size: 20px;
+	float: right; 
+	font-size: 16px;
 }
 .schedule-color{
 		display: inline-block;

@@ -225,35 +225,35 @@
  <!-- ======================================= "가림" 구역 ======================================= -->
  <!-- -->  
  <select id="selectMemberForMainPage" parameterType="MemberDto" resultType="map">
-	 	select 
-	 		   user_no "userNo"
-	 		  ,user_name "userName"
-	 		  ,user_id "userId"
-	 		  ,user_pwd "userPwd"
-	 		  ,profile_url "profileURL"
-	 		  ,vacation_count "vacationCount"
-	 		  ,position_code "positionCode"
-	 		  ,team_code "teamCode"
-	 		  ,(
-	 		  	 select upper_code
-	 		  	   from tb_group
-	 		  	  where group_code like 'TEAM%'
-	 		  	    and code = member.team_code
-	 		  	) "deptCode"
-	 		  ,(
-	 		  	select code_name
-	 		  	  from tb_group
-	 		  	 where group_code like 'TEAM%'
-	 		  	   and code = member.team_code
-	 		   ) "teamName"
-	 		  ,(
-	 		  	 select code_name
-	 		  	   from tb_group
-	 		  	  where group_code like 'POSI%'
-	 		  	    and code = member.position_code
-	 		    ) "positionName"
-	 	   from member
-	 	  where user_no = #{userNo}
+ 	select 
+ 		   user_no "userNo"
+ 		  ,user_name "userName"
+ 		  ,user_id "userId"
+ 		  ,user_pwd "userPwd"
+ 		  ,profile_url "profileURL"
+ 		  ,vacation_count "vacationCount"
+ 		  ,position_code "positionCode"
+ 		  ,team_code "teamCode"
+ 		  ,(
+ 		  	 select upper_code
+ 		  	   from tb_group
+ 		  	  where group_code like 'TEAM%'
+ 		  	    and code = member.team_code
+ 		  	) "deptCode"
+ 		  ,(
+ 		  	select code_name
+ 		  	  from tb_group
+ 		  	 where group_code like 'TEAM%'
+ 		  	   and code = member.team_code
+ 		   ) "teamName"
+ 		  ,(
+ 		  	 select code_name
+ 		  	   from tb_group
+ 		  	  where group_code like 'POSI%'
+ 		  	    and code = member.position_code
+ 		    ) "positionName"
+ 	   from member
+ 	  where user_no = #{userNo}
  </select>
  
  <!-- ======================================= "가림" 구역 ======================================= -->

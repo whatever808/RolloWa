@@ -63,7 +63,7 @@
 	
 	<!-- 웹소켓 관련 빈등록 -->
 	<beans:bean class="com.br.project.handler.LoginLogoutEcoHandler" id="loginLogoutEcoHandler" />
-	<websocket:handlers>
+	<websocket:handlers allowed-origin-patterns="*">
 		<websocket:mapping path="/onoff" handler="loginLogoutEcoHandler" />
 		<websocket:handshake-interceptors>
 			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />

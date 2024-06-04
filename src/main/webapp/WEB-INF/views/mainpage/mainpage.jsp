@@ -403,30 +403,30 @@
         
         getClock(); // 실시간 시간
         setInterval(getClock, 1000); 
-        
-	     // 실시간 시간
-	     function getClock() {
-	         const date = new Date();
-	         const hours = String(date.getHours()).padStart(2, "0");
-	         const minutes = String(date.getMinutes()).padStart(2, "0");
-	         const seconds = String(date.getSeconds()).padStart(2, "0");
-	
-	         $(".time").text(hours + ' : ' + minutes + ' : ' + seconds);
-	     }
-	
-	     // 오늘 날짜
-	     function getToday() {
-	         const todaydate = new Date();
-	         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
-	         const days_num = todaydate.getDay();
-	         const year = todaydate.getFullYear();
-	         const month = todaydate.getMonth() + 1;
-	         const date = todaydate.getDate();
-	         const day = days[days_num];
-	
-	         $(".date").text(year + "년 " + month + "월 " + date+ "일 " + day); 
-	     }
     })
+    
+    // 실시간 시간
+    function getClock() {
+        const date = new Date();
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = String(date.getSeconds()).padStart(2, "0");
+
+        $(".time").text(hours + ' : ' + minutes + ' : ' + seconds);
+    }
+
+    // 오늘 날짜
+    function getToday() {
+        const todaydate = new Date();
+        const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+        const days_num = todaydate.getDay();
+        const year = todaydate.getFullYear();
+        const month = todaydate.getMonth() + 1;
+        const date = todaydate.getDate();
+        const day = days[days_num];
+
+        $(".date").text(year + "년 " + month + "월 " + date+ "일 " + day); 
+    }
     
    	// 공지사항 목록조회 관련 ==========================================================================================================
    	$(document).ready(function(){
@@ -442,6 +442,7 @@
        				category: $(this).hasClass('department') ? 'department' : 'normal',
        				department: $(this).hasClass('department') ? '${ loginMember.deptCode }' : ''
        			},
+       			async:false,
        			success:function(boardList){
        				list = "";
        				if(boardList.length == 0){
@@ -543,6 +544,7 @@
 	  			url: "${contextPath}/notification/list"
 	  			, method: "get"
 	  			, data: {userNo: ${loginMember.userNo}}
+	  			, async:false
 	  			, success: function(notiList) {
 	  				if(notiList.length != 0) {
 	  					// 조회된 알림이 있을 시
@@ -621,40 +623,34 @@
   	
   	// 접속자 관련 (웹소켓) =====================================================================================
   	loginLogout.onmessage = loginLogoutMsg;
-		loginLogout.onclose = loginLogoutClose;
-  	
+  		
+		// 메세지가 왔을 경우
 		function loginLogoutMsg(event){
-			// 로그인일 경우 : [login] [사원번호][프로파일URL][이름/직급/소속팀명]
+			// 로그인일 경우 : [login] [리스트의 모든 사원정보를 이은 문자열]
 			// 로그아웃 경우 : [logout][사원번호]
-			let loginMember = event.data.split("|");
-			let userNo = loginMember[1];
-			let type = function(){
-				//(loginMember[0] == 'login') ? true : false;
-			}
-
-			if(type){
-				$(".login-user-list").children(".login-user").each(function(){
-					$(this).children("[name=userNo]").val() == 
-				});
-				let add  = "<div class='login-user d-flex align-items-center'>";
-						add +=		"<input type='hidden' name='userNo' value='" + loginMember[1] + "'>";
-						add += 		"<img class='login-user-list-profile me-2' src='${ contextPath }" + loginMember[2] + "' alt='user profile image'>";
-						add += 		"<span class='login-user-list-member-info'>" + loginMember[3] + "</span>";
-						add += "</div>";
-				$(".login-user-list").append($(add));
+			let msg = event.data.split("|");
+			let type = msg[0]; 	// [login] or [logout]
+			let addMembers = "";
+			
+			if(type == 'login'){
+				let memberList = msg[1].split(",");	// [사번&프로필&이름/직급/소속팀][사번&프로필&이름/직급/소속팀]...
+				for(let i=0 ; i<memberList.length ; i++){
+					let member = memberList[i].split("&");	// [사번][프로필][이름/직급/소속팀]
+					
+					addMembers += "<div class='login-user d-flex align-items-center mb-3'>";
+					addMembers +=	"<input type='hidden' name='userNo' value='" + member[0] + "'>";
+					addMembers +=	"<img class='login-user-list-profile me-2' src='${ contextPath }" + member[1] + "' alt='user profile image'>";
+					addMembers += 	"<span class='login-user-list-member-info'>" + member[2] + "</span>";
+					addMembers += "</div>";
+			
+				}
+				$(".login-user-list").html(addMembers);
 			}else{
-				console.log("logout");
+				let userNo = msg[1];
 				$(".login-user-list").children(".login-user").each(function(){
 					$(this).children("[name=userNo]").val() == userNo && $(this).remove();
 				});
 			}
-			
-			console.log("웹소켓 : ", event.data);
-			
-		}
-		
-		function loginLogoutClose(){
-			
 		}
   	
 </script>
