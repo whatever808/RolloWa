@@ -264,7 +264,7 @@ i{
 				<div class="vacation-area" id="vacation-area">
 				
 					<div class="line-border-square line-shadow">
-						연차<br>${member.vacationCount}일
+						연차<br><b>${member.vacationCount}</b>일
 					</div>
 					<div class="line-border-square line-shadow">
 						사용<br><span class="RedContext">${member.vaUsingDate}일</span>
@@ -273,7 +273,7 @@ i{
 						지급일<br><span class="gContext">${loginMember.vaGivenDate}일</span>
 					</div>
 					<div class="line-border-square line-shadow">
-						근무 연수<br>${loginMember.vaYearLabor }년
+						근무 연수<br><b>${loginMember.vaYearLabor }</b>년
 					</div>
 					
 				</div>

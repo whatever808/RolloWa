@@ -205,7 +205,7 @@
 
 	<!-- 당일 결근 사원조회 -->
 	<select id="selectDayOffMemberList" resultType="map">
-    select user_no "userNo" , YEAR_LABOR , GIVEN_DATE
+    select user_no "userNo" , YEAR_LABOR , GIVEN_DATE "date"
       from member
      where status = 'Y'
 
