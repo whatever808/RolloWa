@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>지난 휴가</title>
+<title>휴가 결재</title>
 <style>
 .out-line {
 	min-height: 800px;
@@ -77,7 +77,17 @@
 #RR_modal{
    height: fit-content;
 }
+.collapse_font{
+	    font-size: 15px;
+	    font-style: italic;
+    	text-align: start;
+}
 </style>
+<!-- 부트스트랩 js 파일 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 	<div class="out-line">
@@ -87,7 +97,7 @@
 		<div class="content-area">
 			<fieldset class="line-shadow radious10 inner-line">
 				<legend>
-					<h1 class="jua-regular">지난휴가</h1>
+					<h1 class="jua-regular">휴가 결재</h1>
 				</legend>
 				<br>
 				<br>
@@ -102,7 +112,7 @@
 						</select>
 					</div>
 				
-					<div><button style="box-shadow: 1px 1px 1px 1px #8888887a;" type="button" onclick="ajaxSearchOld(1);" class="jua-regular btn btn-outline-dark"> 검색 </button></div>
+				<div><button style="box-shadow: 1px 1px 1px 1px #8888887a;" type="button" onclick="ajaxSearchOld(1);" class="jua-regular btn btn-outline-dark"> 검색 </button></div>
 				</form>
 				<div>
 					<table class="search-list table table-hover">
@@ -112,8 +122,7 @@
 								<th class="font-size20 jua-regular spaceNO">Color</th>
 								<th class="font-size20 jua-regular spaceNO">Category</th>
 								<th class="font-size20 jua-regular spaceNO">Date</th>
-								<th class="font-size20 jua-regular spaceNO">Using</th>
-								<th class="font-size20 jua-regular spaceNO">Del</th>
+								<th class="font-size20 jua-regular spaceNO">Check</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -132,16 +141,29 @@
 			<div>
 				<br>
 				<div style="text-align: center;" class="font-size20 jua-regular">
-				정말로 삭제 하시겠습니까? 삭제 후 첨부파일 data를 복구 할 수 없습니다.
+				반려 하시겠습니까? 이유를 적어 주세요.
 				</div>
 				<br>
-				<div class="jua-regular">철회 사유</div>
-				<textarea name="RRequestComent" style="width: -webkit-fill-available;"></textarea>
+				<div class="jua-regular">반려 사유</div>
+				<textarea name="RetractComent" style="width: -webkit-fill-available;"></textarea>
 				<input type="hidden" name="vacaNO">
 			</div>
 		</div>
-		<div style="text-align: end;"><button type="button" class="btn btn-outline-danger" onclick="RRequest(this);">신청</button></div>
+		<div style="text-align: end;"><button type="button" class="btn btn-outline-danger" onclick="RRequest(this);">확인</button></div>
 	</form>
+	
+	<form id="sing_confirm">
+	<div style="display:flex">
+		<div>
+			<br>
+			<div style="text-align: center;" class="font-size20 jua-regular">
+			휴가신청을 하시겠습니까?
+			</div>
+			<input type="hidden" name="vacaNO">
+		</div>
+	</div>
+	<div style="text-align: end;"><button type="button" class="btn btn-outline-success" onclick="singConfirm(this);">확인</button></div>
+</form>
 	
 	
 	<script>
@@ -154,15 +176,23 @@
 			focusInput : true,
 		});
 		
+		$('#sing_confirm').iziModal({
+			headerColor : '#28a745',
+			theme : 'light',
+			padding : '15px',
+			radius : 10,
+			zindex : 300,
+			focusInput : true,
+		});
+		
 		function ajaxSearchOld(page){
 			$.ajax({
-				url:'${path}/vacation/searchOld.ajax',
+				url:'${path}/vacation/vacationRequest.ajax',
 				type:'post',
 				data:'vacaGroupCode='+$('select').val()
 							+ '&page='+ page,
 				success:function(map){
 					console.log(map);
-					
 					creatTable(map.list);
 					creatPaging(map.paging);
 				},
@@ -170,6 +200,14 @@
 					console.log('list select fail');
 				}
 			})
+		}
+		
+		function singModal(num){
+			$(document).on('opening', '#sing_confirm', function (e) {
+			   $(this).find('input[name="vacaNO"]').val(num);
+			});
+			$('#sing_confirm').iziModal('setTitle', num);
+			$('#sing_confirm').iziModal('open');
 		}
 		
 		function deleteCheck(num){
@@ -182,18 +220,36 @@
 		
 		function RRequest(t){
 			$.ajax({
-				url:'${path}/vacation/RRequest.ajax',
+				url:'${path}/vacation/singRefuse.ajax',
 				type:'post',
 				data:'vacaNO='+$('#RR_modal').find('input[name="vacaNO"]').val()
-							+'&RRequestComent='+$('#RR_modal').find('textarea').val(),
+							+'&RetractComent='+$('#RR_modal').find('textarea').val(),
 				success:function(e){
 					if(e > 0){
-						greenAlert('철회 요청', '철회가 신청 되었습니다.');
+						greenAlert('반려 요청', '반려 되었습니다.');
 						$('#RR_modal').iziModal('close');
+						ajaxSearchOld(1);
 					}else{
-						redAlert('철회 요청', '관리자를 호출 해 주세요');
+						redAlert('반려 요청 실패', '관리자를 호출 해 주세요');
 					}
-					ajaxSearchOld(1);
+				}
+			})
+			
+		}
+		
+		function singConfirm(t){
+			$.ajax({
+				url:'${path}/vacation/singConfirm.ajax',
+				type:'post',
+				data:'vacaNO='+$('#sing_confirm').find('input[name="vacaNO"]').val(),
+				success:function(e){
+					if(e > 0){
+						greenAlert('승인 요청', '승인이 완료 되었습니다.');
+						$('#sing_confirm').iziModal('close');
+						ajaxSearchOld(1);
+					}else{
+						redAlert('승인 요청 실패', '관리자를 호출 해 주세요');
+					}
 				}
 			})
 			
@@ -215,8 +271,9 @@
 			$('tbody>tr').remove();
 			let tableEl = '';
 			if (list.length != 0) {
+				let count = 0;
 				list.forEach((e) => {
-					tableEl += '<tr><td>'
+					tableEl += '<tr data-toggle="collapse" data-target="#collapse'+ count +'"><td>'
 									+ e.vacaNO
 									+ '</td>'
 									+ '<td class="spaceNO"><input type="color" value="' + e.vacaColor + '" id="color-style" style="width: 35px; height: 35px; cursor: auto;" onclick="return false"></td>'
@@ -226,11 +283,23 @@
 									+ '<td class="spaceNO" style="font-size: larger;">'
 									+ e.vacaStart.slice(0,10) +' ~ '+ e.vacaEnd.slice(0,10)
 									+ '</td>'
-									+ '<td><div class="fontRed">- '
-									+ ((new Date(e.vacaEnd.slice(0,10)) - new Date(e.vacaStart.slice(0,10))) / (1000 * 60 * 60 * 24) +1)
-									+ '</div></td>'
-									+ '<td><button class="btn btn-outline-danger" onclick="deleteCheck('+ e.vacaNO +');">철회</button></td>'
+									+ '<td><div style="display: flex;gap: 5px;justify-content: center;">'
+									+ '<button class="btn btn-outline-success" onclick="singModal('+ e.vacaNO +');">승인</button>'
+									+ '<button class="btn btn-outline-danger" onclick="deleteCheck('+ e.vacaNO +');">반려</button></td></div>'
 									+ '</tr>'
+									+ '<tr id="collapse'+ count +'" class="collapse">'
+									+ '<td colspan="5"><div class="collapse_font">'
+									+ ((e.rrequestComent == null) ? '신청 사유 : 휴가 신청': '신청 사유 : ' + e.rrequestComent)
+									+ '</div>';
+									if(e.attach.length != 0){
+										e.attach.forEach((arr) => {
+											tableEl += '<div class="collapse_font">'
+															+ '<a href="${path}'+ arr.attachPath+"/"+ arr.modifyName+ '" download="'+ arr.originName+'">'+ arr.originName+'</a>'
+															+ '</div>';
+										})
+									}
+									tableEl += '</td></tr>';
+									count++;			
 				})
 			} else {
 				tableEl += '<tr><td colspan="6">조회 되는 일정이 없습니다.</td>'

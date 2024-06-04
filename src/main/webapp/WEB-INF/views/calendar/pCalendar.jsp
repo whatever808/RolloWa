@@ -274,7 +274,7 @@
 		    			})
 		    
 							/* 동료를 체크하는 부분   */
-							extend.cowoker.forEach(w => {
+							extend.cowoker.forEach((w) => {
 								$('input[name=coworker]').each(function() {
 									if ($(this).val() == w.userNo) {
 										 $(this).prop('checked', true);

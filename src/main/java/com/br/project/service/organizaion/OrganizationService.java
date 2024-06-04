@@ -78,23 +78,16 @@ public class OrganizationService {
         return employeeCount > 0;
     }
 
-    // 조직 관리 service
-	public int insertDepartment(String deptName) {
-		return organizationDao.insertDepartment(deptName);
+    // 조직 관리 service -----------------------------
+    // 부서추가
+    public int insertDepartment(Map<String, Object> paramMap) {
+		return organizationDao.insertDepartment(paramMap);
+	}
+	// 팀 추가
+	public int insertTeam(Map<String, Object> paramMap) {
+		return organizationDao.insertTeam(paramMap);
 	}
 
-	public void addTeam(OrganizationDto organizationDto) {
-		// TODO Auto-generated method stub
-		
-	}
-	public boolean deleteDepartment(String departmentCode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	public boolean deleteTeam(String teamCode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	
 
 }

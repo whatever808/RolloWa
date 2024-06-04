@@ -480,9 +480,16 @@ td.fc-day.fc-timegrid-col {
 						<div class="line-shadow ho jua-regular"><div class="font-size25">${d.department}</div>
 							<div class="detail line-shadow">
 							<ul>
-								<c:forEach var="m" items="${d.member}">
-									<li>${m.teamCode}/ ${m.userName} / ${m.positionCode}</li>
-								</c:forEach>
+									<c:forEach var="m" items="${d.member}">
+									<c:choose>
+										<c:when test="${not empty m.userName}">
+										<li>${m.teamCode}/ ${m.userName} / ${m.positionCode}</li>
+										</c:when>
+										<c:otherwise>
+											<li>${m.teamCode}에 구성원을 추가해 주세요.</li>
+										</c:otherwise>
+									</c:choose>
+									</c:forEach>
 							</ul>
 							</div>
 						</div>

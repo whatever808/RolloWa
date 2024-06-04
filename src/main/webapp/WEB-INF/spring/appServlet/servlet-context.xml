@@ -34,8 +34,10 @@
 	<interceptors>
 		<!-- 로그인 체크 인터셉터 -->
 		<interceptor>
+			<mapping path="/vacation/*" />
+			<mapping path="/attraction/*" />
+			<mapping path="/calendar/*" />
 			<mapping path="/board/*" />
-      <mapping path="/calendar/*" />
 			<beans:bean class="com.br.project.interceptor.LoginCheckInterceptor" id="loginCheckInterceptor" />
 		</interceptor>
 		
@@ -51,6 +53,7 @@
 		<interceptor>
 			<mapping path="/calendar/companyCalEnroll.page" />
 			<mapping path="/calendar/calendarList.page" />
+			<mapping path="/vacation/complete.page" />
       <mapping path="/board/publisher/*" />
 			<mapping path="/board/temp/*" />
 			<mapping path="/board/modify.*" />

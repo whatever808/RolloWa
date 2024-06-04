@@ -42,9 +42,10 @@
 		
 	</resultMap>
 	
-	<!-- 부서와 팀 가져오기 -->
+	<!-- 조직도 : 부서와 팀 가져오기 -->
 	<select id="selectOrganizationChart" resultType="GroupDto">
-		SELECT D1.CODE_NAME AS "DEPT"
+		SELECT D1.CODE AS "CODE"
+			 , D1.CODE_NAME AS "DEPT"
 		     , D2.CODE_NAME AS "TEAM"
 		  FROM TB_GROUP D1
 		  LEFT JOIN
@@ -298,8 +299,10 @@
 		  AND GROUP_CODE LIKE 'TEAM%';
     </select>
 
+
+	<!-- ======================================== 조직관리  ========================================-->
 	<!-- 부서 추가 -->
-	<insert id="insertDepartment">
+	<insert id="insertDepartment" >
 		    INSERT INTO TB_GROUP (
 		        GROUP_CODE, CODE, CODE_NAME, REGIST_DATE, MODIFY_DATE, STATUS, REGIST_EMP, MODIFY_EMP, UPPER_CODE
 		    ) VALUES (
@@ -309,11 +312,28 @@
 		        SYSDATE,
 		        SYSDATE,
 		        'Y',
-		        1,
-		        1,
+		        #{userNo},
+		        #{userNo},
 		        NULL
 		    )
 	</insert>
+	
+	<!-- 팀 추가 -->
+	<insert id="insertTeam">
+        INSERT INTO TB_GROUP (
+            GROUP_CODE, CODE, CODE_NAME, REGIST_DATE, MODIFY_DATE, STATUS, REGIST_EMP, MODIFY_EMP, UPPER_CODE
+        ) VALUES (
+            'TEAM01',
+            get_team_alphabet_sequence(SEQ_TNO.NEXTVAL),
+            #{teamName},
+            SYSDATE,
+            SYSDATE,
+            'Y',
+            #{userNo},
+            #{userNo},
+            #{deptCode}
+        )
+    </insert>
 	
 	<!-- 부서 변경 -->
 	<update id="reuseGroup">
@@ -321,17 +341,12 @@
 		   SET CODE_NAME = #{codeName}, MODIFY_DATE = SYSDATE, STATUS = 'N', MODIFY_EMP = #{modifyEmp}
 		 WHERE CODE = #{code} AND STATUS = 'N'
     </update>
-	
 	<!-- 부서 삭제 -->
 	<delete id="deleteDepartment">
 		DELETE FROM TB_GROUP WHERE CODE = #{departmentCode} AND GROUP_CODE = 'DEPT'
     </delete>
 	
-	<!-- 팀 추가 -->
-	<insert id="insertTeam">
-		INSERT INTO TB_GROUP (GROUP_CODE, CODE, CODE_NAME, UPPER_CODE, REGIST_DATE, STATUS, REGIST_EMP)
-		VALUES ('TEAM', #{code}, #{codeName}, #{upperCode}, SYSDATE, 'Y', #{registEmp})
-    </insert>
+	
     
 	<!-- 팀 삭제 -->
     <delete id="deleteTeam">

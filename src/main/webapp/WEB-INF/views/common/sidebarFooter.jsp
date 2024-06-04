@@ -9,7 +9,6 @@
 <title>Insert title here</title>
 <style>
   .iziModal-header-title{
-  	font-family: "Jua", sans-serif !important;
   	font-size: 20px !important;
   }
 </style>

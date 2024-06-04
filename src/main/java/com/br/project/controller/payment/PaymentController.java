@@ -68,8 +68,10 @@ public class PaymentController {
 		}
 		
 		if(!param.get("paid_amount").equals("")) {
-			param.put("onePrice", Integer.parseInt((String)param.get("paid_amount"))
-								/Integer.parseInt((String)param.get("paid_amount")));
+			int amount = Integer.parseInt(String.valueOf(param.get("paid_amount")));
+			int count =  Integer.parseInt(String.valueOf(param.get("buyer_count")));
+			
+			param.put("onePrice", Math.ceil(amount/count));
 		}
 		
 		return paymentService.ajaxTossSimplePay(param);		
@@ -128,13 +130,7 @@ public class PaymentController {
 	       result2 = paymentService.insertAjaxkakaoPayRoutine(maps2);
 	    }
 	    
-	    log.debug("maps1 : {}", maps1);
-		log.debug("maps2 : {}", maps2);
-		
-		
-		
-		
-		return "SUCCUSS";
+		return result1 + result2 == 4? "SUCCESS" : "FAIL";
 	}
 	
 
