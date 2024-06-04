@@ -166,7 +166,7 @@
                 	, method: "post"
                 	, data: {userNo: $("#forget_id input[type=text]").val()}
                 	, success: function(result) {
-                		alertify.alert(result);
+                		alertify.alert("아이디 찾기 서비스", result);
                 	}
                 	, error: function() {
                 		console.log("ajax 통신 실패");
