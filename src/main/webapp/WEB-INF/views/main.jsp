@@ -144,7 +144,7 @@
                 navigateArrows: true,
                 zindex: 300, // zindex 모달의 화면 우선 순위 입니다. 
                 focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
-                restoreDefaultContent: true, // 모달을 다시 키면 값을 초기화
+                restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
             });
             // 1. 해당 아이디의 모달 등록이 필요함
             $('#forget_pwd').iziModal({

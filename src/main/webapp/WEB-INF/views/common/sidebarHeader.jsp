@@ -302,11 +302,15 @@
             display: flex;
             flex-direction: column;
         }
-
         .chatting_history {
             height: 80%;
             overflow: auto;
             padding : 10px;
+        }
+        
+        .chatting_history_comment {
+            margin-top: 10px;
+				    font-size: 25px;
         }
 
         .msg_send_box {
@@ -792,7 +796,7 @@ $(document).ready(function(){
 						stompClient.reconnect_delay = 300000;
 						// 디버깅 방법 설정
 					  stompClient.debug = function(str) {
-						    // append the debug log
+						    //console.log(str);
 						};
 			    	stompClient.connect({}, function(frame) {
 							// 구독 중인 채팅방 목록 조회
@@ -822,7 +826,7 @@ $(document).ready(function(){
 					    	
 					    	if(msgBody.flag == 0) {
 					    		// 채팅방 초대 알림인 경우
-					    		if(msgBody.userNo != ${loginMember.userNo}) {
+					    		if(msgBody.userNo != ${ loginMember.userNo } && msgBody.partUserNo == ${loginMember.userNo}) {
 					    			// 메세지 수신 => 채팅방 목록 새로고침
 					    			receiveInviteMsg(msgBody);
 					    			// 초대 받은 채팅방 구독

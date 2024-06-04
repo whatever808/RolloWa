@@ -52,7 +52,7 @@
 
                      <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0" style="height: 100%;">
 
-                         <h5 class="font-weight-bold mb-3 text-center text-lg-start" style="margin-top: 10px; margin-left: 20px;">Member
+                         <h5 class="font-weight-bold mb-3 text-center text-lg-start" style="margin-top: 10px; margin-left: 20px;">Messenger
                          </h5>
                          <div class="msg_btn_wrapper btn_wrapper">
                              <button data-izimodal-open="#people_list" class="btn1 forget_btn people_list_btn"><i
@@ -75,8 +75,14 @@
                      <div class="col-md-6 col-lg-7 col-xl-8 chatting_box">
 
                          <div class="chatting_history scrollbar">
+	                         	 <!--<div>
+	                         		<i class="fa-solid fa-comment-slash fa-8x"></i><br>
+	                         	 </div>
+	                         	 <div class="chatting_history_comment">
+	                         		<span>No Message</span>
+	                         	 </div> -->
                              <ul class="list-unstyled chat_msg_list">
-                                 <!-- 채팅 메세지 구역 -->                              
+                                 <!-- 채팅 메세지 구역 -->              
                              </ul>
                          </div>
 
@@ -476,16 +482,8 @@
 						          if(subRoomNo != -1 && subRoomNo != 0) {
 						        	  // 열어놓은 채팅방의 나간 시간 update
 						        	  updateOutDate(subRoomNo);
-						          } 
- 			    						
- 			    						// 1-2-2. 채팅방 구독
- 		 			    				stompClient.subscribe("/topic/chat/room/" + roomNo, function(msg) {
- 		 			    					receiveMsg(msg);
- 		 			    				}, { id: "room" + roomNo})
- 		 			    				// 1-2-3. 채팅방 목록 새로고침
- 			    						selectChatRoom();
- 		 			    				
- 		 			    				// 1-2-4. 입장 메세지 발송
+						          }  		 			    				
+ 		 			    				// 1-2-2. 입장 메세지 발송
  		 			    				// 메세지 발송 시간
  		 			    				var sendDate = dateFormat(new Date());
  		 				     			stompClient.send("/app/chat/invite", {}, JSON.stringify({userName: '${loginMember.userName}'
@@ -505,6 +503,14 @@
  			    			
  			    		}
  			    	})
+						
+						// 1-2-3. 채팅방 구독
+    				stompClient.subscribe("/topic/chat/room/" + roomNo, function(msg) {
+    					receiveMsg(msg);
+    				}, { id: "room" + roomNo})
+    				
+    				// 1-2-4. 채팅방 목록 새로고침
+						selectChatRoom();
    				}
    			}
    			, error: function() {
@@ -744,6 +750,14 @@
 					console.log("사원 검색 ajax 통신 실패");
 				}
 			})
+		}
+		
+		// 채팅 구역 초기화
+		function chattingHistoryInit() {
+			$(".chatting_history").empty();
+			var text = "<ul class='list-unstyled chat_msg_list'></ul>";
+			$(".chatting_history").append(text);
+			$(".chatting_history").removeClass("no_chatting_history");
 		}
 
 		// 날짜 형식 바꾸기

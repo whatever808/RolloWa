@@ -118,7 +118,7 @@ public class MemberController {
     				'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
     				'!', '@', '#', '$', '%', '^', '&' };
     
-    	String newPwd =  "pass1234"; //RandomStringUtils.random(10, charSet);
+    	String newPwd =  RandomStringUtils.random(10, charSet);
     	log.debug("{}", newPwd);
     	MemberDto member = MemberDto.builder()
     								.userId(userId)
