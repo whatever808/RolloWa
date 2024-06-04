@@ -106,6 +106,13 @@
            AND USER_NO = #{ userNo }
 	</select>
 	
+	<!-- 전체 예약 카운트  -->
+	<select id="selectAllReservationCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM RESERVATION
+		 WHERE STATUS = 'Y'
+	</select>
+	
 	<!-- 내가 예약한 정보 조회 -->
 	<select id="selectMyReservation" resultType="hashmap">
 	<![CDATA[
@@ -118,6 +125,23 @@
 		 WHERE USER_NO = #{ userNo }
 		   AND STATUS = 'Y'
 		 ORDER BY RESERVE_END DESC, RESERVE_START DESC
+	   ]]>
+	</select>
+	
+	<!-- 모든 예약 정보 조회 -->
+	<select id="selectAllReservation" resultType="hashmap">
+	<![CDATA[
+		SELECT R.RESERVE_NO AS "reservationNo"
+		     , M.PROFILE_URL AS "profile_URL"
+		     , M.USER_NAME AS "userName"
+		     , R.RESERVE_MEMO AS "content"
+		     , R.RESERVE_START AS "startTime"
+		     , R.RESERVE_END AS "endTime"
+		     , (SELECT CODE_NAME FROM TB_GROUP WHERE CODE = R.EQUIPMENT_CODE) AS "equipmentName"
+		  FROM RESERVATION R
+		  JOIN MEMBER M ON R.USER_NO = M.USER_NO
+		 WHERE R.STATUS = 'Y'
+		 ORDER BY R.RESERVE_END DESC, R.RESERVE_START DESC
 	   ]]>
 	</select>
 	

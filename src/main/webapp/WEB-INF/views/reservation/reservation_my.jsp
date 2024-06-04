@@ -66,7 +66,7 @@
 		<!-- ------------ -->
 	
 		<div class="div_1">
-		<h4 id="totalCount">전체 ${listCount}개</h4>
+		<h4 id="totalCount">전체 ${ listCount }개</h4>
 			<div>
 				<button class="btn btn-primary" id="cancelReservationBtn">예약 삭제</button>
 			</div>
@@ -176,10 +176,10 @@
 		            var tableHtml = doc.querySelector('tbody').innerHTML;
 		            var pagingHtml = doc.querySelector('#pagingArea').innerHTML;
 		            var totalCount = doc.querySelector('#totalCount').innerText.match(/\d+/)[0];
-		
+		            
 		            $(".table_1 tbody").html(tableHtml);
 		            $("#pagingArea").html(pagingHtml);
-		            $("#totalCount").text(`전체 ${totalCount}개`);
+		            $("#totalCount").text('전체 ' + totalCount + '개');
 		
 		            // 페이지당 항목 수와 현재 페이지 번호를 이용하여 시작 번호 계산
 		            var itemsPerPage = 10;  // 한 페이지당 항목 수를 10으로 설정합니다.

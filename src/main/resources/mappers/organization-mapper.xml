@@ -45,6 +45,7 @@
 	<!-- 조직도 : 부서와 팀 가져오기 -->
 	<select id="selectOrganizationChart" resultType="GroupDto">
 		SELECT D1.CODE AS "CODE"
+			 , D2.CODE AS "TEAMCODE"
 			 , D1.CODE_NAME AS "DEPT"
 		     , D2.CODE_NAME AS "TEAM"
 		  FROM TB_GROUP D1
@@ -54,8 +55,9 @@
 		       AND D2.STATUS = 'Y'
 		 WHERE D1.GROUP_CODE LIKE 'DEPT%'
 	 	   AND D1.STATUS = 'Y'
-         ORDER BY 
-         	   D1.CODE_NAME ASC
+         ORDER BY
+               CODE ASC
+             , TEAM ASC
 	</select>
 
 	<!-- 직원 전체 카운트 -->
@@ -322,6 +324,34 @@
 		    )
 	</insert>
 	
+	<!-- 부서명 변경 -->
+	<update id="updateDepartmentName">
+		UPDATE TB_GROUP
+		   SET CODE_NAME = #{newName}
+		     , MODIFY_DATE = SYSDATE
+		     , MODIFY_EMP = #{userNo}
+		 WHERE CODE = #{deptCode}
+		   AND STATUS = 'Y'
+    </update>
+    
+    <!-- 부서 삭제 -->
+	<update id="deleteDepartment">
+		UPDATE TB_GROUP
+		   SET STATUS = 'N'
+		     , MODIFY_DATE = SYSDATE
+		     , MODIFY_EMP = #{userNo}
+		 WHERE GROUP_CODE LIKE 'DEPT%'
+		   AND CODE = #{deptCode}
+    </update>
+    <!-- 부서 삭제 시 하위 팀들도 삭제 STATUS N으로 모두 변경 -->
+    <update id="deleteSubDepartment" parameterType="map">
+        UPDATE TB_GROUP
+           SET STATUS = 'N'
+             , MODIFY_DATE = SYSDATE
+             , MODIFY_EMP = #{userNo}
+         WHERE UPPER_CODE = #{deptCode}
+    </update>
+	
 	<!-- 팀 추가 -->
 	<insert id="insertTeam">
         INSERT INTO TB_GROUP (
@@ -339,29 +369,28 @@
         )
     </insert>
     
+    <!-- 팀명 수정 -->
+    <update id="updateTeamName" parameterType="map">
+        UPDATE TB_GROUP
+           SET CODE_NAME = #{newName}
+             , MODIFY_DATE = SYSDATE
+             , MODIFY_EMP = #{userNo}
+         WHERE CODE = #{teamCode}
+           AND STATUS = 'Y'
+    </update>
+    
     <!-- 팀 삭제 -->
     <delete id="deleteTeam">
 		UPDATE TB_GROUP
 		   SET STATUS = 'N'
-		   , MODIFY_DATE = SYSDATE
-		   , MODIFY_EMP = #{userNo}
-	   WHERE UPPER_CODE = #{deptCode} 
-		 AND GROUP_CODE LIKE 'TEAM%'
-		 AND CODE_NAME = #{teamName}
+		     , MODIFY_DATE = SYSDATE
+		     , MODIFY_EMP = #{userNo}
+	     WHERE UPPER_CODE = #{deptCode} 
+		   AND GROUP_CODE LIKE 'TEAM%'
+		   AND CODE_NAME = #{teamName}
     </delete>
 	
-	<!-- 부서명 변경 -->
-	<update id="reuseGroup">
-		UPDATE TB_GROUP
-		   SET CODE_NAME = #{codeName}, MODIFY_DATE = SYSDATE, STATUS = 'N', MODIFY_EMP = #{modifyEmp}
-		 WHERE CODE = #{code} AND STATUS = 'N'
-    </update>
-	<!-- 부서 삭제 -->
-	<delete id="deleteDepartment">
-		DELETE FROM TB_GROUP WHERE CODE = #{departmentCode} AND GROUP_CODE = 'DEPT'
-    </delete>
-	
-	<!-- 팀 사용자 인원수 카운트 -->
+	<!-- 팀 사용자 인원수 카운트 : 인원이 있으면 삭제버튼 DISABLE 처리하기 -->
 	<select id="countMember" resultType="hashmap">
 		SELECT D1.CODE AS "CODE",
 		       D1.CODE_NAME AS "DEPT",
@@ -376,10 +405,24 @@
 		 ORDER BY D1.CODE_NAME ASC
     </select>
 	
-	
-	
-	
-	
+	<!-- 부서명 중복체크 후 생성못하게 하기 -->
+	<select id="countDepartmentByName" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_GROUP
+        WHERE CODE_NAME = #{deptName}
+          AND GROUP_CODE LIKE 'DEPT%'
+          AND STATUS = 'Y'
+    </select>
+
+	<!-- 팀명 중복체크 후 생성못하게 : 다른 부서는 동일한 팀명 가능 -->
+    <select id="countTeamByNameAndDept" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_GROUP
+        WHERE CODE_NAME = #{teamName}
+          AND UPPER_CODE = #{deptCode}
+          AND GROUP_CODE LIKE 'TEAM%'
+          AND STATUS = 'Y'
+    </select>
 	
 	
 </mapper>

@@ -221,6 +221,79 @@ public class OrganizationController {
         int result = organizationService.deleteTeam(paramMap);
         return result > 0;
     }
+    
+    // 부서 삭제
+    @PostMapping("/deleteDepartment.do")
+    @ResponseBody
+    public int deleteDepartment(@RequestBody Map<String, Object> params) {
+        String deptCode = (String) params.get("deptCode");
+        int userNo = (int) params.get("userNo");
+    	
+    	log.debug("deptCode 값 : {}", deptCode);
+    	
+    	Map<String, Object> paramMap = new HashMap<>();
+    	paramMap.put("deptCode", deptCode);
+    	paramMap.put("userNo", userNo);
+    	
+    	int result = organizationService.deleteDepartment(paramMap);
+    	 
+    	if(result > 0) {
+    		log.debug("부서 삭제 성공");
+    	} else {
+    		log.debug("부서 삭제 실패");
+    	}
+    	return result;
+    }
+    // 부서명 수정
+    @PostMapping("/updateDepartmentName.do")
+    @ResponseBody
+    public int updateDepartmentName(@RequestBody Map<String, Object> params) {
+    	String deptCode = (String) params.get("deptCode");
+    	String newName = (String) params.get("newName");
+    	int userNo = (int) params.get("userNo");
+    	
+    	log.debug("deptCode 값 : {}", deptCode);
+    	log.debug("newName 값 : {}", newName);
+    	
+    	Map<String, Object> paramMap = new HashMap<>();
+    	paramMap.put("deptCode", deptCode);
+    	paramMap.put("newName", newName);
+    	paramMap.put("userNo", userNo);
+    	
+    	int result = organizationService.updateDepartmentName(paramMap);
+    	
+    	if(result > 0) {
+    		log.debug("부서명 수정 성공");
+    	} else {
+    		log.debug("부서명 수정 실패");
+    	}
+    	return result;
+    }
+    
+    // 팀명 수정
+    @PostMapping("/updateTeamName.do")
+    @ResponseBody
+    public int updateTeamName(@RequestBody Map<String, Object> params) {
+    	String teamCode = (String) params.get("teamCode");
+    	String newName = (String) params.get("newName");
+    	int userNo = (int) params.get("userNo");
+    	
+    	log.debug("teamCode 값 : {}", teamCode);
+    	log.debug("newName 값 : {}", newName);
+    	
+    	Map<String, Object> paramMap = new HashMap<>();
+    	paramMap.put("teamCode", teamCode);
+    	paramMap.put("newName", newName);
+    	paramMap.put("userNo", userNo);
+    	
+    	int result = organizationService.updateTeamName(paramMap);
+    	if(result > 0) {
+    		log.debug("부서명 수정 성공");
+    	} else {
+    		log.debug("부서명 수정 실패");
+    	}
+    	return result;
+    }
 	
     // 팀 사용자 인원수 카운트
     @GetMapping("/countMembers.do")
@@ -228,6 +301,33 @@ public class OrganizationController {
     public List<Map<String, Object>> countMembers() {
         return organizationService.countMember();
     }
-	
+    
+    // 부서명 중복 체크
+    @PostMapping("/countDepartmentByName.do")
+    @ResponseBody
+    public int countDepartmentByName(@RequestBody Map<String, String> payload) {
+        String deptName = payload.get("deptName");
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("deptName", deptName);
+        int resultDepartmentCount = organizationService.countDepartmentByName(paramMap);
+
+        return resultDepartmentCount;
+    }
+
+    // 팀명 중복 체크 다른부서이면 팀명 동일해도 상관없음
+    @PostMapping("/countTeamByNameAndDept.do")
+    @ResponseBody
+    public int countTeamByNameAndDept(@RequestBody Map<String, String> payload) {
+        String deptCode = payload.get("deptCode");
+        String teamName = payload.get("teamName");
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("deptCode", deptCode);
+        paramMap.put("teamName", teamName);
+        int resultDepartmentCount = organizationService.countTeamByNameAndDept(paramMap);
+        return resultDepartmentCount;
+    }
+    
 	
 }

@@ -35,6 +35,14 @@
 </head>
 <body>
 
+	<!-- 로그인 체크 -->
+	<c:if test="${empty loginMember}">
+	    <script>
+	        alert("로그인 후 이용가능합니다.");
+	        window.location.href = "${pageContext.request.contextPath}/";
+	    </script>
+	</c:if>
+
 	<!-- 사이드바 해더 영역 -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 	
@@ -47,8 +55,8 @@
 	
 		<!-- 일별, 월별 조회-->
         <div>
-            <button class="btn btn-primary btn_daily" onclick="showDailyData()">일별 조회</button>
-            <button class="btn btn-secondary btn_monthly" onclick="showMonthlyData()">월별 조회</button>
+            <button class="btn btn-primary btn_daily" onclick="showDailyData()" hidden>일별 조회</button>
+            <button class="btn btn-secondary btn_monthly" onclick="showMonthlyData()" hidden>월별 조회</button>
         </div>
 
 		<!-- 날짜 영역 start -->

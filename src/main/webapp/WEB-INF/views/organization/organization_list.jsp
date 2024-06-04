@@ -20,6 +20,14 @@
 </head>
 <body>
 
+	<!-- 로그인 체크 -->
+	<c:if test="${empty loginMember}">
+	    <script>
+	        alert("로그인 후 이용가능합니다.");
+	        window.location.href = "${pageContext.request.contextPath}/";
+	    </script>
+	</c:if>
+
 	<!-- 사이드바 해더 영역 -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 	
@@ -204,7 +212,7 @@
 	    <h5 class="employee_count">전체 ${ listCount }명</h5>
 	
 	    <!-- 직원 정보 테이블 start-->
-	    <table class="table table_empinfo line-shadow">
+	    <table class="table table_empinfo line-shadow table-bordered">
 	        <tr>
 	            <th>프로필 사진</th>
 	            <th>이름</th>

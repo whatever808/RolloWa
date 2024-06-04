@@ -22,7 +22,7 @@ import com.br.project.util.PagingUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-// 3. 예약 관련 controller
+// 예약 관련 controller
 
 @RequestMapping("/reservation")
 @Controller
@@ -33,7 +33,7 @@ public class ReservationController {
 	private final ReservationService reservationService;
 	private final PagingUtil pagingUtil;
 
-	// 3.1 예약 관리
+	// 비품 예약 페이지
 	@GetMapping("/list.do")
 	public ModelAndView reservationList(@RequestParam(value = "page", defaultValue = "1") int currentPage,
 			@RequestParam(value = "selectedDate", required = false) String selectedDate, ModelAndView mv) {
@@ -60,7 +60,7 @@ public class ReservationController {
 		return mv;
 	}
 
-	// 3.1 예약 관리
+	// 비품 예약 페이지
 	@GetMapping("/search.do")
 	public ModelAndView reservationListSearch(@RequestParam(value = "page", defaultValue = "1") int currentPage,
 			@RequestParam(value = "selectedDate") String selectedDate, ModelAndView mv) {
@@ -170,7 +170,7 @@ public class ReservationController {
 		}
 	}
 
-	// 3.4 비품 관리
+	// 비품 관리
 	@GetMapping("/equipment.do")
 	public ModelAndView reservationEquipment(@RequestParam(value = "page", defaultValue = "1") int currentPage,
 			ModelAndView mv) {
@@ -184,7 +184,7 @@ public class ReservationController {
 
 		return mv;
 	}
-
+	// 비품 추가
 	@PostMapping("/insert.do")
 	@ResponseBody
 	public String addEquipment(@RequestParam String equipmentName, @RequestParam int registEmp) {
@@ -198,7 +198,7 @@ public class ReservationController {
 		reservationService.insertEquipment(paramMap);
 		return "success";
 	}
-
+	// 비품 삭제
 	@PostMapping("/delete.do")
 	@ResponseBody
 	public String deleteEquipment(@RequestParam("ids") List<Integer> ids) {
@@ -208,7 +208,7 @@ public class ReservationController {
 		reservationService.deleteEquipment(ids);
 		return "success";
 	}
-	
+	// 비품 수정
 	@PostMapping("/update.do")
 	@ResponseBody
 	public String updateEquipment(@RequestParam int id, 
@@ -227,5 +227,29 @@ public class ReservationController {
 	    return "success";
 	}
 	
+	// 비품 예약 관리자 페이지
+	@GetMapping("/manager.do")
+	public ModelAndView reservationManger(@RequestParam(value = "page", defaultValue = "1") int currentPage,
+			@RequestParam(value = "userNo", defaultValue = "0") int userNo,
+			ModelAndView mv) {
+		
+		log.debug("현재 페이지: {}", currentPage);
+		int listCount = reservationService.selectAllReservationCount();
+		log.debug("총 예약 수 : {}", listCount);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(listCount, currentPage, 10, 10);
+		log.debug("페이지 정보 : {}", pi);
+		
+		List<HashMap<String, Object>> list = reservationService.selectAllReservation(pi);
+		log.debug("예약 리스트 : {}", list);
+		
+		int startNo = (currentPage - 1) * pi.getListLimit();
 
+		mv.addObject("list", list)
+		  .addObject("pi", pi)
+		  .addObject("listCount", listCount)
+		  .addObject("startNo", startNo)
+		  .setViewName("reservation/reservation_manager");
+		return mv;
+	}
 }

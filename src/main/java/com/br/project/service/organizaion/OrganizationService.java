@@ -95,7 +95,27 @@ public class OrganizationService {
 	public List<Map<String, Object>> countMember() {
 		return organizationDao.countMember();
 	}
+	// 부서 삭제
+	public int deleteDepartment(Map<String, Object> paramMap) {
+		return organizationDao.deleteDepartment(paramMap);
+	}
+	// 부서명 수정 
+	public int updateDepartmentName(Map<String, Object> paramMap) {
+		return organizationDao.updateDepartmentName(paramMap);
+	}
+	// 팀명 수정
+	public int updateTeamName(Map<String, Object> paramMap) {
+		return organizationDao.updateTeamName(paramMap);
+	}
 
+	// 동일한 부서 생성 못하게 하기	
+    public int countDepartmentByName(Map<String, Object> paramMap) {
+        return organizationDao.countDepartmentByName(paramMap);
+    }
+    // 동일한 팀 생성 못하게 하기 다른부서 동일한 팀은 가능
+    public int countTeamByNameAndDept(Map<String, Object> paramMap) {
+    	return organizationDao.countTeamByNameAndDept(paramMap);
+    }
 	
 
 }

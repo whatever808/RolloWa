@@ -23,4 +23,5 @@ public class GroupDto {
 	private String team;
 	private String coworker;
 	private int memberCount;
+	private String teamCode;
 }
