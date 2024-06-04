@@ -6,6 +6,9 @@ import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,6 +53,8 @@ public class PaymentDao {
 	public int insertKakaoPayDetailrRoutine(Map<String, Object> map) {
 		return sqlSessionTemplate.insert("paymentMapper.insertKakaoPayDetailrRoutine", map);
 	}
+	
+	
 	
 	
 		

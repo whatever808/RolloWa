@@ -77,13 +77,12 @@
     font-size: 14px;
     color: #555555;
     cursor: pointer;
-    display: flex;
-    flex-direction: row;
+    /* display: flex; */
+    flex-direction: column;
     height: 157px;
-    flex-wrap: wrap;
-    align-content: center;
-    align-items: baseline;
-    justify-content: center;
+    align-items: center;
+    justify-content: space-evenly;
+    align-content: space-around;
 }
 
 .highlight-box:last-child {
@@ -3182,35 +3181,36 @@ $(document).on('click', '.page-linkc', function(event) {
 						    <div class="highlight-boxes">
 						    		<div class="highlight-box" id="noApprovalSignList">
 						            <div class="title"><h5>${ userName }님의 미결재함</h5></div>  
-						            <div id="svgContent">
-						            <div class="count"><h4>${ noApprovalSignCount }건</h4><button id="round-button">TODAY ${ noApprovalSignCountToday }건</button></div>	
-												</div>
+						            <div class="count">
+							            <h4>${ noApprovalSignCount }건</h4>
+						            </div>
+						            <div>
+						            <button id="round-button">TODAY ${ noApprovalSignCountToday }건</button>
+						            </div>
 										</div>
 						        <div class="highlight-box" id="7daysOuterList">
 						            <div class="title"><h5>${ userName }님의 일주일 이상 <br>지연된 결재 요청함</h5></div>
-						            
-						            <div id="svgContent">
-						            <div class="count"><h4>${ mdCount }건</h4></div>
+						            <div class="count">
+						            	<h4>${ mdCount }건</h4>
 						            </div>
 						        </div>
 						        <div class="highlight-box" id="UserApprovalList">
 						            <div class="title"><h5>${ userName }님의 결재 처리함</h5></div>
-						            <div id="svgContent">
-						            <div class="count"><h4>${ slistCount }건</h4></div>
-												</div>
+						            <div class="count">
+						            	<h4>${ slistCount }건</h4>
+						            </div>
 						        </div>
 						        <div class="highlight-box" id="UserAllList">
 						            <div class="title"><h5>${ userName }님의 전체 결재함</h5></div>
-						            
-						            <div id="svgContent">
-						            <div class="count"><h4>${ ulistCount }건</h4></div>
-												</div>
+						            <div class="count">
+						            	<h4>${ ulistCount }건</h4>
+						            </div>
 						        </div>
 								    <div class="highlight-box" id="AllList" style="display:none;">
 						            <div class="title"><h5>전체 결재함 &nbsp;</h5></div>
-						            <div id="svgContent">
-						            <div class="count"><h4>${ listCount }건</h4></div>
-												</div>
+						            <div class="count">
+						            	<h4>${ listCount }건</h4>
+						            </div>
 								    </div>
 						    </div>
 						
@@ -3260,6 +3260,8 @@ $(document).on('click', '.page-linkc', function(event) {
 												            </tr>
 												        </thead>
 												        <tbody id="tStatus">
+												        <c:choose>
+												        	<c:when test="${ not empty list }">
 												        		<c:forEach var="l" items="${ list }">
                                      		<tr onclick="location.href='${contextPath}/pay/detail.do?approvalNo=${ l.approvalNo }&documentNo=${ l.documentNo }&documentType=${ l.documentType }&payWriter=${ l.payWriter }&payWriterNo=${ l.payWriterNo }';">
                                             <td>${ l.approvalNo }</td>
@@ -3276,22 +3278,32 @@ $(document).on('click', '.page-linkc', function(event) {
                                     				<td class="status">${ l.payStatus }</td>
                                         </tr>
                                     	</c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+	                                     <tr>
+																		       <td colspan="9">존재하는 게시글이 없습니다.</td>
+																		   </tr>
+                                    </c:otherwise>
+                                  </c:choose>
 												        </tbody>
 												    </table>
 												    
-												    <div id="cen_bottom_pagging">
-																<div id="pagin_form">
-																	<ul class="pagination">
-										               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a  href="${ contextPath }/pay/approvalMain.page?page=${pi.currentPage-1}">◁</a></li>
-										      
-															      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-															       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a  href="${ contextPath }/pay/approvalMain.page?page=${p}">${ p }</a></li>
-															      </c:forEach>
-										      
-															      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a  href="${ contextPath }/pay/approvalMain.page?page=${pi.currentPage+1}">▷</a></li>
-															   </ul>
-											          </div>
-										        </div>
+														    	<div id="cen_bottom_pagging">
+																			<div id="pagin_form">
+																				<ul class="pagination">
+												        					<c:if test="${ list != null && !list.isEmpty()}">
+														               	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage-1}">◁</a></li>
+														      
+																			      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+																			       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${p}">${ p }</a></li>
+																			      </c:forEach>
+														      
+																			      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage+1}">▷</a></li>
+																		   		</c:if>
+																		   	</ul>
+														          </div>
+													        </div>
+										         </div>
 										     </div>
 						        </div>
 						    </div>

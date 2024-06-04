@@ -477,25 +477,21 @@ $.ajax({
 							            </c:choose>
 							        </tbody>
 							    </table>
-							    <c:choose>
-								    <c:when test="${ list != null && !list.isEmpty() }">
-								    <div id="cen_bottom_pagging">
-												<div id="pagin_form">
-													<ul class="pagination">
-						               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a href="${ contextPath }/pay/finishApprovalList.page?page=${pi.currentPage-1}">◁</a></li>
+							    <div id="cen_bottom_pagging">
+											<div id="pagin_form">
+												<ul class="pagination">
+				        					<c:if test="${ list != null && !list.isEmpty()}">
+						               	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage-1}">◁</a></li>
 						      
 											      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-											       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a href="${ contextPath }/pay/finishApprovalList.page?page=${p}">${ p }</a></li>
+											       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${p}">${ p }</a></li>
 											      </c:forEach>
 						      
-											      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a href="${ contextPath }/pay/finishApprovalList.page?page=${pi.currentPage+1}">▷</a></li>
-											   </ul>
-							          </div>
-						        </div>
-						        </c:when>
-						        <c:otherwise>
-						        </c:otherwise>
-					        </c:choose>
+											      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage+1}">▷</a></li>
+										   		</c:if>
+										   	</ul>
+						          </div>
+					        </div>
 							</div>
 						</div>
 					</div>

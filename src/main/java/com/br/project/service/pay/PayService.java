@@ -595,5 +595,22 @@ public class PayService {
 		return payDao.ajaxApprovalprocessing(map);
 	}
 	
+	//비품 최종승인 되면 비품등록
+	public int ajaxFix(List<Map<String, Object>> list) {
+		
+		int result = 1;
+		if(list != null && !list.isEmpty()) {
+			result = 0;
+			for(Map<String, Object> fixItem : list) {
+				result = payDao.ajaxFix(fixItem);
+			}
+		} 
+		return result;
+	}
+	
+	public List<Map<String, Object>> laterSearchDept(String keyword){
+		return payDao.laterSearchDept(keyword);
+	}
+	
 	
 }

@@ -351,7 +351,6 @@ $(document).ready(function(){
 </div>
 <!-- 결재승인자 모달 end -->
     
-    
     <div class="user-list">
     	 <div class="actions">
     	 	<input type="text" id="userSearch" placeholder="이름을 입력하세요.">
@@ -380,7 +379,93 @@ $(document).ready(function(){
 		    </div>
 		</div>
       </div>
-</div>			
+</div>	
+
+
+<div id="modal2">
+		<div id="title">
+			<input type="text" id="laterName" placeholder="이름을 입력해주세요.">
+		</div>
+		<div id="searchBox">
+		
+		</div>
+		<div id="clickBox">
+			
+		</div>
+</div>
+
+<script>
+$(document).on("keyup", "#laterName", function(ev){
+	$("#searchBox").empty();
+	if(ev.key == "Enter"){
+		$.ajax({
+			url:"${contextPath}/pay/laterSearchDept.do",
+			type:"get",
+			data:{keyword:$("#laterName").val()},
+			success:function(response){
+				
+				let span = "";
+				if(response != ""){
+					span += "<table>";
+					response.forEach(function(item){
+						span += "<tr>";
+						span += "<td><input type='checkbox' class='checkBox'></td>";
+						span += "<td class='teamName'>" + item.TEAM_NAME + "</td>";
+						span += "<td class='userName'>" + item.USER_NAME + "</td>";
+						span += "</tr>";
+						span += "<input type='hidden' class='userNumber' value='" + item.USER_NO + "'>";
+					})
+				span += "</table>";
+					$("#searchBox").append(span);
+				}else{
+					$("#searchBox").html("<span>검색한 사원은 존재하지않습니다.<span>");
+				}
+			
+			},
+			error:function(){
+				console.log("ajax 통신 실패");
+			}
+			
+		})
+	}
+	
+	
+})
+
+$(".checkBox").change(function(){
+	
+	let teamName = $(this).find(".teamName").text();
+	let userName = $(this).find(".userName").text();
+	let userNumber = $(this).find(".userNumber").val();
+	
+   if($(this).is(":checked")) {
+	   
+	   $("#clickBox").each(function(){
+	       if($("#clickBox").find(".userNumber").val() == userNumber){
+	           alert("중복된 이름입니다.");
+	           return false; 
+	       }else{
+	    	   $("#clickBox").appned(userName);
+	       }
+	   });
+	   
+   } 
+});
+
+$(document).on("check", ".divClass", function(){
+	
+	 
+  
+
+  	
+})
+
+</script>
+
+
+
+
+	
 
        <!-- content 추가 -->
         <div class="content p-4">
@@ -421,6 +506,20 @@ $(document).ready(function(){
 										                    <td class="label">
 											                    승인자
 											                    <button data-izimodal-open="#modal" id="modal_btn">
+																					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
+																					  <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+																					  <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+																					</svg>
+	                                        </button>
+										                    </td>
+										                    <td class="value small sing_name" id="f_name"></td>
+										                    <td class="value small sing_name" id="m_name"></td>
+										                    <td class="value small sing_name" id="l_name"></td>
+										                </tr>
+										                <tr>
+										                    <td class="label">
+											                    수신참조
+											                    <button data-izimodal-open="#modal2" id="modal_btn">
 																					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
 																					  <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
 																					  <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
@@ -585,21 +684,14 @@ $(document).ready(function(){
                
     <script>
         $('#modal2').iziModal({
-            title: '결재선지정',
+        	title: '수신참조인',
             //subtitle: '수정도 가능합니다.',
             headerColor: '#FEEFAD', // 헤더 색깔
             theme: '', //Theme of the modal, can be empty or "light".
-            padding: '15px', // content안의 padding
+            //padding: '15px', // content안의 padding
             //radius: 10, // 모달 외각의 선 둥글기
-            width: '700px',
+            width: '500px',
            
-        });
-
-        // 2. 요소에 이벤트가 일어 났을떄 모달이 작동
-        $("#modal-test").on('click', function () {
-            //event.preventDefault(); //위의 클릭 이벤트가 일어나는 동안 다른 이벤트가 발생하지 않도록해주는 명령어
-
-            $('#modal2').iziModal('open');
         });
     </script>
         

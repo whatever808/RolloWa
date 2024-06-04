@@ -506,4 +506,12 @@ public class PayDao {
 		return sqlSessionTemplate.update("payMapper.ajaxApprovalprocessing", map);
 	}
 	
+	public int ajaxFix(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("reservationMapper.insertEquipment", map);
+	}
+	
+	public List<Map<String, Object>> laterSearchDept(String keyword){
+		return sqlSessionTemplate.selectList("payMapper.laterSearchDept", keyword);
+	}
+	
 }

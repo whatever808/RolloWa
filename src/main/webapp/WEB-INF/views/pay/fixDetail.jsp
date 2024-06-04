@@ -59,10 +59,7 @@ $(document).ready(function(){
 	    	        		dataUrl:data,
 	    	        		signName: "${userName}",
 	    	        		approvalNo: "${list.get(0).APPROVAL_NO}",
-	    	        		approvalSignNo: approvalName,
-	    	        		deptType: "Fix",
-	    	        		productName: $("input[name='productName']").val(),
-	    	        		productAmount:$("input[name='productAmount']").val()
+	    	        		approvalSignNo: approvalName
 	    	        	},
 	    	        	success:function(response){
 	    	        		
@@ -279,21 +276,22 @@ $(document).on("click", "#rejectBtn", function(){
                      <th>가격</th>
                      <th colspan="2">비고</th>
                  </tr>
-								 <c:forEach var="i" begin="0" end="${ list.size() - 1 }">
-		                <c:if test="${ list.get(0).PRODUCT_NAME != null and list.get(i).PRODUCT_NAME != ''}">
-		                  		<tr>
-		                      	<td>${ list.get(i).PRODUCT_NAME }</td>
-		                      	<input type="hidden" name="productName" value="${ list.get(i).PRODUCT_NAME }">
-		                       	<td>${ list.get(i).PRODUCT_SIZE == null ? "-" : list.get(i).PRODUCT_SIZE }</td>
-		                       	<td>${ list.get(i).QUANTITY }</td>
-		                       	<input type="hidden" name="productAmount" value="${ list.get(i).QUANTITY }">
-		                       	<td class="unit_price">${ list.get(i).UNIT_PRICE }</td>
-		                       	<td class="price">${ list.get(i).PRICE }</td>
-		                       	<td>${ list.get(i).NOTE == null ? "-" : list.get(i).NOTE }</td>
-		                  		</tr>
-		                </c:if>
-                 </c:forEach>
-                 
+                 <form id="productForm">
+                 	<input type="hidden" name="registEmp" value="${ list.get(0).PAYMENT_WRITER_NO }">
+									 <c:forEach var="item" items="${list}">
+			                <c:if test="${ item.PRODUCT_NAME != null and item.PRODUCT_NAME != ''}">
+			                  		<tr>
+			                      	<td>${ item.PRODUCT_NAME }</td>
+			                      	<input type="hidden" name="equipmentName" value="${ item.PRODUCT_NAME }">
+			                       	<td>${ item.PRODUCT_SIZE == null ? "-" : item.PRODUCT_SIZE }</td>
+			                       	<td>${ item.QUANTITY }</td>
+			                       	<td class="unit_price">${ item.UNIT_PRICE }</td>
+			                       	<td class="price">${ item.PRICE }</td>
+			                       	<td>${ item.NOTE == null ? "-" : item.NOTE }</td>
+			                  		</tr>
+			                </c:if>
+	                 </c:forEach>
+                 </form>
                   <tr>
 	                    <th colspan="3">합계</th>
 	                    <td colspan="3" id="total_sum">${list.get(0).TOTAL_SUM}</td>
@@ -319,7 +317,7 @@ $(document).on("click", "#rejectBtn", function(){
 													</c:choose>
 					          	</div>
 					          	<div style="display: flex; justify-content: flex-end;">
-					          			<button class="delete-buttons" id="deldo">삭제</button>
+					          			<button class="delete-buttons" id="deldo" style="display: none;">삭제</button>
 					          	</div>
 					 				<div>
 			           			<button id="historyBack" type="button" style="border: none; background-color: white;">
@@ -333,7 +331,7 @@ $(document).on("click", "#rejectBtn", function(){
             </div>
         </div>
         
-       <!-------------- 승인싸인 모달창 ------------->
+        <!-------------- 승인싸인 모달창 ------------->
         <div id="modal2">
 		        <div class="m_content_style"  >
 		        <canvas id="signature" width="600" height="200"></canvas>
@@ -410,6 +408,8 @@ $(document).on("click", "#rejectBtn", function(){
 		   		if("${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}"){
 		   			$(".delete-buttons").css("display", "block");
 		   		}
+		   		
+		   			
 			   
 		   })
 		   
@@ -426,13 +426,24 @@ $(document).on("click", "#rejectBtn", function(){
                             no: "${list.get(0).APPROVAL_NO}"
                         },
                         success: function(response) {
-                        	 if(response == "SUCCESS") {
-                                 alert("삭제가 완료되었습니다.");
-                                 location.href = document.referrer;
-                             } else {
-                                 alert("삭제 실패");
-                             }
-                        },
+                       	 if(response == "SUCCESS") {
+                       		 
+                       		 function redAlert(title, message) {
+                            	    $('#redModal').iziModal('setTitle', title);
+                            	    $('#redModal').iziModal('setSubtitle', message);
+                            	    $('#redModal').iziModal('open');
+		                        	}
+		
+		                        	redAlert("게시글 삭제", "신청서가 정상적으로 삭제되었습니다.");
+		
+		                        	setTimeout(function() {
+		                        	    location.href = document.referrer;
+		                        	}, 3000);
+		                        	
+                            } else {
+                                console.log("ajax 통신 실패");
+                            }
+                       },
                         error: function() {
                             console.log("ajax 통신 오류");
                         }
@@ -463,7 +474,11 @@ $(document).on("click", "#rejectBtn", function(){
 			    if (paymentWriterNo != userNo) {
 			    	$("#modifyWriter").css("display", "none");
 			    }
-			    
+
+		   		if(paymentWriterNo == userNo){
+		   			$("#deldo").css("display", "block");
+		   		}
+		   			
 			    
 			    if (approvalSt == "D" || approvalSt == "I") {
 			        const firstApproval = "${list.get(0).FIRST_APPROVAL}";
@@ -489,12 +504,7 @@ $(document).on("click", "#rejectBtn", function(){
 			        $("#rejectContentBtn").css("display", "block");
 			    }
 			    
-			    // 승인/반려 버튼 표시 여부 결정
-			    if ("${list.get(0).FIRST_APPROVAL}" === userName || "${list.get(0).MIDDLE_APPROVAL}" === userName || "${list.get(0).FINAL_APPROVAL}" === userName) {
-			        $(".suBtn").css("display", "block");
-			    } else {
-			        $(".suBtn").css("display", "none"); 
-			    }
+			    
 			});
 		   
 		  //---------세번째 승인자의 완료버튼--------------
@@ -506,42 +516,73 @@ $(document).on("click", "#rejectBtn", function(){
 		    }
 			});
 		  
-		   function submitLast() {
+		  function submitLast() {
+			    // 결재를 완료하시겠습니까? 라는 확인 창을 띄운다.
 			    if (confirm('결재을 완료하시겠습니까?')) {
-			        if("${sign.get(0).firstSign}" == "반려" || "${sign.get(0).middleSign}" == "반려" || ($("#rejectCheck3").length != 0 || "${sign.get(0).finalSign}" == "반려")){
-			        	$.ajax({
-			        		url:"${contextPath}/pay/ajaxApprovalprocessing.do",
-			        		type:"post",
-			        		data:{status:"N", approvalNo:"${list.get(0).APPROVAL_NO}"},
-			        		success:function(response){
-			        			if(response == 1){
-			        				location.href = document.referrer;
-			        				$('#redModal').iziModal('setTitle', "전자결재");
-			        		    $('#redModal').iziModal('setSubtitle', "승인처리가 최종완료되었습니다.");
-			        			}
-			        		},
-			        		error:function(){
-			        			console.log("ajax통신 실패");
-			        		}
-			        		
-			        	})
-			        }else if($("#img1").length != 0 && $("#img2").length != 0 && ($("#img3").length != 0 || $("#imgcheck3").length != 0)){
-			        	$.ajax({
-			        		url:"${contextPath}/pay/ajaxApprovalprocessing.do",
-			        		type:"post",
-			        		data:{status:"Y", approvalNo:"${list.get(0).APPROVAL_NO}"},
-			        		success:function(response){
-			        			if(response == 1){
-			        		   location.href = document.referrer;
-		        				$('#redModal').iziModal('setTitle', "전자결재");
-		        		    $('#redModal').iziModal('setSubtitle', "승인처리가 최종완료되었습니다.");
-			        			}
-			        		},
-			        		error:function(){
-			        			console.log("ajax통신 실패");
-			        		}
-			        		
-			        	})
+			        
+			        // 결재 상태가 "반려"인 경우를 확인한다.
+			        if ("${sign.get(0).firstSign}" == "반려" || "${sign.get(0).middleSign}" == "반려" || ($("#rejectCheck3").length != 0 || "${sign.get(0).finalSign}" == "반려")) {
+			            
+			            // 상태가 "반려"일 경우 AJAX 요청을 통해 결재를 처리한다.
+			            $.ajax({
+			                url: "${contextPath}/pay/ajaxApprovalprocessing.do",
+			                type: "post",
+			                data: { status: "N", approvalNo: "${list.get(0).APPROVAL_NO}" },
+			                success: function(response) {
+			                    if (response == 1) {
+			                        // 이전 페이지로 이동하고 모달 창을 설정한다.
+			                        location.href = document.referrer;
+			                        $('#redModal').iziModal('setTitle', "전자결재");
+			                        $('#redModal').iziModal('setSubtitle', "승인처리가 최종완료되었습니다.");
+			                    }
+			                },
+			                error: function() {
+			                    console.log("ajax통신 실패");
+			                }
+			            });
+
+			        // 결재가 "반려"가 아니고 필요한 이미지가 모두 있는 경우를 확인한다.
+			        } else if ($("#img1").length != 0 && $("#img2").length != 0 && ($("#img3").length != 0 || $("#imgcheck3").length != 0)) {
+			            
+			            // 상태가 "Y"일 경우 AJAX 요청을 통해 결재를 처리한다.
+			            $.ajax({
+			                url: "${contextPath}/pay/ajaxApprovalprocessing.do",
+			                type: "post", 
+			                data: { status: "Y", approvalNo: "${list.get(0).APPROVAL_NO}" },
+			                success: function(response) {
+			                    if (response == 1) {
+			                        
+			                        // 비품 등록을 위한 AJAX 요청을 보낸다.
+			                        $.ajax({
+			                            url: "${contextPath}/pay/ajaxFix.do",
+			                            type: "post", 
+			                            data: $("#productForm").serialize(),
+			                            success: function(response) {
+			                                if (response == "SUCCESS") {
+			                                	
+			                                	function redAlert(title, message) {
+			                                	    $('#redModal').iziModal('setTitle', title);
+			                                	    $('#redModal').iziModal('setSubtitle', message);
+			                                	    $('#redModal').iziModal('open');
+			                                	}
+
+			                                	redAlert("전자결재", "결재가 최종승인 완료되었습니다.");
+
+			                                	setTimeout(function() {
+			                                	    location.href = document.referrer;
+			                                	}, 3000);
+			                                }
+			                            },
+			                            error: function() {
+			                                console.log("ajax통신 실패");
+			                            }
+			                        });
+			                    }
+			                },
+			                error: function() {
+			                    console.log("ajax 통신 실패");
+			                }
+			            });
 			        }
 			    }
 			}
@@ -550,7 +591,11 @@ $(document).on("click", "#rejectBtn", function(){
 			  
 			    if ($("#imgcheck1").length != 0 || $("#rejectCheck1").length != 0) {
 			        console.log($("#imgcheck1").length != 0 || $("#rejectCheck1").length != 0);
-			        fmSubmit();
+			        yellowAlert("전자결재", "결재 승인이 완료되었습니다.");
+
+			     		setTimeout(function() {
+			     	    location.href = document.referrer;
+			     		}, 3000);
 			    } else {
 			    	console.log($("#imgcheck1").length != 0 || $("#rejectCheck1").length != 0);
 			        alert("승인처리를 완료해주세요.");
@@ -561,17 +606,24 @@ $(document).on("click", "#rejectBtn", function(){
 		 $("#middlebtn").on("click", function() {
 		    if ($("#imgcheck2").length != 0 || $("#rejectCheck2").length != 0) {
 		        console.log($("#imgcheck2").length != 0 || $("#rejectCheck2").length != 0);
-		        fmSubmit();
+		        
+		        yellowAlert("전자결재", "결재 승인이 완료되었습니다.");
+
+		     		setTimeout(function() {
+		     	    location.href = document.referrer;
+		     		}, 3000);
+		     		
 		    } else {
 		        alert("승인처리를 완료해주세요.");
 		    }
-		});
+			});
 				  
 		  
-		  function fmSubmit(){
-			  alert("결재가 완료되었습니다.");
-			  location.href = document.referrer;
-		  }
+		  function yellowAlert(title, message) {
+       	    $('#yellowModal').iziModal('setTitle', title);
+       	    $('#yellowModal').iziModal('setSubtitle', message);
+       	    $('#yellowModal').iziModal('open');
+    	}
 		  
 		  
 		  $(document).ready(function(){

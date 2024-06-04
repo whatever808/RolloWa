@@ -35,6 +35,7 @@ import com.br.project.dto.pay.SignDto;
 import com.br.project.service.pay.PayService;
 import com.br.project.util.FileUtil;
 import com.br.project.util.PagingUtil;
+import com.google.common.collect.Maps;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,7 +88,7 @@ public class PayController {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
 		String formatedNow = sdf.format(now);
 		
-		
+	
 		model.addAttribute("list", list);
 		model.addAttribute("pi", pi);
 		model.addAttribute("listCount", String.valueOf(listCount));		
@@ -911,7 +912,7 @@ public class PayController {
 		
 		
 		redirectAttributes.addFlashAttribute("alertTitle", "게시글 등록 서비스");
-		if(attachList.isEmpty() && result == 1 || !attachList.isEmpty() && result == attachList.size()) {
+		if(!attachList.isEmpty() && result == attachList.size()) {
 			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
 			redirectAttributes.addFlashAttribute("modalColor", "G");
 		}else {
@@ -1490,6 +1491,7 @@ public class PayController {
 		
 		model.addAttribute("list", list);
 		model.addAttribute("pi", pi);
+		model.addAttribute("userName", userName);
 		
 	}
 	
@@ -1964,6 +1966,42 @@ public class PayController {
 		
 		
 		return "pay/approvalMain";
+	}
+	
+
+	@ResponseBody
+	@PostMapping("/ajaxFix.do")
+	public String ajaxFix(@RequestParam Map<String, Object> map
+						, @RequestParam(value="equipmentName") List<String> equipmentName) {
+
+		log.debug("ajaxFixmap : {}", equipmentName);
+		log.debug("ajaxFixmap : {}", equipmentName.get(0));
+		
+		log.debug("ajaxFixmap : {}", map);
+		List<Map<String, Object>> list = new ArrayList<>();
+		if(equipmentName != null && !equipmentName.isEmpty()) {
+			for(int i=0; i<equipmentName.size(); i++) {
+				Map<String, Object> maps = new HashMap<>();
+				maps.put("equipmentName", equipmentName.get(i));
+				maps.put("registEmp", map.get("registEmp"));
+				list.add(maps);
+			}
+		}
+		
+		log.debug("ajaxFixList : {}", list);
+		
+		int result = payService.ajaxFix(list);
+		
+		return result == list.size() ? "SUCCESS" : "FAIL";
+	}
+	
+	
+	@ResponseBody
+	@GetMapping("/laterSearchDept.do")
+	public List<Map<String, Object>> laterSearchDept(String keyword) {
+		
+		return payService.laterSearchDept(keyword);
+		
 	}
 	
 	

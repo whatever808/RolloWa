@@ -130,8 +130,10 @@ public class PaymentController {
 	       result2 = paymentService.insertAjaxkakaoPayRoutine(maps2);
 	    }
 	    
-		return result1 + result2 == 4? "SUCCESS" : "FAIL";
+		return (result1 == 0 && result2 == 2) || (result1 == 2 && result2 == 0) || (result1 == 2 && result2 == 2)?  "SUCCESS" : "FAIL";
 	}
+	
+	
 	
 
 }

@@ -388,7 +388,8 @@
 				where a.STATUS = 'Y'
 				 and DOCUMENT_NUMBER = #{documentNo}
          and APPROVAL_NO = #{approvalNo}
-         and DOCUMENT_TYPE = 'M'
+         and REPORT_TYPE = 'M'
+         AND DOCUMENT_TYPE = 'M'
          and PAYMENT_WRITER_NO = #{payWriterNo}
          and PAYMENT_WRITER = #{payWriter}
    </select>
@@ -1054,7 +1055,8 @@
 				 where a.STATUS = 'Y'
 					 and DOCUMENT_NUMBER = #{documentNo}
 	         and APPROVAL_NO = #{approvalNo}
-	         and DOCUMENT_TYPE = 'B'
+	         and REPORT_TYPE = 'B'
+        	 AND DOCUMENT_TYPE = 'B'
 	         and PAYMENT_WRITER_NO = #{payWriterNo}
 	         and PAYMENT_WRITER = #{payWriter}
    </select>
@@ -2756,6 +2758,32 @@
 		 	 set DOCUMENT_STATUS = #{status}
 	 	 where APPROVAL_NO = #{approvalNo}
 	 </update>
+	 
+	  <!-- 각부서의 속한 팀명, 부장, 과장, 차장 이름 리스트 -->
+   <select id="laterSearchDept" resultType="map">
+   		select 
+		       	 USER_NO
+		       , USER_NAME
+		       , CODE_NAME
+		       , TEAM_CODE
+		       , POSITION_CODE
+		       , (SELECT CODE_NAME 
+		           FROM TB_GROUP G
+		           WHERE CODE = TEAM_CODE
+		            AND GROUP_CODE = 'TEAM01' 
+		         ) AS "TEAM_NAME"
+		       , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE = 'POSI01' AND CODE = M.POSITION_CODE) AS "POSITION_NAME"
+		       , (SELECT CODE_NAME FROM TB_GROUP WHERE GROUP_CODE = 'DEPT01' AND CODE = G.UPPER_CODE) AS "DEPT_NAME"
+				FROM
+				    MEMBER M
+				JOIN TB_GROUP G ON M.TEAM_CODE = G.CODE AND G.GROUP_CODE = 'TEAM01'
+				WHERE  G.UPPER_CODE IN ('A', 'B', 'C', 'D', 'E', 'F')
+					AND (
+					       USER_NAME LIKE '%' || #{keyword} || '%'
+	            OR CODE_NAME LIKE '%' || #{keyword} || '%'
+							)
+   </select>
+
 	
 	
 	
