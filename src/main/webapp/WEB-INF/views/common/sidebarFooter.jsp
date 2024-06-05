@@ -541,6 +541,21 @@
     		return;
     	}
 
+    	const msgContent = $chatArea.val();
+    	
+    	// @ 포함된 경우 사원 멘션 기능 (현재는 @ 포함일 경우 email 아니면 사원 호출이라고 가정)
+    	if(msgContent.indexOf("@") != -1) {    		
+    		// @위치 확인
+    		const atIndex = msgContent.indexOf("@");
+    		// @로부터 사원 이름 추출
+    		const atUserName = msgContent.substring(atIndex + 1);
+    		// 사원 이름인지 확인 (이름에는 영어가 올 수 없다고 가정) 한글 이름 2~5 글자
+    		const regExp = /^[가-힣]{2,5}$/;
+    		if(regExp.test(atUserName)) {
+    			stompClient.send("/app/")
+    		}
+    	}
+    	
 			// 채팅 메세지 전송
     	stompClient.send("/app/chat/message/" + chatRoomNo, {}, JSON.stringify({userNo: '${loginMember.userNo}'
 																												, roomNo: chatRoomNo
