@@ -25,7 +25,7 @@
             margin: 10px;
         }
         .div_btn .btn {
-            width: 150px;
+            width: 170px;
             font-size: 20px !important;
         }
         table {
@@ -36,9 +36,11 @@
         th {
             background-color: gainsboro !important;
         }
+        /*
         tr:hover {
             cursor: pointer;
         }
+        */
         .th_1 {
             width: 150px;
         }
@@ -73,10 +75,15 @@
     
         <div class="div_1">
             <div class="div_btn">
-                <h2>
-                    <button class="btn btn-success" onclick="insertEquipment()">비품 추가</button>
+                <h3>
+                	<!-- 
+                    <button class="btn btn-success" onclick="insertEquipment()" >비품 추가</button>
                     <button class="btn btn-danger" onclick="deleteEquipment()">비품 삭제</button>
-                </h2>
+                     -->
+                     
+                    <button class="btn btn-success" onclick="location.href='${ contextPath }/pay/writerForm.page?writer=b'">비품 추가 신청</button>
+                    <button class="btn btn-danger" onclick="location.href='${ contextPath }/pay/writerForm.page?writer=g'">비품 삭제 신청</button>
+                </h3>
             </div>
             <h4>전체 ${list.size()}개</h4>
         </div>
@@ -196,6 +203,7 @@
 	    }
 	
 	    // 비품명 수정
+	    /*
 	    function editEquipment(tr) {
 	        var equipmentName = prompt("수정할 비품명을 입력하세요:", tr.cells[2].textContent);
 	        if (equipmentName) {
@@ -220,6 +228,7 @@
 	            });
 	        }
 	    }
+	    */
 	
 	    document.querySelectorAll('tr[data-id]').forEach(function(tr) {
 	        tr.addEventListener('click', function(event) {

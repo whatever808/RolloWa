@@ -30,6 +30,18 @@
 	.sortable.desc:after {
 		content: ' \25BC'; /* 내림차순 화살표 */
 	}
+  	/* Scrollable employee info table */
+    .employee_info_container {
+        max-height: 700px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+    }
+    .employee_info thead th {
+        position: sticky;
+        top: 0;
+        background: #f1f1f1;
+        z-index: 1;
+    }
   	
     </style>
 </head>
@@ -452,6 +464,7 @@
 	 		}
 		    </script>
            <!-- 직원 정보 테이블 start-->
+           <div class="employee_info_container">
            <table class="table table-bordered line-shadow employee_info">
 				<thead>
 					<tr>
@@ -529,6 +542,7 @@
 		        </c:otherwise>
         	</c:choose>
            </table>
+           </div>
            <!-- 직원 테이블 end -->
            
 	           

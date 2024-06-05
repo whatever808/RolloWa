@@ -8,7 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2.2 급여 조회</title>
+<title>급여 조회</title>
 
 <!-- css -->
 <link rel="stylesheet"
@@ -32,6 +32,20 @@
 	.sortable.desc:after {
 		content: ' \25BC'; /* 내림차순 화살표 */
 	}
+	
+	/* Scrollable employee info table */
+    .employee_info_container {
+        max-height: 700px;
+        width: 1330px;;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+    }
+    .employee_info thead th {
+        position: sticky;
+        top: 0;
+        background: #f1f1f1;
+        z-index: 1;
+    }
 </style>
 </head>
 <body>
@@ -382,6 +396,7 @@
 
 
 		<!-- 직원 정보 -->
+		<div class="employee_info_container">
 		<table class="table table-bordered line-shadow employee_info">
 			<thead>
 				<tr>
@@ -442,6 +457,7 @@
 				</c:otherwise>
 			</c:choose>
 		</table>
+		</div>
 
 		<!-- ------------ -->
 

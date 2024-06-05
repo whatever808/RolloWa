@@ -146,7 +146,7 @@
 		                    <div>
 		                        <div class="div_common">
 		                            <h5>
-		                            	<input type="text" id="userName" placeholder="이름 입력" value="${ m.userName }">
+		                            	<input type="text" id="userName" placeholder="이름 입력" value="${ m.userName }" oninput="checkForm()">
 		                            </h5>
 		                        </div>
 		                    </div>
@@ -221,7 +221,9 @@
 		                    <label for="department"><h5>부서명</h5></label>
 		                </td>
 	                    <td>
-	                        <select name="department" id="department" class="form-select">${ m.department }</select>
+	                        <select name="department" id="department" class="form-select" onchange="checkForm()">
+	                        <option value="부서 선택">부서 선택</option>
+	                        ${ m.department }</select>
 	                	</td>
 		            </tr>
 		            
@@ -230,7 +232,7 @@
 		                <th>
 		                    <label for="teamCode"><h5>팀명</h5></td></label>
 		                <td class="td_1">
-		                    <select name="teamCode" id="teamCode" class="form-select">
+		                    <select name="teamCode" id="teamCode" class="form-select" onchange="checkForm()">
 		                    	<option value="팀 선택">팀 선택</option>
 	                    	</select>
 		                </td>
@@ -242,7 +244,7 @@
 		                    <h5>직급</h5>
 		                </th>
 		                <td class="td_1">
-		                    <select name="positionCode" id="positionCode" class="form-select" required>
+		                    <select name="positionCode" id="positionCode" class="form-select" required onchange="checkForm()">
 		                    	<option value="직급 선택" disabled selected hidden>직급 선택</option>
 	                    	</select>
 		                </td>
@@ -412,19 +414,48 @@
 		
 	
 		<script>
+		// 구성원 수정 체크
+		function checkForm() {
+		    const userName = document.getElementById('userName').value.trim();
+		    const department = document.getElementById('department').value;
+		    const teamCode = document.getElementById('teamCode').value;
+		    const positionCode = document.getElementById('positionCode').value;
+		    
+		    const isFormValid = userName !== "" &&
+		                        department !== "부서 선택" &&
+		                        teamCode !== "팀 선택" &&
+		                        positionCode !== "직급 선택";
+		
+		    document.getElementById('updateBtn').disabled = !isFormValid;
+		}
+		
 		<!-- 회원 탈퇴하기-->
-		function deleteMember(event){
-			event.preventDefault(); // 기본 폼 제출 방지
-			
-			let userNo = $("#userNo").val();
-			let modifyUserNo = "${ loginMember.userNo }";
-			
-			$.ajax({
+		function deleteMember(event) {
+		    event.preventDefault(); // 기본 폼 제출 방지
+		    
+		    let userNo = $("#userNo").val();
+		    let modifyUserNo = "${ loginMember.userNo }";
+		    let actualName = $("#userName").val();
+		    
+		    // Prompt user for their name
+		    let enteredName = prompt("회원탈퇴를 하시려면 해당 사용자의 이름을 입력하세요:");
+		    
+		    if (enteredName == null) {
+		        // User pressed cancel
+		        return;
+		    }
+		    
+		    if (enteredName != actualName) {
+		        alert("입력한 이름이 일치하지 않습니다.");
+		        return;
+		    }
+		    
+		    $.ajax({
 		        url: "${contextPath}/attendance/deleteMemberAttendance.do",
 		        type: "POST",
 		        data: {
-		        	userNo: userNo,
-		        	modifyUserNo: modifyUserNo
+		            userNo: userNo,
+		            modifyUserNo: modifyUserNo
 		        },
 		        success: function(result) {
 		            console.log("회원 탈퇴 통신 성공!!!");
@@ -433,7 +464,6 @@
 		        },
 		        error: function() {
 		            console.log("회원 탈퇴 통신 실패!!!");
-		            //alert("회원 정보수정 통신 실패!!!");
 		        }
 		    });
 		}
@@ -499,8 +529,11 @@
 		            //alert("회원 정보수정 통신 실패!!!");
 		        }
 		    });
-						
 		}
+		
+		
+		
+		
 		</script>
 	
 	
@@ -527,25 +560,25 @@ function sample6_execDaumPostcode() {
             var extraAddr = ''; // 참고항목 변수
 
             //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+            if (data.userSelectedType == 'R') { // 사용자가 도로명 주소를 선택했을 경우
                 addr = data.roadAddress;
             } else { // 사용자가 지번 주소를 선택했을 경우(J)
                 addr = data.jibunAddress;
             }
 
             // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-            if(data.userSelectedType === 'R'){
+            if(data.userSelectedType == 'R'){
                 // 법정동명이 있을 경우 추가한다. (법정리는 제외)
                 // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                if(data.bname != '' && /[동|로|가]$/g.test(data.bname)){
                     extraAddr += data.bname;
                 }
                 // 건물명이 있고, 공동주택일 경우 추가한다.
-                if(data.buildingName !== '' && data.apartment === 'Y'){
-                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                if(data.buildingName != '' && data.apartment == 'Y'){
+                    extraAddr += (extraAddr != '' ? ', ' + data.buildingName : data.buildingName);
                 }
                 // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-                if(extraAddr !== ''){
+                if(extraAddr != ''){
                     extraAddr = ' (' + extraAddr + ')';
                 }
                 // 조합된 참고항목을 해당 필드에 넣는다.
