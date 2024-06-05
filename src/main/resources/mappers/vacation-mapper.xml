@@ -105,7 +105,7 @@ from vacation v
 left join  attachment a on (VACATION_NO = REF_NO and REF_TYPE = 'VACT' and a.STATUS = 'Y')
 where REGIST_EMP = #{userNo}
 and v.STATUS = 'Y'
-and APPORVAL_STATUS in ('N', 'R')
+and APPORVAL_STATUS = 'N'
 order by VACATION_NO desc 
 </select>
 
@@ -213,6 +213,7 @@ select
     , VACATION_STRAT
     , VACATION_END
     , VACATION_COLOR
+    , RETRACT_COMMNET
     , R_REQUEST_COMMENT
     , REGIST_EMP "USER_NO"
     , (select USER_NAME from member m where m.user_no = v.REGIST_EMP) "USER_NAME"

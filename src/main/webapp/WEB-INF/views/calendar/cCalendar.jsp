@@ -232,6 +232,7 @@ td.fc-day.fc-timegrid-col {
 	margin-top: 5px;
 	white-space: nowrap;
 	margin-bottom: 30px;
+  background: #ffffff85;
 }
 
 .display_att {
