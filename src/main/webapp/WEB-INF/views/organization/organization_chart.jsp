@@ -53,7 +53,7 @@
 			    <c:set var="prevDept" value="" />
 				<c:forEach var="d" items="${dept}">
 				    <c:if test="${d.dept ne prevDept}">
-				        <li>
+				        <li class="department">
 				            <a href="${contextPath}/organization/search.do?page=1&department=${d.dept}&phone=&team=전체 팀&name="><span class="level2">${d.dept}</span></a>
 				            <ul>
 				                <c:forEach var="team" items="${dept}">

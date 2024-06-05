@@ -49,7 +49,7 @@
                 <c:set var="prevDept"/>
                 <c:forEach var="d" items="${dept}">
                     <c:if test="${d.dept ne prevDept}">
-                        <li>
+                        <li class="department">
                         	<input type="hidden" class="code" value="${d.code}">
                         	<button class="btn btn-danger delete_department" data-dept="${d.code}">부서 삭제</button>
 	                        <button class="btn btn-success add_team">팀 추가</button>
@@ -82,6 +82,9 @@
         </ul>
         
         <script>
+        // 조직도 스크립트 추가
+
+        
         document.addEventListener('DOMContentLoaded', function () {
             const deleteButtons = document.querySelectorAll('.delete_team[disabled]');
 
@@ -412,6 +415,7 @@
             });
             
         });
+        
         </script>
         
         <!-- ------------ -->

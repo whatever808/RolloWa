@@ -38,6 +38,9 @@
 			<mapping path="/attraction/*" />
 			<mapping path="/calendar/*" />
 			<mapping path="/board/*" />
+			<mapping path="/organization/*" />
+			<mapping path="/reservation/*" />
+			<mapping path="/attendance/*" />
 			<beans:bean class="com.br.project.interceptor.LoginCheckInterceptor" id="loginCheckInterceptor" />
 		</interceptor>
 		
