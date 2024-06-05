@@ -310,7 +310,7 @@
 }
 
 .chatting_box {
-	margin-top: 50px;
+	/*margin-top: 50px;*/
 	height: 800px;
 	display: flex;
 	flex-direction: column;

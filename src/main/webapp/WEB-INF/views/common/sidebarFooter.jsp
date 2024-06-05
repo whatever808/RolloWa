@@ -73,6 +73,10 @@
                      </div>
 
                      <div class="col-md-6 col-lg-7 col-xl-8 chatting_box">
+                     		<div class="btn_wrapper" style="margin-top: 10px;">
+                     			<button type="button" class="btn1 forget_btn">파일전송</button>
+                     			<button type="button" class="btn1 forget_btn">@멘션</button>
+                     		</div>
 
                          <div class="chatting_history scrollbar">
 	                         	 <!--<div>
@@ -414,7 +418,13 @@
 			// 내가 어떤 채팅방을 열었는지 표시
 			subRoomNo = chatRoomNo;
 			
+			// 채팅방 멘션, 파일전송 버튼 추가
 			
+			
+			<div class="btn_wrapper" style="margin-top: 10px;">
+	 			<button type="button" class="btn1 forget_btn" function="fileSend()">파일전송</button>
+	 			<button type="button" class="btn1 forget_btn" function="atAlram">@멘션</button>
+	 		</div>
 			
 			$.ajax({
 		 	url: "${contextPath}/chat/messages"
@@ -551,12 +561,13 @@
     		const atUserName = msgContent.substring(atIndex + 1);
     		// 사원 이름인지 확인 (이름에는 영어가 올 수 없다고 가정) 한글 이름 2~5 글자
     		const regExp = /^[가-힣]{2,5}$/;
-    		/*if(regExp.test(atUserName)) {
+    		if(regExp.test(atUserName)) {
     			stompClient.send("/app/")
-    			stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
+    			/*stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
 																																	, flag: '3'
-																																	, }));
-    		}*/
+																																	, chatRoomNo
+																																	, atUserName}));*/
+    		}
     	}
     	
 			// 채팅 메세지 전송

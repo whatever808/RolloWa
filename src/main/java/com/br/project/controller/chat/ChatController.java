@@ -123,6 +123,8 @@ public class ChatController {
 					log.debug("알림 저장 실패");
 				}*/
 				
+			} else if (map.get("flag").equals("3")) {
+				// 채팅방 멘션일 경우
 			}
 			
 			
