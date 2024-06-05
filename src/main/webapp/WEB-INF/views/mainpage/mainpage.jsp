@@ -540,7 +540,7 @@
   	// 메인페이지 접속 시 알림 조회
   	$(document).ready(function() {
   		selectAlram();
-  	})
+  	});
   	// 읽지 않은 알림 조회
   	function selectAlram() {
 	  	$.ajax({
@@ -590,7 +590,7 @@
 	  			, error: function() {
 	  				
 	  			}
-  		})
+  			});
 		}
 
   	// 알림 버튼 클릭 시 알림 조회
@@ -601,7 +601,7 @@
 			selectAlram();
 			// 모달창 열기
 			$("#alram_list").iziModal('open');
-  	})
+  	});
   	
   	// 알림 리스트 중 하나의 알림 클릭 시
   	function updateAlram(nsendNo, type) {
@@ -627,34 +627,34 @@
   	// 접속자 관련 (웹소켓) =====================================================================================
   	loginLogout.onmessage = loginLogoutMsg;
   		
-		// 메세지가 왔을 경우
-		function loginLogoutMsg(event){
-			// 로그인일 경우 : [login] [리스트의 모든 사원정보를 이은 문자열]
-			// 로그아웃 경우 : [logout][사원번호]
-			let msg = event.data.split("|");
-			let type = msg[0]; 	// [login] or [logout]
-			let addMembers = "";
-			
-			if(type == 'login'){
-				let memberList = msg[1].split(",");	// [사번&프로필&이름/직급/소속팀][사번&프로필&이름/직급/소속팀]...
-				for(let i=0 ; i<memberList.length ; i++){
-					let member = memberList[i].split("&");	// [사번][프로필][이름/직급/소속팀]
-					
-					addMembers += "<div class='login-user d-flex align-items-center mb-3'>";
-					addMembers +=	"<input type='hidden' name='userNo' value='" + member[0] + "'>";
-					addMembers +=	"<img class='login-user-list-profile me-2' src='${ contextPath }" + member[1] + "' alt='user profile image'>";
-					addMembers += 	"<span class='login-user-list-member-info'>" + member[2] + "</span>";
-					addMembers += "</div>";
-			
-				}
-				$(".login-user-list").html(addMembers);
-			}else{
-				let userNo = msg[1];
-				$(".login-user-list").children(".login-user").each(function(){
-					$(this).children("[name=userNo]").val() == userNo && $(this).remove();
-				});
+	// 메세지가 왔을 경우
+	function loginLogoutMsg(event){
+		// 로그인일 경우 : [login] [리스트의 모든 사원정보를 이은 문자열]
+		// 로그아웃 경우 : [logout][사원번호]
+		let msg = event.data.split("|");
+		let type = msg[0]; 	// [login] or [logout]
+		let addMembers = "";
+		
+		if(type == 'login'){
+			let memberList = msg[1].split(",");	// [사번&프로필&이름/직급/소속팀][사번&프로필&이름/직급/소속팀]...
+			for(let i=0 ; i<memberList.length ; i++){
+				let member = memberList[i].split("&");	// [사번][프로필][이름/직급/소속팀]
+				
+				addMembers += "<div class='login-user d-flex align-items-center mb-3'>";
+				addMembers +=	"<input type='hidden' name='userNo' value='" + member[0] + "'>";
+				addMembers +=	"<img class='login-user-list-profile me-2' src='${ contextPath }" + member[1] + "' alt='user profile image'>";
+				addMembers += 	"<span class='login-user-list-member-info'>" + member[2] + "</span>";
+				addMembers += "</div>";
+		
 			}
+			$(".login-user-list").html(addMembers);
+		}else{
+			let userNo = msg[1];
+			$(".login-user-list").children(".login-user").each(function(){
+				$(this).children("[name=userNo]").val() == userNo && $(this).remove();
+			});
 		}
+	}
   	
 </script>
 

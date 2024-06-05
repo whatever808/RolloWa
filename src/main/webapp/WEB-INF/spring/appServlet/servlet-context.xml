@@ -38,6 +38,9 @@
 			<mapping path="/attraction/*" />
 			<mapping path="/calendar/*" />
 			<mapping path="/board/*" />
+			<mapping path="/organization/*" />
+			<mapping path="/reservation/*" />
+			<mapping path="/attendance/*" />
 			<beans:bean class="com.br.project.interceptor.LoginCheckInterceptor" id="loginCheckInterceptor" />
 		</interceptor>
 		
@@ -60,6 +63,15 @@
 			<mapping path="/board/*/modify.*" />
 			<beans:bean class="com.br.project.interceptor.LevelCheckInterceptor" id="LevelCheckInterceptor" />
 		</interceptor>
+		<!-- 사장, 부장, 과장, 차장 체크  -->
+		<interceptor>
+			<mapping path="/pay/noApprovalListMain.page" />
+			<mapping path="/pay/noApprovalList.page" />
+			<mapping path="/pay/rejectApprovalList.page" />
+			<mapping path="/pay/finishApprovalList.page" />
+			<beans:bean class="com.br.project.interceptor.LevelInterceptor" id="ApprovalLevelCheckInterceptor" />
+		</interceptor>
+
 	</interceptors>
 	
 	<!-- Scheduler 빈등록 -->

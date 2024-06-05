@@ -247,7 +247,7 @@ $(document).on("click", "#rejectBtn", function(){
             </div>
         </div>
         <c:if test="${ not empty refList }">
-	        <div class="body">
+	        <div class="body" style="width: 700px;">
 	         		<table class="info-table">
 	            		<tr>
 	                    <th>수신참조인</th>
@@ -262,7 +262,7 @@ $(document).on("click", "#rejectBtn", function(){
             <table class="info-table">
             		<c:if test="${ list.get(0).MODIFY_TYPE eq 'S'}">
 	            		<td style="border: 0px solid; text-align: center;">
-	            		<button type="button" class="btn btn-outline-primary" disabled>보안 수정</button>
+	            		<button type="button" class="btn btn-outline-primary" disabled>보완 보고서</button>
 	            		</td>
             		</c:if>
                 <tr>
@@ -327,7 +327,7 @@ $(document).on("click", "#rejectBtn", function(){
 						           				<button class="btn btn-warning" class="modifyWriter" id=correction type="submit">수정</button>
 						           			</c:when>
 						           			<c:when test="${ list.get(0).DOCUMENT_STATUS == 'N' && list.get(0).PAYMENT_WRITER_NO == userNo}">
-							           			<button class="btn btn-info" class="modifyWriter" id="secure" type="submit">보안</button>					      					
+							           			<button class="btn btn-info" class="modifyWriter" id="secure" type="submit">보완</button>					      					
 						           			</c:when>
 					      					</c:choose>
 					           			<c:choose>
@@ -643,7 +643,7 @@ $(document).on("click", "#rejectBtn", function(){
 	  
     
        $('#modal3').iziModal({
-           title: '반려(철회)된 사유.',
+           title: '반려된 사유.',
            headerColor: '#FEEFAD', // 헤더 색깔
            theme: '', //Theme of the modal, can be empty or "light".
            padding: '15px', // content안의 padding

@@ -18,6 +18,7 @@
 		<!-- 기안서 공통 스타일 -->
     <link rel="stylesheet" href="${contextPath}/resources/css/pay/detail.css">
 <style>
+#refTable tbody td {width: 50px;}
 </style>
 </head>
 <body>
@@ -191,8 +192,6 @@ $(document).on("click", "#rejectBtn", function(){
 								          	</div>
 								         </div>
 								         <!------------>
-								         
-           
             <div class="approval-info">
                 <div class="approval-box">
                     <div class="approval-title">1차승인자</div>
@@ -243,7 +242,7 @@ $(document).on("click", "#rejectBtn", function(){
         </div>
         <c:if test="${ not empty refList }">
 	        <div class="body">
-	         		<table class="info-table">
+	         		<table class="info-table" id="refTable">
 	            		<tr>
 	                    <th>수신참조인</th>
 	                    <c:forEach var="item" items="${ refList }">
@@ -253,13 +252,15 @@ $(document).on("click", "#rejectBtn", function(){
 	            </table>
 	        </div>
         </c:if>
+        <c:if test="${ list.get(0).MODIFY_TYPE eq 'S'}">
+        	<table class="info-table">
+      			<td style="border: 0px solid; text-align: end;">
+      				<button type="button" class="btn btn-outline-primary" disabled>보완 보고서</button>
+      			</td>
+      		</table>
+     		</c:if>
         <div class="body">
             <table class="info-table">
-            		<c:if test="${ list.get(0).MODIFY_TYPE eq 'S'}">
-	            		<td style="border: 0px solid; text-align: center;">
-	            		<button type="button" class="btn btn-outline-primary" disabled>보안 수정</button>
-	            		</td>
-            		</c:if>
                 <tr>
                     <th>기안부서</th>
                     <td>${list.get(0).DEPARTMENT}</td>
@@ -327,7 +328,7 @@ $(document).on("click", "#rejectBtn", function(){
 						           				<button class="btn btn-warning" class="modifyWriter" id=correction type="submit">수정</button>
 						           			</c:when>
 						           			<c:when test="${ list.get(0).DOCUMENT_STATUS == 'N' && list.get(0).PAYMENT_WRITER_NO == userNo}">
-							           			<button class="btn btn-info" class="modifyWriter" id="secure" type="submit">보안</button>					      					
+							           			<button class="btn btn-info" class="modifyWriter" id="secure" type="submit">보완</button>					      					
 						           			</c:when>
 					      					</c:choose>
 					           			<c:choose>
@@ -663,7 +664,7 @@ $(document).on("click", "#rejectBtn", function(){
 	  
     
        $('#modal3').iziModal({
-           title: '반려(철회)된 사유.',
+           title: '반려된 사유.',
            headerColor: '#FEEFAD', // 헤더 색깔
            theme: '', //Theme of the modal, can be empty or "light".
            padding: '15px', // content안의 padding

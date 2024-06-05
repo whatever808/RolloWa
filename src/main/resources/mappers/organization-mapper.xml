@@ -56,8 +56,8 @@
 		 WHERE D1.GROUP_CODE LIKE 'DEPT%'
 	 	   AND D1.STATUS = 'Y'
          ORDER BY
-               CODE ASC
-             , TEAM ASC
+               LPAD(D1.CODE, 10, '0') ASC
+             , LPAD(D2.CODE, 10, '0') ASC
 	</select>
 
 	<!-- 직원 전체 카운트 -->
@@ -291,7 +291,7 @@
 		 WHERE GROUP_CODE LIKE 'POSI%'
 	</select>
 	
-	<!-- 수정중 -->
+	<!-- 부서,팀 인원 카운트 0명이면 삭제안되게 -->
 	<select id="countEmployeesInDepartment" resultType="_int" parameterType="string">
         SELECT COUNT(*) 
 		FROM TB_GROUP 
@@ -299,7 +299,6 @@
 		  AND GROUP_CODE LIKE 'DEPT%'
     </select>
 	<select id="countEmployeesInTeam" resultType="_int" parameterType="string">
-        <!-- SELECT COUNT(*) FROM employee WHERE team_name =  -->
         SELECT COUNT(*) 
 		FROM TB_GROUP 
 		WHERE CODE_NAME = #{teamName}
@@ -332,6 +331,7 @@
 		     , MODIFY_DATE = SYSDATE
 		     , MODIFY_EMP = #{userNo}
 		 WHERE CODE = #{deptCode}
+		   AND GROUP_CODE LIKE 'DEPT%'
 		   AND STATUS = 'Y'
     </update>
     
@@ -377,6 +377,7 @@
              , MODIFY_DATE = SYSDATE
              , MODIFY_EMP = #{userNo}
          WHERE CODE = #{teamCode}
+           AND GROUP_CODE LIKE 'TEAM%'
            AND STATUS = 'Y'
     </update>
     

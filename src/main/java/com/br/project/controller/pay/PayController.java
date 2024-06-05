@@ -70,7 +70,7 @@ public class PayController {
 		mapUserMember.put("userName", userName);
 		mapUserMember.put("userNo", userNo);
 		List<MemberDeptDto> member = payService.selectloginUserDept(mapUserMember);
-		
+		log.debug("memberDpt : {}", member);
 		List<PayDto> list = payService.paymainPage(pi);
 		
 		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
@@ -88,20 +88,30 @@ public class PayController {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
 		String formatedNow = sdf.format(now);
 		
-	
-		model.addAttribute("list", list);
-		model.addAttribute("pi", pi);
-		model.addAttribute("listCount", String.valueOf(listCount));		
-		model.addAttribute("mdCount", String.valueOf(mdCount));
-		model.addAttribute("slistCount", String.valueOf(slistCount));
-		model.addAttribute("ulistCount", String.valueOf(ulistCount));
-		model.addAttribute("noApprovalSignCount", String.valueOf(noApprovalSignCount));
-		model.addAttribute("noApprovalSignCountToday", String.valueOf(noApprovalSignCountToday));
-		model.addAttribute("userName", userName);
-		model.addAttribute("userNo", userNo);
-		model.addAttribute("today", formatedNow);
-		
-		return "pay/approvalMain";
+		if(member.get(0).getPositionName() == "부장" ||
+		   member.get(0).getPositionName() == "과장" || 
+		   member.get(0).getPositionName() == "차장" ||
+		   member.get(0).getPositionName() == "사장") {
+			
+			model.addAttribute("list", list);
+			model.addAttribute("pi", pi);
+			model.addAttribute("listCount", String.valueOf(listCount));		
+			model.addAttribute("mdCount", String.valueOf(mdCount));
+			model.addAttribute("slistCount", String.valueOf(slistCount));
+			model.addAttribute("ulistCount", String.valueOf(ulistCount));
+			model.addAttribute("noApprovalSignCount", String.valueOf(noApprovalSignCount));
+			model.addAttribute("noApprovalSignCountToday", String.valueOf(noApprovalSignCountToday));
+			model.addAttribute("userName", userName);
+			model.addAttribute("userNo", userNo);
+			model.addAttribute("today", formatedNow);
+			
+			return "pay/approvalMain";
+		}else {
+			redirectAttributes.addFlashAttribute("alertTitle", "권한여부");
+			redirectAttributes.addFlashAttribute("alertMsg", "관리자권한 게시판입니다.");
+			return "/";
+		}
+			
 		
 		
 	}

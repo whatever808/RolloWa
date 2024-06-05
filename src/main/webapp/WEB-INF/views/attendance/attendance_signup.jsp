@@ -352,7 +352,7 @@
 		let pwdResult = false;
 		let pwdckResult = false;
 		      
-		/* 이름 : 한글만 가능*/
+		/* 이름 : 한글 입력*/
 		$("#signup_form input[name=userName]").on("keyup", function(){
 			let regExp = $(this).val().replace(/[^가-힣ㄱ-ㅎa-zA-Z]+/g, '');
 			$(this).val(regExp);
@@ -398,44 +398,48 @@
 		     
 		/* 비밀번호 : 영문, 숫자, 특수문자를 포함한 조합 5~20자 */
 		$("#signup_form input[name=userPwd]").on("keyup", function(){
-			let regExp = $(this).val().replace(/[^A-Za-z0-9!@#$%^&*]+/g, "");
-			$(this).val(regExp);
+		    let regExp = $(this).val().replace(/[^A-Za-z0-9!@#$%^&*]+/g, "");
+		    $(this).val(regExp);
 		
-			console.log("비밀번호 :", pwdResult);
-			console.log("확인 비밀번호 :", regExp);
-			if( regExp.trim().length < 5 || regExp.trim().length > 20 ){
-				pwdResult = checkPrint("#pwd_result", "usable unusable", "nocheck", "다시 입력해주세요.");
-			} else {
-				if( regExp ){
-					pwdResult = checkPrint("#pwd_result", "nocheck unusable", "usable", "사용가능한 비밀번호입니다.");
-				}
-			}
-
-			pwdResult = regExp;
-			if (regExp == "") {
-				checkPrint("#pwd_result", "usable unusable", "nocheck", "비밀번호를 입력해주세요.");
-			}
-			validate();
+		    if( regExp.trim().length < 5 || regExp.trim().length > 20 ){
+		        pwdResult = checkPrint("#pwd_result", "usable unusable", "nocheck", "다시 입력해주세요.");
+		    } else {
+		        if( regExp ){
+		            pwdResult = checkPrint("#pwd_result", "nocheck unusable", "usable", "사용가능한 비밀번호입니다.");
+		        }
+		    }
+		
+		    pwdResult = regExp;
+		    if (regExp == "") {
+		        checkPrint("#pwd_result", "usable unusable", "nocheck", "비밀번호를 입력해주세요.");
+		    }
+		    validate();
+		    checkPwdMatch();
 		})
-				
+		
 		/* 비밀번호 확인 */
 		$("#signup_form input[name=userPwdck]").on("keyup", function(){
-			let regExp = $(this).val().replace(/[^A-Za-z0-9!@#$%^&*]+/g, "");
-			$(this).val(regExp);
+		    let regExp = $(this).val().replace(/[^A-Za-z0-9!@#$%^&*]+/g, "");
+		    $(this).val(regExp);
 		
-			console.log("비밀번호 :", pwdResult);
-			console.log("확인 비밀번호 :", regExp);
-			if( pwdResult !=  regExp ){
-				pwdckResult = checkPrint("#pwdck_result", "usable unusable", "nocheck", "비밀번호가 일치하지 않습니다.");
-			} else {
-				if( regExp &&  regExp == pwdResult){
-					pwdckResult = checkPrint("#pwdck_result", "nocheck unusable", "usable", "비밀번호가 일치합니다.");
-				}
-			}
-			validate();
+		    checkPwdMatch();
+		    validate();
 		})
 		
+		function checkPwdMatch() {
+		    let pwd = $("#signup_form input[name=userPwd]").val();
+		    let pwdck = $("#signup_form input[name=userPwdck]").val();
 		
+		    if (pwdck === "") {
+		        pwdckResult = checkPrint("#pwdck_result", "usable unusable", "nocheck", "비밀번호를 입력하세요.");
+		    } else if (pwd !== pwdck) {
+		        pwdckResult = checkPrint("#pwdck_result", "usable unusable", "nocheck", "비밀번호가 일치하지 않습니다.");
+		    } else {
+		        if (pwdck && pwd === pwdck){
+		            pwdckResult = checkPrint("#pwdck_result", "nocheck unusable", "usable", "비밀번호가 일치합니다.");
+		        }
+		    }
+		}
 		
 		function checkPrint(selector, rmClassNm, addClassNm, msg){
 			$(selector).removeClass(rmClassNm).addClass(addClassNm).text(msg);
@@ -443,20 +447,25 @@
 		}
 		
 		<!---------------------------- 모든 값이 true 여야만 구성원추가 버튼 활성화 ---------------------------->
+		/* 모든 값이 true 여야만 구성원추가 버튼 활성화 */
 		function validate() {
-			let loginUser = ${ loginMember.userNo };
-			let departmentValue = $('#department').val();
-			let teamValue = $('#teamCode').val();
-			let positionValue = $('#positionCode').val();
-			let allSelected = departmentValue && teamValue && positionValue;
-			//let allValid = nameResult && idResult && pwdResult && pwdckResult && allSelected;
+		    let departmentValue = $('#department').val();
+		    let teamValue = $('#teamCode').val();
+		    let positionValue = $('#positionCode').val();
+		    let allSelected = departmentValue && teamValue && positionValue;
+		    let allValid = nameResult && idResult && pwdResult && pwdckResult && allSelected;
 
-			if (allSelected) {
-				$('button[type="submit"]').prop('disabled', false);
-			} else {
-				$('button[type="submit"]').prop('disabled', true);
-			}
+		    if (allValid) {
+		        $('button[type="submit"]').prop('disabled', false);
+		    } else {
+		        $('button[type="submit"]').prop('disabled', true);
+		    }
 		}
+
+		/* 부서, 팀, 직급 선택 변경 시 validate 호출 */
+		$('#department, #teamCode, #positionCode').change(function() {
+		    validate();
+		});
 		</script>
 		
 		
