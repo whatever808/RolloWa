@@ -5,6 +5,7 @@ import java.util.List;
 import com.br.project.dto.common.AttachmentDto;
 import com.br.project.dto.common.GroupDto;
 import com.br.project.dto.member.MemberDto;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +30,8 @@ public class VacationDto {
 	private String RetractComent;
 	private String RRequestComent;
 	private String approrvalStatus;
+	private String signMember;
+	private String registEmp;
 	private String vacaGroupCode;
 	private GroupDto 			group;
 	private MemberDto 			member;
