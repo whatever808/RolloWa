@@ -18,6 +18,7 @@
 		<!-- 기안서 공통 스타일 -->
     <link rel="stylesheet" href="${contextPath}/resources/css/pay/detail.css">
 <style>
+#refTable tbody td {width: 50px;}
 </style>
 </head>
 <body>
@@ -191,8 +192,6 @@ $(document).on("click", "#rejectBtn", function(){
 								          	</div>
 								         </div>
 								         <!------------>
-								         
-           
             <div class="approval-info">
                 <div class="approval-box">
                     <div class="approval-title">1차승인자</div>
@@ -243,7 +242,7 @@ $(document).on("click", "#rejectBtn", function(){
         </div>
         <c:if test="${ not empty refList }">
 	        <div class="body">
-	         		<table class="info-table">
+	         		<table class="info-table" id="refTable">
 	            		<tr>
 	                    <th>수신참조인</th>
 	                    <c:forEach var="item" items="${ refList }">
@@ -253,13 +252,15 @@ $(document).on("click", "#rejectBtn", function(){
 	            </table>
 	        </div>
         </c:if>
+        <c:if test="${ list.get(0).MODIFY_TYPE eq 'S'}">
+        	<table class="info-table">
+      			<td style="border: 0px solid; text-align: end;">
+      				<button type="button" class="btn btn-outline-primary" disabled>보안 수정</button>
+      			</td>
+      		</table>
+     		</c:if>
         <div class="body">
             <table class="info-table">
-            		<c:if test="${ list.get(0).MODIFY_TYPE eq 'S'}">
-	            		<td style="border: 0px solid; text-align: center;">
-	            		<button type="button" class="btn btn-outline-primary" disabled>보안 수정</button>
-	            		</td>
-            		</c:if>
                 <tr>
                     <th>기안부서</th>
                     <td>${list.get(0).DEPARTMENT}</td>
