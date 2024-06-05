@@ -64,7 +64,6 @@
 	width: 15px;
 	height: 30px;
 }
-
 ::-webkit-scrollbar-thumb {
 	background: linear-gradient(180deg, rgb(255 255 255), rgb(255, 247, 208)
 		30%, rgb(255, 230, 109) 50%, rgb(255, 247, 208) 70%,
@@ -894,24 +893,103 @@ $(document).ready(function(){
 
       })
     })
-            
-						
-	// 알림 스타일
-	$("#alram").iziModal({
-		title: '<h6>부서 알림 서비스</h6>'
-		, subtitle: '부서 알림이 등록되었습니다.'
-		, headerColor: '#FEEFAD'
-		, theme: 'light'
-		, radius: '2'
-		, arrowKeys: 'false'
-		, navigateCaption: 'false'
-		, timeout: '3000'
-		, timeoutProgressbar: 'true'
-		, timeoutProgressbarColor: '#FFFFFF'
-		, pauseOnHover: 'true'
-	})
-	
-	
-</script>
+
+						// Auto Reconnect
+						// 5분마다 재연결
+						stompClient.reconnect_delay = 300000;
+						// 디버깅 방법 설정
+					  stompClient.debug = function(str) {
+						    //console.log(str);
+						};
+			    	stompClient.connect({}, function(frame) {
+							// 구독 중인 채팅방 목록 조회
+					    $.ajax({
+					    	url: "${contextPath}/chat/rooms"
+					    	, method: "get"
+					    	, async: false
+					    	, success: function(result) {					    		
+					    		// 참여중인 채팅방 구독
+					    		for(var i = 0; i < result.length; i++) {
+					    			stompClient.subscribe("/topic/chat/room/" + result[i].chatRoomNo, function(msg) {
+					    				// 메세지 수신 처리
+					    				receiveMsg(msg);
+					    			}, { id: "room" + result[i].chatRoomNo})
+					    		}
+					    		selectChatRoom();
+					    	}
+					    	, error: function() {
+					    		console.log("채팅방 목록 조회 ajax 통신 실패");
+					    	}
+					    })
+					    
+					    // 알림용 주소 구독
+					    stompClient.subscribe("/topic/chat/alram", function(msg) {
+					    	// 문자열을 json으로 변환
+					    	const msgBody = JSON.parse(msg.body);
+					    	
+					    	if(msgBody.flag == 0) {
+					    		// 채팅방 초대 알림인 경우
+					    		if(msgBody.userNo != ${ loginMember.userNo } && msgBody.partUserNo == ${loginMember.userNo}) {
+					    			// 메세지 수신 => 채팅방 목록 새로고침
+					    			receiveInviteMsg(msgBody);
+					    			// 초대 받은 채팅방 구독
+					    			stompClient.subscribe("/topic/chat/room/" + msgBody.roomNo, function(msg) {
+					    				// 메세지 수신 처리
+					    				receiveMsg(msg);
+					    			}, { id: "room" + msgBody.roomNo})
+					    		}
+					    	} else {
+					    		// 공지사항, 일정 등록 알림인 경우
+					    		for (var i = 0; i < msgBody.teamMemberList.length; i++) {
+					    			if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
+							    		$("#alram").iziModal('open');
+							    		$("#alram_btn").on("click", function() {
+							    			// 알림의 noti_check_date update
+				    						$.ajax({
+													url: "${contextPath}/notification/checkDate"
+													, method: "post"
+													, data: {userNo: ${loginMember.userNo}}
+													, async: false
+													, success: function(result) {
+														if(result > 0) {
+															console.log("알림 조회 시간 update 성공");
+														}
+													}
+													, error: function() {
+														console.log("알림 조회 시간 update ajax 실패");
+													}
+												})
+							    			
+							    			location.href = msgBody.url;
+							    		})
+							    		// 읽지 않은 알림 조회 후 알림 목록에 추가 및 읽지 않은 알림 표시
+							    		setTimeout(function() {
+							    			selectAlram();
+							    		}, 3000);
+					    			}
+					    		}
+					    	} 
+					    })
+					    
+						})
+					})
+										
+					// 알림 스타일
+					$("#alram").iziModal({
+						title: '<h6>부서 알림 서비스</h6>'
+						, subtitle: '부서 알림이 등록되었습니다.'
+						, headerColor: '#FEEFAD'
+						, theme: 'light'
+						, radius: '2'
+						, arrowKeys: 'false'
+						, navigateCaption: 'false'
+						, timeout: '3000'
+						, timeoutProgressbar: 'true'
+						, timeoutProgressbarColor: '#FFFFFF'
+						, pauseOnHover: 'true'
+					})
+					
+					
+				</script>
 </body>
 </html>

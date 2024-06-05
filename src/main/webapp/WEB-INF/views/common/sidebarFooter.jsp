@@ -28,10 +28,12 @@
          <!-- Modal content -->
          <div class="m_content_style">
              <div class="people_list">
-                 <div class="search_bar form-outline" data-mdb-input-init style="margin-top: 15px;">
+                 <!--<div class="search_bar form-outline" data-mdb-input-init style="margin-top: 15px;">
+                     
                      <input type="text" id="name_search" class="form-control"/>
                      <label class="form-label" for="name_search">인물 검색</label>
-                 </div>
+                      
+                 </div>-->
                  <div class="btn_wrapper">
                      <button type="button" class="btn1 forget_btn" onclick="createChatRoom();">채팅하기</button>
                  </div>
@@ -50,7 +52,7 @@
 
                      <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0" style="height: 100%;">
 
-                         <h5 class="font-weight-bold mb-3 text-center text-lg-start" style="margin-top: 10px; margin-left: 20px;">Member
+                         <h5 class="font-weight-bold mb-3 text-center text-lg-start" style="margin-top: 10px; margin-left: 20px;">Messenger
                          </h5>
                          <div class="msg_btn_wrapper btn_wrapper">
                              <button data-izimodal-open="#people_list" class="btn1 forget_btn people_list_btn"><i
@@ -73,8 +75,14 @@
                      <div class="col-md-6 col-lg-7 col-xl-8 chatting_box">
 
                          <div class="chatting_history scrollbar">
+	                         	 <!--<div>
+	                         		<i class="fa-solid fa-comment-slash fa-8x"></i><br>
+	                         	 </div>
+	                         	 <div class="chatting_history_comment">
+	                         		<span>No Message</span>
+	                         	 </div> -->
                              <ul class="list-unstyled chat_msg_list">
-                                 <!-- 채팅 메세지 구역 -->                              
+                                 <!-- 채팅 메세지 구역 -->              
                              </ul>
                          </div>
 
@@ -239,15 +247,18 @@
 	   	   		  			for(let k = 0; k < map.memberList.length; k++) {
 	   	   		  				// 팀에 해당하는 팀원
 	   	   		  				if(map.teamList[j].code == map.memberList[k].teamCode) {
-	   	   		  					memberText += "<li class='list-group-item'>";
-	   	   		  					memberText += "<div class='pretty p-icon p-smooth'>";
-	   	   		  					memberText += "<input type='checkbox' value='" + map.memberList[k].userNo + "'/>";
-	   	   		  					memberText += "<div class='state p-success'>";
-	   	   		  					memberText += "<i class='icon fa fa-check'></i>"
-	   	   		  					memberText += "<label>" + map.memberList[k].position + " " + map.memberList[k].userName + "</label>";
-	   	   		  					memberText += "</div>";
-	   	   		  					memberText += "</div>";
-	   	   		  					memberText += "</li>";
+	   	   		  					// 로그인한 유저는 출력되지 않도록 수정
+	   	   		  					if(map.memberList[k].userNo != ${loginMember.userNo}) {
+		   	   		  					memberText += "<li class='list-group-item'>";
+		   	   		  					memberText += "<div class='pretty p-icon p-smooth'>";
+		   	   		  					memberText += "<input type='checkbox' value='" + map.memberList[k].userNo + "'/>";
+		   	   		  					memberText += "<div class='state p-success'>";
+		   	   		  					memberText += "<i class='icon fa fa-check'></i>"
+		   	   		  					memberText += "<label>" + map.memberList[k].position + " " + map.memberList[k].userName + "</label>";
+		   	   		  					memberText += "</div>";
+		   	   		  					memberText += "</div>";
+		   	   		  					memberText += "</li>";
+	   	   		  					}
 	   	   		  				}
 	   	   		  			}
 	   	   		  			memberText += "</ul>";
@@ -268,10 +279,10 @@
        })
        
        // 사원 이름으로 검색
-       $("#name_search").keypress(function() {
+       /*$("#name_search").keypress(function(e) {
     	   searchName($("#name_search").val());
     	   $("#name_search").val("");
-       })       
+       })*/    
     })
     
     /*==================================== 함수 구역 =======================================*/   
@@ -283,9 +294,6 @@
     		, data: {roomNo: roomNo, userNo: ${loginMember.userNo}}
     		, async:false
     		, success: function(result) {
-    			if(result == "SUCCESS") {
-    				console.log("접속시간 update 성공");
-    			}
     		}
     		,error: function() {
     			console.log("채팅방 접속 시간 수정 ajax 실패");
@@ -328,44 +336,49 @@
 	   		  , data: {roomNo : chatRoomList[i].chatRoomNo}
 	   		  , success: function(participantsList) {
 	   			  if (participantsList.length > 0) {
-	    			var chatRoomVal = "<li class='p-2 border-bottom chat_room chat_room_" + chatRoomList[i].chatRoomNo + "' onclick='selectChatMsg(event, " + chatRoomList[i].chatRoomNo + ")'>";
-	       	  chatRoomVal += "<a href='#!' class='d-flex justify-content-between'>";
-	       	  chatRoomVal += "<div class='d-flex flex-row'>";
-	       	  chatRoomVal += "<img style='height: 70px;' src='${contextPath}" + participantsList[0].profileURL + "'";
-	       	  chatRoomVal += "class='rounded-circle d-flex align-self-center me-3 shadow-1-strong'";
-	       	  chatRoomVal += "width='60' style='height: 70px'>";
-	       	  chatRoomVal += "<div class='pt-1'>";
-	       	  chatRoomVal += "<p class='fw-bold mb-0'>";
-	       	  for(var j = 0; j < (participantsList.length > 2 ? 2 : participantsList.length ); j++) {
-	       		  chatRoomVal += participantsList[j].userName + (j == (participantsList.length - 1) ? "" : ",");
-	       	  }
-	       	  chatRoomVal += "</p>";
-	       	  chatRoomVal += "<p class='small text-muted lastest_msg'></p>";
-	       	  chatRoomVal += "</div>";
-	       	  chatRoomVal += "</div>";
-	       	  chatRoomVal += "<div class='pt-1' id='chat_room_info" + chatRoomNo + "'>";
-	       	  chatRoomVal += "<p class='small text-muted mb-1'>" + participantsList.length + "명</p>";
-	       	  
-	       	  // 읽지 않은 메세지가 존재할 경우
-	       	  if (selectUnreadMsg(chatRoomNo) > 0) {
-	       		  
-	       		  // 처음 페이지를 새로고침해서 메신저를 열지 않은 경우 or 메신저를 닫아놓은 경우만 실행
-	       		  if(subRoomNo == -1 || subRoomNo == 0) {
-	       			  // 기존 알림 제거
-								$(".chat_alram").children().empty();
-								// 메신저 아이콘에 알림 표시 추가
-								$(".chat_alram").append("<span class='badge bg-danger float-end'>New</span>");
-	       		  }
-							
-							// 채팅방에 읽지 않은 메세지 표시
-	       			chatRoomVal += "<span class='badge bg-danger float-end'>" + selectUnreadMsg(chatRoomNo) + "</span>";
-	       	  }
-	       	  
-	       	  chatRoomVal += "</div>";
-	       	  chatRoomVal += "</a>";
-	       	  chatRoomVal += "</li>";
-	       	  $chatRoomUl.append(chatRoomVal);
-	   			  }
+	   				  if(chatRoomNo == subRoomNo) {
+	   					  var chatRoomVal = "<li class='p-2 selected border-bottom chat_room chat_room_" + chatRoomList[i].chatRoomNo + "' onclick='selectChatMsg(event, " + chatRoomList[i].chatRoomNo + ")'";
+	   				  } else {
+	   					var chatRoomVal = "<li class='p-2 border-bottom chat_room chat_room_" + chatRoomList[i].chatRoomNo + "' onclick='selectChatMsg(event, " + chatRoomList[i].chatRoomNo + ")'";
+	   				  }
+		    			chatRoomVal += ">";
+		       	  chatRoomVal += "<a href='#!' class='d-flex justify-content-between'>";
+		       	  chatRoomVal += "<div class='d-flex flex-row'>";
+		       	  chatRoomVal += "<img style='height: 70px;' src='${contextPath}" + participantsList[0].profileURL + "'";
+		       	  chatRoomVal += "class='rounded-circle d-flex align-self-center me-3 shadow-1-strong'";
+		       	  chatRoomVal += "width='60' style='height: 70px'>";
+		       	  chatRoomVal += "<div class='pt-1'>";
+		       	  chatRoomVal += "<p class='fw-bold mb-0'>";
+		       	  for(var j = 0; j < (participantsList.length > 2 ? 2 : participantsList.length ); j++) {
+		       		  chatRoomVal += participantsList[j].userName + (j == (participantsList.length - 1) ? "" : ",");
+		       	  }
+		       	  chatRoomVal += "</p>";
+		       	  chatRoomVal += "<p class='small text-muted lastest_msg'></p>";
+		       	  chatRoomVal += "</div>";
+		       	  chatRoomVal += "</div>";
+		       	  chatRoomVal += "<div class='pt-1' id='chat_room_info" + chatRoomNo + "'>";
+		       	  chatRoomVal += "<p class='small text-muted mb-1'>" + participantsList.length + "명</p>";
+		       	  
+		       	  // 읽지 않은 메세지가 존재할 경우
+		       	  if (selectUnreadMsg(chatRoomNo) > 0) {
+		       		  
+		       		  // 처음 페이지를 새로고침해서 메신저를 열지 않은 경우 or 메신저를 닫아놓은 경우만 실행
+		       		  if(subRoomNo == -1 || subRoomNo == 0) {
+		       			  // 기존 알림 제거
+									$(".chat_alram").children().empty();
+									// 메신저 아이콘에 알림 표시 추가
+									$(".chat_alram").append("<span class='badge bg-danger float-end'>New</span>");
+		       		  }
+								
+								// 채팅방에 읽지 않은 메세지 표시
+		       			chatRoomVal += "<span class='badge bg-danger float-end'>" + selectUnreadMsg(chatRoomNo) + "</span>";
+		       	  }
+		       	  
+		       	  chatRoomVal += "</div>";
+		       	  chatRoomVal += "</a>";
+		       	  chatRoomVal += "</li>";
+		       	  $chatRoomUl.append(chatRoomVal);
+		   			  }
 	   		  }
 	   		  , error: function(xhr, status, error){
 	   			    console.log(status, error);
@@ -470,16 +483,8 @@
 						          if(subRoomNo != -1 && subRoomNo != 0) {
 						        	  // 열어놓은 채팅방의 나간 시간 update
 						        	  updateOutDate(subRoomNo);
-						          } 
- 			    						
- 			    						// 1-2-2. 채팅방 구독
- 		 			    				stompClient.subscribe("/topic/chat/room/" + roomNo, function(msg) {
- 		 			    					receiveMsg(msg);
- 		 			    				}, { id: "room" + roomNo})
- 		 			    				// 1-2-3. 채팅방 목록 새로고침
- 			    						selectChatRoom();
- 		 			    				
- 		 			    				// 1-2-4. 입장 메세지 발송
+						          }  		 			    				
+ 		 			    				// 1-2-2. 입장 메세지 발송
  		 			    				// 메세지 발송 시간
  		 			    				var sendDate = dateFormat(new Date());
  		 				     			stompClient.send("/app/chat/invite", {}, JSON.stringify({userName: '${loginMember.userName}'
@@ -499,6 +504,14 @@
  			    			
  			    		}
  			    	})
+						
+						// 1-2-3. 채팅방 구독
+    				stompClient.subscribe("/topic/chat/room/" + roomNo, function(msg) {
+    					receiveMsg(msg);
+    				}, { id: "room" + roomNo})
+    				
+    				// 1-2-4. 채팅방 목록 새로고침
+						selectChatRoom();
    				}
    			}
    			, error: function() {
@@ -738,6 +751,14 @@
 					console.log("사원 검색 ajax 통신 실패");
 				}
 			})
+		}
+		
+		// 채팅 구역 초기화
+		function chattingHistoryInit() {
+			$(".chatting_history").empty();
+			var text = "<ul class='list-unstyled chat_msg_list'></ul>";
+			$(".chatting_history").append(text);
+			$(".chatting_history").removeClass("no_chatting_history");
 		}
 
 		// 날짜 형식 바꾸기
