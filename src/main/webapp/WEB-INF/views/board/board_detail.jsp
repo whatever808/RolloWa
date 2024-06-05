@@ -27,15 +27,22 @@
 	        <!-- board header area start -->
 	        <div class="board-header">
 					
-				<!-- header left area start -->
+							<!-- header left area start -->
 	            <div class="board-header-left">
 	            	<!-- board title -->
 	            	<div class="title">${ board.title }</div>
 						
-					<!-- board info area start  -->
+									<!-- board info area start  -->
 	                <div class="board-info">
 	                    <div class="info-first">
-                    		<img src="${ contextPath }/resources/images/defaultProfile.png" alt="profile image" class="writer-profile-image">
+	                    	<c:choose>
+	                    		<c:when test='${ empty board.profileURL }'>
+		                    		<img src="${ contextPath }/resources/images/defaultProfile.png" alt="profile image" class="writer-profile-image">
+	                    		</c:when>
+	                    		<c:otherwise>
+	                    			<img src="${ contextPath }${ board.profileURL }" alt="profile image" class="writer-profile-image">
+	                    		</c:otherwise>
+	                    	</c:choose>
                     		<label class="ms-2">${ board.writerName }</label>
 	                    </div>
 	                    <div class="info-middle">
@@ -204,7 +211,7 @@
 	    	},error:function(){
 	    		console.log("공지사항 목록조회 AJAX 실패");
 	    	}
-	    })
+	    });
 	    
 	 	 // 이전 | 다음 공지사항 페이지 이동
 	    function moveBoard(element, boardNo, boardWriter){
@@ -222,18 +229,18 @@
 	    // 임시저장으로 변경 or 공지사항 삭제요청시 요청사항 확인용 function ============================================================================
 	    $(".temp, .delete").on("click", function(){
 	    	let request = $(this).hasClass("delete") ? '삭제' : '임시저장';
-			if(confirm("공지사항을 " + request + " 하시겠습니까?")){
-				return true;
-			}
-			return false;
-	    })
+				if(confirm("공지사항을 " + request + " 하시겠습니까?")){
+					return true;
+				}
+				return false;
+	    });
 	    
-	})
+	});
 	
     // 현재 공지사항의 URL 파라미터값 스트링 객체
-	const urlParams = new URLSearchParams(location.search);
+		const urlParams = new URLSearchParams(location.search);
 	
-	// 이전 | 다음 공지사항 페이지 이동
+		// 이전 | 다음 공지사항 페이지 이동
     function moveBoard(element, boardNo, requestBoardWriter){
 		// 글번호 파라미터값 변경
 		urlParams.set("no", boardNo);

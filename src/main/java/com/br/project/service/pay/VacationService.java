@@ -167,4 +167,15 @@ public class VacationService {
 		return vacationDao.singConfirm(vacation);
 	}
 
+	public int requestRefuse(VacationDto vacation) {
+		return vacationDao.requestRefuse(vacation);
+	}
+	public int requestConfine(VacationDto vacation) {
+		return vacationDao.requestConfine(vacation);
+	}
+
+	public String selectUpperMember(int emp) {
+		return vacationDao.selectUpperMember(emp);
+	}
+
 }

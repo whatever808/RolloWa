@@ -176,6 +176,7 @@
 				,content
 				,modify_emp
 				,user_name		"writer_name"
+				,profile_url
 				,(
 					select code_name
 					  from tb_group

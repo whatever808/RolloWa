@@ -76,5 +76,17 @@ public class VacationDao {
 		return sqlSession.update("vacationMapper.singConfirm", vacation);
 	}
 
+	public int requestRefuse(VacationDto vacation) {
+		return sqlSession.update("vacationMapper.requestRefuse", vacation);
+	}
+
+	public int requestConfine(VacationDto vacation) {
+		return sqlSession.update("vacationMapper.requestConfine", vacation);
+	}
+
+	public String selectUpperMember(int emp) {
+		return sqlSession.selectOne("vacationMapper.selectUpperMember", emp);
+	}
+
 	
 }

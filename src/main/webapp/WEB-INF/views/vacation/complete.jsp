@@ -82,6 +82,15 @@
 	    font-style: italic;
     	text-align: start;
 }
+.greenCol{
+	 color: green;
+}
+.redCol{
+	    color: red;
+}
+.collaps_detail{
+	
+}
 </style>
 <!-- 부트스트랩 js 파일 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
@@ -157,9 +166,13 @@
 		<div>
 			<br>
 			<div style="text-align: center;" class="font-size20 jua-regular">
-			휴가신청을 하시겠습니까?
+			결재를 승인 하시겠습니까?
 			</div>
 			<input type="hidden" name="vacaNO">
+			<input type="hidden" name="member.userNo">
+			<input type="hidden" name="status">
+			<input type="hidden" name="vacaStart">
+			<input type="hidden" name="vacaEnd">
 		</div>
 	</div>
 	<div style="text-align: end;"><button type="button" class="btn btn-outline-success" onclick="singConfirm(this);">확인</button></div>
@@ -190,7 +203,7 @@
 				url:'${path}/vacation/vacationRequest.ajax',
 				type:'post',
 				data:'vacaGroupCode='+$('select').val()
-							+ '&page='+ page,
+							+ '&page=' + page,
 				success:function(map){
 					console.log(map);
 					creatTable(map.list);
@@ -202,19 +215,23 @@
 			})
 		}
 		
-		function singModal(num){
+		function singModal(vacaNO, userNO, status, start, end){
 			$(document).on('opening', '#sing_confirm', function (e) {
-			   $(this).find('input[name="vacaNO"]').val(num);
+			   $(this).find('input[name="vacaNO"]').val(vacaNO);
+			   $(this).find('input[name="member.userNo"]').val(userNO);
+			   $(this).find('input[name="status"]').val(status);
+			   $(this).find('input[name="vacaStart"]').val(start);
+			   $(this).find('input[name="vacaEnd"]').val(end);
 			});
-			$('#sing_confirm').iziModal('setTitle', num);
+			$('#sing_confirm').iziModal('setTitle', vacaNO);
 			$('#sing_confirm').iziModal('open');
 		}
 		
-		function deleteCheck(num){
+		function deleteCheck(vacaNO){
 			$(document).on('opening', '#RR_modal', function (e) {
-			   $(this).find('input[name="vacaNO"]').val(num);
+			   $(this).find('input[name="vacaNO"]').val(vacaNO);
 			});
-			$('#RR_modal').iziModal('setTitle', num);
+			$('#RR_modal').iziModal('setTitle', vacaNO);
 			$('#RR_modal').iziModal('open');
 		}
 		
@@ -241,7 +258,7 @@
 			$.ajax({
 				url:'${path}/vacation/singConfirm.ajax',
 				type:'post',
-				data:'vacaNO='+$('#sing_confirm').find('input[name="vacaNO"]').val(),
+				data:$('#sing_confirm').serialize(),
 				success:function(e){
 					if(e > 0){
 						greenAlert('승인 요청', '승인이 완료 되었습니다.');
@@ -273,6 +290,7 @@
 			if (list.length != 0) {
 				let count = 0;
 				list.forEach((e) => {
+					let checkRe = (e.rrequestComent == null);
 					tableEl += '<tr data-toggle="collapse" data-target="#collapse'+ count +'"><td>'
 									+ e.vacaNO
 									+ '</td>'
@@ -284,21 +302,23 @@
 									+ e.vacaStart.slice(0,10) +' ~ '+ e.vacaEnd.slice(0,10)
 									+ '</td>'
 									+ '<td><div style="display: flex;gap: 5px;justify-content: center;">'
-									+ '<button class="btn btn-outline-success" onclick="singModal('+ e.vacaNO +');">승인</button>'
+									+ '<button class="btn btn-outline-success" onclick="singModal('+ e.vacaNO +','+ e.member.userNo +','+ checkRe +','+"'"+ e.vacaStart.slice(0, 10) +"'"+','+"'"+ e.vacaEnd.slice(0, 10)+"'" +');">승인</button>'
 									+ '<button class="btn btn-outline-danger" onclick="deleteCheck('+ e.vacaNO +');">반려</button></td></div>'
 									+ '</tr>'
 									+ '<tr id="collapse'+ count +'" class="collapse">'
-									+ '<td colspan="5"><div class="collapse_font">'
-									+ ((e.rrequestComent == null) ? '신청 사유 : 휴가 신청': '신청 사유 : ' + e.rrequestComent)
-									+ '</div>';
+									+ '<td colspan="5"><div class="collaps_detail" style="display: grid; grid-template-columns: 50% 50%;">'
+									+ '<div>'
+									+ '<div class="collapse_font '+ (checkRe ? 'greenCol' : 'redCol') +'">'+ (checkRe ? '신청 사유 : <b>휴가 신청</b>': '신청 사유 : <b>' + e.rrequestComent) + '</div>'
+									+ '<div class="collapse_font">신청자 : ' + e.member.userName + '</div>'
+									+'</div>';
 									if(e.attach.length != 0){
+										tableEl += '<div class="collapse_font">';
 										e.attach.forEach((arr) => {
-											tableEl += '<div class="collapse_font">'
-															+ '<a href="${path}'+ arr.attachPath+"/"+ arr.modifyName+ '" download="'+ arr.originName+'">'+ arr.originName+'</a>'
-															+ '</div>';
+											tableEl += '<a href="${path}'+ arr.attachPath+"/"+ arr.modifyName+ '" download="'+ arr.originName+'">'+ arr.originName+'</a><br>'
 										})
+										tableEl +='</div>';
 									}
-									tableEl += '</td></tr>';
+									tableEl += '</div></td></tr>';
 									count++;			
 				})
 			} else {

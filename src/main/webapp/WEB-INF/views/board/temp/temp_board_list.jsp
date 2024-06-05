@@ -187,7 +187,7 @@
 		})
 		
 		// "키워드검색" 게시글 목록조회 요청했을 경우, 검색값 지정
-		if("${ filter.condition }".length != 0 && "${ filter.keyword != ''}".length != 0){
+		if("${ filter.condition }".length != 0 && "${ filter.keyword }".length != 0){
 			$("#condition").children("option").first().val("all");
 			
 			// 1) 검색값 노출

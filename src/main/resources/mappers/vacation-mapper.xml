@@ -17,6 +17,7 @@
 		<result column="UPPER_CODE" 					property="upperCode" />
 	</collection>
 	<collection ofType="MemberDto" 					property="member">
+		<result column="USER_NO" 							property="userNo"/>
 		<result column="USER_NAME" 						property="userName"/>
 	</collection>	
 	<collection ofType="AttachmentDto" 			property="attach">
@@ -69,6 +70,7 @@ VACATION_NO
 ,VACATION_END
 ,VACATION_COMMNET
 ,VACATION_COLOR
+,SIGN_MEMBER
 ,REGIST_EMP
 ,MODIFY_EMP
 ,GROUP_CODE
@@ -78,6 +80,7 @@ VACATION_NO
 	, to_date(#{vacaEnd}   , 'YYYY-MM-DD HH24:MI:SS')
 	, #{vacaComment}
 	, #{vacaColor}
+	, #{signMember}
 	, #{member.userNo}
 	, #{member.userNo}
 	, #{group.code} 
@@ -211,6 +214,8 @@ select
     , VACATION_END
     , VACATION_COLOR
     , R_REQUEST_COMMENT
+    , REGIST_EMP "USER_NO"
+    , (select USER_NAME from member m where m.user_no = v.REGIST_EMP) "USER_NAME"
     , GROUP_CODE
     , ORIGIN_NAME 
     , MODIFY_NAME
@@ -250,5 +255,33 @@ order by
 	where 
 		VACATION_NO = #{vacaNO}
 	</update>
+	
+	<update id="requestRefuse">
+		update 
+			member
+		set 
+		     VACATION_COUNT = VACATION_COUNT + (to_date(#{vacaEnd}) - to_date(#{vacaStart}) + 1)
+		     ,  USING_DTAE = USING_DTAE - (to_date(#{vacaEnd}) - to_date(#{vacaStart}) + 1)   
+		where 
+			user_no = #{member.userNo}
+	</update>
+	
+	<update id="requestConfine">
+		update 
+			member
+		set 
+		     VACATION_COUNT = VACATION_COUNT - (to_date(#{vacaEnd}) - to_date(#{vacaStart}) + 1)
+		     ,  USING_DTAE = USING_DTAE + (to_date(#{vacaEnd}) - to_date(#{vacaStart}) + 1)   
+		where 
+			user_no = #{member.userNo}
+	</update>
+	
+	<select id="selectUpperMember" resultType="string">
+	select 
+		user_no
+	from member
+	where team_code = (select team_code from member where user_no = #{emp})
+	and position_code = 'E'
+	</select>
 
 </mapper>

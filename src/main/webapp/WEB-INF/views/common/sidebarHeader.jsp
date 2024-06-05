@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath" value="${ pageContext.request.contextPath }" />
 <!DOCTYPE html>
@@ -7,356 +7,369 @@
 <head>
 <meta charset="UTF-8">
 <title>SideBar</title>
-    <!-- bootstrap -->
-    <link href="${ contextPath }/resources/css/common/bootstrap.min.css" rel="stylesheet">
+<!-- bootstrap -->
+<link href="${ contextPath }/resources/css/common/bootstrap.min.css"
+	rel="stylesheet">
 
-    <!-- fontawesome -->
-    <script src="https://kit.fontawesome.com/12ec987af7.js" crossorigin="anonymous"></script>
+<!-- fontawesome -->
+<script src="https://kit.fontawesome.com/12ec987af7.js"
+	crossorigin="anonymous"></script>
 
-    <!-- Google Fonts Roboto -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+<!-- Google Fonts Roboto -->
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
 
-    <!-- Google Fonts Jua -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<!-- Google Fonts Jua -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
+	rel="stylesheet">
 
- 		<!-- socket 통신을 위한 js -->
-    <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- socket 통신을 위한 js -->
+<script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
+	integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!-- jQuery -->
-    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- jQuery -->
+<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <!-- 모달 관련 -->
-    <script src="${ contextPath }/resources/js/iziModal.min.js"></script>
-    <link rel="stylesheet" href="${ contextPath }/resources/css/iziModal.min.css">
+<!-- 모달 관련 -->
+<script src="${ contextPath }/resources/js/iziModal.min.js"></script>
+<link rel="stylesheet"
+	href="${ contextPath }/resources/css/iziModal.min.css">
 
-    <!-- 체크박스 관련 스타일 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
-    
-    <!-- alertify -->
-     <script src="${ contextPath }/resources/alertify/js/alertify.min.js"></script>
-		 <link href="${contextPath}/resources/alertify/css/alertify.min.css" rel="stylesheet">
-		 <link href="${contextPath}/resources/alertify/css/default.min.css" rel="stylesheet">
-		 <link href="${contextPath}/resources/alertify/css/semantic.min.css" rel="stylesheet">
+<!-- 체크박스 관련 스타일 -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
 
-    <!-- css -->
-    <link href="${ contextPath }/resources/css/common/sidebars.css" rel="stylesheet">
-    <link rel="stylesheet" href="${ contextPath }/resources/css/common.css">
-    <link rel="stylesheet" href="${ contextPath }/resources/css/common/mdb.min.css" />
-    <style>
-   		  ::-webkit-scrollbar {
-			    width: 15px;
-			    height: 30px;
-			  }
-			  ::-webkit-scrollbar-thumb {
-			    background: linear-gradient(180deg, rgb(255 255 255) , rgb(255, 247, 208) 30%, rgb(255 230 109) 50%, rgb(255, 247, 208) 70%, rgb(255 255 255) );
-			    border-radius: 20px;
-			    background-clip: padding-box;
-			    border: 2px solid transparent;
-			  }
-			  ::-webkit-scrollbar-track {
-			    background-color: rgb(256, 256, 256, 0.4);
-			    border-radius: 20px;
-			    box-shadow: inset 0px 0px 5px white;
-			  }
-        .b-example-divider {
-            width: 100%;
-            height: 3rem;
-            background: rgb(255, 247, 208);
-            /* background: linear-gradient(90deg, rgba(255, 247, 208, 1) 0%, rgba(254, 239, 173, 1) 46%, rgba(248, 255, 140, 1) 100%); */
-            border: solid rgba(0, 0, 0, .15);
-            border-width: 1px 0;
-            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-        }
+<!-- alertify -->
+<script src="${ contextPath }/resources/alertify/js/alertify.min.js"></script>
+<link href="${contextPath}/resources/alertify/css/alertify.min.css"
+	rel="stylesheet">
+<link href="${contextPath}/resources/alertify/css/default.min.css"
+	rel="stylesheet">
+<link href="${contextPath}/resources/alertify/css/semantic.min.css"
+	rel="stylesheet">
 
-        .bi {
-            vertical-align: -.125em;
-            fill: currentColor;
-        }
+<!-- css -->
+<link href="${ contextPath }/resources/css/common/sidebars.css"
+	rel="stylesheet">
+<link rel="stylesheet" href="${ contextPath }/resources/css/common.css">
+<link rel="stylesheet"
+	href="${ contextPath }/resources/css/common/mdb.min.css" />
+<style>
+::-webkit-scrollbar {
+	width: 15px;
+	height: 30px;
+}
+::-webkit-scrollbar-thumb {
+	background: linear-gradient(180deg, rgb(255 255 255), rgb(255, 247, 208)
+		30%, rgb(255, 230, 109) 50%, rgb(255, 247, 208) 70%,
+		rgb(255, 255, 255));
+	border-radius: 20px;
+	background-clip: padding-box;
+	border: 2px solid transparent;
+}
 
-        .nav-scroller {
-            position: relative;
-            z-index: 2;
-            height: 2.75rem;
-            overflow-y: hidden;
-        }
+::-webkit-scrollbar-track {
+	background-color: rgb(256, 256, 256, 0.4);
+	border-radius: 20px;
+	box-shadow: inset 0px 0px 5px white;
+}
 
-        .nav-scroller .nav {
-            display: flex;
-            flex-wrap: nowrap;
-            padding-bottom: 1rem;
-            margin-top: -1px;
-            overflow-x: auto;
-            text-align: center;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-        }
+.b-example-divider {
+	width: 100%;
+	height: 3rem;
+	background: rgb(255, 247, 208);
+	/* background: linear-gradient(90deg, rgba(255, 247, 208, 1) 0%, rgba(254, 239, 173, 1) 46%, rgba(248, 255, 140, 1) 100%); */
+	border: solid rgba(0, 0, 0, .15);
+	border-width: 1px 0;
+	box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em
+		rgba(0, 0, 0, .15);
+}
 
-        .active .bi {
-            display: block !important;
-        }
+.bi {
+	vertical-align: -.125em;
+	fill: currentColor;
+}
 
-        .msg_open_btn,
-        .msg_close_btn {
-            position: fixed;
-            right: 30px;
-            bottom: 30px;
-            cursor: pointer;
-            color: #FEEFAD;
-            z-index: 10;
-        }
-        
-        .chat_alram {
-        	position: fixed;
-       		bottom: 90px;
-    			right: 20px;
-    			cursor: pointer;
-    			z-index: 10;
-        }
+.nav-scroller {
+	position: relative;
+	z-index: 2;
+	height: 2.75rem;
+	overflow-y: hidden;
+}
 
-        .msg_open_btn:hover,
-        .msg_close_btn:hover {
-            color: #ffe367;
-        }
+.nav-scroller .nav {
+	display: flex;
+	flex-wrap: nowrap;
+	padding-bottom: 1rem;
+	margin-top: -1px;
+	overflow-x: auto;
+	text-align: center;
+	white-space: nowrap;
+	-webkit-overflow-scrolling: touch;
+}
 
-        .msg_close_btn {
-            display: none;
-        }
+.active .bi {
+	display: block !important;
+}
 
-        .msg_open_btn>a,
-        .msg_close_btn>a {
-            color: black;
-        }
+.msg_open_btn, .msg_close_btn {
+	position: fixed;
+	right: 30px;
+	bottom: 30px;
+	cursor: pointer;
+	color: #FEEFAD;
+	z-index: 10;
+}
 
-        .mb-1>button {
-            box-shadow: none;
-        }
+.chat_alram {
+	position: fixed;
+	bottom: 90px;
+	right: 20px;
+	cursor: pointer;
+	z-index: 10;
+}
 
-        /* content의 height와 height 값을 동일하게 */
-        .b-example-vr {
-            flex-shrink: 0;
-            width: 1.5rem;
-            height: 110em;
-        }
+.msg_open_btn:hover, .msg_close_btn:hover {
+	color: #ffe367;
+}
 
-        .content {
-            height: 1200px;
-            width: 1500px;
-        }
+.msg_close_btn {
+	display: none;
+}
 
+.msg_open_btn>a, .msg_close_btn>a {
+	color: black;
+}
 
-        /* 채팅 스타일 */
-        .msgbox {
-            height: 900px;
-            width: 1000px;
-            border-radius: 10px;
-            position: fixed;
-            right: 80px;
-            bottom: 30px;
-            opacity: 0;
-            flex-direction: column;
-            overflow: auto;
-            overflow-x: none;
-            z-index: -1;
-            transition-property: opacity;
-            transition-duration: 0.3s;
-            background: #eee;
-        }
+.mb-1>button {
+	box-shadow: none;
+}
 
-        .people_list {
-            height: 500px;
-            overflow: scroll;
-            overflow-x: hidden;
-        }
+/* content의 height와 height 값을 동일하게 */
+.b-example-vr {
+	flex-shrink: 0;
+	width: 1.5rem;
+	height: 110em;
+}
 
-        /* 채팅방 리스트 */
-        .chat_room {
-        	border-radius: 5px;
-        }
-        
-        .chat_room:hover {
-            background-color: #eeeeee;
-        }
+.content {
+	height: 1200px;
+	width: 1500px;
+}
 
-        .chat_room_active {
-            background-color: #dddddd;
-        }
-        
-        .selected {
-        	background-color: #eeeeee;
-        }
+/* 채팅 스타일 */
+.msgbox {
+	height: 900px;
+	width: 1000px;
+	border-radius: 10px;
+	position: fixed;
+	right: 80px;
+	bottom: 30px;
+	opacity: 0;
+	flex-direction: column;
+	overflow: auto;
+	overflow-x: none;
+	z-index: -1;
+	transition-property: opacity;
+	transition-duration: 0.3s;
+	background: #eee;
+}
 
-        .card-body {
-            padding: 10px;
-        }
+.people_list {
+	height: 500px;
+	overflow: scroll;
+	overflow-x: hidden;
+}
 
-        /* 채팅방 리스트 끝 */
+/* 채팅방 리스트 */
+.chat_room {
+	border-radius: 5px;
+}
 
-        /* 인물 목록 */
-        .people_list {
-            display: flex;
-            flex-direction: column;
-        }
+.chat_room:hover {
+	background-color: #eeeeee;
+}
 
-        .search_bar {
-            height: 10%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+.chat_room_active {
+	background-color: #dddddd;
+}
 
-        .dept_list_wrapper {
-            height: 90%;
-            display: flex;
-            flex-direction: column;
-        }
+.selected {
+	background-color: #eeeeee;
+}
 
-        .dept_list {
-            display: flex;
-            flex-direction: column;
-            height: 40px;
-        }
+.card-body {
+	padding: 10px;
+}
 
-        .dept {
-            height: 40px;
-            width: 100%;
-            font-size: 15px;
-        }
+/* 채팅방 리스트 끝 */
 
-        .team {
-            /* height: 30px; */
-            font-size: 15px;
-            padding: 0;
-            margin: 10px;
-            font-family: "Jua", sans-serif;
-        }
+/* 인물 목록 */
+.people_list {
+	display: flex;
+	flex-direction: column;
+}
 
-        .chatting_btn {
-            margin-left: 150px;
-        }
+.search_bar {
+	height: 10%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
-        .team_list {
-            display: flex;
-            justify-content: center;
-        }
+.dept_list_wrapper {
+	height: 90%;
+	display: flex;
+	flex-direction: column;
+}
 
-        /* 인물 목록 끝 */
+.dept_list {
+	display: flex;
+	flex-direction: column;
+	height: 40px;
+}
 
-        /* 채팅방 버튼 */
-        .chat_btn {
-            border: 1px solid blue;
-            height: 100px;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-        }
+.dept {
+	height: 40px;
+	width: 100%;
+	font-size: 15px;
+}
 
-        .pl_btn,
-        .cr_btn {
-            border-radius: 25px;
-            --bs-btn-bg: #72abff;
-            --bs-btn-border-color: #72abff;
-            --bs-btn-hover-bg: #4992ff;
-            margin: 0 15px;
-        }
+.team {
+	/* height: 30px; */
+	font-size: 15px;
+	padding: 0;
+	margin: 10px;
+	font-family: "Jua", sans-serif;
+}
 
-        .msg_btn_wrapper {
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-        }
+.chatting_btn {
+	margin-left: 150px;
+}
 
-        .btn-outline-info {
-            --mdb-btn-bg: transparent;
-            --mdb-btn-color: #0e1010;
-            --mdb-btn-hover-bg: #f6fbfd;
-            --mdb-btn-hover-color: #0e1010;
-            --mdb-btn-focus-bg: #f6fbfd;
-            --mdb-btn-focus-color: #0e1010;
-            --mdb-btn-active-bg: #f6fbfd;
-            --mdb-btn-active-color: #0e1010;
-            --mdb-btn-outline-border-color: #FEEFAD;
-            --mdb-btn-outline-focus-border-color: #ffd000;
-            --mdb-btn-outline-hover-border-color: #ffe367;
-        }
+.team_list {
+	display: flex;
+	justify-content: center;
+}
 
-        .btn1 {
-            height: 35px;
-        }
+/* 인물 목록 끝 */
 
-        /* 채팅방 버튼 끝 */
+/* 채팅방 버튼 */
+.chat_btn {
+	border: 1px solid blue;
+	height: 100px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
 
-        /* 채팅방 */
-        .chatting {
-            display: block;
-        }
+.pl_btn, .cr_btn {
+	border-radius: 25px; -
+	-bs-btn-bg: #72abff; -
+	-bs-btn-border-color: #72abff; -
+	-bs-btn-hover-bg: #4992ff;
+	margin: 0 15px;
+}
 
-        .chatting_box {
-            margin-top: 50px;
-            height: 800px;
-            display: flex;
-            flex-direction: column;
-        }
-        .chatting_history {
-            height: 80%;
-            overflow: auto;
-            padding : 10px;
-        }
-        
-        .chatting_history_comment {
-            margin-top: 10px;
-				    font-size: 25px;
-        }
+.msg_btn_wrapper {
+	height: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
 
-        .msg_send_box {
-            height: 20%;
-            padding-top: 20px;
-        }
+.btn-outline-info { -
+	-mdb-btn-bg: transparent; -
+	-mdb-btn-color: #0e1010; -
+	-mdb-btn-hover-bg: #f6fbfd; -
+	-mdb-btn-hover-color: #0e1010; -
+	-mdb-btn-focus-bg: #f6fbfd; -
+	-mdb-btn-focus-color: #0e1010; -
+	-mdb-btn-active-bg: #f6fbfd; -
+	-mdb-btn-active-color: #0e1010; -
+	-mdb-btn-outline-border-color: #FEEFAD; -
+	-mdb-btn-outline-focus-border-color: #ffd000; -
+	-mdb-btn-outline-hover-border-color: #ffe367;
+}
 
-        /* 채팅방 스타일 끝 */
-        
-        /* 채팅 메세지 스타일 */
-        .fromMe {
-        	background-color: #fff8e3;
-    			color: #444444;
-        }
-        
-        /* 채팅 메세지 스타일 끝 */
-        
-    </style>
+.btn1 {
+	height: 35px;
+}
+
+/* 채팅방 버튼 끝 */
+
+/* 채팅방 */
+.chatting {
+	display: block;
+}
+
+.chatting_box {
+	margin-top: 50px;
+	height: 800px;
+	display: flex;
+	flex-direction: column;
+}
+
+.chatting_history {
+	height: 80%;
+	overflow: auto;
+	padding: 10px;
+}
+
+.msg_send_box {
+	height: 20%;
+	padding-top: 20px;
+}
+
+/* 채팅방 스타일 끝 */
+
+/* 채팅 메세지 스타일 */
+.fromMe {
+	background-color: #fff8e3;
+	color: #444444;
+}
+
+/* 채팅 메세지 스타일 끝 */
+</style>
 <style>
 #main_logo span:hover {
-  position: relative;
-  top: 3px;
-  display: inline-block;
-  -webkit-font-smoothing: antialiased;
-  animation: bounce 0.3s ease infinite alternate;
-}
-#main_logo span{
-	animation-delay: 0.1s;
-}
-#main_logo span{
-	background: linear-gradient(to left, #f6eec9, #dfc853 70%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-@keyframes bounce {
-  100% {top: -3px;}
-}
-.allposition{
-	display: flex;
+	position: relative;
+	top: 3px;
+	display: inline-block;
+	-webkit-font-smoothing: antialiased;
+	animation: bounce 0.3s ease infinite alternate;
 }
 
+#main_logo span {
+	animation-delay: 0.1s;
+}
+
+#main_logo span {
+	background: linear-gradient(to left, #f6eec9, #dfc853 70%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+@
+keyframes bounce { 100% {
+	top: -3px;
+}
+
+}
+.allposition {
+	display: flex;
+}
 </style>
 </head>
 <body class="allposition">
 
-<script>
+	<script>
 $(document).ready(function(){
 	if(${ alertMsg != null }){
 		switch ('${ modalColor }'){
@@ -374,12 +387,12 @@ $(document).ready(function(){
 	})
 </script>
 
-<main class="d-flex flex-nowrap"></main>
+	<main class="d-flex flex-nowrap"></main>
 	<!-- 알림창 div -->
-    <div id="redModal"></div>
-    <div id="greenModal"></div>
-    <div id="yellowModal"></div>  
-    <script>
+	<div id="redModal"></div>
+	<div id="greenModal"></div>
+	<div id="yellowModal"></div>
+	<script>
 	    $('#redModal').iziModal({
 	        headerColor: '#dc3545',
 	        timeout: 3000,
@@ -419,110 +432,112 @@ $(document).ready(function(){
           $('#yellowModal').iziModal('open');
       };
     </script>
-	
-        <div class="flex-shrink-0 p-3" style="width: 280px;">
-            <a href="${contextPath}/"
-                class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
-                <svg class="bi pe-none me-2" width="30" height="24">
+
+	<div class="flex-shrink-0 p-3" style="width: 280px;">
+		<a href="${contextPath}/"
+			class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+			<svg class="bi pe-none me-2" width="30" height="24">
                     <use xlink:href="#bootstrap" />
-                </svg>
-                <span id="main_logo" class="fs-5 fw-semibold font-size25 jua-regular">
-	                <span>RoLLoWa</span>
-                </span>
-            </a>
-            
-            <ul class="list-unstyled ps-0">              
-                <!-- ======================================= "가림" 구역 start ======================================= -->
-                <!-- ======================================= 게시판 관련 start ======================================= -->
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#board-collapse" aria-expanded="false">
-                        게시판
-                    </button>
-                    <div class="collapse" id="board-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                        	
-                            <li><a href="${ contextPath }/board/list.do"
-                                   class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 조회</a>
-                            </li>
-                            <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
-                          	 <li><a href="${ contextPath }/board/post.page"
-                                  class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항 등록</a>
-                          	 </li>
-                            
-                            <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
-                            <li><a href="${ contextPath }/board/publisher/list.do?page=1&category=normal&department=&condition=&keyword="
-                                   class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">등록공지보관함</a>
-                            </li>
-                            
-                            <!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
-                            <li><a href="${ contextPath }/board/temp/list.do?page=1&category=normal&department=&condition=&keyword="
-                                   class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">임시공지보관함</a>
-                            </li>
-                            
-                            <!--
+                </svg> <span id="main_logo"
+			class="fs-5 fw-semibold font-size25 jua-regular"> <span>RoLLoWa</span>
+		</span>
+		</a>
+
+		<ul class="list-unstyled ps-0">
+			<!-- ======================================= "가림" 구역 start ======================================= -->
+			<!-- ======================================= 게시판 관련 start ======================================= -->
+			<li class="mb-1">
+				<button
+					class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+					data-bs-toggle="collapse" data-bs-target="#board-collapse"
+					aria-expanded="false">게시판</button>
+				<div class="collapse" id="board-collapse">
+					<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+						<li><a href="${ contextPath }/board/list.do"
+							class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항
+								조회</a></li>
+						<!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
+						<li><a href="${ contextPath }/board/post.page"
+							class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항
+								등록</a></li>
+
+						<!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
+						<li><a
+							href="${ contextPath }/board/publisher/list.do?page=1&category=normal&department=&condition=&keyword="
+							class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">등록공지보관함</a>
+						</li>
+
+						<!-- 글작성 권한을 가진 부장 or 사장일 경우 보여짐 -->
+						<li><a
+							href="${ contextPath }/board/temp/list.do?page=1&category=normal&department=&condition=&keyword="
+							class="board-publisher d-none link-body-emphasis d-inline-flex text-decoration-none rounded">임시공지보관함</a>
+						</li>
+
+						<!--
                             <li><a href="#"
                                     class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
                             </li>
                             -->
-                        </ul>
-                    </div>
-                </li>
-             <!-- ======================================= 게시판 관련 end ======================================= -->
-             <!-- ======================================= 어트랙션 관련 start ======================================= -->
-              <li class="mb-1">
-                  <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                      data-bs-toggle="collapse" data-bs-target="#attraction-collapse" aria-expanded="false">
-                      어트랙션
-                  </button>
-                  <div class="collapse" id="attraction-collapse">
-                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+					</ul>
+				</div>
+			</li>
+			<!-- ======================================= 게시판 관련 end ======================================= -->
+			<!-- ======================================= 어트랙션 관련 start ======================================= -->
+			<li class="mb-1">
+				<button
+					class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+					data-bs-toggle="collapse" data-bs-target="#attraction-collapse"
+					aria-expanded="false">어트랙션</button>
+				<div class="collapse" id="attraction-collapse">
+					<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 
-                          <li><a href="${ contextPath }/attraction/list.do"
-                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 조회</a>
-                          </li>
-                          
-                          <li><a href="${ contextPath }/attraction/utilization.do"
-                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 이용률</a>
-                          </li> 
+						<li><a href="${ contextPath }/attraction/list.do"
+							class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션
+								조회</a></li>
 
-                          <li><a href="${ contextPath }/attraction/regist.page"
-                                 class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 등록</a>
-                          </li>
+						<li><a href="${ contextPath }/attraction/utilization.do"
+							class="link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션
+								이용률</a></li>
 
-                          <li><a href="${ contextPath }/attraction/manage/list.do"
-                                 class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션 관리</a>
-                          </li>
+						<li><a href="${ contextPath }/attraction/regist.page"
+							class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션
+								등록</a></li>
+
+						<li><a href="${ contextPath }/attraction/manage/list.do"
+							class="attraction-manager d-none link-body-emphasis d-inline-flex text-decoration-none rounded">어트랙션
+								관리</a></li>
 
 
-                      </ul>
-                  </div>
-              </li>
-              <!-- ======================================= 어트랙션 관련 end ======================================= -->
-              <!-- ======================================= 매출관리 관련 start ======================================= -->
-              <li class="mb-1">
-                  <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                      data-bs-toggle="collapse" data-bs-target="#sales-collapse" aria-expanded="false">
-                      매출관리
-                  </button>
-                  <div class="collapse" id="sales-collapse">
-                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+					</ul>
+				</div>
+			</li>
+			<!-- ======================================= 어트랙션 관련 end ======================================= -->
+			<!-- ======================================= 매출관리 관련 start ======================================= -->
+			<li class="mb-1">
+				<button
+					class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+					data-bs-toggle="collapse" data-bs-target="#sales-collapse"
+					aria-expanded="false">매출관리</button>
+				<div class="collapse" id="sales-collapse">
+					<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 
-                          <li><a href="${ contextPath }/sales/ticket.do"
-                                 class="link-body-emphasis d-inline-flex text-decoration-none rounded">이용권 매출조회</a>
-                          </li>
-                          
-                      </ul>
-                  </div>
-              </li>
-              <!-- ======================================= 매출관리 관련 end ======================================= -->
-              <script>
+						<li><a href="${ contextPath }/sales/ticket.do"
+							class="link-body-emphasis d-inline-flex text-decoration-none rounded">이용권
+								매출조회</a></li>
+
+					</ul>
+				</div>
+			</li>
+			<!-- ======================================= 매출관리 관련 end ======================================= -->
+			<script>
                 $(document).ready(function(){
                   // 로그인 회원 정보조회
                   $.ajax({
                       url:"${ contextPath }/member/memInfo.do",
                       method:"get",
                       data:"userId=${ loginMember.userNo }",
+                      async:false,
                       success:function(memInfo){
                         // 직급이 부장 or 사장일 경우에만 공지사항 관리자 메뉴 노출
                         if(memInfo.positionCode == 'E' || memInfo.positionCode == 'F'){
@@ -539,36 +554,38 @@ $(document).ready(function(){
                     })
                 })
               </script>
-              <!-- ======================================= "가림" 구역 end ======================================= -->
+			<!-- ======================================= "가림" 구역 end ======================================= -->
 
-				<!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
-                <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#org-collapse" aria-expanded="false">
-                        조직안내
-                    </button>
-                    <div class="collapse" id="org-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li>
-                            	<a href="${ contextPath }/organization/chart.page" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
-                            </li>
-                            <li>
-                            	<a href="${ contextPath }/organization/list.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원 검색</a>
-                            </li>
-                            <li class="onlyManagerShow">
-                            	<a href="${ contextPath }/organization/manager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직 관리</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                
-                <script>
+			<!--◆◇◆◇◆◇◆◇◆◇◆◇ 김호관 사이드바 start ◆◇◆◇◆◇◆◇◆◇◆◇-->
+			<li class="mb-1">
+				<button
+					class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+					data-bs-toggle="collapse" data-bs-target="#org-collapse"
+					aria-expanded="false">조직안내</button>
+				<div class="collapse" id="org-collapse">
+					<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+						<li><a href="${ contextPath }/organization/chart.page"
+							class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직도</a>
+						</li>
+						<li><a href="${ contextPath }/organization/list.do"
+							class="link-body-emphasis d-inline-flex text-decoration-none rounded">직원
+								검색</a></li>
+						<li class="onlyManagerShow"><a
+							href="${ contextPath }/organization/manager.do"
+							class="link-body-emphasis d-inline-flex text-decoration-none rounded">조직
+								관리</a></li>
+					</ul>
+				</div>
+			</li>
+
+			<script>
                 $(document).ready(function(){
                     $.ajax({
                         url:"${ contextPath }/member/selectAuthLevel.do",
                         method:"GET",
                         data:{ userNo: "${ loginMember.userNo }" },
                         dataType: "json",
+                        async:false,
                         success:function(result){
                         	//console.log("통신 성공");
                         	//console.log("result : ", result);
@@ -765,8 +782,15 @@ $(document).ready(function(){
         </div>
 								
         <div class="b-example-divider b-example-vr"></div>
-				<script>
-					var alram;
+    	<!-- socket 통신을 위한 js -->
+        <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+        <script>
+
+        /* ========================== "가림" 구역 ========================== */
+           loginLogout = new SockJS("${contextPath}/onoff");
+        /* ========================== "가림" 구역 ========================== */
+
+          var alram;
 					var chatting;
 					var stompClient;
 					
@@ -790,7 +814,86 @@ $(document).ready(function(){
 						// 채팅용 웹소켓 연결
 						chatting = new SockJS("${contextPath}/chatting");
 						stompClient = Stomp.over(chatting);
-						
+            
+       // Auto Reconnect
+      stompClient.reconnect_delay = 300000;
+      // 디버깅 방법 설정
+      stompClient.debug = function(str) {
+          // append the debug log
+      };
+      stompClient.connect({}, function(frame) {
+        // 구독 중인 채팅방 목록 조회
+        $.ajax({
+          url: "${contextPath}/chat/rooms"
+          , method: "get"
+          , async: false
+          , success: function(result) {					    		
+            // 참여중인 채팅방 구독
+            for(var i = 0; i < result.length; i++) {
+              stompClient.subscribe("/topic/chat/room/" + result[i].chatRoomNo, function(msg) {
+                // 메세지 수신 처리
+                receiveMsg(msg);
+              }, { id: "room" + result[i].chatRoomNo})
+            }
+            selectChatRoom();
+          }
+          , error: function() {
+            console.log("채팅방 목록 조회 ajax 통신 실패");
+          }
+        })
+
+        // 알림용 주소 구독
+        stompClient.subscribe("/topic/chat/alram", function(msg) {
+          // 문자열을 json으로 변환
+          const msgBody = JSON.parse(msg.body);
+
+          if(msgBody.flag == 0) {
+            // 채팅방 초대 알림인 경우
+            if(msgBody.userNo != ${loginMember.userNo}) {
+              // 메세지 수신 => 채팅방 목록 새로고침
+              receiveInviteMsg(msgBody);
+              // 초대 받은 채팅방 구독
+              stompClient.subscribe("/topic/chat/room/" + msgBody.roomNo, function(msg) {
+                // 메세지 수신 처리
+                receiveMsg(msg);
+              })
+            }
+          } else {
+            // 공지사항, 일정 등록 알림인 경우
+            for (var i = 0; i < msgBody.teamMemberList.length; i++) {
+              if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
+                $("#alram").iziModal('open');
+                $("#alram_btn").on("click", function() {
+                  // 알림의 noti_check_date update
+                  $.ajax({
+                    url: "${contextPath}/notification/checkDate"
+                    , method: "post"
+                    , data: {userNo: ${loginMember.userNo}}
+                    , async: false
+                    , success: function(result) {
+                      if(result > 0) {
+                        console.log("알림 조회 시간 update 성공");
+                      }
+                    }
+                    , error: function() {
+                      console.log("알림 조회 시간 update ajax 실패");
+                    }
+                  })
+
+                  location.href = msgBody.url;
+                })
+                // 읽지 않은 알림 조회 후 알림 목록에 추가 및 읽지 않은 알림 표시
+                setTimeout(function() {
+                  selectAlram();
+                }, 3000);
+              }
+            }
+          } 
+        })
+
+      })
+    })
+
 						// Auto Reconnect
 						// 5분마다 재연결
 						stompClient.reconnect_delay = 300000;

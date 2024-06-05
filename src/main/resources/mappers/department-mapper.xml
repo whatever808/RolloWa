@@ -59,9 +59,9 @@
 	<!-- 팀의 부서명 조회 -->
 	<select id="selectUppderCode" resultMap="groupResultMap" parameterType="hashmap">
 		select
-			   group_code
-			  ,code
-			  ,code_name
+			     group_code
+			    ,code
+			    ,code_name
 		  from tb_group
 		 where group_code like #{upperGroupCode}
 		   and code = (

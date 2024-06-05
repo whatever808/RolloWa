@@ -292,6 +292,7 @@
     		url: "${contextPath}/chat/inDate"
     		, method: "post"
     		, data: {roomNo: roomNo, userNo: ${loginMember.userNo}}
+    		, async:false
     		, success: function(result) {
     		}
     		,error: function() {
@@ -784,6 +785,6 @@
       $(".msgbox").css("opacity", opacity);
       $(".msgbox").css("z-index", z);
     }
-    
+		
 </script>
 </html>
