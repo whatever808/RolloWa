@@ -80,16 +80,17 @@
 .tree li:first-child:before {
 	left: 50%;
 }
-/* 각 4번째 요소마다 오른쪽에 세로줄 생성 */
-.tree li:nth-child(4n):after {
-    outline: solid 1px red;
-    content: "";
-    height: 99%;
-    position: absolute;
-    top: -2px;
-    right: -1em;
-    z-index: -1;
-}
+/* 각 4번째 요소마다 오른쪽에 세로줄 생성시키기위한 스타일 */
+.show-after:after {
+        outline: solid 1px gainsboro;
+        content: "";
+        height: 99%;
+        position: absolute;
+        top: -2px;
+        right: -1em;
+        z-index: -1;
+    }
+
 
 
 .tree li:last-child:before {
