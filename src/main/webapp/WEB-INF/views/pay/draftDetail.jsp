@@ -248,7 +248,7 @@ $(document).on("click", "#rejectBtn", function(){
             </div>
         </div>
        <c:if test="${ not empty refList }">
-	        <div class="body">
+	        <div class="body" style="width: 700px;">
 	         		<table class="info-table">
 	            		<tr>
 	                    <th>수신참조인</th>
