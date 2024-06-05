@@ -221,11 +221,12 @@ public class PayController {
 		if(map != null && !map.isEmpty() && map.get("documentType").equals("매출보고서")) {
 			List<Map<String, Object>> list = payService.expendDetail(map);
 			List<SignDto> sign = payService.ajaxSignSelect(map);
-			
+			List<Map<String, Object>> refList = payService.refList(approvalNo);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", String.valueOf(userName));
 			model.addAttribute("sign", sign);
+			model.addAttribute("refList", refList);
 			
 			return "pay/expendDetail";
 			
@@ -236,18 +237,21 @@ public class PayController {
 			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
 			//에디터
 			String content = payService.contentSelect(map);
+			List<Map<String, Object>> refList = payService.refList(approvalNo);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
 			model.addAttribute("sign", sign);
 			model.addAttribute("fileList", fileList);
 			model.addAttribute("content", content);
+			model.addAttribute("refList", refList);
 			return "pay/salesDetail";
 			
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("비품신청서")) {
 			List<Map<String, Object>> list = payService.fixDetail(map);
 			List<SignDto> sign = payService.ajaxSignSelect(map);
 			List<Map<String, Object>> refList = payService.refList(approvalNo);
+			
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
@@ -258,10 +262,12 @@ public class PayController {
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("휴직신청서")) {
 			List<Map<String, Object>> list = payService.retireDetail(map);
 			List<SignDto> sign = payService.ajaxSignSelect(map);
+			List<Map<String, Object>> refList = payService.refList(approvalNo);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
 			model.addAttribute("sign", sign);
+			model.addAttribute("refList", refList);
 			return "pay/retireDetail";
 			
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("지출결의서")) {
@@ -269,11 +275,13 @@ public class PayController {
 			map.put("refType", "PJ");
 			List<Map<String, Object>> fileList = payService.fileDraftDetail(map);
 			List<SignDto> sign = payService.ajaxSignSelect(map);
+			List<Map<String, Object>> refList = payService.refList(approvalNo);
 			model.addAttribute("list", list);
 			model.addAttribute("fileList", fileList);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
 			model.addAttribute("sign", sign);
+			model.addAttribute("refList", refList);
 			return "pay/draftDetail";
 		}
 		
@@ -2037,13 +2045,17 @@ public class PayController {
 	
 	
 	@RequestMapping("/myReferrer.page")
-	public String myReferrer(HttpSession session, Model model){
+	public String myReferrer(@RequestParam(value="page", defaultValue="1") int currentPage, HttpSession session, Model model){
 		
 		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
 		
-		List<Map<String, Object>> list = payService.myReferrer(userNo);
-		String userName = payService.loginUserMember(userNo);	
+		String userName = payService.loginUserMember(userNo);
+		int myReferrerCount = payService.myReferrerCount(userNo);
+		PageInfoDto pi = pagingUtil.getPageInfoDto(myReferrerCount, currentPage, 5, 10);
+		List<Map<String, Object>> list = payService.myReferrerList(userNo, pi);
+		
 		model.addAttribute("list", list);
+		model.addAttribute("pi",pi);
 		model.addAttribute("userName",userName);
 		
 		return "pay/myReferrer";
@@ -2051,7 +2063,35 @@ public class PayController {
 	}
 	
 	
-	
+	// 승인자 차례의 미결재함 전체검색
+	@ResponseBody
+	@GetMapping("/ajaxMyReferrer.do")
+	public Map<String, Object> ajaxMyReferrer(@RequestParam(value="page", defaultValue="1") int currentPage
+											, HttpSession session, String keyword) {
+		
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);	
+		Map<String, Object> mapUserMember = new HashMap<>();
+		mapUserMember.put("userNo", userNo);
+		mapUserMember.put("keyword", keyword);	
+		
+		int ajaxMyReferrerCount = payService.ajaxMyReferrerCount(mapUserMember);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(ajaxMyReferrerCount, currentPage, 5, 10);
+		
+		List<Map<String, Object>> list = payService.ajaxMyReferrerList(mapUserMember, pi);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
+		map.put("userName", userName);
+		log.debug("list : {}", list);
+		log.debug("pi : {}", pi);
+		log.debug("userName : {}", userName);
+		
+		return map;
+	}
 	
 	
 

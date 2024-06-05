@@ -394,6 +394,7 @@ $(document).ready(function(){
 		                   <input type="hidden" name="finalApproval" id="last_name" class="hiddenSignName" value="${ list.get(0).FINAL_APPROVAL }">
 		                   <input type="hidden" name="payWriter" value="${list.get(0).PAYMENT_WRITER}">
                        <input type="hidden" name="payWriterNo" value="${list.get(0).PAYMENT_WRITER_NO}">
+                       <input type="hidden" name="modifyType" value="${type}">
 		                   <div class="document">
 										        <h1 class="title2">매출 보고서</h1>
 										

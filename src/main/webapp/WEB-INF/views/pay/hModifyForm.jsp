@@ -408,6 +408,7 @@ $(document).ready(function(){
 											 <input type="hidden" name="writerNo" value="${ list.get(0).PAYMENT_WRITER_NO}">                                                                                                              
                       	<input type="hidden" name="retireNo" value="${ list.get(0).RETIRE_NO}">                                                                                                              
                        <input type="hidden" name="approvalNo" value="${ list.get(0).APPROVAL_NO}">
+                       <input type="hidden" name="modifyType" value="${type}">
 		                   <div class="document">
 										        <h1 class="title2">휴직신청서</h1>
 										

@@ -665,4 +665,21 @@ public class PayService {
 	}
 	
 	
+	public int ajaxMyReferrerCount(Map<String, Object> map) {
+		return payDao.ajaxMyReferrerCount(map);
+	}
+	
+	public List<Map<String, Object>> ajaxMyReferrerList(Map<String, Object> map, PageInfoDto pi){
+		return payDao.ajaxMyReferrerList(map, pi);
+	}
+	
+	
+	public int myReferrerCount(int userNo) {
+		return payDao.myReferrerCount(userNo);
+	}
+	
+	public List<Map<String, Object>> myReferrerList(int userNo, PageInfoDto pi){
+		return payDao.myReferrerList(userNo, pi);
+	}
+	
 }

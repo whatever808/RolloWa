@@ -399,6 +399,7 @@ $(document).ready(function(){
 											 <input type="hidden" name="payWriter" value="${list.get(0).PAYMENT_WRITER}">
                        <input type="hidden" name="payWriterNo" value="${list.get(0).PAYMENT_WRITER_NO}">
                        <input type="hidden" name="fileLength" value="${ fileList.size() }">
+                       <input type="hidden" name="modifyType" value="${type}">
 		                   <div class="document">
 										        <h1 class="title2">지출 결의서</h1>
 										
