@@ -643,6 +643,9 @@ $(document).ready(function(){
                             <li class="onlyManagerShow">
                             	<a href="${ contextPath }/reservation/equipment.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비품 관리</a>
                             </li>
+                            <li class="onlyManagerShow">
+                            	<a href="${ contextPath }/reservation/manager.do" class="link-body-emphasis d-inline-flex text-decoration-none rounded">예약 관리</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

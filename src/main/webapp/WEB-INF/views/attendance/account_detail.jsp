@@ -24,6 +24,14 @@
 </head>
 <body>
 
+	<!-- 로그인 체크 -->
+	<c:if test="${empty loginMember}">
+	    <script>
+	        alert("로그인 후 이용가능합니다.");
+	        window.location.href = "${pageContext.request.contextPath}/";
+	    </script>
+	</c:if>
+
 	<!-- 사이드바 해더 영역 -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 	
@@ -38,9 +46,9 @@
         <table class="table table-responsive table-bordered line-shadow table_1">
             <tr>
                 <th colspan="4">
-                    <c:choose>
+	            	<c:choose>
 		            	<c:when test="${ not empty m.profileURL }">
-			                <img src="${ m.profileURL }" class="profile_img" onerror="this.onerror=null; this.src='${contextPath}/resources/images/defaultProfile.png';">
+			                <img src="${contextPath}/${m.profileURL}" class="profile_img">
 		            	</c:when>
 		            	<c:otherwise>
 			                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">

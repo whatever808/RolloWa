@@ -98,6 +98,38 @@ public class OrganizationDao {
 	public int insertTeam(Map<String, Object> paramMap) {
 		return sqlSessionTemplate.insert("organizationMapper.insertTeam", paramMap);
 	}
+	// 팀 삭제
+	public int deleteTeam(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.update("organizationMapper.deleteTeam", paramMap);
+	}
+	// 팀 사용자 인원수 카운트
+	public List<Map<String, Object>> countMember() {
+		return sqlSessionTemplate.selectList("organizationMapper.countMember");
+	}
+	// 부서 삭제
+	public int deleteDepartment(Map<String, Object> paramMap) {
+		int result = sqlSessionTemplate.update("organizationMapper.deleteDepartment", paramMap);
+		// 하위 팀들도 모두 삭제
+		return result += sqlSessionTemplate.update("organizationMapper.deleteSubDepartment", paramMap);
+	}
+	// 부서명 수정
+	public int updateDepartmentName(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.update("organizationMapper.updateDepartmentName", paramMap);
+	}
+	// 팀명 수정
+	public int updateTeamName(Map<String, Object> paramMap) {
+		return sqlSessionTemplate.update("organizationMapper.updateTeamName", paramMap);
+	}
+	
+	// 동일한 부서 생성 못하게 하기	
+    public int countDepartmentByName(Map<String, Object> paramMap) {
+        return sqlSessionTemplate.selectOne("organizationMapper.countDepartmentByName", paramMap);
+    }
+    // 동일한 팀 생성 못하게 하기 다른부서 동일한 팀은 가능
+    public int countTeamByNameAndDept(Map<String, Object> paramMap) {
+        return sqlSessionTemplate.selectOne("organizationMapper.countTeamByNameAndDept", paramMap);
+    }
+    
 
 	
 }

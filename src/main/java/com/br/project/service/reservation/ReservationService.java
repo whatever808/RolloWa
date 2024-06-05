@@ -33,20 +33,24 @@ public class ReservationService {
 		return reservationDao.selectReservationState(paramMap);
 	}
 	
-	// 1. 먼저 예약 가능한지 시간 체크하기
+	// 먼저 예약 가능한지 시간 체크하기
 	public int selectTimeCheck(Map<String, Object> paramMap) {
 		return reservationDao.selectTimeCheck(paramMap);
 	}
-	// 2. 예약 하기
+	// 예약 하기
 	public int insertReservation(Map<String, Object> paramMap) {
 		return reservationDao.insertReservation(paramMap);
 	}
 
-    // 3. 내 예약 조회
+    // 내 예약 조회
     public List<HashMap<String, Object>> selectMyReservation(PageInfoDto pi, int userNo) {
         return reservationDao.selectMyReservation(pi, userNo);
     }
-    // 4. 예약 취소
+    // 전체 예약 조회
+    public List<HashMap<String, Object>> selectAllReservation(PageInfoDto pi) {
+    	return reservationDao.selectAllReservation(pi);
+    }
+    // 예약 취소
 	public int updateReservation(Map<String, Object> params) {
 		return reservationDao.updateReservation(params);
 	}
@@ -63,6 +67,10 @@ public class ReservationService {
 	// 내 예약 수 조회 (페이징처리)
 	public int selectMyReservationCount(int userNo) {
 		return reservationDao.selectMyReservationCount(userNo);
+	}
+	// 전체 예약수 카운트
+	public int selectAllReservationCount() {
+		return reservationDao.selectAllReservationCount();
 	}
 	
 }

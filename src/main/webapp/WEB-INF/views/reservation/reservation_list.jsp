@@ -48,7 +48,7 @@
         margin-bottom: 50px;
     }
     .th_title{
-        background-color: aquamarine !important;
+        background-color: rgb(255,247,208);
         width: 170px;
         height: 60px;
         text-align: center;
@@ -180,6 +180,14 @@
 </head>
 <body>
 
+	<!-- 로그인 체크 -->
+	<c:if test="${empty loginMember}">
+	    <script>
+	        alert("로그인 후 이용가능합니다.");
+	        window.location.href = "${pageContext.request.contextPath}/";
+	    </script>
+	</c:if>
+
 	<!-- 사이드바 해더 영역 -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 	
@@ -190,6 +198,7 @@
 	    
 		<!-- ----------------------------------------------------------------------------------------- -->
 	
+
 		<!--날짜, 오늘 선택 -->
 		<div class="select_date">
 			<table class="table_2">

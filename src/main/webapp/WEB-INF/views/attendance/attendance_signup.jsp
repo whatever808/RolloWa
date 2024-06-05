@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2.4 구성원 추가</title>
+    <title>구성원 추가</title>
 
 	<style>
     .main_content{
@@ -78,6 +78,14 @@
 </head>
 <body>
 
+	<!-- 로그인 체크 -->
+	<c:if test="${empty loginMember}">
+	    <script>
+	        alert("로그인 후 이용가능합니다.");
+	        window.location.href = "${pageContext.request.contextPath}/";
+	    </script>
+	</c:if>
+
 	<!-- 사이드바 해더 영역 -->
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp"/>
 	
@@ -100,7 +108,7 @@
 		                <td class="td_common">
 		                    <div>
 		                    	<div class="div_common">
-			                        <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력하세요." >
+			                        <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력하세요." required>
 				                    <h4>
 				                        <div id="nameCheck_result" class="nocheck"></div>
 				                    </h4>
@@ -117,7 +125,7 @@
 		                <td class="td_common">
 		                    <div>
 		                        <div class="div_common">
-		                            <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디을 입력하세요.">
+		                            <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디을 입력하세요." required>
 		                            <h4>
 		                                <div id="idCheck_result" class="nocheck"></div>
 		                            </h4>
@@ -135,7 +143,7 @@
 		                <td class="td_common">
 		                    <div>
 		                        <div class="div_common">
-		                            <input type="password" class="form-control" id="userPwd" name="userPwd" placeholder="비밀번호을 입력하세요.">
+		                            <input type="password" class="form-control" id="userPwd" name="userPwd" placeholder="비밀번호을 입력하세요." required>
 		                            <h4>
 		                                <div id="pwd_result" class="nocheck"></div>
 		                            </h4>
@@ -153,7 +161,7 @@
 		                <td class="td_common">
 		                    <div>
 		                        <div class="div_common">
-		                            <input type="password" class="form-control" id="userPwdck" name="userPwdck" placeholder="확인 비밀번호를 입력하세요.">
+		                            <input type="password" class="form-control" id="userPwdck" name="userPwdck" placeholder="확인 비밀번호를 입력하세요." required>
 		                            <h4>
 		                                <div id="pwdck_result" class="nocheck"></div>
 		                            </h4>
@@ -230,7 +238,7 @@
 		    
 		    <div class="btn_center">
 		        <button type="reset" class="btn btn-outline-primary" onclick="reloadPage();"><h6>초기화</h6></button>
-		        <button type="submit" class="btn btn-primary"><h6>구성원 추가</h6></button>
+		        <button type="submit" class="btn btn-primary" disabled><h6>구성원 추가</h6></button>
 		    </div>
 		</form>
 		<!-- 메인 영역 end -->
@@ -344,18 +352,16 @@
 		let pwdResult = false;
 		let pwdckResult = false;
 		      
-		/* 이름 : 한글만 입력되고 나머지 글자(숫자,영문,특문)는 공백으로 변환 */
+		/* 이름 : 한글만 가능*/
 		$("#signup_form input[name=userName]").on("keyup", function(){
 			let regExp = $(this).val().replace(/[^가-힣ㄱ-ㅎa-zA-Z]+/g, '');
 			$(this).val(regExp);
 	
-			if( regExp.trim().length == 0 || regExp.length < 2){
-				nameResult = checkPrint("#nameCheck_result", "usable unusable", "nocheck", "다시 입력해주세요.");
-     		} else {
-    			if( regExp ){
-    				nameResult = checkPrint("#nameCheck_result", "nocheck unusable", "usable", "사용가능한 이름입니다.");
-    			}
-   			}
+			if( regExp.trim().length < 2){
+		        nameResult = checkPrint("#nameCheck_result", "usable unusable", "nocheck", "다시 입력해주세요.");
+		    } else {
+		        nameResult = checkPrint("#nameCheck_result", "nocheck unusable", "usable", "사용가능한 이름입니다.");
+		    }
 			validate();
  		})
 		
@@ -443,12 +449,12 @@
 			let teamValue = $('#teamCode').val();
 			let positionValue = $('#positionCode').val();
 			let allSelected = departmentValue && teamValue && positionValue;
-			let allValid = nameResult && idResult && pwdResult && pwdckResult && allSelected;
+			//let allValid = nameResult && idResult && pwdResult && pwdckResult && allSelected;
 
-			if (allValid) {
-				//$('button[type="submit"]').prop('disabled', false);
+			if (allSelected) {
+				$('button[type="submit"]').prop('disabled', false);
 			} else {
-				//$('button[type="submit"]').prop('disabled', true);
+				$('button[type="submit"]').prop('disabled', true);
 			}
 		}
 		</script>
