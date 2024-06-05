@@ -501,4 +501,38 @@ public class PayDao {
 		return sqlSessionTemplate.update("payMapper.updateGReport", map);
 	}
 	
+	//최종승인완료
+	public int ajaxApprovalprocessing(Map<String, Object> map) {
+		return sqlSessionTemplate.update("payMapper.ajaxApprovalprocessing", map);
+	}
+	
+	public int ajaxFix(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("reservationMapper.insertEquipment", map);
+	}
+	
+	public List<Map<String, Object>> laterSearchDept(String keyword){
+		return sqlSessionTemplate.selectList("payMapper.laterSearchDept", keyword);
+	}
+	
+	public int insertRefNo(Map<String, Object> refNo) {
+		return sqlSessionTemplate.insert("payMapper.insertRefNo", refNo);
+	}
+	
+	public List<Map<String, Object>> myReferrer(int userNo){
+		return sqlSessionTemplate.selectList("payMapper.myReferrer", userNo);
+	}
+	
+	public List<Map<String, Object>> refList(String approvalNo){
+		return sqlSessionTemplate.selectList("payMapper.refList", approvalNo);
+	}
+	
+	public int deleteRefNo(String approvalNo) {
+		return sqlSessionTemplate.insert("payMapper.deleteRefNo", approvalNo);
+	}
+	
+	
+	public int updateInsertRefNo(Map<String, Object> map) {
+		return sqlSessionTemplate.insert("payMapper.updateInsertRefNo", map);
+	}
+	
 }

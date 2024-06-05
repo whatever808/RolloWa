@@ -627,19 +627,18 @@ $(document).ready(function(){
 
             $("#tr_table").append(result);
         });
+        
+        $(document).on("click", "#del_btn", function () {
+            // 데이터 행이 있는 경우에만 삭제
+            if ($("#tr_table tr").length > 2) {
+                $("#tr_table tr:last").remove();
+            } else {
+                alert("삭제할 행이 없습니다.");
+            }
+        });
     });
    	</script>
     
-    <script>
-    $(document).ready(function(){
-    	
-    	$(document).on("click", "#del_btn", function () {
-    	    //$("#tr_table tr:last-child").remove();
-    	    $("#tr_table").children("tr").last().remove();
-    	});
-    })
-    </script>
-        
      <script>
         $('#modal').iziModal({
             title: '결재선지정',

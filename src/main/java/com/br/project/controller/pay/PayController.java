@@ -35,6 +35,7 @@ import com.br.project.dto.pay.SignDto;
 import com.br.project.service.pay.PayService;
 import com.br.project.util.FileUtil;
 import com.br.project.util.PagingUtil;
+import com.google.common.collect.Maps;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,7 +88,7 @@ public class PayController {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
 		String formatedNow = sdf.format(now);
 		
-		
+	
 		model.addAttribute("list", list);
 		model.addAttribute("pi", pi);
 		model.addAttribute("listCount", String.valueOf(listCount));		
@@ -97,6 +98,7 @@ public class PayController {
 		model.addAttribute("noApprovalSignCount", String.valueOf(noApprovalSignCount));
 		model.addAttribute("noApprovalSignCountToday", String.valueOf(noApprovalSignCountToday));
 		model.addAttribute("userName", userName);
+		model.addAttribute("userNo", userNo);
 		model.addAttribute("today", formatedNow);
 		
 		return "pay/approvalMain";
@@ -212,6 +214,7 @@ public class PayController {
 						, HttpSession session) {
 		
 		//회원정보조회용
+		String approvalNo = (String)map.get("approvalNo");
 		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
 		String userName = payService.loginUserMember(userNo);
 		log.debug("map : {}", map);
@@ -244,9 +247,11 @@ public class PayController {
 		}else if(map != null && !map.isEmpty() && map.get("documentType").equals("비품신청서")) {
 			List<Map<String, Object>> list = payService.fixDetail(map);
 			List<SignDto> sign = payService.ajaxSignSelect(map);
+			List<Map<String, Object>> refList = payService.refList(approvalNo);
 			model.addAttribute("list", list);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("userName", userName);
+			model.addAttribute("refList", refList);
 			model.addAttribute("sign", sign);
 			return "pay/fixDetail";
 			
@@ -673,6 +678,7 @@ public class PayController {
 			model.addAttribute("teamNames", teamNames);
 			//-------------------------------------
 			model.addAttribute("list", listM);
+			model.addAttribute("type", map.get("type"));
 			
 			return "pay/mModifyForm";
 			
@@ -686,6 +692,7 @@ public class PayController {
 			//-------------------------------------
 			model.addAttribute("list", listJ);
 			model.addAttribute("fileList", fileList);
+			model.addAttribute("type", map.get("type"));
 			
 			return "pay/jModifyForm";
 			
@@ -697,6 +704,7 @@ public class PayController {
 			model.addAttribute("teamNames", teamNames);
 			//-------------------------------------
 			model.addAttribute("list", listH);
+			model.addAttribute("type", map.get("type"));
 			
 			return "pay/hModifyForm";
 			
@@ -708,6 +716,7 @@ public class PayController {
 			model.addAttribute("teamNames", teamNames);
 			//-------------------------------------
 			model.addAttribute("list", listB);
+			model.addAttribute("type", map.get("type"));
 			
 			return "pay/bModifyForm";
 		}else {
@@ -722,6 +731,7 @@ public class PayController {
 			model.addAttribute("content", content);			
 			
 			model.addAttribute("list", listG);
+			model.addAttribute("type", map.get("type"));
 			log.debug("gModifyFormList : {}", listG);
 			
 			return "pay/gModifyForm";
@@ -844,7 +854,11 @@ public class PayController {
 	
 	@PostMapping("/gReportUpdate.do")
 	public String gReportUpdate(@RequestParam Map<String, Object> map, RedirectAttributes redirectAttributes
-							  , List<MultipartFile> uploadFiles,  String[] delFileNo) { 
+							  , List<MultipartFile> uploadFiles,  String[] delFileNo
+							  , @RequestParam(value="referrer", defaultValue="null") List<String> referrerNo
+							  , @RequestParam(value="referrerName", defaultValue="null") List<String> referrerName) { 
+		
+		String approvalNo = (String)map.get("approvalNo");
 		
 		List<Map<String, Object>> attachList = new ArrayList<>();
 		
@@ -862,7 +876,19 @@ public class PayController {
 			}
 		}
 		
-		int result = payService.gReportUpdate(map, attachList, delFileNo);
+		List<Map<String, Object>> referrerList = new ArrayList<>();
+		if(referrerNo != null &&!referrerNo.equals("null")) {
+			for(int i=0; i<referrerNo.size(); i++) {
+				Map<String, Object> refMap = new HashMap<>();
+				refMap.put("approvalNo", map.get("approvalNo"));
+				refMap.put("writerNo", map.get("payWriterNo"));
+				refMap.put("refNo", referrerNo.get(i));
+				refMap.put("refName", referrerName.get(i));
+				referrerList.add(refMap);
+			}
+		}
+		
+		int result = payService.gReportUpdate(map, attachList, delFileNo, referrerList, approvalNo);
 		
 		redirectAttributes.addFlashAttribute("alertTitle", "게시글 수정 서비스");
 		if(result == 1 && uploadFiles.isEmpty() || result == attachList.size() && !uploadFiles.isEmpty()) {
@@ -882,7 +908,9 @@ public class PayController {
 	
 	@PostMapping("/gReportInsert.do")
 	public String gReportInsert(@RequestParam Map<String, Object> map, List<MultipartFile> uploadFiles
-								, RedirectAttributes redirectAttributes) {
+								, RedirectAttributes redirectAttributes
+								, @RequestParam(value="referrer", defaultValue="null") List<String> referrerNo
+								, @RequestParam(value="referrerName", defaultValue="null") List<String> referrerName) {
 		
 		
 		List<Map<String, Object>> attachList = new ArrayList<>();
@@ -906,11 +934,22 @@ public class PayController {
 			map.put("fileStatus", "N");
 		}
 		
-		int result = payService.gReportInsert(map, attachList);
+		List<Map<String, Object>> referrerList = new ArrayList<>();
+		if(!referrerNo.equals("null")) {
+			for(int i=0; i<referrerNo.size(); i++) {
+				Map<String, Object> refMap = new HashMap<>();
+				refMap.put("writerNo", map.get("writerNo"));
+				refMap.put("refNo", referrerNo.get(i));
+				refMap.put("refName", referrerName.get(i));
+				referrerList.add(refMap);
+			}
+		}
+		
+		int result = payService.gReportInsert(map, attachList, referrerList);
 		
 		
 		redirectAttributes.addFlashAttribute("alertTitle", "게시글 등록 서비스");
-		if(attachList.isEmpty() && result == 1 || !attachList.isEmpty() && result == attachList.size()) {
+		if(!attachList.isEmpty() && result == attachList.size()) {
 			redirectAttributes.addFlashAttribute("alertMsg", "성공적으로 등록 되었습니다.");
 			redirectAttributes.addFlashAttribute("modalColor", "G");
 		}else {
@@ -968,6 +1007,8 @@ public class PayController {
 							    @RequestParam("price") List<String> prices,
 							    @RequestParam("etc") List<String> etcs,
 							    @RequestParam Map<String, Object> map,
+							    @RequestParam(value="referrer", defaultValue="null") List<String> referrerNo,
+							    @RequestParam(value="referrerName", defaultValue="null") List<String> referrerName,
 							    Model model,
 							    RedirectAttributes redirectAttributes) {
 		
@@ -988,7 +1029,22 @@ public class PayController {
 		}
 		log.debug("품목 : {}", list);
 		
-		int result = payService.bReportInsert(map, list);
+		List<Map<String, Object>> referrerList = new ArrayList<>();
+		if(!referrerNo.equals("null")) {
+			for(int i=0; i<referrerNo.size(); i++) {
+				Map<String, Object> refMap = new HashMap<>();
+				refMap.put("writerNo", map.get("writerNo"));
+				refMap.put("refNo", referrerNo.get(i));
+				refMap.put("refName", referrerName.get(i));
+				referrerList.add(refMap);
+			}
+		}
+		
+		
+		log.debug("referrerNo : {}", referrerNo);
+		log.debug("referrerList : {}", referrerList);
+		
+		int result = payService.bReportInsert(map, list, referrerList);
 		
 		redirectAttributes.addFlashAttribute("alertTitle", "게시글 등록 서비스");
 		if(result > 0) {
@@ -1267,9 +1323,12 @@ public class PayController {
 							    @RequestParam("price") List<String> prices,
 							    @RequestParam("etc") List<String> etcs,
 							    @RequestParam Map<String, Object> map,
+							    @RequestParam(value="referrer", defaultValue="null") List<String> referrerNo,
+							    @RequestParam(value="referrerName", defaultValue="null") List<String> referrerName,
 							    Model model,
 							    RedirectAttributes redirectAttributes) {
 
+			String approvalNo = (String)map.get("approvalNo");
 			// 품목, 규격, 수량, 단가, 가격, 기타 
 			List<Map<String, Object>> list = new ArrayList<>();
 			
@@ -1287,9 +1346,23 @@ public class PayController {
 					
 				}
 			}
-			log.debug("품목 : {}", list);
 			
-			int result = payService.bReportUpdate(map, list);
+			List<Map<String, Object>> referrerList = new ArrayList<>();
+			if(referrerNo != null &&!referrerNo.equals("null")) {
+				for(int i=0; i<referrerNo.size(); i++) {
+					Map<String, Object> refMap = new HashMap<>();
+					refMap.put("approvalNo", map.get("approvalNo"));
+					refMap.put("writerNo", map.get("payWriterNo"));
+					refMap.put("refNo", referrerNo.get(i));
+					refMap.put("refName", referrerName.get(i));
+					referrerList.add(refMap);
+				}
+			}
+			
+			log.debug("품목 : {}", list);
+			log.debug("referrerList : {}", referrerList);
+			
+			int result = payService.bReportUpdate(map, list, referrerList, approvalNo);
 			
 			
 			redirectAttributes.addFlashAttribute("alertTitle", "게시글 수정 서비스");
@@ -1307,59 +1380,19 @@ public class PayController {
 	
 	// 승인 싸인 저장하기 ajax
 	@ResponseBody
-	@PostMapping(value="/ajaxSign.do", produces = "application/json; charset=UTF-8")
-	public Map<String, Object> ajaxSign(@RequestParam Map<String, Object> map,
-										@RequestParam(value="productName") List<String> productName,
-										@RequestParam(value="productAmount") List<String> productAmount) {
+	@PostMapping(value="/ajaxSign.do")
+	public Map<String, Object> ajaxSign(@RequestParam Map<String, Object> map) {
 		
 //		Map<String, Object> map = new HashMap<String, Object>();
 //		map = CommonController.getParameterMap(request);
-//		log.debug("map : {}", map);
-		log.debug("mapSign : {}", map);
-		for(int i=0; i<productName.size(); i++) {
-			log.debug("productName : {}", productName.get(i));
-			log.debug("productAmount : {}", productAmount.get(i));			
-		}
-		String dataUrl = (String)map.get("dataUrl");
-		
-        map.put("fileName", dataUrl);
-		
+
+		log.debug("signMap : {}", map);
 		int result =  payService.ajaxSignUpdate(map);
-		log.debug("result : {}", result);
 		
 		List<SignDto> sign = new ArrayList<>();
 		if(result > 0) {
 			sign = payService.ajaxSignSelect(map);
 		}
-		/*
-		List<Map<String, Object>> list = new ArrayList<>();
-		if("3".equals(map.get("approvalSignNo")) && "Fix".equals(map.get("deptType")) && !fix.isEmpty()) {
-			for (String f : fix) {
-	            try {
-	                String decodedString = URLDecoder.decode(f, "UTF-8");
-	                String[] pairs = decodedString.split("&");
-	                String[] pair = decodedString.split("=");
-	                Map<String, Object> productMap = new HashMap<>();
-	                for (int i=0; i<pairs.length; i++) {
-	                    productMap.put("fixName", pairs[i]);
-	                    productMap.put("fixAmount", pairs[i]);
-	                }
-	                
-	                list.add(productMap);
-	            } catch (Exception e) {
-	                log.error("Error decoding fix parameter: " + f, e);
-	            }
-	        }
-		}
-		*/
-		
-		
-		
-		//int resultFix = payService.fixInsert(list);
-		
-		
-		
-		//log.debug("resultFix : {}", resultFix);
 		
 		Map<String, Object> maps = new HashMap<>();
 		maps.put("sign", sign);
@@ -1489,6 +1522,7 @@ public class PayController {
 		
 		model.addAttribute("list", list);
 		model.addAttribute("pi", pi);
+		model.addAttribute("userName", userName);
 		
 	}
 	
@@ -1906,6 +1940,119 @@ public class PayController {
 		
 		return map;
 	}
+	//결재최종승인
+	@ResponseBody
+	@PostMapping("/ajaxApprovalprocessing.do")
+	public int ajaxApprovalprocessing(@RequestParam Map<String, Object> map) {
+		return payService.ajaxApprovalprocessing(map);
+	}
+	
+	// 승인자 차례의 미결재함
+	@RequestMapping("/noApprovalListMain.page")
+	public String noApprovalListMain(@RequestParam(value="page", defaultValue="1") int currentPage
+							, HttpSession session, Model model) {
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		String userName = payService.loginUserMember(userNo);
+		
+		int noApprovalSignCount = payService.noApprovalSignCount(userName);
+		
+		PageInfoDto pi = pagingUtil.getPageInfoDto(noApprovalSignCount, currentPage, 5, 10);
+		
+		List<PayDto> list = payService.noApprovalSign(userName, pi);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("userName", userName);
+		
+		//개시글총갯수
+		int listCount = payService.selectListCount();
+		
+		//로그인한 사용자의 일주일이상승인완료가 안된 게시글총갯수
+		int mdCount = payService.moreDateCount(userName);
+		//로그인한 사용자의 결재한 내역 게시글 총갯수
+		int slistCount = payService.successListCount(userName);
+		// 로그인한 사용자의 전체수신갯수
+		int ulistCount = payService.allUserCount(userName);
+		// 미결재함
+		
+		int noApprovalSignCountToday = payService.noApprovalSignCountToday(userName);
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+		String formatedNow = sdf.format(now);
+		
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("listCount", String.valueOf(listCount));		
+		model.addAttribute("mdCount", String.valueOf(mdCount));
+		model.addAttribute("slistCount", String.valueOf(slistCount));
+		model.addAttribute("ulistCount", String.valueOf(ulistCount));
+		model.addAttribute("noApprovalSignCount", String.valueOf(noApprovalSignCount));
+		model.addAttribute("noApprovalSignCountToday", String.valueOf(noApprovalSignCountToday));
+		model.addAttribute("userName", userName);
+		model.addAttribute("userNo", userNo);
+		model.addAttribute("today", formatedNow);
+				
+		
+		
+		return "pay/approvalMain";
+	}
+	
+
+	@ResponseBody
+	@PostMapping("/ajaxFix.do")
+	public String ajaxFix(@RequestParam Map<String, Object> map
+						, @RequestParam(value="equipmentName") List<String> equipmentName) {
+
+		log.debug("ajaxFixmap : {}", equipmentName);
+		log.debug("ajaxFixmap : {}", equipmentName.get(0));
+		
+		log.debug("ajaxFixmap : {}", map);
+		List<Map<String, Object>> list = new ArrayList<>();
+		if(equipmentName != null && !equipmentName.isEmpty()) {
+			for(int i=0; i<equipmentName.size(); i++) {
+				Map<String, Object> maps = new HashMap<>();
+				maps.put("equipmentName", equipmentName.get(i));
+				maps.put("registEmp", map.get("registEmp"));
+				list.add(maps);
+			}
+		}
+		
+		log.debug("ajaxFixList : {}", list);
+		
+		int result = payService.ajaxFix(list);
+		
+		return result == list.size() ? "SUCCESS" : "FAIL";
+	}
+	
+	
+	@ResponseBody
+	@GetMapping("/laterSearchDept.do")
+	public List<Map<String, Object>> laterSearchDept(String keyword) {
+		
+		return payService.laterSearchDept(keyword);
+		
+	}
+	
+	
+	@RequestMapping("/myReferrer.page")
+	public String myReferrer(HttpSession session, Model model){
+		
+		int userNo = (int)((MemberDto)session.getAttribute("loginMember")).getUserNo();
+		
+		List<Map<String, Object>> list = payService.myReferrer(userNo);
+		String userName = payService.loginUserMember(userNo);	
+		model.addAttribute("list", list);
+		model.addAttribute("userName",userName);
+		
+		return "pay/myReferrer";
+		
+	}
+	
+	
+	
+	
 	
 
 

@@ -686,13 +686,13 @@ $(document).ready(function(){
 						    <div class="collapse" id="approval-collapse">
 						        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
 						            <li>
-						                <a href="${contextPath}/pay/approvalMain.page"
+						                <a href="${contextPath}/pay/noApprovalListMain.page"
 						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">관리자홈</a>
 						            </li>
 						            <li>
 						                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
 						                    data-bs-toggle="collapse" data-bs-target="#approval-collapseApproval" aria-expanded="false">
-						                    결재상신함
+						                    결재진행함
 						                </button>
 						                <div class="collapse" id="approval-collapseApproval">
 						                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
@@ -748,7 +748,11 @@ $(document).ready(function(){
 						            </li>
 						            <li>
 						                <a href="${contextPath}/pay/myAllApproval.page"
-						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">나의결재함</a>
+						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재상신함</a>
+						            </li>
+						            <li>
+						                <a href="${contextPath}/pay/myReferrer.page"
+						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">수신함</a>
 						            </li>
 						        </ul>
 						    </div>

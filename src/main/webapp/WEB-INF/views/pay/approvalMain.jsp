@@ -68,19 +68,21 @@
 
 .highlight-box {
   	flex: 1;
-    padding: 20px;
-    margin-right: 10px;
+    padding: 21px;
+    margin: 10px;
     background-color: #ffffff;
     border: 3px solid #e0e0e0;
     border-radius: 22px;
     text-align: center;
-    font-size: 21px;
+    font-size: 14px;
     color: #555555;
     cursor: pointer;
-    display: flex;
-    align-content: space-around;
+    /* display: flex; */
     flex-direction: column;
-    justify-content: space-around;
+    height: 157px;
+    align-items: center;
+    justify-content: space-evenly;
+    align-content: space-around;
 }
 
 .highlight-box:last-child {
@@ -93,8 +95,12 @@
 }
 
 .highlight-box .count {
-    font-size: 24px;
+  font-size: 24px;
     color: #F44336;
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
+    flex-wrap: wrap;
 }
 
 /* List of Requests */
@@ -921,7 +927,8 @@
 			    border-radius: 65px;
 		  }
 			<!----------->	
-				
+			#svgContent{display: flex;
+    justify-content: space-around;}
 </style>
 </head>
 <body>
@@ -1859,7 +1866,7 @@ $(document).on('click', '.page-linkc', function(event) {
                        }
 
                        var row = '';
-                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '">' +
+                       row +=	'<tr onclick=location.href="${contextPath}/pay/detail.do?approvalNo=' + item.approvalNo  + '&documentNo=' + item.documentNo + '&documentType=' + item.documentType + '&payWriter=' + item.payWriter + '&payWriterNo=' + item.payWriterNo + '&payWriterNo=' + item.payWriterNo + '">' +
                        				'<td>' + item.approvalNo + '</td>' +
                               '<td>' + item.title + attachmentIcon + '</td>' +
                               '<td>' + item.documentType + '</td>' +
@@ -3173,57 +3180,38 @@ $(document).on('click', '.page-linkc', function(event) {
 						    <!-- Highlighted Boxes -->
 						    <div class="highlight-boxes">
 						    		<div class="highlight-box" id="noApprovalSignList">
-						            <div class="title"><h5>${ userName }님의 <br>미결재함</h5></div>
-						            <div class="count"><h5>${ noApprovalSignCount }건</h5><button id="round-button">TODAY ${ noApprovalSignCountToday }건</button></div>						            
-						            <div id="svgContent">
-						            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard2-check" viewBox="0 0 16 16">
-												  <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5z"/>
-												  <path d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z"/>
-												  <path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
-												</svg>
-												</div>
+						            <div class="title"><h5>${ userName }님의 미결재함</h5></div>  
+						            <div class="count">
+							            <h4>${ noApprovalSignCount }건</h4>
+						            </div>
+						            <div>
+						            <button id="round-button">TODAY ${ noApprovalSignCountToday }건</button>
+						            </div>
 										</div>
 						        <div class="highlight-box" id="7daysOuterList">
-						            <div class="title"><h5>${ userName }님의 <br>일주일 이상 지연된 <br>결재 요청함</h5></div>
-						            <div class="count"><h5>${ mdCount }건</h5></div>
-						            <div id="svgContent">
-							            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard-minus" viewBox="0 0 16 16">
-													  <path fill-rule="evenodd" d="M5.5 9.5A.5.5 0 0 1 6 9h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5"/>
-													  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
-													  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
-													</svg>
+						            <div class="title"><h5>${ userName }님의 일주일 이상 <br>지연된 결재 요청함</h5></div>
+						            <div class="count">
+						            	<h4>${ mdCount }건</h4>
 						            </div>
 						        </div>
 						        <div class="highlight-box" id="UserApprovalList">
-						            <div class="title"><h5>${ userName }님의 <br>결재 처리함</h5></div>
-						            <div class="count"><h5>${ slistCount }건</h5></div>
-						            <div id="svgContent">
-							            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard2" viewBox="0 0 16 16">
-													  <path d="M3.5 2a.5.5 0 0 0-.5.5v12a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-12a.5.5 0 0 0-.5-.5H12a.5.5 0 0 1 0-1h.5A1.5 1.5 0 0 1 14 2.5v12a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-12A1.5 1.5 0 0 1 3.5 1H4a.5.5 0 0 1 0 1z"/>
-													  <path d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5"/>
-													</svg>
-												</div>
+						            <div class="title"><h5>${ userName }님의 결재 처리함</h5></div>
+						            <div class="count">
+						            	<h4>${ slistCount }건</h4>
+						            </div>
 						        </div>
 						        <div class="highlight-box" id="UserAllList">
-						            <div class="title"><h5>${ userName }님의 <br>전체 결재 요청함</h5></div>
-						            <div class="count"><h5>${ ulistCount }건</h5></div>
-						            <div id="svgContent">
-							            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard-plus-fill" viewBox="0 0 16 16">
-													  <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"/>
-													  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5zm4.5 6V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5a.5.5 0 0 1 1 0"/>
-													</svg>
-												</div>
+						            <div class="title"><h5>${ userName }님의 전체 결재함</h5></div>
+						            <div class="count">
+						            	<h4>${ ulistCount }건</h4>
+						            </div>
 						        </div>
-						        <div class="highlight-box" id="AllList">
-						            <div class="title"><h5>전체 결재함</h5></div>
-						            <div class="count"><h5>${ listCount }건</h5></div>
-						            <div id="svgContent">
-						            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
-												  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
-												  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
-												</svg>
-												</div>
-						        </div>
+								    <div class="highlight-box" id="AllList" style="display:none;">
+						            <div class="title"><h5>전체 결재함 &nbsp;</h5></div>
+						            <div class="count">
+						            	<h4>${ listCount }건</h4>
+						            </div>
+								    </div>
 						    </div>
 						
 						    <!-- List of Requests -->
@@ -3272,6 +3260,8 @@ $(document).on('click', '.page-linkc', function(event) {
 												            </tr>
 												        </thead>
 												        <tbody id="tStatus">
+												        <c:choose>
+												        	<c:when test="${ not empty list }">
 												        		<c:forEach var="l" items="${ list }">
                                      		<tr onclick="location.href='${contextPath}/pay/detail.do?approvalNo=${ l.approvalNo }&documentNo=${ l.documentNo }&documentType=${ l.documentType }&payWriter=${ l.payWriter }&payWriterNo=${ l.payWriterNo }';">
                                             <td>${ l.approvalNo }</td>
@@ -3288,22 +3278,32 @@ $(document).on('click', '.page-linkc', function(event) {
                                     				<td class="status">${ l.payStatus }</td>
                                         </tr>
                                     	</c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+	                                     <tr>
+																		       <td colspan="9">존재하는 게시글이 없습니다.</td>
+																		   </tr>
+                                    </c:otherwise>
+                                  </c:choose>
 												        </tbody>
 												    </table>
 												    
-												    <div id="cen_bottom_pagging">
-																<div id="pagin_form">
-																	<ul class="pagination">
-										               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a  href="${ contextPath }/pay/approvalMain.page?page=${pi.currentPage-1}">◁</a></li>
-										      
-															      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-															       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a  href="${ contextPath }/pay/approvalMain.page?page=${p}">${ p }</a></li>
-															      </c:forEach>
-										      
-															      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a  href="${ contextPath }/pay/approvalMain.page?page=${pi.currentPage+1}">▷</a></li>
-															   </ul>
-											          </div>
-										        </div>
+														    	<div id="cen_bottom_pagging">
+																			<div id="pagin_form">
+																				<ul class="pagination">
+												        					<c:if test="${ list != null && !list.isEmpty()}">
+														               	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage-1}">◁</a></li>
+														      
+																			      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+																			       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${p}">${ p }</a></li>
+																			      </c:forEach>
+														      
+																			      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage+1}">▷</a></li>
+																		   		</c:if>
+																		   	</ul>
+														          </div>
+													        </div>
+										         </div>
 										     </div>
 						        </div>
 						    </div>
@@ -3319,7 +3319,13 @@ $(document).on('click', '.page-linkc', function(event) {
                 $(this).css("color", "rgb(49, 106, 153)");
             } 
         });
+        
+       if("${userNo}" == 1){
+    	   $("#AllList").css("display", "block");
+       }
+        
     });
+    
 </script>
 	          
 	          

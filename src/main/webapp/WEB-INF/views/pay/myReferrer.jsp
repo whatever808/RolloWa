@@ -358,12 +358,15 @@ $.ajax({
         console.log(item);
         
         var documentStatusClass = '';
-        
-			  if (item.DOCUMENT_STATUS === '진행') {
-			      documentStatusClass = 'progresses';
-			  } else if (item.DOCUMENT_STATUS === '대기') {
-			      documentStatusClass = 'pending';
-			  }
+        if (item.documentStatus === '반려') {
+            documentStatusClass = 'rejected';
+        } else if (item.documentStatus === '완료') {
+            documentStatusClass = 'completes';
+        } else if (item.documentStatus === '진행') {
+            documentStatusClass = 'progresses';
+        } else if (item.documentStatus === '대기') {
+            documentStatusClass = 'pending';
+        }
 		  
         var attachmentIcon = '';
         if (item.SALES_STATUS + item.DRAFT_STATUS + item.BUSINESSTRIP_STATUS > 0) {
@@ -428,7 +431,7 @@ $.ajax({
 	            
 							
 							<div class="content2">
-							   <h2>${ userName }님의 미결재함</h2>
+							   <h2>${ userName }님의 수신함</h2>
 							    <div class="d-flex justify-content-between align-items-center mb-3">
 											 <div class="search-container">
 							            <input type="text" class="search-input" id="searches" placeholder="검색어를 입력하세요...">

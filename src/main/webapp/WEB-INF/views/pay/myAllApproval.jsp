@@ -205,7 +205,7 @@ $(document).ready(function(){
         if(text == "반려"){
             $(this).addClass("rejected");
         } else if(text == "완료"){ 
-            $(this).addClass("completes");
+            $(this).addClass("completed");
         } else if(text == "진행"){
             $(this).addClass("progresses");
         } else if(text == "대기"){
@@ -820,7 +820,7 @@ $(document).on('click', '.pages-linki', function(e) {
 	            
 							
 							<div class="content2">
-							   <h2>나의 결재함</h2>
+							   <h2>${ userName }님의 결재상신함</h2>
 							    <div class="d-flex justify-content-between align-items-center mb-3">
 							        <div class="filter-buttons d-flex" style="margin: 16px;">
 							            <button id="wait" type="button">대기</button>
@@ -890,25 +890,21 @@ $(document).on('click', '.pages-linki', function(e) {
 											    </c:otherwise>
 										</c:choose>
 							    </table>
-							    <c:choose>
-							    <c:when test="${ list != null && !list.isEmpty()}">
-							    	<div id="cen_bottom_pagging">
+							    <div id="cen_bottom_pagging">
 											<div id="pagin_form">
 												<ul class="pagination">
-					               <li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage-1}">◁</a></li>
-					      
-										      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-										       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/myAllApproval.page?page=${p}">${ p }</a></li>
-										      </c:forEach>
-					      
-										      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a class="page-link" href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage+1}">▷</a></li>
-										   </ul>
+				        					<c:if test="${ list != null && !list.isEmpty()}">
+						               	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage-1}">◁</a></li>
+						      
+											      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+											       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${p}">${ p }</a></li>
+											      </c:forEach>
+						      
+											      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage+1}">▷</a></li>
+										   		</c:if>
+										   	</ul>
 						          </div>
 					        </div>
-							    </c:when>
-							    <c:otherwise>
-							    </c:otherwise>
-							    </c:choose>
 							</div>
 						</div>
 					</div>

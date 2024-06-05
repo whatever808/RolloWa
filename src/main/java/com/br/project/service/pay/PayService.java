@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.br.project.dao.pay.PayDao;
 import com.br.project.dto.common.PageInfoDto;
@@ -199,7 +201,7 @@ public class PayService {
 	}
 	
 	
-	public int gReportInsert(Map<String, Object> map, List<Map<String, Object>> attachList) {
+	public int gReportInsert(Map<String, Object> map, List<Map<String, Object>> attachList, List<Map<String, Object>> referrerList) {
 		//1.기안서테이블 등록
 		int result1 = payDao.gReportInsert(map);
 		//2. 파일등록
@@ -212,6 +214,14 @@ public class PayService {
 		}
 		//3.결재이력공동테이블 등록
 		int result3 = payDao.gReportApprovalInsert(map);
+		
+		int result4 = 1;
+		if(referrerList != null && !referrerList.isEmpty()) {
+			result4 = 0;
+			for(Map<String, Object> refNo : referrerList) {
+				result4 = payDao.insertRefNo(refNo);
+			}
+		}
 			
 		
 		return result1 * result2 * result3;
@@ -228,7 +238,7 @@ public class PayService {
 		return payDao.ApprovedList(pi, userName);
 	}
 	
-	public int bReportInsert(Map<String, Object> map, List<Map<String, Object>> list) {
+	public int bReportInsert(Map<String, Object> map, List<Map<String, Object>> list, List<Map<String, Object>> referrerList) {
 		
 		
 		//1.비품신청서테이블 등록
@@ -243,6 +253,14 @@ public class PayService {
 			}
 		//3.결재이력공동테이블 등록
 	    int result3 = payDao.bReportApprovalInsert(map);
+	    
+	    int result4 = 1;
+		if(referrerList != null && !referrerList.isEmpty()) {
+			result4 = 0;
+			for(Map<String, Object> refNo : referrerList) {
+				result4 = payDao.insertRefNo(refNo);
+			}
+		}
 					
 		return result1 * result2 * result3;
 	} 
@@ -391,7 +409,7 @@ public class PayService {
 		return result1 + result2;
 	}
 	
-	public int bReportUpdate(Map<String, Object> map, List<Map<String, Object>> itemList) {
+	public int bReportUpdate(Map<String, Object> map, List<Map<String, Object>> itemList, List<Map<String, Object>> referrerList, String approvalNo) {
 		
 		//1.비품신청서 업데이트
 		int result1 = payDao.updateBReport(map);
@@ -411,6 +429,19 @@ public class PayService {
 		}
 		//4.결재공동테이블 업데이트 approval
 		int result4 = payDao.updateApproval(map);
+		//수신참조자 삭제 후
+		int result5 = 1;
+		if(approvalNo != null || !approvalNo.equals("")) {
+			result5 = payDao.deleteRefNo(approvalNo);			
+		}
+		// insert (update과정)
+		int result6 = 1;
+		if(referrerList != null && !referrerList.isEmpty()) {
+			result6 = 0;
+			for(Map<String, Object> refNo : referrerList) {
+				result6 = payDao.updateInsertRefNo(refNo);
+			}
+		}
 		
 		return result3;
 	}
@@ -557,9 +588,23 @@ public class PayService {
 	
 	
 	//기안서 업데이트
-	public int gReportUpdate(Map<String, Object> map, List<Map<String, Object>> attachList, String[] delFileNo) {
+	public int gReportUpdate(Map<String, Object> map, List<Map<String, Object>> attachList, String[] delFileNo, List<Map<String, Object>> referrerList, String approvalNo) {
 		
 		int result1 = payDao.updateApproval(map);
+		
+		//수신참조자 삭제 후
+		int result7 = 1;
+		if(approvalNo != null || !approvalNo.equals("")) {
+			result7 = payDao.deleteRefNo(approvalNo);			
+		}
+		// insert (update과정)
+		int result6 = 1;
+		if(referrerList != null && !referrerList.isEmpty()) {
+			result6 = 0;
+			for(Map<String, Object> refNo : referrerList) {
+				result6 = payDao.updateInsertRefNo(refNo);
+			}
+		}
 		
 		int result2 = 1;
 		if(delFileNo != null) {
@@ -587,5 +632,37 @@ public class PayService {
 		
 		return result1 * result2 * result3 * result5;
 	}
+	
+	//최종승인완료
+	public int ajaxApprovalprocessing(Map<String, Object> map) {
+		return payDao.ajaxApprovalprocessing(map);
+	}
+	
+	//비품 최종승인 되면 비품등록
+	public int ajaxFix(List<Map<String, Object>> list) {
+		
+		int result = 1;
+		if(list != null && !list.isEmpty()) {
+			result = 0;
+			for(Map<String, Object> fixItem : list) {
+				result = payDao.ajaxFix(fixItem);
+			}
+		} 
+		return result;
+	}
+	
+	public List<Map<String, Object>> laterSearchDept(String keyword){
+		return payDao.laterSearchDept(keyword);
+	}
+	
+	public List<Map<String, Object>> myReferrer(int userNo){
+		return payDao.myReferrer(userNo);
+	}
+	
+	
+	public List<Map<String, Object>> refList(String approvalNo){
+		return payDao.refList(approvalNo);
+	}
+	
 	
 }

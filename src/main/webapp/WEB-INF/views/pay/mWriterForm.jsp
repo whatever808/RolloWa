@@ -571,18 +571,16 @@ $(document).ready(function(){
                 
                 $("#tr_table").append(result);
             });
+            
+        	$(document).on("click", "#del_btn", function () {
+        	    //$("#tr_table tr:last-child").remove();
+        	    $("#tr_input").next("tr").last().remove();
+        	});
+        	
         });
+        
     </script>
     
-    <script>
-    $(document).ready(function(){
-    
-    	$(document).on("click", "#del_btn", function () {
-    	    //$("#tr_table tr:last-child").remove();
-    	    $("#tr_table").children("tr").last().remove();
-    	});
-    })
-    </script>
         
      <script>
         $('#modal').iziModal({

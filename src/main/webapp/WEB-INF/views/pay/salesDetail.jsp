@@ -51,19 +51,23 @@ $(document).ready(function(){
 	    } else {
 	    		if(confirm("정말로 승인을 하시겠습니까?")){
 	    			
+	    			
+	    			
 	    			var data = signature.toDataURL("image/png");
-	    	        const image = canvas.toDataURL();
+	    	    const image = canvas.toDataURL();
 	    	        
-	    	        var approvalName = "${list.get(0).FIRST_APPROVAL == userName ? 1 : list.get(0).MIDDLE_APPROVAL == userName ? 2 : list.get(0).FINAL_APPROVAL == userName ? 3 : 0}" 
-	    	        
+	    	    var approvalName = "${list.get(0).FIRST_APPROVAL == userName ? 1 : list.get(0).MIDDLE_APPROVAL == userName ? 2 : list.get(0).FINAL_APPROVAL == userName ? 3 : 0}" 
+	    	    var formData = $("#formFix").serialize();
+	    	    
 	    	        $.ajax({
 	    	        	url:"${contextPath}/pay/ajaxSign.do",
 	    	        	type:"post",
+	    	        	contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
 	    	        	data:{
 	    	        		dataUrl:data,
-	    	        		signName:"${userName}",
-	    	        		approvalNo:"${list.get(0).APPROVAL_NO}",
-	    	        		approvalSignNo:approvalName
+	    	        		signName: "${userName}",
+	    	        		approvalNo: "${list.get(0).APPROVAL_NO}",
+	    	        		approvalSignNo: approvalName
 	    	        	},
 	    	        	success:function(response){
 	    	        		
@@ -75,7 +79,7 @@ $(document).ready(function(){
 	    	        		    if (response.approvalSignNo == 1) {
 	    	        		    	$('#firstSign').children().remove();
 	    	        		    	$("#apDt1").children().remove();
-	    	        		      $('#firstSign').append('<img src="' + response.sign[0].firstSign + '" alt="First Approval Signature">');
+	    	        		      $('#firstSign').append('<img src="' + response.sign[0].firstSign + '" alt="First Approval Signature"  id="imgcheck1">');
 	    	        		      	if($("#apDt1").text() == ""){
 	    			        		      $("#apDt1").append(response.sign[0].firstApDt);	
 	    	        		      	}
@@ -84,21 +88,17 @@ $(document).ready(function(){
 	    	        		    } else if (response.approvalSignNo == 2) {
 	    	        		    	$('#middleSign').children().remove();
 	    		        		    $("#apDt2").children().remove();
-	    	        		      $('#middleSign').append('<img src="' + response.sign[0].middleSign + '" alt="Middle Approval Signature">');
+	    	        		      $('#middleSign').append('<img src="' + response.sign[0].middleSign + '" alt="Middle Approval Signature" id="imgcheck2">');
 	    	        		      if($("#apDt2").text() == ""){
 	    		        		      $("#apDt2").append(response.sign[0].middleApDt);	
 	            		      	}
-	    	        		      $("#approvalSt").empty();
-													$("#approvalSt").text("진행");
-	    	        		    } else {
+	    	        		    } else if(response.approvalSignNo == 3){
 	    	        		    	$('#finalSign').children().remove();
 	    	        		    	$("#apDt3").children().remove();
-	    	        		      $('#finalSign').append('<img src="' + response.sign[0].finalSign + '" alt="Final Approval Signature">');
+		    	        		    $('#finalSign').append('<img src="' + response.sign[0].finalSign + '" alt="Final Approval Signature" id="imgcheck3">');
 	    	        		    	if($("#apDt3").text() == ""){
 	    	        		        $("#apDt3").append(response.sign[0].finalApDt);	        		    		
 	    	        		    	}
-	    	        		    	$("#approvalSt").empty();
-	    										$("#approvalSt").text("승인");	
 	    	        		    }
 	    	        		}
 	    	              
@@ -135,43 +135,35 @@ $(document).on("click", "#rejectBtn", function(){
 					  alert("반려가 완료되었습니다.");
 					  $("#firstSign").children().remove();
 					  $("#apDt1").children().remove();
-					  $("#firstSign").append().html('<h1 style="color: red;" class="rejects">반려</h1>');
+					  $("#firstSign").append().html('<h1 style="color: red;" class="rejects" id="rejectCheck1">반려</h1>');
 						  if($("#apDt1").text() == ""){
 				        	$("#apDt1").append(list[0].firstApDt);	
 		        	}
-						  if($("#approvalSt").text() == ""){
-						        $("#approvalSt").text("반려");	
-					    }
-						  $("#modal").iziModal('close');
+					  $("#approvalSt").empty();
+						$("#approvalSt").text("진행");	
+							
 				  }else if(list[1].approvalSignNo == "2"){
 					  alert("반려가 완료되었습니다.");
 					  $("#middleSign").children().remove();
 					  $("#apDt2").children().remove();
-					  $("#middleSign").append().html('<h1 style="color: red;" class="rejects">반려</h1>');
+					  $("#middleSign").append().html('<h1 style="color: red;" class="rejects" id="rejectCheck2">반려</h1>');
 						  if($("#apDt2").text() == ""){
 		        		$("#apDt2").append(list[0].middleApDt);	
 	    		  	}
-						  if($("#approvalSt").text() == ""){
-				        $("#approvalSt").text("반려");	
-			    		}
-					  $("#modal").iziModal('close');
-					  
+							
 				  }else{
 					  alert("반려가 완료되었습니다.");
 					  $("#finalSign").children().remove();
 					  $("#apDt3").children().remove();
-					  $("#finalSign").append().html('<h1 style="color: red;" class="rejects">반려</h1>');
+					  $("#finalSign").append().html('<h1 style="color: red;" class="rejects" id="rejectCheck3">반려</h1>');
 						  if($("#apDt3").text() == ""){
 		        		$("#apDt3").append(list[0].finalApDt);	
 	    		  	}
-						  if($("#approvalSt").text() == ""){
-						        $("#approvalSt").text("반려");	
-					    }
-					  $("#modal").iziModal('close');
+					 }
+				  $("#modal").iziModal('close');
 					  
 				  }
 				
-			  }
 			  
 			  
 		  })
@@ -180,7 +172,6 @@ $(document).on("click", "#rejectBtn", function(){
 	  
 	  
 })
-
 	
 </script>
 
@@ -255,8 +246,25 @@ $(document).on("click", "#rejectBtn", function(){
                 </div>
             </div>
         </div>
+        <c:if test="${ not empty refList }">
+	        <div class="body">
+	         		<table class="info-table">
+	            		<tr>
+	                    <th>수신참조인</th>
+	                    <c:forEach var="item" items="${ refList }">
+	                    <td>${item.REF_WRITER_NAME}</td>
+	                    </c:forEach>
+	                </tr>
+	            </table>
+	        </div>
+        </c:if>
         <div class="body">
             <table class="info-table">
+            		<c:if test="${ list.get(0).MODIFY_TYPE eq 'S'}">
+	            		<td style="border: 0px solid; text-align: center;">
+	            		<button type="button" class="btn btn-outline-primary" disabled>보안 수정</button>
+	            		</td>
+            		</c:if>
                 <tr>
                     <th>기안부서</th>
                     <td>${list.get(0).DEPARTMENT}</td>
@@ -312,19 +320,38 @@ $(document).on("click", "#rejectBtn", function(){
                     </c:choose>
 								</tr>
             </table>
-					        </div>
+					         </div>
 					      			<div id="modifybtn">
-					           			<button class="btn btn-warning" id="modifyWriter" type="submit" style="display: none;">수정</button>
-					          			<button class="btn btn-primary" onclick="submitbtn();" style="display: none;" id="aproS">완료</button>
+					           			<c:choose>
+					      						<c:when test="${ list.get(0).DOCUMENT_STATUS == 'D' ||  list.get(0).DOCUMENT_STATUS == 'I' && list.get(0).PAYMENT_WRITER_NO == userNo}">
+						           				<button class="btn btn-warning" class="modifyWriter" id=correction type="submit">수정</button>
+						           			</c:when>
+						           			<c:when test="${ list.get(0).DOCUMENT_STATUS == 'N' && list.get(0).PAYMENT_WRITER_NO == userNo}">
+							           			<button class="btn btn-info" class="modifyWriter" id="secure" type="submit">보안</button>					      					
+						           			</c:when>
+					      					</c:choose>
+					           			<c:choose>
+													    <c:when test="${list.get(0).FINAL_APPROVAL.equals(userName)}">
+													        <button class="btn btn-primary" id="lastbtn">완료</button>
+													    </c:when>
+													    <c:when test="${list.get(0).FIRST_APPROVAL.equals(userName)}">
+													        <button class="btn btn-primary" id="firstbtn">완료</button>
+													    </c:when>
+													    <c:when test="${list.get(0).MIDDLE_APPROVAL.equals(userName)}">
+													        <button class="btn btn-primary" id="middlebtn">완료</button>
+													    </c:when>
+													</c:choose>
 					          	</div>
 					          	<div style="display: flex; justify-content: flex-end;">
-					          			<button class="delete-buttons" id="deldo">삭제</button>
+					          			<button class="delete-buttons" id="deldo" style="display: none;">삭제</button>
 					          	</div>
-					          	<button id="historyBack" type="button" style="border: none; background-color: white;">
+					 				<div>
+			           			<button id="historyBack" type="button" style="border: none; background-color: white;">
 				           			<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" style="color: #e99db2;" class="bi bi-arrow-left-square-fill" viewBox="0 0 16 16">
 												  <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1"/>
 												</svg>
-											</button>	
+											</button>							        
+					        </div>
 					 				</div> 
                 </div>
             </div>
@@ -367,11 +394,41 @@ $(document).on("click", "#rejectBtn", function(){
 		        </div>
 		    </div>
 		    <!---------------------------------------------->
-   <script>
+  	<script>
+    $(document).ready(function() {
+        // 페이지가 로드될 때 sessionStorage에서 데이터 불러오기
+        if (sessionStorage.getItem('DATA')) {
+            $('#input_text').val(sessionStorage.getItem('DATA'));
+        }
+
+        // input_text의 값이 변경될 때마다 sessionStorage에 저장
+        $('#input_text').on('input', function() {
+            sessionStorage.setItem('DATA', $(this).val());
+        });
+
+        // 뒤로가기 버튼 클릭 시 이벤트
+        $('#historyBack').on('click', function() {
+            // 여기서는 페이지 이동을 위한 코드 추가 (예: window.history.back();)
+            window.history.back();
+        });
+    });
+
+    // 페이지가 다시 로드될 때 sessionStorage에서 데이터 불러오기
+    window.onpageshow = function(event) {
+        if (event.persisted || (window.performance && (window.performance.navigation.type == 1 || window.performance.navigation.type == 2))) {
+            if (sessionStorage.getItem('DATA')) {
+                $('#input_text').val(sessionStorage.getItem('DATA'));
+            }
+        }
+    };
+    		
+    
 		   $(document).ready(function() {
 		   		if("${list.get(0).PAYMENT_WRITER_NO}" == "${userNo}"){
 		   			$(".delete-buttons").css("display", "block");
 		   		}
+		   		
+		   			
 			   
 		   })
 		   
@@ -389,10 +446,21 @@ $(document).on("click", "#rejectBtn", function(){
                         },
                         success: function(response) {
                         	 if(response == "SUCCESS") {
-                                 alert("삭제가 완료되었습니다.");
-                                 location.href = document.referrer; 
+                        		 
+                        		 function redAlert(title, message) {
+                             	    $('#redModal').iziModal('setTitle', title);
+                             	    $('#redModal').iziModal('setSubtitle', message);
+                             	    $('#redModal').iziModal('open');
+		                        	}
+		
+		                        	redAlert("게시글 삭제", "신청서가 정상적으로 삭제되었습니다.");
+		
+		                        	setTimeout(function() {
+		                        	    location.href = document.referrer;
+		                        	}, 3000);
+		                        	
                              } else {
-                                 alert("삭제 실패");
+                                 console.log("ajax 통신 실패");
                              }
                         },
                         error: function() {
@@ -406,36 +474,46 @@ $(document).on("click", "#rejectBtn", function(){
             }
         });
     });
-    
-   
+		   $(document).ready(function(){
+			    if("${list.get(0).DOCUMENT_STATUS}" == "Y" || "${list.get(0).DOCUMENT_STATUS}" == "N"){
+			        $("#lastbtn").css("visibility", "hidden");
+			        $("#firstbtn").css("visibility", "hidden");
+			        $("#middlebtn").css("visibility", "hidden");
+			    }
+				});
+		   
 		   $(document).ready(function() {
 				  
-			    var approvalSt = $("#approvalSt").text().trim();
+			    var approvalSt = "${list.get(0).DOCUMENT_STATUS}"
 			    var paymentWriterNo = "${list.get(0).PAYMENT_WRITER_NO}";
 			    var userName = "${userName}";
 			    var userNo = "${userNo}";
 			    
 			 		// 수정 버튼 표시 여부 결정
-			    if (paymentWriterNo === userNo) {
-			        if (approvalSt === "완료") {
-			            $("#modifyWriter").css("display", "none"); // 완료 상태면 수정 버튼 숨김
-			        } else {
-			            $("#modifyWriter").css("display", "block"); // 완료 상태가 아니면 수정 버튼 표시
-			        }
-			    } else {
-			        $("#modifyWriter").css("display", "none"); // 작성자가 아니면 수정 버튼 숨김
+			    if (paymentWriterNo != userNo) {
+			    	$("#modifyWriter").css("display", "none");
 			    }
+
+		   		if(paymentWriterNo == userNo){
+		   			$("#deldo").css("display", "block");
+		   		}
+		   			
 			    
-			    
-			    // 승인 상태에 따라 버튼 표시 여부 결정
-			    if (approvalSt !== "완료") {
-			        if ("${list.get(0).FIRST_APPROVAL}" === userName) {
+			    if (approvalSt == "D" || approvalSt == "I") {
+			        const firstApproval = "${list.get(0).FIRST_APPROVAL}";
+			        const middleApproval = "${list.get(0).MIDDLE_APPROVAL}";
+			        const finalApproval = "${list.get(0).FINAL_APPROVAL}";
+
+			        const isSignedOrRejected1 = $("#img1").length || $("#reject1").length;
+			        const isSignedOrRejected2 = $("#img2").length || $("#reject2").length;
+
+			        if (firstApproval === userName) {
 			            $(".suBtn").css("display", "block");
-			        } else if ("${list.get(0).MIDDLE_APPROVAL}" === userName && $("#img1").length) {
-			            // 첫 번째 승인자가 싸인을 한 경우에만 두 번째 승인자에게 버튼을 보여줌
+			        } else if (middleApproval === userName && isSignedOrRejected1) {
+			        	// 첫 번째 승인자가 싸인을 한 경우에만 두 번째 승인자에게 버튼을 보여줌
 			            $(".suBtn").css("display", "block");
-			        } else if ("${list.get(0).FINAL_APPROVAL}" === userName && $("#img1").length && $("#img2").length) {
-			            // 첫 번째와 두 번째 승인자가 싸인을 한 경우에만 세 번째 승인자에게 버튼을 보여줌
+			        } else if (finalApproval === userName && isSignedOrRejected1 && isSignedOrRejected2) {
+			           // 첫 번째와 두 번째 승인자가 싸인을 한 경우에만 세 번째 승인자에게 버튼을 보여줌
 			            $(".suBtn").css("display", "block");
 			        }
 			    }
@@ -445,33 +523,122 @@ $(document).on("click", "#rejectBtn", function(){
 			        $("#rejectContentBtn").css("display", "block");
 			    }
 			    
-			    // 승인/반려 버튼 표시 여부 결정
-			    if ("${list.get(0).FIRST_APPROVAL}" === userName || "${list.get(0).MIDDLE_APPROVAL}" === userName || "${list.get(0).FINAL_APPROVAL}" === userName) {
-			        $("#aproS").css("display", "block");
+			    
+			});
+		   
+		  //---------세번째 승인자의 완료버튼--------------
+		  $("#lastbtn").on("click", function() {
+		    if ($("#imgcheck3").length != 0 || $("#rejectCheck3").length != 0) {
+		        submitLast();
+		    } else {
+		        alert("승인처리를 완료해주세요.");
+		    }
+			});
+		  
+		  function submitLast() {
+			    // 결재를 완료하시겠습니까? 라는 확인 창을 띄운다.
+			    if (confirm('결재을 완료하시겠습니까?')) {
+			        
+			        // 결재 상태가 "반려"인 경우를 확인한다.
+			        if ("${sign.get(0).firstSign}" == "반려" || "${sign.get(0).middleSign}" == "반려" || ($("#rejectCheck3").length != 0 || "${sign.get(0).finalSign}" == "반려")) {
+			            
+			            // 상태가 "반려"일 경우 AJAX 요청을 통해 결재를 처리한다.
+			            $.ajax({
+			                url: "${contextPath}/pay/ajaxApprovalprocessing.do",
+			                type: "post",
+			                data: { status: "N", approvalNo: "${list.get(0).APPROVAL_NO}" },
+			                success: function(response) {
+			                    if (response == 1) {
+			                        // 이전 페이지로 이동하고 모달 창을 설정한다.
+			                        location.href = document.referrer;
+			                        $('#redModal').iziModal('setTitle', "전자결재");
+			                        $('#redModal').iziModal('setSubtitle', "승인처리가 최종완료되었습니다.");
+			                    }
+			                },
+			                error: function() {
+			                    console.log("ajax통신 실패");
+			                }
+			            });
+
+			        // 결재가 "반려"가 아니고 필요한 이미지가 모두 있는 경우를 확인한다.
+			        } else if ($("#img1").length != 0 && $("#img2").length != 0 && ($("#img3").length != 0 || $("#imgcheck3").length != 0)) {
+			            
+			            // 상태가 "Y"일 경우 AJAX 요청을 통해 결재를 처리한다.
+			            $.ajax({
+			                url: "${contextPath}/pay/ajaxApprovalprocessing.do",
+			                type: "post", 
+			                data: { status: "Y", approvalNo: "${list.get(0).APPROVAL_NO}" },
+			                success: function(response) {
+			                    if (response == 1) {
+			                        
+			                    	function redAlert(title, message) {
+                                	    $('#redModal').iziModal('setTitle', title);
+                                	    $('#redModal').iziModal('setSubtitle', message);
+                                	    $('#redModal').iziModal('open');
+                           	}
+
+                           	redAlert("전자결재", "결재가 최종승인 완료되었습니다.");
+
+                           	setTimeout(function() {
+                           	    location.href = document.referrer;
+                           	}, 3000);
+                                	
+			                    }
+			                },
+			                error: function() {
+			                    console.log("ajax 통신 실패");
+			                }
+			            });
+			        }
+			    }
+			}
+		  //--------------------------------------
+		  $("#firstbtn").on("click", function() {
+			  
+			    if ($("#imgcheck1").length != 0 || $("#rejectCheck1").length != 0) {
+			        console.log($("#imgcheck1").length != 0 || $("#rejectCheck1").length != 0);
+			        yellowAlert("전자결재", "결재 승인이 완료되었습니다.");
+
+			     		setTimeout(function() {
+			     	    location.href = document.referrer;
+			     		}, 3000);
 			    } else {
-			        $("#aproS").css("display", "none"); 
+			    	console.log($("#imgcheck1").length != 0 || $("#rejectCheck1").length != 0);
+			        alert("승인처리를 완료해주세요.");
 			    }
 			});
 		  
-		   function submitbtn() {
-			    if (confirm('결재을 완료하시겠습니까?')) {
-			        alert("결재가 완료되었습니다.");
-			        location.href = document.referrer;
-			    }
-			}
+		  //두번째 승인자의 완료버튼
+		 $("#middlebtn").on("click", function() {
+		    if ($("#imgcheck2").length != 0 || $("#rejectCheck2").length != 0) {
+		        console.log($("#imgcheck2").length != 0 || $("#rejectCheck2").length != 0);
+		        
+		        yellowAlert("전자결재", "결재 승인이 완료되었습니다.");
+
+		     		setTimeout(function() {
+		     	    location.href = document.referrer;
+		     		}, 3000);
+		     		
+		    } else {
+		        alert("승인처리를 완료해주세요.");
+		    }
+			});
+				  
 		  
+		  function yellowAlert(title, message) {
+       	    $('#yellowModal').iziModal('setTitle', title);
+       	    $('#yellowModal').iziModal('setSubtitle', message);
+       	    $('#yellowModal').iziModal('open');
+    	}
+			
+		 
 		  $(document).ready(function(){
 			  
-			  var approvalSt = $("#approvalSt").text().trim();
+			  var approvalSt = "${list.get(0).DOCUMENT_STATUS}";
 			  var paymentWriterNo = "${list.get(0).PAYMENT_WRITER_NO}";
-			  if (approvalSt == "완료") {
-           $("#aproS").css("display", "none");
+			  if (approvalSt == "Y" || approvalSt == "N") {
+          $(".suBtn").css("display", "none");
 	      }
-			  if (approvalSt == "반려" || approvalSt == "완료") {
-		       $(".suBtn").css("display", "none");
-		    }
-			  
-			  
 		  })
 	  
     
@@ -525,25 +692,48 @@ $(document).on("click", "#rejectBtn", function(){
        });
    
     
-    $("#modifyWriter").on("click", function(){
-    	
-    	let writerNo = '${ not empty list and userNo == list.get(0).PAYMENT_WRITER_NO and  (list.get(0).DOCUMENT_STATUS == "D" || list.get(0).DOCUMENT_STATUS == "N")}';
-    	
-    	if(writerNo == "true"){
-	    	 	if(confirm('수정하시겠습니까?')){
-						alert("작성페이지로 이동합니다.");
-							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).SALES_NO} 
-																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
-																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
-																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
-																									 			+ "&report=g";
-	    		}
-    	}else{
-    		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
-    	}
-   
-    })
-    </script>
+       $("#correction").on("click", function(){
+       	
+       	let writerNo = "${ not empty list && (list.get(0).DOCUMENT_STATUS == 'N' || list.get(0).DOCUMENT_STATUS == 'D') && userNo == list.get(0).PAYMENT_WRITER_NO }";
+       	
+       	if(writerNo == "true"){
+   	    	 	if(confirm('수정하시겠습니까?')){
+   						alert("작성페이지로 이동합니다.");
+   							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).SALES_NO} 
+   																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
+   																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
+   																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
+   																									 			+ "&report=g"
+   																									 			+ "&type=C";
+   	    		}
+       	}else{
+       		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
+       	}
+      
+       })
+       </script>
+       
+       <script>
+
+   		$("#secure").on("click", function(){
+       	
+       	let writerNo = "${ not empty list && (list.get(0).DOCUMENT_STATUS == 'N' || list.get(0).DOCUMENT_STATUS == 'D') && userNo == list.get(0).PAYMENT_WRITER_NO }";
+       	
+       	if(writerNo == "true"){
+   	    	 	if(confirm('수정하시겠습니까?')){
+   						alert("작성페이지로 이동합니다.");
+   							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).SALES_NO} 
+   																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
+   																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
+   																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
+   																									 			+ "&report=g"
+   																									 			+ "&type=S";
+   	    		}
+       	}else{
+       		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
+       	}
+   		}) 
+       </script>
     
    
 
