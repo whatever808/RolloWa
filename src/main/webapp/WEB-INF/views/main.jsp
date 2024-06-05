@@ -166,10 +166,11 @@
             
             // 아이디 찾기 ajax 통신
             $(".forget_id_btn").on("click", function() {
+            	var userNo = $.trim($("#forget_id input[type=text]").val());
             	$.ajax({
                 	url: "${contextPath}/member/forgetId.do"
                 	, method: "post"
-                	, data: {userNo: $("#forget_id input[type=text]").val()}
+                	, data: {userNo: userNo}
                 	, success: function(result) {
                 		alertify.alert("아이디 찾기 서비스", result);
                 	}
