@@ -26,10 +26,6 @@
 			console.log("데이터 먼스 : ", mDataTable);
 			console.log("데이타 데이 : ", dDataTable);
 			
-			// 차트 컬럼
-			// mDataTable.addColumn('string', '기간');
-			// dDataTable.addColumn('string', '기간');
-			
 			// 차트 옵션값 지정
 			mOptions = {
 		      title: '월별 이용률',
@@ -204,9 +200,9 @@
 			success: function(data){
 				console.log("chartData : ", data);
 				if(type == 'year'){
-					drawChart(attractionName, data, mDataTable, mChart);
+					drawChart(attractionName, data, mDataTable, mOptions, mChart);
 				}else{
-					drawChart(attractionName, data, dDataTable, dChart);
+					drawChart(attractionName, data, dDataTable, dOptions, dChart);
 				}
 			},error: function(){
 				console.log("SELECT ATTRACTION UTILIZATION LIST TO COMPARE FAILED");
@@ -215,15 +211,25 @@
 	}
 	
 	// 차트 그리기
-	function drawChart(attractionName, data, dataTable, chart) {
-		console.log("data label : ", dataTable.getNumberOfColumns());
+	function drawChart(attractionName, data, dataTable, options, chart) {
+		console.log("options : ", options.title);
+		
+		// 기존의 데이터가 없을 경우에 추가될 컬럼 및 행
 		if(dataTable.getNumberOfColumns() == 0){
 			dataTable.addColumn('string', '기간');
+			for(let i=0 ; i<data.length ; i++){
+				console.log(data[i].L);
+				dataTable.addRow([data[i].L]);
+			}
 		}
 		
+		// 새로 생성할 데이터 컬럼 추가
 		dataTable.addColumn('number', attractionName + '이용률');
+		for(let i=0 ; i<data.length ; i++){
+			console.log(data[i].usage);
+			dataTable.addRow([data[i].usage]);
+		}
 		
-		// 컬럼 추가
 		// 옵션 수정
 		// 차트 그리기
 		
