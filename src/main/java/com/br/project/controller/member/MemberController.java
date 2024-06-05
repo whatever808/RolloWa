@@ -103,7 +103,7 @@ public class MemberController {
         
         message.setText("[CoolSMS] 인증번호를 확인하고 입력해주세요 : " + rand);
 
-        //SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
         //log.debug("{}", response);
         
         return rand;
