@@ -246,8 +246,25 @@ $(document).on("click", "#rejectBtn", function(){
                 </div>
             </div>
         </div>
+        <c:if test="${ not empty refList }">
+	        <div class="body">
+	         		<table class="info-table">
+	            		<tr>
+	                    <th>수신참조인</th>
+	                    <c:forEach var="item" items="${ refList }">
+	                    <td>${item.REF_WRITER_NAME}</td>
+	                    </c:forEach>
+	                </tr>
+	            </table>
+	        </div>
+        </c:if>
         <div class="body">
             <table class="info-table">
+            		<c:if test="${ list.get(0).MODIFY_TYPE eq 'S'}">
+	            		<td style="border: 0px solid; text-align: center;">
+	            		<button type="button" class="btn btn-outline-primary" disabled>보안 수정</button>
+	            		</td>
+            		</c:if>
                 <tr>
                     <th>기안부서</th>
                     <td>${list.get(0).DEPARTMENT}</td>
@@ -305,7 +322,14 @@ $(document).on("click", "#rejectBtn", function(){
             </table>
 					         </div>
 					      			<div id="modifybtn">
-					           			<button class="btn btn-warning" id="modifyWriter" type="submit">수정</button>
+					           			<c:choose>
+					      						<c:when test="${ list.get(0).DOCUMENT_STATUS == 'D' ||  list.get(0).DOCUMENT_STATUS == 'I' && list.get(0).PAYMENT_WRITER_NO == userNo}">
+						           				<button class="btn btn-warning" class="modifyWriter" id=correction type="submit">수정</button>
+						           			</c:when>
+						           			<c:when test="${ list.get(0).DOCUMENT_STATUS == 'N' && list.get(0).PAYMENT_WRITER_NO == userNo}">
+							           			<button class="btn btn-info" class="modifyWriter" id="secure" type="submit">보안</button>					      					
+						           			</c:when>
+					      					</c:choose>
 					           			<c:choose>
 													    <c:when test="${list.get(0).FINAL_APPROVAL.equals(userName)}">
 													        <button class="btn btn-primary" id="lastbtn">완료</button>
@@ -668,25 +692,48 @@ $(document).on("click", "#rejectBtn", function(){
        });
    
     
-    $("#modifyWriter").on("click", function(){
-    	
-    	let writerNo = '${ not empty list and userNo == list.get(0).PAYMENT_WRITER_NO and  (list.get(0).DOCUMENT_STATUS == "D" || list.get(0).DOCUMENT_STATUS == "N")}';
-    	
-    	if(writerNo == "true"){
-	    	 	if(confirm('수정하시겠습니까?')){
-						alert("작성페이지로 이동합니다.");
-							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).SALES_NO} 
-																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
-																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
-																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
-																									 			+ "&report=g";
-	    		}
-    	}else{
-    		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
-    	}
-   
-    })
-    </script>
+       $("#correction").on("click", function(){
+       	
+       	let writerNo = "${ not empty list && (list.get(0).DOCUMENT_STATUS == 'N' || list.get(0).DOCUMENT_STATUS == 'D') && userNo == list.get(0).PAYMENT_WRITER_NO }";
+       	
+       	if(writerNo == "true"){
+   	    	 	if(confirm('수정하시겠습니까?')){
+   						alert("작성페이지로 이동합니다.");
+   							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).SALES_NO} 
+   																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
+   																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
+   																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
+   																									 			+ "&report=g"
+   																									 			+ "&type=C";
+   	    		}
+       	}else{
+       		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
+       	}
+      
+       })
+       </script>
+       
+       <script>
+
+   		$("#secure").on("click", function(){
+       	
+       	let writerNo = "${ not empty list && (list.get(0).DOCUMENT_STATUS == 'N' || list.get(0).DOCUMENT_STATUS == 'D') && userNo == list.get(0).PAYMENT_WRITER_NO }";
+       	
+       	if(writerNo == "true"){
+   	    	 	if(confirm('수정하시겠습니까?')){
+   						alert("작성페이지로 이동합니다.");
+   							location.href="${contextPath}/pay/modify.do?documentNo=" + ${list.get(0).SALES_NO} 
+   																									 			+ "&approvalNo=" + ${list.get(0).APPROVAL_NO} 
+   																								 	 			+ "&payWriterNo=" + ${list.get(0).PAYMENT_WRITER_NO} 
+   																									 			+ "&payWriter=${list.get(0).PAYMENT_WRITER}"
+   																									 			+ "&report=g"
+   																									 			+ "&type=S";
+   	    		}
+       	}else{
+       		alert("결재가 진행된 상태이므로 수정이 불가능합니다.");
+       	}
+   		}) 
+       </script>
     
    
 

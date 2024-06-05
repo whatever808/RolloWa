@@ -201,7 +201,7 @@ public class PayService {
 	}
 	
 	
-	public int gReportInsert(Map<String, Object> map, List<Map<String, Object>> attachList) {
+	public int gReportInsert(Map<String, Object> map, List<Map<String, Object>> attachList, List<Map<String, Object>> referrerList) {
 		//1.기안서테이블 등록
 		int result1 = payDao.gReportInsert(map);
 		//2. 파일등록
@@ -214,6 +214,14 @@ public class PayService {
 		}
 		//3.결재이력공동테이블 등록
 		int result3 = payDao.gReportApprovalInsert(map);
+		
+		int result4 = 1;
+		if(referrerList != null && !referrerList.isEmpty()) {
+			result4 = 0;
+			for(Map<String, Object> refNo : referrerList) {
+				result4 = payDao.insertRefNo(refNo);
+			}
+		}
 			
 		
 		return result1 * result2 * result3;
@@ -580,9 +588,23 @@ public class PayService {
 	
 	
 	//기안서 업데이트
-	public int gReportUpdate(Map<String, Object> map, List<Map<String, Object>> attachList, String[] delFileNo) {
+	public int gReportUpdate(Map<String, Object> map, List<Map<String, Object>> attachList, String[] delFileNo, List<Map<String, Object>> referrerList, String approvalNo) {
 		
 		int result1 = payDao.updateApproval(map);
+		
+		//수신참조자 삭제 후
+		int result7 = 1;
+		if(approvalNo != null || !approvalNo.equals("")) {
+			result7 = payDao.deleteRefNo(approvalNo);			
+		}
+		// insert (update과정)
+		int result6 = 1;
+		if(referrerList != null && !referrerList.isEmpty()) {
+			result6 = 0;
+			for(Map<String, Object> refNo : referrerList) {
+				result6 = payDao.updateInsertRefNo(refNo);
+			}
+		}
 		
 		int result2 = 1;
 		if(delFileNo != null) {
