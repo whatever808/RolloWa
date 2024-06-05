@@ -177,5 +177,8 @@ public class VacationService {
 	public String selectUpperMember(int emp) {
 		return vacationDao.selectUpperMember(emp);
 	}
+	public int vacationExpire(VacationDto vacation) {
+		return vacationDao.vacationExpire(vacation);
+	}
 
 }

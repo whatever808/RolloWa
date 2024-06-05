@@ -58,7 +58,7 @@ and
 ]]>
 <if test="userNO != null">
 and 
-	vacation.MODIFY_EMP in (${userNO})
+	vacation.REGIST_EMP in (${userNO})
 </if>
 </select>
 
@@ -96,6 +96,7 @@ select
     , VACATION_COMMNET
     , VACATION_COLOR
     , RETRACT_COMMNET
+    , R_REQUEST_COMMENT
     , GROUP_CODE
     , APPORVAL_STATUS
     , ORIGIN_NAME 
@@ -105,7 +106,7 @@ from vacation v
 left join  attachment a on (VACATION_NO = REF_NO and REF_TYPE = 'VACT' and a.STATUS = 'Y')
 where REGIST_EMP = #{userNo}
 and v.STATUS = 'Y'
-and APPORVAL_STATUS = 'N'
+and APPORVAL_STATUS in ('N', 'R' , 'T')
 order by VACATION_NO desc 
 </select>
 
@@ -115,6 +116,7 @@ update
 set 
 	VACATION_STRAT = To_date(#{vacaStart}, 'YYYY-MM-DD HH24:MI:SS')
 , VACATION_END = To_date(#{vacaEnd}, 'YYYY-MM-DD HH24:MI:SS')
+, VACATION_COLOR = #{vacaColor}
 , VACATION_COMMNET = #{vacaComment}
 , MODIFY_EMP = #{member.userNo}
 where 
@@ -169,8 +171,7 @@ order by VACATION_NO desc
 			vacation
 		set
 			R_REQUEST_COMMENT = #{RRequestComent}
-			, APPORVAL_STATUS = 'N'
-			, STATUS = 'R'
+			, APPORVAL_STATUS = 'T'
 		where
 			VACATION_NO = #{vacaNO}
 	</update>
@@ -230,7 +231,7 @@ where
 and 
 	v.STATUS = 'Y'
 and 
-	APPORVAL_STATUS = 'N'
+	APPORVAL_STATUS in ('N', 'T')
 <if test="!vacaGroupCode.equals('all')">
 	and GROUP_CODE = #{vacaGroupCode}
 </if>
@@ -248,14 +249,14 @@ order by
 		VACATION_NO = #{vacaNO}
 	</update>
 	
-		<update id="singConfirm">
+<update id="singConfirm">
 	update 
 		vacation
 	set 
 		APPORVAL_STATUS = 'Y'
 	where 
 		VACATION_NO = #{vacaNO}
-	</update>
+</update>
 	
 	<update id="requestRefuse">
 		update 
@@ -284,5 +285,13 @@ order by
 	where team_code = (select team_code from member where user_no = #{emp})
 	and position_code = 'E'
 	</select>
-
+	
+	<update id="vacationExpire">
+		update 
+			vacation
+		set
+			STATUS = 'N'
+		where 
+			VACATION_NO = #{vacaNO}
+	</update>
 </mapper>

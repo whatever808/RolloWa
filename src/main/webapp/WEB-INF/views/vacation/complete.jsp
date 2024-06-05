@@ -302,13 +302,13 @@
 									+ e.vacaStart.slice(0,10) +' ~ '+ e.vacaEnd.slice(0,10)
 									+ '</td>'
 									+ '<td><div style="display: flex;gap: 5px;justify-content: center;">'
-									+ '<button class="btn btn-outline-success" onclick="singModal('+ e.vacaNO +','+ e.member.userNo +','+ checkRe +','+"'"+ e.vacaStart.slice(0, 10) +"'"+','+"'"+ e.vacaEnd.slice(0, 10)+"'" +');">승인</button>'
-									+ '<button class="btn btn-outline-danger" onclick="deleteCheck('+ e.vacaNO +');">반려</button></td></div>'
+									+ '<button style="white-space: nowrap;" class="btn btn-outline-success" onclick="singModal('+ e.vacaNO +','+ e.member.userNo +','+ checkRe +','+"'"+ e.vacaStart.slice(0, 10) +"'"+','+"'"+ e.vacaEnd.slice(0, 10)+"'" +');">승인</button>'
+									+ '<button style="white-space: nowrap;" class="btn btn-outline-danger" onclick="deleteCheck('+ e.vacaNO +');">반려</button></td></div>'
 									+ '</tr>'
 									+ '<tr id="collapse'+ count +'" class="collapse">'
 									+ '<td colspan="5"><div class="collaps_detail" style="display: grid; grid-template-columns: 50% 50%;">'
 									+ '<div>'
-									+ '<div class="collapse_font '+ (checkRe ? 'greenCol' : 'redCol') +'">'+ (checkRe ? '신청 사유 : <b>휴가 신청</b>': '신청 사유 : <b>' + e.rrequestComent) + '</div>'
+									+ '<div class="collapse_font '+ (checkRe ? 'greenCol' : 'redCol') +'">'+ (checkRe ? '<b>휴가 신청</b>': '철회 신청 사유 : <b>' + e.rrequestComent) + '</div>'
 									+ '<div class="collapse_font">신청자 : ' + e.member.userName + '</div>'
 									+'</div>';
 									if(e.attach.length != 0){

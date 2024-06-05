@@ -127,7 +127,7 @@
 		border-radius: 10px !important;
 	}
 	.fc .fc-timegrid-col.fc-day-today{
-		background-color: rgb(0 0 0) !important;
+		background-color: rgb(246 239 201 / 0.05) !important;
 		border-radius: 5px !important;
 	}
 	.fc-scroller.fc-scroller-liquid-absolute{

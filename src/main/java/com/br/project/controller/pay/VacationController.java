@@ -276,10 +276,12 @@ public class VacationController {
 		int result = vactService.singConfirm(vacation);
 		int outcome = 0;
 		if (result > 0) {
-			
 			if(status.equals("false")) {
+				//false
 				outcome = vactService.requestRefuse(vacation);
+				outcome *= vactService.vacationExpire(vacation);
 			}else {
+				//true
 				outcome = vactService.requestConfine(vacation);
 			}
 		}

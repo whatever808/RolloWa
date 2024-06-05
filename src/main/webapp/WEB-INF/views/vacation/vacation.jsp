@@ -34,7 +34,7 @@
 
 .s-wrap {
 	display:grid;
-	grid-template-columns: 50px 50px 1fr;
+	grid-template-columns: 50px 50px 50px 50px 1fr;
 	align-items: center;
 	column-gap: 10px;
 	padding: 10px;
@@ -415,6 +415,7 @@ i{
 						redAlert('철회 요청', '관리자를 호출 해 주세요');
 					}
 					ajaxSearchOld(1);
+					selectRequest();
 				}
 			})
 			
@@ -450,7 +451,7 @@ i{
 									+ '<td><div class="fontRed">- '
 									+ ((new Date(e.vacaEnd.slice(0,10)) - new Date(e.vacaStart.slice(0,10))) / (1000 * 60 * 60 * 24) +1)
 									+ '</div></td>'
-									+ '<td><button class="btn btn-outline-danger" onclick="deleteCheck('+ e.vacaNO +');">철회</button></td>'
+									+ '<td><button class="btn btn-outline-danger" style="white-space: nowrap;" onclick="deleteCheck('+ e.vacaNO +');">철회</button></td>'
 									+ '</tr>'
 				})
 			} else {
@@ -568,6 +569,7 @@ i{
 					$(modal_select).iziModal('close');
 					
 					selectRequest();
+					ajaxSearchOld();
 				},
 				error:function(){
 					console.log('휴가신청 오류');
@@ -973,6 +975,7 @@ i{
 						$('#standby_request').iziModal('close');
 						$('#retract_request').iziModal('close');
 						selectRequest();
+						ajaxSearchOld();
 					}else {
 						redAlert('휴가 수정', '관리자를 호출 해 주세요');
 					}
@@ -999,6 +1002,7 @@ i{
 						$('#standby_request').iziModal('close');
 						$('#retract_request').iziModal('close');
 						selectRequest();
+						ajaxSearchOld();
 					}else {
 						redAlert('휴가 삭제', '관리자를 호출 해 주세요');
 					}
@@ -1021,16 +1025,20 @@ i{
 					
 					list.forEach((e) => {
 						let ch = (e.retractComent != null); // true : 철회가 된거임
-						let element = '';
+						let checkRe = (e.rrequestComent == null); // 철회 요청인지
+						let element = '';+ (checkRe ? '': '철회' ) 
 						element	+='<div class="s-wrap radious10" onclick="onpening('+(ch ? 0:1)+', this);">'
+										+ '<div class="s-situation line-border-square-sm"><b>'+ e.vacaNO +'</b></div>'
 										+ '<div class="info" data-start="'+e.vacaStart
 																		 +'" data-end="'+e.vacaEnd
 																		 +'" data-coment="'+e.retractComent
 																		 +'" data-num="'+e.vacaNO
 																		 +'" data-code="'+e.vacaGroupCode
+																		 +'" data-color="'+e.vacaColor
 																		 +'"></div>'
 										+ '<div class="s-category line-border-square-sm">'+codeName(e.vacaGroupCode)+'</div>'
-										+ '<div class="s-situation line-border-square-sm '+ ((ch) ? 'RedContext">철회' : 'gContext">대기') +'</div>'
+										+ '<div class="s-situation line-border-square-sm '+ ((ch) ? 'RedContext">철회' : 'gContext">'+'대기') +'</div>'
+										+ '<div class="s-situation line-border-square-sm">'+ ((checkRe) ? '' : '철회') +'</div>'
 						if(e.attach.length != 0){
 							e.attach.forEach((arr) => {
 								element +=  '<input class="attach-put" type="text" value="'+arr.attachPath+'">'
@@ -1039,7 +1047,7 @@ i{
 							})
 						}
 						if(e.vacaGroupCode != 'B'){
-							element	+= '<div class="s-date line-border-square-sm">'
+							element	+= '<div class="s-date line-border-square-sm" style="white-space: nowrap;">'
 											+		e.vacaStart.slice(0,10) + ' ~ ' + e.vacaEnd.slice(0,10)
 											+		'</div>'
 						}else {
@@ -1081,14 +1089,15 @@ i{
 			let check_modal = (( num == 0) ?'#retract_request' :'#standby_request');
 			
 			$(document).on('opening', check_modal, function (e) {
-				
-				$(this).eq(0).find('input[name=vacaNO]').val(event.children[0].dataset.num);
-				$(this).eq(0).find('input[name=vacaGroupCode]').val(event.children[0].dataset.code);
+
+				$(this).eq(0).find('input[name=vacaNO]').val(event.children[1].dataset.num);
+				$(this).eq(0).find('input[name=vacaGroupCode]').val(event.children[1].dataset.code);
+				$(this).eq(0).find('input[name=vacaColor]').val(event.children[1].dataset.color);
 				let arr = $(this).eq(0).find('input.date-area').get();
-				arr[0].value = event.children[0].dataset.start.slice(0,10);
-				arr[1].value = event.children[0].dataset.end.slice(0,10);
+				arr[0].value = event.children[1].dataset.start.slice(0,10);
+				arr[1].value = event.children[1].dataset.end.slice(0,10);
 				
-				let coment = event.children[0].dataset.coment;
+				let coment = event.children[1].dataset.coment;
 				let str = (coment == 'null') ? '내용이 없습니다.':coment;
 				$(this).eq(0).find('textarea').val(str);
 				
@@ -1100,12 +1109,12 @@ i{
 				}
 			})
 			
-			if(event.children[0].dataset.code != 'A' && event.children[0].dataset.code != 'B'){
+			if(event.children[1].dataset.code != 'A' && event.children[1].dataset.code != 'B'){
 				let fileHtml = '<div class="jua-regular">Submit</div><input type="file" style="width: 70%;" name="files" accept="image/*" multiple>';
 				$('#standby_request').find('.myfile').append(fileHtml);
 			}
 			
-			$(check_modal).iziModal('setTitle', codeName(event.children[0].dataset.code) + (num == 0 ? ' 철회':' 대기중'));
+			$(check_modal).iziModal('setTitle', codeName(event.children[1].dataset.code) + (num == 0 ? ' 철회 ' + event.children[1].dataset.num:' 대기중 ' + event.children[1].dataset.num));
 			$(check_modal).iziModal('open');
 			
 		}

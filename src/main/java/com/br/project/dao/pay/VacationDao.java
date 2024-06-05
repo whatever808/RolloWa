@@ -87,6 +87,9 @@ public class VacationDao {
 	public String selectUpperMember(int emp) {
 		return sqlSession.selectOne("vacationMapper.selectUpperMember", emp);
 	}
+	public int vacationExpire(VacationDto vacation) {
+		return sqlSession.update("vacationMapper.vacationExpire", vacation);
+	}
 
 	
 }
