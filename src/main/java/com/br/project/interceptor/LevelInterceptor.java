@@ -25,7 +25,7 @@ public class LevelInterceptor implements HandlerInterceptor {
 			out.print("<link  href='"+request.getContextPath()+"/resources/css/iziModal.min.css' rel='stylesheet'>");
 			out.print("</head><body>");
 			
-			
+			 
 			out.print("<div id=\"redModal\"></div>");
 			
 			out.print("<script>$('#redModal').iziModal({"
