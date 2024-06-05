@@ -14,6 +14,74 @@
 	
 	<!-- Google Chart Script -->
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script>
+		google.charts.load('current', {'packages':['corechart']});
+		google.charts.setOnLoadCallback(drawDefaultChart);
+		
+		// 디폴트 차트 생성 함수
+		function drawDefaultChart(){
+			// 차트 데이터 테이블
+			monthlyData = new google.visualization.DataTable();
+			dailyData = new google.visualization.DataTable();
+			console.log("데이타 먼스 : ", monthlyData);
+			console.log("데이타 데이 : ", dailyData);
+			
+			// 차트 컬럼
+			monthlyData.addColumn('string', '기간');
+			monthlyData.addColumn('number', '');
+			
+			dailyData.addColumn('string', '기간');
+			dailyData.addColumn('number', '');
+			
+			// 디폴트 데이터
+			monthlyData.addRow['', ''];
+			dailyData.addRow['', ''];
+			
+			// 차트 옵션값 지정
+			monthlyOptions = {
+		      title: '',
+		      colors: [''],
+		      legend: 'none',
+		      animation:{	
+				startup:true,
+				duration: 1000,
+				easing: 'out',
+			  },
+			  vAxis: {
+				title: '이용률 (단위 : %)',
+				minValue: 0,
+				maxValue: 100,
+			  },
+			  pointSize: 9,
+			  curveType: 'function',
+	        }
+			
+			dailyOptions = {
+		      title: '',
+		      colors: [''],
+		      legend: 'none',
+		      animation:{	
+				startup:true,
+				duration: 1000,
+				easing: 'out',
+			  },
+			  vAxis: {
+				title: '이용률 (단위 : %)',
+				minValue: 0,
+				maxValue: 100,
+			  },
+			  pointSize: 9,
+			  curveType: '',
+		    }
+			
+			monthlyChart = new google.visualization.LineChart(document.getElementById('monthly-chart'));
+			dailyChart = new google.visualization.LineChart(document.getElementById('daily-chart'));
+			
+			monthlyChart.draw(monthlyData, monthlyOptions);
+			dailyChart.draw(dailyData, dailyOptions);
+		}		
+	</script>
+
 </head>
 <body>
 
@@ -128,76 +196,6 @@
 			ajaxSelectAttractionUtilization('month', $(this).data("attractionno"), $(this).data("attractionname"));
 		});
 	});
-	
-	(function(){
-		google.charts.load('current', {'packages':['corechart']});
-		google.charts.setOnLoadCallback(drawDefaultChart);
-		
-		drawDefaultChart();
-	}());
-	
-	// 디폴트 차트 생성 함수
-	function drawDefaultChart(){
-		// 차트 데이터 테이블
-		monthlyData = new google.visualization.DataTable();
-		dailyData = new google.visualization.DataTable();
-		console.log("데이타 먼스 : ", monthlyData);
-		console.log("데이타 데이 : ", dailyData);
-		
-		// 차트 컬럼
-		monthlyData.addColumn('string', '기간');
-		monthlyData.addColumn('number', '');
-		
-		dailyData.addColumn('string', '기간');
-		dailyData.addColumn('number', '');
-		
-		// 디폴트 데이터
-		monthlyData.addRow['', ''];
-		dailyData.addRow['', ''];
-		
-		// 차트 옵션값 지정
-		monthlyOptions = {
-      title: '',
-      colors: [''],
-      legend: 'none',
-      animation:{	
-				startup:true,
-				duration: 1000,
-				easing: 'out',
-			},
-			vAxis: {
-				title: '이용률 (단위 : %)',
-				minValue: 0,
-				maxValue: 100,
-			},
-			pointSize: 9,
-	    curveType: 'function',
-    }
-		
-		dailyOptions = {
-      title: '',
-      colors: [''],
-      legend: 'none',
-      animation:{	
-				startup:true,
-				duration: 1000,
-				easing: 'out',
-			},
-			vAxis: {
-				title: '이용률 (단위 : %)',
-				minValue: 0,
-				maxValue: 100,
-			},
-			pointSize: 9,
-	    curveType: '',
-    }
-		
-		monthlyChart = new google.visualization.LineChart(document.getElementById('monthly-chart'));
-		dailyChart = new google.visualization.LineChart(document.getElementById('daily-chart'));
-		
-		monthlyChart.draw(monthlyData, monthlyOptions);
-		dailyChart.draw(dailyData, dailyOptions);
-	}
 	
 	// 차트 그리기
 	function drawChart() {
