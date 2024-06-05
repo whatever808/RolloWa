@@ -731,7 +731,7 @@ $(document).ready(function(){
 						            </li>
 						            <li>
 						                <a href="${contextPath}/pay/myReferrer.page"
-						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">수신함</a>
+						                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">수신참조함</a>
 						            </li>
 						        </ul>
 						    </div>

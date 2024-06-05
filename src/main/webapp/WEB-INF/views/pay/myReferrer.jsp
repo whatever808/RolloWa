@@ -222,8 +222,8 @@
 		    padding: 5px 14px;
 		    font-size: 11px;
 		    color: #fff;
-		    background-color: #f186aa;
-		    border: 2px solid #f186aa;
+		    background-color: #e5f186;
+		    border: 2px solid #e5f186;
 		    border-radius: 3px;
 		    cursor: pointer;
 		    transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -314,7 +314,7 @@ $(document).ready(function(){
 $(document).on('keyup', '#searches', function(e) {
 	
 	if(e.key == "Enter"){
-		loadPageMyNoAprroval(1);
+		loadPageMyReferrer(1);
 	}
 
 });
@@ -322,25 +322,25 @@ $(document).on('keyup', '#searches', function(e) {
 
 $(document).on('click', '#searchBtn', function(e) {
 
-	loadPageMyNoAprroval(1);
+	loadPageMyReferrer(1);
 
 });
 
 
 
 
-$(document).on('click', '.pages-link', function(e) {
+$(document).on('click', '.page-links', function(e) {
 e.preventDefault();
 var page = parseInt($(this).data('page'));
 if (page > 0) {
-	loadPageMyNoAprroval(page);
+	loadPageMyReferrer(page);
 }
 });
 
-function loadPageMyNoAprroval(page) {
+function loadPageMyReferrer(page) {
 
 $.ajax({
-    url: "${contextPath}/pay/ajaxMyNoSignSearchApproval.do", 
+    url: "${contextPath}/pay/ajaxMyReferrer.do", 
     method: 'GET',
     data: { 
     	page: page,
@@ -358,15 +358,15 @@ $.ajax({
         console.log(item);
         
         var documentStatusClass = '';
-        if (item.documentStatus === '반려') {
-            documentStatusClass = 'rejected';
-        } else if (item.documentStatus === '완료') {
-            documentStatusClass = 'completes';
-        } else if (item.documentStatus === '진행') {
-            documentStatusClass = 'progresses';
-        } else if (item.documentStatus === '대기') {
-            documentStatusClass = 'pending';
-        }
+			  if (item.DOCUMENT_STATUS === '반려') {
+			      documentStatusClass = 'rejected';
+			  } else if (item.DOCUMENT_STATUS === '완료') {
+			      documentStatusClass = 'completed';
+			  } else if (item.DOCUMENT_STATUS === '진행') {
+			      documentStatusClass = 'progresses';
+			  } else if (item.DOCUMENT_STATUS === '대기') {
+			      documentStatusClass = 'pending';
+			  }
 		  
         var attachmentIcon = '';
         if (item.SALES_STATUS + item.DRAFT_STATUS + item.BUSINESSTRIP_STATUS > 0) {
@@ -390,13 +390,13 @@ $.ajax({
 				var ul = $('.pagination');
 				ul.empty(); 
 
-				ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="pages-link" data-page="' + (response.pi.currentPage == 1 ? 0 : response.pi.currentPage - 1) + '">◁</a></li>');
+				ul.append('<li class="page-item ' + (response.pi.currentPage == 1 ? 'disabled' : '') + '"><a class="page-links" data-page="' + (response.pi.currentPage == 1 ? 0 : response.pi.currentPage - 1) + '">◁</a></li>');
 				
 				for (var p = response.pi.startPage; p <= response.pi.endPage; p++) {
-				    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="pages-link" data-page="' + p + '">' + p + '</a></li>');
+				    ul.append('<li class="page-item ' + (response.pi.currentPage == p ? 'disabled' : '') + '"><a class="page-links" data-page="' + p + '">' + p + '</a></li>');
 				}
 
-				ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="pages-link" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
+				ul.append('<li class="page-item ' + (response.pi.currentPage == response.pi.maxPage ? 'disabled' : '') + '"><a class="page-links" data-page="' + (response.pi.currentPage == response.pi.maxPage ? 0 : response.pi.currentPage + 1) + '">▷</a></li>');
 				
 				}else {
 					 var row = '<tr>' +
@@ -431,7 +431,7 @@ $.ajax({
 	            
 							
 							<div class="content2">
-							   <h2>${ userName }님의 수신함</h2>
+							   <h2>${ userName }님의 수신참조함</h2>
 							    <div class="d-flex justify-content-between align-items-center mb-3">
 											 <div class="search-container">
 							            <input type="text" class="search-input" id="searches" placeholder="검색어를 입력하세요...">
@@ -485,13 +485,13 @@ $.ajax({
 										<div id="pagin_form">
 											<ul class="pagination">
 			        					<c:if test="${ list != null && !list.isEmpty()}">
-					               	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage-1}">◁</a></li>
+					               	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a href="${ contextPath }/pay/myReferrer.page?page=${pi.currentPage-1}">◁</a></li>
 					      
 										      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-										       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${p}">${ p }</a></li>
+										       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a href="${ contextPath }/pay/myReferrer.page?page=${p}">${ p }</a></li>
 										      </c:forEach>
 					      
-										      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage+1}">▷</a></li>
+										      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a href="${ contextPath }/pay/myReferrer.page?page=${pi.currentPage+1}">▷</a></li>
 									   		</c:if>
 									   	</ul>
 					          </div>

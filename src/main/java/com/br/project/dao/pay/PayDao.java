@@ -535,4 +535,24 @@ public class PayDao {
 		return sqlSessionTemplate.insert("payMapper.updateInsertRefNo", map);
 	}
 	
+	public int myReferrerCount(int userNo) {
+		return sqlSessionTemplate.selectOne("payMapper.myReferrerCount", userNo);
+	}
+	
+	public List<Map<String, Object>> myReferrerList(int userNo, PageInfoDto pi){
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.myReferrerList", userNo, rowBounds);
+	}
+	
+	public int ajaxMyReferrerCount(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("payMapper.ajaxMyReferrerCount", map);
+	}
+	
+	public List<Map<String, Object>> ajaxMyReferrerList(Map<String, Object> map, PageInfoDto pi){
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage() - 1) * pi.getListLimit(), pi.getListLimit());
+		return sqlSessionTemplate.selectList("payMapper.ajaxMyReferrerList", map, rowBounds);
+	}
+	
+	
+	
 }

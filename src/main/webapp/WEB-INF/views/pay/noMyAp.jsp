@@ -482,13 +482,13 @@ $.ajax({
 										<div id="pagin_form">
 											<ul class="pagination">
 			        					<c:if test="${ list != null && !list.isEmpty()}">
-					               	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage-1}">◁</a></li>
+					               	<li class="page-item ${ pi.currentPage == 1 ? 'disabled' : '' }"><a href="${ contextPath }/pay/noApprovalList.page?page=${pi.currentPage-1}">◁</a></li>
 					      
 										      <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-										       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${p}">${ p }</a></li>
+										       	<li class="page-item ${ pi.currentPage == p ? 'disabled' : '' }"><a href="${ contextPath }/pay/noApprovalList.page?page=${p}">${ p }</a></li>
 										      </c:forEach>
 					      
-										      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a href="${ contextPath }/pay/myAllApproval.page?page=${pi.currentPage+1}">▷</a></li>
+										      <li class="page-item ${ pi.currentPage == pi.maxPage ? 'disabled' : '' }"><a href="${ contextPath }/pay/noApprovalList.page?page=${pi.currentPage+1}">▷</a></li>
 									   		</c:if>
 									   	</ul>
 					          </div>
