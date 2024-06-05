@@ -18,30 +18,36 @@
 	<jsp:include page="/WEB-INF/views/common/sidebarHeader.jsp" />
 	
 		<!-- content 추가 -->
-  		<div class="content p-5">
-	  
-	  	<h1 class="page-title">어트랙션 이용률</h1>
-		
-		<!-- select filter div start -->
-		<div class="select-filter-div">
-			<select class="form-control form-select" id="location-select">
-				<option value="">전체</option>
-				<c:forEach var="location" items="${ locationList }">
-					<option value="${ location.locationNo }">${ location.locationName }</option>
-				</c:forEach>
-			</select>
-		
-			<select class="form-control form-select" id="year-select"></select>
+ 		<div class="content p-5">
+  
+  			<div class="d-flex justify-content-between align-items-center">
+  				<h1 class="page-title">어트랙션 이용률</h1>
+  				<button type="button" class="btn btn-secondary fw-bold fs-6" id="compare">비교하기</button>
+  			</div>
 			
-			<select class="form-control forms-select" id="month-select"></select>
+			<!-- 비교할 어트랙션 번호 목록 -->
+			<form action="${ contextPath }/attraction/utilization/compare.page" method="post" class="d-none" id="compareList"></form>
 			
-			<select class="form-control form-select" id="date-select"></select>
-		</div>
-		<!-- select filter div end -->
-
-		<!-- statics list div start -->
-		<div class="statics-list-div">
-		
+			<!-- select filter div start -->
+			<div class="select-filter-div">
+				<select class="form-control form-select" id="location-select">
+					<option value="">전체</option>
+					<c:forEach var="location" items="${ locationList }">
+						<option value="${ location.locationNo }">${ location.locationName }</option>
+					</c:forEach>
+				</select>
+			
+				<select class="form-control form-select" id="year-select"></select>
+				
+				<select class="form-control forms-select" id="month-select"></select>
+				
+				<select class="form-control form-select" id="date-select"></select>
+			</div>
+			<!-- select filter div end -->
+	
+			<!-- statics list div start -->
+			<div class="statics-list-div">
+			
 			<!-- statics list start -->
 			<table class="table table-hover text-center">
 				<thead>
@@ -50,6 +56,7 @@
 						<th>연간 이용률</th>
 						<th>월간 이용률</th>
 						<th>일간 이용률</th>
+						<th>비교함 추가</th>
 					</tr>
 				<thead>
 				
@@ -62,8 +69,8 @@
     	<!-- statics list div end -->
     	
     	<nav class="d-flex justify-content-center">
-			  <ul class="pagination"></ul>
-			</nav>
+			<ul class="pagination"></ul>
+		</nav>
   
     </div>
     <!-- content 끝 -->
@@ -192,11 +199,12 @@
 					listStr += "</tr>";
 				}else{
 					for(let i=0 ; i<list.length ; i++){
-						listStr += "<tr onclick='atrtUsageChart(" + list[i].attractionNo + ");'>";
-						listStr += 	"<td class='td1'>" + list[i].attractionName + "</td>";
-						listStr += 	"<td class='td2'>" + list[i].yearUsage + "%</td>";
-						listStr += 	"<td class='td3'>" + list[i].monthUsage + "%</td>";
-						listStr +=	"<td class='td4'>" + list[i].dailyUsage + "%</td>";
+						listStr += "<tr>";
+						listStr += 	 "<td class='td1' onclick='atrtUsageChart(" + list[i].attractionNo + ");'>" + list[i].attractionName + "</td>";
+						listStr += 	 "<td class='td2'>" + list[i].yearUsage + "%</td>";
+						listStr += 	 "<td class='td3'>" + list[i].monthUsage + "%</td>";
+						listStr +=	 "<td class='td4'>" + list[i].dailyUsage + "%</td>";
+						listStr +=	 "<td class='td5 compareAtrt' data-attractionno='" + list[i].attractionNo + "' data-attractionname='" + list[i].attractionName + "'>➕</td>";
 						listStr += "<tr>";
 					}
 					
@@ -216,7 +224,6 @@
 				}
 				
 				$("#utilization-list").html(listStr);
-				console.log(pageStr);
 				$(".pagination").html(pageStr);
 				
 			},error:function(){
@@ -234,6 +241,34 @@
 
 		location.href = "${ contextPath }/attraction/utilization/detail.page?" + urlSearchParams.toString();
 	}
+	
+	// 이용률 비교관련 ==============================================================================================
+	$(document).ready(function(){
+		// 비교할 어트랙션 추가
+		$("tbody").on("click", ".compareAtrt", function(){
+			let attractionNo = $(this).data("attractionno");
+			let flag = true;
+
+			$("#compareList").children("input").each(function(){
+				if($(this).val() == attractionNo){
+					yellowAlert('비교함에 이미 담긴 어트랙션입니다.','');
+					flag = false;
+				}
+			});
+			
+			if(flag){
+				$("#compareList").append("<input type='hidden' name='attractionNo' value='" + $(this).data("attractionno") + "'>");
+				$("#compareList").append("<input type='hidden' name='attractionName' value='" + $(this).data("attractionname") + "'>");
+			}
+		});
+		
+		// 비교하기 버튼 클릭시
+		$("#compare").on("click", function(){
+			$("#compareList").append("<input type='hidden' name='year' value='" + $("#year-select").val() + "'>");
+			$("#compareList").append("<input type='hidden' name='month' value='" + $("#month-select").val() + "'>");
+			$("#compareList").submit();
+		});
+	});
 </script>
 
 </html>

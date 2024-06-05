@@ -84,6 +84,7 @@ h4, h5{
     display: flex;
     align-items: center;
     margin-bottom: 30px;
+    height: 39em;
 }
 .profile-attend-div{
     width: 100%;
@@ -102,8 +103,8 @@ h4, h5{
 }
 .profile-img-div>img{
     display: block;
-    width: 70%;
-    height: 70%;
+    width: 250px;
+    height: 250px;
     border-radius: 100px;
 }
 
@@ -126,6 +127,15 @@ h4, h5{
     height: 55em;
     overflow-x: auto;
     overflow-y: auto;
+}
+.login-user-list-profile{
+	width: 25px; 
+	height: 25px; 
+	border-radius: 100px;
+}
+.login-user-list-member-info{
+	float: right; 
+	font-size: 16px;
 }
 .schedule-color{
 		display: inline-block;
@@ -157,7 +167,6 @@ h4, h5{
     align-items: center;
 }
 .my-attend-info-div{
-    width: 80%;
     display: flex;
     justify-content: space-evenly;
     flex-direction: row;

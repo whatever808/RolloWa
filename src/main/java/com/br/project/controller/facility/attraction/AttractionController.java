@@ -3,6 +3,7 @@ package com.br.project.controller.facility.attraction;
 import static com.br.project.controller.common.CommonController.getParameterMap;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -266,6 +267,36 @@ public class AttractionController {
 	@ResponseBody
 	public List<Map<String, Object>> ajaxSelectAttractionUtilization(HttpServletRequest request){
 		return attractionService.selectAttractionUtilization(getParameterMap(request));
+	}
+	
+	/**
+	 * @method : 어트랙션 이용률 비교 페이지 이동
+	 */
+	@RequestMapping("/utilization/compare.page")
+	public String showAttractionUtilizationComparePage(HttpServletRequest request) {
+		List<Map<String, String>> attractionList = new ArrayList<>();
+		String[] attractionNoArr = request.getParameterValues("attractionNo");
+		String[] attractionNameArr = request.getParameterValues("attractionName");
+		for(int i=0 ; i<attractionNoArr.length ; i++) {
+			Map<String, String> attraction = new HashMap<>();
+			
+			attraction.put("attractionNo", attractionNoArr[i]);
+			attraction.put("attractionName", attractionNameArr[i]);
+			
+			attractionList.add(attraction);
+		}
+		request.setAttribute("attractionList", attractionList);
+		request.setAttribute("year", request.getParameter("year"));
+		request.setAttribute("month", request.getParameter("month"));
+		return "facility/attraction/attraction_utilization_compare";
+	}
+	
+	@RequestMapping(value="/utilization/compare.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public List<Map<String, Object>> ajaxSelectAttractionUtilizationForComparing(HttpServletRequest request, @RequestParam(value="noList[]", defaultValue="") List<String> noList) {
+		HashMap<String, Object> params = getParameterMap(request);
+		params.put("noList", noList);
+		return attractionService.selectAttractionUtilization(params);
 	}
 	
 	

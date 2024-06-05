@@ -281,6 +281,7 @@
     		url: "${contextPath}/chat/inDate"
     		, method: "post"
     		, data: {roomNo: roomNo, userNo: ${loginMember.userNo}}
+    		, async:false
     		, success: function(result) {
     			if(result == "SUCCESS") {
     				console.log("접속시간 update 성공");
@@ -763,6 +764,6 @@
       $(".msgbox").css("opacity", opacity);
       $(".msgbox").css("z-index", z);
     }
-    
+		
 </script>
 </html>

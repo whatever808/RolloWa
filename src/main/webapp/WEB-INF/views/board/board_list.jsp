@@ -24,7 +24,7 @@
 	
 	     <h1 class="page-title">공지사항</h1>
 	
-		   <!-- about category start  -->
+		 <!-- about category start  -->
 	     <div id="filter-category">
 	     	 <!-- board category start -->
 		     <select id="category" name="category" class="board-category form-select text-center" onchange="categoryChange(this);" style="width:200px;">
@@ -137,29 +137,27 @@
 	         <!-- pagination start -->
 	         <div class="board-list-pagination ${ pageInfo.listCount == 0 ? 'd-none' : '' }">
 	             <ul class="pagination">
-	             
-
 		            <!-- Previous -->
-					      <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
-							    onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '' }">
-					      	<span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">◁</span>
-					      </li>
-						    
-						    <!-- Page -->
-						    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
-							    <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
-							    	  onclick="${ pageInfo.currentPage != page ? 'ajaxBoardList();' : '' }">
-							    	<span class="page-link" data-pageno="${ page }">${ page }</span>
-							    </li>
-						    </c:forEach>
-						    
-						    <!-- Next -->
-						    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
-						    	  onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxBoardList();' : ''}">
-						      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">▷</span>
-						    </li>
-						    
-						  </ul>
+			        <li id="normal" class="page-item ${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? '' : 'disabled' }"
+					    onclick="${ pageInfo.listCount != 0 && pageInfo.currentPage != 1 ? 'ajaxBoardList();' : '' }">
+			      	  <span class="page-link" data-pageno="${ pageInfo.currentPage - 1 }">◁</span>
+			        </li>
+					    
+				    <!-- Page -->
+				    <c:forEach var="page" begin="${ pageInfo.startPage }" end="${ pageInfo.endPage }">
+					    <li class="page-item ${ pageInfo.currentPage == page ? 'active' : '' }"
+					    	  onclick="${ pageInfo.currentPage != page ? 'ajaxBoardList();' : '' }">
+					    	<span class="page-link" data-pageno="${ page }">${ page }</span>
+					    </li>
+				    </c:forEach>
+					    
+				    <!-- Next -->
+				    <li class="page-item ${ pageInfo.currentPage == pageInfo.maxPage ? 'disabled' : '' }"
+				    	  onclick="${ pageInfo.currentPage != pageInfo.maxPage ? 'ajaxBoardList();' : ''}">
+				      <span class="page-link" data-pageno="${ pageInfo.currentPage + 1 }">▷</span>
+				    </li>
+				    
+				  </ul>
 	         </div>
 	         <!-- pagination end -->
 	     </div>
@@ -197,7 +195,7 @@
 		}	
 		
 		// "키워드검색" 게시글 목록조회 요청했을 경우, 검색값 지정
-		if("${ filter.condition }".length != 0 && "${ filter.keyword != ''}".length != 0){
+		if("${ filter.condition }".length != 0 && "${ filter.keyword }".length != 0){
 			$("#condition").children("option").first().val("all");
 			
 			// 1) 검색값 노출
@@ -230,12 +228,12 @@
 		$("#keyword").on("keyup", function(){
 			// "Enter"를 입력했을 경우
 			if(event.key == 'Enter' || event.code == 'Enter'){
-				$("#keyword").autocomplete( "option", "disabled", true );
+				// $("#keyword").autocomplete( "option", "disabled", true );
 				searchValidation();
 			}
 		});
 		
-		// 검색어 자동완성 함수 ======================================================================================================
+		/* 검색어 자동완성 함수 ======================================================================================================
 		$("#keyword").autocomplete({
 			source: function(request, response){ // 자동완성 검색어 대상
 				let autoList = [];
@@ -286,6 +284,7 @@
 				console.log("자동완성 창 종료 : ", event);
 			}
 		});
+		*/
 	});	
 	
 	// 키워드검색 게시글 목록조회 요청시 입력값 유효성 체크 

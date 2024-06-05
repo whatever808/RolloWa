@@ -225,47 +225,47 @@
 	<select id="selectAttractionUtilization" parameterType="hashmap" resultType="map">
 		SELECT LPAD(L, 2, 0) L
 		     , TO_NUMBER(TO_CHAR(((SELECT COUNT(VISITOR_NO)
-		           				 					 FROM (SELECT DISTINCT TO_CHAR(V.VISIT_DATE, 'YYYYMMDD') VISIT_DATE, A.VISITOR_NO, A.ATTRACTION_NO 
-										                     FROM ATTRACTION_UTILIZATION A
-										                     JOIN VISITOR V ON (A.VISITOR_NO = V.VISITOR_NO)
-					                   					 )
-		           									WHERE EXTRACT(YEAR FROM TO_DATE(VISIT_DATE, 'YYYYMMDD')) = #{year}
-										           <choose>
-										           	 <when test='"".equals(month)'>
-											           	 AND EXTRACT(MONTH FROM TO_DATE(VISIT_DATE, 'YYYYMMDD')) = L
-											           </when>
-											           <otherwise>
-											             AND EXTRACT(MONTH FROM TO_DATE(VISIT_DATE, 'YYYYMMDD')) = #{month}
-											             AND EXTRACT(DAY FROM TO_DATE(VISIT_DATE, 'YYYYMMDD')) = L
-											           </otherwise>
-										           </choose>
-										               AND ATTRACTION_NO = #{no}
-									              ) / (SELECT DECODE(COUNT(VISITOR_NO), 0, 1, COUNT(VISITOR_NO))
-									               			 FROM VISITOR
-									              			WHERE EXTRACT(YEAR FROM VISIT_DATE) = #{year}
-											              <choose>
-											              	<when test='"".equals(month)'>
-											              		AND EXTRACT(MONTH FROM VISIT_DATE) = L
-											              	</when>
-											              	<otherwise>
-											              		AND EXTRACT(MONTH FROM VISIT_DATE) = #{month}
-											                	AND EXTRACT(DAY FROM VISIT_DATE) = L
-											              	</otherwise>
-											              </choose>
-		            								)) * 100, 'FM000.00')) "usage"
+			     				 	 FROM (SELECT DISTINCT TO_CHAR(V.VISIT_DATE, 'YYYYMMDD') VISIT_DATE, A.VISITOR_NO, A.ATTRACTION_NO 
+						                     FROM ATTRACTION_UTILIZATION A
+						                     JOIN VISITOR V ON (A.VISITOR_NO = V.VISITOR_NO)
+				                		   )
+			     					WHERE EXTRACT(YEAR FROM TO_DATE(VISIT_DATE, 'YYYYMMDD')) = #{year}
+						           <choose>
+						           	 <when test='"".equals(month)'>
+							           	 AND EXTRACT(MONTH FROM TO_DATE(VISIT_DATE, 'YYYYMMDD')) = L
+							           </when>
+							           <otherwise>
+							             AND EXTRACT(MONTH FROM TO_DATE(VISIT_DATE, 'YYYYMMDD')) = #{month}
+							             AND EXTRACT(DAY FROM TO_DATE(VISIT_DATE, 'YYYYMMDD')) = L
+							           </otherwise>
+						           </choose>
+									  AND ATTRACTION_NO = #{no}
+				              ) / (SELECT DECODE(COUNT(VISITOR_NO), 0, 1, COUNT(VISITOR_NO))
+			               			 FROM VISITOR
+			              			WHERE EXTRACT(YEAR FROM VISIT_DATE) = #{year}
+					              <choose>
+					              	<when test='"".equals(month)'>
+					              		AND EXTRACT(MONTH FROM VISIT_DATE) = L
+					              	</when>
+					              	<otherwise>
+					              		AND EXTRACT(MONTH FROM VISIT_DATE) = #{month}
+					                	AND EXTRACT(DAY FROM VISIT_DATE) = L
+					              	</otherwise>
+					              </choose>
+			      					)) * 100, 'FM000.00')) "usage"
 		  FROM (
 		         SELECT LEVEL L
 		           FROM DUAL
 		         <choose>
 		         	 <when test='"".equals(month)'>
 			         	CONNECT BY LEVEL &lt;= CASE WHEN #{year} = TO_CHAR(SYSDATE, 'YYYY') THEN EXTRACT(MONTH FROM SYSDATE)
-			        												 			ELSE 12
-			        												 END
+			        								ELSE 12
+			        						   END
 			         </when>
 			         <otherwise>
 			        	CONNECT BY LEVEL &lt;= CASE WHEN #{year} || #{month} = TO_CHAR(SYSDATE, 'YYYYMM') THEN EXTRACT(DAY FROM SYSDATE)
-			        												 			ELSE EXTRACT(DAY FROM LAST_DAY(TO_DATE(#{year} || #{month} || '01', 'YYYYMMDD')))
-			        												 END
+			        								ELSE EXTRACT(DAY FROM LAST_DAY(TO_DATE(#{year} || #{month} || '01', 'YYYYMMDD')))
+			        						   END
 			         </otherwise>
 		         </choose>
 		        )

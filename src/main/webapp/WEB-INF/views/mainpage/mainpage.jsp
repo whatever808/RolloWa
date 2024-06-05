@@ -62,23 +62,23 @@
                     		<!-- 기웅 추가 -->
                     		<div class="alram-div"><button type="button" class="btn alram-btn" style="box-shadow: none;"><i class="fa-solid fa-bell fa-2x" style="color: #ff939e;"></i></button></div>
                     		<!-- 기웅 추가 -->
-                        <img src="${ contextPath }${ loginMember.profileURL } alt="user profile">
+                        <img src="${ contextPath }${ loginMember.profileURL }" alt="user profile">
 
-                        <h6 class="mt-3 fw-bold">${ loginMember.userName } / ${ loginMember.positionName } / ${ loginMember.teamName }</h6>
+                        <h5 class="mt-4 fw-bold">${ loginMember.userName } / ${ loginMember.positionName } / ${ loginMember.teamName }</h5>
                     </div>
 					
                     <div class="profile-attend pe-4">
-                        <div class="attend-button d-flex my-2">
+                        <div class="attend-button d-flex my-3">
                             <button class="work-on btn btn-outline-primary px-4 me-auto" data-attendanceno="">출근</button>
                             <label class="work-on-time attend-time"></label>
                         </div>
 
-                        <div class="attend-button d-flex my-2">
+                        <div class="attend-button d-flex my-3">
                             <button class="work-off btn btn-outline-danger px-4 me-auto disabled">퇴근</button>
                             <label class="work-off-time attend-time"></label>
                         </div>
 
-                        <div class="attend-button d-flex my-2">
+                        <div class="attend-button d-flex my-3">
                             <button class="leave-early btn btn-outline-warning px-4 me-auto disabled">조퇴</button>
                             <label class="leave-early-time attend-time"></label>
                         </div>
@@ -88,10 +88,8 @@
 
                 <!-- login user list (main-left-bottom)-->
                 <div class="login-user-list-div">
-                    <h5 class="fw-bold text-end mb-4"></h5>
-                    <div class="login-user-list">
-	                    <!-- 부서 일정 목록영역 -->
-                    </div>
+                    <h5 class="fw-bold text-end mb-4">현재접속자</h5>
+                    <div class="login-user-list"></div>
                 </div>
                 <!-- login user list (main-left-bottom)-->
                 
@@ -385,7 +383,7 @@
 					let result = responseData.result;
 					if(result == 'SUCCESS'){
 						$(".total-vacation-count").text(responseData.attendInfo.vacationCount);
-						$(".used-vacation-count").text(responseData.attendInfo.usedVactionCount);
+						$(".used-vacation-count").text(responseData.attendInfo.usedVacationCount);
 						$(".left-vacation-count").text(responseData.attendInfo.vacationCount - responseData.attendInfo.usedVacationCount);
 						$(".leave-early-count").text(responseData.attendInfo.leaveEarlyCount);
 						$(".day-off-count").text(responseData.attendInfo.dayOffCount);
@@ -405,30 +403,30 @@
         
         getClock(); // 실시간 시간
         setInterval(getClock, 1000); 
-        
-	     // 실시간 시간
-	     function getClock() {
-	         const date = new Date();
-	         const hours = String(date.getHours()).padStart(2, "0");
-	         const minutes = String(date.getMinutes()).padStart(2, "0");
-	         const seconds = String(date.getSeconds()).padStart(2, "0");
-	
-	         $(".time").text(hours + ' : ' + minutes + ' : ' + seconds);
-	     }
-	
-	     // 오늘 날짜
-	     function getToday() {
-	         const todaydate = new Date();
-	         const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
-	         const days_num = todaydate.getDay();
-	         const year = todaydate.getFullYear();
-	         const month = todaydate.getMonth() + 1;
-	         const date = todaydate.getDate();
-	         const day = days[days_num];
-	
-	         $(".date").text(year + "년 " + month + "월 " + date+ "일 " + day); 
-	     }
     })
+    
+    // 실시간 시간
+    function getClock() {
+        const date = new Date();
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = String(date.getSeconds()).padStart(2, "0");
+
+        $(".time").text(hours + ' : ' + minutes + ' : ' + seconds);
+    }
+
+    // 오늘 날짜
+    function getToday() {
+        const todaydate = new Date();
+        const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+        const days_num = todaydate.getDay();
+        const year = todaydate.getFullYear();
+        const month = todaydate.getMonth() + 1;
+        const date = todaydate.getDate();
+        const day = days[days_num];
+
+        $(".date").text(year + "년 " + month + "월 " + date+ "일 " + day); 
+    }
     
    	// 공지사항 목록조회 관련 ==========================================================================================================
    	$(document).ready(function(){
@@ -444,6 +442,7 @@
        				category: $(this).hasClass('department') ? 'department' : 'normal',
        				department: $(this).hasClass('department') ? '${ loginMember.deptCode }' : ''
        			},
+       			async:false,
        			success:function(boardList){
        				list = "";
        				if(boardList.length == 0){
@@ -545,6 +544,7 @@
 	  			url: "${contextPath}/notification/list"
 	  			, method: "get"
 	  			, data: {userNo: ${loginMember.userNo}}
+	  			, async:false
 	  			, success: function(notiList) {
 	  				if(notiList.length != 0) {
 	  					// 조회된 알림이 있을 시
@@ -621,6 +621,37 @@
   		})
   	}
   	
+  	// 접속자 관련 (웹소켓) =====================================================================================
+  	loginLogout.onmessage = loginLogoutMsg;
+  		
+		// 메세지가 왔을 경우
+		function loginLogoutMsg(event){
+			// 로그인일 경우 : [login] [리스트의 모든 사원정보를 이은 문자열]
+			// 로그아웃 경우 : [logout][사원번호]
+			let msg = event.data.split("|");
+			let type = msg[0]; 	// [login] or [logout]
+			let addMembers = "";
+			
+			if(type == 'login'){
+				let memberList = msg[1].split(",");	// [사번&프로필&이름/직급/소속팀][사번&프로필&이름/직급/소속팀]...
+				for(let i=0 ; i<memberList.length ; i++){
+					let member = memberList[i].split("&");	// [사번][프로필][이름/직급/소속팀]
+					
+					addMembers += "<div class='login-user d-flex align-items-center mb-3'>";
+					addMembers +=	"<input type='hidden' name='userNo' value='" + member[0] + "'>";
+					addMembers +=	"<img class='login-user-list-profile me-2' src='${ contextPath }" + member[1] + "' alt='user profile image'>";
+					addMembers += 	"<span class='login-user-list-member-info'>" + member[2] + "</span>";
+					addMembers += "</div>";
+			
+				}
+				$(".login-user-list").html(addMembers);
+			}else{
+				let userNo = msg[1];
+				$(".login-user-list").children(".login-user").each(function(){
+					$(this).children("[name=userNo]").val() == userNo && $(this).remove();
+				});
+			}
+		}
   	
 </script>
 
