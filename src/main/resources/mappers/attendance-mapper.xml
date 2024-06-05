@@ -304,7 +304,9 @@
 	<!-- 근태관리 정보조회 -->
 	<select id="selectMemberAttend" parameterType="hashmap" resultType="map">
 		select
-			 vacation_count "vacationCount"
+			  case when #{year} = extract(year from sysdate) then (15 + year_labor)
+			  	   else 15 + (year_labor - (extract(year from sysdate) - #{year}))
+			  end "vacationCount"
 			,(
 				select count(user_no)
 				  from attendance
@@ -321,16 +323,18 @@
 				   and to_char(clock_in, 'YYYY') = #{year}
 				   and extract(month from clock_in) = extract(month from to_date(#{month}, 'MM'))
 			  ) "leaveEarlyCount"
-			,case when #{year} = extract(year from sysdate) then to_number(using_dtae) 
+			,case when #{year} = extract(year from sysdate) then (15 + year_labor) - vacation_count
+			  	  else (15 + (year_labor - (extract(year from sysdate) - #{year}))) - ( select count(vacation_no)
+																						  from vacation
+																						 where (regist_emp = #{userNo} or modify_emp = #{userNo})
+																						   and (extract(year from vacation_strat) = #{year} or extract(year from vacation_end) = #{year}))
+			 end "usedVacationCount"
+			,case when #{year} = extract(year from sysdate) then vacation_count
 				  else (select count(vacation_no)
 						  from vacation
-						 where status = 'Y'
-						   and apporval_status = 'Y'
-						   and extract(year from vacation_strat) = #{year}
-						   and extract(year from vacation_end) = #{year}
-						   and (regist_emp = #{userNo}
-						    or modify_emp = #{userNo})) 
-		      end "usedVacationCount"
+						 where (regist_emp = #{userNo} or modify_emp = #{userNo})
+						   and (extract(year from vacation_strat) = #{year} or extract(year from vacation_end) = #{year}))
+			 end "leftVacationCount"
 		   from member
 		  where user_no = #{userNo}
   </select>

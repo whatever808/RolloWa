@@ -127,7 +127,7 @@
                             </div>
 
                             <div class="attend-info-div">
-                                <div class="attend-info left-vacation-count">${ loginMemberAttend.vacationCount - loginMemberAttend.usedVacationCount }</div>
+                                <div class="attend-info left-vacation-count">${ loginMemberAttend.leftVacationCount }</div>
                                 <div class="attend-title text-center mt-2 fw-bold">잔여 연차</div>
                             </div>
 
@@ -246,23 +246,25 @@
 			const clockOut = "${ loginMemberTodayAttend.clockOut }";
 			const requestDetail = "${ loginMemberTodayAttend.requestDetail }";
 			
-			// 출근시간 출력 & 출근버튼 비활성화
-			$(".work-on-time").text(clockIn);
-			$(".work-on").attr("data-attendanceno", "${ loginMemberTodayAttend.attendanceNo }")
-						 .addClass("disabled");
-			
-			// 조퇴/퇴근시간 출력 & 버튼 비활성화
-			if(clockOut != null && clockOut != ''){
-				if(requestDetail == '퇴근'){
-					$(".work-off-time").text(clockOut);
-				}else if(requestDetail == '조퇴'){
-					$(".work-off-time").text(clockOut);
+			if(requestDetail != '휴가'){
+				// 출근시간 출력 & 출근버튼 비활성화
+				$(".work-on-time").text(clockIn);
+				$(".work-on").attr("data-attendanceno", "${ loginMemberTodayAttend.attendanceNo }")
+							 .addClass("disabled");
+				
+				// 조퇴/퇴근시간 출력 & 버튼 비활성화
+				if(clockOut != null && clockOut != ''){
+					if(requestDetail == '퇴근'){
+						$(".work-off-time").text(clockOut);
+					}else if(requestDetail == '조퇴'){
+						$(".work-off-time").text(clockOut);
+					}
+					$(".work-off").addClass("disabled");
+					$(".leave-early").addClass("disabled");
+				}else{
+					$(".work-off").removeClass("disabled");
+					$(".leave-early").removeClass("disabled");
 				}
-				$(".work-off").addClass("disabled");
-				$(".leave-early").addClass("disabled");
-			}else{
-				$(".work-off").removeClass("disabled");
-				$(".leave-early").removeClass("disabled");
 			}
 		}
 	
@@ -381,10 +383,11 @@
 				},
 				success:function(responseData){
 					let result = responseData.result;
+					console.log(responseData, "델ㅇ");
 					if(result == 'SUCCESS'){
 						$(".total-vacation-count").text(responseData.attendInfo.vacationCount);
 						$(".used-vacation-count").text(responseData.attendInfo.usedVacationCount);
-						$(".left-vacation-count").text(responseData.attendInfo.vacationCount - responseData.attendInfo.usedVacationCount);
+						$(".left-vacation-count").text(responseData.attendInfo.leftVacationCount);
 						$(".leave-early-count").text(responseData.attendInfo.leaveEarlyCount);
 						$(".day-off-count").text(responseData.attendInfo.dayOffCount);
 					}else{
