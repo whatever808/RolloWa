@@ -273,7 +273,7 @@ i{
 						지급일<br><span class="gContext">${loginMember.vaGivenDate}일</span>
 					</div>
 					<div class="line-border-square line-shadow">
-						근무 연수<br><b>${loginMember.vaYearLabor }</b>년
+						근무 년수<br><b>${loginMember.vaYearLabor }</b>년
 					</div>
 					
 				</div>
@@ -1026,7 +1026,7 @@ i{
 					list.forEach((e) => {
 						let ch = (e.retractComent != null); // true : 철회가 된거임
 						let checkRe = (e.rrequestComent == null); // 철회 요청인지
-						let element = '';+ (checkRe ? '': '철회' ) 
+						let element = '';+ (checkRe ? '': '반려' ) 
 						element	+='<div class="s-wrap radious10" onclick="onpening('+(ch ? 0:1)+', this);">'
 										+ '<div class="s-situation line-border-square-sm"><b>'+ e.vacaNO +'</b></div>'
 										+ '<div class="info" data-start="'+e.vacaStart
@@ -1037,7 +1037,7 @@ i{
 																		 +'" data-color="'+e.vacaColor
 																		 +'"></div>'
 										+ '<div class="s-category line-border-square-sm">'+codeName(e.vacaGroupCode)+'</div>'
-										+ '<div class="s-situation line-border-square-sm '+ ((ch) ? 'RedContext">철회' : 'gContext">'+'대기') +'</div>'
+										+ '<div class="s-situation line-border-square-sm '+ ((ch) ? 'RedContext">반려' : 'gContext">'+'대기') +'</div>'
 										+ '<div class="s-situation line-border-square-sm">'+ ((checkRe) ? '' : '철회') +'</div>'
 						if(e.attach.length != 0){
 							e.attach.forEach((arr) => {
@@ -1114,7 +1114,7 @@ i{
 				$('#standby_request').find('.myfile').append(fileHtml);
 			}
 			
-			$(check_modal).iziModal('setTitle', codeName(event.children[1].dataset.code) + (num == 0 ? ' 철회 ' + event.children[1].dataset.num:' 대기중 ' + event.children[1].dataset.num));
+			$(check_modal).iziModal('setTitle', codeName(event.children[1].dataset.code) + (num == 0 ? ' 반려 ' + event.children[1].dataset.num:' 대기중 ' + event.children[1].dataset.num));
 			$(check_modal).iziModal('open');
 			
 		}
