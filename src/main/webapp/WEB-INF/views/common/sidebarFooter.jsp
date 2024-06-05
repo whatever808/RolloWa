@@ -551,9 +551,12 @@
     		const atUserName = msgContent.substring(atIndex + 1);
     		// 사원 이름인지 확인 (이름에는 영어가 올 수 없다고 가정) 한글 이름 2~5 글자
     		const regExp = /^[가-힣]{2,5}$/;
-    		if(regExp.test(atUserName)) {
+    		/*if(regExp.test(atUserName)) {
     			stompClient.send("/app/")
-    		}
+    			stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
+																																	, flag: '3'
+																																	, }));
+    		}*/
     	}
     	
 			// 채팅 메세지 전송
