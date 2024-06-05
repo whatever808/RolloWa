@@ -33,7 +33,7 @@
 }
 /* ∞°∑Œ¡Ÿ */
 .tree li:before {
-    outline: solid 1px red;
+    outline: solid 1px gainsboro;
     content: "";
     left: 0;
     right: 0;
