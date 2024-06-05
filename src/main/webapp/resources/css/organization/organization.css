@@ -5,10 +5,6 @@
 }
 
 /* 1. 조직도 관련 css */
-/* 대표이사 위치 */
-.tree{
-  width: 77.5em;
-}
 .tree, .tree ul, .tree li {
     list-style: none;
     margin: 0;
@@ -32,10 +28,11 @@
     position: relative;
 }
 /* 가로줄 */
-.tree li:before {
+.tree li.department:nth-child(4n-3):before {
     outline: solid 1px gainsboro;
     content: "";
-    left: 0;
+    left: 50%;
+    width: 940px;
     right: 0;
     position: absolute;
     top: -.2em;
@@ -68,11 +65,6 @@
   z-index: -1;
 }
 
-/* 가로 수량 조절시 2개 같이 수정 */
-/* 줄 간격 넓히기 */
-.tree li:nth-child(n+5) {
-  margin-top: 50px;
-}
 /* 크기 조절 */
 .tree code, .tree span {
     border: solid .1em gainsboro;
@@ -88,10 +80,20 @@
 .tree li:first-child:before {
 	left: 50%;
 }
+/* 각 4번째 요소마다 오른쪽에 세로줄 생성 */
+.tree li:nth-child(4n):after {
+    outline: solid 1px red;
+    content: "";
+    height: 99%;
+    position: absolute;
+    top: -2px;
+    right: -1em;
+    z-index: -1;
+}
+
+
 .tree li:last-child:before {
 	right: 50%;
-}
-li:nth-child(4n):before{
 }
 
 .tree ul:before {
@@ -128,6 +130,9 @@ a:hover{
 	color: black !important;
 	margin: -0.45em 0 !important;
 }
+
+
+
 
 
 /* 2. 직원 검색 관련 css */
@@ -201,7 +206,7 @@ table{
 		position: absolute;
     	z-index: 1;
     	top: 20px;
-    	right: 400px;
+    	right: 330px;
     	white-space: nowrap;
     	outline: none;
 	}
