@@ -83,21 +83,12 @@
         
         <script>
         // 조직도 스크립트 추가
-
-        
-        document.addEventListener('DOMContentLoaded', function () {
-            const deleteButtons = document.querySelectorAll('.delete_team[disabled]');
-
-            deleteButtons.forEach(function (button) {
-                const tooltip = button.nextElementSibling;
-
-                button.addEventListener('mouseover', function () {
-                    tooltip.style.display = 'block';
-                });
-
-                button.addEventListener('mouseout', function () {
-                    tooltip.style.display = 'none';
-                });
+		document.addEventListener('DOMContentLoaded', function() {
+            const treeItems = document.querySelectorAll('.tree li.department');
+            treeItems.forEach((item, index) => {
+                if ((index + 1) % 4 === 0 && item.nextElementSibling) {
+                    item.classList.add('show-after');
+                }
             });
         });
         
