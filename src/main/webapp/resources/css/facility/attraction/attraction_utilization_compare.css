@@ -29,7 +29,7 @@
 	padding: 10px;
 	border: 1px solid lightgray;
 	box-shadow: 3px 3px 5px 2px rgb(166, 166, 166);
-  border-radius: 10px;
+  	border-radius: 10px;
 }
 .select{
 	width: 200px !important;
