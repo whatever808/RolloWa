@@ -755,6 +755,38 @@ $(document).on("click", "#okayBtn", function(){
             </div>
         </div>
         
+   
+     <script>
+        $(document).ready(function() {
+            $("input[name='amount'], input[name='unitPrice']").on('input', function() {
+                var row = $(this).closest('tr');
+                var amount = parseFloat(row.find("input[name='amount']").val().replace(/,/g, '')) || 0;
+                var unitPrice = parseFloat(row.find("input[name='unitPrice']").val().replace(/,/g, '')) || 0;
+                var price = amount * unitPrice;
+
+                if(unitPrice !== ""){
+                    row.find("input[name='price']").val(price.toLocaleString());
+                } else {
+                    row.find("input[name='price']").val("");
+                }
+
+                updateTotalSum();
+            });
+
+            function updateTotalSum() {
+                var sum = 0;
+                $("#tr_table").find("input[name='unitPrice']").each(function() {
+                    var unitPrice = parseFloat($(this).val().replace(/,/g, '')) || 0;
+                    sum += unitPrice;
+                });
+                $("input[name='totalSum']").val(sum.toLocaleString());
+            }
+
+            // 초기 페이지 로드시 총합을 계산
+            updateTotalSum();
+        });
+    </script>
+		
     <c:if test="${ not empty list }">
     <script>
     	$(document).ready(function(){
@@ -832,7 +864,7 @@ $(document).on("click", "#okayBtn", function(){
                
     <script>
         $('#modal2').iziModal({
-        	title: '수신참조인',
+        	title: '<h4>수신참조인</h4>',
             //subtitle: '수정도 가능합니다.',
             headerColor: '#FEEFAD', // 헤더 색깔
             theme: '', //Theme of the modal, can be empty or "light".

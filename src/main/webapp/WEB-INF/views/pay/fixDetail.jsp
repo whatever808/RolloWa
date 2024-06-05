@@ -390,7 +390,7 @@ $(document).on("click", "#rejectBtn", function(){
 		        </div>
 		    </div>
 		    <!---------------------------------------------->
-		
+	
 		<script>
        $(document).ready(function() {
            $(".unit_price, .price").each(function() {
@@ -501,6 +501,9 @@ $(document).on("click", "#rejectBtn", function(){
 			    if (paymentWriterNo != userNo) {
 			    	$(".modifyWriter").css("display", "none");
 			    }
+			    if (paymentWriterNo != userNo) {
+			    	$("#correction").css("display", "none");
+			    }
 
 		   		if(paymentWriterNo == userNo){
 		   			$("#deldo").css("display", "block");
@@ -556,12 +559,20 @@ $(document).on("click", "#rejectBtn", function(){
 			                type: "post",
 			                data: { status: "N", approvalNo: "${list.get(0).APPROVAL_NO}" },
 			                success: function(response) {
-			                    if (response == 1) {
-			                        // 이전 페이지로 이동하고 모달 창을 설정한다.
-			                        location.href = document.referrer;
-			                        $('#redModal').iziModal('setTitle', "전자결재");
-			                        $('#redModal').iziModal('setSubtitle', "승인처리가 최종완료되었습니다.");
-			                    }
+			                	 if (response == 1) {
+	                                	
+			                		 	function yellowAlert(title, content){
+			                	          $('#yellowModal').iziModal('setTitle', title);
+			                	          $('#yellowModal').iziModal('setSubtitle', content);
+			                	          $('#yellowModal').iziModal('open');
+			                	    };
+
+                          	redAlert("전자결재", "결재가 최종승인 완료되었습니다.");
+
+                          	setTimeout(function() {
+                          	    location.href = document.referrer;
+                          	}, 3000);
+                         }
 			                },
 			                error: function() {
 			                    console.log("ajax통신 실패");
