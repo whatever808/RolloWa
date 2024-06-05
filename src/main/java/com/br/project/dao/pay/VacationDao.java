@@ -46,7 +46,6 @@ public class VacationDao {
 		PageInfoDto page = (PageInfoDto)map.get("paging");
 		RowBounds row = new RowBounds(page.getListLimit()* (page.getCurrentPage()-1)
 									, page.getListLimit());
-		
 		return sqlSession.selectList("vacationMapper.searchOld", map.get("vacation"), row);
 	}
 
@@ -61,7 +60,33 @@ public class VacationDao {
 	public int updateAnuul(MemberDto member) {
 		return sqlSession.update("vacationMapper.updateOverAnuul", member);
 	}
-	
-	
+	public int selectRefuseRequest(VacationDto vacation) {
+		return sqlSession.selectOne("vacationMapper.selectRefuseRequest", vacation);
+	}
+	public List<VacationDto> searchreQuest(Map<String, Object> map) {
+		PageInfoDto page = (PageInfoDto)map.get("paging");
+		RowBounds row = new RowBounds(page.getListLimit()* (page.getCurrentPage()-1)
+									, page.getListLimit());
+		return sqlSession.selectList("vacationMapper.searchreQuest", map.get("vacation") , row);
+	}
+	public int singRefuse(VacationDto vacation) {
+		return sqlSession.update("vacationMapper.singRefuse", vacation);
+	}
+	public int singConfirm(VacationDto vacation) {
+		return sqlSession.update("vacationMapper.singConfirm", vacation);
+	}
+
+	public int requestRefuse(VacationDto vacation) {
+		return sqlSession.update("vacationMapper.requestRefuse", vacation);
+	}
+
+	public int requestConfine(VacationDto vacation) {
+		return sqlSession.update("vacationMapper.requestConfine", vacation);
+	}
+
+	public String selectUpperMember(int emp) {
+		return sqlSession.selectOne("vacationMapper.selectUpperMember", emp);
+	}
+
 	
 }

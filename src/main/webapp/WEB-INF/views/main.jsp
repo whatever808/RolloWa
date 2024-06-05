@@ -50,6 +50,8 @@
 				    <style>
 					    .container {
 			    	    background: white;
+   	            box-shadow: 5px 8px 5px 2px rgb(0 0 0 / 45%)
+        					, -3px -3px 5px rgb(265 265 265 / 50%);
 					    }
 				    	.backGround{
 				    		  opacity: 0.3;

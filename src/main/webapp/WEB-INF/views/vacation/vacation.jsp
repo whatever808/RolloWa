@@ -264,7 +264,7 @@ i{
 				<div class="vacation-area" id="vacation-area">
 				
 					<div class="line-border-square line-shadow">
-						연차<br>${member.vacationCount}일
+						연차<br><b>${member.vacationCount}</b>일
 					</div>
 					<div class="line-border-square line-shadow">
 						사용<br><span class="RedContext">${member.vaUsingDate}일</span>
@@ -273,7 +273,7 @@ i{
 						지급일<br><span class="gContext">${loginMember.vaGivenDate}일</span>
 					</div>
 					<div class="line-border-square line-shadow">
-						근무 연수<br>${loginMember.vaYearLabor }년
+						근무 연수<br><b>${loginMember.vaYearLabor }</b>년
 					</div>
 					
 				</div>
@@ -296,7 +296,7 @@ i{
 				<div class="standby">
 				</div>
 				<br>
-				<div class="font-size25 jua-regular">철회</div>
+				<div class="font-size25 jua-regular">반려</div>
 				<div class="retract">
 				</div>
 			</fieldset>
@@ -382,7 +382,7 @@ i{
 				data:'vacaGroupCode='+$('select').val()
 							+ '&page='+ page,
 				success:function(map){
-					console.log(map);
+					//console.log(map);
 					
 					creatTable(map.list);
 					creatPaging(map.paging);
@@ -984,7 +984,7 @@ i{
 		
 		function delecteRequest(button){
 			const $form = $(button).parents('form')[0];
-			console.log($form);
+			//console.log($form);
 			
 			$.ajax({
 				url:'${path}/vacation/deleteRequest.ajax',
@@ -1020,7 +1020,7 @@ i{
 					console.log(list);
 					
 					list.forEach((e) => {
-						let ch = (e.approrvalStatus == 'N');
+						let ch = (e.retractComent != null); // true : 철회가 된거임
 						let element = '';
 						element	+='<div class="s-wrap radious10" onclick="onpening('+(ch ? 0:1)+', this);">'
 										+ '<div class="info" data-start="'+e.vacaStart
@@ -1101,7 +1101,7 @@ i{
 			})
 			
 			if(event.children[0].dataset.code != 'A' && event.children[0].dataset.code != 'B'){
-				let fileHtml = '<div class="jua-regular">Submit</div><input type="file" style="width: 71%;" name="files" accept="image/*" multiple>';
+				let fileHtml = '<div class="jua-regular">Submit</div><input type="file" style="width: 70%;" name="files" accept="image/*" multiple>';
 				$('#standby_request').find('.myfile').append(fileHtml);
 			}
 			
