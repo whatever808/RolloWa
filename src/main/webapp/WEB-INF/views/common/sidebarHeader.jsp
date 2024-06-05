@@ -813,8 +813,10 @@ $(document).ready(function(){
 						// 새로고침 감지
 						window.addEventListener('beforeunload', (event) => {
 							// 메신저를 아예 열지 않았거나 채팅방을 닫아놨을 경우를 제외하고 실행
-		          if(subRoomNo != -1 && subRoomNo != 0) {
+							// 메신저를 열었지만, 채팅방을 열지 않았을 경우도 제외
+		          if(subRoomNo != -1 && subRoomNo != 0 && subRoomNo != 1) {
 		        	  // 새로고침 전 열어놓은 채팅방의 나간 시간 update
+		        	  console.log("새로고침 시 채팅방 나간 시간 update");
 		        	  updateOutDate(subRoomNo);
 		          }  
 		        });

@@ -73,11 +73,6 @@
                      </div>
 
                      <div class="col-md-6 col-lg-7 col-xl-8 chatting_box">
-                     		<div class="btn_wrapper" style="margin-top: 10px;">
-                     			<button type="button" class="btn1 forget_btn">파일전송</button>
-                     			<button type="button" class="btn1 forget_btn">@멘션</button>
-                     		</div>
-
                          <div class="chatting_history scrollbar">
 	                         	 <!--<div>
 	                         		<i class="fa-solid fa-comment-slash fa-8x"></i><br>
@@ -99,6 +94,10 @@
 
              </div>
          </section>
+     </div>
+     
+     <div id="mention">
+     	
      </div>
     </main>
     <script src="${ contextPath }/resources/js/common/bootstrap.bundle.min.js"></script>
@@ -341,9 +340,9 @@
 	   		  , success: function(participantsList) {
 	   			  if (participantsList.length > 0) {
 	   				  if(chatRoomNo == subRoomNo) {
-	   					  var chatRoomVal = "<li class='p-2 selected border-bottom chat_room chat_room_" + chatRoomList[i].chatRoomNo + "' onclick='selectChatMsg(event, " + chatRoomList[i].chatRoomNo + ")'";
+	   					  var chatRoomVal = "<li class='p-2 selected border-bottom chat_room chat_room_" + chatRoomList[i].chatRoomNo + "' onclick='selectChatMsg(event, " + chatRoomList[i].chatRoomNo + ", " + JSON.stringify(participantsList) + ")'";
 	   				  } else {
-	   					var chatRoomVal = "<li class='p-2 border-bottom chat_room chat_room_" + chatRoomList[i].chatRoomNo + "' onclick='selectChatMsg(event, " + chatRoomList[i].chatRoomNo + ")'";
+	   					var chatRoomVal = "<li class='p-2 border-bottom chat_room chat_room_" + chatRoomList[i].chatRoomNo + "' onclick='selectChatMsg(event, " + chatRoomList[i].chatRoomNo + ", " + JSON.stringify(participantsList) + ")'";
 	   				  }
 		    			chatRoomVal += ">";
 		       	  chatRoomVal += "<a href='#!' class='d-flex justify-content-between'>";
@@ -398,13 +397,12 @@
     }
 	
 		// 채팅방 메세지 이력 가져오기
-		function selectChatMsg(event, chatRoomNo) {
+		function selectChatMsg(event, chatRoomNo, participantsList) {
 			// 내가 선택한 채팅방 색깔 바꾸기
 			$(".chat_room").each(function(index, el) {
 				$(el).removeClass("selected");
 			})
 			$(".chat_room_" + chatRoomNo).addClass("selected");
-			
 			
 			// 채팅방 알림 제거
 			$("#chat_room_info" + chatRoomNo).children($("p")).next().empty();
@@ -418,13 +416,15 @@
 			// 내가 어떤 채팅방을 열었는지 표시
 			subRoomNo = chatRoomNo;
 			
+			console.log(subRoomNo);
+			
 			// 채팅방 멘션, 파일전송 버튼 추가
+			var functionBtn = "<div class='btn_wrapper' style='margin-top: 10px;''>";
+			functionBtn += "<button type='button' class='btn1 forget_btn' function='sendFile(" + chatRoomNo + ");'>파일전송</button>";
+			functionBtn += "<button type='button' class='btn1 forget_btn' function='mention(" + chatRoomNo + ", " + JSON.stringify(participantsList) + ");'>@멘션</button>";
+			functionBtn += "</div>";
 			
-			
-			<div class="btn_wrapper" style="margin-top: 10px;">
-	 			<button type="button" class="btn1 forget_btn" function="fileSend()">파일전송</button>
-	 			<button type="button" class="btn1 forget_btn" function="atAlram">@멘션</button>
-	 		</div>
+			//$(".chatting_box").before(functionBtn);
 			
 			$.ajax({
 		 	url: "${contextPath}/chat/messages"
@@ -464,6 +464,22 @@
 		 // 스크롤 맨 아래로 고정 (이후 스크롤 높이 구해서 10000 수정해야함)
 		 $(".chatting_history").animate({scrollTop:'10000'}, '500');
 		}
+		
+		// 채팅방 사원 멘션 기능
+		function mention(chatRoomNo, participantsList) {
+			// 모달에 채팅방 사원 출력
+			
+			
+			// 멘션하기 버튼 클릭 시 체크된 회원 확인
+			
+			// 체크된 회원에게 알림 전송
+		}
+		
+		// 채팅방 파일 전송 기능
+		function sendFile(chatRoomNo) {
+			
+		}
+		
     // 채팅하기 버튼 클릭 시 체크된 회원들과 채팅방 생성
     function createChatRoom() {
     	// 1. 채팅방 데이터 생성 => Chatting Room 데이터 추가, Chatting Participation 데이터 추가
