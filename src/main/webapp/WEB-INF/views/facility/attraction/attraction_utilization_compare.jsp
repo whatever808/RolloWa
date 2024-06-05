@@ -23,7 +23,7 @@
 			// 차트 데이터 테이블
 			monthlyData = new google.visualization.DataTable();
 			dailyData = new google.visualization.DataTable();
-			console.log("데이타 먼스 : ", monthlyData);
+			console.log("데이터 먼스 : ", monthlyData);
 			console.log("데이타 데이 : ", dailyData);
 			
 			// 차트 컬럼
@@ -79,6 +79,12 @@
 			
 			monthlyChart.draw(monthlyData, monthlyOptions);
 			dailyChart.draw(dailyData, dailyOptions);
+			
+			$("input[name=attraction]").each(function(){
+				console.log("no : ", $(this).data("attractionno"), ", name : ", $(this).data("attractionname"));
+				ajaxSelectAttractionUtilization('year', $(this).data("attractionno"), $(this).data("attractionname"));
+				ajaxSelectAttractionUtilization('month', $(this).data("attractionno"), $(this).data("attractionname"));
+			});
 		}		
 	</script>
 
@@ -190,11 +196,11 @@
 	
 	// 차트 관련 =================================================================================
 	$(document).ready(function(){
-		$("input[name=attraction]").each(function(){
+		/* $("input[name=attraction]").each(function(){
 			console.log("no : ", $(this).data("attractionno"), ", name : ", $(this).data("attractionname"));
 			ajaxSelectAttractionUtilization('year', $(this).data("attractionno"), $(this).data("attractionname"));
 			ajaxSelectAttractionUtilization('month', $(this).data("attractionno"), $(this).data("attractionname"));
-		});
+		}); */
 	});
 	
 	// 차트 그리기
