@@ -15,7 +15,7 @@ public class LevelInterceptor implements HandlerInterceptor {
 			throws Exception {
 		response.setCharacterEncoding("UTF-8");
 		String position = (String)((MemberDto)request.getSession().getAttribute("loginMember")).getPositionCode();
-		if(position != null && (position.equals("E") || position.equals("F") || position.equals("C") || position.equals("D"))) {
+		if(position != null && (position.equals("E") || position.equals("F") || position.equals("C") || position.equals("D")|| position.equals("B"))) {
 			return true;
 		}else {
 			PrintWriter out = response.getWriter();
