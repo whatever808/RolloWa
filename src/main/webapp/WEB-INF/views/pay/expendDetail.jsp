@@ -7,7 +7,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
+		<!-- jQuery -->
+		<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- 모달 관련 -->
     <script src="${contextPath}/resources/js/iziModal.min.js"></script>
     <link rel="stylesheet" href="${contextPath}/resources/css/iziModal.min.css">
@@ -415,7 +416,7 @@ $(document).on("click", "#rejectBtn", function(){
         // 뒤로가기 버튼 클릭 시 이벤트
         $('#historyBack').on('click', function() {
             // 여기서는 페이지 이동을 위한 코드 추가 (예: window.history.back();)
-            window.history.back();
+        	location.href = document.referrer;
         });
     });
 

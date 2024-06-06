@@ -523,7 +523,7 @@ public class PayController {
 		}
 		
 		
-		return "redirect:/pay/approvalMain.page";
+		return "redirect:/pay/myAllApproval.page";
 	}
 	
 	@ResponseBody
@@ -858,7 +858,7 @@ public class PayController {
 		}
 		
 		
-		return "redirect:/pay/approvalMain.page";
+		return "redirect:/pay/myAllApproval.page";
 		
 	}
 	
@@ -910,7 +910,7 @@ public class PayController {
 		
 		
 		
-		return "redirect:/pay/approvalMain.page";
+		return "redirect:/pay/myAllApproval.page";
 		
 	}
 	
@@ -927,22 +927,19 @@ public class PayController {
 		
 		for(MultipartFile uploadFile : uploadFiles) {
 			if(uploadFile != null && !uploadFile.isEmpty()) {
-				Map<String, String> fileMap = fileUtil.fileUpload(uploadFile, "approval");
-				Map<String, Object> file = new HashMap<>();
-				file.put("filePath", fileMap.get("filePath"));
-				file.put("filesystemName", fileMap.get("filesystemName"));
-				file.put("originalName", fileMap.get("originalName"));
-				file.put("RefType", "PG");
-				attachList.add(file);
+				Map<String, String> file = fileUtil.fileUpload(uploadFile, "approval"); 
+				Map<String, Object> fileMap = new HashMap<>();
+				fileMap.put("originalName", file.get("originalName"));
+				fileMap.put("filesystemName", file.get("filesystemName"));
+				fileMap.put("filePath", file.get("filePath"));
+				fileMap.put("RefType", "PG");
+				attachList.add(fileMap);
 			}
 		}
 		log.debug("map : {}", map);
 		
-		if(attachList != null && !attachList.isEmpty()) {
-			map.put("fileStatus", "Y");			
-		}else {
-			map.put("fileStatus", "N");
-		}
+		map.put("fileStatus", "Y");			
+		
 		
 		List<Map<String, Object>> referrerList = new ArrayList<>();
 		if(!referrerNo.equals("null")) {
@@ -973,7 +970,7 @@ public class PayController {
 		
 		
 		
-		return "redirect:/pay/approvalMain.page";
+		return "redirect:/pay/myAllApproval.page";
 		
 		
 	}
@@ -1064,7 +1061,7 @@ public class PayController {
 			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
 		}
 		
-		return "redirect:/pay/approvalMain.page";
+		return "redirect:/pay/myAllApproval.page";
 	}
 	
 	@PostMapping("/hReportInsert.do")
@@ -1081,7 +1078,7 @@ public class PayController {
 			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
 		}
 		
-		return "redirect:/pay/approvalMain.page";
+		return "redirect:/pay/myAllApproval.page";
 	}
 	
 	
@@ -1140,7 +1137,7 @@ public class PayController {
 			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
 		}
 		
-		return "redirect:/pay/approvalMain.page";
+		return "redirect:/pay/myAllApproval.page";
 	
 	}
 	
@@ -1215,7 +1212,7 @@ public class PayController {
 		}
 		
 
-		return "redirect:/pay/approvalMain.page";
+		return "redirect:/pay/myAllApproval.page";
 		
 		
 	}
@@ -1322,7 +1319,7 @@ public class PayController {
 			redirectAttributes.addFlashAttribute("alertMsg", "게시글 등록 실패");
 		}
 		
-		return "redirect:/pay/approvalMain.page";
+		return "redirect:/pay/myAllApproval.page";
 	}
 	
 	@PostMapping("/bReportUpdate.do")
@@ -1336,7 +1333,8 @@ public class PayController {
 							    @RequestParam(value="referrer", defaultValue="null") List<String> referrerNo,
 							    @RequestParam(value="referrerName", defaultValue="null") List<String> referrerName,
 							    Model model,
-							    RedirectAttributes redirectAttributes) {
+							    RedirectAttributes redirectAttributes,
+							    HttpSession session) {
 
 			String approvalNo = (String)map.get("approvalNo");
 			// 품목, 규격, 수량, 단가, 가격, 기타 
@@ -1369,8 +1367,6 @@ public class PayController {
 				}
 			}
 			
-			log.debug("품목 : {}", list);
-			log.debug("referrerList : {}", referrerList);
 			
 			int result = payService.bReportUpdate(map, list, referrerList, approvalNo);
 			
@@ -1384,7 +1380,7 @@ public class PayController {
 			}
 			
 			
-			return "redirect:/pay/approvalMain.page";
+			return "redirect:/pay/myAllApproval.page";
 		
 	}
 	
@@ -1955,6 +1951,8 @@ public class PayController {
 	@PostMapping("/ajaxApprovalprocessing.do")
 	public int ajaxApprovalprocessing(@RequestParam Map<String, Object> map) {
 		return payService.ajaxApprovalprocessing(map);
+		
+		
 	}
 	
 	// 승인자 차례의 미결재함
@@ -2011,7 +2009,7 @@ public class PayController {
 	
 
 	@ResponseBody
-	@PostMapping("/ajaxFix.do")
+	@RequestMapping("/ajaxFix.do")
 	public String ajaxFix(@RequestParam Map<String, Object> map
 						, @RequestParam(value="equipmentName") List<String> equipmentName) {
 

@@ -669,7 +669,7 @@ $(document).on("click", "#okayBtn", function(){
 										                </tr>
 										                <tr>
 										                    <td class="label">
-											                    수신참조
+											                    수신참조인
 											                    <button data-izimodal-open="#modal2" id="modal_btn">
 																					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
 																					  <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
@@ -778,22 +778,10 @@ $(document).on("click", "#okayBtn", function(){
    
    
    
-   
-   
-    <script>
-    
-    	$(document).on("click", "#del_btn", function () {
-    	    //$("#tr_table tr:last-child").remove();
-    	    $("#tr_table").children("tr").last().remove();
-    	});
-    
-    	
-    })
-    </script>
         
      <script>
         $('#modal').iziModal({
-            title: '결재선지정',
+            title: '<h4 style="color:black">결재선지정</h4>',
             //subtitle: '수정도 가능합니다.',
             headerColor: '#FEEFAD', // 헤더 색깔
             theme: '', //Theme of the modal, can be empty or "light".
@@ -807,7 +795,7 @@ $(document).on("click", "#okayBtn", function(){
                
     <script>
         $('#modal2').iziModal({
-        	title: '수신참조인',
+        	title: '<h4 style="color:black">수신참조인</h4>',
             //subtitle: '수정도 가능합니다.',
             headerColor: '#FEEFAD', // 헤더 색깔
             theme: '', //Theme of the modal, can be empty or "light".

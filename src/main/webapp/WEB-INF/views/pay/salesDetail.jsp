@@ -7,6 +7,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+		<!-- jQuery -->
+		<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <!-- 모달 관련 -->
     <script src="${contextPath}/resources/js/iziModal.min.js"></script>
@@ -408,10 +410,9 @@ $(document).on("click", "#rejectBtn", function(){
             sessionStorage.setItem('DATA', $(this).val());
         });
 
-        // 뒤로가기 버튼 클릭 시 이벤트
         $('#historyBack').on('click', function() {
             // 여기서는 페이지 이동을 위한 코드 추가 (예: window.history.back();)
-            window.history.back();
+        	location.href = document.referrer;
         });
     });
 
@@ -584,12 +585,6 @@ $(document).on("click", "#rejectBtn", function(){
 			                success: function(response) {
 			                    if (response == 1) {
 			                        
-			                    	function redAlert(title, message) {
-                                	    $('#redModal').iziModal('setTitle', title);
-                                	    $('#redModal').iziModal('setSubtitle', message);
-                                	    $('#redModal').iziModal('open');
-                           	}
-
                            	redAlert("전자결재", "결재가 최종승인 완료되었습니다.");
 
                            	setTimeout(function() {

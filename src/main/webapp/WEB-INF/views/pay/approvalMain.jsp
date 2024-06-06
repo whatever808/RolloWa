@@ -3180,7 +3180,7 @@ $(document).on('click', '.page-linkc', function(event) {
 						    <!-- Highlighted Boxes -->
 						    <div class="highlight-boxes">
 						    		<div class="highlight-box" id="noApprovalSignList">
-						            <div class="title"><h5>${ userName }님의 미결재함</h5></div>  
+						            <div class="title"><h5>${ userName }님의 결재대기 문서함</h5></div>  
 						            <div class="count">
 							            <h4>${ noApprovalSignCount }건</h4>
 						            </div>
@@ -3189,7 +3189,7 @@ $(document).on('click', '.page-linkc', function(event) {
 						            </div>
 										</div>
 						        <div class="highlight-box" id="7daysOuterList">
-						            <div class="title"><h5>${ userName }님의 일주일 이상 <br>지연된 결재 요청함</h5></div>
+						            <div class="title"><h5>${ userName }님의 일주일 이상 <br>지연된 결재 대기함</h5></div>
 						            <div class="count">
 						            	<h4>${ mdCount }건</h4>
 						            </div>
