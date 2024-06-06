@@ -90,11 +90,11 @@
 
         <table class="table table-bordered line-shadow">
             <tr>
-                <th class="th_1">    
+                <%-- <th class="th_1">    
                     <input type="hidden" value="${ code }">
                     <input type="checkbox" id="selectAll" onclick="toggle(this);">
                     <label for="selectAll" style="cursor: pointer;">전체 선택</label>
-                </th>
+                </th> --%>
                 <th>번호</th>
                 <th>비품명</th>
                 <th>등록일</th>
@@ -104,9 +104,9 @@
                 <c:when test="${not empty list}">
                     <c:forEach var="item" items="${list}" varStatus="status">
                         <tr data-id="${item.code}">
-                            <td onclick="toggleCheckbox(this);">
+                            <!-- <td onclick="toggleCheckbox(this);">
                                 <input type="checkbox" class="equipment-checkbox" onclick="event.stopPropagation(); checkToggle();">
-                            </td>
+                            </td> -->
                             <td>${status.index + 1}</td>
                             <td>${item.equipmentName}</td>
                             <td>

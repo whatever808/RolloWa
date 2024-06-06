@@ -132,7 +132,7 @@
 	<select id="selectAllReservation" resultType="hashmap">
 	<![CDATA[
 		SELECT R.RESERVE_NO AS "reservationNo"
-		     , M.PROFILE_URL AS "profile_URL"
+		     , M.PROFILE_URL AS "profileURL"
 		     , M.USER_NAME AS "userName"
 		     , R.RESERVE_MEMO AS "content"
 		     , R.RESERVE_START AS "startTime"
