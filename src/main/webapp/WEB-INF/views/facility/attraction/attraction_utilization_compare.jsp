@@ -23,55 +23,56 @@
 			// 차트 데이터 테이블
 			mDataTable = new google.visualization.DataTable();
 			dDataTable = new google.visualization.DataTable();
-			console.log("데이터 먼스 : ", mDataTable);
-			console.log("데이타 데이 : ", dDataTable);
 			
 			// 차트 옵션값 지정
 			mOptions = {
-		      title: '월별 이용률',
-		      colors: [''],
-		      legend: 'none',
-		      animation:{	
-				startup:true,
-				duration: 1000,
-				easing: 'out',
+		    title: '월별 이용률',
+		    legend: 'bottom',
+		    chartArea: {
+					width: '75%',
+					height: '75%',
+				},
+		    animation:{	
+					startup:true,
+					duration: 1000,
+					easing: 'out',
 			  },
 			  vAxis: {
-				title: '이용률 (단위 : %)',
-				minValue: 0,
-				maxValue: 100,
+					title: '이용률 (단위 : %)',
+					minValue: 0,
+					maxValue: 100,
 			  },
 			  pointSize: 9,
 			  curveType: 'function',
-	        }
+	    }
 			
 			dOptions = {
-		      title: '일별 이용률',
-		      colors: [''],
-		      legend: 'none',
-		      animation:{	
-				startup:true,
-				duration: 1000,
-				easing: 'out',
+		    title: '일별 이용률',
+		    legend: 'bottom',
+		    chartArea: {
+					width: '75%',
+					height: '75%',
+				},
+		    animation:{	
+					startup:true,
+					duration: 1000,
+					easing: 'out',
 			  },
 			  vAxis: {
-				title: '이용률 (단위 : %)',
-				minValue: 0,
-				maxValue: 100,
+					title: '이용률 (단위 : %)',
+					minValue: 0,
+					maxValue: 100,
 			  },
 			  pointSize: 9,
 			  curveType: '',
-		    }
+		  }
 			
 			mChart = new google.visualization.LineChart(document.getElementById('monthly-chart'));
 			dChart = new google.visualization.LineChart(document.getElementById('daily-chart'));
 			
-			// monthlyChart.draw(monthlyData, monthlyOptions);
-			// dailyChart.draw(dailyData, dailyOptions);
-			
-			$("input[name=attraction]").each(function(){
-				ajaxSelectAttractionUtilization('year', $(this).data("attractionno"), $(this).data("attractionname"));
-				ajaxSelectAttractionUtilization('month', $(this).data("attractionno"), $(this).data("attractionname"));
+			$("#compareList").children('input[name=attractionNo]').each(function(){
+				ajaxSelectAttractionUtilization('year', $(this).val(), $(this).next().val());
+				ajaxSelectAttractionUtilization('month',  $(this).val(), $(this).next().val());	
 			});
 		}		
 	</script>
@@ -86,21 +87,54 @@
   		<div class="content p-5">
   		
   		<div class='d-flex justify-content-between align-itmes-center'>
-  			<div>
-  				<h1 class="page-title">이용률 비교</h1>
-  				
-  			</div>
-  		
+  			<h1 class="page-title">이용률 비교</h1>
   			<a href="${ contextPath }/attraction/utilization.do" class="go-list" id="back-to-list">목록가기</a>
+  			
+  			<!-- parameter for list page -->
+  			<form method="post" id="compareList" class="d-none">
+  				<c:forEach var="attraction" items="${ sessionScope.attractionCompareList }">
+						<input type="hidden" name="attractionNo" value="${ attraction.attractionNo }">
+						<input type="hidden" name="attractionName" value="${ attraction.attractionName }">
+					</c:forEach>
+  			</form>
+  			
   		</div>
   		
-  		<!-- 비교할 어트랙션 번호 목록 -->
-  		<div class="d-none">
-  			<c:forEach var="attraction" items="${ attractionList }">
-				<input type="hidden" name="attraction" data-attractionno="${ attraction.attractionNo }" data-attractionname="${ attraction.attractionName }">
-  			</c:forEach>
+  		<!-- about compare items start -->
+  		<div class="d-flex justify-content-between align-items-center mt-4">
+  			<!-- selected attraction name list start -->
+	  		<div class="selected-attraction-list">
+	  			<c:forEach var="attraction" items="${ sessionScope.attractionCompareList }">
+	  				<div class="selected-attraction d-inline-block">
+	  					<input type="hidden" name="attractionNo" value="${ attraction.attractionNo }">
+	  					<label class="me-2">${ attraction.attractionName }</label>
+	  					<label type="button" class="selected-attraction-remove">✖️</label>
+	  				</div>
+	  			</c:forEach>
+	  		</div>
+	  		<!-- selected attraction name list end -->
+  			
+  			<!-- button for modal -->
+  			<button type="button" id="addItemsBtn" class="btn" data-bs-toggle="modal" data-bs-target="#attractionListModal">
+				  ➕ 추가
+				</button>
+				
+  			<!-- 비교대상 추가 modal start -->
+				<div class="modal fade" id="attractionListModal" tabindex="-1" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header" style="background-color: #ffdd7391">
+				        <h5 class="modal-title" id="exampleModalLabel">어트랙션 리스트</h5>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				      </div>
+				      <div class="modal-body" id="attraction-list"></div>
+				    </div>
+				  </div>
+				</div>
+				<!-- 비교대상 추가 modal end -->
+				
   		</div>
-  		<!-- 비교할 어트랙션 번호 목록 -->
+  		<!-- about compare items end -->
   		
   		<div class="chart-list-div">
   			
@@ -109,7 +143,7 @@
   			
 	  			<!-- monthly chart start -->
 	  			<div class="chart" id="monthly-chart"></div>
-				<!-- monthly chart end -->
+					<!-- monthly chart end -->
   			</div>
 				
 			<div class="chart-div">
@@ -172,13 +206,18 @@
 				$(this).val() == oldMonth && $(this).attr("selected", true);
 			});
 			
-			// ajaxSelectAttractionUtilization('year');
-			// ajaxSelectAttractionUtilization('month');
+			$("#compareList").children('input[name=attractionNo]').each(function(){
+				ajaxSelectAttractionUtilization('year', $(this).val(), $(this).next().val());
+				ajaxSelectAttractionUtilization('month',  $(this).val(), $(this).next().val());	
+			});
+			
 		});
 		
 		// "월" 선택값이 바뀌었을 경우 ==================================================================
 		$(document).on("change", "#month-select", function(){
-			// ajaxSelectAttractionUtilization('month');
+			$("#compareList").children('input[name=attractionNo]').each(function(){
+				ajaxSelectAttractionUtilization('month', $(this).val(), $(this).next().val());
+			});
 		});	
 	});
 	
@@ -198,7 +237,7 @@
 				month: (type == 'year') ? '' : $month,
 			},
 			success: function(data){
-				console.log("chartData : ", data);
+				console.log(type, " chartData : ", data);
 				if(type == 'year'){
 					drawChart(attractionName, data, mDataTable, mOptions, mChart);
 				}else{
@@ -209,16 +248,15 @@
 			}
 		});
 	}
-	
+
 	// 차트 그리기
 	function drawChart(attractionName, data, dataTable, options, chart) {
-		console.log("options : ", options.title);
-		
 		// 기존의 데이터가 없을 경우에 추가될 컬럼 및 행
-		if(dataTable.getNumberOfColumns() == 0){
+		if(dataTable.getNumberOfColumns() == 0 || dataTable.getNumberOfRows() != data.length){
+			dataTable.removeColumns(0, dataTable.getNumberOfColumns());
+			dataTable.removeRows(0, dataTable.getNumberOfRows());
 			dataTable.addColumn('string', '기간');
 			for(let i=0 ; i<data.length ; i++){
-				console.log(data[i].L);
 				dataTable.addRow([data[i].L]);
 			}
 		}
@@ -226,22 +264,165 @@
 		// 새로 생성할 데이터 컬럼 추가
 		dataTable.addColumn('number', attractionName + '이용률');
 		for(let i=0 ; i<data.length ; i++){
-			console.log(data[i].usage);
-			dataTable.addRow([data[i].usage]);
+			let rowIndex = data[i].L - 1;
+			let colIndex = dataTable.getNumberOfColumns() - 1;
+			dataTable.setCell(rowIndex, colIndex, data[i].usage);
 		}
 		
-		// 옵션 수정
 		// 차트 그리기
-		
-		/* 차트 데이터 추가
-		for(let i=0 ; i<chartData.length ; i++){
-			data.addRow([chartData[i].L, chartData[i].usage]);
-		}
-			  
-		  var chart = new google.visualization.LineChart(document.getElementById(areaId));
-		  chart.draw(data, options);
-		  */
+		chart.draw(dataTable, options);
 	}
+	
+	// 비교 어트랙션 추가, 제거 관련 ====================================================================================
+	$(document).ready(function(){
+		ajaxSelectAttractionList();
+ 				
+		// 모달에서 비교 어트랙션 추가, 취소 버튼 클릭시
+		$(".modal-add-btn").on("click", function(){
+			let $this = $(this);
+			let $compareList = $("#compareList");
+			let $selectedAttractionList = $(".selected-attraction-list");
+			let itemCount = $compareList.children("[name=attractionNo]").length;
+			let $attractionNo = $(this).data("attractionno");
+			let $attractionName = $(this).prev().text();
+		
+			if($(this).text() == '➕'){
+				if(itemCount >= 5){
+ 						redAlert('최대 5개의 어트랙션만 비교 가능합니다.', '');
+ 					}else{
+  					$.ajax({// 세션의 비교목록에서 해당 어트랙션 추가
+							url: "${ contextPath }/attraction/utilization/compare/insert.do",
+							method: "get",
+							async: false,
+							data:{
+								attractionNo: $attractionNo,
+								attractionName: $attractionName,
+							},
+							success:function(){
+								$compareList.append("<input type='hidden' name='attractionNo' value='" + $attractionNo + "'>");
+								$compareList.append("<input type='hidden' name='attractionName' value='" + $attractionName + "'>");
+								
+								$this.css("background-color", "#FFA7A7").text("✖️");
+								
+								let str  = "<div class='selected-attraction d-inline-block'>";
+										str +=		"<input type='hidden' name='attractionNo' value='" + $attractionNo + "'>";
+										str += 		"<label class='me-2'>" + $attractionName + "</label>";
+										str += 		"<label type='button' class='selected-attraction-remove'>✖️</label>"; 
+								$selectedAttractionList.append(str);
+								
+								drawDefaultChart();
+								$("#compareList").children('input[name=attractionNo]').each(function(){
+									ajaxSelectAttractionUtilization('year', $(this).val(), $(this).next().val());
+									ajaxSelectAttractionUtilization('month',  $(this).val(), $(this).next().val());	
+								});
+							},error:function(){
+								console.log("INSERT ATTRACTION TO COMPARE LIST AJAX FAILED");
+							}
+						});
+ 					}
+			}else{
+				if(itemCount == 1){
+					redAlert('최소 1개 이상의 비교값이 존재해야합니다.', '');
+				}else{
+					$.ajax({// 세션의 비교목록에서 해당 어트랙션 삭제
+							url: "${ contextPath }/attraction/utilization/compare/delete.do",
+							method: "get",
+							data:{attractionNo: $attractionNo},
+							async: false,
+							success:function(){
+								$compareList.children("[value='" + $attractionNo + "']").remove();
+								$compareList.children("[value='" + $attractionName + "']").remove();
+								
+								$this.css('background-color', 'white').text('➕');
+								
+								$selectedAttractionList.find('[name=attractionNo]').each(function(){
+								$(this).val() == $attractionNo && $(this).parent().remove();
+								
+								drawDefaultChart();
+								$("#compareList").children('input[name=attractionNo]').each(function(){
+									ajaxSelectAttractionUtilization('year', $(this).val(), $(this).next().val());
+									ajaxSelectAttractionUtilization('month',  $(this).val(), $(this).next().val());	
+								});
+							});
+							},error:function(){
+								console.log("DELETE ATTRACTION FROM COMPARE LIST AJAX FAILED");
+							}
+						});
+				}
+			}
+		});
+	});
+ 			
+	// 어트랙션 리스트 조회 AJAX
+	function ajaxSelectAttractionList(){
+		$.ajax({
+				url: "${ contextPath }/attraction/utilization/attraction/list.ajax",
+				method: "get",
+				async: false,
+				success: function(attractionList){
+					let list = "";
+					if(attractionList.length == 0){
+						list += "<div class='d-flex justify-content-center align-items-center'>비교가능한 어트랙션이 없습니다.</div>";
+					}else{
+						for(let i=0 ; i<attractionList.length ; i++){
+							list += "<div class='d-flex justify-content-between align-items-center mb-2'>";
+							list += 	"<span class='fw-bold'>" + attractionList[i].attractionName + "</span>";
+							list += 	"<span class='btn modal-add-btn' data-attractionno='" + attractionList[i].attractionNo + "'>➕</span>";
+							list += "</div>";
+						}
+						
+						$("#attraction-list").html(list);
+						
+						$("#attraction-list").find(".modal-add-btn").each(function(){
+							let $span = $(this);
+							let $attractionNo = $(this).data("attractionno");
+						$("#compareList").children("[name=attractionNo]").each(function(){
+								$(this).val() == $attractionNo && $span.css("backgroundColor", "#FFA7A7").text("✖️");
+							});
+						});
+					}
+				},error: function(){
+					console.log("SELECT ATTRACTION LIST FOR COMPARE AJAX FAILED");
+				}
+			});
+ 		}
+	
+	// 비교 목록에서 어트랙션 삭제
+	$(document).ready(function(){
+		$(".selected-attraction-remove").on("click", function(event){
+			let $this = $(this);
+			let $compareList = $("#compareList");
+			let $attractionNo = $(this).siblings("[name=attractionNo]").val();
+			let $attractionName = $(this).prev().text();
+			
+			if($compareList.children().length / 2 == 1){
+				redAlert('최소 1개 이상의 비교값이 존재해야합니다.', '');
+			}else{
+				$.ajax({// 세션의 비교목록에서 해당 어트랙션 삭제
+					url: "${ contextPath }/attraction/utilization/compare/delete.do",
+					method: "get",
+					data:{attractionNo: $attractionNo},
+					async: false,
+					success:function(){
+						$compareList.children("[value='" + $attractionNo + "']").remove();
+						$compareList.children("[value='" + $attractionName + "']").remove();
+						
+						$this.parent().remove();
+						
+						ajaxSelectAttractionList();
+						
+						drawDefaultChart();
+						$("#compareList").children('input[name=attractionNo]').each(function(){
+							ajaxSelectAttractionUtilization('year', $(this).val(), $(this).next().val());
+							ajaxSelectAttractionUtilization('month',  $(this).val(), $(this).next().val());	
+						});
+					},error:function(){
+						console.log("DELETE ATTRACTION FROM COMPARE LIST AJAX FAILED");
+					}
+				});
+			} 					
+		});
+	});
 </script>
 
 </html>

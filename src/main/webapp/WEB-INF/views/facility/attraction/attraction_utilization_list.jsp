@@ -26,7 +26,12 @@
   			</div>
 			
 			<!-- 비교할 어트랙션 번호 목록 -->
-			<form action="${ contextPath }/attraction/utilization/compare.page" method="post" class="d-none" id="compareList"></form>
+			<form action="${ contextPath }/attraction/utilization/compare.page" method="post" class="d-none" id="compareList">
+				<c:forEach var="attraction" items="${ sessionScope.attractionCompareList }">
+					<input type="hidden" name="attractionNo" value="${ attraction.attractionNo }">
+					<input type="hidden" name="attractionName" value="${ attraction.attractionName }">
+				</c:forEach>
+			</form>
 			
 			<!-- select filter div start -->
 			<div class="select-filter-div">
@@ -162,6 +167,8 @@
 	
 	// 어트랙션 이용률 조회 관련 ============================================================================
 	$(document).ready(function(){
+		//
+		
 		ajaxSelectAttractionUtilizationList();
 		
 		$("#location-select").on("change", function(){
@@ -226,6 +233,14 @@
 				$("#utilization-list").html(listStr);
 				$(".pagination").html(pageStr);
 				
+				$(".compareAtrt").each(function(){
+					let $td = $(this);
+					let $no = $(this).data("attractionno");
+					$("#compareList").children("[name=attractionNo]").each(function(){
+						$(this).val() == $no && $td.html("<button class='btn btn-sm btn-danger'>취소</button>");
+					});
+				});
+				
 			},error:function(){
 				console.log("ATTRACTION UTILIZATION LIST AJAX FAILED");
 			}
@@ -244,29 +259,62 @@
 	
 	// 이용률 비교관련 ==============================================================================================
 	$(document).ready(function(){
-		// 비교할 어트랙션 추가
+		// 비교할 어트랙션 추가, 삭제
 		$("tbody").on("click", ".compareAtrt", function(){
-			let attractionNo = $(this).data("attractionno");
-			let flag = true;
+			let $compareList = $("#compareList");
+			let $compareCount = $compareList.children().length/2;
+			let $td = $(this);
+			let $attractionNo = $(this).data("attractionno");
+			let $attractionName = $(this).data("attractionname");
+			console.log($attractionNo);
+			console.log($attractionName);
 
-			$("#compareList").children("input").each(function(){
-				if($(this).val() == attractionNo){
-					yellowAlert('비교함에 이미 담긴 어트랙션입니다.','');
-					flag = false;
+			if($(this).text() == '➕'){
+				if($compareCount == 5){
+					yellowAlert('최대 5개의 어트랙션만 비교 가능합니다.');
+				}else{
+					$.ajax({// 세션의 비교목록에서 해당 어트랙션 추가
+						url: "${ contextPath }/attraction/utilization/compare/insert.do",
+						method: "get",
+						data:{
+							attractionNo: $attractionNo,
+							attractionName: $attractionName,
+						},
+						success:function(){
+							$compareList.append("<input type='hidden' name='attractionNo' value='" + $attractionNo + "'>");
+							$compareList.append("<input type='hidden' name='attractionName' value='" + $attractionName + "'>");
+							$td.html("<button class='btn btn-sm btn-danger'>취소</button>");
+						},error:function(){
+							console.log("INSERT ATTRACTION TO COMPARE LIST AJAX FAILED");
+						}
+					});
 				}
-			});
-			
-			if(flag){
-				$("#compareList").append("<input type='hidden' name='attractionNo' value='" + $(this).data("attractionno") + "'>");
-				$("#compareList").append("<input type='hidden' name='attractionName' value='" + $(this).data("attractionname") + "'>");
+			}else{
+				$.ajax({// 세션의 비교목록에서 해당 어트랙션 삭제
+					url: "${ contextPath }/attraction/utilization/compare/delete.do",
+					method: "get",
+					data:{attractionNo: $attractionNo},
+					success:function(){
+						$td.html('➕');
+						$compareList.children("[value='" + $attractionNo + "']").remove();
+						$compareList.children("[value='" + $attractionName + "']").remove();
+					},error:function(){
+						console.log("DELETE ATTRACTION FROM COMPARE LIST AJAX FAILED");
+					}
+				});
 			}
 		});
 		
 		// 비교하기 버튼 클릭시
 		$("#compare").on("click", function(){
-			$("#compareList").append("<input type='hidden' name='year' value='" + $("#year-select").val() + "'>");
-			$("#compareList").append("<input type='hidden' name='month' value='" + $("#month-select").val() + "'>");
-			$("#compareList").submit();
+			let compareCount = $("#compareList").children().length;
+			if(compareCount == 0){
+				redAlert('비교할 어트랙션이 없습니다.', '');
+			}else{
+				$("#compareList").append("<input type='hidden' name='year' value='" + $("#year-select").val() + "'>");
+				$("#compareList").append("<input type='hidden' name='month' value='" + $("#month-select").val() + "'>");
+				$("#compareList").submit();
+			}
 		});
 	});
 </script>

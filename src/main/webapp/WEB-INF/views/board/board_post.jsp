@@ -126,8 +126,8 @@
 				contentType:false,
 				processData:false,
 				success:function(result){
+					let msg = "";
 					if(result.result == 'SUCCESS'){
-						alert("공지사항이 " + (status == 'Y' ? '등록' : '저장') + " 되었습니다.");
 						if(status == 'Y'){
 							// [기웅] 부서 공지사항 등록 시 알림 전송
 							if($("select[name=category]").val() != "") {
@@ -137,16 +137,17 @@
 																																		, url: "${contextPath}/board/detail.do?category=&department=&condition=&keyword=&no=" + result.boardNo}));
 							}
 							// [기웅]
-		
+							msg = "공지사항이 " + (status == 'Y' ? '등록' : '저장') + " 되었습니다.";
+							alert(msg);
 							location.href = "${ contextPath }/board/publisher/detail.do?no=" + result.boardNo;						
 						}else if(status == 'T'){
 							location.href = "${ contextPath }/board/temp/detail.do?no=" + result.boardNo;						
 						}
 					}else{
-						alert("공지사항 " + (status == 'Y' ? '등록' : '저장') + "이 실패되었습니다.");
+						redAlert("공지사항 " + (status == 'Y' ? '등록' : '저장') + "이 실패되었습니다.", '');
 					}
 				},error:function(){
-					alert("공지사항 " + (status == 'Y' ? '등록' : '저장') + "요청에 실패했습니다.");
+					redAlert("공지사항 " + (status == 'Y' ? '등록' : '저장') + "요청에 실패했습니다.", '');
 				}
 			})
 		}else{

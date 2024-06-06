@@ -171,47 +171,56 @@
 		 </if>
 	</select>
 	
+	<!-- 어트랙션 리스트 조회(운영중, 운영중지) -->
+	<select id="selectUsingAttractionList" resultType="map">
+		select 
+				   attraction_no "attractionNo"
+				  ,attraction_name "attractionName"
+			from tb_attraction
+		 where status in ('OPERATING', 'STOP')
+	</select>
+	
 	<!-- 연간, 월간, 일간 전체 어트랙션별 이용률 -->
 	<select id="selectAttractionUtilizationList" parameterType="hashmap" resultType="map">
 		SELECT A.ATTRACTION_NO "attractionNo"
 			  ,A.ATTRACTION_NAME "attractionName"
 			  ,A.LOCATION "locationNo" 
 			  ,TO_CHAR((
-                       (SELECT  COUNT(COUNT(*)) VISITOR_USED 
-                          FROM  ATTRACTION_UTILIZATION AU
-                          JOIN VISITOR V ON (AU.VISITOR_NO = V.VISITOR_NO)
-                         WHERE EXTRACT(YEAR FROM V.VISIT_DATE) = #{year}
-                           AND AU.ATTRACTION_NO = A.ATTRACTION_NO
-                         GROUP BY ATTRACTION_NO, AU.VISITOR_NO, V.VISIT_DATE) / (SELECT DECODE(COUNT(VISITOR_NO), 0, 1,  COUNT(VISITOR_NO)) TOTAL_VISITORS
-                                                                                   FROM VISITOR
-                                                                                  WHERE EXTRACT(YEAR FROM VISIT_DATE) = #{year})
-                        ) * 100, 'FM000.00') "yearUsage"
-              ,TO_CHAR((
-                       (SELECT  COUNT(COUNT(*)) VISITOR_USED 
-                          FROM  ATTRACTION_UTILIZATION AU
-                          JOIN VISITOR V ON (AU.VISITOR_NO = V.VISITOR_NO)
-                         WHERE EXTRACT(YEAR FROM V.VISIT_DATE) = #{year}
-                           AND EXTRACT(MONTH FROM V.VISIT_DATE) = #{month}
-                           AND AU.ATTRACTION_NO = A.ATTRACTION_NO
-                         GROUP BY ATTRACTION_NO, AU.VISITOR_NO, V.VISIT_DATE) / (SELECT DECODE(COUNT(VISITOR_NO), 0, 1,  COUNT(VISITOR_NO)) TOTAL_VISITORS
-                                                                                   FROM VISITOR
-                                                                                  WHERE EXTRACT(YEAR FROM VISIT_DATE) = #{year}
-                                                                                    AND EXTRACT(MONTH FROM VISIT_DATE) = #{month})
-                        ) * 100, 'FM000.00') "monthUsage"
-              ,TO_CHAR((
-                       (SELECT  COUNT(COUNT(*)) VISITOR_USED 
-                          FROM  ATTRACTION_UTILIZATION AU
-                          JOIN VISITOR V ON (AU.VISITOR_NO = V.VISITOR_NO)
-                         WHERE EXTRACT(YEAR FROM V.VISIT_DATE) = #{year}
-                           AND EXTRACT(MONTH FROM V.VISIT_DATE) = #{month}
-                           AND EXTRACT(DAY FROM V.VISIT_DATE) = #{date}
-                           AND AU.ATTRACTION_NO = A.ATTRACTION_NO
-                         GROUP BY ATTRACTION_NO, AU.VISITOR_NO, V.VISIT_DATE) / (SELECT DECODE(COUNT(VISITOR_NO), 0, 1,  COUNT(VISITOR_NO)) TOTAL_VISITORS
-                                                                                   FROM VISITOR
-                                                                                  WHERE EXTRACT(YEAR FROM VISIT_DATE) = #{year}
-                                                                                    AND EXTRACT(MONTH FROM VISIT_DATE) = #{month}
-                                                                                    AND EXTRACT(DAY FROM VISIT_DATE) = #{date})
-                        ) * 100, 'FM000.00') "dailyUsage"
+                  (SELECT  COUNT(COUNT(*)) VISITOR_USED 
+                     FROM  ATTRACTION_UTILIZATION AU
+                     JOIN VISITOR V ON (AU.VISITOR_NO = V.VISITOR_NO)
+                    WHERE EXTRACT(YEAR FROM V.VISIT_DATE) = #{year}
+                      AND AU.ATTRACTION_NO = A.ATTRACTION_NO
+                    GROUP BY ATTRACTION_NO, AU.VISITOR_NO, V.VISIT_DATE) / (SELECT DECODE(COUNT(VISITOR_NO), 0, 1,  COUNT(VISITOR_NO)) TOTAL_VISITORS
+                                                                              FROM VISITOR
+                                                                             WHERE EXTRACT(YEAR FROM VISIT_DATE) = #{year})
+                   ) * 100, 'FM000.00') "yearUsage"
+         ,TO_CHAR((
+                  (SELECT  COUNT(COUNT(*)) VISITOR_USED 
+                     FROM  ATTRACTION_UTILIZATION AU
+                     JOIN VISITOR V ON (AU.VISITOR_NO = V.VISITOR_NO)
+                    WHERE EXTRACT(YEAR FROM V.VISIT_DATE) = #{year}
+                      AND EXTRACT(MONTH FROM V.VISIT_DATE) = #{month}
+                      AND AU.ATTRACTION_NO = A.ATTRACTION_NO
+                    GROUP BY ATTRACTION_NO, AU.VISITOR_NO, V.VISIT_DATE) / (SELECT DECODE(COUNT(VISITOR_NO), 0, 1,  COUNT(VISITOR_NO)) TOTAL_VISITORS
+                                                                              FROM VISITOR
+                                                                             WHERE EXTRACT(YEAR FROM VISIT_DATE) = #{year}
+                                                                               AND EXTRACT(MONTH FROM VISIT_DATE) = #{month})
+                   ) * 100, 'FM000.00') "monthUsage"
+         ,TO_CHAR((
+                  (SELECT  COUNT(COUNT(*)) VISITOR_USED 
+                     FROM  ATTRACTION_UTILIZATION AU
+                     JOIN VISITOR V ON (AU.VISITOR_NO = V.VISITOR_NO)
+                    WHERE EXTRACT(YEAR FROM V.VISIT_DATE) = #{year}
+                      AND EXTRACT(MONTH FROM V.VISIT_DATE) = #{month}
+                      AND EXTRACT(DAY FROM V.VISIT_DATE) = #{date}
+                      AND AU.ATTRACTION_NO = A.ATTRACTION_NO
+                    GROUP BY ATTRACTION_NO, AU.VISITOR_NO, V.VISIT_DATE) / (SELECT DECODE(COUNT(VISITOR_NO), 0, 1,  COUNT(VISITOR_NO)) TOTAL_VISITORS
+                                                                              FROM VISITOR
+                                                                             WHERE EXTRACT(YEAR FROM VISIT_DATE) = #{year}
+                                                                               AND EXTRACT(MONTH FROM VISIT_DATE) = #{month}
+                                                                               AND EXTRACT(DAY FROM VISIT_DATE) = #{date})
+                   ) * 100, 'FM000.00') "dailyUsage"
   		  FROM TB_ATTRACTION A
   		 WHERE A.STATUS IN ('OPERATING', 'STOP')
   		 <if test='location != null and !"".equals(location)'>

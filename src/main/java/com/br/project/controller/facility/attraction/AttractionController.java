@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -225,8 +225,29 @@ public class AttractionController {
 	 * @method : 어트랙션 이용률 관리페이지
 	 */
 	@RequestMapping("/utilization.do")
-	public String showAttractionUtilizationPage(Model model) {
-		model.addAttribute("locationList", locationService.selectLocationList());
+	public String showAttractionUtilizationListPage(HttpServletRequest request, HttpSession session) {
+		try {
+			/*
+			HashMap<String, Object> params = getParameterMap(request);
+			if(params != null && !params.isEmpty()) {
+				List<Map<String, String>> compareList = new ArrayList<>();
+				for(int i=0 ; i<((String[])params.get("attractionNo")).length ; i++) {
+					Map<String, String> attraction = new HashMap<>();
+					
+					attraction.put("attractionNo", ((String[])params.get("attractionNo"))[i]);
+					attraction.put("attractionName", ((String[])params.get("attractionName"))[i]);
+					
+					compareList.add(attraction);
+				}
+				session.setAttribute("attractionCompareList", compareList);
+			}
+			*/
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			request.setAttribute("locationList", locationService.selectLocationList());
+		}
+		
 		return "facility/attraction/attraction_utilization_list";
 	}
 	
@@ -252,11 +273,15 @@ public class AttractionController {
 	 */
 	@RequestMapping("/utilization/detail.page")
 	public String showAttractionUtilizationPage(HttpServletRequest request) {
-		HashMap<String, Object> params = getParameterMap(request);
-		for(String key : params.keySet()) {
-			request.setAttribute(key, params.get(key));
+		try {
+			HashMap<String, Object> params = getParameterMap(request);
+			for(String key : params.keySet()) {
+				request.setAttribute(key, params.get(key));
+			}
+			request.setAttribute("attraction", attractionService.selectAttraction(getParameterMap(request)));
+		}catch(Exception e){
+			e.printStackTrace();
 		}
-		request.setAttribute("attraction", attractionService.selectAttraction(getParameterMap(request)));
 		return "/facility/attraction/attraction_utilization_detail";
 	}
 	
@@ -274,23 +299,74 @@ public class AttractionController {
 	 */
 	@RequestMapping("/utilization/compare.page")
 	public String showAttractionUtilizationComparePage(HttpServletRequest request) {
-		List<Map<String, String>> attractionList = new ArrayList<>();
-		String[] attractionNoArr = request.getParameterValues("attractionNo");
-		String[] attractionNameArr = request.getParameterValues("attractionName");
-		for(int i=0 ; i<attractionNoArr.length ; i++) {
-			Map<String, String> attraction = new HashMap<>();
-			
-			attraction.put("attractionNo", attractionNoArr[i]);
-			attraction.put("attractionName", attractionNameArr[i]);
-			
-			attractionList.add(attraction);
+		try {
+			/*
+			HashMap<String, Object> params = getParameterMap(request);
+			if(params != null && !params.isEmpty()) {
+				List<Map<String, String>> compareList = new ArrayList<>();
+				for(int i=0 ; i<((String[])params.get("attractionNo")).length ; i++) {
+					Map<String, String> attraction = new HashMap<>();
+					attraction.put("attractionNo", ((String[])params.get("attractionNo"))[i]);
+					attraction.put("attractionName", ((String[])params.get("attractionName"))[i]);
+					compareList.add(attraction);
+				}
+				session.setAttribute("attractionCompareList", compareList);
+			}
+			*/
+			request.setAttribute("year", request.getParameter("year"));
+			request.setAttribute("month", request.getParameter("month"));
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
-		request.setAttribute("attractionList", attractionList);
-		request.setAttribute("year", request.getParameter("year"));
-		request.setAttribute("month", request.getParameter("month"));
 		return "facility/attraction/attraction_utilization_compare";
 	}
 	
+	/**
+	 * @method : 세션영역의 이용률 비교 어트랙션 리스트에 어트랙션 추가
+	 */
+	@RequestMapping(value="/utilization/compare/insert.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public void insertAttractionCompareList(HttpServletRequest request, HttpSession session) {
+		List<Map<String, String>> compareList = (List<Map<String, String>>)session.getAttribute("attractionCompareList");
+		HashMap<String, Object> params = getParameterMap(request);
+		Map<String, String> attraction = new HashMap<>();
+		attraction.put("attractionNo", params.get("attractionNo").toString());
+		attraction.put("attractionName", params.get("attractionName").toString());
+		
+		if(compareList == null) {
+			List<Map<String, String>> list = new ArrayList<>();
+			list.add(attraction);
+			session.setAttribute("attractionCompareList", list);
+		}else {
+			compareList.add(attraction);
+		}
+	}
+	
+	/**
+	 * @method : 세션영역의 이용률 비교 어트랙션 리스트에서 어트랙션 제거
+	 */
+	@RequestMapping(value="/utilization/compare/delete.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public void deleteFromAttractionCompareList(String attractionNo, HttpSession session) {
+		List<Map<String, String>> compareList = (List<Map<String, String>>)session.getAttribute("attractionCompareList");
+		for(int i=0 ; i<compareList.size() ; i++) {
+			Map<String, String> attraction = compareList.get(i);
+			if(attraction.get("attractionNo").equals(attractionNo)) {
+				compareList.remove(i);
+			}
+		}
+		session.setAttribute("attractionCompareList", compareList);
+	}
+	
+	@RequestMapping(value="/utilization/attraction/list.ajax", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public List<Map<String, Object>> ajaxSelectUsingAttractionList(){
+		return attractionService.selectUsingAttractionList();
+	}
+	
+	/**
+	 * @method : 
+	 */
 	@RequestMapping(value="/utilization/compare.do", produces="application/json; charset=utf-8")
 	@ResponseBody
 	public List<Map<String, Object>> ajaxSelectAttractionUtilizationForComparing(HttpServletRequest request, @RequestParam(value="noList[]", defaultValue="") List<String> noList) {
@@ -298,6 +374,5 @@ public class AttractionController {
 		params.put("noList", noList);
 		return attractionService.selectAttractionUtilization(params);
 	}
-	
 	
 }

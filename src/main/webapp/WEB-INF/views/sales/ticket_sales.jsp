@@ -355,9 +355,14 @@
 			let options = {
 					title: (chartType == 'year') ? '연간 이용권 매출' : month + '월 이용권 매출',
 					colors: ['#FFA7A7', '#FFDD73', '#FFA7A7', '#FFDD73'],
+					chartArea: {
+						right: '50',
+						width: '80%',
+						height: '80%',
+					},
 					legend: { 
 						position: 'bottom', 
-						alignment: 'end', 
+						alignment: 'center', 
 					},
 					animation:{
 						startup:true,
@@ -365,7 +370,7 @@
 						easing: 'out',
 					},
 					vAxis: {
-						title: '매출액 (단위 : 천원)',
+						title: '매출액 (단위 : 원)',
 						minValue: 0,
 						maxValue: 18000
 					},

@@ -211,10 +211,10 @@
 	
 	// 사용자가 현재 위치 추적을 허용했을 경우
 	const success = (position) => {
-		const latitude = position.coords.latitude;
-		const longitude = position.coords.longitude;
+		// const latitude = position.coords.latitude;
+		// const longitude = position.coords.longitude;
 		
-		getWeather(latitude, longitude);
+		getWeather(35.6895, 139.6917);
 	}
 	
 	const getWeather = (lat, lon) => {
