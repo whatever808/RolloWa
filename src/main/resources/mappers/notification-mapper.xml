@@ -134,6 +134,7 @@
 		and user_no = #{ userNo }
 		and noti_check_date is null
 		and no.status = 'Y'
+		and no.type != 'M'
 		order by noti_send_date desc
 	</select>
 	

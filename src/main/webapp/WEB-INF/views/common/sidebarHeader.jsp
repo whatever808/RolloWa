@@ -867,8 +867,26 @@ $(document).ready(function(){
 			                receiveMsg(msg);
 			              })
 			            }
+			          } else if (msgBody.flag == 3) {
+			        		// 채팅방 멘션일 경우
+			        	  for (var i = 0; i < msgBody.teamMemberList.length; i++) {
+			              if(${loginMember.userNo} == msgBody.teamMemberList[i].userNo) {
+			                $("#alram").iziModal('open');
+			                $("#alram_btn").on("click", function() {													
+			                  // 채팅방 멘션일 경우
+			                  console.log(msgBody.chatRoomNo)
+		                	  selectChatMsg(event, msgBody.chatRoomNo, msgBody.teamMemberList);
+		                	  $(".msg_open_btn").trigger("click");
+		                	  $("#alram").iziModal("close");
+			                })
+			                // 읽지 않은 알림 조회 후 알림 목록에 추가 및 읽지 않은 알림 표시
+			                setTimeout(function() {
+			                  selectAlram();
+			                }, 3000);
+				             }
+				           }
 			          } else {
-			            // 공지사항, 일정 등록 알림인 경우
+			            // 공지사항, 일정 등록, 채팅방 멘션 알림인 경우
 			            for (var i = 0; i < msgBody.teamMemberList.length; i++) {
 			              if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
 			                $("#alram").iziModal('open');
@@ -888,8 +906,8 @@ $(document).ready(function(){
 			                      console.log("알림 조회 시간 update ajax 실패");
 			                    }
 			                  })
-			
-			                  location.href = msgBody.url;
+												
+		                	  location.href = msgBody.url;
 			                })
 			                // 읽지 않은 알림 조회 후 알림 목록에 추가 및 읽지 않은 알림 표시
 			                setTimeout(function() {
