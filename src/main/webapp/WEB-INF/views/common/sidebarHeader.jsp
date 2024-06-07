@@ -709,7 +709,7 @@ $(document).ready(function(){
 						                        </li>
 						                        <li>
 						                            <a href="${contextPath}/pay/noApprovalList.page"
-						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">미결재함</a>
+						                                class="link-body-emphasis d-inline-flex text-decoration-none rounded">결재대기함</a>
 						                        </li>
 						                    </ul>
 						                </div>

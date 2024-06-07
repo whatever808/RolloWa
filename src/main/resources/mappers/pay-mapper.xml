@@ -177,14 +177,13 @@
 	<select id="moreDateCount" resultType="_int">
       SELECT COUNT(*) count
 			  FROM APPROVAL A
-			 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-			   AND DOCUMENT_STATUS IN ('I', 'D') 
+			 WHERE DOCUMENT_STATUS IN ('I', 'D') 
 			   AND STATUS = 'Y'
-			    and (
-		            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
-		         or (MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is null)
-		         or (FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is null)
-          		)
+			    AND (
+	          (FIRST_APPROVAL = #{userName} AND FIRST_APPROVAL_DATE IS NULL AND REGIST_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	          OR (FIRST_APPROVAL_DATE IS NOT NULL AND MIDDLE_APPROVAL = #{userName} AND MIDDLE_APPROVAL_DATE IS NULL AND FIRST_APPROVAL_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	          OR (MIDDLE_APPROVAL_DATE IS NOT NULL AND FINAL_APPROVAL = #{userName} AND FINAL_APPROVAL_DATE IS NULL AND MIDDLE_APPROVAL_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	      			)
 	</select>
 	
 	<!-- 로그인한 사용자의 결재내역(Y,N,I)의 목록 갯수 -->
@@ -370,9 +369,9 @@
 			      , FINAL_APPROVAL
 			      , DOCUMENT_STATUS
 			      , CANCELLATION_CONTENT
-			      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
-			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
-			      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+			      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') FIRST_APPROVAL_DATE
+			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') MIDDLE_APPROVAL_DATE
+			      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') FINAL_APPROVAL_DATE
 			      , TITLE
 			      , SALES_DIVISION
 			      , MANAGER_NAME
@@ -911,9 +910,9 @@
 				      , FINAL_APPROVAL
 				      , DOCUMENT_STATUS
 				      , CANCELLATION_CONTENT
-				      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
-				      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
-				      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+				      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') FIRST_APPROVAL_DATE
+				      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') MIDDLE_APPROVAL_DATE
+				      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') FINAL_APPROVAL_DATE
 				      , SALES_NO
 				      , to_char(EFFECTIVE_DATE, 'YYYY-MM-DD') EFFECTIVE_DATE
               , COOPERATION_DEPARTMENT
@@ -1038,9 +1037,9 @@
 				    , FIRST_APPROVAL
 				    , MIDDLE_APPROVAL
 				    , FINAL_APPROVAL
-			      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
-			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
-			      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+			      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') FIRST_APPROVAL_DATE
+			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') MIDDLE_APPROVAL_DATE
+			      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') FINAL_APPROVAL_DATE
 			      , to_char(REGIST_DATE, 'YYYY-MM-DD') REGIST_DATE
 				    , FIX_NO
 				    , TITLE
@@ -1135,9 +1134,9 @@
 				    , FIRST_APPROVAL
 				    , MIDDLE_APPROVAL
 				    , FINAL_APPROVAL
-			      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
-			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
-			      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+			      , to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') FIRST_APPROVAL_DATE
+			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') MIDDLE_APPROVAL_DATE
+			      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') FINAL_APPROVAL_DATE
 			      , to_char(REGIST_DATE, 'YYYY-MM-DD') REGIST_DATE
 			  	  , RETIRE_NO 
 			  	  , to_char(START_PERIOD, 'YYYY-MM-DD') START_PERIOD
@@ -1304,9 +1303,9 @@
 						, MIDDLE_APPROVAL
 						, FINAL_APPROVAL
 						, CANCELLATION_CONTENT
-						, to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
-			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
-			      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+						, to_char(FIRST_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') FIRST_APPROVAL_DATE
+			      , to_char(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') MIDDLE_APPROVAL_DATE
+			      , to_char(FINAL_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') FINAL_APPROVAL_DATE
 						, to_char(A.REGIST_DATE, 'YYYY-MM-DD') REGIST_DATE
 						, MODIFY_TYPE
 				FROM approval A
@@ -1319,7 +1318,6 @@
 				  AND DR.DRAFT_NO = #{documentNo}
 				  AND I.REPORT_NO = #{documentNo}
 				  AND DOCUMENT_NUMBER = #{documentNo}
-				  AND A.PAYMENT_WRITER = #{payWriter}
 				  AND A.PAYMENT_WRITER_NO = #{payWriterNo}
 	 </select>
 	 
@@ -1385,6 +1383,7 @@
 		</insert>
 		
 		<select id="delayDateList" resultMap="payResult">
+		
 			select 
 				      APPROVAL_NO
 				    , case when document_type = 'C' then '출장보고서'
@@ -1428,29 +1427,29 @@
 				     , PAYMENT_STATUS
 		  from approval A
       join member m on( USER_NO =  PAYMENT_WRITER_NO)
-		 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-		   AND DOCUMENT_STATUS IN ('I', 'D') 
+		  WHERE DOCUMENT_STATUS IN ('I', 'D') 
 		   AND A.STATUS = 'Y'
-		    and (
-	            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
-	         or (MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is null)
-	         or (FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is null)
-	        		)
+		    AND (
+          (FIRST_APPROVAL = #{userName} AND FIRST_APPROVAL_DATE IS NULL AND REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE)
+          OR (FIRST_APPROVAL_DATE IS NOT NULL AND MIDDLE_APPROVAL = #{userName} AND MIDDLE_APPROVAL_DATE IS NULL AND FIRST_APPROVAL_DATE + 7  <![CDATA[ <= ]]>  SYSDATE)
+          OR (MIDDLE_APPROVAL_DATE IS NOT NULL AND FINAL_APPROVAL = #{userName} AND FINAL_APPROVAL_DATE IS NULL AND MIDDLE_APPROVAL_DATE + 7  <![CDATA[ <= ]]> SYSDATE)
+      			)
 		order
 			 by APPROVAL_NO desc
+			
 		</select>
 		
 		<select id="moreDateSelectCount" resultType="_int">
+		
 			SELECT COUNT(*) count
 			  FROM APPROVAL A
-			 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-			   AND DOCUMENT_STATUS IN ('I', 'D')
+			 WHERE DOCUMENT_STATUS IN ('I', 'D')
 			   AND STATUS = 'Y'
-			    and (
-		            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
-		         or (MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is null)
-		         or (FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is null)
-          		)
+			    AND (
+	          (FIRST_APPROVAL = #{userName} AND FIRST_APPROVAL_DATE IS NULL AND REGIST_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	          OR (FIRST_APPROVAL_DATE IS NOT NULL AND MIDDLE_APPROVAL = #{userName} AND MIDDLE_APPROVAL_DATE IS NULL AND FIRST_APPROVAL_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	          OR (MIDDLE_APPROVAL_DATE IS NOT NULL AND FINAL_APPROVAL = #{userName} AND FINAL_APPROVAL_DATE IS NULL AND MIDDLE_APPROVAL_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	      			)
         <choose>
 					<when test="conditions == '전체'">
 					and DOCUMENT_TYPE IN ('T','C','B','M','J','G','H','V')
@@ -1468,7 +1467,7 @@
 						and PAYMENT_STATUS = #{status}
 					</otherwise>
 				</choose>
-				
+		
 		</select>
 		
 		<select id="delayDateSelectList" resultMap="payResult">
@@ -1516,14 +1515,13 @@
 				     , TITLE
 		  from approval A
       join member m on( USER_NO =  PAYMENT_WRITER_NO)
-		 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-		   AND DOCUMENT_STATUS IN ('I', 'D') 
+		 WHERE DOCUMENT_STATUS IN ('I', 'D') 
 		   AND A.STATUS = 'Y'
-		    and (
-	            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
-	         or (MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is null)
-	         or (FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is null)
-	        		)
+		    AND (
+	          (FIRST_APPROVAL = #{userName} AND FIRST_APPROVAL_DATE IS NULL AND REGIST_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	          OR (FIRST_APPROVAL_DATE IS NOT NULL AND MIDDLE_APPROVAL = #{userName} AND MIDDLE_APPROVAL_DATE IS NULL AND FIRST_APPROVAL_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	          OR (MIDDLE_APPROVAL_DATE IS NOT NULL AND FINAL_APPROVAL = #{userName} AND FINAL_APPROVAL_DATE IS NULL AND MIDDLE_APPROVAL_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	      			)
       <choose>
 				<when test="conditions == '전체'">
 				and DOCUMENT_TYPE IN ('T','C','B','M','J','G','H','V')
@@ -1548,14 +1546,13 @@
 		<select id="moreDateSearchCount" resultType="_int">
 				SELECT COUNT(*) count
 			  FROM APPROVAL A
-			 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-			   AND DOCUMENT_STATUS IN ('I', 'D')
+			 WHERE DOCUMENT_STATUS IN ('I', 'D')
 			   AND STATUS = 'Y'
-			    and (
-		            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
-		         or (MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is null)
-		         or (FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is null)
-          		)
+			    AND (
+	          (FIRST_APPROVAL = #{userName} AND FIRST_APPROVAL_DATE IS NULL AND REGIST_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	          OR (FIRST_APPROVAL_DATE IS NOT NULL AND MIDDLE_APPROVAL = #{userName} AND MIDDLE_APPROVAL_DATE IS NULL AND FIRST_APPROVAL_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	          OR (MIDDLE_APPROVAL_DATE IS NOT NULL AND FINAL_APPROVAL = #{userName} AND FINAL_APPROVAL_DATE IS NULL AND MIDDLE_APPROVAL_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	      			)
           AND ${condition} LIKE '%' || #{keyword} || '%'
 		</select>
 		
@@ -1604,14 +1601,13 @@
 				     , TITLE
 		  from approval A
       join member m on( USER_NO =  PAYMENT_WRITER_NO)
-		 WHERE REGIST_DATE + 7  <![CDATA[ <= ]]>  SYSDATE
-		   AND DOCUMENT_STATUS IN ('I', 'D')
+		 WHERE DOCUMENT_STATUS IN ('I', 'D')
 		   AND A.STATUS = 'Y'
-		    and (
-	            (FIRST_APPROVAL = #{userName} and FIRST_APPROVAL_DATE is null)
-	         or (MIDDLE_APPROVAL = #{userName} and MIDDLE_APPROVAL_DATE is null)
-	         or (FINAL_APPROVAL = #{userName} and FINAL_APPROVAL_DATE is null)
-	        		)
+		    AND (
+	          (FIRST_APPROVAL = #{userName} AND FIRST_APPROVAL_DATE IS NULL AND REGIST_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	          OR (FIRST_APPROVAL_DATE IS NOT NULL AND MIDDLE_APPROVAL = #{userName} AND MIDDLE_APPROVAL_DATE IS NULL AND FIRST_APPROVAL_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	          OR (MIDDLE_APPROVAL_DATE IS NOT NULL AND FINAL_APPROVAL = #{userName} AND FINAL_APPROVAL_DATE IS NULL AND MIDDLE_APPROVAL_DATE + 7 <![CDATA[ <= ]]> SYSDATE)
+	      			)
 				 AND ${condition} LIKE '%' || #{keyword} || '%'		
 		
 		</select>
@@ -1764,9 +1760,9 @@
 					, FIRST_SIGN
 					, MIDDLE_SIGN
 					, FINAL_SIGN
-					, TO_CHAR(FIRST_APPROVAL_DATE, 'YYYY-MM-DD') FIRST_APPROVAL_DATE
-					, TO_CHAR(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD') MIDDLE_APPROVAL_DATE
-					, TO_CHAR(FINAL_APPROVAL_DATE, 'YYYY-MM-DD') FINAL_APPROVAL_DATE
+					, TO_CHAR(FIRST_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') FIRST_APPROVAL_DATE
+					, TO_CHAR(MIDDLE_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') MIDDLE_APPROVAL_DATE
+					, TO_CHAR(FINAL_APPROVAL_DATE, 'YYYY-MM-DD HH24:MI') FINAL_APPROVAL_DATE
 					, DOCUMENT_STATUS
 			  from APPROVAL
 			 where APPROVAL_NO = #{approvalNo}

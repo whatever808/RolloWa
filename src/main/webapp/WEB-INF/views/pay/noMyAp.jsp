@@ -428,7 +428,7 @@ $.ajax({
 	            
 							
 							<div class="content2">
-							   <h2>${ userName }님의 미결재함</h2>
+							   <h2>${ userName }님의 결재대기함</h2>
 							    <div class="d-flex justify-content-between align-items-center mb-3">
 											 <div class="search-container">
 							            <input type="text" class="search-input" id="searches" placeholder="검색어를 입력하세요...">

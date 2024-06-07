@@ -7,7 +7,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<!-- jQuery -->
+		<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- 모달 관련 -->
     <script src="${contextPath}/resources/js/iziModal.min.js"></script>
     <link rel="stylesheet" href="${contextPath}/resources/css/iziModal.min.css">
@@ -248,8 +249,8 @@ $(document).on("click", "#rejectBtn", function(){
             </div>
         </div>
        <c:if test="${ not empty refList }">
-	        <div class="body" style="width: 700px;">
-	         		<table class="info-table">
+	        <div class="body">
+	         		<table class="info-table" id="refTable">
 	            		<tr>
 	                    <th>수신참조인</th>
 	                    <c:forEach var="item" items="${ refList }">
@@ -259,13 +260,15 @@ $(document).on("click", "#rejectBtn", function(){
 	            </table>
 	        </div>
         </c:if>
+        <c:if test="${ list.get(0).MODIFY_TYPE eq 'S'}">
+        	<table class="info-table">
+      			<td style="border: 0px solid; text-align: end;">
+      				<button type="button" class="btn btn-outline-primary" disabled>보완 보고서</button>
+      			</td>
+      		</table>
+     		</c:if>
         <div class="body">
             <table class="info-table">
-            		<c:if test="${ list.get(0).MODIFY_TYPE eq 'S'}">
-	            		<td style="border: 0px solid; text-align: center;">
-	            		<button type="button" class="btn btn-outline-primary" disabled>보완 보고서</button>
-	            		</td>
-            		</c:if>
                 <tr>
                     <th>기안부서</th>
                     <td>${list.get(0).DEPARTMENT}</td>
@@ -438,7 +441,7 @@ $(document).on("click", "#rejectBtn", function(){
         // 뒤로가기 버튼 클릭 시 이벤트
         $('#historyBack').on('click', function() {
             // 여기서는 페이지 이동을 위한 코드 추가 (예: window.history.back();)
-            window.history.back();
+        	location.href = document.referrer;
         });
     });
 
@@ -522,6 +525,8 @@ $(document).on("click", "#rejectBtn", function(){
 			    if (paymentWriterNo != userNo) {
 			    	$(".modifyWriter").css("display", "none");
 			    }
+			   
+			 		
 
 		   		if(paymentWriterNo == userNo){
 		   			$("#deldo").css("display", "block");
@@ -577,12 +582,20 @@ $(document).on("click", "#rejectBtn", function(){
 			                type: "post",
 			                data: { status: "N", approvalNo: "${list.get(0).APPROVAL_NO}" },
 			                success: function(response) {
-			                    if (response == 1) {
-			                        // 이전 페이지로 이동하고 모달 창을 설정한다.
-			                        location.href = document.referrer;
-			                        $('#redModal').iziModal('setTitle', "전자결재");
-			                        $('#redModal').iziModal('setSubtitle', "승인처리가 최종완료되었습니다.");
-			                    }
+			                	 if (response == 1) {
+	                                	
+			                		 	function yellowAlert(title, content){
+			                	          $('#yellowModal').iziModal('setTitle', title);
+			                	          $('#yellowModal').iziModal('setSubtitle', content);
+			                	          $('#yellowModal').iziModal('open');
+			                	    };
+	
+		                       	redAlert("전자결재", "결재가 최종승인 완료되었습니다.");
+		
+		                       	setTimeout(function() {
+		                       	    location.href = document.referrer;
+		                       	}, 3000);
+	                      	}
 			                },
 			                error: function() {
 			                    console.log("ajax통신 실패");

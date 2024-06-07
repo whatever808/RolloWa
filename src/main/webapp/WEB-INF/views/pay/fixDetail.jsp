@@ -7,7 +7,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
+		<!-- jQuery -->
+		<script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- 모달 관련 -->
     <script src="${contextPath}/resources/js/iziModal.min.js"></script>
     <link rel="stylesheet" href="${contextPath}/resources/css/iziModal.min.css">
@@ -18,7 +19,7 @@
 		<!-- 기안서 공통 스타일 -->
     <link rel="stylesheet" href="${contextPath}/resources/css/pay/detail.css">
 <style>
-#refTable tbody td {width: 50px;}
+
 </style>
 </head>
 <body>
@@ -241,8 +242,8 @@ $(document).on("click", "#rejectBtn", function(){
             </div>
         </div>
         <c:if test="${ not empty refList }">
-	        <div class="body">
-	         		<table class="info-table" id="refTable">
+	        <div class="body" id="refTable">
+	         		<table class="info-table">
 	            		<tr>
 	                    <th>수신참조인</th>
 	                    <c:forEach var="item" items="${ refList }">
@@ -321,7 +322,7 @@ $(document).on("click", "#rejectBtn", function(){
 		                  <td colspan="3">${list.get(0).ETC_CONTENT}</td>
 		               </tr>
             </table>
-					        </div>
+					       </div>
 					      			<div id="modifybtn">
 					           			<c:choose>
 					      						<c:when test="${ list.get(0).DOCUMENT_STATUS == 'D' ||  list.get(0).DOCUMENT_STATUS == 'I' && list.get(0).PAYMENT_WRITER_NO == userNo}">
@@ -357,8 +358,13 @@ $(document).on("click", "#rejectBtn", function(){
                 </div>
             </div>
         </div>
+        <script>
+        $('#historyBack').on('click', function() {
+            window.history.back();
+        });
+   		</script> 
         
-        <!-------------- 승인싸인 모달창 ------------->
+       <!-------------- 승인싸인 모달창 ------------->
         <div id="modal2">
 		        <div class="m_content_style"  >
 		        <canvas id="signature" width="600" height="200"></canvas>
@@ -390,7 +396,7 @@ $(document).on("click", "#rejectBtn", function(){
 		        </div>
 		    </div>
 		    <!---------------------------------------------->
-		
+	
 		<script>
        $(document).ready(function() {
            $(".unit_price, .price").each(function() {
@@ -417,7 +423,7 @@ $(document).on("click", "#rejectBtn", function(){
         // 뒤로가기 버튼 클릭 시 이벤트
         $('#historyBack').on('click', function() {
             // 여기서는 페이지 이동을 위한 코드 추가 (예: window.history.back();)
-            window.history.back();
+        	location.href = document.referrer;
         });
     });
 
@@ -453,23 +459,15 @@ $(document).on("click", "#rejectBtn", function(){
                             no: "${list.get(0).APPROVAL_NO}"
                         },
                         success: function(response) {
+                        	
                        	 if(response == "SUCCESS") {
                        		 
-                       		 function redAlert(title, message) {
-                            	    $('#redModal').iziModal('setTitle', title);
-                            	    $('#redModal').iziModal('setSubtitle', message);
-                            	    $('#redModal').iziModal('open');
-		                        	}
-		
-		                        	redAlert("게시글 삭제", "신청서가 정상적으로 삭제되었습니다.");
-		
-		                        	setTimeout(function() {
-		                        	    location.href = document.referrer;
-		                        	}, 3000);
-		                        	
-                            } else {
-                                console.log("ajax 통신 실패");
-                            }
+                       			redAlert("게시글 삭제", "신청서가 정상적으로 삭제되었습니다.");
+	                       		setTimeout(function() {
+		            		     	    location.href = document.referrer;
+		            		     		}, 3000);
+                       	 }
+                       		 
                        },
                         error: function() {
                             console.log("ajax 통신 오류");
@@ -500,6 +498,9 @@ $(document).on("click", "#rejectBtn", function(){
 			 		// 수정 버튼 표시 여부 결정
 			    if (paymentWriterNo != userNo) {
 			    	$(".modifyWriter").css("display", "none");
+			    }
+			    if (paymentWriterNo != userNo) {
+			    	$("#correction").css("display", "none");
 			    }
 
 		   		if(paymentWriterNo == userNo){
@@ -556,16 +557,37 @@ $(document).on("click", "#rejectBtn", function(){
 			                type: "post",
 			                data: { status: "N", approvalNo: "${list.get(0).APPROVAL_NO}" },
 			                success: function(response) {
-			                    if (response == 1) {
-			                        // 이전 페이지로 이동하고 모달 창을 설정한다.
-			                        location.href = document.referrer;
-			                        $('#redModal').iziModal('setTitle', "전자결재");
-			                        $('#redModal').iziModal('setSubtitle', "승인처리가 최종완료되었습니다.");
-			                    }
+			                	
+			                	if (response == 1) {
+			                	    // 비품 등록을 위한 AJAX 요청을 보낸다.
+			                	    $.ajax({
+			                	        url: "${contextPath}/pay/ajaxFix.do",
+			                	        data: $("#productForm").serialize(),
+			                	        success: function(response) {
+			                	        	
+			                	            if (response == "SUCCESS") {
+			                	            	
+			                	            		redAlert("전자결재", "결재가 최종승인 완료되었습니다.");
+			                	            		
+			                	            		setTimeout(function() {
+			                	            			
+			    		            		     	    location.href = document.referrer;
+			    		            		     	    
+			    		            		     			}, 3000);
+			                	            }
+			                	            
+			                	        },
+			                	        error: function() {
+			                	            console.log("ajax통신 실패");
+			                	        }
+			                	    });
+			                	}
+			                	
 			                },
-			                error: function() {
-			                    console.log("ajax통신 실패");
+			                error:function(){
+			                	console.log("ajax 통신 실패");
 			                }
+			                
 			            });
 
 			        // 결재가 "반려"가 아니고 필요한 이미지가 모두 있는 경우를 확인한다.
@@ -577,34 +599,34 @@ $(document).on("click", "#rejectBtn", function(){
 			                type: "post", 
 			                data: { status: "Y", approvalNo: "${list.get(0).APPROVAL_NO}" },
 			                success: function(response) {
-			                    if (response == 1) {
-			                        
-			                        // 비품 등록을 위한 AJAX 요청을 보낸다.
-			                        $.ajax({
-			                            url: "${contextPath}/pay/ajaxFix.do",
-			                            type: "post", 
-			                            data: $("#productForm").serialize(),
-			                            success: function(response) {
-			                                if (response == "SUCCESS") {
-			                                	
-			                                	function redAlert(title, message) {
-			                                	    $('#redModal').iziModal('setTitle', title);
-			                                	    $('#redModal').iziModal('setSubtitle', message);
-			                                	    $('#redModal').iziModal('open');
-			                                	}
-
-			                                	redAlert("전자결재", "결재가 최종승인 완료되었습니다.");
-
-			                                	setTimeout(function() {
-			                                	    location.href = document.referrer;
-			                                	}, 3000);
-			                                }
-			                            },
-			                            error: function() {
-			                                console.log("ajax통신 실패");
-			                            }
-			                        });
-			                    }
+			                	
+			                   
+			                	if (response == 1) {
+			                	    $.ajax({
+			                	        url: "${contextPath}/pay/ajaxFix.do",
+			                	        data: $("#productForm").serialize(),
+			                	        success: function(response) {
+			                	        	
+			                	            
+	                	            		redAlert("전자결재", "결재가 최종승인 완료되었습니다.");
+	                	            		
+	                	            		setTimeout(function() {
+	                	            			
+	    		            		     	    location.href = document.referrer;
+	    		            		     	    
+	    		            		     			}, 3000);
+			                	            
+			                	            
+			                	        },
+			                	        error: function() {
+			                	            console.log("ajax통신 실패");
+			                	        }
+			                	    });
+			                	}
+				               
+			                	
+			                	
+			                
 			                },
 			                error: function() {
 			                    console.log("ajax 통신 실패");
@@ -636,7 +658,7 @@ $(document).on("click", "#rejectBtn", function(){
 		        
 		        yellowAlert("전자결재", "결재 승인이 완료되었습니다.");
 
-		     		setTimeout(function() {
+		        setTimeout(function() {
 		     	    location.href = document.referrer;
 		     		}, 3000);
 		     		
@@ -646,12 +668,7 @@ $(document).on("click", "#rejectBtn", function(){
 			});
 				  
 		  
-		  function yellowAlert(title, message) {
-       	    $('#yellowModal').iziModal('setTitle', title);
-       	    $('#yellowModal').iziModal('setSubtitle', message);
-       	    $('#yellowModal').iziModal('open');
-    	}
-		  
+		 
 		  
 		  $(document).ready(function(){
 			  
@@ -664,7 +681,7 @@ $(document).on("click", "#rejectBtn", function(){
 	  
     
        $('#modal3').iziModal({
-           title: '반려된 사유.',
+           title: '<h4 style="color:black">반려 사유</h4>',
            headerColor: '#FEEFAD', // 헤더 색깔
            theme: '', //Theme of the modal, can be empty or "light".
            padding: '15px', // content안의 padding
@@ -680,7 +697,7 @@ $(document).on("click", "#rejectBtn", function(){
        });
        
        $('#modal').iziModal({
-           title: '반려사유를 작성해주세요.',
+           title: '<h4 style="color:black">반려사유를 작성해주세요</h4>',
            headerColor: '#FEEFAD', // 헤더 색깔
            theme: '', //Theme of the modal, can be empty or "light".
            padding: '15px', // content안의 padding
@@ -697,7 +714,7 @@ $(document).on("click", "#rejectBtn", function(){
        
        
        $('#modal2').iziModal({
-           title: '싸인',
+           title: '<h4 style="color:black">승인<h4>',
            headerColor: '#FEEFAD', // 헤더 색깔
            theme: '', //Theme of the modal, can be empty or "light".
            padding: '15px', // content안의 padding

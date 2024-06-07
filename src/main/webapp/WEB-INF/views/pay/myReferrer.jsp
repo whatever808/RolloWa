@@ -361,7 +361,7 @@ $.ajax({
 			  if (item.DOCUMENT_STATUS === '반려') {
 			      documentStatusClass = 'rejected';
 			  } else if (item.DOCUMENT_STATUS === '완료') {
-			      documentStatusClass = 'completed';
+			      documentStatusClass = 'completes';
 			  } else if (item.DOCUMENT_STATUS === '진행') {
 			      documentStatusClass = 'progresses';
 			  } else if (item.DOCUMENT_STATUS === '대기') {
