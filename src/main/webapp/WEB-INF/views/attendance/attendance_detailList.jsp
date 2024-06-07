@@ -38,6 +38,19 @@
 	#position {
 		width: 150px;
 	}
+	/* Scrollable employee info table */
+    .employee_info_container {
+        max-height: 700px;
+        width: 1335px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+    }
+    .employee_info thead th {
+        position: sticky;
+        top: 0;
+        background: #f1f1f1;
+        z-index: 1;
+    }
 	
 </style>
 </head>
@@ -295,6 +308,7 @@
 	    </script>
 
 		<!-- 직원 정보 -->
+		<div class="employee_info_container">
 		<table class="table table-bordered line-shadow employee_info">
 			<thead>
 				<tr>
@@ -349,7 +363,8 @@
 				</c:otherwise>
 			</c:choose>
 		</table>
-
+		</div>
+		
 		<!-- 정렬 기능 -->
 		<script>     	
 		// 동적으로 생성된 tr 요소에 클릭 이벤트 (상세페이지 이동)

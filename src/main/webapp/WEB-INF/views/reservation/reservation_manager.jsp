@@ -149,13 +149,13 @@
 		                        <td>${startNo - status.index}</td>
 		                        <td>
 		                        	<c:choose>
-					            	<c:when test="${ not empty r.profileUrl }">
-						                <img src="${contextPath}/${r.profileUrl}" class="profile_img">
-					            	</c:when>
-					            	<c:otherwise>
-						                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">
-					            	</c:otherwise>
-					            </c:choose>
+							            <c:when test="${ not empty r.profileURL }">
+							                <img src="${contextPath}/${r.profileURL}" class="profile_img">
+							            </c:when>
+							            <c:otherwise>
+							                <img src="${ contextPath }/resources/images/defaultProfile.png" class="profile_img">
+							            </c:otherwise>
+						            </c:choose>
 		                        </td>
 		                        <td>${r.userName }</td>
 		                        <td>${r.equipmentName}</td>

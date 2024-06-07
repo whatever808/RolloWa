@@ -26,6 +26,9 @@
 	.level3:hover {
 		background-color: gray;
 	}
+	.btn:disabled {
+	    background-color: rgba(128, 128, 128, 0.5) !important;
+	}
 	</style>
 	
 </head>
@@ -78,6 +81,16 @@
 		</ul>
 		
 		<script>
+		// 조직도 스크립트 추가
+		document.addEventListener('DOMContentLoaded', function() {
+            const treeItems = document.querySelectorAll('.tree li.department');
+            treeItems.forEach((item, index) => {
+                if ((index + 1) % 4 === 0 && item.nextElementSibling) {
+                    item.classList.add('show-after');
+                }
+            });
+        });
+		
 		  $(document).ready(function() {
 		      var treeItems = $('.tree > li > ul > li').length;
 		      if (treeItems > 1) {
