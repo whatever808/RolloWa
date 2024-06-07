@@ -27,28 +27,34 @@
 			// 차트 옵션값 지정
 			mOptions = {
 		    title: '월별 이용률',
-		    legend: 'bottom',
+		    legend: {
+		    	position: 'bottom',
+		    	maxLines: 3,
+		    },
 		    chartArea: {
-					width: '75%',
-					height: '75%',
-				},
+			  width: '75%',
+			  height: '75%',
+			},
 		    animation:{	
-					startup:true,
-					duration: 1000,
-					easing: 'out',
-			  },
-			  vAxis: {
-					title: '이용률 (단위 : %)',
-					minValue: 0,
-					maxValue: 100,
-			  },
-			  pointSize: 9,
+			  startup:true,
+			  duration: 1000,
+			  easing: 'out',
+			},
+			vAxis: {
+			  title: '이용률 (단위 : %)',
+			  minValue: 0,
+			  maxValue: 100,
+			},
+			pointSize: 9,
 			  curveType: 'function',
-	    }
+	    	}
 			
 			dOptions = {
 		    title: '일별 이용률',
-		    legend: 'bottom',
+		    legend: {
+		    	position: 'bottom',
+		    	maxLines: 3,
+		    },
 		    chartArea: {
 					width: '75%',
 					height: '75%',
@@ -278,7 +284,7 @@
 		ajaxSelectAttractionList();
  				
 		// 모달에서 비교 어트랙션 추가, 취소 버튼 클릭시
-		$(".modal-add-btn").on("click", function(){
+		$(document).on("click", ".modal-add-btn", function(){
 			let $this = $(this);
 			let $compareList = $("#compareList");
 			let $selectedAttractionList = $(".selected-attraction-list");
@@ -305,16 +311,23 @@
 								$this.css("background-color", "#FFA7A7").text("✖️");
 								
 								let str  = "<div class='selected-attraction d-inline-block'>";
-										str +=		"<input type='hidden' name='attractionNo' value='" + $attractionNo + "'>";
-										str += 		"<label class='me-2'>" + $attractionName + "</label>";
-										str += 		"<label type='button' class='selected-attraction-remove'>✖️</label>"; 
-								$selectedAttractionList.append(str);
+									str +=		"<input type='hidden' name='attractionNo' value='" + $attractionNo + "'>";
+									str += 		"<label class='me-2'>" + $attractionName + "</label>";
+									str += 		"<label type='button' class='selected-attraction-remove'>✖️</label>"; 
+								    str += "</div>";
+									$selectedAttractionList.append(str);
 								
+								
+								ajaxSelectAttractionUtilization('year', $attractionNo, $attractionName);
+								ajaxSelectAttractionUtilization('month',  $attractionNo, $attractionName);	
+								
+								/*
 								drawDefaultChart();
 								$("#compareList").children('input[name=attractionNo]').each(function(){
 									ajaxSelectAttractionUtilization('year', $(this).val(), $(this).next().val());
 									ajaxSelectAttractionUtilization('month',  $(this).val(), $(this).next().val());	
 								});
+								*/
 							},error:function(){
 								console.log("INSERT ATTRACTION TO COMPARE LIST AJAX FAILED");
 							}
@@ -338,11 +351,19 @@
 								$selectedAttractionList.find('[name=attractionNo]').each(function(){
 								$(this).val() == $attractionNo && $(this).parent().remove();
 								
+								let colIdx = mDataTable.getColumnIndex($attractionName + '이용률');
+								mDataTable.removeColumn(colIdx);
+								mChart.draw(mDataTable, mOptions);
+								dDataTable.removeColumn(colIdx);
+								dChart.draw(dDataTable, dOptions);
+								
+								/*
 								drawDefaultChart();
 								$("#compareList").children('input[name=attractionNo]').each(function(){
 									ajaxSelectAttractionUtilization('year', $(this).val(), $(this).next().val());
 									ajaxSelectAttractionUtilization('month',  $(this).val(), $(this).next().val());	
 								});
+								*/
 							});
 							},error:function(){
 								console.log("DELETE ATTRACTION FROM COMPARE LIST AJAX FAILED");
@@ -389,7 +410,7 @@
 	
 	// 비교 목록에서 어트랙션 삭제
 	$(document).ready(function(){
-		$(".selected-attraction-remove").on("click", function(event){
+		$(document).on("click", ".selected-attraction-remove", function(event){
 			let $this = $(this);
 			let $compareList = $("#compareList");
 			let $attractionNo = $(this).siblings("[name=attractionNo]").val();
@@ -411,11 +432,18 @@
 						
 						ajaxSelectAttractionList();
 						
+						let colIdx = mDataTable.getColumnIndex($attractionName + '이용률');
+						mDataTable.removeColumn(colIdx);
+						mChart.draw(mDataTable, mOptions);
+						dDataTable.removeColumn(colIdx);
+						dChart.draw(dDataTable, dOptions);
+						/*
 						drawDefaultChart();
 						$("#compareList").children('input[name=attractionNo]').each(function(){
 							ajaxSelectAttractionUtilization('year', $(this).val(), $(this).next().val());
 							ajaxSelectAttractionUtilization('month',  $(this).val(), $(this).next().val());	
 						});
+						*/
 					},error:function(){
 						console.log("DELETE ATTRACTION FROM COMPARE LIST AJAX FAILED");
 					}

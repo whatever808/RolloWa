@@ -320,7 +320,7 @@ public class BoardController {
 				
 			// 삭제할 첨부파일 정보조회
 			List<AttachmentDto> delAttachmentList = new ArrayList<>();
-			String[] delFileNoArr = (String[])params.get("delFileNoArr");
+			String[] delFileNoArr = multiRequest.getParameterValues("delFileNoArr");
 			if(delFileNoArr != null && delFileNoArr.length != 0) {
 				params.put("delFileNoArr", delFileNoArr);
 				delAttachmentList = boardAttachmentService.selectAttachmentList(params);

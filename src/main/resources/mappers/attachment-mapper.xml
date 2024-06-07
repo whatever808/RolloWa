@@ -48,7 +48,7 @@
 		  from attachment
 		<where>
 			<if test="delFileNoArr != null">
-				<foreach item="fileNo" collection="delFileArr" open="file_no in(" separator="," close=")">
+				<foreach item="fileNo" collection="delFileNoArr" open="file_no in(" separator="," close=")">
 					#{fileNo}
 				</foreach>
 			</if>

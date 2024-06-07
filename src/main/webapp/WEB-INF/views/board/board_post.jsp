@@ -139,7 +139,7 @@
 							// [기웅]
 							msg = "공지사항이 " + (status == 'Y' ? '등록' : '저장') + " 되었습니다.";
 							alert(msg);
-							location.href = "${ contextPath }/board/publisher/detail.do?no=" + result.boardNo;						
+							location.href = "${ contextPath }/board/detail.do?no=" + result.boardNo;						
 						}else if(status == 'T'){
 							location.href = "${ contextPath }/board/temp/detail.do?no=" + result.boardNo;						
 						}
