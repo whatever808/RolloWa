@@ -73,6 +73,13 @@ public class AttractionService {
 	}
 	
 	/**
+	 * @return : 어트랙션 목록(운영중, 운영중지)
+	 */
+	public List<Map<String, Object>> selectUsingAttractionList(){
+		return attractionDao.selectUsingAttractionList();
+	}
+	
+	/**
 	 * @param params : 연, [월], 차트타입, 어트랙션번호
 	 * @return : 월별 or 일별 어트랙션 이용률
 	 */
