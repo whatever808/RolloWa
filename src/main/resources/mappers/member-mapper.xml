@@ -170,6 +170,7 @@
 	<select id="selectParticipants" resultMap="memberResult">
 	  select
         user_no, user_name, profile_url
+        , (select code_name from tb_group g where g.group_code = 'POSI01' and g.code = position_code) as position
     from
         chatting_participation cp, member
     where

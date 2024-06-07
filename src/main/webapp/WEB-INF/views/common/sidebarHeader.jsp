@@ -310,7 +310,7 @@
 }
 
 .chatting_box {
-	margin-top: 50px;
+	/*margin-top: 50px;*/
 	height: 800px;
 	display: flex;
 	flex-direction: column;
@@ -813,8 +813,10 @@ $(document).ready(function(){
 						// 새로고침 감지
 						window.addEventListener('beforeunload', (event) => {
 							// 메신저를 아예 열지 않았거나 채팅방을 닫아놨을 경우를 제외하고 실행
-		          if(subRoomNo != -1 && subRoomNo != 0) {
+							// 메신저를 열었지만, 채팅방을 열지 않았을 경우도 제외
+		          if(subRoomNo != -1 && subRoomNo != 0 && subRoomNo != 1) {
 		        	  // 새로고침 전 열어놓은 채팅방의 나간 시간 update
+		        	  console.log("새로고침 시 채팅방 나간 시간 update");
 		        	  updateOutDate(subRoomNo);
 		          }  
 		        });
@@ -865,8 +867,26 @@ $(document).ready(function(){
 			                receiveMsg(msg);
 			              })
 			            }
+			          } else if (msgBody.flag == 3) {
+			        		// 채팅방 멘션일 경우
+			        	  for (var i = 0; i < msgBody.teamMemberList.length; i++) {
+			              if(${loginMember.userNo} == msgBody.teamMemberList[i].userNo) {
+			                $("#alram").iziModal('open');
+			                $("#alram_btn").on("click", function() {													
+			                  // 채팅방 멘션일 경우
+			                  console.log(msgBody.chatRoomNo)
+		                	  selectChatMsg(event, msgBody.chatRoomNo, msgBody.teamMemberList);
+		                	  $(".msg_open_btn").trigger("click");
+		                	  $("#alram").iziModal("close");
+			                })
+			                // 읽지 않은 알림 조회 후 알림 목록에 추가 및 읽지 않은 알림 표시
+			                setTimeout(function() {
+			                  selectAlram();
+			                }, 3000);
+				             }
+				           }
 			          } else {
-			            // 공지사항, 일정 등록 알림인 경우
+			            // 공지사항, 일정 등록, 채팅방 멘션 알림인 경우
 			            for (var i = 0; i < msgBody.teamMemberList.length; i++) {
 			              if(${loginMember.userNo} == msgBody.teamMemberList[i]) {
 			                $("#alram").iziModal('open');
@@ -886,8 +906,8 @@ $(document).ready(function(){
 			                      console.log("알림 조회 시간 update ajax 실패");
 			                    }
 			                  })
-			
-			                  location.href = msgBody.url;
+												
+		                	  location.href = msgBody.url;
 			                })
 			                // 읽지 않은 알림 조회 후 알림 목록에 추가 및 읽지 않은 알림 표시
 			                setTimeout(function() {

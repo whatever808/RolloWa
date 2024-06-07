@@ -123,6 +123,32 @@ public class ChatController {
 					log.debug("알림 저장 실패");
 				}*/
 				
+			} else if (map.get("flag").equals("3")) {
+				// 채팅방 멘션일 경우
+				List<String> mentionList = (List<String>)map.get("mentionList");
+				
+				// 알림 타입 지정
+				map.put("type", "M");
+				
+				// 알림을 프론트에서 처리하기 위해 변수에 담기
+				List<MemberDto> teamMemberList = new ArrayList<>();
+				
+				int result = 0;
+				for(int i = 0; i < mentionList.size(); i++) {
+					// 알림을 프론트에서 처리하기 위해 변수에 담기
+					teamMemberList.add(memberService.selectMemberInfo(Integer.parseInt(mentionList.get(i))));
+					map.put("receiveUserNo", mentionList.get(i));
+					
+					result += notificationService.insertNotificationSend(map);
+				}
+				map.put("teamMemberList", teamMemberList);
+				
+				if (result == mentionList.size()) {
+					template.convertAndSend("/topic/chat/alram", mapToJson(map));
+				} else {
+					log.debug("알림 저장 실패");
+				}
+				
 			}
 			
 			

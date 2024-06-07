@@ -570,7 +570,9 @@
 		  						alramText += (i + 1) + "." + notiList[i].sendUserName + "님이 공지사항을 등록하였습니다.";
 		  					} else if (notiList[i].type == 'C') {
 		  						alramText += (i + 1) + "." + notiList[i].sendUserName + "님이 부서 일정을 등록하였습니다.";
-		  					}
+		  					} /*else if (notiList[i].type == 'M') {
+		  						alramText += (i + 1) + "." + notiList[i].sendUserName + "님이 나를 멘션 하였습니다.";
+		  					}*/
 		  					alramText += "</a>";
 		  					alramText += "</div>";
 		  					alramText += "<div class='alram_date'><span class='send_date'>" + notiList[i].notiSendDate + "</span></div>";

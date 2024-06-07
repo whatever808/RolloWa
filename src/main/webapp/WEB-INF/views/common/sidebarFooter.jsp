@@ -73,7 +73,6 @@
                      </div>
 
                      <div class="col-md-6 col-lg-7 col-xl-8 chatting_box">
-
                          <div class="chatting_history scrollbar">
 	                         	 <!--<div>
 	                         		<i class="fa-solid fa-comment-slash fa-8x"></i><br>
@@ -95,6 +94,15 @@
 
              </div>
          </section>
+     </div>
+     
+     <div id="mention">
+     	<ul class="participant_list">
+     	
+     	</ul>
+     	<div class="btn_wrapper mention_btn_wrapper" style="height: 40px;">
+     	
+     	</div>
      </div>
     </main>
     <script src="${ contextPath }/resources/js/common/bootstrap.bundle.min.js"></script>
@@ -212,6 +220,17 @@
 	        focusInput: true, // 가장 맨 위에 보이게 해주는 속성값
 	        restoreDefaultContent: false, // 모달을 다시 키면 값을 초기화
 	    });
+      
+      // 멘션 기능을 위한 모달
+      $("#mention").iziModal({
+    	  title: '<h6>채팅방 사원 목록</h6>',
+        subtitle: '',
+        headerColor: '#FEEFAD', // 헤더 색깔
+        theme: 'light', //Theme of the modal, can be empty or "light".
+        padding: '15px', // content안의 padding
+        radius: 10, // 모달 외각의 선 둥글기
+      })
+     
     	 // 채팅 - 전체 사원 조회
 			 // 사원 목록 구역
 			 const $deptListWrapper = $(".dept_list_wrapper");
@@ -249,7 +268,7 @@
 	   	   		  				if(map.teamList[j].code == map.memberList[k].teamCode) {
 	   	   		  					// 로그인한 유저는 출력되지 않도록 수정
 	   	   		  					if(map.memberList[k].userNo != ${loginMember.userNo}) {
-		   	   		  					memberText += "<li class='list-group-item'>";
+		   	   		  					memberText += "<li class='list-group-item memberList'>";
 		   	   		  					memberText += "<div class='pretty p-icon p-smooth'>";
 		   	   		  					memberText += "<input type='checkbox' value='" + map.memberList[k].userNo + "'/>";
 		   	   		  					memberText += "<div class='state p-success'>";
@@ -337,9 +356,9 @@
 	   		  , success: function(participantsList) {
 	   			  if (participantsList.length > 0) {
 	   				  if(chatRoomNo == subRoomNo) {
-	   					  var chatRoomVal = "<li class='p-2 selected border-bottom chat_room chat_room_" + chatRoomList[i].chatRoomNo + "' onclick='selectChatMsg(event, " + chatRoomList[i].chatRoomNo + ")'";
+	   					  var chatRoomVal = "<li class='p-2 selected border-bottom chat_room chat_room_" + chatRoomList[i].chatRoomNo + "' onclick='selectChatMsg(event, " + chatRoomList[i].chatRoomNo + ", " + JSON.stringify(participantsList) + ")'";
 	   				  } else {
-	   					var chatRoomVal = "<li class='p-2 border-bottom chat_room chat_room_" + chatRoomList[i].chatRoomNo + "' onclick='selectChatMsg(event, " + chatRoomList[i].chatRoomNo + ")'";
+	   					var chatRoomVal = "<li class='p-2 border-bottom chat_room chat_room_" + chatRoomList[i].chatRoomNo + "' onclick='selectChatMsg(event, " + chatRoomList[i].chatRoomNo + ", " + JSON.stringify(participantsList) + ")'";
 	   				  }
 		    			chatRoomVal += ">";
 		       	  chatRoomVal += "<a href='#!' class='d-flex justify-content-between'>";
@@ -394,13 +413,12 @@
     }
 	
 		// 채팅방 메세지 이력 가져오기
-		function selectChatMsg(event, chatRoomNo) {
+		function selectChatMsg(event, chatRoomNo, participantsList) {
 			// 내가 선택한 채팅방 색깔 바꾸기
 			$(".chat_room").each(function(index, el) {
 				$(el).removeClass("selected");
 			})
 			$(".chat_room_" + chatRoomNo).addClass("selected");
-			
 			
 			// 채팅방 알림 제거
 			$("#chat_room_info" + chatRoomNo).children($("p")).next().empty();
@@ -414,7 +432,18 @@
 			// 내가 어떤 채팅방을 열었는지 표시
 			subRoomNo = chatRoomNo;
 			
+			$(".chatting_history").before
 			
+			// 채팅방 기능 버튼 초기화
+			$(".chatting_box>.btn_wrapper").remove();
+			
+			// 채팅방 멘션, 파일전송 버튼 추가
+			var functionBtn = "<div class='btn_wrapper' style='margin-top: 10px;''>";
+			functionBtn += "<button type='button' class='btn1 forget_btn' onclick='sendFile(" + chatRoomNo + ");'>파일전송</button>";
+			functionBtn += "<button type='button' class='btn1 forget_btn' onclick='mentionModal(" + chatRoomNo + ", " + JSON.stringify(participantsList) + ");'>@멘션</button>";
+			functionBtn += "</div>";
+			
+			$(".chatting_history").before(functionBtn);
 			
 			$.ajax({
 		 	url: "${contextPath}/chat/messages"
@@ -454,6 +483,56 @@
 		 // 스크롤 맨 아래로 고정 (이후 스크롤 높이 구해서 10000 수정해야함)
 		 $(".chatting_history").animate({scrollTop:'10000'}, '500');
 		}
+		
+		// 채팅방 사원 멘션 기능
+		function mentionModal(chatRoomNo, participantsList) {
+			// 모달창 초기화
+			$(".participant_list").empty();
+			// 모달창 버튼 초기화
+			$(".mention_btn_wrapper").empty();
+			// 모달에 채팅방 사원 출력
+			$("#mention").iziModal('open');
+			
+			var memberText = "";
+			for(var i = 0; i < participantsList.length; i++) {
+				memberText = "<li class='list-group-item partList'>";
+				memberText += "<div class='pretty p-icon p-smooth'>";
+				memberText += "<input type='checkbox' value='" + participantsList[i].userNo + "'/>";
+				memberText += "<div class='state p-success'>";
+				memberText += "<i class='icon fa fa-check'></i>"
+				memberText += "<label>" + participantsList[i].position + " " + participantsList[i].userName + "</label>";
+				memberText += "</div>";
+				memberText += "</div>";
+				memberText += "</li>";
+			}
+			
+			$(".participant_list").append(memberText);
+			// 모달창 버튼 생성
+			var functionBtn = "<button type='button' class='btn1 forget_btn' onclick='mention(" + chatRoomNo + ");''>멘션하기</button>"
+			$(".mention_btn_wrapper").append(functionBtn);
+		}
+		
+		function mention(chatRoomNo) {			
+			// 멘션하기 버튼 클릭 시 체크된 회원 확인
+			var mentionList = new Array();
+			$(".participant_list>.partList").each(function(index, el) {
+				mentionList.push($(el).children().children("input[type=checkbox]").val());
+			})
+			
+			// 체크된 회원에게 알림 전송
+			stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
+																															, flag: '3'
+																															, mentionList: mentionList
+																															, chatRoomNo: chatRoomNo
+																															, url: ""}));
+			$("#mention").iziModal("close");
+		}
+		
+		// 채팅방 파일 전송 기능
+		function sendFile(chatRoomNo) {
+			
+		}
+		
     // 채팅하기 버튼 클릭 시 체크된 회원들과 채팅방 생성
     function createChatRoom() {
     	// 1. 채팅방 데이터 생성 => Chatting Room 데이터 추가, Chatting Participation 데이터 추가
@@ -466,7 +545,7 @@
    				if(result > 0) {
    					roomNo = result;
    					// 1-2. 채팅방 참여인원 생성
- 			    	$(".list-group-item").each(function(index, el) {
+ 			    	$(".memberList").each(function(index, el) {
  			    		var partUserNo = $(el).children().children().val();
  			    		if($(el).children().children().is(':checked')) {  
  			    			$(el).children().children().prop("checked", false);
@@ -551,12 +630,13 @@
     		const atUserName = msgContent.substring(atIndex + 1);
     		// 사원 이름인지 확인 (이름에는 영어가 올 수 없다고 가정) 한글 이름 2~5 글자
     		const regExp = /^[가-힣]{2,5}$/;
-    		/*if(regExp.test(atUserName)) {
+    		if(regExp.test(atUserName)) {
     			stompClient.send("/app/")
-    			stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
+    			/*stompClient.send("/app/alram/send", {}, JSON.stringify({sendUserNo: '${loginMember.userNo}'
 																																	, flag: '3'
-																																	, }));
-    		}*/
+																																	, chatRoomNo
+																																	, atUserName}));*/
+    		}
     	}
     	
 			// 채팅 메세지 전송
@@ -746,7 +826,7 @@
 					if(memberList.length != 0) {
   					// 조회된 사원이 있을 시		  			
  		  			for(let k = 0; k < memberList.length; k++) {
-	  					memberText += "<li class='list-group-item'>";
+	  					memberText += "<li class='list-group-item memberList'>";
 	  					memberText += "<div class='pretty p-icon p-smooth'>";
 	  					memberText += "<input type='checkbox' value='" + memberList[k].userNo + "'/>";
 	  					memberText += "<div class='state p-success'>";
@@ -758,7 +838,7 @@
 	  				}
   				} else {
   					// 조회된 사원이 없을 시
-  					memberText += "<li class='list-group-item'>";
+  					memberText += "<li class='list-group-item memberList'>";
   					memberText += "<label>조회된 사원이 없습니다.</label>";
   					memberText += "</li>";
   				}
