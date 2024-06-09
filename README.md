@@ -47,35 +47,52 @@
 ## ⚙️ [ Functions ]
 
 ### ① [ 부서일정 ]
-> fullcalendar을 이용해서 각 부서별 일정과 휴가가 같이 조회 되도록 구현 했습니다.
+> fullcalendar을 이용해서 부서별 일정과 휴가가 같이 조회 되도록 구현 했습니다.
 > 
 ### ① - 1 { 부서일정 등록 및 수정}
 > 일정 등록시 종일 버튼을 이용해 오늘 날짜의 12시간의 차이가 나도록 구현했습니다.
 > 이전 날짜가 이후 날짜보다 클 경우 알림창을 이용해 사용자에게 알려주고 있습니다.
- > ![부서일정_등록수정](https://github.com/leeyechanbal/RolloWa/assets/153481748/2dac44ba-9921-4d93-8db2-b65038e44ff3)
+
+> ![부서일정_등록수정](https://github.com/leeyechanbal/RolloWa/assets/153481748/2dac44ba-9921-4d93-8db2-b65038e44ff3)
 ### ① - 2 { 부서일정 조회 }
- > ![부서일정_조회](https://github.com/leeyechanbal/RolloWa/assets/153481748/926c511d-e76d-47a4-b12a-68797299bfc5)
+> 각 일정이 년도, 월, 주 별로 조회가 가능하도록 구현했습니다.
+
+> ![부서일정_조회](https://github.com/leeyechanbal/RolloWa/assets/153481748/926c511d-e76d-47a4-b12a-68797299bfc5)
 ### ① - 3 { 부서일정 직원별 조회 }
- > ![부서_직원검색](https://github.com/leeyechanbal/RolloWa/assets/153481748/c03e07a1-7e17-4534-a60a-539ce3a1f7b2)
+> 로그인된 회원의 부서팀원들만 조회 되도록 했으며 로그인된 회원이 가장 왼쪽에 배체되도록 정렬해서 가져 데이터를 가져 왔습니다.
+
+> ![부서_직원검색](https://github.com/leeyechanbal/RolloWa/assets/153481748/c03e07a1-7e17-4534-a60a-539ce3a1f7b2)
 
 ### ② [ 회사일정 ]
-> 회사 일정 등록 페이지 이동시 Spring의 interceptor을 이용해 권한이 부족할 경우 historyback으로 페이지가 돌아 가도록 구현 했습니다.
-### ② - 1 { 회사 일정 권한 체크 }
- > ![권한_체크](https://github.com/leeyechanbal/RolloWa/assets/153481748/d3cc258a-19a9-4b08-8ae8-adc1905b5a4c)
+> 회사 일정 등록 페이지 이동시 Spring의 interceptor을 이용해 권한이 부족할 경우 historyback으로 페이지가 되돌아가도록 구현 했습니다.
+
+> ![권한_체크](https://github.com/leeyechanbal/RolloWa/assets/153481748/d3cc258a-19a9-4b08-8ae8-adc1905b5a4c)
 
 ### ③ [ 일정관리 ]
+> 회사와 부서를 selector을 이용해 검색 할 수 있도록 구현 했습니다.
+> 체크박스로 선택된 일정 번호를 이용해 다중 삭제가 가능합니다.
+
 > ![일정관리_삭제](https://github.com/leeyechanbal/RolloWa/assets/153481748/197ecabc-6585-428f-a75a-7a27bc9556b4)
 
 ### ④ [ 휴가신청 및 결재 ]
+> 휴가 신청은 각 모달을 통해 신청이 가능합니다.
+> 휴가를 결재시 자동으로 연차가 계산됩니다.
+> 철회를 요청 하고 철회 승인시 자동으로 연차가 계산됩니다.
+> 지급일, 연차를 자동으로 계산합니다.
 ### ④ - 1 { 휴가 신청 및 반려 }
- > ![휴가반려_삭제](https://github.com/leeyechanbal/RolloWa/assets/153481748/9476adf8-40e7-4450-9e69-c2755b67c902)
+
+> ![휴가반려_삭제](https://github.com/leeyechanbal/RolloWa/assets/153481748/9476adf8-40e7-4450-9e69-c2755b67c902)
 ### ④ - 2 { 휴가 승인 }
- > ![휴가_승인](https://github.com/leeyechanbal/RolloWa/assets/153481748/21e31785-2cbd-408b-8b72-12ed97954d76)
+
+> ![휴가_승인](https://github.com/leeyechanbal/RolloWa/assets/153481748/21e31785-2cbd-408b-8b72-12ed97954d76)
 ### ④ - 3 { 휴가 철회 승인 }
- > ![휴가철회_승인](https://github.com/leeyechanbal/RolloWa/assets/153481748/168198df-87f0-4817-909f-d0e790e846d9)
+
+> ![휴가철회_승인](https://github.com/leeyechanbal/RolloWa/assets/153481748/168198df-87f0-4817-909f-d0e790e846d9)
 
 ### ⑤ [ 이용권 결재 ]
- > ![결제](https://github.com/leeyechanbal/RolloWa/assets/153481748/4b7cea60-7b39-460d-83e5-05a972a4e1ae)
+> 이용권을 결재 할 ㅅ ㅜ있습니다.
+
+> ![결제](https://github.com/leeyechanbal/RolloWa/assets/153481748/4b7cea60-7b39-460d-83e5-05a972a4e1ae)
 
 
 ***
