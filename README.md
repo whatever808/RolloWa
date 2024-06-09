@@ -63,18 +63,18 @@
 ### ② - 1 { 회사 일정 권한 체크 }
  > ![권한_체크](https://github.com/leeyechanbal/RolloWa/assets/153481748/d3cc258a-19a9-4b08-8ae8-adc1905b5a4c)
 
-### ② [ 일정관리 ]
+### ③ [ 일정관리 ]
 > ![일정관리_삭제](https://github.com/leeyechanbal/RolloWa/assets/153481748/197ecabc-6585-428f-a75a-7a27bc9556b4)
 
-### ③ [ 휴가신청 및 결재 ]
-### ③ - 1 { 휴가 신청 및 반려 }
+### ④ [ 휴가신청 및 결재 ]
+### ④ - 1 { 휴가 신청 및 반려 }
  > ![휴가반려_삭제](https://github.com/leeyechanbal/RolloWa/assets/153481748/9476adf8-40e7-4450-9e69-c2755b67c902)
-### ③ - 2 { 휴가 승인 }
+### ④ - 2 { 휴가 승인 }
  > ![휴가_승인](https://github.com/leeyechanbal/RolloWa/assets/153481748/21e31785-2cbd-408b-8b72-12ed97954d76)
-### ③ - 3 { 휴가 철회 승인 }
+### ④ - 3 { 휴가 철회 승인 }
  > ![휴가철회_승인](https://github.com/leeyechanbal/RolloWa/assets/153481748/168198df-87f0-4817-909f-d0e790e846d9)
 
-### ④ [ 이용권 결재 ]
+### ⑤ [ 이용권 결재 ]
  > ![결제](https://github.com/leeyechanbal/RolloWa/assets/153481748/4b7cea60-7b39-460d-83e5-05a972a4e1ae)
 
 
