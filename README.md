@@ -47,30 +47,58 @@
 ## ⚙️ [ Functions ]
 
 ### ① [ 부서일정 ]
-> fullcalendar을 이용해서 부서별 일정과 휴가가 같이 조회 되도록 구현 했습니다.
-> 
+> fullcalendar을 이용해서 부서별로 일정과 휴가를 년도, 월, 주, 일별로 조회가 가능합니다.
+> 각 일정의 상세정보는 iziModal이라는 외부 CSS을 이용하여 보여주고 있습니다.
+> 일정 등록시에는 input의 값을 초기화 현재 날짜,시간으로 이클 차이가 나도록 초기화하고 있으며
+> 종일 버튼을 이용하여 오날짜의 12시간이 차이가 나도록 되어있습니다. 
+> 단, 사용자가 이전 날짜가 더욱 큰 값으로 일정 등록시 알림창을 통해 알려주며 일정이 등록되지 않습니다.
+> 회월별 검색은 로그인된 회원이 가장 왼쪽에 배치되며 자신이 속한 팀원이 조회 됩니다.
+> 조회된 회원이 일정이 없을 경우 알림창을 통해 사용자에게 알려 주고 있습니다.
+
 ### ① - 1 { 부서일정 등록 및 수정}
-> 일정 등록시 종일 버튼을 이용해 오늘 날짜의 12시간의 차이가 나도록 구현했습니다.
-> 이전 날짜가 이후 날짜보다 클 경우 알림창을 이용해 사용자에게 알려주고 있습니다.
+> 처음 페이지 이동시 1년 동안의 일정 정보를 AJAX을 통해 DB에서 조회해 오며 fullcalendar의 event 속성값을 이용해 data을
+> 저장하고 있습니다. 각 저장된 data는 iziModal에서 제공하는 opening매서드를 사용하여 각 모달의 input 및 teatarea에 value값으로
+> 초기화 되고 있습니다.
+> 모달의 정보를 수정하고 수정버튼을 클릭시 ajax의 serialize을 이용하여 데이터를 전달 및 db에 저장합니다.
+> 수정후 function에 정의해둔 ajax을 이용해 다시한번 변경된 일정을 조회 합니다.
 
 > ![부서일정_등록수정](https://github.com/leeyechanbal/RolloWa/assets/153481748/2dac44ba-9921-4d93-8db2-b65038e44ff3)
 ### ① - 2 { 부서일정 조회 }
-> 각 일정이 년도, 월, 주 별로 조회가 가능하도록 구현했습니다.
 
 > ![부서일정_조회](https://github.com/leeyechanbal/RolloWa/assets/153481748/926c511d-e76d-47a4-b12a-68797299bfc5)
 ### ① - 3 { 부서일정 직원별 조회 }
-> 로그인된 회원의 부서팀원들만 조회 되도록 했으며 로그인된 회원이 가장 왼쪽에 배체되도록 정렬해서 가져 데이터를 가져 왔습니다.
+> 로그인된 회원의 팀코드를 이용하여 팀원들의 정보를 List<MemberDto>에 조회해 옵니다.
+> 로그인된 회원의 회원번호를 이용해 조회해온 팀원 List<>에서 일치하는 회원을 if문으로 찾아내서
+> 맨 처음 위치에 저장하고 원래 저장된 위치에서 로그인된 유저의 정보를 삭제 합니다.
+
+ '''
+
+		MemberDto member = (MemberDto)session.getAttribute("loginMember");
+		String teamCode = member.getTeamCode();
+		List<MemberDto> teams = calService.selectTeamPeer(teamCode);
+
+    for(int i =0; i<teams.size(); i++) {
+			MemberDto m = teams.get(i);
+			if(m.getUserNo() == member.getUserNo()) {
+				teams.add(0, teams.remove(i));
+			}
+		}
+
+ '''
 
 > ![부서_직원검색](https://github.com/leeyechanbal/RolloWa/assets/153481748/c03e07a1-7e17-4534-a60a-539ce3a1f7b2)
 
 ### ② [ 회사일정 ]
-> 회사 일정 등록 페이지 이동시 Spring의 interceptor을 이용해 권한이 부족할 경우 historyback으로 페이지가 되돌아가도록 구현 했습니다.
+> 회사의 일정등록 페이지를 이동시 Spring의 interceptor와 HttpSession을 통해 로그인된 회원의 권한을 체크하고
+> 권한이 부족한 회원일 경우 알림창을 통해 알려주며 historyback을 이용해 이전 화면으로 되돌리고 있습니다. 
 
 > ![권한_체크](https://github.com/leeyechanbal/RolloWa/assets/153481748/d3cc258a-19a9-4b08-8ae8-adc1905b5a4c)
 
 ### ③ [ 일정관리 ]
-> 회사와 부서를 selector을 이용해 검색 할 수 있도록 구현 했습니다.
-> 체크박스로 선택된 일정 번호를 이용해 다중 삭제가 가능합니다.
+> 회사일정과 부서일정을 bootstrap의 selector을 이용하여 구분하여 조회 할 수 있으며
+> 검색된 기간안의 모든 일정을 조회 할 수 있습니다.
+> 각 행의 마지막의 체크박스를 통해 다중으로 일정이 삭제가 가능합니다.
+> jQurey의 input:checked된 타입을 탐색하여 serialize을 이용해 선택된 일정 번호를 넘겨주고 있습니다. 
 
 > ![일정관리_삭제](https://github.com/leeyechanbal/RolloWa/assets/153481748/197ecabc-6585-428f-a75a-7a27bc9556b4)
 
