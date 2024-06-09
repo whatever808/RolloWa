@@ -44,7 +44,7 @@
 ***
 
 
-## ⚙️ [ Function implementation ]
+## ⚙️ [ Functions ]
 
 ###  ① [ 부서일정 ]
 
