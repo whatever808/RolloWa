@@ -44,7 +44,7 @@
 ***
 
 
-## ⚙️ 화면 구현
+## ⚙️ [ Function implementation ]
 
 ###  ① [ 부서일정 ]
 
