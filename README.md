@@ -52,7 +52,7 @@
 ### ① - 1 { 부서일정 등록 및 수정}
 > 일정 등록시 종일 버튼을 이용해 오늘 날짜의 12시간의 차이가 나도록 구현했습니다.
 > 이전 날짜가 이후 날짜보다 클 경우 알림창을 이용해 사용자에게 알려주고 있습니다.
- > 
+ > ![부서일정_등록수정](https://github.com/leeyechanbal/RolloWa/assets/153481748/2dac44ba-9921-4d93-8db2-b65038e44ff3)
 ### ① - 2 { 부서일정 조회 }
  > ![부서일정_조회](https://github.com/leeyechanbal/RolloWa/assets/153481748/926c511d-e76d-47a4-b12a-68797299bfc5)
 ### ① - 3 { 부서일정 직원별 조회 }
@@ -62,6 +62,9 @@
 > 회사 일정 등록 페이지 이동시 Spring의 interceptor을 이용해 권한이 부족할 경우 historyback으로 페이지가 돌아 가도록 구현 했습니다.
 ### ② - 1 { 회사 일정 권한 체크 }
  > ![권한_체크](https://github.com/leeyechanbal/RolloWa/assets/153481748/d3cc258a-19a9-4b08-8ae8-adc1905b5a4c)
+
+### ② [ 일정관리 ]
+> ![일정관리_삭제](https://github.com/leeyechanbal/RolloWa/assets/153481748/197ecabc-6585-428f-a75a-7a27bc9556b4)
 
 ### ③ [ 휴가신청 및 결재 ]
 ### ③ - 1 { 휴가 신청 및 반려 }
