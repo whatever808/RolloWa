@@ -47,25 +47,32 @@
 ## ⚙️ [ Functions ]
 
 ### ① [ 부서일정 ]
- ① - 1 { 부서일정 등록 및 수정}
- > <img src="https://github.com/leeyechanbal/RolloWa/assets/153481748/877be2c3-940d-45c0-8fcc-dde96abd05c4">
- ① - 2 { 부서일정 조회 }
+> fullcalendar을 이용해서 각 부서별 일정과 휴가가 같이 조회 되도록 구현 했습니다.
+> 
+### ① - 1 { 부서일정 등록 및 수정}
+> 일정 등록시 종일 버튼을 이용해 오늘 날짜의 12시간의 차이가 나도록 구현했습니다.
+> 이전 날짜가 이후 날짜보다 클 경우 알림창을 이용해 사용자에게 알려주고 있습니다.
+ > 
+### ① - 2 { 부서일정 조회 }
  > ![부서일정_조회](https://github.com/leeyechanbal/RolloWa/assets/153481748/926c511d-e76d-47a4-b12a-68797299bfc5)
- ① - 3 { 부서일정 직원별 조회 }
- > ![부서_직원검색](https://github.com/leeyechanbal/RolloWa/assets/153481748/c03e07a1-7e17-4534-a60a-539ce3a1f7b2)  
+### ① - 3 { 부서일정 직원별 조회 }
+ > ![부서_직원검색](https://github.com/leeyechanbal/RolloWa/assets/153481748/c03e07a1-7e17-4534-a60a-539ce3a1f7b2)
+
 ### ② [ 회사일정 ]
-② - 1 { 회사 일정 권한 체크 }
-> ![권한_체크](https://github.com/leeyechanbal/RolloWa/assets/153481748/d3cc258a-19a9-4b08-8ae8-adc1905b5a4c)
+> 회사 일정 등록 페이지 이동시 Spring의 interceptor을 이용해 권한이 부족할 경우 historyback으로 페이지가 돌아 가도록 구현 했습니다.
+### ② - 1 { 회사 일정 권한 체크 }
+ > ![권한_체크](https://github.com/leeyechanbal/RolloWa/assets/153481748/d3cc258a-19a9-4b08-8ae8-adc1905b5a4c)
+
 ### ③ [ 휴가신청 및 결재 ]
-③ - 1 { 휴가 신청 및 반려 }
-> ![휴가반려_삭제](https://github.com/leeyechanbal/RolloWa/assets/153481748/9476adf8-40e7-4450-9e69-c2755b67c902)
-③ - 2 { 휴가 승인 }
-> ![휴가_승인](https://github.com/leeyechanbal/RolloWa/assets/153481748/21e31785-2cbd-408b-8b72-12ed97954d76)
-③ - 3 { 휴가 철회 승인 }
-> ![휴가철회_승인](https://github.com/leeyechanbal/RolloWa/assets/153481748/168198df-87f0-4817-909f-d0e790e846d9)
+### ③ - 1 { 휴가 신청 및 반려 }
+ > ![휴가반려_삭제](https://github.com/leeyechanbal/RolloWa/assets/153481748/9476adf8-40e7-4450-9e69-c2755b67c902)
+### ③ - 2 { 휴가 승인 }
+ > ![휴가_승인](https://github.com/leeyechanbal/RolloWa/assets/153481748/21e31785-2cbd-408b-8b72-12ed97954d76)
+### ③ - 3 { 휴가 철회 승인 }
+ > ![휴가철회_승인](https://github.com/leeyechanbal/RolloWa/assets/153481748/168198df-87f0-4817-909f-d0e790e846d9)
 
 ### ④ [ 이용권 결재 ]
-> ![결제](https://github.com/leeyechanbal/RolloWa/assets/153481748/4b7cea60-7b39-460d-83e5-05a972a4e1ae)
+ > ![결제](https://github.com/leeyechanbal/RolloWa/assets/153481748/4b7cea60-7b39-460d-83e5-05a972a4e1ae)
 
 
 ***
