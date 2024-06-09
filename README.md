@@ -46,14 +46,18 @@
 
 ## ⚙️ [ Functions ]
 
-###  ① [ 부서일정 ]
-
-
+### ① [ 부서일정 ]
+ ① - 1 { 부서일정 등록 및 수정}
+ > <img src="https://github.com/leeyechanbal/RolloWa/assets/153481748/877be2c3-940d-45c0-8fcc-dde96abd05c4">
+ ① - 2 { 부서일정 조회 }
+ > ![부서일정_조회](https://github.com/leeyechanbal/RolloWa/assets/153481748/926c511d-e76d-47a4-b12a-68797299bfc5)
+ ① - 3 { 부서일정 직원별 조회 }
+ > ![부서_직원검색](https://github.com/leeyechanbal/RolloWa/assets/153481748/c03e07a1-7e17-4534-a60a-539ce3a1f7b2)  
 ### ② [ 회사일정 ]
-
-
+② - 1 { 회사 일정 권한 체크 }
+> ![권한_체크](https://github.com/leeyechanbal/RolloWa/assets/153481748/d3cc258a-19a9-4b08-8ae8-adc1905b5a4c)
 ### ③ [ 휴가신청 ]
-
+③ - 1 {  }
 
 ### ④ [ 휴가 결재 ]
 
