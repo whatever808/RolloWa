@@ -4,7 +4,7 @@
 ***
 
 ## :sparkles: [ Summary ]
-> 놀이공원 운영을 위한 효율적인 그룹웨어 서비스 									<br>
+> 놀이공원 운영을 위한 효율적인 그룹웨어 서비스 <br>
 > 출/퇴근, 매출 현황, 비품 관리부터 전자결재, 일정 및 채팅까지 다양한 기능을 통해 업무를 간편하게 관리할 수 있습니다.
 
 ## :date: [ Develop Date ]
@@ -26,19 +26,19 @@
 
 ## :four_leaf_clover: [ Stack ]
 <div>
-  <img src="https://img.shields.io/badge/html5-E34F26?logo=html5&logoColor=white" height="30px"> &nbsp;
-  <img src="https://img.shields.io/badge/css3-1572B6?logo=css3&logoColor=white" height="30px"> &nbsp;
-  <img src="https://img.shields.io/badge/javascript-F7DF1E?logo=javascript&logoColor=black" height="30px"> &nbsp;
-  <img src="https://img.shields.io/badge/jquery-0769AD?logo=jquery&logoColor=white" height="30px"> <br><br> 
-  <img src="https://img.shields.io/badge/visualstudiocode-007ACC?logo=visualstudiocode&logoColor=white" height="30px"> &nbsp;
-  <img src="https://img.shields.io/badge/spring-6DB33F?logo=spring&logoColor=white" height="30px"> &nbsp;
-  <img src="https://img.shields.io/badge/java11-007396?logo=OpenJDK&logoColor=white" height="30px"> &nbsp;
-  <img src="https://img.shields.io/badge/oracle-F80000?logo=visualstudiocode&logoColor=white" height="30px"> <br><br> 
-  <img src="https://img.shields.io/badge/github-181717?logo=github&logoColor=white" height="30px"> &nbsp;
-  <img src="https://img.shields.io/badge/apachetomcat9-F8DC75?logo=apachetomcat&logoColor=black" height="30px"> <br><br> 
-  <img src="https://img.shields.io/badge/fullcalendar-4285F4?logo=googlecalendar&logoColor=black" height="30px"> &nbsp;
-  <img src="https://img.shields.io/badge/bootstrap4-7952B3?logo=bootstrap&logoColor=black" height="30px"> &nbsp;
-  <img src="https://img.shields.io/badge/maven-C71A36?logo=apachemaven&logoColor=black" height="30px"> &nbsp;
+  <img src="https://img.shields.io/badge/html5-E34F26?logo=html5&logoColor=white" height="30px"> 			&nbsp;
+  <img src="https://img.shields.io/badge/css3-1572B6?logo=css3&logoColor=white" height="30px"> 				&nbsp;
+  <img src="https://img.shields.io/badge/javascript-F7DF1E?logo=javascript&logoColor=black" height="30px"> 		&nbsp;
+  <img src="https://img.shields.io/badge/jquery-0769AD?logo=jquery&logoColor=white" height="30px"> 			<br><br> 
+  <img src="https://img.shields.io/badge/visualstudiocode-007ACC?logo=visualstudiocode&logoColor=white" height="30px">  &nbsp;
+  <img src="https://img.shields.io/badge/spring-6DB33F?logo=spring&logoColor=white" height="30px"> 			&nbsp;
+  <img src="https://img.shields.io/badge/java11-007396?logo=OpenJDK&logoColor=white" height="30px"> 			&nbsp;
+  <img src="https://img.shields.io/badge/oracle-F80000?logo=visualstudiocode&logoColor=white" height="30px"> 		<br><br> 
+  <img src="https://img.shields.io/badge/github-181717?logo=github&logoColor=white" height="30px"> 			&nbsp;
+  <img src="https://img.shields.io/badge/apachetomcat9-F8DC75?logo=apachetomcat&logoColor=black" height="30px"> 	<br><br> 
+  <img src="https://img.shields.io/badge/fullcalendar-4285F4?logo=googlecalendar&logoColor=black" height="30px"> 	&nbsp;
+  <img src="https://img.shields.io/badge/bootstrap4-7952B3?logo=bootstrap&logoColor=black" height="30px"> 		&nbsp;
+  <img src="https://img.shields.io/badge/maven-C71A36?logo=apachemaven&logoColor=black" height="30px"> 			&nbsp;
 </div>
 
 ***
@@ -48,7 +48,7 @@
 
 ### ① [ 부서일정 ]
 > fullcalendar 이용해서 부서별로 일정과 휴가를 년도, 월, 주, 일별로 조회가 가능합니다. 		<br>
-> 각 일정의 상세 정보는 iziModal이라는 외부 CSS 이용하여 보여주고 있습니다. 			<br>
+> 각 일정의 상세 정보는 iziModal이라는 외부 CSS 이용하여 보여주고 있습니다. 				<br>
 > 일정 등록 시에는 input의 값을 초기화 현재 날짜, 시간으로 이틀 차이가 나도록 초기화하고 있으며  	<br>
 > 종일 버튼을 이용하여 오늘 날짜의 12시간이 차이가 나도록 되어있습니다. 				<br>
 > 단, 사용자가 이전 날짜가 더욱 큰 값으로 일정 등록시 알림창을 통해 알려주며 일정이 등록되지 않습니다.  <br>
@@ -68,7 +68,7 @@
 > ![부서일정_조회](https://github.com/leeyechanbal/RolloWa/assets/153481748/926c511d-e76d-47a4-b12a-68797299bfc5)
 ### ① - 3 { 부서일정 직원별 조회 }
 > 로그인된 회원의 팀 코드를 이용하여 팀원들의 정보를 List<MemberDto>에 조회해 옵니다.  		<br>
-> 로그인된 회원의 회원 번호를 이용해 조회해 온 팀원 List<>에서 일치하는 회원을 if문으로 찾아내서		<br>
+> 로그인된 회원의 회원 번호를 이용해 조회해 온 팀원 List<>에서 일치하는 회원을 if문으로 찾아내서	<br>
 > 맨 처음 위치에 저장하고 원래 저장된 위치에서 로그인된 유저의 정보를 삭제합니다.			<br>
 
 
@@ -103,15 +103,15 @@
 
 ### ④ [ 휴가신청 및 결재 ]
 > 휴가 신청은 각 모달을 통해 휴가를 신청합니다.									<br>
-> 신청된 휴가는 각 팀의 부장에게 자동으로 결재를 요청합니다.							<br>
+> 신청된 휴가는 각 팀의 부장에게 자동으로 결재를 요청합니다.								<br>
 > 휴가가 결재되는 것에 따라 연차가 줄어들고 사용 일수가 늘어납니다.							<br>
-> 자신이 사용한 휴가에만 잘못된 승인된 휴가나 사용하지 못한 휴가를 철회 요청할 수 있습니다.			<br>
-> 철회 각 팀의 부장급에게 자동으로 신청되며 신청된 철회는 관리자의 판단하에 승인, 반려됩니다.			<br>
+> 자신이 사용한 휴가에만 잘못된 승인된 휴가나 사용하지 못한 휴가를 철회 요청할 수 있습니다.				<br>
+> 철회 각 팀의 부장급에게 자동으로 신청되며 신청된 철회는 관리자의 판단하에 승인, 반려됩니다.				<br>
 > 철회 승인될 시 연차의 개개수가 늘어나고 사용 일수가 줄어듭니다.							<br>
 
 ### ④ - 1 { 휴가 신청 및 반려 }
 > 휴가 종류별 각 모달을 통해 데이터를 입력하며 입력된 데이터를 FormData을 통해서 Controller에 전달하고 있습니다.	<br>
-> 신청된 휴가는 ajax을 통해 다시 조회되어 결재 대기 테이블에서 바로 확인이 가능합니다.					<br>
+> 신청된 휴가는 ajax을 통해 다시 조회되어 결재 대기 테이블에서 바로 확인이 가능합니다.				<br>
 > 첨부파일(이미지)이 존재한는 휴가일 경우										<br>
 > 휴가 신청이 실패 시 Java의 File객체를 이용하여 등록되었 파일이 삭제되도록 구현했습니다. 				<br>
 
@@ -144,7 +144,7 @@
 ### ⑤ [ 이용권 결재 ]
 > 포트원 API를 이용하여 드사와 결재 수단, 구매 고유번호 등을 생성 및 V1모달을 통해 포트원으로 전달하여			<br>
 > 결재를 진행하고 반환되는 정보를 이용해서 구매 고유번호, 결재상태, 수량, 가격, 구매자 정보들을 ajax의			<br>
-> JSON.stringify()을 이용하여 DB에 결재 명세 저장했습니다.							<br>
+> JSON.stringify()을 이용하여 DB에 결재 명세 저장했습니다.								<br>
 
 > ![결제](https://github.com/leeyechanbal/RolloWa/assets/153481748/4b7cea60-7b39-460d-83e5-05a972a4e1ae)
 
@@ -153,7 +153,7 @@
 
 ### ❔ [ retrospect ]
 각자의 기능을 충실히 수행했으나 소통이 부족했던 것 같다. 						<br>
-비품 관리나 구성원페이지를 fullcalendar이나 구성원 상세 보기 페이지는 마이페이지와 비슷했는	<br>
+비품 관리나 구성원페이지를 fullcalendar이나 구성원 상세 보기 페이지는 마이페이지와 비슷했는		<br>
 각자 만들어 버린 부분이 소통이 부족했던 부분이었다고 느습니다.					<br>
 만약 다음에 스터디를 하게 된다면 각자의 진행 상황이나 치는 부분에 대해서는				<br>
 내가 구현한 기능을 제안해 보는 것이 좋을 것 같다고 느꼈다.						<br>
