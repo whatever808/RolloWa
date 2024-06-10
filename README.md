@@ -39,6 +39,7 @@
   <img src="https://img.shields.io/badge/fullcalendar-4285F4?logo=googlecalendar&logoColor=black" height="30px"> 	&nbsp;
   <img src="https://img.shields.io/badge/bootstrap4-7952B3?logo=bootstrap&logoColor=black" height="30px"> 		&nbsp;
   <img src="https://img.shields.io/badge/maven-C71A36?logo=apachemaven&logoColor=black" height="30px"> 			&nbsp;
+  <img src="https://img.shields.io/badge/notion-F8DC75?logo=notion&logoColor=black" height="30px"> 	<br><br>
 </div>
 
 ***
@@ -138,7 +139,15 @@
 > ![휴가철회_승인](https://github.com/leeyechanbal/RolloWa/assets/153481748/168198df-87f0-4817-909f-d0e790e846d9)
 
 ### ④ - 4 { 휴가 정보 }
-> 휴가 정보 
+> 휴가 정보 ( 연차, 사용 일수, 지급일, 근무연수 )를 자동으로 초기화 합니다.
+> 지급일은 입사일을 기준으로 트리거를 이용하여 자동으로 게산하여 들어가며
+> 근무연수는 1,6월의 scheduler을 이용하여 1년미만인 경우 simpleDataFormate과 지급일을 가지고 지난달의 날짜를 생성해
+> 현재의 날짜와 같은지를 비교하여 연차의 개수를 하나씩 증가 시키고
+> 1년 이상일 경우 simpleDataFormate과 지급일을 이용하여 작년 입사일이 같은지 비교하여 (15일 + (근무연수 + 1))로 연차가 갱신되도록 구현 했습니다.
+> 연차와 사용 일수에 대해서는 위의 휴가 결재 및 철회 결재를 통해 승인여부에 따라 갱신되고 있습니다.
+
+
+
 
 
 ### ⑤ [ 이용권 결재 ]
@@ -152,7 +161,6 @@
 ***
 
 ### ❔ [ retrospect ]
-각자의 기능을 충실히 수행했으나 소통이 부족했던 것 같다. 						<br>
 비품 관리나 구성원페이지를 fullcalendar이나 구성원 상세 보기 페이지는 마이페이지와 비슷했는		<br>
 각자 만들어 버린 부분이 소통이 부족했던 부분이었다고 느습니다.					<br>
 만약 다음에 스터디를 하게 된다면 각자의 진행 상황이나 치는 부분에 대해서는				<br>
@@ -160,7 +168,6 @@
 
 철회 시 관리자의 판단으로 결재가 진행되지만 잘못 결재된 것에 대해서 어떻게 할지?
 
-notion
-https://www.notion.so/6f82052c952b487c83cab947dab2f65f
+notion : https://www.notion.so/6f82052c952b487c83cab947dab2f65f
 
 
