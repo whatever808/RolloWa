@@ -94,7 +94,7 @@ Notion : https://www.notion.so/6f82052c952b487c83cab947dab2f65f
 > 회사의 일정 등록 페이지를 이동할  Spring의 interceptor와 HttpSession을 통해 로그인된 회원의 권한을 체크하고		<br>
 > 권한이 부족한 회원일 경우 알림창으로 알려주며 historyback을 이용해 이전 화면으로 되돌리고 있습니다. 			<br>
 
-
+### 부장급 이상인지 체크하는  인터셉터
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)throws Exception {
 			response.setCharacterEncoding("UTF-8");
 			String position = (String)((MemberDto)request.getSession().getAttribute("loginMember")).getPositionCode();
