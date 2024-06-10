@@ -94,6 +94,43 @@ Notion : https://www.notion.so/6f82052c952b487c83cab947dab2f65f
 > 회사의 일정 등록 페이지를 이동할  Spring의 interceptor와 HttpSession을 통해 로그인된 회원의 권한을 체크하고		<br>
 > 권한이 부족한 회원일 경우 알림창으로 알려주며 historyback을 이용해 이전 화면으로 되돌리고 있습니다. 			<br>
 
+
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)throws Exception {
+			response.setCharacterEncoding("UTF-8");
+			String position = (String)((MemberDto)request.getSession().getAttribute("loginMember")).getPositionCode();
+			if(position != null && (position.equals("E") || position.equals("F"))) {
+				return true;
+			}else {
+				PrintWriter out = response.getWriter();
+				out.print("<html><head><meta charset='UTF-8'>");
+				out.print("<script src='http://code.jquery.com/jquery-3.7.1.min.js'></script>");
+				out.print("<script src='"+request.getContextPath()+"/resources/js/iziModal.min.js'></script>");
+				out.print("<link  href='"+request.getContextPath()+"/resources/css/iziModal.min.css' rel='stylesheet'>");
+				out.print("</head><body>");
+				
+				out.print("<div id=\"redModal\"></div>");
+				
+				out.print("<script>$('#redModal').iziModal({"
+						+ "headerColor: '#dc3545',"
+						+ "timeout: 3000,"
+						+ "timeoutProgressbar: true,"
+						+ "onClosing: function(){history.back();}"
+						+ "});");
+				
+				out.print("function redAlert(title, content){"
+						+ "$('#redModal').iziModal('setTitle', title);"
+						+ "$('#redModal').iziModal('setSubtitle', content);"
+						+ "$('#redModal').iziModal('open');"
+						+ "}");
+				
+				out.print("redAlert('권한 체크', '해당 계정으로 사용할 수 없습니다.');</script>");			
+				out.print("</body></html>");
+				return false;
+			}
+		}
+
+## ????????????????이쪽 코드를 굳이 보여줄 필요가 있을까요?
+
 > ![권한_체크](https://github.com/leeyechanbal/RolloWa/assets/153481748/d3cc258a-19a9-4b08-8ae8-adc1905b5a4c)
 
 ### ③ [ 일정관리 ]
@@ -143,14 +180,52 @@ Notion : https://www.notion.so/6f82052c952b487c83cab947dab2f65f
 ### ④ - 4 { 휴가 정보 }
 > 휴가 정보 ( 연차, 사용 일수, 지급일, 근무연수 )를 자동으로 초기화 합니다.
 > 지급일은 입사일을 기준으로 트리거를 이용하여 자동으로 게산하여 들어가며
-> 근무연수는 1,6월의 scheduler을 이용하여 1년미만인 경우 simpleDataFormate과 지급일을 가지고 지난달의 날짜를 생성해
+> 근무연수는 1,6월의 scheduler을 이용하여 1년미만인 경우 LocalDate와 지급일을 가지고 지난달의 날짜를 생성해
 > 현재의 날짜와 같은지를 비교하여 연차의 개수를 하나씩 증가 시키고
-> 1년 이상일 경우 simpleDataFormate과 지급일을 이용하여 작년 입사일이 같은지 비교하여 (15일 + (근무연수 + 1))로 연차가 갱신되도록 구현 했습니다.
+> 1년 이상일 경우 LocalDate와 지급일을 이용하여 작년 입사일이 같은지 비교하여 (16일 + 근무연수)의 연차가 갱신되도록 구현 했습니다.
 > 연차와 사용 일수에 대해서는 위의 휴가 결재 및 철회 결재를 통해 승인여부에 따라 갱신되고 있습니다.
 
+## 30일 및 1년이 되었는지 체크하는 코드
+		LocalDate currentDate = getNowDate();
 
+		int result = 1;
+		int year = Integer.parseInt(member.getVaYearLabor());
+		//1년차 이상
+		if(year > 0) {
+			LocalDate givenDate = LocalDate.of(currentDate.getYear() - 1
+	   											, currentDate.getMonthValue()
+	   											, Integer.parseInt(member.getVaGivenDate()));
+			// 1년이 지날때 마다
+			if(givenDate.plusYears(1).isEqual(currentDate)) {
+				//연차 15 + 근수연수 member.getVaYearLabor()
+				member.setVacationCount(year  + 16);
+				result = vacationDao.updateAnuul(member);
+			}
+		// 1년차 미만
+		}else {
+			LocalDate givenDate = LocalDate.of(currentDate.getYear()
+					   							, currentDate.getMonthValue() - 1
+					   							, Integer.parseInt(member.getVaGivenDate()));
+			// 30일이 지날때마다
+			if(givenDate.plusDays(30).isEqual(currentDate)) {
+				//연차 +1
+				member.setVacationCount(1);
+				result = vacationDao.updateAnuul(member);				
+			}
+		}
+		return result;
+	}
+##  입사일 기준으로 자동으로 지급일을 갱신하는 트리거
+	create or replace trigger INSERT_GIVENDATE
+	AFTER INSERT ON MEMBER
+	BEGIN
+	    update member a
+	    set GIVEN_DATE = (select extract (day from ENROLL_DATE) 
+	                        from member b where a.user_no = b.user_no );
+	END;
 
-
+ 
+## ????????????여기도 굳이 이런 코드를 보여줄 필요가 있을까요?
 
 ### ⑤ [ 이용권 결재 ]
 > 포트원 API를 이용하여 드사와 결재 수단, 구매 고유번호 등을 생성 및 V1모달을 통해 포트원으로 전달하여			<br>
