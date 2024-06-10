@@ -193,8 +193,8 @@ Notion : https://www.notion.so/6f82052c952b487c83cab947dab2f65f
 		//1년차 이상
 		if(year > 0) {
 			LocalDate givenDate = LocalDate.of(currentDate.getYear() - 1
-	   											, currentDate.getMonthValue()
-	   											, Integer.parseInt(member.getVaGivenDate()));
+   							 , currentDate.getMonthValue()
+	   						 , Integer.parseInt(member.getVaGivenDate()));
 			// 1년이 지날때 마다
 			if(givenDate.plusYears(1).isEqual(currentDate)) {
 				//연차 15 + 근수연수 member.getVaYearLabor()
@@ -204,8 +204,8 @@ Notion : https://www.notion.so/6f82052c952b487c83cab947dab2f65f
 		// 1년차 미만
 		}else {
 			LocalDate givenDate = LocalDate.of(currentDate.getYear()
-					   							, currentDate.getMonthValue() - 1
-					   							, Integer.parseInt(member.getVaGivenDate()));
+					   		 , currentDate.getMonthValue() - 1
+					   		 , Integer.parseInt(member.getVaGivenDate()));
 			// 30일이 지날때마다
 			if(givenDate.plusDays(30).isEqual(currentDate)) {
 				//연차 +1
