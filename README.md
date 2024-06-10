@@ -41,7 +41,7 @@ Notion : https://www.notion.so/6f82052c952b487c83cab947dab2f65f
   <img src="https://img.shields.io/badge/fullcalendar-4285F4?logo=googlecalendar&logoColor=black" height="30px"> 	&nbsp;
   <img src="https://img.shields.io/badge/bootstrap4-7952B3?logo=bootstrap&logoColor=black" height="30px"> 		&nbsp;
   <img src="https://img.shields.io/badge/maven-C71A36?logo=apachemaven&logoColor=black" height="30px"> 			&nbsp;
-  <img src="https://img.shields.io/badge/notion-F8DC75?logo=notion&logoColor=black" height="30px"> 			<br><br>
+  <img src="https://img.shields.io/badge/notion-000000?logo=notion&logoColor=whitek" height="30px"> 			<br><br>
 </div>
 
 ***
