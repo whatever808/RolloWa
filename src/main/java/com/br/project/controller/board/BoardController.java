@@ -118,12 +118,10 @@ public class BoardController {
 						   "/detail/list.ajax", "/publisher/detail/list.ajax", "/temp/detail/list.ajax"})
 	@ResponseBody
 	public Object ajaxSelectBoardList(HttpServletRequest request){
-		
 		StringBuffer requestURL = request.getRequestURL();
 		
 		// 조회할 공지사항 상태값 지정
 		HashMap<String, Object> params = getParameterMap(request);
-		
 		if(requestURL.indexOf("temp") != -1) {
 			params.put("status", "T");
 		}else {
@@ -136,11 +134,11 @@ public class BoardController {
 			params.put("userNo", loginMember.getUserNo());
 		}
 		
-		// 리스트 페이징처리 유무
-		if(requestURL.indexOf("detail") == -1 && requestURL.indexOf("main") == -1) {
+		// 리스트 페이징처리 유무 
+		if(requestURL.indexOf("detail") == -1 && requestURL.indexOf("main") == -1) {	// 목록페이지, 등록보관함, 임시보관함에서 목록조회 요청
 			// 게시글 페이징바 생성
 			PageInfoDto pageInfo = pagingUtil.getPageInfoDto(boardService.selectTotalBoardCount(params), 
-															 Integer.parseInt(params.get("page").toString()), 5, 10);
+															 Integer.parseInt(request.getParameter("page")), 5, 10);
 			
 			// 공지사항 리스트 및 페이징바 반환
 			Map<String, Object> response = new HashMap<>();
@@ -148,9 +146,8 @@ public class BoardController {
 			response.put("pageInfo", pageInfo);
 			
 			return response;
-		}else {
-			// 공지사항 전체 리스트 반환
-			return boardService.selectBoardList(params);
+		}else {	// 메인페이지, 상세페이지에서 목록조회 요청
+			return boardService.selectBoardList(params);	// 공지사항 전체 리스트 반환
 		}
 	}
 	
@@ -159,24 +156,21 @@ public class BoardController {
 	 */
 	@RequestMapping(value="/reader/detail.do")
 	public String increaseReadCount(HttpServletRequest request ,RedirectAttributes redirectAttributes) {
-		
 		try {
-			// 파라미터값
-			HashMap<String, Object> params = getParameterMap(request);
-			String category = params.get("category") != null ? params.get("category").toString() : "";
-			String department = params.get("department") != null ? params.get("department").toString() : "";
-			String condition = params.get("condition") != null ? params.get("condition").toString() : "";
-			String keyword = params.get("keyword") != null ? params.get("keyword").toString() : "";
-			String no =params.get("no").toString();
+			String category = request.getParameter("category") != null ? request.getParameter("category") : "";
+			String department = request.getParameter("department") != null ? request.getParameter("department") : "";
+			String condition = request.getParameter("condition") != null ? request.getParameter("condition") : "";
+			String keyword = request.getParameter("keyword") != null ? request.getParameter("keyword") : "";
+			String boardNo = request.getParameter("no");
 			
 			// 공지사항 조회수 증가
-			boardService.updateReadCount(no);
+			boardService.updateReadCount(boardNo);
 			
 			return "redirect:/board/detail.do?" + "category=" + category + "&"
 												+ "department=" + department + "&"
 												+ "condition=" + condition + "&"
 												+ "keyword=" + keyword + "&"
-												+ "no=" + no;
+												+ "no=" + boardNo;
 		}catch(Exception e) {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("modalColor", "R");
@@ -184,7 +178,6 @@ public class BoardController {
 			redirectAttributes.addFlashAttribute("alertMsg", "공지사항 상세페이지 요청에 실패했습니다.");
 			return "redirect:" + request.getHeader("Referer");
 		}
-		
 	}
 	
 	/**
@@ -192,30 +185,26 @@ public class BoardController {
 	 */
 	@RequestMapping(value={"/detail.do", "/publisher/detail.do", "/temp/detail.do"})
 	public String showBoardDetail(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-		
 		try {
+			StringBuffer requestURL = request.getRequestURL();
+			String pageType = (requestURL.indexOf("publisher") != -1) ? "publisher" : (requestURL.indexOf("temp") != -1 ? "temp" : "list");
+			String boardStatus = (requestURL.indexOf("temp") != -1) ? "T" : "Y";
+			
 			HashMap<String, Object> params = getParameterMap(request);
-			params.put("status", request.getRequestURL().indexOf("temp") != -1 ? "T" : "Y");	// 등록상태
+			params.put("status", boardStatus);
 			
 			// 공지사항 상세조회
 			BoardDto board = boardService.selectBoard(params);
-			if(board != null) {
+			if(board != null) {	// 유효한 공지사항
 				request.setAttribute("board", board);
-				
-				if(request.getRequestURL().indexOf("publisher") != -1) {
-					return "board/publisher/publisher_board_detail";
-				}else if(request.getRequestURL().indexOf("temp") != -1) {
-					return "board/temp/temp_board_detail";
-				}else {
-					return "board/board_detail";
-				}
-			}else {
+				request.setAttribute("pageType", pageType);				
+				return "board/board_detail";
+			}else {	// 유효하지 않은 공지사항
 				redirectAttributes.addFlashAttribute("modalColor", "Y");
 				redirectAttributes.addFlashAttribute("alertTitle", "공지사항 상세조회");
 				redirectAttributes.addFlashAttribute("alertMsg", "유효하지 않은 공지사항입니다.");
 				return "redirect:" + request.getHeader("Referer");
 			}
-			
 		}catch(Exception e){
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("modalColor", "Y");

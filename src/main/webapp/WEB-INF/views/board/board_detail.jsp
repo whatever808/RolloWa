@@ -27,12 +27,12 @@
 	        <!-- board header area start -->
 	        <div class="board-header">
 					
-							<!-- header left area start -->
+				<!-- header left area start -->
 	            <div class="board-header-left">
 	            	<!-- board title -->
 	            	<div class="title">${ board.title }</div>
 						
-									<!-- board info area start  -->
+					<!-- board info area start  -->
 	                <div class="board-info">
 	                    <div class="info-first">
 	                    	<c:choose>
@@ -61,15 +61,35 @@
 	            	 
 	            	 <!-- edit area (로그인 사용자 == 게시글 작성자일 경우에만 보여짐) -->
 	            	 <c:if test="${ loginMember.userNo == board.modifyEmp }">
+	            	   <c:choose>
+	            	   	 <c:when test='${ pageType.equals("list") }'>
+	            	   	   <!-- from 공지목록페이지 -->
 					       <div class="edit-area">
-					           <a href="${ contextPath }/board/modify.page?no=${ board.boardNo }" class="text-primary">수정하기</a>
-					           <a href="${ contextPath }/board/status/modify.do?no=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y' }" class="text-warning temp">임시저장으로 변경</a>
-					           <a href="${ contextPath }/board/delete.do?no=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y'}" class="text-danger delete">삭제하기</a>
+					         <a href="${ contextPath }/board/modify.page?no=${ board.boardNo }" class="text-primary">수정하기</a>
+					         <a href="${ contextPath }/board/status/modify.do?no=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y' }" class="text-warning temp">임시저장으로 변경</a>
+					         <a href="${ contextPath }/board/delete.do?no=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y'}" class="text-danger delete">삭제하기</a>
 					       </div>
-				       </c:if>
+	            	   	 </c:when>
+	            	   	 <c:when test='${ pageType.equals("publisher") }'>
+	            	   	   <!-- from 등록공지보관함 -->
+					       <div class="edit-area">
+					         <a href="${ contextPath }/board/publisher/modify.page?no=${ board.boardNo }" class="text-primary">수정하기</a>
+					         <a href="${ contextPath }/board/publisher/status/modify.do?no=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y' }" class="text-warning temp">임시저장으로 변경</a>
+					         <a href="${ contextPath }/board/publisher/delete.do?no=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y'}" class="text-danger delete">삭제하기</a>
+						   </div>
+	            	   	 </c:when>
+	            	   	 <c:when test='${ pageType.equals("temp") }'>
+	            	   	   <!-- from 임시공지보관함 -->
+					       <div class="edit-area">
+				             <a href="${ contextPath }/board/temp/modify.page?no=${ board.boardNo }" class="text-primary">수정하기</a>
+				             <a href="${ contextPath }/board/temp/post.do?no=${ board.boardNo }" class="text-warning post" id="post-from-temp">등록하기</a>
+				             <a href="${ contextPath }/board/temp/delete.do?no=${ board.boardNo }&fyn=${ empty board.attachmentList ? 'N' : 'Y'}" class="text-danger delete">삭제하기</a>
+				           </div>
+	            	   	 </c:when>
+	            	   </c:choose>
+				     </c:if>
 	            </div>
-	            <!-- header right area end -->
-	             
+	            <!-- header right area end -->	             
 	            
 	        </div>
 	        <!-- board header area end -->
@@ -89,17 +109,16 @@
 		                <span class="about-attachment-list">첨부파일 : 파일 ${ board.attachmentList.size() }개</span>
 		            </div>
 						
-						
 		            <div class="attachment-list d-none">
-		                <ul class="list">
-		                    <c:forEach var="attachment" items="${ board.attachmentList }">
-			                    <li>
-			                        <a download="${ attachment.originName }" href="${ contextPath }${ attachment.attachPath }/${ attachment.modifyName }" class="file-link">
-			                            <span class="file-name">${ attachment.originName }</span>
-			                        </a>
-			                    </li>
-		                    </c:forEach>
-		                </ul>
+		              <ul class="list">
+		                <c:forEach var="attachment" items="${ board.attachmentList }">
+			              <li>
+			                <a download="${ attachment.originName }" href="${ contextPath }${ attachment.attachPath }/${ attachment.modifyName }" class="file-link">
+			                  <span class="file-name">${ attachment.originName }</span>
+			                </a>
+			              </li>
+		                </c:forEach>
+		              </ul>
 		            </div>
 		        </div>
 	        </c:if>
@@ -117,16 +136,13 @@
 	        <div class="change-board">
 	
 	            <!-- move to previous board -->
-	            <a id="prev-board" class="list list-group list-group-item-action list-group-item-light d-inline-block text-truncate text-center">
-								<span id="prev-board-title"></span>
-	            </a>
+	            <a id="prev-board" class="list list-group list-group-item-action list-group-item-light d-inline-block text-truncate text-center"></a>
 	            
 	            <!-- move to board list page -->
 	            <a id="list-board" class="list list-group list-group-item-action list-group-item-warning">목록</a>
 	
 	            <!-- move to next board -->
-				<a id="next-board" class="list list-group list-group-item-action list-group-item-light d-inline-block text-truncate text-center">다음 게시글 제목</a>
-
+				<a id="next-board" class="list list-group list-group-item-action list-group-item-light d-inline-block text-truncate text-center"></a>
 	
 	        </div>
 	        <!-- board change button area end -->
@@ -143,116 +159,115 @@
 </body>
 
 <script>
-	$(document).ready(function(){
-	    // attachment list show or hide function start ------------------------------------------------------------------------
-	    $(".show-hide").on("click", function(){
-	        if($(this).hasClass("show")){       // 리스트 노출요청
-	            // 첨부파일 리스트 보여주기
-	            $(".attachment-list").removeClass("d-none");
-	
-	            // 기존 아이콘(show 아이콘) 숨기기
-	            $(this).addClass("d-none");
-	
-	            // "숨김(위화살표)" 아이콘 노출
-	            $(this).siblings(".hide").removeClass("d-none");
-	
-	        }else if($(this).hasClass("hide")){ // 리스트 숨김요청
-	        	console.log("숨어라 참깨");
-	            // 첨부파일 리스트 숨김처리
-	            $(".attachment-list").addClass("d-none");
-	
-	            // 기존 아이콘(hide 아이콘) 숨기기
-	            $(this).addClass("d-none");
-	
-	            // "열기(아래화살표)" 아이콘 노출
-	            $(this).siblings(".show").removeClass("d-none");
-	        }
-	    })
-	    // attachment list show or hide function end ------------------------------------------------------------------------
-		
-	    // 공지사항 목록조회 ======================================================================================================		 
+	const urlParams = new URLSearchParams(location.search); // 현재 공지사항의 URL 파라미터값 스트링 객체
+	let pageType = "${ pageType }";
+	let ajaxURL = "";
+	let changeStatusUrlPrefix = "";
+	let listPageURL = "";
+	$(document).ready(function(){	 
+	    if(pageType == "list"){
+	    	ajaxURL = "${ contextPath }/board/detail/list.ajax";
+	    	listPageURL = "${ contextPath }/board/list.do?" + urlParams.toString();
+	    	changeStatusUrlPrefix = "${ contextPath }/board";
+	    }else if(pageType == "publisher"){
+	    	ajaxURL = "${ contextPath }/board/publisher/detail/list.ajax";
+	    	listPageURL = "${ contextPath }/board/publisher/list.do?" + urlParams.toString();
+	    	changeStatusUrlPrefix = "${ contextPath }/board/publisher/detail.do?";
+	    }else if(pageType == "temp"){
+	    	ajaxURL = "${ contextPath }/board/temp/detail/list.ajax";
+	    	listPageURL = "${ contextPath }/board/temp/list.do?" + urlParams.toString();
+	    	changeStatusUrlPrefix = "${ contextPath }/board/temp/detail.do?";
+	    }
+	    
+	 	// 공지사항 목록조회 AJAX ------------------------------------------------------------------------------------------------------	
 	    $.ajax({
-	    	url:"${ contextPath }/board/detail/list.ajax",
-	    	method:"get",
-	    	data:urlParams.toString(),
-	    	success:function(boardList){
+	    	url: ajaxURL,
+	    	method: "get",
+	    	data: urlParams.toString(),
+	    	success: function(boardList){
 	    		// 조회한 공지사항 목록중 상세조회한 현재 게시글의 인덱스 번호
 	    		let boardIndex = boardList.findIndex(function(board){
-	    			return board.boardNo == ${ board.boardNo }
+	    			return board.boardNo == ${ board.boardNo };
 	    		});
 	    		
+	    		let $nextBoardBtn = $("#next-board");
 	    		// 다음 공지사항 이동버튼
 	    		if(boardIndex != 0){
 	    			// 현재 공지사항 조회한 공지사항 목록의 첫번째 공지사항(최신공지)이 아닐경우
-	    			$("#next-board").text(boardList[boardIndex - 1].title);
-	    			moveBoard($("#next-board"), boardList[boardIndex - 1].boardNo, boardList[boardIndex - 1].modifyEmp);
+	    			$nextBoardBtn.text(boardList[boardIndex - 1].title);
+	    			moveBoard($nextBoardBtn, boardList[boardIndex - 1].boardNo, boardList[boardIndex - 1].modifyEmp);
 	    		}else{
 	    			// 현재 공지사항이 조회한 공지사항 목록의 첫번째 공지사항(최신공지)일 경우
-	    			$("#next-board").text("다음 글이 없습니다.")
-	    								 .css("pointer-events", "none");
+	    			$nextBoardBtn.text("다음 글이 없습니다.").css("pointer-events", "none");
 	    		}
-
+				
+	    		let $prevBoardBtn = $("#prev-board");
 	    		// 이전 공지사항 이동버튼
 	    		if(boardIndex != (boardList.length - 1)){
 	    			// 현재 공지사항이 조회한 공지사항 목록의 마지막 공지사항(최초공지)이 아닐 경우
-	    			$("#prev-board").text(boardList[boardIndex + 1].title);
-	    			moveBoard($("#prev-board"), boardList[boardIndex + 1].boardNo,boardList[boardIndex + 1].modifyEmp);
+	    			$prevBoardBtn.text(boardList[boardIndex + 1].title);
+	    			moveBoard($prevBoardBtn, boardList[boardIndex + 1].boardNo,boardList[boardIndex + 1].modifyEmp);
 	    		}else{
 	    			// 현재 공지사항이 조회한 공지사항 목록의 마지막 공지사항(최초공지)일 경우
-	    			$("#prev-board").text("이전 글이 없습니다.")
-					 					 .css("pointer-events", "none");
+	    			$prevBoardBtn.text("이전 글이 없습니다.").css("pointer-events", "none");
 	    		}
-
 
 	    		// 공지사항 목록 이동
 	    		urlParams.delete("no");
-	    		$("#list-board").attr("href", "${ contextPath }/board/list.do?" + urlParams.toString());
+	    		$("#list-board").attr("href", listPageURL);
 	    		
-	    	},error:function(){
-	    		console.log("공지사항 목록조회 AJAX 실패");
+	    	},error: function(){
+	    		console.log("SELECT BOARD LIST AJAX FAILED");
 	    	}
 	    });
 	    
-	 	 // 이전 | 다음 공지사항 페이지 이동
-	    function moveBoard(element, boardNo, boardWriter){
-			// 글번호 파라미터값 변경
-			urlParams.set("no", boardNo);
-	   	if(${ loginMember.userNo } != boardWriter){
-	  			// 로그인 사용자가 이전 or 다음 공지사항의 작성자가 아닐경우
-	  			element.attr("href",  "${ contextPath }/board/reader/detail.do?" + urlParams.toString());
-	  		}else{
-	  			// 로그인 사용자가 이전 or 다음 공지사항의 작성자일 경우
-	  			element.attr("href", "${ contextPath }/board/detail.do?" + urlParams.toString());
-	  		}
-	    }
-	    
-	    // 임시저장으로 변경 or 공지사항 삭제요청시 요청사항 확인용 function ============================================================================
-	    $(".temp, .delete").on("click", function(){
-	    	let request = $(this).hasClass("delete") ? '삭제' : '임시저장';
+	    // 공지사항 상태변경 요청시 재확인용 ----------------------------------------------------------------------------------------------
+	    $(".temp, .delete, .post").on("click", function(){
+	    	let request = $(this).hasClass('temp') ? '임시저장' : ($(this).hasClass('delete') ? '삭제' : '등록');
 				if(confirm("공지사항을 " + request + " 하시겠습니까?")){
 					return true;
 				}
 				return false;
 	    });
 	    
+	 	// 첨부파일 목록 숨김 or 노출 --------------------------------------------------------------------------------------------------
+	    $(".show-hide").on("click", function(){
+	    	let $attachmentList = $(".attachment-list");
+	    	let $this = $(this);
+	        if($(this).hasClass("show")){       // 리스트 노출요청
+	            // 첨부파일 리스트 보여주기
+	            $attachmentList.removeClass("d-none");
+	
+	            // 기존 아이콘(show 아이콘) 숨기기
+	            $this.addClass("d-none");
+	
+	            // "숨김(위화살표)" 아이콘 노출
+	            $this.siblings(".hide").removeClass("d-none");
+	
+	        }else if($(this).hasClass("hide")){ // 리스트 숨김요청
+	            // 첨부파일 리스트 숨김처리
+	            $attachmentList.addClass("d-none");
+	
+	            // 기존 아이콘(hide 아이콘) 숨기기
+	            $this.addClass("d-none");
+	
+	            // "열기(아래화살표)" 아이콘 노출
+	            $this.siblings(".show").removeClass("d-none");
+	        }
+	    });
+	    
 	});
 	
-    // 현재 공지사항의 URL 파라미터값 스트링 객체
-		const urlParams = new URLSearchParams(location.search);
-	
-		// 이전 | 다음 공지사항 페이지 이동
+	// ======================================== functions ======================================== 
+	// 이전 | 다음 공지사항 페이지 이동
     function moveBoard(element, boardNo, requestBoardWriter){
-		// 글번호 파라미터값 변경
-		urlParams.set("no", boardNo);
+		urlParams.set("no", boardNo);	// 글번호 파라미터값 변경
 		
-   		if(${ loginMember.userNo } != requestBoardWriter){
-  			// 로그인 사용자가 이전 공지사항의 작성자가 아닐경우
-  			element.attr("href",  "${ contextPath }/board/reader/detail.do?" + urlParams.toString());
-  		}else{
-  			// 로그인 사용자가 이전 공지사항의 작성자일 경우
-  			element.attr("href", "${ contextPath }/board/detail.do?" + urlParams.toString());
-  		}
-		
+		if(changeStatusUrlPrefix == "${ contextPath }/board"){
+			changeStatusUrlPrefix += (${ loginMember.userNo } != requestBoardWriter) ? "/reader/detail.do?" // 로그인 사용자가 이전 공지사항의 작성자가 아닐경우
+																					 : "/detail.do?";		// 로그인 사용자가 이전 공지사항의 작성자일 경우
+		}
+  		element.attr("href",  changeStatusUrlPrefix + urlParams.toString());
     }
 	
 </script>
