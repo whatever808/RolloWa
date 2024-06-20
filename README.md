@@ -1,8 +1,7 @@
 # Rollowa
+* 'RollerCoaster' + '놀러와' = 'Rollowa'
+* 놀이공원 운영을 위한 그룹웨어 서비스 제공
 
-## 프로젝트 소개
-* 구디아카데미 풀스택개발자 양성과정에서 진행한 파이널 팀 프로젝트 입니다.
-* 놀이공원 사내 직원들을 위한 그룹웨어 웹사이트 입니다.
 
 ## 팀원소개 및 역할분담
 |팀원|역할|
@@ -15,8 +14,13 @@
 
 
 ## 개발환경
+* **Operation System**<br>
+  [https://img.shields.io/badge/Window_10-blue](https://img.shields.io/badge/#windows10-0078D6?style=flat&logo=Windows10&logoColor=white)
+
+* **Processor**<br>
+  ![intel core](https://img.shields.io/badge/Windows%2011-%230079d5.svg?style=for-the-badge&logo=Windows%2011&logoColor=white)
 * **개발도구**</br>
-    ![image](https://github.com/whatever808/RolloWa/assets/153481968/012d8728-f487-4a18-abdb-cd1bfdde1285)
+  ![image](https://github.com/whatever808/RolloWa/assets/153481968/012d8728-f487-4a18-abdb-cd1bfdde1285)
 * **Back End**</br>
   ![image](https://github.com/whatever808/RolloWa/assets/153481968/eab09973-b73d-4e7b-885b-0e602014c630)
 * **Front End**</br>
