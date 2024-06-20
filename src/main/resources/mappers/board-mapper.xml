@@ -258,7 +258,7 @@
 	<update id="updateBoardStatus" parameterType="hashmap">
 		update tb_board
 		   set status   = #{status}
-		   		,modify_date = sysdate
+		   	  ,modify_date = sysdate
 		<if test='no != null and !no.equals("")'>
 			<where>
 				board_no = #{no}

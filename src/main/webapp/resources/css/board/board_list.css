@@ -5,10 +5,7 @@
 }
 
 /* ------------- board category ------------- */
-#filter-category{
-	
-}
-#category{
+#general-page-category, #writer-page-category{
 	display: inline-block;
     width: 200px;
 }
@@ -69,14 +66,14 @@ tbody>tr{
     margin-right: 5px;
     border-radius: 100px;
 }
-.td1, .td4, .td5, .td6{
+.td0, .td1, .td4, .td5, .td6{
 	width: 10%;
-}
-.td2{
-	width: 40%;
 }
 .td3{
 	width: 20%;
+}
+.trashcan-icon:hover{
+	cursor: pointer;
 }
 
 /* ------------- pagination ------------- */
