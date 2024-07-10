@@ -1,9 +1,6 @@
 # Rollowa
 * 'RollerCoaster' + '놀러와' = 'Rollowa'
 * 놀이공원 운영을 위한 그룹웨어 서비스 제공
-* 배포 URL :
-* Test ID :
-* Test PW : 
 
 # Built With
 * ### Front-end Skills
